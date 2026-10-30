@@ -24,7 +24,7 @@ def main(argv: list[str] | None = None) -> int:
     dx.add_argument("--split", default="dev", choices=["dev", "heldout"])
     ax = sub.add_parser("answer-exp", help="run answer-generation model comparison (calls the OpenAI API)")
     ax.add_argument("--split", default="dev", choices=["dev", "heldout"])
-    ax.add_argument("--exp", default="G1", choices=["G1", "G0", "G3"])
+    ax.add_argument("--exp", default="G1", choices=["G1", "G0", "G3", "G4"])
     ax.add_argument("--models", nargs="*", help="restrict to these models")
     sub.add_parser("gold-check", help="validate the gold set and regenerate the owner review sheet")
     sub.add_parser("export", help="export presentation-ready JSON for the interactive report page")

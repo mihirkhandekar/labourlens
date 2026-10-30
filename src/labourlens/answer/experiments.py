@@ -13,7 +13,7 @@ import json
 import statistics
 from concurrent.futures import ThreadPoolExecutor
 
-from labourlens import paths
+from labourlens import paths, prices
 from labourlens.answer import pipeline as pl
 from labourlens.answer import validate as vd
 from labourlens.retrieval import chunk as ck
@@ -57,7 +57,7 @@ def score(case: dict, rec: dict) -> dict:
     return s
 
 
-def aggregate(scores: list[dict]) -> dict:
+def aggregate(scores: list[dict], model: str) -> dict:
     n = len(scores)
     def rate(xs):
         xs = list(xs)
@@ -83,6 +83,7 @@ def aggregate(scores: list[dict]) -> dict:
         "latency_p50_s": secs[len(secs) // 2], "latency_max_s": secs[-1],
         "prompt_tokens_mean": round(statistics.mean(s["prompt_tokens"] for s in scores)), "completion_tokens_mean": round(statistics.mean(s["completion_tokens"] for s in scores)),
         "total_tokens": sum(s["prompt_tokens"] + s["completion_tokens"] for s in scores),
+        "cost_per_case_usd": round(sum(prices.chat_cost(model, s["prompt_tokens"], s["completion_tokens"]) for s in scores) / n, 5),
     }
 
 
@@ -100,13 +101,13 @@ def run_config(label: str, cfg: pl.AnswerConfig, cases: list[dict], world, exp: 
     pub = paths.EXPERIMENTS / "runs" / exp
     pub.mkdir(parents=True, exist_ok=True)
     (pub / f"{label}.scores.jsonl").write_text("\n".join(json.dumps(s) for s in scores) + "\n")
-    m = aggregate(scores)
+    m = aggregate(scores, cfg.model)
     (pub / f"{label}.metrics.json").write_text(json.dumps({"label": label, "config": cfg.key(), "prompt_hash": pl.load_prompt(cfg.prompt)[2], "metrics": m}, indent=1))
     return m
 
 
 COLS = ["valid_rate", "repair_rate", "behavior_accuracy", "over_abstention_rate", "false_answer_rate", "numbers_complete_rate", "gold_in_context_rate",
-        "gold_cited_rate", "key_number_recall", "answers_with_ungrounded_numbers", "latency_p50_s", "total_tokens"]
+        "gold_cited_rate", "key_number_recall", "answers_with_ungrounded_numbers", "latency_p50_s", "total_tokens", "cost_per_case_usd"]
 
 
 def table(rows: dict[str, dict]) -> list[str]:
@@ -126,6 +127,8 @@ EXPERIMENTS = {
            _per_model(lambda m: pl.AnswerConfig(m, oracle=True)), MODELS),
     "G3": ("evidence size k (chunks shown to the model), two fast models",
            lambda models: {f"{m} k={k}": pl.AnswerConfig(m, k=k) for m in models for k in (3, 5, 8)}, ("gpt-4.1-mini", "gpt-5.4-mini")),
+    "G4": ("k=8 for the two cheapest cautious models (the owner's prefer-declining policy, D-026)",
+           lambda models: {f"{m} k=8": pl.AnswerConfig(m, k=8) for m in models}, ("gpt-5.6-luna", "gpt-6-luna")),
 }
 
 
@@ -148,7 +151,7 @@ def resummarize(exp: str, title: str) -> None:
     """Rebuild a summary table from saved per-case scores (no API calls)."""
     rows = {}
     for f in sorted((paths.EXPERIMENTS / "runs" / exp).glob("*.scores.jsonl")):
-        rows[f.name.removesuffix(".scores.jsonl")] = aggregate([json.loads(x) for x in f.read_text().splitlines()])
+        rows[f.name.removesuffix(".scores.jsonl")] = aggregate([json.loads(x) for x in f.read_text().splitlines()], f.name.split(".scores")[0].split()[0])
     text = "\n".join([title, ""] + table(rows)) + "\n"
     (paths.EXPERIMENTS / "runs" / f"{exp}-SUMMARY.md").write_text(text)
     print(text)

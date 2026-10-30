@@ -32,8 +32,8 @@ Reading: hybrid has the best hit@10 and recall@5 in both chunkings and the fewes
 ## E7: prepend document title and section heading to the embedded text (dense, 3-large)
 header off: hit@10 0.67, MRR 0.53. header on: hit@10 0.71, MRR 0.50. No clear effect (opposite directions on two metrics, one case apart). The header idea (to help the model tell quarters apart) is not supported by this data.
 
-## Cost and latency (MEASURED tokens; prices are an UNVERIFIED assumption)
-Tokens reported by the API for embedding the corpus plus 24 queries: 3-small 217,501; 3-large 639,683; ada-002 217,501. At list prices I remember (3-small $0.02, ada-002 $0.10, 3-large $0.13 per million tokens; NOT verified against current OpenAI pricing) that is about $0.004, $0.022 and $0.083. Query embedding latency (network call, uncached): 3-small 340 ms, 3-large 390 ms, ada-002 625 ms (median of 24). Search over the cached matrix is 5 to 7 ms, versus 0.2 ms for BM25.
+## Cost and latency (MEASURED tokens, VERIFIED prices)
+Tokens reported by the API for embedding the corpus plus 24 queries: 3-small 217,501; 3-large 639,683; ada-002 217,501. Prices from https://developers.openai.com/api/docs/pricing (read 2026-10-30; `specs/prices.yaml`): 3-small $0.02, ada-002 $0.10, 3-large $0.13 per million tokens, so the one-off cost was $0.0044, $0.0218 and $0.0832. Cost is negligible at this corpus size; the 3-large vectors are 2x the dimension of 3-small (3,072 vs 1,536), which matters for storage at scale. Query embedding latency (network call, uncached): 3-small 340 ms, 3-large 390 ms, ada-002 625 ms (median of 24). Search over the cached matrix is 5 to 7 ms, versus 0.2 ms for BM25.
 
 ## What this does and does not show
 - Dense and hybrid retrieval are better than BM25 on this dev set, on every metric except raw context size. The size of the difference between embedding models is not established at n=24.

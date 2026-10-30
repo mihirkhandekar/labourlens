@@ -57,5 +57,27 @@ Retrieve (hybrid RRF, merge200, text-embedding-3-large) -> label each source pas
 - Numerical-comparison cases and prompt-injection fixtures are not covered yet (M4 and M5).
 - Prompt wording was not varied. Tuning the prompt on six non-answer dev cases would overfit, so a prompt comparison should wait for more dev cases or be done on held-out-safe fresh cases.
 
-## Candidate default (PROPOSAL, owner decision)
-Retrieval: hybrid, k=8. Model: a mini model for latency (gpt-4.1-mini or gpt-5.4-mini) with the abstention policy decided by the owner; or gpt-5.6-luna if avoiding false answers matters more than latency. Not frozen.
+## Cost (MEASURED tokens x VERIFIED prices)
+Prices: `specs/prices.yaml`, read from https://developers.openai.com/api/docs/pricing on 2026-10-30, Standard processing, short context, no cached-input discount applied (upper bound). `gpt-6-astra` ($10 input / $50 output per million tokens) was excluded by the owner. Cost per case from the G1 runs (retrieved evidence, k=5):
+
+| model | $ per case | relative to gpt-6-luna | behaviour | false-answer | over-abstain |
+|---|---|---|---|---|---|
+| gpt-6-luna | 0.00051 | 1x | 0.60 | 0.00 | 0.42 |
+| gpt-5.6-luna | 0.00113 | 2.2x | 0.73 | 0.00 | 0.29 |
+| gpt-4.1-mini | 0.00161 | 3.2x | 0.83 | 0.33 | 0.13 |
+| gpt-5.4-mini | 0.00335 | 6.6x | 0.70 | 0.17 | 0.25 |
+| gpt-6.1-terra | 0.00432 | 8.5x | 0.57 | 0.00 | 0.42 |
+| gpt-6-sol | 0.00912 | 18x | 0.60 | 0.17 | 0.38 |
+
+Reading: price does not track quality here. gpt-6-sol costs 18 times gpt-6-luna and scored no better; gpt-6.1-terra costs 8.5 times and scored lower on answer completeness. At these volumes (about 3,000 tokens a case) every option is under one cent a case, so cost matters for the evaluation budget and for scale, not for the demo.
+
+## G4: k=8 for the two cheapest cautious models
+| config | valid | behaviour | over-abstain | false-answer | numbers complete | $ per case |
+|---|---|---|---|---|---|---|
+| gpt-6-luna k=8 | 0.97 | 0.70 | 0.29 | 0.00 | 0.63 | 0.00066 |
+| gpt-5.6-luna k=8 | 0.97 | 0.77 | 0.17 | 0.33 | 0.71 | 0.00121 |
+
+gpt-5.6-luna's false-answer rate over four runs on this set: 0.00, 0.17 (oracle), 0.00 (k=5 repeat), 0.33 (k=8); gpt-6-luna's: 0.00, 0.17 (oracle), 0.00, 0.00. On six cases that difference is one or two cases, so it is suggestive, not established.
+
+## Candidate default (PROPOSAL, follows D-026 prefer-declining policy; not frozen)
+Retrieval hybrid (BM25 + dense, RRF), k=8. Model `gpt-6-luna`: cheapest, most consistently cautious (no false answers in 3 of 4 runs), at the price of over-abstaining on about 29% of answerable cases. The alternative, `gpt-5.6-luna`, answers more but false-answered in k=8. Revisit after owner review of the gold labels and more non-answer cases.

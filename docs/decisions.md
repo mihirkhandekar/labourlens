@@ -159,3 +159,6 @@ M3 scope: text-evidence, abstain, clarify and refuse cases. The 12 numerical-com
 
 ### D-025 — M3 answer-generation findings (MEASURED, dev n=30, nothing locked, 30 Oct 2026)
 Retrieval, not the model, limits quality: gold passage in context in 58% of cases at k=5, 69% at k=8; oracle evidence lifts every model. Models differ in abstention temperament (false-answer versus over-abstention). Model choice, k and the abstention policy are open until the held-out pre-registration is frozen. Details: `docs/experiments/m3-answer-generation.md`.
+
+### D-026 — Abstention policy: prefer declining to a wrong answer (DECISION, owner accepted recommendation, 30 Oct 2026)
+When evidence is missing or the question is ambiguous, the system should abstain or ask for clarification rather than answer. Rationale: a confident wrong figure does more harm in policy research than a decline the user can resolve. Consequence: lower answer completeness (over-abstention about 29% on dev for the leading candidate). Prices are now taken from the official OpenAI pricing page (`specs/prices.yaml`, read 30 Oct 2026) and cost per case is reported in every answer comparison. Candidate default (not frozen): hybrid retrieval, k=8, `gpt-6-luna`; see `docs/experiments/m3-answer-generation.md`.
