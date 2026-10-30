@@ -2,7 +2,7 @@
 
 > **This is the first file any agent reads when resuming.** Update it at the end of every work session, every substep, and before any long-running command. Newest entry on top of the log. Never record a result that has no file or command behind it.
 
-**Last updated:** 2026-10-30 (planning session 1) · **Deadline:** Wed 4 Nov 2026, morning SGT
+**Last updated:** 2026-10-30 (M1 implemented; awaiting owner gate review) · **Deadline:** Wed 4 Nov 2026, morning SGT
 
 ## Current state (one screen)
 
@@ -10,11 +10,11 @@
 |---|---|
 | Active milestone | **M1 — Government data ingestion and provenance** |
 | Gate status | **M1 IMPLEMENTATION APPROVED 30 Oct 2026 (D-005).** Scope: ADR-001 + ADR-003 structured data, D-006 corpus, D-004 CSV snapshots committed to the private repo. M2+ is NOT approved. |
-| Code written | In progress (see checklist) |
+| Code written | M1 complete: `src/labourlens/**`, 51 tests pass, 142 build checks 0 failed |
 | Data downloaded | See checklist; raw files under `data/raw/` (gitignored) |
-| Next decision for owner | Review at the M1 gate (after M1.6) |
+| Next decision for owner | M1 gate review: fill `docs/human-review/*.md`, then approve M2 (BM25 baseline). Open proposals D-007, D-008, D-009, D-011 |
 | Blockers | None. No API keys needed for M1. |
-| Who is working | Nobody holds a lock. See "Claiming work" below. |
+| Who is working | Nobody holds a lock. Repo: https://github.com/mihirkhandekar/labourlens (private, `master`) |
 
 ## Document map (public vs private)
 
@@ -39,7 +39,6 @@ Rule: if unsure whether something belongs in a published doc, put it in `private
 
 | Agent | Substep | Files | Started (SGT) |
 |---|---|---|---|
-| ClaudeMain | M1.0 to M1.6 (sequential) | `pyproject.toml`, `src/labourlens/**`, `tests/**`, `data/**`, `artifacts/**`, `docs/data-sheet.md`, `study/01-data-ingestion.md` | 2026-10-30 |
 
 ## Milestone checklist
 
@@ -47,13 +46,13 @@ Status values: `not started`, `in progress`, `done (evidence: path)`, `blocked (
 
 | ID | Substep | Status | Evidence |
 |---|---|---|---|
-| M1.0 | Repo hygiene: `.gitignore`, private/public doc split, handoff docs | in progress | this file, `.gitignore` |
-| M1.1 | Verify sources, rights, schemas; freeze manifest | not started | |
-| M1.2 | Models, manifest, acquisition with throttle and hashes | not started | |
-| M1.3 | Dataset normalizers, Parquet, DuckDB read layer | not started | |
-| M1.4 | PDF and HTML passage extraction with quality flags | not started | |
-| M1.5 | Quality report, advance/final/dataset reconciliation | not started | |
-| M1.6 | Clean-room run, data sheet, study note, commit proposal | not started | |
+| M1.0 | Repo hygiene: `.gitignore`, private/public doc split, handoff docs | done | evidence: `.gitignore`, this file, `docs/decisions.md` |
+| M1.1 | Verify sources, rights, schemas; freeze manifest | done | evidence: `specs/sources.yaml`, `data/manifests/manifest.json` |
+| M1.2 | Models, manifest, acquisition with throttle and hashes | done | evidence: `src/labourlens/data/acquire.py`, `raw_store.py`, `fetch.py`; 33 sources ok |
+| M1.3 | Dataset normalizers, Parquet, DuckDB read layer | done | evidence: `data/processed/observations.parquet`, 10,896 rows |
+| M1.4 | PDF and HTML passage extraction with quality flags | done | evidence: `artifacts/data-quality/extraction_stats.json` |
+| M1.5 | Quality report, advance/final/dataset reconciliation | done | evidence: `artifacts/data-quality/quality-report.md`, `reconciliation.json` |
+| M1.6 | Clean-room run, data sheet, study note, commit proposal | done except human review | evidence: `artifacts/tests/pytest-m1.txt`, `docs/data-sheet.md`, clean-room run below |
 
 ## Verified facts so far (planning session 1, probes run 2026-10-30)
 
@@ -102,3 +101,5 @@ Every row came from a live call; none is stored as a repo artifact yet. M1.1 mus
 (none)
 
 - 2026-10-30: D-010 recorded (interactive report page). Added `labourlens export` (data/export/*.json, 7 files), fixed revisions summary print, eda+revisions run OK (3 figures, eda-findings.md, revisions.json baseline_only). `docs/presentation-plan.md` written. Remaining M1: tests (M1.6), spot-check sheets, data-sheet, study note, README/.env.example, clean-room run, commit proposal. Checklist table above is stale: M1.1-M1.5 implemented, build 142 checks/0 failed.
+
+- 2026-10-30 (M1 close): Added tests (51 pass, `artifacts/tests/pytest-m1.txt`), review sheets (`labourlens review-sheets`; UNREVIEWED), data sheet, README, `.env.example`, requirements matrix, study note (private), D-011 human-feedback design. Re-fetched the 4 LF2025 PDFs to sync catalog rights (now 8 unresolved, all HTML releases). Clean-room run in /tmp copy of tracked files: `uv sync`, `fetch --kind documents`, `build` (142 checks, 0 failed), `pytest` (51 passed). NOT re-run in clean room: dataset `fetch` (throttled, about 4 min; datasets came from committed snapshots). Committed `7c23b3a` and pushed to the private GitHub repo. Next: owner review of `docs/human-review/`, then M2 approval. Claim released.
