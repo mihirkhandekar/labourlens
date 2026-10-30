@@ -1,0 +1,120 @@
+# LabourLens on one Droplet: Caddy (HTTPS, the only published ports) in front of one app container.
+# Run from /srv/labourlens/deploy as the deploy user:
+#   IMAGE_TAG=<git sha> docker compose --env-file /srv/labourlens/.env up -d
+# Optional MCP sidecar (loopback only, not published):
+#   IMAGE_TAG=<git sha> docker compose --env-file /srv/labourlens/.env --profile mcp up -d
+# The corpus is NOT in the image: /srv/labourlens/data is bind-mounted at /app/data (see runtime-data.txt).
+
+name: labourlens
+
+x-logging: &logging
+  driver: json-file
+  options:
+    max-size: "10m"
+    max-file: "3"
+
+services:
+  app:
+    image: ${LABOURLENS_IMAGE:-ghcr.io/mihirkhandekar/labourlens}:${IMAGE_TAG:?set IMAGE_TAG to the image tag (commit sha) to run}
+    restart: unless-stopped
+    # No `ports:` on purpose: only Caddy can reach the app, over the private network below.
+    env_file: ${LABOURLENS_ENV_FILE:-/srv/labourlens/.env}
+    environment:
+      # The app believes X-Forwarded-For / -Proto only from this one address (Caddy's fixed address on the edge network).
+      # Anything else, including a spoofed header sent by a client, cannot change the rate-limit key.
+      LABOURLENS_FORWARDED_ALLOW_IPS: 172.30.0.2
+    volumes:
+      - /srv/labourlens/data:/app/data
+    read_only: true
+    tmpfs:
+      - /tmp:size=64m,mode=1777
+    user: "10001:10001"
+    cap_drop: [ALL]
+    security_opt:
+      - no-new-privileges:true
+    mem_limit: 1280m
+    pids_limit: 256
+    healthcheck:
+      test: ["CMD", "python", "-c", "import sys, urllib.request; sys.exit(0 if urllib.request.urlopen('http://127.0.0.1:8000/healthz', timeout=4).status == 200 else 1)"]
+      interval: 30s
+      timeout: 5s
+      start_period: 120s
+      retries: 3
+    logging: *logging
+    networks:
+      edge:
+        ipv4_address: 172.30.0.3
+
+  caddy:
+    image: caddy:2-alpine
+    restart: unless-stopped
+    depends_on:
+      app:
+        condition: service_healthy
+    ports:
+      - "80:80"
+      - "443:443"
+    environment:
+      DOMAIN: ${DOMAIN:?set DOMAIN in /srv/labourlens/.env}
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data      # certificates and the ACME account: keep this volume
+      - caddy_config:/config
+    read_only: true
+    tmpfs:
+      - /tmp:size=16m,mode=1777
+    cap_drop: [ALL]
+    cap_add: [NET_BIND_SERVICE]
+    security_opt:
+      - no-new-privileges:true
+    mem_limit: 192m
+    pids_limit: 128
+    logging: *logging
+    networks:
+      edge:
+        ipv4_address: 172.30.0.2
+
+  # Optional read-only MCP statistics server over loopback HTTP with a bearer token. It shares the app container's network
+  # namespace, so 127.0.0.1:8765 exists only inside it: nothing is published and Caddy does not route to it.
+  mcp:
+    profiles: ["mcp"]
+    image: ${LABOURLENS_IMAGE:-ghcr.io/mihirkhandekar/labourlens}:${IMAGE_TAG:?set IMAGE_TAG to the image tag (commit sha) to run}
+    restart: unless-stopped
+    depends_on:
+      app:
+        condition: service_healthy
+    network_mode: "service:app"
+    # Separate file so the main app never receives the MCP token and the MCP server never receives the OpenAI key.
+    env_file: ${LABOURLENS_MCP_ENV_FILE:-/srv/labourlens/mcp.env}
+    entrypoint: ["python", "-m", "labourlens.mcp.server"]
+    command: ["--transport", "http", "--host", "127.0.0.1", "--port", "8765"]
+    volumes:
+      - /srv/labourlens/data:/app/data:ro
+    read_only: true
+    tmpfs:
+      - /tmp:size=32m,mode=1777
+    user: "10001:10001"
+    cap_drop: [ALL]
+    security_opt:
+      - no-new-privileges:true
+    mem_limit: 384m
+    pids_limit: 64
+    healthcheck:
+      # 401 proves the process is up and enforcing the token; anything else (including a refused connection) fails.
+      test: ["CMD", "python", "-c", "import sys, urllib.request, urllib.error\ntry:\n    urllib.request.urlopen(urllib.request.Request('http://127.0.0.1:8765/mcp', data=b'{}', method='POST'), timeout=4)\nexcept urllib.error.HTTPError as e:\n    sys.exit(0 if e.code == 401 else 1)\nsys.exit(1)"]
+      interval: 30s
+      timeout: 5s
+      start_period: 30s
+      retries: 3
+    logging: *logging
+
+networks:
+  edge:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.30.0.0/24
+
+volumes:
+  caddy_data:
+  caddy_config:

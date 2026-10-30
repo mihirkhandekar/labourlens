@@ -22,6 +22,9 @@ def main(argv: list[str] | None = None) -> int:
     rx.add_argument("--split", default="dev", choices=["dev", "heldout"])
     dx = sub.add_parser("dense-exp", help="run dense/hybrid embedding experiments (calls the OpenAI embeddings API; needs OPENAI_API_KEY)")
     dx.add_argument("--split", default="dev", choices=["dev", "heldout"])
+    r2x = sub.add_parser("retrieval-exp2", help="retrieval improvements R0-R3 (query metadata, LLM rerank); dev only; calls the OpenAI API for rerank")
+    r2x.add_argument("--split", default="dev", choices=["dev"])
+    r2x.add_argument("--no-rerank", action="store_true", help="run only the API-free configurations")
     ax = sub.add_parser("answer-exp", help="run answer-generation model comparison (calls the OpenAI API)")
     ax.add_argument("--split", default="dev", choices=["dev", "heldout"])
     ax.add_argument("--exp", default="G1", choices=["G1", "G0", "G3", "G4"])
@@ -87,6 +90,11 @@ def main(argv: list[str] | None = None) -> int:
         from labourlens.retrieval import experiments_dense
 
         experiments_dense.run(args.split)
+        return 0
+    if args.cmd == "retrieval-exp2":
+        from labourlens.retrieval import experiments_rerank
+
+        experiments_rerank.run(args.split, not args.no_rerank)
         return 0
     if args.cmd == "answer-exp":
         from labourlens.answer import experiments as ae

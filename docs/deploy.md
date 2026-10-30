@@ -1,172 +1,239 @@
-# Deploying the LabourLens report
+# Deploying LabourLens on one DigitalOcean Droplet
 
-**PROPOSAL / operator runbook. No deployment has been performed.** The commands below have not been run for a deployment. The report is public. Live questions and feedback require an access-code session. The service is a single-process demonstration, not a production authentication or billing system.
+**Status: PROPOSAL / operator runbook. Nothing in this document has been run against a real Droplet.** The files it relies on (`Dockerfile`, `deploy/`, `scripts/`, `.github/workflows/deploy.yml`) were exercised locally only; section 12 lists what that did and did not cover.
 
-## 1. Prepare the release
+**DECISION (owner, 30 Oct 2026):** host on one DigitalOcean Droplet (Ubuntu LTS, Singapore region `sgp1`) with Docker Compose and Caddy, deployed by GitHub Actions. Not approved: App Platform, Kubernetes, managed Postgres, public MCP exposure, OAuth.
 
-Use Python 3.12, `uv`, the checked-in lockfile and a reviewed revision. From the repository root:
+**Why one Droplet.** The app keeps state in one process: the daily budget ledger and the audit and feedback logs are files, and rate limits are in memory. The MOM report passages are not in Git (they are gitignored for rights reasons, decision D-001), so the corpus has to live on the server's persistent disk and never in the image or the repository.
 
-```sh
-uv sync --frozen
-uv run labourlens build-report
-uv run labourlens serve --host 127.0.0.1 --port 8000
+**Prices (VERIFIED, DigitalOcean pricing page, read 30 Oct 2026):** Droplet with 1 GiB memory $6 per month; with 2 GiB memory $12 per month. This runbook targets the 2 GiB size. Snapshot and bandwidth costs were not verified.
+
+## 1. What runs where
+
+```
+Internet --80/443--> Caddy (HTTPS, headers, body limit, access log)
+                       |  private Docker network 172.30.0.0/24
+                       v
+                     app container (uvicorn, one worker, port 8000, not published)
+                       |  bind mount /srv/labourlens/data -> /app/data
+                     [mcp sidecar, optional, shares the app's loopback, not published]
 ```
 
-`build-report` assembles saved local evidence into `web/static/data/report.json`. It does not download sources, train models, compute embeddings or run evaluations. Do not add `fetch`, `build`, `dense-exp`, `agent-exp`, `eval` or any paid API run to a deployment hook. Do not regenerate missing research artifacts during release preparation.
-
-Publish only the reviewed, rights-cleared report and web assets. Keep these out of `web/`, public buckets and public container directories: `.env`, access codes, session keys, raw MOM PDFs, extensive extracted report text, private review sheets and raw model runs. Keep source links and attribution visible. The static report must work with live mode disabled.
-
-For live mode, provision these local runtime assets separately: corpus, structured observations, retrieval caches, prompts, source specifications and pricing configuration. They are ignored or private, so a public checkout does not contain them. Keep restricted source material private and confirm deployment rights. With live mode enabled, startup loads the shared retrieval resources. Missing resources raise an operational error and do not produce an empty evidence set. Inspect the asset bundle before enabling live mode. Do not generate missing embeddings during deployment.
-
-## 2. Runtime configuration and secrets
-
-Set these on the server only. `serve` loads a repository-root `.env` without overriding variables already set in the environment. Prefer a protected service environment file or platform runtime secrets. Never send the OpenAI key to the browser, put it in report JSON, log it or pass it as a build argument.
-
-| Variable | Meaning / operator action |
+| Path on the Droplet | Contents |
 |---|---|
-| `LABOURLENS_DEMO_ENABLED` | Set `false` for report-only mode or emergency shutdown. Set `true` only after live prerequisites and HTTPS are checked. Defaults to `true`. Live mode stays disabled when access codes or the session secret are missing. |
-| `LABOURLENS_ACCESS_CODES` | Comma-separated nonempty reviewer codes. Generate unpredictable values and distribute them privately. |
-| `LABOURLENS_SESSION_SECRET` | Separately generated signing secret of at least 32 random bytes. Required for live mode. Rotation invalidates existing sessions. |
-| `LABOURLENS_DAILY_BUDGET_USD` | Daily estimated-cost admission ceiling. Default `2.0`. Use a finite nonnegative decimal. Zero blocks new live questions. The provider does not enforce this limit. |
-| `OPENAI_API_KEY` | Restricted server-side OpenAI project key, used for live research only. Omit in report-only mode. |
+| `/srv/labourlens/.env` | Runtime secrets and settings (mode 600). Read by compose, only the app container receives it. |
+| `/srv/labourlens/mcp.env` | Optional. `LABOURLENS_MCP_TOKEN` for the MCP sidecar only. |
+| `/srv/labourlens/data/` | The minimal runtime data set (section 6). Writable by the app (audit log, budget ledger, query-embedding cache). |
+| `/srv/labourlens/deploy/` | `docker-compose.yml`, `Caddyfile`, `deploy.sh`, copied by the deploy job. |
+| `/srv/labourlens/state/` | `current_tag` and `previous_tag`, written by `deploy.sh`. |
+| `/srv/labourlens/backups/` | Target for the data backup in section 10. |
 
-Generate codes and the session secret independently, in a password manager or a private terminal with `openssl rand -hex 32`. Do not paste values into documentation, shared shell history, screenshots or issue trackers. Set an OpenAI project-level budget in addition to the application limits. Configuration changes take effect after a service restart or redeploy.
+The image contains code, `specs/`, `prompts/`, `web/` and the locked Python dependencies. It never contains `data/`, PDFs, env files, `study/` or `private/`. `.dockerignore` is an allow-list, and `scripts/check-build-context.sh` proves the result (CI runs it and also inspects the built image).
 
-**VERIFIED FACT (implementation):** sessions use a signed `labourlens_session` cookie with HttpOnly, SameSite=Strict, an eight-hour lifetime, and Secure when the application sees HTTPS. The cookie does not contain the access code. Changing codes does not invalidate issued cookies. Rotate the signing secret to revoke sessions. `false` blocks new live API requests. It does not stop provider work already running.
+## 2. Create the Droplet
 
-Default limits:
-- Login: 5 attempts per IP per 60 seconds.
-- Questions: 10 per session and 20 per IP in that interval.
-- Active runs: at most 2.
-- HTTP wait: 90 seconds.
-- Request body: 8 KiB.
-- Questions and feedback comments: 1,000 characters.
+1. In the DigitalOcean control panel create a Droplet: Ubuntu LTS (24.04), region Singapore `sgp1`, Basic plan with 2 GiB memory ($12 per month). Choose SSH key authentication and add your public key. Do not enable password login. IPv6 is optional; leave it off unless you need it (see section 11).
+2. Note the public IPv4 address.
+3. Create a **DigitalOcean Cloud Firewall** and attach it to the Droplet: inbound TCP 22 (restrict the source to your own address if it is stable), TCP 80 and TCP 443 from anywhere; all outbound allowed. This is a second layer. The on-host firewall (ufw) does not filter ports that Docker publishes, because Docker writes its own iptables rules; the cloud firewall does.
+4. Create a DNS **A record** for your domain pointing at the Droplet's IPv4 address, and wait for it to resolve (`dig +short your.domain`) **before the first deploy**. Caddy requests the certificate on first start and needs ports 80 and 443 reachable and the name resolving to this machine.
 
-These limits are `Settings` fields. `Settings.from_env` reads only the variables in the table above. Do not invent variable names for the other fields.
+## 3. One-time bootstrap
 
-The budget ledger is `data/feedback/budget.json`. Sanitized feedback appends to `data/feedback/feedback.jsonl`. Make that directory writable only by the service account and keep it outside the public document root. Back it up privately if feedback must be kept. Tell reviewers not to enter personal or confidential information, because HTML and control-character sanitizing does not anonymize text. Set a retention period and delete feedback under it.
-
-## 3. Recommended live hosting: Droplet with a local HTTPS proxy
-
-**PROPOSAL:** run one application process on one host under a dedicated unprivileged account. Caddy or Nginx terminates HTTPS and forwards to `127.0.0.1:8000`. This matches the local persistence and the proxy trust boundary. Use a supported Linux release with current security updates, SSH keys, and a firewall that opens only SSH, HTTP and HTTPS. Do not expose port 8000.
-
-1. Copy the reviewed application and permitted private runtime assets to `/srv/labourlens`. Install `uv` and Python 3.12. As the service user, run `uv sync --frozen` and `uv run labourlens build-report`. Do not run research pipeline commands.
-2. Store the runtime variables in `/etc/labourlens.env`, owned by root and readable by the service account. Set `LABOURLENS_DEMO_ENABLED=false` initially.
-3. Run one service with working directory `/srv/labourlens`, environment file `/etc/labourlens.env` and start command `uv run labourlens serve --host 127.0.0.1 --port 8000`. Restart it automatically on failure. Do not add workers. In a systemd `ExecStart`, use the absolute path to `uv`.
-4. Give the proxy a valid DNS name and a trusted TLS certificate. Redirect HTTP to HTTPS. Forward the original Host and the HTTPS scheme, and overwrite client-supplied forwarding headers. Match proxy request limits and timeouts to the application. Example Caddy configuration:
-
-   ```caddyfile
-   research.example.org {
-       reverse_proxy 127.0.0.1:8000
-   }
-   ```
-
-   Replace the example domain with your domain. Check the certificate and forwarded-header behavior before enabling live mode.
-5. The server trusts forwarding headers only from `127.0.0.1`. Use that address (not another network proxy or IPv6 loopback) unless you configure and review a different trust list. Never trust arbitrary Internet forwarding headers to fix a scheme or cookie problem.
-6. Complete the checks in section 6, set up provider-side cost controls, then enable live mode and restart the service.
-
-## 4. DigitalOcean App Platform alternative
-
-**VERIFIED FACT (official documentation):** App Platform deploys from a Git repository or image and assigns a starter domain ([domain configuration](https://docs.digitalocean.com/products/app-platform/how-to/manage-domains/)). [Encrypted runtime variables](https://docs.digitalocean.com/products/app-platform/how-to/use-environment-variables/) are readable by application code and trusted console users. Encryption does not protect against malicious application code. Restrict deployment and console access.
-
-Use one web service, one instance, no autoscaling, and a Python 3.12 / `uv` environment with the pinned dependencies. For live mode, supply the reviewed runtime assets privately. Configure:
+From your machine:
 
 ```sh
-# Build command, with no OpenAI key present:
-uv sync --frozen && uv run labourlens build-report
-
-# Run command, matching the service's configured HTTP port:
-uv run labourlens serve --host 0.0.0.0 --port 8080
+scp scripts/droplet-bootstrap.sh root@<droplet-ip>:/root/
+ssh root@<droplet-ip> 'bash /root/droplet-bootstrap.sh'
 ```
 
-Set the HTTP port to 8080 and the health check to `/api/status`. A successful status response shows that HTTP is available. It does not show authentication, corpus readiness or answer correctness. Configure the public HTTPS route or custom domain. Start with `LABOURLENS_DEMO_ENABLED=false`. Store access codes, the session secret and the OpenAI key as encrypted component-level RUN_TIME variables, not build-time or app-wide variables.
+The script is idempotent. It creates the `deploy` user (uid 10001, the same uid the container runs as, so the app can write the bind-mounted data directory), copies root's authorized key to it, creates `/srv/labourlens`, installs Docker Engine and the compose plugin from Docker's apt repository, enables unattended security upgrades, configures ufw for ports 22, 80 and 443 only, installs fail2ban for sshd, switches ssh to key-only login (`PermitRootLogin prohibit-password`), and adds a 1 GiB swap file. Before closing the root session, open a second terminal and confirm `ssh deploy@<droplet-ip>` works.
 
-**Live-mode prerequisite:** `serve` trusts only a loopback proxy, and App Platform's ingress is not assumed to be one. Before enabling live mode, configure a documented, restricted ingress or proxy trust so the application sees the external HTTPS scheme and the correct same-origin host. Otherwise Secure cookies and origin checks may be wrong. Do not use `--forwarded-allow-ips '*'` on a backend that untrusted clients can reach. If the topology cannot be verified and configured safely, keep this deployment report-only and use the Droplet for live questions.
+The `deploy` user is in the `docker` group, which is root-equivalent on the host. Treat its ssh key as a root credential.
 
-**Persistence limitation:** [App Platform local filesystems are ephemeral](https://docs.digitalocean.com/products/app-platform/how-to/store-data/). Deployments and replacements discard the local feedback and budget ledgers, and instances do not share local files. This version therefore cannot run unattended with a persistent budget on App Platform. Before replacement, export permitted feedback privately and reconcile spending independently. Managed persistent accounting does not exist and would be a separate change. The Droplet's private local storage is the simpler option for a live demo.
+## 4. Server configuration (`/srv/labourlens/.env`)
 
-## 5. Operating limits and emergency controls
-
-- **One process or instance only.** Rate counters and active-run admission are process-local. The budget file is not a distributed ledger and has no cross-process lock.
-- Completed-run usage is estimated and persisted locally. Concurrent in-flight requests can exceed the admission ceiling by their final usage (at most 2 active runs with defaults). A timed-out HTTP response does not mean the provider call stopped. The slot stays occupied until the run finishes. Provider billing may differ from the estimates, so reconcile it separately.
-- The day rolls over on the server's local calendar date. Record the server timezone. Do not reset or delete the ledger to get past a budget rejection. An unreadable ledger counts as exhausted.
-- Emergency stop: set `LABOURLENS_DEMO_ENABLED=false` and restart or redeploy. Revoke the provider key to stop provider work immediately. After a suspected disclosure, rotate the access codes and the session secret. Keep only the redacted diagnostics you need.
-- The entry point disables Uvicorn access logging. Configure proxy and platform logs not to record request bodies, cookies, Authorization headers or query text. Keep private research data out of public telemetry.
-- The application sets a same-origin CSP, frame denial, nosniff, referrer and permissions policies. API responses are `no-store`. Keep these headers intact at the proxy. The UI renders all model strings as text, never as HTML.
-
-## 6. Owner verification before sharing a link
-
-**Not executed.** The integration owner runs `uv run pytest tests/web` with fake injected runners, then checks the HTTPS site in a browser. A paid live query is a manual operator action, not a deployment hook.
-
-- With live mode off and no OpenAI key, the report, figures, navigation and provenance links load.
-- `/api/status` reports the disabled, enabled-signed-out and signed-in states correctly.
-- An invalid code fails. Repeated attempts are rate-limited. A valid code sets HttpOnly, Secure and SameSite cookies over the public HTTPS URL. A tampered session cannot ask a question.
-- Unauthenticated and cross-origin questions fail without invoking research. Oversized or invalid requests fail. API responses carry security headers and `no-store`.
-- With an injected offline runner, one successful response contains answer, evidence, chart, trace and usage. Budget exhaustion and concurrency rejection prevent extra research calls. A timeout does not free an active worker early.
-- Feedback writes one sanitized JSONL record with no credentials. Check private persistence, backup and retention across a service restart.
-- The kill switch blocks new live work while the report stays available. Rotating the session secret and reopening the browser behave as intended.
-
-Record the commands, observations and deployment URL in the owner handoff after they are run. This runbook records no deployed URL or test result.
-
-## 7. Optional: MCP statistics server as a loopback sidecar
-
-**What this is.** The read-only MCP statistics server can also run over streamable HTTP on the loopback interface, protected by a bearer token. It is for a second local process (for example an MCP client on the same machine or in the same container) and is **not** a public endpoint. Not built: OAuth, per-client authorisation, TLS termination. The web app does not need it; the agent keeps calling statistics directly unless an operator wires in the MCP client. stdio stays the tested default (`uv run python -m labourlens.mcp.server`).
-
-**Rules.** Same container or instance as its client, bound to `127.0.0.1`, token supplied by the environment, never published through the proxy or a platform route, never exposed on `0.0.0.0`. The server refuses to start without a token of at least 24 characters and refuses a non-loopback `--host` unless `--allow-nonloopback` is given (that flag prints a warning: it then needs TLS and a real authentication layer, which this server does not provide). The server only reads the observations table, the committed manifests, the committed snapshot CSVs and the dataset adapter specs; it holds no API key and serves no MOM report text.
-
-Generate a token once and keep it out of the repository and out of shell history:
+Create it as the deploy user and restrict it. `deploy/.env.example` holds the same template (and `deploy/mcp.env.example` the MCP one):
 
 ```sh
-# on the host, readable by the service user only
-umask 077 && python3 -c "import secrets; print('LABOURLENS_MCP_TOKEN=' + secrets.token_urlsafe(32))" > /etc/labourlens/mcp.env
+ssh deploy@<droplet-ip>
+umask 077
+cat > /srv/labourlens/.env <<'EOF'
+DOMAIN=labourlens.example.org
+OPENAI_API_KEY=sk-REPLACE-WITH-A-RESTRICTED-PROJECT-KEY
+LABOURLENS_ACCESS_CODES=REPLACE-WITH-RANDOM-CODE-1,REPLACE-WITH-RANDOM-CODE-2
+LABOURLENS_SESSION_SECRET=REPLACE-64-HEX-CHARACTERS
+LABOURLENS_AUDIT_SALT=REPLACE-64-HEX-CHARACTERS
+LABOURLENS_DAILY_BUDGET_USD=2.0
+LABOURLENS_DEMO_ENABLED=false
+EOF
 ```
 
-Droplet or any systemd host, a second unit next to the web service (`/etc/systemd/system/labourlens-mcp.service`):
+Replace every `REPLACE-...` value. Generate the random ones privately, each independently:
 
-```ini
-[Unit]
-Description=LabourLens MCP statistics server (loopback only)
-After=network.target
-
-[Service]
-User=labourlens
-WorkingDirectory=/opt/labourlens
-EnvironmentFile=/etc/labourlens/mcp.env
-ExecStart=/usr/local/bin/uv run python -m labourlens.mcp.server --transport http --host 127.0.0.1 --port 8765
-Restart=on-failure
-RestartSec=3
-NoNewPrivileges=true
-ProtectSystem=strict
-ProtectHome=true
-PrivateTmp=true
-ReadOnlyPaths=/opt/labourlens
-
-[Install]
-WantedBy=multi-user.target
+```sh
+openssl rand -hex 32   # run once per value: session secret, audit salt, each access code
 ```
 
-Container sidecar (compose-style; no `ports:` entry, so nothing is published):
+Do not paste real values into documentation, shell history shared with others, screenshots or issue trackers. Compose reads the file verbatim, so do not wrap values in quotes.
 
-```yaml
-services:
-  labourlens-mcp:
-    build: .
-    command: ["uv", "run", "python", "-m", "labourlens.mcp.server", "--transport", "http", "--host", "127.0.0.1", "--port", "8765"]
-    environment:
-      LABOURLENS_MCP_TOKEN: ${LABOURLENS_MCP_TOKEN:?set a random token of at least 24 characters}
-    network_mode: "service:web"   # share the web container's loopback; do not publish 8765
-    read_only: true
-    restart: unless-stopped
-    healthcheck:
-      # 401 means the server is up and enforcing the token. Any other status or a refused connection fails the check.
-      test: ["CMD-SHELL", "test \"$(curl -s -o /dev/null -w '%{http_code}' -X POST http://127.0.0.1:8765/mcp)\" = 401"]
-      interval: 30s
-      timeout: 5s
-      retries: 3
+| Variable | Meaning |
+|---|---|
+| `DOMAIN` | Public host name. Used by Caddy for the certificate and by `deploy.sh` for its edge health check. |
+| `OPENAI_API_KEY` | Restricted server-side OpenAI project key for live research and query embeddings. Omit while live mode is off. |
+| `LABOURLENS_ACCESS_CODES` | Comma-separated reviewer codes; **every code must be at least 16 characters**, otherwise live mode is disabled. Generate independently at random and distribute privately. |
+| `LABOURLENS_SESSION_SECRET` | Signing secret for session cookies; code enforces at least **32 characters**, and operators should generate 32 random bytes or more (for example 64 hex characters). Rotating it revokes all sessions. |
+| `LABOURLENS_AUDIT_SALT` | Secret HMAC key for audit pseudonyms. If unset, a random per-installation key is persisted locally with mode `0600`, not a public default. Keep it stable and protect its backup: changing it breaks pseudonym joins. |
+| `LABOURLENS_DAILY_BUDGET_USD` | Daily estimated-cost admission ceiling, default `2.0`. Zero blocks new live questions. A $0.05 conservative per-run reservation is persisted before launch; it is not a provider-enforced billing cap. |
+| `LABOURLENS_DEMO_ENABLED` | `false` for report-only mode and the kill switch. Defaults to `true` when unset. Live mode also stays off if any code is shorter than 16 characters or the session secret is shorter than 32 characters. |
+
+`LABOURLENS_FORWARDED_ALLOW_IPS` is set by `docker-compose.yml`, not by you (section 8). Set an OpenAI project-level budget in addition to the application limit. Start with `LABOURLENS_DEMO_ENABLED=false`, verify the site, then enable live mode.
+
+Existing behaviour that matters to operators: sessions are signed `labourlens_session` cookies (HttpOnly, SameSite=Strict, eight hours, Secure when the app sees HTTPS) and require an active in-memory session. Same-origin `POST /api/logout` revokes that session and clears the cookie; restarting the app revokes all sessions. Login also checks Origin. Default limits: login 5 attempts per IP per 60 seconds **and 50 failed logins globally per 10 minutes**; questions 10 per access-code-bound identity and 20 per IP per 60 seconds (logging in again does not reset the code's question allowance); at most 2 active runs; 90-second HTTP wait; 8 KiB request body; questions and feedback comments up to 1,000 characters. Audit session hashes still identify distinct sessions. These are `Settings` fields; `Settings.from_env` reads only the variables above.
+
+## 5. GitHub secrets and repository settings
+
+In the private repository `mihirkhandekar/labourlens`, branch `master`, add Actions secrets (repository-level, or on the `production` environment that the deploy job uses; an environment can also require a manual approval):
+
+| Secret | Value |
+|---|---|
+| `DROPLET_HOST` | The Droplet's IPv4 address or host name. |
+| `DROPLET_USER` | `deploy` |
+| `DROPLET_SSH_KEY` | Private key of a dedicated deploy key pair (generate one just for this: `ssh-keygen -t ed25519 -f labourlens-deploy -N ''`; put the `.pub` in `/home/deploy/.ssh/authorized_keys`). |
+| `DROPLET_KNOWN_HOSTS` | The Droplet's host key line, obtained on a trusted path: `ssh-keyscan -t ed25519 <droplet-ip>` run from your machine, then compare its fingerprint with `ssh-keygen -lf` of `/etc/ssh/ssh_host_ed25519_key.pub` seen over the DigitalOcean console. The job uses `StrictHostKeyChecking yes` with this file, so there is no blind trust of the host. |
+
+The workflow (`.github/workflows/deploy.yml`) has three jobs.
+
+1. **test** installs the locked dependencies with `uv sync --frozen` and runs the test suite in a checkout that has no gitignored corpus. One test is deselected because it re-hashes raw files that exist only on the author's machine (`tests/data/test_provenance_and_packaging.py::test_every_ok_entry_has_matching_file_hash`). It first fails if git tracks any corpus path, PDF or env file.
+2. **build-push** checks the build context, builds the image, fails if `/app/data` is not empty or the image contains a PDF (outside the Python dependency tree) or an env file, then pushes `ghcr.io/mihirkhandekar/labourlens:<commit sha>` and `:latest`.
+3. **deploy** copies `deploy/` to the Droplet, logs the Droplet into GHCR with the job's short-lived `GITHUB_TOKEN` (logged out again afterwards), and runs `deploy.sh up <sha>`, which pulls the image, starts it, waits for container health (up to 240 seconds) and for `https://DOMAIN/healthz` through Caddy, and returns to the previous tag automatically if either fails.
+
+A concurrency group serialises runs; a queued run waits rather than cancelling one in progress. Workflow permissions are empty by default, and each job requests only what it needs (`packages: write` only to push, `packages: read` only to deploy). The third-party actions are pinned to full commit SHAs, each the commit of the tag in the adjacent comment, checked with `git ls-remote` on 30 Oct 2026; re-verify them when you bump a version. The base images (`python:3.12-slim`, `caddy:2-alpine`, the `uv` image) are pinned by tag, not digest, because no digest was verified. Pull access for the package is assumed to follow repository access for a package published by the same repository's workflow; this was not verified, and if the pull is denied, grant the repository access in the package settings.
+
+## 6. Runtime data
+
+The live app reads these files at startup (the list is `deploy/runtime-data.txt`, 2 structured files, 46 passage files and 2 embedding files, about 39 MB):
+
+- `data/processed/observations.parquet`: structured observations (`StatsData`).
+- `data/manifests/manifest.json`: source provenance shown in answers, and the manifest hash in audit records.
+- `data/passages/*.jsonl`: extracted MOM report passages (`load_passages`). Not redistributable publicly (D-001); server disk only.
+- `data/index/embeddings/text-embedding-3-large/{keys.json,vectors.npy}`: cached chunk embeddings. Only the user's question is embedded at runtime. Each new question appends to this cache and to `usage.jsonl`, so the directory must stay writable; the files that exist at start stay valid.
+
+Everything else under `data/` (raw PDFs and HTML, other embedding models, `runs/`, `export/`, `snapshots/`) is not needed by the web app and stays off the server, with one optional exception: the MCP sidecar's `get_revisions` tool reads `data/snapshots`, and without it that tool reports no history, which is not evidence that nothing was revised. Upload them with `--with-mcp-snapshots` if you run the sidecar.
+
+**VERIFIED (local, 30 Oct 2026):** starting `Shared()` and then the web app against a `data/` directory containing exactly this set loaded 2,106 chunks, 13,484 passages and 3,790 in-scope observations without a network call or API key use, in about 2.5 seconds on the author's machine with a warm file cache. The container reported healthy about 9 seconds after start. The earlier estimate of 30 seconds for startup was not reproduced; no on-disk BM25 cache exists and none is needed at this size. Allow for slower cold-disk reads on the Droplet; the compose health check allows 120 seconds.
+
+Upload from your machine (dry run first, then transfer):
+
+```sh
+scripts/upload-corpus.sh deploy@<droplet-ip>            # lists what would be sent
+scripts/upload-corpus.sh deploy@<droplet-ip> --go       # transfers exactly the files in deploy/runtime-data.txt
 ```
 
-**Health probe.** There is no unauthenticated health route on purpose. An unauthenticated request to `/mcp` must return 401 with an empty body; that proves the process is up and the token check is on.
+The script refuses to run if any listed file is missing locally, never uses `--delete`, and uses `StrictHostKeyChecking=yes`, so connect once by hand first to record the host key.
 
-**Client.** Set `LABOURLENS_MCP_TOKEN` in the client's environment and use the allow-listed `labourlens-stats-http` entry (`http://127.0.0.1:8765/mcp`). The client refuses non-loopback URLs and sends the token only there. Rotate by changing the environment file and restarting both units.
+## 7. First deploy
 
-**Owner verification (not executed here beyond `tests/mcp/test_http.py` and `uv run labourlens mcp-demo`).** On the host: `curl -i -X POST http://127.0.0.1:8765/mcp` returns 401; the same request from another machine cannot connect; `ss -ltn` shows port 8765 bound to 127.0.0.1 only; `journalctl -u labourlens-mcp` contains no token.
+Do the steps in order; there is no image until the workflow has run once.
+
+1. Push to `master` (or run the workflow from the Actions tab with `workflow_dispatch`). The test and build jobs run; the deploy job will fail the first time if `/srv/labourlens/.env` or the data directory is missing, which is expected if you skipped sections 4 or 6.
+2. After the deploy job succeeds, on the Droplet: `/srv/labourlens/deploy/deploy.sh status` shows the current tag, container state and `/healthz`.
+
+To enable live mode: edit `/srv/labourlens/.env`, set `LABOURLENS_DEMO_ENABLED=true`, then run `/srv/labourlens/deploy/deploy.sh restart`.
+
+## 8. How the client address and HTTPS are handled
+
+The rate limiter keys on the client address. Behind a proxy that address comes from `X-Forwarded-For`, which a client can forge, so two things work together:
+
+- Caddy **replaces** the header: `header_up X-Forwarded-For {remote_host}` discards whatever the client sent and passes the TCP peer address that Caddy sees. It also sets `X-Forwarded-Proto` and drops `X-Real-IP` and `Forwarded`.
+- The app trusts the forwarded headers **only from Caddy's address**. `docker-compose.yml` fixes Caddy at `172.30.0.2` on a private network and sets `LABOURLENS_FORWARDED_ALLOW_IPS=172.30.0.2` for the app (read by `labourlens serve`, passed to uvicorn as `forwarded_allow_ips`, with `proxy_headers=True`). A request that reaches the app from any other address cannot change its client address or scheme. The setting refuses `*`. Without the variable the default stays `127.0.0.1`, as for local use.
+
+**VERIFIED (local, real Caddy and the built image, 30 Oct 2026):** seven login attempts with seven different forged `X-Forwarded-For` values were limited after the fifth (`401 401 401 401 401 429 429`), so the forged header did not change the key. `tests/web/test_deploy_edge.py` shows the same at unit level: from an untrusted peer a forged header is ignored; from the proxy address it is used.
+
+**Not verified:** the real client address a Droplet receives through Docker's published ports on IPv4. Docker's IPv4 NAT path normally preserves the source address; the IPv6 userland proxy may not. Keep IPv6 off on the Droplet, or check the address in the Caddy log before relying on per-IP limits (section 11).
+
+Caddy sends HSTS (`max-age=31536000`), `Cross-Origin-Opener-Policy`, `Cross-Origin-Resource-Policy`, and removes `Server` and `Via`. The app already sends the CSP, nosniff, referrer policy, frame denial, permissions policy and API `no-store`; Caddy does not repeat them, so the policy has one owner. HTTP/3 is switched off because UDP 443 is not open. Caddy compresses responses, rejects bodies over 16 KB (the app's own cap is 8 KiB), waits up to 100 seconds for the app (the app waits 90), and writes a JSON access log to stdout with the query string, `Cookie`, `Authorization`, forwarded-for and `Set-Cookie` removed. There is no WAF and no Caddy-level rate limit.
+
+The server logs its explicit trusted-proxy setting without secrets. Regression coverage for ignored untrusted forwarding, trusted HTTPS forwarding and the cookie's `Secure` flag is in `tests/web/test_deploy_edge.py` and `tests/web/test_security_fixes.py`; this documentation update did not run it. Caddy's HSTS is the deployed transport policy, not an app-level Host allow-list. Never expose the app port directly or broaden proxy trust to arbitrary peers.
+
+## 9. Verify a deployment
+
+On the Droplet and from your machine:
+
+1. `curl -fsS https://<domain>/healthz` returns `{"status":"ok","version":"0.1.0+<commit sha>"}`. It is unauthenticated and returns nothing else.
+2. `curl -sI http://<domain>/` redirects to HTTPS; the HTTPS response carries the CSP and `strict-transport-security`.
+3. In a browser: the report, figures and source links load with live mode off and no OpenAI key.
+4. `/api/status` shows the disabled, signed-out and signed-in states correctly; a wrong code is rejected, repeated attempts get a 429; a right code sets an HttpOnly, Secure, SameSite cookie.
+5. With live mode on, ask one question as a signed-in reviewer. This makes a paid call and is a manual operator action, never a deployment hook. Check that the answer, evidence, chart and trace appear.
+6. Send feedback once; confirm a sanitized record in `/srv/labourlens/data/audit/feedback.jsonl`.
+7. Kill switch: set `LABOURLENS_DEMO_ENABLED=false`, run `deploy.sh restart`, and confirm new questions are rejected while the report stays up.
+
+`uv run pytest tests/web` runs the offline acceptance tests with injected fake research and needs no corpus, network or key.
+
+## 10. Operations
+
+**Logs.** Docker rotates container logs (10 MB, 3 files each). On the Droplet: `/srv/labourlens/deploy/deploy.sh logs app 200`, or `caddy` or `mcp` in place of `app`. The app's uvicorn access log is off and error logs pass through the redaction filter; Caddy's access log omits query strings and cookies. Application records (runs, feedback, admission events) are JSONL in `/srv/labourlens/data/audit`, with HMAC-pseudonymised session and client identifiers. Rejection events include known routes only, are sampled per client, capped at 1 MiB per day and written off the event loop; they are not an exhaustive access log. String values are redacted before JSON serialization and JSONL readers preserve physical-line framing. Web runs use `save_trace=True` and save redacted traces under `data/runs/agent/`; retain/protect those files as private operational data too.
+
+**Rollback by image tag.** Automatic: a failed `deploy.sh up` returns to the previous tag. Manual: `deploy.sh rollback` starts the recorded previous tag; or `deploy.sh up <sha>` for any earlier commit's tag that is still in GHCR. Rollback restores code only; the data directory and `.env` are untouched.
+
+**Kill switch.** Set `LABOURLENS_DEMO_ENABLED=false` in `.env` and run `deploy.sh restart`. This blocks new live questions; it does not stop provider calls already running. To stop provider work immediately, revoke the OpenAI key.
+
+**Rotating the API key.** Create a new restricted project key, put it in `.env`, run `deploy.sh restart`, then revoke the old key.
+
+**Rotating access codes and the session secret.** Edit the values, run `deploy.sh restart`. The restart revokes all in-memory sessions, including when only access codes changed. `POST /api/logout` revokes the current session without a restart. After a suspected disclosure, rotate both and the API key. Fresh logins with the same code share a code-bound question-rate identity; shared codes are not individual accounts.
+
+**Updating the corpus.** Run `scripts/upload-corpus.sh deploy@<ip> --go` from the machine that holds the new files, then `deploy.sh restart` so the app reloads them. If the file set changes, update `deploy/runtime-data.txt` first. The embedding cache must contain vectors for every chunk of the new passages; the app does not generate missing embeddings at startup, and a missing vector would be requested from the embeddings API on first use. Do not run `fetch`, `build`, `dense-exp`, `agent-exp` or `eval` on the server.
+
+**Updating the application.** Merge to `master`; the workflow does the rest. Docs-only pushes do not deploy.
+
+**Backups.** Two layers. (a) DigitalOcean Droplet snapshots or backups, taken from the control panel; **the snapshot cost was not verified here**, so check the current price before enabling scheduled backups. (b) A copy of the state that cannot be rebuilt, from your machine: `rsync -a deploy@<ip>:/srv/labourlens/data/audit/ ./backups/audit-$(date +%F)/`. The budget ledger (`data/audit/budget.json`) and feedback live there. Caddy's certificates live in the `caddy_data` Docker volume; they are re-issued automatically if lost, subject to Let's Encrypt rate limits. The corpus itself is reproduced from the author's machine with the upload script.
+
+**Disk and memory.** The app container is limited to 1.25 GiB and Caddy to 192 MiB, on a 2 GiB Droplet with 1 GiB swap. The app's measured memory under load was not measured; check `docker stats --no-stream` after the first real use.
+
+**Privacy.** Tell reviewers not to enter personal or confidential information: HTML and control-character stripping does not anonymise text. Set a retention period for `data/audit` and delete under it.
+
+## 11. Limits
+
+- **Single instance, no high availability.** One Droplet, one app process. A reboot, a failed deploy or a host fault means downtime. Rate counters and active-run admission are per process; the budget file is not a distributed ledger and has no cross-process lock.
+- **The daily budget is estimated, not a billing guarantee.** Admission persists a conservative $0.05 run reservation before launching paid work and refuses admission when it cannot persist the ledger or fit the reservation. A successful, non-timed-out run reconciles to its reported cost; errors and HTTP timeouts keep the reservation, even if the worker later completes. A timeout does not stop provider calls. The $0.05 value is not a measured worst-case bound for all context sizes, model settings, retries or provider billing; a successful run can cost more. Keep the provider-side project budget/cap as the backstop and check whether the provider actually enforces a hard cap rather than only an alert. An unreadable ledger counts as exhausted. The day rolls over on the server's local date; the Droplet starts in UTC.
+- **No WAF.** Caddy provides TLS, a body limit and header hygiene only. There is no bot filtering, no IP reputation and no Caddy-side rate limit; the app's per-client, code-bound and global login-failure limits provide the throttles. Per-client limits are only as good as the forwarded client address (section 8), and global login throttling may block legitimate reviewers during an attack.
+- **Docker and ufw.** ufw does not filter published container ports. Only Caddy publishes ports; the DigitalOcean cloud firewall is the second layer.
+- **Deploy user is root-equivalent** through the docker group.
+- **Rollback does not restore data.**
+- **Authentication is shared access codes**, not accounts. There is no OAuth and no per-user authorisation.
+- **Report rights are still restrictive.** The web projection replaces free-text fields containing more than 12 consecutive evidence words, allows at most 12 claims and 3 citations per claim, caps each quotation at 40 words and total quotations at 120 words per answer, and deduplicates evidence-card quotes (also capped at 120 words per card). These controls reduce verbatim disclosure, not confer a reproduction licence. Paraphrase and accumulation across repeated questions remain residual rights risks; do not publicly package full reports or extensive extracts.
+- **Dependency review is informational.** `uv.lock` and `uv sync --frozen` preserve the reviewed resolution. No advisory scan was run as part of this security documentation update; no CVE or vulnerability-free claim is made. See the full AI review and all ten finding statuses in `docs/security-review-web.md`.
+- **Not verified on a real Droplet:** the bootstrap script, the GitHub Actions run, GHCR pull from the Droplet, certificate issuance, the real client address, memory under load, and the snapshot cost.
+
+## 12. What was verified locally (30 Oct 2026)
+
+Run on the author's Mac with Docker Desktop (Docker 29.5.3), not on Ubuntu or a Droplet:
+
+- `scripts/check-build-context.sh` against the repository: the context holds 125 files with top level `prompts pyproject.toml specs src uv.lock web`; run against a copy without `.dockerignore` it fails and lists `data/`, PDFs and corpus files.
+- `docker build` succeeded; a container started with the minimal data set, read-only root filesystem, all capabilities dropped and a fake key became healthy and answered `/healthz`, `/api/status`, `/` and an unauthenticated `/api/ask` (401). The image's `/app/data` was empty.
+- `docker compose config` parsed the file; with a local override (data path and unprivileged ports only) the full stack, including the `mcp` profile, started healthy; Caddy served HTTPS for `localhost`, redirected HTTP, compressed, rejected a 20 KB body with 413, and kept query strings and cookies out of its log. The MCP port answered 401 inside the app's network namespace and was unreachable from the host.
+- `/api/ask` with a fake agent against the real `Shared()` over the minimal data set returned 200.
+- `actionlint` on the workflow; `shellcheck` at warning level on the scripts; `caddy validate` on the Caddyfile.
+- A checkout with no corpus (tracked and untracked non-ignored files copied to a temporary directory, `git init`, `uv sync --frozen`): 287 tests passed and 1 was deselected (`test_every_ok_entry_has_matching_file_hash`, which needs the raw files), in about 4 minutes. That run also fixed an existing failure: `test_no_pdfs_or_mom_text_visible_to_git` flagged the application's own `web/index.html`; it now exempts `web/`. Whether the same suite passes on a GitHub runner (network, clock, Python download) was not tested.
+
+## 13. Optional: MCP statistics server as a loopback sidecar
+
+**What this is.** The read-only MCP statistics server can run over streamable HTTP on the loopback interface, protected by a bearer token. It is for a second local process (for example an MCP client on the same machine or in the same container) and is **not** a public endpoint. Not built: OAuth, per-client authorisation, TLS termination. The web app does not need it; the agent calls statistics directly. stdio stays the tested default (`uv run python -m labourlens.mcp.server`).
+
+**Rules.** Same container network namespace as its client, bound to `127.0.0.1`, token supplied by the environment, never published through Caddy or the host, never on `0.0.0.0`. The server refuses to start without a token of at least 24 characters and refuses a non-loopback `--host` unless `--allow-nonloopback` is given (that flag prints a warning: it then needs TLS and a real authentication layer, which this server does not provide). It reads only the observations table, the manifest, the snapshot CSVs and the dataset adapter specs; it holds no API key and serves no MOM report text.
+
+**Enable it with the compose profile.** The `mcp` service in `deploy/docker-compose.yml` joins the app container's network namespace (`network_mode: "service:app"`), so port 8765 exists only on that loopback and nothing publishes it. It has its own env file so the app never receives the token and the sidecar never receives the OpenAI key.
+
+```sh
+ssh deploy@<droplet-ip>
+umask 077
+python3 -c "import secrets; print('LABOURLENS_MCP_TOKEN=' + secrets.token_urlsafe(32))" > /srv/labourlens/mcp.env
+/srv/labourlens/deploy/deploy.sh restart      # deploy.sh adds --profile mcp when mcp.env exists
+```
+
+`deploy.sh` enables the profile whenever `/srv/labourlens/mcp.env` exists. To remove the sidecar, delete the file and run `docker rm -f labourlens-mcp-1`. Upload the snapshot files once with `scripts/upload-corpus.sh deploy@<ip> --go --with-mcp-snapshots`.
+
+**Health probe.** There is no unauthenticated health route on purpose. An unauthenticated request to `/mcp` must return 401 with an empty body; that proves the process is up and the token check is on. The compose health check uses exactly this.
+
+**Client.** Set `LABOURLENS_MCP_TOKEN` in the client's environment and use the allow-listed `labourlens-stats-http` entry (`http://127.0.0.1:8765/mcp`). The client refuses non-loopback URLs and sends the token only there. Rotate by changing `mcp.env` and restarting.
+
+**Verification.** Locally verified: the profile started healthy and answered 401 inside the app's namespace, and the port was unreachable from the host (section 12), in addition to `tests/mcp/test_http.py`. On the Droplet: `docker exec labourlens-app-1 python -c ...` as in the health check returns 401, `ss -ltn` on the host shows nothing on 8765, and `docker logs labourlens-mcp-1` contains no token.

@@ -54,6 +54,12 @@ def validate(path=None) -> list[str]:
                     errs.append(f"{cid}: unknown passage {pid}")
                 elif pids[pid] != e["source_id"]:
                     errs.append(f"{cid}: passage {pid} is not in {e['source_id']}")
+        for e in c.get("partial_evidence_text", []):  # alternatives that cover only part of an answer: ids must still be real and match their source
+            for pid in e["passage_ids"]:
+                if pid not in pids:
+                    errs.append(f"{cid}: unknown partial-evidence passage {pid}")
+                elif pids[pid] != e["source_id"]:
+                    errs.append(f"{cid}: partial-evidence passage {pid} is not in {e['source_id']}")
         for e in c["evidence_data"]:
             for oid in e["observation_ids"]:
                 if oid not in obs.index:

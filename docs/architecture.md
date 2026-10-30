@@ -1,0 +1,180 @@
+# LabourLens architecture
+
+This document describes the system as built on 30 October 2026. Decision ids (D-nnn) refer to `docs/decisions.md`. Evaluation results are not in this document. See section 10 of the interactive page and `experiments/eval/`.
+
+## 1. Overview
+
+LabourLens answers questions from Singapore policy researchers about labour-market statistics and MOM reports. The supported period is 2024-Q1 to 2026-Q2 (ADR-001, `docs/decisions/ADR-001-scope.md`).
+
+Two kinds of source feed the system.
+
+- **Structured data.** Quarterly datasets from data.gov.sg, published by MOM and SingStat. They are fetched as immutable snapshots, normalised into one observation table and checked by data contracts (ADR-003, D-003).
+- **Reports.** MOM labour-market reports and advance releases. They are parsed into passages with page or section locators. The PDFs are all-rights-reserved, so they and their text stay out of Git (D-001).
+
+One bounded LangGraph agent reads both through three read-only tools. Code does all arithmetic. A deterministic validator checks every answer before it is returned. The answer has one of four statuses: answered, abstained, clarify or refused (D-024).
+
+The README (`README.md`) lists the current data counts. The data sheet (`docs/data-sheet.md`) records sources, licences and checks.
+
+## 2. Component diagram
+
+```mermaid
+flowchart TB
+  subgraph Sources
+    DG[data.gov.sg datasets]
+    MOM[MOM reports and releases]
+  end
+  subgraph Ingestion["Ingestion (labourlens fetch, build)"]
+    FETCH[fetch + raw_store<br/>hashed snapshots]
+    NORM[normalize + validate<br/>data contracts]
+    EXTRACT[pdf_extract + html_extract<br/>passages with locators]
+  end
+  subgraph Stores["Local stores"]
+    OBS[(observations.parquet)]
+    PAS[(passages JSONL<br/>gitignored)]
+    IDX[(BM25 + embeddings<br/>data/index, gitignored)]
+  end
+  subgraph Agent["Bounded LangGraph agent"]
+    VQ[validate_question] --> PR[plan_research]
+    PR --> EX[execute_tool]
+    EX --> PR
+    EX --> AE[assess_evidence]
+    PR --> AE
+    AE --> GA[generate_answer]
+    GA --> VA[validate_answer]
+    VA --> GA
+    VA --> FIN[finalize]
+  end
+  subgraph Tools["Read-only tools"]
+    SR[search_reports]
+    GS[get_series]
+    CC[calculate_change]
+  end
+  subgraph MCP["MCP trust boundary (optional route)"]
+    CLIENT[MCP client<br/>screens every reply]
+    SERVER[MCP server<br/>9 read-only tools]
+  end
+  DG --> FETCH --> NORM --> OBS
+  MOM --> FETCH
+  FETCH --> EXTRACT --> PAS --> IDX
+  PR -. proposes calls .-> Tools
+  EX --> Tools
+  SR --> IDX
+  GS --> OBS
+  GS -. stats_backend .-> CLIENT --> SERVER --> OBS
+  CC --> OBS
+  FIN --> OUT[Cited answer + tool timeline]
+  OUT --> WEB[Interactive page<br/>FastAPI + web/]
+  Agent --> AUD[(Audit log<br/>data/audit)]
+  WEB --> AUD
+```
+
+## 3. Data flow from ingestion to cited answer
+
+1. **Fetch.** `src/labourlens/data/fetch.py` and `acquire.py` download each source named in `specs/sources.yaml` and `specs/sources.d/`. `raw_store.py` writes the file under a snapshot id with its SHA-256 hash. Dataset snapshots are committed in `data/snapshots/`. MOM files go to `data/raw/`, which is gitignored.
+2. **Normalise.** `data/normalize.py` reads each dataset using its spec in `specs/datasets/*.yaml` and writes one long table, `data/processed/observations.parquet`. Every row keeps indicator, population, seasonal adjustment, unit, release stage and an observation id that leads back to the raw cell (`labourlens trace <id>`).
+3. **Validate.** `data/validate.py` runs the data contracts and writes `artifacts/data-quality/quality-report.md`. A dataset that fails its contract is dropped and reported (D-005).
+4. **Extract.** `pdf_extract.py` and `html_extract.py` split reports into passages. Each passage has an id, a page or section locator and a quality flag. Output is `data/passages/*.jsonl`.
+5. **Chunk and index.** `retrieval/chunk.py` merges adjacent good passages into chunks of about 200 words (config `merge200`, D-015). `bm25_index.py` builds a persisted BM25 index and `dense.py` builds OpenAI embeddings cached on disk. `retrieval/runtime.py` combines them with reciprocal rank fusion. The chunk size, embedding model and fusion method are candidate defaults and are not frozen (D-023, D-026).
+6. **Plan.** The planner model receives the question, the tool catalogue and labels of evidence gathered so far. It never receives passage text. It returns a JSON plan whose source ids, indicator ids, adjustments and change kinds are enums built from the catalogue.
+7. **Execute.** Tools in `agent/tools.py` check every argument, run the query or calculation and return items with labels P (passage), O (observation) or C (calculation). Code writes data-quality notes about missing periods, null values, mixed series and advance-versus-final conflicts.
+8. **Answer.** `answer/context.py` renders items and notes into the prompt. The model returns a structured answer with claim-level citations, each with a verbatim quote (`answer/schema.py`).
+9. **Validate.** `answer/validate.py` rejects an answer when a cited label is not in the context, a quote is not verbatim in the cited item, a quote exceeds 40 words, a flagged item is cited or the status contradicts the content. One repair attempt follows. Numbers in a claim that do not appear in the cited text are reported as ungrounded.
+10. **Finalize.** The output guard in `security/guards.py` blocks answers that contain a known secret or system-prompt text. The page shows the answer, the evidence behind each citation and the tool timeline.
+
+## 4. The agent graph
+
+Built in `src/labourlens/agent/graph.py` with LangGraph `StateGraph` (ADR-002, D-027). There is one agent with seven nodes.
+
+| Node | Work |
+|---|---|
+| `validate_question` | Rejects an empty question or one over 1,000 characters. Records heuristic injection flags. |
+| `plan_research` | Planner model proposes up to three tool calls, or decides to finish. |
+| `execute_tool` | Runs each call in a worker thread with a timeout. |
+| `assess_evidence` | Counts passages, observations and calculations. Reports an operational failure if every tool call failed. |
+| `generate_answer` | Answer model writes the structured answer from the evidence. |
+| `validate_answer` | Runs the checks in section 3, step 9. |
+| `finalize` | Applies the output guard and sets the outcome. |
+
+Bounds, all constants or fields in `graph.py`:
+
+| Bound | Value |
+|---|---|
+| Evidence-gathering rounds | 2 |
+| Tool calls per run | 6, at most 3 per round |
+| Time per tool call | 10 s |
+| Retry for a transient tool failure | 1 |
+| Retry for malformed planner output | 1 |
+| Repair of an invalid answer | 1 |
+| Graph recursion backstop | 40 |
+| Question length | 1,000 characters |
+
+Graph state holds counters, decisions and the activity trace. Evidence text sits in a per-run registry, not in graph state (ADR-002, item 3). Checkpointing is in memory only (D-027).
+
+Outcomes are `answered`, `abstained`, `clarify`, `refused`, `invalid`, `rejected_input`, `blocked_output` and `operational_failure`. A tool outage, a timeout or a planner outage ends in `operational_failure`. It is never reported as missing evidence. Tests for these paths are in `tests/retrieval/test_agent.py`.
+
+## 5. MCP trust boundary
+
+The server is `src/labourlens/mcp/server.py`, built on the official `mcp` SDK. It offers nine read-only tools, two resources (`labourlens://sources` and `labourlens://source/{id}`) and one prompt. It serves statistics and catalogue metadata. It never serves MOM text (D-028). The default transport is stdio. An optional loopback HTTP transport with a bearer token is in `mcp/http_server.py`.
+
+The client is `src/labourlens/mcp/client.py`. It sits between the agent and the server and treats the server as untrusted. It starts only servers on its allow-list, gives the subprocess a minimal environment, checks server name and version, ignores tools that are not on the allow-list, validates arguments against the tool schema, applies timeouts and a size cap, validates results against the tool's model and screens every string for instruction-like text. `mcp/redact.py` removes secrets from logs. The full list of controls is in `docs/threat-model.md`.
+
+The agent calls statistics directly by default. Setting `Shared.stats_backend` routes `get_series` through the MCP client. `docs/mcp-demo-transcript.md` records the scripted client run and a direct-versus-MCP comparison in section 17.
+
+`src/labourlens/mcp/evil.py` is a test fixture. It is a deliberately hostile server and is never on the allow-list.
+
+## 6. Audit log
+
+`src/labourlens/audit/log.py` appends one JSON line per agent run to `data/audit/runs-YYYY-MM-DD.jsonl`. Feedback goes to `data/audit/feedback.jsonl`. Rejected or administrative requests go to `data/audit/events-YYYY-MM-DD.jsonl`. When trace saving is on, the full trace of a run is written to `data/runs/agent/<run_id>.json`. The web server runs the agent with trace saving off (`src/labourlens/report/app.py`), so web runs have the audit record only.
+
+A record holds the run id, channel, salted hashes of session and client, the redacted question, model and prompt versions, git commit, data manifest hash, outcome, tool calls with outcomes, guard events, data-quality notes, evidence and cited ids, token usage, cost and latency. Secrets are redacted before every write. Raw IP addresses are not stored. A write failure never breaks a request.
+
+Commands: `uv run labourlens audit-report`, `audit-show <run_id>` and `audit-prune --days N`. Field-level detail is in `docs/audit-and-logging.md`. The `data/audit/` directory is local and not published.
+
+## 7. Module map
+
+| Area | Path | Purpose |
+|---|---|---|
+| CLI | `src/labourlens/cli.py` | All commands: fetch, build, eda, export, serve, agent-exp, threat-test, eval, audit-* |
+| Paths and models | `src/labourlens/paths.py`, `models.py` | Directory layout, shared record types |
+| Source specs | `specs/sources.yaml`, `specs/sources.d/`, `specs/datasets/` | What to fetch and how each dataset is read |
+| Prices | `specs/prices.yaml`, `src/labourlens/prices.py` | Model price table used for cost per case |
+| Acquisition | `src/labourlens/data/fetch.py`, `acquire.py`, `raw_store.py`, `catalog.py` | Download, hash and catalogue sources |
+| Normalisation | `src/labourlens/data/normalize.py`, `validate.py`, `build.py` | Observation table and data contracts |
+| Report parsing | `src/labourlens/data/pdf_extract.py`, `html_extract.py` | Passages with locators |
+| Analytics | `src/labourlens/data/reconcile.py`, `derived.py`, `revisions.py`, `eda.py`, `export.py`, `trace.py`, `review.py` | Advance-versus-final reconciliation, derived checks, revision tracker, figures, provenance, review sheets |
+| Retrieval | `src/labourlens/retrieval/chunk.py`, `tokenize.py`, `bm25_index.py`, `dense.py`, `runtime.py` | Chunking, BM25, dense and hybrid search |
+| Retrieval evaluation | `src/labourlens/retrieval/gold.py`, `evaluate.py`, `experiments.py`, `experiments_dense.py` | Gold-set validator, retrieval metrics, experiment runners |
+| Answers | `src/labourlens/answer/schema.py`, `context.py`, `llm.py`, `pipeline.py`, `validate.py`, `experiments.py` | Answer schema, prompt context, model client, validator |
+| Agent | `src/labourlens/agent/graph.py`, `tools.py`, `experiments.py` | LangGraph graph, tools, agent experiment runner |
+| MCP | `src/labourlens/mcp/server.py`, `analysis.py`, `models.py`, `client.py`, `http_server.py`, `redact.py`, `demo.py`, `evil.py` | Server, client, scripted demo, hostile fixture |
+| Security | `src/labourlens/security/guards.py`, `threat_suite.py` | Injection and output guards, adversarial suite |
+| Evaluation | `src/labourlens/evaluation/harness.py` | Metrics from saved raw runs |
+| Audit | `src/labourlens/audit/log.py` | Run, feedback and event logs |
+| Web | `src/labourlens/report/app.py`, `serve.py`, `build.py`, `audit.py`; `web/index.html`, `web/static/` | FastAPI server, report builder, 13-section page |
+| Prompts | `prompts/planner_v1.md`, `answer_v1.md` to `answer_v4.md`, `answer_naive.md`, `repair_v1.md`, `judge_v1.md` | Versioned prompts with matching `_user.md` templates |
+| Tests | `tests/data/`, `tests/retrieval/`, `tests/mcp/`, `tests/web/`, `tests/test_security.py`, `tests/test_audit_and_notes.py` | Unit, integration, protocol and adversarial tests |
+| Gold set | `experiments/gold/draft_cases.jsonl`, `CHANGELOG.md`, `ai-review/`, `ai-review-2/` | Evaluation cases and their review history |
+| Experiments | `experiments/eval/`, `experiments/runs/`, `experiments/threats/`, `docs/experiments/` | Raw and summarised experiment outputs |
+
+## 8. Key design decisions
+
+| Decision | Reason | Id |
+|---|---|---|
+| MOM PDFs and their text stay out of Git | The notices reserve all rights. | D-001 |
+| Report page as the presentation | Reviewers can open any number and its source. | D-010 |
+| Passages as JSONL, indexes on disk, no database server | The corpus is small and the files are easy to audit. | D-009 |
+| BM25 index persisted with a corpus hash that fails on mismatch | A stale index must not serve old text. | D-012 |
+| Chunks of about 200 words from adjacent good passages | The median passage is too short to retrieve on its own. | D-015 |
+| Compare options under a fixed harness and report null results | Choices should rest on measurements. | D-016 |
+| Gold cases labelled at passage and observation level | Every chunking variant can be scored. | D-017 |
+| Hosted OpenAI embeddings and models, chosen by experiment | Candidates are compared on our own cases and costs. | D-021, D-022 |
+| Claim-level citations with verbatim quotes | A reviewer can check each claim against its quote. | D-024 |
+| Prefer declining to a wrong answer | A wrong figure does more harm in policy work than a decline. | D-026 |
+| One bounded agent, three typed tools, enum-constrained planner | Fewer moving parts and a measurable failure surface. | ADR-002, D-027 |
+| Code computes every difference and percentage | The model is not trusted with arithmetic. | D-027 |
+| Planner never sees passage text | Injected text cannot steer tool choice. | D-027, D-028 |
+| Operational failures end the run and are never "no data" | A tool outage must not look like an absence of evidence. | ADR-002, D-028 |
+| MCP server with nine read-only tools and a screening client | The server is treated as untrusted even when local. | D-028 |
+| MCP is an optional route and direct calls are the default | Direct calls are faster and the protocol adds a failure mode. | D-028 |
+| Structured data scope of 33 datasets through a spec-driven adapter | One adapter and a spec per dataset keep the cost of each addition low. | ADR-003, D-003 |
+| Labels follow what the evidence supports | One rule makes abstain, refuse and answer cases consistent. | `experiments/gold/CHANGELOG.md`, section v3 |

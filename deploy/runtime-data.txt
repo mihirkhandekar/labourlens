@@ -1,0 +1,59 @@
+# Minimal runtime data set for the live app, one path per line, relative to the repository root.
+# Everything else under data/ stays out of the image, out of git and off the server.
+# Determined 30 Oct 2026 by starting Shared() and the web app against a data/ directory holding only these files
+# (see docs/deploy.md section "Runtime data"). If the app starts reading another file, extend this list and the test
+# tests/web/test_deploy_files.py will keep upload-corpus.sh and this list in agreement.
+#
+# Structured observations (Open Data Licence) and the provenance manifest.
+data/processed/observations.parquet
+data/manifests/manifest.json
+# Extracted MOM report passages (gitignored; all-rights-reserved source, D-001). Server disk only.
+data/passages/mom-2023-q1-final.jsonl
+data/passages/mom-2023-q2-final.jsonl
+data/passages/mom-2023-q3-final.jsonl
+data/passages/mom-2023-q4-final.jsonl
+data/passages/mom-2024-q1-advance.jsonl
+data/passages/mom-2024-q1-final-release.jsonl
+data/passages/mom-2024-q1-final.jsonl
+data/passages/mom-2024-q2-advance.jsonl
+data/passages/mom-2024-q2-final-release.jsonl
+data/passages/mom-2024-q2-final.jsonl
+data/passages/mom-2024-q3-advance.jsonl
+data/passages/mom-2024-q3-final-release.jsonl
+data/passages/mom-2024-q3-final.jsonl
+data/passages/mom-2024-q4-advance.jsonl
+data/passages/mom-2024-q4-final-release.jsonl
+data/passages/mom-2024-q4-final.jsonl
+data/passages/mom-2025-q1-advance.jsonl
+data/passages/mom-2025-q1-final-release.jsonl
+data/passages/mom-2025-q1-final.jsonl
+data/passages/mom-2025-q2-advance.jsonl
+data/passages/mom-2025-q2-final-release.jsonl
+data/passages/mom-2025-q2-final.jsonl
+data/passages/mom-2025-q3-advance.jsonl
+data/passages/mom-2025-q3-final-release.jsonl
+data/passages/mom-2025-q3-final.jsonl
+data/passages/mom-2025-q4-advance.jsonl
+data/passages/mom-2025-q4-final-release.jsonl
+data/passages/mom-2025-q4-final.jsonl
+data/passages/mom-2026-q1-advance.jsonl
+data/passages/mom-2026-q1-final-release.jsonl
+data/passages/mom-2026-q1-final.jsonl
+data/passages/mom-2026-q2-advance.jsonl
+data/passages/mom-2026-q2-final-release.jsonl
+data/passages/mom-2026-q2-final.jsonl
+data/passages/mom-jv2025-release.jsonl
+data/passages/mom-jv2025.jsonl
+data/passages/mom-lf2024-copyright.jsonl
+data/passages/mom-lf2024-coverage-methodology.jsonl
+data/passages/mom-lf2024-survey-findings.jsonl
+data/passages/mom-lf2024-survey-highlights.jsonl
+data/passages/mom-lf2025-copyright.jsonl
+data/passages/mom-lf2025-coverage-methodology.jsonl
+data/passages/mom-lf2025-survey-findings.jsonl
+data/passages/mom-lf2025-survey-highlights.jsonl
+data/passages/mom-wage-practices2024-release.jsonl
+data/passages/mom-wage-practices2024.jsonl
+# Cached embeddings for the shipped retrieval model (text-embedding-3-large). The app embeds only the user's question at runtime.
+data/index/embeddings/text-embedding-3-large/keys.json
+data/index/embeddings/text-embedding-3-large/vectors.npy

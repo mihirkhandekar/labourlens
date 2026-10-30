@@ -7,6 +7,7 @@ import hashlib
 import hmac
 import inspect
 import json
+import logging
 import math
 import os
 import re
@@ -25,11 +26,14 @@ from fastapi.responses import FileResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 
 from labourlens import paths
-from labourlens.mcp.redact import redact
+from labourlens.mcp.redact import redact, redact_values
 from labourlens.audit import log as audit_log
 from labourlens.report import audit as web_audit
 
 COOKIE = "labourlens_session"
+# Conservative admission charge for this bounded demo; provider project budgets remain the hard stop.
+RUN_RESERVATION_USD = 0.05
+RIGHTS_NOTICE = "Text withheld: excessive verbatim overlap with source evidence."
 
 
 @dataclass
@@ -56,7 +60,19 @@ class Settings:
 
     @property
     def enabled(self):
-        return self.demo_enabled and bool(self.access_codes) and bool(self.session_secret)
+        return (self.demo_enabled and bool(self.access_codes)
+                and all(len(code) >= 16 for code in self.access_codes) and len(self.session_secret) >= 32)
+
+
+def _version() -> str:
+    from importlib import metadata
+
+    try:
+        base = metadata.version("labourlens")
+    except metadata.PackageNotFoundError:
+        base = "unknown"
+    build = re.sub(r"[^0-9A-Za-z._-]", "", os.getenv("LABOURLENS_BUILD", ""))[:40]
+    return f"{base}+{build}" if build else base
 
 
 def _safe_url(value):
@@ -72,12 +88,46 @@ def _provenance():
     except (OSError, ValueError, KeyError):
         return {}
 
+def _bounded_answer(answer, evidence_text):
+    """Rights boundary independent of model compliance and internal answer validators."""
+    windows = set()
+    for text in evidence_text.values():
+        words = str(text).casefold().split()
+        windows.update(tuple(words[i:i + 13]) for i in range(max(0, len(words) - 12)))
+
+    def free_text(value):
+        words = str(value or "").casefold().split()
+        return RIGHTS_NOTICE if any(tuple(words[i:i + 13]) in windows for i in range(max(0, len(words) - 12))) else str(value or "")
+
+    result = {k: free_text(answer.get(k, "")) for k in ("status", "summary", "reason", "clarification_question")}
+    result["caveats"] = [free_text(c) for c in answer.get("caveats", [])]
+    result["claims"] = []
+    seen, total = set(), 0
+    per_card = defaultdict(int)
+    for claim in answer.get("claims", [])[:12]:
+        projected = {k: free_text(v) if isinstance(v, str) else v for k, v in claim.items() if k != "citations"}
+        projected["citations"] = []
+        for citation in claim.get("citations", [])[:3]:
+            label, quote = str(citation.get("label", "")), str(citation.get("quote", ""))
+            count = len(quote.split())
+            normalized = " ".join(quote.casefold().split())
+            if (not quote or not count or count > 40 or normalized in seen
+                    or quote not in str(evidence_text.get(label, "")) or total + count > 120 or per_card[label] + count > 120):
+                continue
+            seen.add(normalized)
+            total += count
+            per_card[label] += count
+            projected["citations"].append({**citation, "quote": quote})
+        result["claims"].append(projected)
+    return result
+
 
 def public_result(raw: dict, shared) -> dict:
     """Expose only cited report fragments, never the tool's full passage registry."""
     answer = raw.get("answer")
     if not isinstance(answer, dict) or raw.get("outcome") not in ("answered", "abstained", "clarify", "refused"):
         answer = {"status": "abstained", "summary": "The run did not produce a validated answer.", "claims": [], "caveats": [], "reason": "Evidence or service unavailable.", "clarification_question": ""}
+    answer = _bounded_answer(answer, raw.get("evidence_text", {}))
     quotes = defaultdict(list)
     for claim in answer.get("claims", []):
         for c in claim.get("citations", []):
@@ -121,23 +171,39 @@ def create_app(settings: Settings | None = None, runner=None, shared_factory=Non
     injected_runner = runner is not None
     if runner is None:
         from labourlens.agent.graph import run_agent
-        runner = lambda question, shared, audit=None: run_agent(question, shared, save_trace=False, audit=audit)
+        runner = lambda question, shared, audit=None: run_agent(question, shared, save_trace=True, audit=audit)
     if shared_factory is None:
         from labourlens.agent.tools import Shared
         shared_factory = Shared
     counters = defaultdict(deque)
     tasks = set()
     budget_file = cfg.feedback_dir / "budget.json"
+    sessions = {}
+    login_failures = deque()
+
+    def persist_budget():
+        try:
+            cfg.feedback_dir.mkdir(parents=True, exist_ok=True)
+            temporary = budget_file.with_suffix(".tmp")
+            temporary.write_text(json.dumps({"day": str(app.state.day), "spent_usd": app.state.spent_usd}))
+            temporary.replace(budget_file)
+        except Exception:
+            app.state.spent_usd = cfg.daily_budget_usd
+            raise HTTPException(503, "Budget ledger unavailable.")
 
     @asynccontextmanager
     async def lifespan(app):
+        if cfg.demo_enabled and not cfg.enabled:
+            logging.getLogger(__name__).warning("Live demo disabled: require a session secret >=32 characters and every access code >=16 characters.")
         app.state.shared = shared_factory() if cfg.enabled else None
         if cfg.enabled and budget_file.exists():
             try:
                 saved = json.loads(budget_file.read_text())
                 if saved.get("day") == str(date.today()):
                     app.state.spent_usd = float(saved["spent_usd"])
-            except (OSError, ValueError, KeyError):
+                    if not math.isfinite(app.state.spent_usd) or app.state.spent_usd < 0:
+                        app.state.spent_usd = cfg.daily_budget_usd
+            except (OSError, ValueError, KeyError, TypeError, AttributeError):
                 # An unreadable ledger must not silently reset the spend limit.
                 app.state.spent_usd = cfg.daily_budget_usd
         yield
@@ -168,9 +234,17 @@ def create_app(settings: Settings | None = None, runner=None, shared_factory=Non
             if not hmac.compare_digest(signature, expected):
                 return None
             sid, expiry = payload.rsplit(":", 1)
-            return sid if float(expiry) > time.time() else None
+            return sid if float(expiry) > time.time() and sessions.get(sid) == float(expiry) else None
         except (ValueError, TypeError):
             return None
+
+    def check_origin(request):
+        origin = request.headers.get("origin")
+        if origin and origin != str(request.base_url).rstrip("/"):
+            raise HTTPException(403, "Request not allowed.")
+
+    def client_host(request):
+        return request.client.host if request.client else None
 
     def authorize(request):
         if not cfg.enabled or os.getenv("LABOURLENS_DEMO_ENABLED", "true").lower() == "false":
@@ -179,9 +253,7 @@ def create_app(settings: Settings | None = None, runner=None, shared_factory=Non
         if not sid:
             raise HTTPException(401, "Sign in to use the live demo.")
         # Browser cross-site requests cannot use the session even if cookie handling changes.
-        origin = request.headers.get("origin")
-        if origin and origin != str(request.base_url).rstrip("/"):
-            raise HTTPException(403, "Request not allowed.")
+        check_origin(request)
         return sid
 
     async def body(request):
@@ -212,9 +284,9 @@ def create_app(settings: Settings | None = None, runner=None, shared_factory=Non
             response.headers["Cache-Control"] = "no-store"
             if response.status_code >= 400:
                 try:
-                    web_audit.log_event("request_rejected", session(request), request.client.host if request.client else None,
-                                        {"route": request.url.path, "status": response.status_code,
-                                         "reason": getattr(request.state, "reject_reason", None) or {400: "Invalid request.", 413: "Request too large."}.get(response.status_code, "Service error.")})
+                    await asyncio.to_thread(web_audit.log_event, "request_rejected", session(request), client_host(request),
+                                            {"route": request.url.path, "status": response.status_code,
+                                             "reason": getattr(request.state, "reject_reason", None) or {400: "Invalid request.", 413: "Request too large."}.get(response.status_code, "Service error.")})
                 except Exception:
                     pass
         return response
@@ -224,13 +296,24 @@ def create_app(settings: Settings | None = None, runner=None, shared_factory=Non
         request.state.reject_reason = str(exc.detail)
         return JSONResponse({"detail": exc.detail}, exc.status_code)
 
+    @app.get("/healthz")
+    async def healthz():
+        # Liveness only: no secrets, no cost data, no corpus detail. Lifespan has finished loading before this answers.
+        return {"status": "ok", "version": _version()}
+
     @app.get("/api/status")
     async def status(request: Request):
         return {"enabled": cfg.enabled and os.getenv("LABOURLENS_DEMO_ENABLED", "true").lower() != "false", "authenticated": bool(session(request))}
 
     @app.post("/api/login")
     async def login(request: Request):
-        hit(("login", request.client.host), cfg.login_limit)
+        check_origin(request)
+        hit(("login", client_host(request)), cfg.login_limit)
+        now = time.monotonic()
+        while login_failures and login_failures[0] <= now - 600:
+            login_failures.popleft()
+        if len(login_failures) >= 50:
+            raise HTTPException(429, "Login temporarily locked. Try again later.")
         if not cfg.enabled:
             raise HTTPException(503, "Live demo disabled.")
         data = await body(request)
@@ -238,28 +321,48 @@ def create_app(settings: Settings | None = None, runner=None, shared_factory=Non
         # Hash both inputs to a fixed size; always check every configured code.
         matches = [hmac.compare_digest(hashlib.sha256(candidate.encode()).digest(), hashlib.sha256(c.encode()).digest()) for c in cfg.access_codes]
         if not any(matches):
+            login_failures.append(now)
             raise HTTPException(401, "Invalid access code.")
-        payload = secrets.token_urlsafe(24) + ":" + str(int(time.time()) + 28800)
+        expiry = int(time.time()) + 28800
+        for old in [key for key, end in sessions.items() if end <= time.time()]:
+            sessions.pop(old, None)
+        code_hash = hmac.new(cfg.session_secret.encode(), candidate.encode(), hashlib.sha256).hexdigest()
+        sid = secrets.token_urlsafe(24) + "~" + code_hash
+        sessions[sid] = expiry
+        payload = sid + ":" + str(expiry)
         signature = hmac.new(cfg.session_secret.encode(), payload.encode(), hashlib.sha256).hexdigest()
         response = JSONResponse({"authenticated": True})
         response.set_cookie(COOKIE, payload + "." + signature, httponly=True, secure=request.url.scheme == "https", samesite="strict", max_age=28800)
         return response
+    @app.post("/api/logout")
+    async def logout(request: Request):
+        check_origin(request)
+        sid = session(request)
+        sessions.pop(sid, None)
+        response = JSONResponse({"authenticated": False})
+        response.delete_cookie(COOKIE, httponly=True, secure=request.url.scheme == "https", samesite="strict")
+        return response
+
 
     @app.post("/api/ask")
     async def ask(request: Request):
         sid = authorize(request)
-        hit(("session", sid), cfg.session_limit)
-        hit(("ip", request.client.host), cfg.ip_limit)
+        hit(("session", sid.rsplit("~", 1)[-1]), cfg.session_limit)
+        hit(("ip", client_host(request)), cfg.ip_limit)
         data = await body(request)
         question = data.get("question")
         if not isinstance(question, str) or not question.strip() or len(question) > 1000:
             raise HTTPException(422, "Question must contain between 1 and 1000 characters.")
         if app.state.day != date.today():
             app.state.day, app.state.spent_usd = date.today(), 0.0
-        if app.state.spent_usd >= cfg.daily_budget_usd:
+        if app.state.spent_usd + RUN_RESERVATION_USD > cfg.daily_budget_usd:
             raise HTTPException(429, "Daily demo budget reached.")
         if app.state.active >= min(2, cfg.max_concurrent):
             raise HTTPException(503, "Demo busy. Try again shortly.")
+        app.state.spent_usd += RUN_RESERVATION_USD
+        persist_budget()  # No await between admission, durable reservation and slot acquisition.
+        reserved_day = app.state.day
+        timed_out = False
         app.state.active += 1
 
         async def execute():
@@ -270,16 +373,17 @@ def create_app(settings: Settings | None = None, runner=None, shared_factory=Non
                 raw = await runner(question, app.state.shared, **kwargs) if inspect.iscoroutinefunction(runner) else await asyncio.to_thread(runner, question, app.state.shared, **kwargs)
                 if injected_runner:
                     web_audit.log_injected_run(raw, question, sid, context["ip"])
+                response = redact_values(public_result(raw, app.state.shared), list(cfg.access_codes) + [cfg.session_secret])
+                response = JSONResponse(response)  # Validate serialization before releasing any reservation.
                 cost = float(raw.get("usage", {}).get("cost_usd", 0))
                 if not math.isfinite(cost) or cost < 0:
                     cost = cfg.daily_budget_usd
-                app.state.spent_usd += cost
-                cfg.feedback_dir.mkdir(parents=True, exist_ok=True)
-                temporary = budget_file.with_suffix(".tmp")
-                temporary.write_text(json.dumps({"day": str(app.state.day), "spent_usd": app.state.spent_usd}))
-                temporary.replace(budget_file)
-                response = public_result(raw, app.state.shared)
-                return json.loads(redact(json.dumps(response, default=str), list(cfg.access_codes) + [cfg.session_secret]))
+                if timed_out or raw.get("outcome") not in ("answered", "abstained", "clarify", "refused"):
+                    cost = max(RUN_RESERVATION_USD, cost)
+                if app.state.day == reserved_day:
+                    app.state.spent_usd += cost - RUN_RESERVATION_USD
+                    persist_budget()
+                return response
             finally:
                 app.state.active -= 1
         task = asyncio.create_task(execute())
@@ -292,6 +396,7 @@ def create_app(settings: Settings | None = None, runner=None, shared_factory=Non
         try:
             return await asyncio.wait_for(asyncio.shield(task), cfg.request_timeout)
         except TimeoutError:
+            timed_out = True
             raise HTTPException(504, "Run timed out. Please try again later.")
         except Exception:
             raise HTTPException(503, "Agent unavailable. Please try again later.")

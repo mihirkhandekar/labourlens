@@ -1,0 +1,158 @@
+# Test, build the image, push it to GHCR, and deploy it to the one DigitalOcean Droplet (docs/deploy.md).
+# Third-party actions are pinned to full commit SHAs. Each SHA is the commit of the tag in its comment, checked with
+# `git ls-remote` on 30 Oct 2026; re-verify when you bump a version.
+name: deploy
+
+on:
+  push:
+    branches: [master]
+    paths-ignore:
+      - "**/*.md"
+      - "docs/**"
+      - "study/**"
+  workflow_dispatch:
+
+# Nothing by default; each job asks for what it needs.
+permissions: {}
+
+# One run at a time, queued rather than cancelled, so two deploys never overlap on the Droplet.
+concurrency:
+  group: labourlens-production
+  cancel-in-progress: false
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+        with:
+          persist-credentials: false
+      - name: Corpus must not be tracked in git
+        run: |
+          set -eu
+          leaked="$(git ls-files 'data/raw' 'data/passages' 'data/index' 'data/runs' 'data/feedback' 'data/audit' '*.pdf' '.env' '.env.*' | grep -v -x '.env.example' || true)"
+          if [ -n "$leaked" ]; then echo "tracked files that must stay out of git:"; echo "$leaked"; exit 1; fi
+      - uses: astral-sh/setup-uv@d0cc045d04ccac9d8b7881df0226f9e82c39688e # v6.8.0
+      - run: uv sync --frozen
+      # The suite runs against a checkout WITHOUT the gitignored corpus: no data/raw, data/passages or data/index, no network
+      # and no paid API. In such a checkout one test cannot pass, because it re-hashes the raw files listed in the manifest
+      # (tests/data/test_provenance_and_packaging.py::test_every_ok_entry_has_matching_file_hash). It runs locally only.
+      - name: Tests (corpus-free)
+        run: >
+          uv run pytest -q -p no:cacheprovider
+          --deselect tests/data/test_provenance_and_packaging.py::test_every_ok_entry_has_matching_file_hash
+
+  build-push:
+    needs: test
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: read
+      packages: write
+    outputs:
+      tag: ${{ github.sha }}
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+        with:
+          persist-credentials: false
+      - name: Image name (GHCR requires lowercase)
+        run: echo "IMAGE=ghcr.io/${GITHUB_REPOSITORY,,}" >> "$GITHUB_ENV"
+      - name: Build context must exclude the corpus
+        run: scripts/check-build-context.sh
+      - uses: docker/setup-buildx-action@e468171a9de216ec08956ac3ada2f0791b6bd435 # v3.11.1
+      - name: Build (local only, not pushed yet)
+        uses: docker/build-push-action@10e90e3645eae34f1e60eeb005ba3a3d33f178e8 # v6.19.2
+        with:
+          context: .
+          load: true
+          push: false
+          tags: |
+            ${{ env.IMAGE }}:${{ github.sha }}
+            ${{ env.IMAGE }}:latest
+          build-args: |
+            LABOURLENS_BUILD=${{ github.sha }}
+      - name: Built image must contain no corpus, PDF or env file
+        run: |
+          set -eu
+          docker run --rm --entrypoint sh "$IMAGE:$GITHUB_SHA" -c '
+            set -eu
+            [ -z "$(ls -A /app/data)" ] || { echo "FAIL: /app/data is not empty"; ls -A /app/data; exit 1; }
+            pdfs="$(find /app -path /app/.venv -prune -o -iname "*.pdf" -print)"
+            [ -z "$pdfs" ] || { echo "FAIL: PDF in image:"; echo "$pdfs"; exit 1; }
+            envs="$(find /app -path /app/.venv -prune -o \( -name ".env" -o -name ".env.*" \) -print)"
+            [ -z "$envs" ] || { echo "FAIL: env file in image:"; echo "$envs"; exit 1; }
+            echo "image content check passed"'
+      - uses: docker/login-action@5e57cd118135c172c3672efd75eb46360885c0ef # v3.6.0
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Push (reuses the layers built above)
+        uses: docker/build-push-action@10e90e3645eae34f1e60eeb005ba3a3d33f178e8 # v6.19.2
+        with:
+          context: .
+          push: true
+          tags: |
+            ${{ env.IMAGE }}:${{ github.sha }}
+            ${{ env.IMAGE }}:latest
+          build-args: |
+            LABOURLENS_BUILD=${{ github.sha }}
+
+  deploy:
+    needs: [test, build-push]
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    environment: production
+    permissions:
+      contents: read
+      packages: read
+    env:
+      DROPLET_HOST: ${{ secrets.DROPLET_HOST }}
+      DROPLET_USER: ${{ secrets.DROPLET_USER }}
+      TAG: ${{ needs.build-push.outputs.tag }}
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+        with:
+          persist-credentials: false
+      - name: Prepare ssh (key and pinned host key; no blind trust)
+        env:
+          SSH_KEY: ${{ secrets.DROPLET_SSH_KEY }}
+          KNOWN_HOSTS: ${{ secrets.DROPLET_KNOWN_HOSTS }}
+        run: |
+          set -eu
+          umask 077
+          mkdir -p ~/.ssh
+          printf '%s\n' "$SSH_KEY" > ~/.ssh/deploy_key
+          printf '%s\n' "$KNOWN_HOSTS" > ~/.ssh/known_hosts
+          cat > ~/.ssh/config <<CONF
+          Host droplet
+            HostName $DROPLET_HOST
+            User $DROPLET_USER
+            IdentityFile ~/.ssh/deploy_key
+            IdentitiesOnly yes
+            StrictHostKeyChecking yes
+            UserKnownHostsFile ~/.ssh/known_hosts
+            ConnectTimeout 15
+            ServerAliveInterval 20
+          CONF
+      - name: Copy deploy files
+        run: |
+          set -eu
+          scp -p deploy/docker-compose.yml deploy/Caddyfile deploy/deploy.sh droplet:/srv/labourlens/deploy/
+          ssh droplet 'chmod 755 /srv/labourlens/deploy/deploy.sh'
+      - name: Registry login on the Droplet (short-lived workflow token)
+        env:
+          REGISTRY_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          # shellcheck disable=SC2029  # the actor name is expanded here on purpose
+          printf '%s' "$REGISTRY_TOKEN" | ssh droplet "docker login ghcr.io -u '$GITHUB_ACTOR' --password-stdin"
+      - name: Deploy (waits for health; rolls back to the previous tag on failure)
+        run: |
+          # shellcheck disable=SC2029  # TAG is a commit sha, expanded here on purpose
+          ssh droplet "/srv/labourlens/deploy/deploy.sh up '$TAG'"
+      - name: Registry logout on the Droplet
+        if: always()
+        run: ssh droplet 'docker logout ghcr.io' || true

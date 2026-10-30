@@ -79,7 +79,7 @@ def test_default_runner_passes_context_and_writes_one_shared_run(settings, monke
             question, resources, save_trace, context = calls[0]
             assert question == QUESTION
             assert resources is shared
-            assert save_trace is False
+            assert save_trace is True
             assert context == {"channel": "web", "session": sid, "ip": "127.0.0.1", "extra": {}}
             records = log.read_runs()
             assert len(records) == 1  # No duplicate fallback record for the real runner.

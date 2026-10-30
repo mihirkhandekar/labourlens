@@ -1,0 +1,20 @@
+# Allow-list build context: everything is excluded unless re-included below. The corpus (data/), private notes, PDFs and
+# secrets can therefore never reach the image. scripts/check-build-context.sh proves the result; CI runs it.
+*
+!pyproject.toml
+!uv.lock
+!src
+!specs
+!prompts
+!web
+# Re-excluded after the allow-list (last matching rule wins).
+**/__pycache__
+**/*.pyc
+**/*.pdf
+**/.env
+**/.env.*
+**/.DS_Store
+data
+**/data/**/*.parquet
+**/data/**/*.jsonl
+**/data/**/*.npy

@@ -59,7 +59,8 @@ def _visible_to_git() -> list[str]:
 def test_no_pdfs_or_mom_text_visible_to_git():
     files = _visible_to_git()
     assert files, "git returned no files"
-    leaks = [f for f in files if f.lower().endswith((".pdf", ".html", ".htm")) or f.startswith(("data/raw/", "data/passages/", "study/", "private/"))]
+    # web/ holds the application's own static pages, not fetched source pages.
+    leaks = [f for f in files if (f.lower().endswith((".pdf", ".html", ".htm")) and not f.startswith("web/")) or f.startswith(("data/raw/", "data/passages/", "study/", "private/"))]
     assert not leaks
 
 

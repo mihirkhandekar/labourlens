@@ -1,0 +1,57 @@
+# Caddy terminates HTTPS (automatic certificates for {$DOMAIN}, HTTP redirected to HTTPS) and forwards to the app.
+# DOMAIN is set in /srv/labourlens/.env and passed to this container by docker-compose.yml.
+{
+	# UDP 443 is not published (the firewall opens TCP 22/80/443), so do not advertise HTTP/3.
+	servers {
+		protocols h1 h2
+	}
+}
+
+{$DOMAIN} {
+	encode zstd gzip
+
+	# The app caps request bodies at 8 KiB; refuse anything much larger before it reaches Python.
+	request_body {
+		max_size 16KB
+	}
+
+	# Access log to stdout. Query strings, cookies, credentials and Set-Cookie are removed before writing.
+	log {
+		output stdout
+		format filter {
+			wrap json
+			fields {
+				request>uri regexp \?.* ""
+				request>headers>Cookie delete
+				request>headers>Authorization delete
+				request>headers>X-Forwarded-For delete
+				resp_headers>Set-Cookie delete
+			}
+		}
+	}
+
+	# Only headers the app does not already send. The app sets CSP, X-Content-Type-Options, Referrer-Policy,
+	# X-Frame-Options, Permissions-Policy and API Cache-Control; they are left untouched here so the policy has one owner.
+	# If the app later adds Strict-Transport-Security, delete the HSTS line below.
+	header {
+		Strict-Transport-Security "max-age=31536000"
+		Cross-Origin-Opener-Policy "same-origin"
+		Cross-Origin-Resource-Policy "same-origin"
+		-Server
+		-Via
+		defer
+	}
+
+	reverse_proxy app:8000 {
+		# Replace, never append: the client's own X-Forwarded-For is discarded and the TCP peer address Caddy sees is the
+		# only value the app receives. The app trusts this header only from Caddy's fixed address (172.30.0.2).
+		header_up X-Forwarded-For {remote_host}
+		header_up X-Forwarded-Proto {scheme}
+		header_up -X-Real-IP
+		header_up -Forwarded
+		transport http {
+			dial_timeout 5s
+			response_header_timeout 100s
+		}
+	}
+}

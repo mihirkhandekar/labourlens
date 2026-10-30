@@ -12,23 +12,28 @@ Design rules:
 
 from __future__ import annotations
 
+import fcntl
 import hashlib
+import hmac
 import json
 import os
 import subprocess
 import sys
+import tempfile
 import threading
 import time
 from datetime import datetime, timezone
 
 from labourlens import paths
-from labourlens.mcp.redact import redact
+from labourlens.mcp.redact import redact, redact_values
 
 SCHEMA_VERSION = 1
 AUDIT_DIR = paths.DATA / "audit"
 MAX_FIELD = 4000
 _lock = threading.Lock()
 _failures = 0
+_corrupt_lines = 0
+_salt_lock = threading.Lock()
 
 
 def _version() -> dict:
@@ -45,28 +50,67 @@ def _version() -> dict:
 _VERSION = _version()
 
 
+def _audit_salt() -> bytes:
+    configured = os.environ.get("LABOURLENS_AUDIT_SALT")
+    if configured:
+        return configured.encode("utf-8")
+    # Publish a fully written, private file atomically. O_EXCL alone would let a
+    # second process observe an empty file before the creator finishes writing.
+    with _salt_lock:
+        AUDIT_DIR.mkdir(parents=True, exist_ok=True)
+        target = AUDIT_DIR / "salt"
+        if not target.exists():
+            fd, temporary = tempfile.mkstemp(prefix=".salt-", dir=AUDIT_DIR)
+            try:
+                with os.fdopen(fd, "wb") as stream:
+                    stream.write(os.urandom(32))
+                    stream.flush()
+                    os.fsync(stream.fileno())
+                try:
+                    os.link(temporary, target)
+                except FileExistsError:
+                    pass
+            finally:
+                os.unlink(temporary)
+        with target.open("rb") as stream:
+            os.fchmod(stream.fileno(), 0o600)
+            salt = stream.read(33)
+        if len(salt) != 32:
+            raise ValueError("invalid audit salt file")
+        return salt
+
+
 def salted_hash(value: str | None) -> str | None:
-    """Stable pseudonym for a session or IP. The salt comes from LABOURLENS_AUDIT_SALT (set one in production)."""
+    """Stable HMAC pseudonym, keyed by an environment or private per-install salt."""
     if not value:
         return None
-    salt = os.environ.get("LABOURLENS_AUDIT_SALT", "labourlens-dev-salt")
-    return hashlib.sha256(f"{salt}|{value}".encode()).hexdigest()[:16]
+    return hmac.new(_audit_salt(), value.encode("utf-8"), hashlib.sha256).hexdigest()[:16]
 
 
 def _clip(s: str | None, n: int = MAX_FIELD) -> str | None:
     return None if s is None else redact(s)[:n]
 
 
-def _append(name: str, record: dict) -> None:
+def _write_failure(error: Exception) -> None:
     global _failures
+    with _lock:
+        _failures += 1
+    print(f"audit write failed: {type(error).__name__}", file=sys.stderr)
+
+
+def _append(name: str, record: dict, *, max_bytes: int | None = None) -> None:
     try:
         AUDIT_DIR.mkdir(parents=True, exist_ok=True)
-        line = redact(json.dumps(record, ensure_ascii=False, default=str))
-        with _lock, open(AUDIT_DIR / name, "a", encoding="utf-8") as f:
-            f.write(line + "\n")
-    except Exception as e:  # noqa: BLE001 - auditing must never break the request
-        _failures += 1
-        print(f"audit write failed: {type(e).__name__}", file=sys.stderr)
+        line = (json.dumps(redact_values(record), ensure_ascii=True, default=lambda value: redact(str(value))) + "\n").encode("ascii")
+        with _lock, open(AUDIT_DIR / name, "ab") as stream:
+            # The process lock protects threads; flock also protects independent
+            # workers sharing the installation's audit directory and size cap.
+            fcntl.flock(stream.fileno(), fcntl.LOCK_EX)
+            stream.seek(0, os.SEEK_END)
+            if max_bytes is None or stream.tell() + len(line) <= max_bytes:
+                stream.write(line)
+    except Exception as error:  # noqa: BLE001 - auditing must never break the request
+        _write_failure(error)
 
 
 def run_record(res: dict, channel: str, session: str | None = None, ip: str | None = None, extra: dict | None = None) -> dict:
@@ -94,8 +138,11 @@ def run_record(res: dict, channel: str, session: str | None = None, ip: str | No
 
 
 def log_run(res: dict, channel: str, session: str | None = None, ip: str | None = None, extra: dict | None = None) -> None:
-    rec = run_record(res, channel, session, ip, extra)
-    _append(f"runs-{rec['ts'][:10]}.jsonl", rec)
+    try:
+        rec = run_record(res, channel, session, ip, extra)
+        _append(f"runs-{rec['ts'][:10]}.jsonl", rec)
+    except Exception as error:  # noqa: BLE001
+        _write_failure(error)
 
 
 def log_feedback(run_id: str, rating: str, comment: str | None = None, session: str | None = None, tags: list[str] | None = None) -> dict:
@@ -103,21 +150,48 @@ def log_feedback(run_id: str, rating: str, comment: str | None = None, session: 
     if rating not in ("up", "down"):
         raise ValueError("rating must be 'up' or 'down'")
     rec = {"schema": SCHEMA_VERSION, "ts": datetime.now(timezone.utc).isoformat(timespec="seconds"), "run_id": run_id[:32], "rating": rating,
-           "comment": _clip((comment or "").replace("\x00", ""), 1000), "tags": [t[:40] for t in (tags or [])][:6], "session": salted_hash(session)}
-    _append("feedback.jsonl", rec)
+           "comment": _clip((comment or "").replace("\x00", ""), 1000), "tags": [t[:40] for t in (tags or [])][:6], "session": None}
+    try:
+        rec["session"] = salted_hash(session)
+        _append("feedback.jsonl", rec)
+    except Exception as error:  # noqa: BLE001 - no public fallback if private salt is unavailable
+        _write_failure(error)
     return rec
 
 
+def _read_jsonl(path) -> list[dict]:
+    global _corrupt_lines
+    records = []
+    # Only LF delimits JSONL: Unicode line separators inside a JSON string are
+    # data, including in older logs written with ensure_ascii=False.
+    with path.open(encoding="utf-8", errors="replace", newline="\n") as stream:
+        for line in stream:
+            if not line.strip():
+                continue
+            try:
+                record = json.loads(line)
+                if not isinstance(record, dict):
+                    raise ValueError("audit record must be an object")
+            except (ValueError, TypeError):
+                with _lock:
+                    _corrupt_lines += 1
+                continue
+            records.append(record)
+    return records
+
+
 def read_runs() -> list[dict]:
-    out = []
-    for f in sorted(AUDIT_DIR.glob("runs-*.jsonl")):
-        out += [json.loads(line) for line in f.read_text(encoding="utf-8").splitlines() if line.strip()]
-    return out
+    return [record for path in sorted(AUDIT_DIR.glob("runs-*.jsonl")) for record in _read_jsonl(path)]
 
 
 def read_feedback() -> list[dict]:
-    f = AUDIT_DIR / "feedback.jsonl"
-    return [json.loads(line) for line in f.read_text(encoding="utf-8").splitlines() if line.strip()] if f.exists() else []
+    path = AUDIT_DIR / "feedback.jsonl"
+    return _read_jsonl(path) if path.exists() else []
+
+
+def corrupt_lines() -> int:
+    """Count corrupt records skipped by readers in this process (including rereads)."""
+    return _corrupt_lines
 
 
 def failures() -> int:
