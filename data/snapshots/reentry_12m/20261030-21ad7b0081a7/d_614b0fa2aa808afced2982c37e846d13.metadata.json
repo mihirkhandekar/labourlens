@@ -1,0 +1,41 @@
+{
+  "collectionIds": [],
+  "columnMetadata": {
+    "map": {
+      "c_5nmp6d5m9ap63gq5df87oyr68": "reentry_rate_12mth",
+      "c_5z29kgfoni4q6ovl1lx6n7e60": "quarter"
+    },
+    "metaMapping": {
+      "c_5nmp6d5m9ap63gq5df87oyr68": {
+        "columnTitle": "Reentry Rate 12mth",
+        "dataType": "Text",
+        "index": "1",
+        "isCategorical": false,
+        "name": "reentry_rate_12mth"
+      },
+      "c_5z29kgfoni4q6ovl1lx6n7e60": {
+        "columnTitle": "Quarter",
+        "dataType": "Quarter (Q)",
+        "index": "0",
+        "isCategorical": false,
+        "name": "quarter"
+      }
+    },
+    "order": [
+      "c_5z29kgfoni4q6ovl1lx6n7e60",
+      "c_5nmp6d5m9ap63gq5df87oyr68"
+    ]
+  },
+  "contactEmails": [
+    "LEE_Wan_Ning@mom.gov.sg"
+  ],
+  "coverageEnd": "2026-06-30T08:00:00+08:00",
+  "coverageStart": "2000-01-01T08:00:00+08:00",
+  "createdAt": "2026-03-20T17:29:18+08:00",
+  "datasetId": "d_614b0fa2aa808afced2982c37e846d13",
+  "datasetSize": 1486,
+  "format": "CSV",
+  "lastUpdatedAt": "2026-10-06T11:08:40+08:00",
+  "managedBy": "Ministry of Manpower",
+  "name": "Rate of Re-entry Into Employment (Within 12 Months Post-Retrenchment), Quarterly"
+}

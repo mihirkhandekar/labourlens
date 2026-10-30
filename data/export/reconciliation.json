@@ -1,0 +1,107 @@
+{
+ "description": "Headline total employment change by quarter from three source kinds. Values are persons.",
+ "interpretation_note": "MOM headline totals exclude migrant domestic workers (MDW) per the 2Q 2026 report. The dataset total's population basis is UNVERIFIED. A stable positive gap (dataset minus final) is consistent with an MDW difference but this is an INFERENCE, not a verified fact.",
+ "quarters": [
+  {
+   "advance": {
+    "locator": "section: Main Findings 3, item 2",
+    "passage_id": "mom-2025-q3-advance:s02:i002:6c4338fb",
+    "publication_date": "2025-10-30",
+    "release_stage": "advance",
+    "value": 24800
+   },
+   "dataset_minus_final": 5100,
+   "dataset_total": {
+    "observation_id": "d36d0541315596c1",
+    "snapshot_id": "20261030-8a5f067e693a",
+    "source_id": "employment_change_by_sector",
+    "value": 30200
+   },
+   "final": {
+    "locator": "section: Labour Market Report 3Q 2025, item 2",
+    "passage_id": "mom-2025-q3-final-release:s01:i002:bc8b950e",
+    "publication_date": "2025-12-11",
+    "release_stage": "final",
+    "value": 25100
+   },
+   "final_minus_advance": 300,
+   "period": "2025-Q3"
+  },
+  {
+   "advance": {
+    "locator": "section: Labour Market Advance Release Fourth Quarter 2025, item 4",
+    "passage_id": "mom-2025-q4-advance:s01:i004:e5fa11e6",
+    "publication_date": "2026-01-29",
+    "release_stage": "advance",
+    "value": 19600
+   },
+   "dataset_minus_final": 3100,
+   "dataset_total": {
+    "observation_id": "196411966d74baa0",
+    "snapshot_id": "20261030-8a5f067e693a",
+    "source_id": "employment_change_by_sector",
+    "value": 20800
+   },
+   "final": {
+    "locator": "section: Main Findings, item 2",
+    "passage_id": "mom-2025-q4-final-release:s01:i002:257c8baa",
+    "publication_date": "2026-03-20",
+    "release_stage": "final",
+    "value": 17700
+   },
+   "final_minus_advance": -1900,
+   "period": "2025-Q4"
+  },
+  {
+   "advance": {
+    "locator": "section: Labour Market Advance Release – First Quarter 2026, item 3",
+    "passage_id": "mom-2026-q1-advance:s01:i003:3cd3fd75",
+    "publication_date": "2026-04-30",
+    "release_stage": "advance",
+    "value": 5000
+   },
+   "dataset_minus_final": 3600,
+   "dataset_total": {
+    "observation_id": "a8146d27628629cc",
+    "snapshot_id": "20261030-8a5f067e693a",
+    "source_id": "employment_change_by_sector",
+    "value": 13000
+   },
+   "final": {
+    "locator": "section: Labour Market Report 1Q 2026, item 1",
+    "passage_id": "mom-2026-q1-final-release:s01:i001:059b7175",
+    "publication_date": "2026-06-15",
+    "release_stage": "final",
+    "value": 9400
+   },
+   "final_minus_advance": 4400,
+   "period": "2026-Q1"
+  },
+  {
+   "advance": {
+    "locator": "section: Labour Market Advance Release – Second Quarter 2026, item 1",
+    "passage_id": "mom-2026-q2-advance:s01:i001:a424084c",
+    "publication_date": "2026-07-31",
+    "release_stage": "advance",
+    "value": 10700
+   },
+   "dataset_minus_final": 3300,
+   "dataset_total": {
+    "observation_id": "fa8b0c600d4d60ca",
+    "snapshot_id": "20261030-8a5f067e693a",
+    "source_id": "employment_change_by_sector",
+    "value": 14700
+   },
+   "final": {
+    "locator": "section: Labour Market Report - Second Quarter 2026, item 1",
+    "passage_id": "mom-2026-q2-final-release:s01:i001:98b26ad8",
+    "publication_date": "2026-09-21",
+    "release_stage": "final",
+    "value": 11400
+   },
+   "final_minus_advance": 700,
+   "period": "2026-Q2"
+  }
+ ],
+ "schema_version": "export-0.1"
+}

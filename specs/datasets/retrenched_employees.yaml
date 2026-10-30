@@ -1,0 +1,22 @@
+source_id: retrenched_employees
+adapter: quarterly_long
+period_col: quarter
+expected_columns:
+- quarter
+- retrench
+measures:
+- column: retrench
+  indicator_id: retrenched_employees
+  unit: persons
+  population: establishments
+  adjustment: not_applicable
+  definition: 'Retrenchment: termination of permanent employees due to redundancy plus early termination of term contract employees due to redundancy. Values arrive as text in the CSV. Labour Market Survey
+    of establishments (MRSD, MOM). From 2006 the scope includes the public sector.'
+  plausible_range:
+  - 100
+  - 20000
+expected_first_period: 1998-Q1
+expected_last_period: 2026-Q2
+missing_tokens:
+- na
+- '-'

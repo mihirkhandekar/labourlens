@@ -1,0 +1,43 @@
+{
+  "collectionIds": [],
+  "columnMetadata": {
+    "map": {
+      "c_4irj81wudqgkmru7as3l11n98": "resignation_rate",
+      "c_5ghfa060vx91w6hhlayqvkbiv": "quarter"
+    },
+    "metaMapping": {
+      "c_4irj81wudqgkmru7as3l11n98": {
+        "columnTitle": "Resignation Rate",
+        "dataType": "Numeric (Percentage)",
+        "index": "1",
+        "isCategorical": false,
+        "name": "resignation_rate"
+      },
+      "c_5ghfa060vx91w6hhlayqvkbiv": {
+        "columnTitle": "Quarter",
+        "dataType": "Quarter (Q)",
+        "index": "0",
+        "isCategorical": false,
+        "name": "quarter"
+      }
+    },
+    "order": [
+      "c_5ghfa060vx91w6hhlayqvkbiv",
+      "c_4irj81wudqgkmru7as3l11n98"
+    ]
+  },
+  "contactEmails": [
+    "ng_li_mei@mom.gov.sg",
+    "samantha_teo@mom.gov.sg"
+  ],
+  "coverageEnd": "2026-06-30T08:00:00+08:00",
+  "coverageStart": "1998-01-01T08:00:00+08:00",
+  "createdAt": "2026-03-23T15:30:42+08:00",
+  "datasetId": "d_e58adb04ca812651cfecfa82acdf6c35",
+  "datasetSize": 1472,
+  "description": "Average Monthly Resignation Rate during a quarter is defined as the average number of persons who resigned in a month during the quarter divided by the average number of employees in the establishment. The annual figures are the simple averages of the quarterly figures\t\nSource: Labour Market Survey, Manpower Research & Statistics Department, MOM\t\nBefore 2006, data pertain to private sector establishments (each with at least 25 employees). From 2006 onwards, it also includes\t\nthe public sector.\t\n",
+  "format": "CSV",
+  "lastUpdatedAt": "2026-09-22T17:50:48+08:00",
+  "managedBy": "Ministry of Manpower",
+  "name": "Average Monthly Resignation Rate - Quarterly"
+}

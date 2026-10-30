@@ -1,0 +1,718 @@
+{
+  "checks": [
+    {
+      "detail": "33 catalogued, missing=[]",
+      "name": "manifest.all_sources_present",
+      "status": "pass"
+    },
+    {
+      "detail": "not ok: []",
+      "name": "manifest.all_retrievals_ok",
+      "status": "pass"
+    },
+    {
+      "detail": "incomplete: []",
+      "name": "manifest.required_fields_present",
+      "status": "pass"
+    },
+    {
+      "detail": "mismatches: []",
+      "name": "manifest.raw_files_match_sha256",
+      "status": "pass"
+    },
+    {
+      "detail": "found markers: []",
+      "name": "manifest.no_signed_url_material",
+      "status": "pass"
+    },
+    {
+      "detail": "8 sources still have unresolved rights (kept local-only): ['mom-2026-q2-advance', 'mom-2026-q2-final-release', 'mom-2025-q3-advance', 'mom-2025-q3-final-release', 'mom-2025-q4-advance', 'mom-2025-q4-final-release', 'mom-2026-q1-advance', 'mom-2026-q1-final-release']",
+      "name": "rights.unresolved_sources_listed",
+      "status": "warn"
+    },
+    {
+      "detail": "quarantined=0",
+      "name": "dataset.resident_unemployment_rate.no_quarantined_rows",
+      "status": "pass"
+    },
+    {
+      "detail": "first=1992-Q1 expected=1992-Q1; last=2026-Q2 expected=2026-Q2",
+      "name": "dataset.resident_unemployment_rate.first_last_period",
+      "status": "pass"
+    },
+    {
+      "detail": "duplicates=0",
+      "name": "dataset.resident_unemployment_rate.no_duplicate_keys",
+      "status": "pass"
+    },
+    {
+      "detail": "",
+      "name": "dataset.resident_unemployment_rate.observation_ids_unique",
+      "status": "pass"
+    },
+    {
+      "detail": "outside=0",
+      "name": "dataset.resident_unemployment_rate.values_in_plausible_range",
+      "status": "pass"
+    },
+    {
+      "detail": "series with gaps=0",
+      "name": "dataset.resident_unemployment_rate.in_scope_rows_cover_10_quarters",
+      "status": "pass"
+    },
+    {
+      "detail": "0 of 20 in-scope cells have no published number (reasons: {})",
+      "name": "dataset.resident_unemployment_rate.in_scope_values_present",
+      "status": "pass"
+    },
+    {
+      "detail": "quarantined=0",
+      "name": "dataset.vacancy_to_unemployed_ratio.no_quarantined_rows",
+      "status": "pass"
+    },
+    {
+      "detail": "first=1998-Q1 expected=1998-Q1; last=2026-Q2 expected=2026-Q2",
+      "name": "dataset.vacancy_to_unemployed_ratio.first_last_period",
+      "status": "pass"
+    },
+    {
+      "detail": "duplicates=0",
+      "name": "dataset.vacancy_to_unemployed_ratio.no_duplicate_keys",
+      "status": "pass"
+    },
+    {
+      "detail": "",
+      "name": "dataset.vacancy_to_unemployed_ratio.observation_ids_unique",
+      "status": "pass"
+    },
+    {
+      "detail": "outside=0",
+      "name": "dataset.vacancy_to_unemployed_ratio.values_in_plausible_range",
+      "status": "pass"
+    },
+    {
+      "detail": "series with gaps=0",
+      "name": "dataset.vacancy_to_unemployed_ratio.in_scope_rows_cover_10_quarters",
+      "status": "pass"
+    },
+    {
+      "detail": "0 of 10 in-scope cells have no published number (reasons: {})",
+      "name": "dataset.vacancy_to_unemployed_ratio.in_scope_values_present",
+      "status": "pass"
+    },
+    {
+      "detail": "quarantined=0",
+      "name": "dataset.retrenched_employees.no_quarantined_rows",
+      "status": "pass"
+    },
+    {
+      "detail": "first=1998-Q1 expected=1998-Q1; last=2026-Q2 expected=2026-Q2",
+      "name": "dataset.retrenched_employees.first_last_period",
+      "status": "pass"
+    },
+    {
+      "detail": "duplicates=0",
+      "name": "dataset.retrenched_employees.no_duplicate_keys",
+      "status": "pass"
+    },
+    {
+      "detail": "",
+      "name": "dataset.retrenched_employees.observation_ids_unique",
+      "status": "pass"
+    },
+    {
+      "detail": "outside=0",
+      "name": "dataset.retrenched_employees.values_in_plausible_range",
+      "status": "pass"
+    },
+    {
+      "detail": "series with gaps=0",
+      "name": "dataset.retrenched_employees.in_scope_rows_cover_10_quarters",
+      "status": "pass"
+    },
+    {
+      "detail": "0 of 10 in-scope cells have no published number (reasons: {})",
+      "name": "dataset.retrenched_employees.in_scope_values_present",
+      "status": "pass"
+    },
+    {
+      "detail": "quarantined=0",
+      "name": "dataset.employment_change_by_sector.no_quarantined_rows",
+      "status": "pass"
+    },
+    {
+      "detail": "first=1991-Q1 expected=1991-Q1; last=2026-Q2 expected=2026-Q2",
+      "name": "dataset.employment_change_by_sector.first_last_period",
+      "status": "pass"
+    },
+    {
+      "detail": "duplicates=0",
+      "name": "dataset.employment_change_by_sector.no_duplicate_keys",
+      "status": "pass"
+    },
+    {
+      "detail": "",
+      "name": "dataset.employment_change_by_sector.observation_ids_unique",
+      "status": "pass"
+    },
+    {
+      "detail": "outside=0",
+      "name": "dataset.employment_change_by_sector.values_in_plausible_range",
+      "status": "pass"
+    },
+    {
+      "detail": "series with gaps=0",
+      "name": "dataset.employment_change_by_sector.in_scope_rows_cover_10_quarters",
+      "status": "pass"
+    },
+    {
+      "detail": "0 of 260 in-scope cells have no published number (reasons: {})",
+      "name": "dataset.employment_change_by_sector.in_scope_values_present",
+      "status": "pass"
+    },
+    {
+      "detail": "quarantined=0",
+      "name": "dataset.overall_unemployment_rate.no_quarantined_rows",
+      "status": "pass"
+    },
+    {
+      "detail": "first=1992-Q1 expected=1992-Q1; last=2026-Q2 expected=2026-Q2",
+      "name": "dataset.overall_unemployment_rate.first_last_period",
+      "status": "pass"
+    },
+    {
+      "detail": "duplicates=0",
+      "name": "dataset.overall_unemployment_rate.no_duplicate_keys",
+      "status": "pass"
+    },
+    {
+      "detail": "",
+      "name": "dataset.overall_unemployment_rate.observation_ids_unique",
+      "status": "pass"
+    },
+    {
+      "detail": "outside=0",
+      "name": "dataset.overall_unemployment_rate.values_in_plausible_range",
+      "status": "pass"
+    },
+    {
+      "detail": "series with gaps=0",
+      "name": "dataset.overall_unemployment_rate.in_scope_rows_cover_10_quarters",
+      "status": "pass"
+    },
+    {
+      "detail": "0 of 20 in-scope cells have no published number (reasons: {})",
+      "name": "dataset.overall_unemployment_rate.in_scope_values_present",
+      "status": "pass"
+    },
+    {
+      "detail": "quarantined=0",
+      "name": "dataset.citizen_unemployment_rate.no_quarantined_rows",
+      "status": "pass"
+    },
+    {
+      "detail": "first=1992-Q1 expected=1992-Q1; last=2026-Q2 expected=2026-Q2",
+      "name": "dataset.citizen_unemployment_rate.first_last_period",
+      "status": "pass"
+    },
+    {
+      "detail": "duplicates=0",
+      "name": "dataset.citizen_unemployment_rate.no_duplicate_keys",
+      "status": "pass"
+    },
+    {
+      "detail": "",
+      "name": "dataset.citizen_unemployment_rate.observation_ids_unique",
+      "status": "pass"
+    },
+    {
+      "detail": "outside=0",
+      "name": "dataset.citizen_unemployment_rate.values_in_plausible_range",
+      "status": "pass"
+    },
+    {
+      "detail": "series with gaps=0",
+      "name": "dataset.citizen_unemployment_rate.in_scope_rows_cover_10_quarters",
+      "status": "pass"
+    },
+    {
+      "detail": "0 of 20 in-scope cells have no published number (reasons: {})",
+      "name": "dataset.citizen_unemployment_rate.in_scope_values_present",
+      "status": "pass"
+    },
+    {
+      "detail": "quarantined=0",
+      "name": "dataset.job_vacancy_rate.no_quarantined_rows",
+      "status": "pass"
+    },
+    {
+      "detail": "first=1998-Q1 expected=1998-Q1; last=2026-Q2 expected=2026-Q2",
+      "name": "dataset.job_vacancy_rate.first_last_period",
+      "status": "pass"
+    },
+    {
+      "detail": "duplicates=0",
+      "name": "dataset.job_vacancy_rate.no_duplicate_keys",
+      "status": "pass"
+    },
+    {
+      "detail": "",
+      "name": "dataset.job_vacancy_rate.observation_ids_unique",
+      "status": "pass"
+    },
+    {
+      "detail": "outside=0",
+      "name": "dataset.job_vacancy_rate.values_in_plausible_range",
+      "status": "pass"
+    },
+    {
+      "detail": "series with gaps=0",
+      "name": "dataset.job_vacancy_rate.in_scope_rows_cover_10_quarters",
+      "status": "pass"
+    },
+    {
+      "detail": "0 of 10 in-scope cells have no published number (reasons: {})",
+      "name": "dataset.job_vacancy_rate.in_scope_values_present",
+      "status": "pass"
+    },
+    {
+      "detail": "quarantined=0",
+      "name": "dataset.job_vacancy_count.no_quarantined_rows",
+      "status": "pass"
+    },
+    {
+      "detail": "first=1998-Q1 expected=1998-Q1; last=2026-Q2 expected=2026-Q2",
+      "name": "dataset.job_vacancy_count.first_last_period",
+      "status": "pass"
+    },
+    {
+      "detail": "duplicates=0",
+      "name": "dataset.job_vacancy_count.no_duplicate_keys",
+      "status": "pass"
+    },
+    {
+      "detail": "",
+      "name": "dataset.job_vacancy_count.observation_ids_unique",
+      "status": "pass"
+    },
+    {
+      "detail": "outside=0",
+      "name": "dataset.job_vacancy_count.values_in_plausible_range",
+      "status": "pass"
+    },
+    {
+      "detail": "series with gaps=0",
+      "name": "dataset.job_vacancy_count.in_scope_rows_cover_10_quarters",
+      "status": "pass"
+    },
+    {
+      "detail": "0 of 10 in-scope cells have no published number (reasons: {})",
+      "name": "dataset.job_vacancy_count.in_scope_values_present",
+      "status": "pass"
+    },
+    {
+      "detail": "quarantined=0",
+      "name": "dataset.retrenched_by_industry.no_quarantined_rows",
+      "status": "pass"
+    },
+    {
+      "detail": "first=1998-Q1 expected=1998-Q1; last=2026-Q2 expected=2026-Q2",
+      "name": "dataset.retrenched_by_industry.first_last_period",
+      "status": "pass"
+    },
+    {
+      "detail": "duplicates=0",
+      "name": "dataset.retrenched_by_industry.no_duplicate_keys",
+      "status": "pass"
+    },
+    {
+      "detail": "",
+      "name": "dataset.retrenched_by_industry.observation_ids_unique",
+      "status": "pass"
+    },
+    {
+      "detail": "outside=0",
+      "name": "dataset.retrenched_by_industry.values_in_plausible_range",
+      "status": "pass"
+    },
+    {
+      "detail": "series with gaps=0",
+      "name": "dataset.retrenched_by_industry.in_scope_rows_cover_10_quarters",
+      "status": "pass"
+    },
+    {
+      "detail": "47 of 420 in-scope cells have no published number (reasons: {'dash_marker_publisher_does_not_define_nil_vs_suppressed': np.int64(47)})",
+      "name": "dataset.retrenched_by_industry.in_scope_values_present",
+      "status": "warn"
+    },
+    {
+      "detail": "quarantined=0",
+      "name": "dataset.retrenched_permanent.no_quarantined_rows",
+      "status": "pass"
+    },
+    {
+      "detail": "first=1998-Q1 expected=1998-Q1; last=2026-Q2 expected=2026-Q2",
+      "name": "dataset.retrenched_permanent.first_last_period",
+      "status": "pass"
+    },
+    {
+      "detail": "duplicates=0",
+      "name": "dataset.retrenched_permanent.no_duplicate_keys",
+      "status": "pass"
+    },
+    {
+      "detail": "",
+      "name": "dataset.retrenched_permanent.observation_ids_unique",
+      "status": "pass"
+    },
+    {
+      "detail": "outside=0",
+      "name": "dataset.retrenched_permanent.values_in_plausible_range",
+      "status": "pass"
+    },
+    {
+      "detail": "series with gaps=0",
+      "name": "dataset.retrenched_permanent.in_scope_rows_cover_10_quarters",
+      "status": "pass"
+    },
+    {
+      "detail": "0 of 10 in-scope cells have no published number (reasons: {})",
+      "name": "dataset.retrenched_permanent.in_scope_values_present",
+      "status": "pass"
+    },
+    {
+      "detail": "quarantined=0",
+      "name": "dataset.retrenched_term_contract.no_quarantined_rows",
+      "status": "pass"
+    },
+    {
+      "detail": "first=1998-Q1 expected=1998-Q1; last=2026-Q2 expected=2026-Q2",
+      "name": "dataset.retrenched_term_contract.first_last_period",
+      "status": "pass"
+    },
+    {
+      "detail": "duplicates=0",
+      "name": "dataset.retrenched_term_contract.no_duplicate_keys",
+      "status": "pass"
+    },
+    {
+      "detail": "",
+      "name": "dataset.retrenched_term_contract.observation_ids_unique",
+      "status": "pass"
+    },
+    {
+      "detail": "outside=0",
+      "name": "dataset.retrenched_term_contract.values_in_plausible_range",
+      "status": "pass"
+    },
+    {
+      "detail": "series with gaps=0",
+      "name": "dataset.retrenched_term_contract.in_scope_rows_cover_10_quarters",
+      "status": "pass"
+    },
+    {
+      "detail": "0 of 10 in-scope cells have no published number (reasons: {})",
+      "name": "dataset.retrenched_term_contract.in_scope_values_present",
+      "status": "pass"
+    },
+    {
+      "detail": "quarantined=0",
+      "name": "dataset.reentry_6m.no_quarantined_rows",
+      "status": "pass"
+    },
+    {
+      "detail": "first=2000-Q1 expected=2000-Q1; last=2026-Q2 expected=2026-Q2",
+      "name": "dataset.reentry_6m.first_last_period",
+      "status": "pass"
+    },
+    {
+      "detail": "duplicates=0",
+      "name": "dataset.reentry_6m.no_duplicate_keys",
+      "status": "pass"
+    },
+    {
+      "detail": "",
+      "name": "dataset.reentry_6m.observation_ids_unique",
+      "status": "pass"
+    },
+    {
+      "detail": "outside=0",
+      "name": "dataset.reentry_6m.values_in_plausible_range",
+      "status": "pass"
+    },
+    {
+      "detail": "series with gaps=0",
+      "name": "dataset.reentry_6m.in_scope_rows_cover_10_quarters",
+      "status": "pass"
+    },
+    {
+      "detail": "0 of 10 in-scope cells have no published number (reasons: {})",
+      "name": "dataset.reentry_6m.in_scope_values_present",
+      "status": "pass"
+    },
+    {
+      "detail": "quarantined=0",
+      "name": "dataset.reentry_12m.no_quarantined_rows",
+      "status": "pass"
+    },
+    {
+      "detail": "first=2000-Q1 expected=2000-Q1; last=2026-Q2 expected=2026-Q2",
+      "name": "dataset.reentry_12m.first_last_period",
+      "status": "pass"
+    },
+    {
+      "detail": "duplicates=0",
+      "name": "dataset.reentry_12m.no_duplicate_keys",
+      "status": "pass"
+    },
+    {
+      "detail": "",
+      "name": "dataset.reentry_12m.observation_ids_unique",
+      "status": "pass"
+    },
+    {
+      "detail": "outside=0",
+      "name": "dataset.reentry_12m.values_in_plausible_range",
+      "status": "pass"
+    },
+    {
+      "detail": "series with gaps=0",
+      "name": "dataset.reentry_12m.in_scope_rows_cover_10_quarters",
+      "status": "pass"
+    },
+    {
+      "detail": "0 of 10 in-scope cells have no published number (reasons: {})",
+      "name": "dataset.reentry_12m.in_scope_values_present",
+      "status": "pass"
+    },
+    {
+      "detail": "quarantined=0",
+      "name": "dataset.resignation_rate.no_quarantined_rows",
+      "status": "pass"
+    },
+    {
+      "detail": "first=1998-Q1 expected=1998-Q1; last=2026-Q2 expected=2026-Q2",
+      "name": "dataset.resignation_rate.first_last_period",
+      "status": "pass"
+    },
+    {
+      "detail": "duplicates=0",
+      "name": "dataset.resignation_rate.no_duplicate_keys",
+      "status": "pass"
+    },
+    {
+      "detail": "",
+      "name": "dataset.resignation_rate.observation_ids_unique",
+      "status": "pass"
+    },
+    {
+      "detail": "outside=0",
+      "name": "dataset.resignation_rate.values_in_plausible_range",
+      "status": "pass"
+    },
+    {
+      "detail": "series with gaps=0",
+      "name": "dataset.resignation_rate.in_scope_rows_cover_10_quarters",
+      "status": "pass"
+    },
+    {
+      "detail": "0 of 10 in-scope cells have no published number (reasons: {})",
+      "name": "dataset.resignation_rate.in_scope_values_present",
+      "status": "pass"
+    },
+    {
+      "detail": "quarantined=0",
+      "name": "dataset.recruitment_rate.no_quarantined_rows",
+      "status": "pass"
+    },
+    {
+      "detail": "first=1998-Q1 expected=1998-Q1; last=2026-Q2 expected=2026-Q2",
+      "name": "dataset.recruitment_rate.first_last_period",
+      "status": "pass"
+    },
+    {
+      "detail": "duplicates=0",
+      "name": "dataset.recruitment_rate.no_duplicate_keys",
+      "status": "pass"
+    },
+    {
+      "detail": "",
+      "name": "dataset.recruitment_rate.observation_ids_unique",
+      "status": "pass"
+    },
+    {
+      "detail": "outside=0",
+      "name": "dataset.recruitment_rate.values_in_plausible_range",
+      "status": "pass"
+    },
+    {
+      "detail": "series with gaps=0",
+      "name": "dataset.recruitment_rate.in_scope_rows_cover_10_quarters",
+      "status": "pass"
+    },
+    {
+      "detail": "0 of 10 in-scope cells have no published number (reasons: {})",
+      "name": "dataset.recruitment_rate.in_scope_values_present",
+      "status": "pass"
+    },
+    {
+      "detail": "quarantined=0",
+      "name": "dataset.unemployed_residents.no_quarantined_rows",
+      "status": "pass"
+    },
+    {
+      "detail": "first=1992-Q1 expected=1992-Q1; last=2026-Q2 expected=2026-Q2",
+      "name": "dataset.unemployed_residents.first_last_period",
+      "status": "pass"
+    },
+    {
+      "detail": "duplicates=0",
+      "name": "dataset.unemployed_residents.no_duplicate_keys",
+      "status": "pass"
+    },
+    {
+      "detail": "",
+      "name": "dataset.unemployed_residents.observation_ids_unique",
+      "status": "pass"
+    },
+    {
+      "detail": "outside=0",
+      "name": "dataset.unemployed_residents.values_in_plausible_range",
+      "status": "pass"
+    },
+    {
+      "detail": "series with gaps=0",
+      "name": "dataset.unemployed_residents.in_scope_rows_cover_10_quarters",
+      "status": "pass"
+    },
+    {
+      "detail": "0 of 20 in-scope cells have no published number (reasons: {})",
+      "name": "dataset.unemployed_residents.in_scope_values_present",
+      "status": "pass"
+    },
+    {
+      "detail": "quarantined=0",
+      "name": "dataset.unemployed_overall.no_quarantined_rows",
+      "status": "pass"
+    },
+    {
+      "detail": "first=1992-Q1 expected=1992-Q1; last=2026-Q2 expected=2026-Q2",
+      "name": "dataset.unemployed_overall.first_last_period",
+      "status": "pass"
+    },
+    {
+      "detail": "duplicates=0",
+      "name": "dataset.unemployed_overall.no_duplicate_keys",
+      "status": "pass"
+    },
+    {
+      "detail": "",
+      "name": "dataset.unemployed_overall.observation_ids_unique",
+      "status": "pass"
+    },
+    {
+      "detail": "outside=0",
+      "name": "dataset.unemployed_overall.values_in_plausible_range",
+      "status": "pass"
+    },
+    {
+      "detail": "series with gaps=0",
+      "name": "dataset.unemployed_overall.in_scope_rows_cover_10_quarters",
+      "status": "pass"
+    },
+    {
+      "detail": "0 of 20 in-scope cells have no published number (reasons: {})",
+      "name": "dataset.unemployed_overall.in_scope_values_present",
+      "status": "pass"
+    },
+    {
+      "detail": "checked=80 parent/period pairs, max_abs_diff=200 persons, tolerance=100/child, exceeded=[]",
+      "name": "sector.children_sum_to_parent_within_rounding",
+      "status": "pass"
+    },
+    {
+      "detail": "unknown industries=[]",
+      "name": "industry.in_scope_names_all_in_hierarchy",
+      "status": "pass"
+    },
+    {
+      "detail": "checked=69, skipped_due_to_dash_cells=31, max_abs_diff=20, exceeded=[]",
+      "name": "industry.children_sum_to_parent_within_rounding",
+      "status": "pass"
+    },
+    {
+      "detail": "in-scope quarters=10, max |perm+term-total|=10.0 persons (source rounds to 10)",
+      "name": "derived.retrenchment_parts_equal_total",
+      "status": "pass"
+    },
+    {
+      "detail": "in-scope quarters=10, max abs diff=0.6651, mean=0.5956000000000001 (different surveys; a gap is expected, a large one would signal a definition problem)",
+      "name": "derived.vacancy_ratio_recomputed_vs_published",
+      "status": "warn"
+    },
+    {
+      "detail": "4187 passages",
+      "name": "passages.ids_unique",
+      "status": "pass"
+    },
+    {
+      "detail": "",
+      "name": "passages.non_empty_text",
+      "status": "pass"
+    },
+    {
+      "detail": "bad=[]",
+      "name": "passages.pdf_have_page_numbers",
+      "status": "pass"
+    },
+    {
+      "detail": "bad=[]",
+      "name": "passages.html_have_section_locator",
+      "status": "pass"
+    },
+    {
+      "detail": "not extracted: []",
+      "name": "passages.every_document_extracted",
+      "status": "pass"
+    },
+    {
+      "detail": "mismatched publication dates: []",
+      "name": "passages.html_date_matches_catalog",
+      "status": "pass"
+    },
+    {
+      "detail": "{'table_unreliable': 2243, 'ok': 1929, 'garbled': 15}",
+      "name": "passages.quality_flag_distribution",
+      "status": "pass"
+    },
+    {
+      "detail": "documents with fewer than 0.5 passages per page (text may be in images/tables): []",
+      "name": "passages.low_yield_documents",
+      "status": "pass"
+    },
+    {
+      "detail": "visible PDFs: []",
+      "name": "packaging.no_pdf_visible_to_git",
+      "status": "pass"
+    },
+    {
+      "detail": "visible private paths: []",
+      "name": "packaging.private_paths_ignored",
+      "status": "pass"
+    },
+    {
+      "detail": "unexpected: []",
+      "name": "packaging.snapshots_only_open_licence_csv_and_metadata",
+      "status": "pass"
+    },
+    {
+      "detail": "advance=10700 (2026-07-31), final=11400 (2026-09-21), dataset=14700",
+      "name": "reconcile.q2_2026_three_values_present",
+      "status": "pass"
+    }
+  ],
+  "summary": {
+    "pass": 139,
+    "warn": 3
+  }
+}

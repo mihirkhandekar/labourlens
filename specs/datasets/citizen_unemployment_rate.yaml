@@ -1,0 +1,32 @@
+source_id: citizen_unemployment_rate
+adapter: quarter_end_month
+period_col: period
+expected_columns:
+- period
+- residential_status
+- seasonally_adj_unemp_rate
+- non_seasonally_adj_unemp_rate
+constant_columns:
+  residential_status: citizen
+measures:
+- column: seasonally_adj_unemp_rate
+  indicator_id: unemployment_rate
+  unit: percent
+  population: citizen
+  adjustment: seasonally_adjusted
+  definition: Quarterly unemployment rate from the Labour Force Survey (MRSD, MOM). SA series are re-estimated once a year with new seasonal factors, so historical SA values can change between snapshots.
+    Singapore citizens only.
+  plausible_range: &id001
+  - 0
+  - 15
+- column: non_seasonally_adj_unemp_rate
+  indicator_id: unemployment_rate
+  unit: percent
+  population: citizen
+  adjustment: not_adjusted
+  definition: Quarterly unemployment rate from the Labour Force Survey (MRSD, MOM). SA series are re-estimated once a year with new seasonal factors, so historical SA values can change between snapshots.
+    Singapore citizens only.
+  plausible_range: *id001
+expected_first_period: 1992-Q1
+expected_last_period: 2026-Q2
+missing_tokens: []

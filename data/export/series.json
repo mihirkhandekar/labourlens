@@ -1,0 +1,2203 @@
+{
+ "schema_version": "export-0.1",
+ "series": {
+  "job_vacancies": {
+   "adjustment": "unspecified",
+   "points": [
+    {
+     "observation_id": "241958130600020c",
+     "period": "2019-Q1",
+     "value": 54700.0
+    },
+    {
+     "observation_id": "8825ab83cc6060ee",
+     "period": "2019-Q2",
+     "value": 53900.0
+    },
+    {
+     "observation_id": "0c7f86f84d875775",
+     "period": "2019-Q3",
+     "value": 52900.0
+    },
+    {
+     "observation_id": "4c3c5ce221bf30c3",
+     "period": "2019-Q4",
+     "value": 50000.0
+    },
+    {
+     "observation_id": "0a22a404e8f91669",
+     "period": "2020-Q1",
+     "value": 44400.0
+    },
+    {
+     "observation_id": "e07fb7568f908011",
+     "period": "2020-Q2",
+     "value": 42800.0
+    },
+    {
+     "observation_id": "f688abc5cefe64ea",
+     "period": "2020-Q3",
+     "value": 53300.0
+    },
+    {
+     "observation_id": "70e1ee549b5970cc",
+     "period": "2020-Q4",
+     "value": 53000.0
+    },
+    {
+     "observation_id": "73835d6fd48b94cb",
+     "period": "2021-Q1",
+     "value": 67000.0
+    },
+    {
+     "observation_id": "4806632aa1a44e10",
+     "period": "2021-Q2",
+     "value": 93800.0
+    },
+    {
+     "observation_id": "d25c4c9b60bd12ce",
+     "period": "2021-Q3",
+     "value": 104200.0
+    },
+    {
+     "observation_id": "e78ced8bf311ee7a",
+     "period": "2021-Q4",
+     "value": 114000.0
+    },
+    {
+     "observation_id": "a1b5ba1d959b4fec",
+     "period": "2022-Q1",
+     "value": 123100.0
+    },
+    {
+     "observation_id": "baa0912d0ebf621f",
+     "period": "2022-Q2",
+     "value": 127000.0
+    },
+    {
+     "observation_id": "6558a02bffa3e747",
+     "period": "2022-Q3",
+     "value": 107200.0
+    },
+    {
+     "observation_id": "82c527115cf7c8bc",
+     "period": "2022-Q4",
+     "value": 102700.0
+    },
+    {
+     "observation_id": "ff8d5ed65d26c98c",
+     "period": "2023-Q1",
+     "value": 97400.0
+    },
+    {
+     "observation_id": "7103820237359308",
+     "period": "2023-Q2",
+     "value": 89400.0
+    },
+    {
+     "observation_id": "0b69111ab103d59c",
+     "period": "2023-Q3",
+     "value": 78100.0
+    },
+    {
+     "observation_id": "3c55c077d977887d",
+     "period": "2023-Q4",
+     "value": 78300.0
+    },
+    {
+     "observation_id": "f9bf39d4d6dbc3ee",
+     "period": "2024-Q1",
+     "value": 82200.0
+    },
+    {
+     "observation_id": "3b8f727d6c9eb9a4",
+     "period": "2024-Q2",
+     "value": 82600.0
+    },
+    {
+     "observation_id": "7169c9a5f6af5180",
+     "period": "2024-Q3",
+     "value": 61400.0
+    },
+    {
+     "observation_id": "ffac54968f7a03a0",
+     "period": "2024-Q4",
+     "value": 75800.0
+    },
+    {
+     "observation_id": "66d24d27df616833",
+     "period": "2025-Q1",
+     "value": 82200.0
+    },
+    {
+     "observation_id": "0f0ef2fddff0fc35",
+     "period": "2025-Q2",
+     "value": 78100.0
+    },
+    {
+     "observation_id": "eb2cf8aad25fcde8",
+     "period": "2025-Q3",
+     "value": 67800.0
+    },
+    {
+     "observation_id": "642a17683020895f",
+     "period": "2025-Q4",
+     "value": 75700.0
+    },
+    {
+     "observation_id": "b5534131ba0ff2d3",
+     "period": "2026-Q1",
+     "value": 75200.0
+    },
+    {
+     "observation_id": "bac2affa70ca8918",
+     "period": "2026-Q2",
+     "value": 69900.0
+    }
+   ],
+   "population": "establishments",
+   "unit": "persons"
+  },
+  "job_vacancy_rate": {
+   "adjustment": "unspecified",
+   "points": [
+    {
+     "observation_id": "904a6175582eaaae",
+     "period": "2019-Q1",
+     "value": 2.5
+    },
+    {
+     "observation_id": "45a1df7a40dfae22",
+     "period": "2019-Q2",
+     "value": 2.5
+    },
+    {
+     "observation_id": "6ad4e93eb98b0997",
+     "period": "2019-Q3",
+     "value": 2.4
+    },
+    {
+     "observation_id": "3d4c7e83feb8e064",
+     "period": "2019-Q4",
+     "value": 2.3
+    },
+    {
+     "observation_id": "2e8c6a0a0003ca2c",
+     "period": "2020-Q1",
+     "value": 2.1
+    },
+    {
+     "observation_id": "33c4acfa867715d3",
+     "period": "2020-Q2",
+     "value": 2.1
+    },
+    {
+     "observation_id": "8fd0c455d24b91da",
+     "period": "2020-Q3",
+     "value": 2.6
+    },
+    {
+     "observation_id": "15b9badb35bc973c",
+     "period": "2020-Q4",
+     "value": 2.6
+    },
+    {
+     "observation_id": "877b08e20f9cfc8c",
+     "period": "2021-Q1",
+     "value": 3.3
+    },
+    {
+     "observation_id": "a0fef79a7b6f2678",
+     "period": "2021-Q2",
+     "value": 4.9
+    },
+    {
+     "observation_id": "460f566e27ecc02c",
+     "period": "2021-Q3",
+     "value": 5.5
+    },
+    {
+     "observation_id": "3a7ce93a457a499c",
+     "period": "2021-Q4",
+     "value": 5.2
+    },
+    {
+     "observation_id": "7fb543f4b7910975",
+     "period": "2022-Q1",
+     "value": 5.5
+    },
+    {
+     "observation_id": "801c9dbe095d1300",
+     "period": "2022-Q2",
+     "value": 5.6
+    },
+    {
+     "observation_id": "39741b075cfd10da",
+     "period": "2022-Q3",
+     "value": 4.8
+    },
+    {
+     "observation_id": "1eae7a61e999c0a9",
+     "period": "2022-Q4",
+     "value": 4.5
+    },
+    {
+     "observation_id": "acc70ee16cb697d5",
+     "period": "2023-Q1",
+     "value": 4.3
+    },
+    {
+     "observation_id": "41d594b8ad347841",
+     "period": "2023-Q2",
+     "value": 3.9
+    },
+    {
+     "observation_id": "5d12b3c1ed91afc3",
+     "period": "2023-Q3",
+     "value": 3.4
+    },
+    {
+     "observation_id": "f84a9bf41f7774c7",
+     "period": "2023-Q4",
+     "value": 3.3
+    },
+    {
+     "observation_id": "cfcae5aa01ceb75b",
+     "period": "2024-Q1",
+     "value": 3.5
+    },
+    {
+     "observation_id": "d5f5340561d05ecd",
+     "period": "2024-Q2",
+     "value": 3.4
+    },
+    {
+     "observation_id": "bb4ad333e16b02e5",
+     "period": "2024-Q3",
+     "value": 2.7
+    },
+    {
+     "observation_id": "022223b527c08153",
+     "period": "2024-Q4",
+     "value": 3.0
+    },
+    {
+     "observation_id": "911f322b8395fc86",
+     "period": "2025-Q1",
+     "value": 3.3
+    },
+    {
+     "observation_id": "36754057b5eb6e8b",
+     "period": "2025-Q2",
+     "value": 3.0
+    },
+    {
+     "observation_id": "acda0eced9e44851",
+     "period": "2025-Q3",
+     "value": 2.8
+    },
+    {
+     "observation_id": "28d513ab235d92f0",
+     "period": "2025-Q4",
+     "value": 3.0
+    },
+    {
+     "observation_id": "8ca38ec78c231bcd",
+     "period": "2026-Q1",
+     "value": 3.0
+    },
+    {
+     "observation_id": "80ea8b10a8f20865",
+     "period": "2026-Q2",
+     "value": 2.9
+    }
+   ],
+   "population": "establishments",
+   "unit": "percent"
+  },
+  "recruitment_rate": {
+   "adjustment": "unspecified",
+   "points": [
+    {
+     "observation_id": "f26cf029869ae90e",
+     "period": "2019-Q1",
+     "value": 2.2
+    },
+    {
+     "observation_id": "33b7a9dc45a2ddb3",
+     "period": "2019-Q2",
+     "value": 2.4
+    },
+    {
+     "observation_id": "8d7d2654bbf27c04",
+     "period": "2019-Q3",
+     "value": 2.4
+    },
+    {
+     "observation_id": "b490b4342876aaeb",
+     "period": "2019-Q4",
+     "value": 2.0
+    },
+    {
+     "observation_id": "1750fb679a771a73",
+     "period": "2020-Q1",
+     "value": 1.9
+    },
+    {
+     "observation_id": "4ad85cac17d6c465",
+     "period": "2020-Q2",
+     "value": 1.2
+    },
+    {
+     "observation_id": "7d7ce221e5244201",
+     "period": "2020-Q3",
+     "value": 1.6
+    },
+    {
+     "observation_id": "d6c84f9f01f41920",
+     "period": "2020-Q4",
+     "value": 1.6
+    },
+    {
+     "observation_id": "286c77956ac983dc",
+     "period": "2021-Q1",
+     "value": 1.8
+    },
+    {
+     "observation_id": "06ae66d00c98ff10",
+     "period": "2021-Q2",
+     "value": 2.1
+    },
+    {
+     "observation_id": "328a52a871458ca5",
+     "period": "2021-Q3",
+     "value": 2.0
+    },
+    {
+     "observation_id": "06ebbdaa9266146d",
+     "period": "2021-Q4",
+     "value": 2.3
+    },
+    {
+     "observation_id": "885259ab7fc9deae",
+     "period": "2022-Q1",
+     "value": 2.4
+    },
+    {
+     "observation_id": "ab0f7620da1883e1",
+     "period": "2022-Q2",
+     "value": 2.8
+    },
+    {
+     "observation_id": "ea3d4b628c371c7c",
+     "period": "2022-Q3",
+     "value": 2.7
+    },
+    {
+     "observation_id": "e814db86d11849fa",
+     "period": "2022-Q4",
+     "value": 2.3
+    },
+    {
+     "observation_id": "ddad7602943b5024",
+     "period": "2023-Q1",
+     "value": 2.2
+    },
+    {
+     "observation_id": "b8191e20732361a3",
+     "period": "2023-Q2",
+     "value": 2.5
+    },
+    {
+     "observation_id": "d89e632317a603c7",
+     "period": "2023-Q3",
+     "value": 2.3
+    },
+    {
+     "observation_id": "413ae9aee5c40d10",
+     "period": "2023-Q4",
+     "value": 2.1
+    },
+    {
+     "observation_id": "bbd7c78ac01b3f25",
+     "period": "2024-Q1",
+     "value": 2.0
+    },
+    {
+     "observation_id": "7e7f7ec56242aa6c",
+     "period": "2024-Q2",
+     "value": 2.1
+    },
+    {
+     "observation_id": "23ac36fa8679bbcd",
+     "period": "2024-Q3",
+     "value": 2.1
+    },
+    {
+     "observation_id": "b6df7ed7eb682522",
+     "period": "2024-Q4",
+     "value": 1.8
+    },
+    {
+     "observation_id": "ecee1a4258fe7452",
+     "period": "2025-Q1",
+     "value": 1.7
+    },
+    {
+     "observation_id": "c7767292cfb1ed6a",
+     "period": "2025-Q2",
+     "value": 1.7
+    },
+    {
+     "observation_id": "61217ad4b1f3afc0",
+     "period": "2025-Q3",
+     "value": 1.9
+    },
+    {
+     "observation_id": "1863647033271125",
+     "period": "2025-Q4",
+     "value": 1.9
+    },
+    {
+     "observation_id": "a24912f3b31d76fc",
+     "period": "2026-Q1",
+     "value": 1.5
+    },
+    {
+     "observation_id": "34f29d4137febe3e",
+     "period": "2026-Q2",
+     "value": 1.4
+    }
+   ],
+   "population": "establishments",
+   "unit": "percent"
+  },
+  "reentry_12m": {
+   "adjustment": "unspecified",
+   "points": [
+    {
+     "observation_id": "7aef1237a32fea35",
+     "period": "2019-Q1",
+     "value": 73.2
+    },
+    {
+     "observation_id": "59d96db60eb1fd91",
+     "period": "2019-Q2",
+     "value": 74.3
+    },
+    {
+     "observation_id": "1e1d15342850383f",
+     "period": "2019-Q3",
+     "value": 76.6
+    },
+    {
+     "observation_id": "31b3d3d070bc60a7",
+     "period": "2019-Q4",
+     "value": 73.4
+    },
+    {
+     "observation_id": "af5b3b8b90307f5d",
+     "period": "2020-Q1",
+     "value": 75.0
+    },
+    {
+     "observation_id": "b792f8749ac7dd94",
+     "period": "2020-Q2",
+     "value": 75.2
+    },
+    {
+     "observation_id": "f45845d14a54532d",
+     "period": "2020-Q3",
+     "value": 74.6
+    },
+    {
+     "observation_id": "9ae5c3f919f3a0d7",
+     "period": "2020-Q4",
+     "value": 71.1
+    },
+    {
+     "observation_id": "7c43ed36aa941cb2",
+     "period": "2021-Q1",
+     "value": 71.3
+    },
+    {
+     "observation_id": "4ca9c2966b90caf9",
+     "period": "2021-Q2",
+     "value": 76.4
+    },
+    {
+     "observation_id": "73c57757245be6ed",
+     "period": "2021-Q3",
+     "value": 77.4
+    },
+    {
+     "observation_id": "23ebcc87017eb8f1",
+     "period": "2021-Q4",
+     "value": 76.9
+    },
+    {
+     "observation_id": "02ff7f57f4fd44a4",
+     "period": "2022-Q1",
+     "value": 77.7
+    },
+    {
+     "observation_id": "2e778080b54d1544",
+     "period": "2022-Q2",
+     "value": 75.5
+    },
+    {
+     "observation_id": "01c79414c04b5eb8",
+     "period": "2022-Q3",
+     "value": 80.0
+    },
+    {
+     "observation_id": "933e7d5d69341a31",
+     "period": "2022-Q4",
+     "value": 73.6
+    },
+    {
+     "observation_id": "71b5ba371055e0d4",
+     "period": "2023-Q1",
+     "value": 73.0
+    },
+    {
+     "observation_id": "ca9f879ab637edb9",
+     "period": "2023-Q2",
+     "value": 79.2
+    },
+    {
+     "observation_id": "a09bb5271f6452d8",
+     "period": "2023-Q3",
+     "value": 82.7
+    },
+    {
+     "observation_id": "3a3e478a72ddd34b",
+     "period": "2023-Q4",
+     "value": 70.9
+    },
+    {
+     "observation_id": "c41bf524b8fb0c84",
+     "period": "2024-Q1",
+     "value": 76.6
+    },
+    {
+     "observation_id": "0805e42dc1fd3d2e",
+     "period": "2024-Q2",
+     "value": 73.2
+    },
+    {
+     "observation_id": "db0af70fe18ce97e",
+     "period": "2024-Q3",
+     "value": 72.1
+    },
+    {
+     "observation_id": "06373594541786d8",
+     "period": "2024-Q4",
+     "value": 69.1
+    },
+    {
+     "observation_id": "c9652fc3f818ff49",
+     "period": "2025-Q1",
+     "value": 74.8
+    },
+    {
+     "observation_id": "77819e26f3ebab99",
+     "period": "2025-Q2",
+     "value": 71.2
+    },
+    {
+     "observation_id": "c744b37562321e99",
+     "period": "2025-Q3",
+     "value": 74.2
+    },
+    {
+     "observation_id": "ef56e6210bd6afa4",
+     "period": "2025-Q4",
+     "value": 68.9
+    },
+    {
+     "observation_id": "3caa17cea0c127f9",
+     "period": "2026-Q1",
+     "value": 69.4
+    },
+    {
+     "observation_id": "3f84dceeabf17608",
+     "period": "2026-Q2",
+     "value": 69.8
+    }
+   ],
+   "population": "unverified_basis",
+   "unit": "percent"
+  },
+  "reentry_6m": {
+   "adjustment": "unspecified",
+   "points": [
+    {
+     "observation_id": "c3f32c10db922161",
+     "period": "2019-Q1",
+     "value": 66.4
+    },
+    {
+     "observation_id": "4d2f1becfa82e33b",
+     "period": "2019-Q2",
+     "value": 59.9
+    },
+    {
+     "observation_id": "78ca3de133a8a00e",
+     "period": "2019-Q3",
+     "value": 65.4
+    },
+    {
+     "observation_id": "2d77fb26992efe8c",
+     "period": "2019-Q4",
+     "value": 65.9
+    },
+    {
+     "observation_id": "718593c6b7bad9b4",
+     "period": "2020-Q1",
+     "value": 64.0
+    },
+    {
+     "observation_id": "8855a177715775f8",
+     "period": "2020-Q2",
+     "value": 58.4
+    },
+    {
+     "observation_id": "827702118b1d7a31",
+     "period": "2020-Q3",
+     "value": 57.0
+    },
+    {
+     "observation_id": "86502af63db53cd6",
+     "period": "2020-Q4",
+     "value": 64.3
+    },
+    {
+     "observation_id": "371dd7f302553827",
+     "period": "2021-Q1",
+     "value": 66.2
+    },
+    {
+     "observation_id": "e17711675ea6e53d",
+     "period": "2021-Q2",
+     "value": 64.4
+    },
+    {
+     "observation_id": "0562553b662331b4",
+     "period": "2021-Q3",
+     "value": 66.2
+    },
+    {
+     "observation_id": "dd13b755451646da",
+     "period": "2021-Q4",
+     "value": 66.8
+    },
+    {
+     "observation_id": "9d362a7d2e53cce9",
+     "period": "2022-Q1",
+     "value": 71.5
+    },
+    {
+     "observation_id": "87a484fee506a626",
+     "period": "2022-Q2",
+     "value": 66.0
+    },
+    {
+     "observation_id": "2205497d61ea1c05",
+     "period": "2022-Q3",
+     "value": 64.8
+    },
+    {
+     "observation_id": "f01302cf780fd5db",
+     "period": "2022-Q4",
+     "value": 73.1
+    },
+    {
+     "observation_id": "7ff059e13ca125f9",
+     "period": "2023-Q1",
+     "value": 71.7
+    },
+    {
+     "observation_id": "9bc54487d92641c4",
+     "period": "2023-Q2",
+     "value": 59.4
+    },
+    {
+     "observation_id": "6eb63c746a46e845",
+     "period": "2023-Q3",
+     "value": 65.3
+    },
+    {
+     "observation_id": "dbb8a3a6a21efafc",
+     "period": "2023-Q4",
+     "value": 61.5
+    },
+    {
+     "observation_id": "bafbe975ae625023",
+     "period": "2024-Q1",
+     "value": 59.4
+    },
+    {
+     "observation_id": "a0cd2320a04906b0",
+     "period": "2024-Q2",
+     "value": 55.0
+    },
+    {
+     "observation_id": "4f1bd645d3fcca0a",
+     "period": "2024-Q3",
+     "value": 60.4
+    },
+    {
+     "observation_id": "757b751e4ee81723",
+     "period": "2024-Q4",
+     "value": 58.1
+    },
+    {
+     "observation_id": "b8a523c88a3feda0",
+     "period": "2025-Q1",
+     "value": 60.6
+    },
+    {
+     "observation_id": "4099596a3dc47ca1",
+     "period": "2025-Q2",
+     "value": 56.3
+    },
+    {
+     "observation_id": "e622ac9c2beb25d1",
+     "period": "2025-Q3",
+     "value": 55.4
+    },
+    {
+     "observation_id": "7c66e32864b038f7",
+     "period": "2025-Q4",
+     "value": 57.4
+    },
+    {
+     "observation_id": "5fcc3c1f03458022",
+     "period": "2026-Q1",
+     "value": 60.7
+    },
+    {
+     "observation_id": "61d598b64afaabe0",
+     "period": "2026-Q2",
+     "value": 54.9
+    }
+   ],
+   "population": "unverified_basis",
+   "unit": "percent"
+  },
+  "resignation_rate": {
+   "adjustment": "unspecified",
+   "points": [
+    {
+     "observation_id": "8d3002cb62199f55",
+     "period": "2019-Q1",
+     "value": 1.8
+    },
+    {
+     "observation_id": "3c26ce8d4dd444de",
+     "period": "2019-Q2",
+     "value": 2.0
+    },
+    {
+     "observation_id": "49264e8308705103",
+     "period": "2019-Q3",
+     "value": 1.8
+    },
+    {
+     "observation_id": "572b8d1fcb87e49d",
+     "period": "2019-Q4",
+     "value": 1.5
+    },
+    {
+     "observation_id": "7a2c34035ec8b83d",
+     "period": "2020-Q1",
+     "value": 1.7
+    },
+    {
+     "observation_id": "ee6f1fd478e13fd2",
+     "period": "2020-Q2",
+     "value": 1.3
+    },
+    {
+     "observation_id": "e1b62a697d4cf486",
+     "period": "2020-Q3",
+     "value": 1.6
+    },
+    {
+     "observation_id": "803e994a72affb57",
+     "period": "2020-Q4",
+     "value": 1.5
+    },
+    {
+     "observation_id": "0dcb3c3d2079fef5",
+     "period": "2021-Q1",
+     "value": 1.6
+    },
+    {
+     "observation_id": "279b45dfd6df3ab1",
+     "period": "2021-Q2",
+     "value": 1.8
+    },
+    {
+     "observation_id": "ef906a37891db579",
+     "period": "2021-Q3",
+     "value": 1.7
+    },
+    {
+     "observation_id": "56c37d4d0e8b9174",
+     "period": "2021-Q4",
+     "value": 1.6
+    },
+    {
+     "observation_id": "f0b5b90fbed1900c",
+     "period": "2022-Q1",
+     "value": 1.7
+    },
+    {
+     "observation_id": "6ee2ee36fc66ef9c",
+     "period": "2022-Q2",
+     "value": 1.8
+    },
+    {
+     "observation_id": "cde89efaf9ea5f87",
+     "period": "2022-Q3",
+     "value": 1.7
+    },
+    {
+     "observation_id": "9ea68a04b7c19dec",
+     "period": "2022-Q4",
+     "value": 1.4
+    },
+    {
+     "observation_id": "4c96fcec2d57ad37",
+     "period": "2023-Q1",
+     "value": 1.5
+    },
+    {
+     "observation_id": "475d993b69c2424a",
+     "period": "2023-Q2",
+     "value": 1.5
+    },
+    {
+     "observation_id": "7952fa6e6ad2c515",
+     "period": "2023-Q3",
+     "value": 1.4
+    },
+    {
+     "observation_id": "c153a8ea697681e9",
+     "period": "2023-Q4",
+     "value": 1.3
+    },
+    {
+     "observation_id": "048b4f679e88f067",
+     "period": "2024-Q1",
+     "value": 1.4
+    },
+    {
+     "observation_id": "3af72463f712cbbe",
+     "period": "2024-Q2",
+     "value": 1.4
+    },
+    {
+     "observation_id": "1e137b032fc3b3c4",
+     "period": "2024-Q3",
+     "value": 1.3
+    },
+    {
+     "observation_id": "c974a8515a50c1d0",
+     "period": "2024-Q4",
+     "value": 1.1
+    },
+    {
+     "observation_id": "29f4cc822cbe1cfe",
+     "period": "2025-Q1",
+     "value": 1.2
+    },
+    {
+     "observation_id": "af69fc311227e794",
+     "period": "2025-Q2",
+     "value": 1.2
+    },
+    {
+     "observation_id": "30bf042f5fbb0c12",
+     "period": "2025-Q3",
+     "value": 1.2
+    },
+    {
+     "observation_id": "7aebdc0c65dde945",
+     "period": "2025-Q4",
+     "value": 1.2
+    },
+    {
+     "observation_id": "236138a9f359e9af",
+     "period": "2026-Q1",
+     "value": 1.0
+    },
+    {
+     "observation_id": "4dc766cf6a224589",
+     "period": "2026-Q2",
+     "value": 1.0
+    }
+   ],
+   "population": "establishments",
+   "unit": "percent"
+  },
+  "retrenched_permanent": {
+   "adjustment": "not_applicable",
+   "points": [
+    {
+     "observation_id": "aa5fad03a9431fe3",
+     "period": "2019-Q1",
+     "value": 3010.0
+    },
+    {
+     "observation_id": "db9a1af7b66d43cb",
+     "period": "2019-Q2",
+     "value": 2120.0
+    },
+    {
+     "observation_id": "c030b2e30642356e",
+     "period": "2019-Q3",
+     "value": 2240.0
+    },
+    {
+     "observation_id": "3a9699e3782fc094",
+     "period": "2019-Q4",
+     "value": 2440.0
+    },
+    {
+     "observation_id": "ff48bcfcc4dfe1bc",
+     "period": "2020-Q1",
+     "value": 3040.0
+    },
+    {
+     "observation_id": "420374220bedafcf",
+     "period": "2020-Q2",
+     "value": 7240.0
+    },
+    {
+     "observation_id": "7dffab703207bbcb",
+     "period": "2020-Q3",
+     "value": 8140.0
+    },
+    {
+     "observation_id": "a3934c1464436a21",
+     "period": "2020-Q4",
+     "value": 4120.0
+    },
+    {
+     "observation_id": "eb6275f35ef0031f",
+     "period": "2021-Q1",
+     "value": 2190.0
+    },
+    {
+     "observation_id": "811ef2aa2d48be34",
+     "period": "2021-Q2",
+     "value": 2170.0
+    },
+    {
+     "observation_id": "f8a56db59ff66218",
+     "period": "2021-Q3",
+     "value": 1690.0
+    },
+    {
+     "observation_id": "faa8dd029ecb9488",
+     "period": "2021-Q4",
+     "value": 1420.0
+    },
+    {
+     "observation_id": "22ee4bae2a6f7769",
+     "period": "2022-Q1",
+     "value": 1260.0
+    },
+    {
+     "observation_id": "1a321bd1b74ead21",
+     "period": "2022-Q2",
+     "value": 780.0
+    },
+    {
+     "observation_id": "e63cbddd09b7b3e7",
+     "period": "2022-Q3",
+     "value": 1090.0
+    },
+    {
+     "observation_id": "208986683db2cbb2",
+     "period": "2022-Q4",
+     "value": 2430.0
+    },
+    {
+     "observation_id": "3bbfbd8e14f78779",
+     "period": "2023-Q1",
+     "value": 3600.0
+    },
+    {
+     "observation_id": "a91a10c6cbc75b9a",
+     "period": "2023-Q2",
+     "value": 3000.0
+    },
+    {
+     "observation_id": "1832f6f6950c3c28",
+     "period": "2023-Q3",
+     "value": 3930.0
+    },
+    {
+     "observation_id": "c92c2e5568959f84",
+     "period": "2023-Q4",
+     "value": 3290.0
+    },
+    {
+     "observation_id": "181fe90b7bf1c3e8",
+     "period": "2024-Q1",
+     "value": 2950.0
+    },
+    {
+     "observation_id": "3d30036746b5e1e7",
+     "period": "2024-Q2",
+     "value": 3130.0
+    },
+    {
+     "observation_id": "3f9d6ca7813d5050",
+     "period": "2024-Q3",
+     "value": 2900.0
+    },
+    {
+     "observation_id": "964ab5d8b24d7408",
+     "period": "2024-Q4",
+     "value": 3580.0
+    },
+    {
+     "observation_id": "8e0fc3922ec80f20",
+     "period": "2025-Q1",
+     "value": 3440.0
+    },
+    {
+     "observation_id": "a1c7d91ff656a1ea",
+     "period": "2025-Q2",
+     "value": 3310.0
+    },
+    {
+     "observation_id": "53d5c7d8fc5d112a",
+     "period": "2025-Q3",
+     "value": 3580.0
+    },
+    {
+     "observation_id": "a30248e598783b54",
+     "period": "2025-Q4",
+     "value": 3460.0
+    },
+    {
+     "observation_id": "4bfb673ecd779507",
+     "period": "2026-Q1",
+     "value": 3730.0
+    },
+    {
+     "observation_id": "374cc7912d6f6274",
+     "period": "2026-Q2",
+     "value": 4470.0
+    }
+   ],
+   "population": "establishments",
+   "unit": "persons"
+  },
+  "retrenched_term_contract": {
+   "adjustment": "not_applicable",
+   "points": [
+    {
+     "observation_id": "ebea56a20bf1f59f",
+     "period": "2019-Q1",
+     "value": 220.0
+    },
+    {
+     "observation_id": "2de65e1ee5680288",
+     "period": "2019-Q2",
+     "value": 200.0
+    },
+    {
+     "observation_id": "355eab181419ea2d",
+     "period": "2019-Q3",
+     "value": 230.0
+    },
+    {
+     "observation_id": "d9897cd637a87351",
+     "period": "2019-Q4",
+     "value": 240.0
+    },
+    {
+     "observation_id": "8e4f09c80bc7af7d",
+     "period": "2020-Q1",
+     "value": 190.0
+    },
+    {
+     "observation_id": "45221b5097fa207a",
+     "period": "2020-Q2",
+     "value": 880.0
+    },
+    {
+     "observation_id": "62371165c4e361ba",
+     "period": "2020-Q3",
+     "value": 990.0
+    },
+    {
+     "observation_id": "1686c1e5c6efb869",
+     "period": "2020-Q4",
+     "value": 1520.0
+    },
+    {
+     "observation_id": "362e3ae528c63b2e",
+     "period": "2021-Q1",
+     "value": 80.0
+    },
+    {
+     "observation_id": "da274b55b0c01ac5",
+     "period": "2021-Q2",
+     "value": 170.0
+    },
+    {
+     "observation_id": "696875f72c65929a",
+     "period": "2021-Q3",
+     "value": 210.0
+    },
+    {
+     "observation_id": "b2e0d1c480344c86",
+     "period": "2021-Q4",
+     "value": 80.0
+    },
+    {
+     "observation_id": "6f7d89343ff1805c",
+     "period": "2022-Q1",
+     "value": 60.0
+    },
+    {
+     "observation_id": "3875c51ac6dbc1da",
+     "period": "2022-Q2",
+     "value": 40.0
+    },
+    {
+     "observation_id": "c8199e1c063d3098",
+     "period": "2022-Q3",
+     "value": 210.0
+    },
+    {
+     "observation_id": "0a6a8d48597f1095",
+     "period": "2022-Q4",
+     "value": 560.0
+    },
+    {
+     "observation_id": "44d6ad06f78a1e67",
+     "period": "2023-Q1",
+     "value": 220.0
+    },
+    {
+     "observation_id": "9cbf938d7a65bd5e",
+     "period": "2023-Q2",
+     "value": 200.0
+    },
+    {
+     "observation_id": "f4ce11319e575215",
+     "period": "2023-Q3",
+     "value": 180.0
+    },
+    {
+     "observation_id": "ab075f1ff6fa61bf",
+     "period": "2023-Q4",
+     "value": 160.0
+    },
+    {
+     "observation_id": "78a7e7b69cf6e035",
+     "period": "2024-Q1",
+     "value": 80.0
+    },
+    {
+     "observation_id": "da6baf76b63f4071",
+     "period": "2024-Q2",
+     "value": 140.0
+    },
+    {
+     "observation_id": "ba10a164348063b4",
+     "period": "2024-Q3",
+     "value": 140.0
+    },
+    {
+     "observation_id": "32ac57209a604be3",
+     "period": "2024-Q4",
+     "value": 90.0
+    },
+    {
+     "observation_id": "173fcd7c4ee26493",
+     "period": "2025-Q1",
+     "value": 160.0
+    },
+    {
+     "observation_id": "dac55f116ab77c9a",
+     "period": "2025-Q2",
+     "value": 230.0
+    },
+    {
+     "observation_id": "c56bedb673bf4da5",
+     "period": "2025-Q3",
+     "value": 90.0
+    },
+    {
+     "observation_id": "383e59c35dcb6f46",
+     "period": "2025-Q4",
+     "value": 230.0
+    },
+    {
+     "observation_id": "13f7c32e5b555386",
+     "period": "2026-Q1",
+     "value": 100.0
+    },
+    {
+     "observation_id": "a1c9ad55c3b0dc2a",
+     "period": "2026-Q2",
+     "value": 150.0
+    }
+   ],
+   "population": "establishments",
+   "unit": "persons"
+  },
+  "retrenchments": {
+   "adjustment": "not_applicable",
+   "points": [
+    {
+     "observation_id": "0bda25fa8ac4ecd5",
+     "period": "2019-Q1",
+     "value": 3230.0
+    },
+    {
+     "observation_id": "e5495de6c8f65665",
+     "period": "2019-Q2",
+     "value": 2320.0
+    },
+    {
+     "observation_id": "7885594d2f116242",
+     "period": "2019-Q3",
+     "value": 2470.0
+    },
+    {
+     "observation_id": "e27764f342703172",
+     "period": "2019-Q4",
+     "value": 2670.0
+    },
+    {
+     "observation_id": "7b1e16237faf64da",
+     "period": "2020-Q1",
+     "value": 3220.0
+    },
+    {
+     "observation_id": "bc1b521bd35170bf",
+     "period": "2020-Q2",
+     "value": 8130.0
+    },
+    {
+     "observation_id": "0796f993cb1c8f13",
+     "period": "2020-Q3",
+     "value": 9120.0
+    },
+    {
+     "observation_id": "f62762f7b96abd0a",
+     "period": "2020-Q4",
+     "value": 5640.0
+    },
+    {
+     "observation_id": "f94a5689eb085a09",
+     "period": "2021-Q1",
+     "value": 2270.0
+    },
+    {
+     "observation_id": "a4febe1a8f79ade9",
+     "period": "2021-Q2",
+     "value": 2340.0
+    },
+    {
+     "observation_id": "565a5e9769290760",
+     "period": "2021-Q3",
+     "value": 1900.0
+    },
+    {
+     "observation_id": "fb844a38c000052a",
+     "period": "2021-Q4",
+     "value": 1500.0
+    },
+    {
+     "observation_id": "c1347f4c704f3d65",
+     "period": "2022-Q1",
+     "value": 1320.0
+    },
+    {
+     "observation_id": "d67df8f24be720ce",
+     "period": "2022-Q2",
+     "value": 830.0
+    },
+    {
+     "observation_id": "3e54697c786803cd",
+     "period": "2022-Q3",
+     "value": 1300.0
+    },
+    {
+     "observation_id": "b355588ac9ef3669",
+     "period": "2022-Q4",
+     "value": 2990.0
+    },
+    {
+     "observation_id": "50889623294041b5",
+     "period": "2023-Q1",
+     "value": 3820.0
+    },
+    {
+     "observation_id": "00c55832fc6fa807",
+     "period": "2023-Q2",
+     "value": 3200.0
+    },
+    {
+     "observation_id": "60dcaad31b0707b2",
+     "period": "2023-Q3",
+     "value": 4110.0
+    },
+    {
+     "observation_id": "3521a443d96f6deb",
+     "period": "2023-Q4",
+     "value": 3460.0
+    },
+    {
+     "observation_id": "0f99b5c79172c310",
+     "period": "2024-Q1",
+     "value": 3030.0
+    },
+    {
+     "observation_id": "4873a795152cb38c",
+     "period": "2024-Q2",
+     "value": 3270.0
+    },
+    {
+     "observation_id": "6adba6b18e091d4f",
+     "period": "2024-Q3",
+     "value": 3050.0
+    },
+    {
+     "observation_id": "e63bb1fe026dd3bd",
+     "period": "2024-Q4",
+     "value": 3680.0
+    },
+    {
+     "observation_id": "5fee9324bc624e4d",
+     "period": "2025-Q1",
+     "value": 3590.0
+    },
+    {
+     "observation_id": "53ead881385a53c7",
+     "period": "2025-Q2",
+     "value": 3540.0
+    },
+    {
+     "observation_id": "a62a15204fcba505",
+     "period": "2025-Q3",
+     "value": 3670.0
+    },
+    {
+     "observation_id": "cf9bcacafabfda9f",
+     "period": "2025-Q4",
+     "value": 3690.0
+    },
+    {
+     "observation_id": "af35147df5007250",
+     "period": "2026-Q1",
+     "value": 3830.0
+    },
+    {
+     "observation_id": "60eb7f4b1780e77e",
+     "period": "2026-Q2",
+     "value": 4620.0
+    }
+   ],
+   "population": "establishments",
+   "unit": "persons"
+  },
+  "unemployment_citizen_sa": {
+   "adjustment": "seasonally_adjusted",
+   "points": [
+    {
+     "observation_id": "69ad8b8814e37453",
+     "period": "2019-Q1",
+     "value": 3.3
+    },
+    {
+     "observation_id": "8efeaee18b9fd4a0",
+     "period": "2019-Q2",
+     "value": 3.3
+    },
+    {
+     "observation_id": "51fe91838afd0872",
+     "period": "2019-Q3",
+     "value": 3.2
+    },
+    {
+     "observation_id": "d2e22312b01f06a9",
+     "period": "2019-Q4",
+     "value": 3.2
+    },
+    {
+     "observation_id": "10bb939a0daca00c",
+     "period": "2020-Q1",
+     "value": 3.6
+    },
+    {
+     "observation_id": "2e54c4f15e680564",
+     "period": "2020-Q2",
+     "value": 4.2
+    },
+    {
+     "observation_id": "cf2b622d4a50518e",
+     "period": "2020-Q3",
+     "value": 4.7
+    },
+    {
+     "observation_id": "f0850d172d6191ec",
+     "period": "2020-Q4",
+     "value": 4.4
+    },
+    {
+     "observation_id": "e7ead8377380f702",
+     "period": "2021-Q1",
+     "value": 4.1
+    },
+    {
+     "observation_id": "45d5adcd058fe1f3",
+     "period": "2021-Q2",
+     "value": 3.8
+    },
+    {
+     "observation_id": "fc35290873f37b8d",
+     "period": "2021-Q3",
+     "value": 3.6
+    },
+    {
+     "observation_id": "d15cf5ad89f884c3",
+     "period": "2021-Q4",
+     "value": 3.4
+    },
+    {
+     "observation_id": "2e5ba6ed7f8a8769",
+     "period": "2022-Q1",
+     "value": 3.1
+    },
+    {
+     "observation_id": "c8bc8be780c79b6d",
+     "period": "2022-Q2",
+     "value": 3.0
+    },
+    {
+     "observation_id": "c80f9d88ee74fe33",
+     "period": "2022-Q3",
+     "value": 3.0
+    },
+    {
+     "observation_id": "1636b15b10968733",
+     "period": "2022-Q4",
+     "value": 2.9
+    },
+    {
+     "observation_id": "d43e3f839ae4af72",
+     "period": "2023-Q1",
+     "value": 2.6
+    },
+    {
+     "observation_id": "f730351220649d78",
+     "period": "2023-Q2",
+     "value": 2.9
+    },
+    {
+     "observation_id": "41fb72f7ec4558e7",
+     "period": "2023-Q3",
+     "value": 3.0
+    },
+    {
+     "observation_id": "73e793f03b764feb",
+     "period": "2023-Q4",
+     "value": 2.9
+    },
+    {
+     "observation_id": "2a9adbc628264005",
+     "period": "2024-Q1",
+     "value": 3.0
+    },
+    {
+     "observation_id": "08be4176d8e4de96",
+     "period": "2024-Q2",
+     "value": 2.8
+    },
+    {
+     "observation_id": "0a9c08ef7b5bcf76",
+     "period": "2024-Q3",
+     "value": 2.7
+    },
+    {
+     "observation_id": "365b374d50e77ff9",
+     "period": "2024-Q4",
+     "value": 3.0
+    },
+    {
+     "observation_id": "fb28dcecfef71aa5",
+     "period": "2025-Q1",
+     "value": 3.0
+    },
+    {
+     "observation_id": "d134a523959321f4",
+     "period": "2025-Q2",
+     "value": 2.8
+    },
+    {
+     "observation_id": "a343b05670db3830",
+     "period": "2025-Q3",
+     "value": 3.1
+    },
+    {
+     "observation_id": "816475c94b927cfa",
+     "period": "2025-Q4",
+     "value": 3.0
+    },
+    {
+     "observation_id": "0335dd5af5c7a3cd",
+     "period": "2026-Q1",
+     "value": 3.1
+    },
+    {
+     "observation_id": "82133fc29d053c44",
+     "period": "2026-Q2",
+     "value": 3.0
+    }
+   ],
+   "population": "citizen",
+   "unit": "percent"
+  },
+  "unemployment_overall_sa": {
+   "adjustment": "seasonally_adjusted",
+   "points": [
+    {
+     "observation_id": "6b279f2c172d1f7e",
+     "period": "2019-Q1",
+     "value": 2.2
+    },
+    {
+     "observation_id": "dfb6c9a042a1ea19",
+     "period": "2019-Q2",
+     "value": 2.3
+    },
+    {
+     "observation_id": "a6ba3a656f9c9d2b",
+     "period": "2019-Q3",
+     "value": 2.2
+    },
+    {
+     "observation_id": "436873823a128849",
+     "period": "2019-Q4",
+     "value": 2.2
+    },
+    {
+     "observation_id": "c053649d8af2f5a4",
+     "period": "2020-Q1",
+     "value": 2.5
+    },
+    {
+     "observation_id": "8927448bae1a7147",
+     "period": "2020-Q2",
+     "value": 3.0
+    },
+    {
+     "observation_id": "87c2b59bd1b5a6ac",
+     "period": "2020-Q3",
+     "value": 3.4
+    },
+    {
+     "observation_id": "498fffcee00d478c",
+     "period": "2020-Q4",
+     "value": 3.2
+    },
+    {
+     "observation_id": "32ddd5516704c559",
+     "period": "2021-Q1",
+     "value": 2.9
+    },
+    {
+     "observation_id": "963a480a4268e7d0",
+     "period": "2021-Q2",
+     "value": 2.7
+    },
+    {
+     "observation_id": "c8be060903036542",
+     "period": "2021-Q3",
+     "value": 2.6
+    },
+    {
+     "observation_id": "f839770e5b5f6757",
+     "period": "2021-Q4",
+     "value": 2.4
+    },
+    {
+     "observation_id": "3a8e44663867507c",
+     "period": "2022-Q1",
+     "value": 2.2
+    },
+    {
+     "observation_id": "355b44705d62d4a6",
+     "period": "2022-Q2",
+     "value": 2.1
+    },
+    {
+     "observation_id": "bf35fa816c4de0e1",
+     "period": "2022-Q3",
+     "value": 2.1
+    },
+    {
+     "observation_id": "76cfc8f81a708254",
+     "period": "2022-Q4",
+     "value": 2.0
+    },
+    {
+     "observation_id": "a79ed3dcc99a90d9",
+     "period": "2023-Q1",
+     "value": 1.8
+    },
+    {
+     "observation_id": "f1668a562647833d",
+     "period": "2023-Q2",
+     "value": 2.0
+    },
+    {
+     "observation_id": "5eca48a879868a8f",
+     "period": "2023-Q3",
+     "value": 2.0
+    },
+    {
+     "observation_id": "9b6346a42e579817",
+     "period": "2023-Q4",
+     "value": 2.0
+    },
+    {
+     "observation_id": "98eb25a43584c75a",
+     "period": "2024-Q1",
+     "value": 2.0
+    },
+    {
+     "observation_id": "894c33671bfe5504",
+     "period": "2024-Q2",
+     "value": 2.0
+    },
+    {
+     "observation_id": "4d2d73184cca07fe",
+     "period": "2024-Q3",
+     "value": 1.9
+    },
+    {
+     "observation_id": "7f004585e533b059",
+     "period": "2024-Q4",
+     "value": 1.9
+    },
+    {
+     "observation_id": "98e612f740d4e876",
+     "period": "2025-Q1",
+     "value": 2.0
+    },
+    {
+     "observation_id": "6588bc07e916d35e",
+     "period": "2025-Q2",
+     "value": 2.0
+    },
+    {
+     "observation_id": "3a90971d338602b7",
+     "period": "2025-Q3",
+     "value": 2.0
+    },
+    {
+     "observation_id": "77ec2e8f4dde2196",
+     "period": "2025-Q4",
+     "value": 2.0
+    },
+    {
+     "observation_id": "d1ae17fe89360271",
+     "period": "2026-Q1",
+     "value": 2.0
+    },
+    {
+     "observation_id": "aeacb5d50793b5e2",
+     "period": "2026-Q2",
+     "value": 1.9
+    }
+   ],
+   "population": "overall",
+   "unit": "percent"
+  },
+  "unemployment_resident_nsa": {
+   "adjustment": "not_adjusted",
+   "points": [
+    {
+     "observation_id": "fb9fda585c698fc6",
+     "period": "2019-Q1",
+     "value": 2.8
+    },
+    {
+     "observation_id": "57a5609b864b13c9",
+     "period": "2019-Q2",
+     "value": 4.2
+    },
+    {
+     "observation_id": "87a285f6cabe5c78",
+     "period": "2019-Q3",
+     "value": 2.8
+    },
+    {
+     "observation_id": "95357927a1d21132",
+     "period": "2019-Q4",
+     "value": 2.7
+    },
+    {
+     "observation_id": "2b6e9c88c668657c",
+     "period": "2020-Q1",
+     "value": 3.1
+    },
+    {
+     "observation_id": "892a849913913ed8",
+     "period": "2020-Q2",
+     "value": 5.2
+    },
+    {
+     "observation_id": "52564844fe690c7f",
+     "period": "2020-Q3",
+     "value": 4.3
+    },
+    {
+     "observation_id": "875dead4dd999409",
+     "period": "2020-Q4",
+     "value": 3.8
+    },
+    {
+     "observation_id": "9485006e10a483ad",
+     "period": "2021-Q1",
+     "value": 3.5
+    },
+    {
+     "observation_id": "18fc6cc88dcb7646",
+     "period": "2021-Q2",
+     "value": 4.6
+    },
+    {
+     "observation_id": "8b4a4909c3cb2cd4",
+     "period": "2021-Q3",
+     "value": 3.2
+    },
+    {
+     "observation_id": "425aef74c2611c2d",
+     "period": "2021-Q4",
+     "value": 2.7
+    },
+    {
+     "observation_id": "9af8430658e1ab6c",
+     "period": "2022-Q1",
+     "value": 2.7
+    },
+    {
+     "observation_id": "6c6881b73cb11330",
+     "period": "2022-Q2",
+     "value": 3.6
+    },
+    {
+     "observation_id": "13e4e1433095b55d",
+     "period": "2022-Q3",
+     "value": 2.8
+    },
+    {
+     "observation_id": "1ac796f583adaf7c",
+     "period": "2022-Q4",
+     "value": 2.4
+    },
+    {
+     "observation_id": "55f4484b8fbf06a1",
+     "period": "2023-Q1",
+     "value": 2.3
+    },
+    {
+     "observation_id": "759c84641d74494d",
+     "period": "2023-Q2",
+     "value": 3.4
+    },
+    {
+     "observation_id": "7925d11069a9a2b7",
+     "period": "2023-Q3",
+     "value": 2.8
+    },
+    {
+     "observation_id": "01914d8c2f605dc2",
+     "period": "2023-Q4",
+     "value": 2.4
+    },
+    {
+     "observation_id": "38e9ec776d9b2b52",
+     "period": "2024-Q1",
+     "value": 2.6
+    },
+    {
+     "observation_id": "4d9c223fdcff87b2",
+     "period": "2024-Q2",
+     "value": 3.3
+    },
+    {
+     "observation_id": "7ad6b7fa45bb93e5",
+     "period": "2024-Q3",
+     "value": 2.5
+    },
+    {
+     "observation_id": "046650ec324eba7e",
+     "period": "2024-Q4",
+     "value": 2.5
+    },
+    {
+     "observation_id": "6407148b9704e4a9",
+     "period": "2025-Q1",
+     "value": 2.7
+    },
+    {
+     "observation_id": "67b8050d0677e67d",
+     "period": "2025-Q2",
+     "value": 3.3
+    },
+    {
+     "observation_id": "4caa3fbd0df137f1",
+     "period": "2025-Q3",
+     "value": 2.7
+    },
+    {
+     "observation_id": "65a6b88028dc8555",
+     "period": "2025-Q4",
+     "value": 2.6
+    },
+    {
+     "observation_id": "c1e43b3f8ebfc607",
+     "period": "2026-Q1",
+     "value": 2.8
+    },
+    {
+     "observation_id": "9e3b178b6b85f234",
+     "period": "2026-Q2",
+     "value": 3.5
+    }
+   ],
+   "population": "resident",
+   "unit": "percent"
+  },
+  "unemployment_resident_sa": {
+   "adjustment": "seasonally_adjusted",
+   "points": [
+    {
+     "observation_id": "85fedc28da7c9dda",
+     "period": "2019-Q1",
+     "value": 3.1
+    },
+    {
+     "observation_id": "8a780f2d5ca19edb",
+     "period": "2019-Q2",
+     "value": 3.2
+    },
+    {
+     "observation_id": "1c265b33420d7823",
+     "period": "2019-Q3",
+     "value": 3.1
+    },
+    {
+     "observation_id": "73f112b347279383",
+     "period": "2019-Q4",
+     "value": 3.2
+    },
+    {
+     "observation_id": "7bf5ab2dcac778ce",
+     "period": "2020-Q1",
+     "value": 3.4
+    },
+    {
+     "observation_id": "b7035876c2d439c9",
+     "period": "2020-Q2",
+     "value": 4.1
+    },
+    {
+     "observation_id": "dd27a5a2cda24d2e",
+     "period": "2020-Q3",
+     "value": 4.6
+    },
+    {
+     "observation_id": "12a2d48d627df994",
+     "period": "2020-Q4",
+     "value": 4.3
+    },
+    {
+     "observation_id": "babad0478bbba0ac",
+     "period": "2021-Q1",
+     "value": 3.9
+    },
+    {
+     "observation_id": "550a9945299a759a",
+     "period": "2021-Q2",
+     "value": 3.6
+    },
+    {
+     "observation_id": "4e9407e0478a6f0b",
+     "period": "2021-Q3",
+     "value": 3.4
+    },
+    {
+     "observation_id": "ce5bb5bb2a565e3c",
+     "period": "2021-Q4",
+     "value": 3.1
+    },
+    {
+     "observation_id": "e17a48fb89f9197e",
+     "period": "2022-Q1",
+     "value": 3.0
+    },
+    {
+     "observation_id": "d707aede7fd7e5d6",
+     "period": "2022-Q2",
+     "value": 2.8
+    },
+    {
+     "observation_id": "cbbbe93fa2c9e3f1",
+     "period": "2022-Q3",
+     "value": 2.9
+    },
+    {
+     "observation_id": "e812ac3ffdf55d37",
+     "period": "2022-Q4",
+     "value": 2.8
+    },
+    {
+     "observation_id": "7d99082c64875825",
+     "period": "2023-Q1",
+     "value": 2.5
+    },
+    {
+     "observation_id": "915b5c245406e34c",
+     "period": "2023-Q2",
+     "value": 2.8
+    },
+    {
+     "observation_id": "9217d3c527bb503d",
+     "period": "2023-Q3",
+     "value": 2.9
+    },
+    {
+     "observation_id": "315a82ba1e903806",
+     "period": "2023-Q4",
+     "value": 2.8
+    },
+    {
+     "observation_id": "9acf102dd4140cc7",
+     "period": "2024-Q1",
+     "value": 2.8
+    },
+    {
+     "observation_id": "5bfa12b6028b1901",
+     "period": "2024-Q2",
+     "value": 2.7
+    },
+    {
+     "observation_id": "01b383a44fc5aa6c",
+     "period": "2024-Q3",
+     "value": 2.6
+    },
+    {
+     "observation_id": "cac660635c13ba75",
+     "period": "2024-Q4",
+     "value": 2.8
+    },
+    {
+     "observation_id": "686bc33e5f946053",
+     "period": "2025-Q1",
+     "value": 2.8
+    },
+    {
+     "observation_id": "0ee50f2fab5239c8",
+     "period": "2025-Q2",
+     "value": 2.7
+    },
+    {
+     "observation_id": "42aa7008cf0d7874",
+     "period": "2025-Q3",
+     "value": 2.9
+    },
+    {
+     "observation_id": "7daa0066b46d65a5",
+     "period": "2025-Q4",
+     "value": 2.9
+    },
+    {
+     "observation_id": "0db05d96f3e8ce11",
+     "period": "2026-Q1",
+     "value": 2.9
+    },
+    {
+     "observation_id": "3407f2b885745f7f",
+     "period": "2026-Q2",
+     "value": 2.9
+    }
+   ],
+   "population": "resident",
+   "unit": "percent"
+  },
+  "vacancy_ratio": {
+   "adjustment": "seasonally_adjusted",
+   "points": [
+    {
+     "observation_id": "e63f0313f91362df",
+     "period": "2019-Q1",
+     "value": 1.01
+    },
+    {
+     "observation_id": "725b43d00cb4e892",
+     "period": "2019-Q2",
+     "value": 0.89
+    },
+    {
+     "observation_id": "028b69aa8a19e502",
+     "period": "2019-Q3",
+     "value": 0.9
+    },
+    {
+     "observation_id": "3a35cd3c4b6244cf",
+     "period": "2019-Q4",
+     "value": 0.85
+    },
+    {
+     "observation_id": "f9b636bd18725c05",
+     "period": "2020-Q1",
+     "value": 0.66
+    },
+    {
+     "observation_id": "b9d1e8508249ca5c",
+     "period": "2020-Q2",
+     "value": 0.52
+    },
+    {
+     "observation_id": "a818a30179e949e3",
+     "period": "2020-Q3",
+     "value": 0.67
+    },
+    {
+     "observation_id": "46df1202f98af1aa",
+     "period": "2020-Q4",
+     "value": 0.78
+    },
+    {
+     "observation_id": "2390c781eda5222e",
+     "period": "2021-Q1",
+     "value": 0.99
+    },
+    {
+     "observation_id": "665a539adc69e954",
+     "period": "2021-Q2",
+     "value": 1.58
+    },
+    {
+     "observation_id": "8916a7f505649858",
+     "period": "2021-Q3",
+     "value": 2.09
+    },
+    {
+     "observation_id": "e9a484d342018866",
+     "period": "2021-Q4",
+     "value": 2.08
+    },
+    {
+     "observation_id": "5b9a732609a24584",
+     "period": "2022-Q1",
+     "value": 2.38
+    },
+    {
+     "observation_id": "ab0164d5f8cd0d96",
+     "period": "2022-Q2",
+     "value": 2.55
+    },
+    {
+     "observation_id": "11bda1ec01049712",
+     "period": "2022-Q3",
+     "value": 2.12
+    },
+    {
+     "observation_id": "d2ab15e9bb918dd3",
+     "period": "2022-Q4",
+     "value": 2.24
+    },
+    {
+     "observation_id": "4c39ecf0ccd6413c",
+     "period": "2023-Q1",
+     "value": 2.34
+    },
+    {
+     "observation_id": "49898e3b34cb3561",
+     "period": "2023-Q2",
+     "value": 1.87
+    },
+    {
+     "observation_id": "7316b5bbc0be0a4a",
+     "period": "2023-Q3",
+     "value": 1.63
+    },
+    {
+     "observation_id": "2dc8db391a1f848a",
+     "period": "2023-Q4",
+     "value": 1.69
+    },
+    {
+     "observation_id": "765b80aeaa54d901",
+     "period": "2024-Q1",
+     "value": 1.64
+    },
+    {
+     "observation_id": "a84eaacb4cda2a28",
+     "period": "2024-Q2",
+     "value": 1.72
+    },
+    {
+     "observation_id": "61cc795b6f86aca2",
+     "period": "2024-Q3",
+     "value": 1.34
+    },
+    {
+     "observation_id": "ce87ebbfe18bb7ce",
+     "period": "2024-Q4",
+     "value": 1.57
+    },
+    {
+     "observation_id": "32ccb63d130c4aea",
+     "period": "2025-Q1",
+     "value": 1.67
+    },
+    {
+     "observation_id": "88dd4d4b8d3b21d1",
+     "period": "2025-Q2",
+     "value": 1.38
+    },
+    {
+     "observation_id": "eacff567296be032",
+     "period": "2025-Q3",
+     "value": 1.5
+    },
+    {
+     "observation_id": "c6e3f48db7af08c9",
+     "period": "2025-Q4",
+     "value": 1.58
+    },
+    {
+     "observation_id": "b37e902dc0da3c80",
+     "period": "2026-Q1",
+     "value": 1.46
+    },
+    {
+     "observation_id": "3997683b266057f8",
+     "period": "2026-Q2",
+     "value": 1.48
+    }
+   ],
+   "population": "not_applicable",
+   "unit": "ratio"
+  }
+ }
+}

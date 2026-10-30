@@ -1,0 +1,2086 @@
+{
+ "population_basis": "unverified",
+ "rows": [
+  {
+   "level": 3,
+   "observation_id": "087d2fbfc035c731",
+   "path": "Total Changes In Employment > Services Producing Industries > Accommodation & Food Services > Accommodation",
+   "period": "2024-Q1",
+   "sector": "Accommodation",
+   "value": 200.0
+  },
+  {
+   "level": 3,
+   "observation_id": "dab32e02b8177b0e",
+   "path": "Total Changes In Employment > Services Producing Industries > Accommodation & Food Services > Accommodation",
+   "period": "2024-Q2",
+   "sector": "Accommodation",
+   "value": 100.0
+  },
+  {
+   "level": 3,
+   "observation_id": "8d33310031fa7645",
+   "path": "Total Changes In Employment > Services Producing Industries > Accommodation & Food Services > Accommodation",
+   "period": "2024-Q3",
+   "sector": "Accommodation",
+   "value": 1400.0
+  },
+  {
+   "level": 3,
+   "observation_id": "63fd08d84a4c8004",
+   "path": "Total Changes In Employment > Services Producing Industries > Accommodation & Food Services > Accommodation",
+   "period": "2024-Q4",
+   "sector": "Accommodation",
+   "value": -800.0
+  },
+  {
+   "level": 3,
+   "observation_id": "af7741533a83db72",
+   "path": "Total Changes In Employment > Services Producing Industries > Accommodation & Food Services > Accommodation",
+   "period": "2025-Q1",
+   "sector": "Accommodation",
+   "value": 100.0
+  },
+  {
+   "level": 3,
+   "observation_id": "4b91d05360bdb85c",
+   "path": "Total Changes In Employment > Services Producing Industries > Accommodation & Food Services > Accommodation",
+   "period": "2025-Q2",
+   "sector": "Accommodation",
+   "value": -300.0
+  },
+  {
+   "level": 3,
+   "observation_id": "c3f370d0bfbd17c6",
+   "path": "Total Changes In Employment > Services Producing Industries > Accommodation & Food Services > Accommodation",
+   "period": "2025-Q3",
+   "sector": "Accommodation",
+   "value": 600.0
+  },
+  {
+   "level": 3,
+   "observation_id": "3e87a850716fa4b5",
+   "path": "Total Changes In Employment > Services Producing Industries > Accommodation & Food Services > Accommodation",
+   "period": "2025-Q4",
+   "sector": "Accommodation",
+   "value": -200.0
+  },
+  {
+   "level": 3,
+   "observation_id": "f1c56b45637ee8e9",
+   "path": "Total Changes In Employment > Services Producing Industries > Accommodation & Food Services > Accommodation",
+   "period": "2026-Q1",
+   "sector": "Accommodation",
+   "value": -500.0
+  },
+  {
+   "level": 3,
+   "observation_id": "c88149cc1cdba898",
+   "path": "Total Changes In Employment > Services Producing Industries > Accommodation & Food Services > Accommodation",
+   "period": "2026-Q2",
+   "sector": "Accommodation",
+   "value": -300.0
+  },
+  {
+   "level": 2,
+   "observation_id": "f46050704322bad1",
+   "path": "Total Changes In Employment > Services Producing Industries > Accommodation & Food Services",
+   "period": "2024-Q1",
+   "sector": "Accommodation & Food Services",
+   "value": 500.0
+  },
+  {
+   "level": 2,
+   "observation_id": "4913eeac2385f6a5",
+   "path": "Total Changes In Employment > Services Producing Industries > Accommodation & Food Services",
+   "period": "2024-Q2",
+   "sector": "Accommodation & Food Services",
+   "value": 400.0
+  },
+  {
+   "level": 2,
+   "observation_id": "73d6e51ae40b7778",
+   "path": "Total Changes In Employment > Services Producing Industries > Accommodation & Food Services",
+   "period": "2024-Q3",
+   "sector": "Accommodation & Food Services",
+   "value": 2600.0
+  },
+  {
+   "level": 2,
+   "observation_id": "40b9c880fe19e039",
+   "path": "Total Changes In Employment > Services Producing Industries > Accommodation & Food Services",
+   "period": "2024-Q4",
+   "sector": "Accommodation & Food Services",
+   "value": -2200.0
+  },
+  {
+   "level": 2,
+   "observation_id": "fde653d5dd6a3d4e",
+   "path": "Total Changes In Employment > Services Producing Industries > Accommodation & Food Services",
+   "period": "2025-Q1",
+   "sector": "Accommodation & Food Services",
+   "value": 100.0
+  },
+  {
+   "level": 2,
+   "observation_id": "5fddd01edfb7a926",
+   "path": "Total Changes In Employment > Services Producing Industries > Accommodation & Food Services",
+   "period": "2025-Q2",
+   "sector": "Accommodation & Food Services",
+   "value": -1500.0
+  },
+  {
+   "level": 2,
+   "observation_id": "4c01afc8f26d142a",
+   "path": "Total Changes In Employment > Services Producing Industries > Accommodation & Food Services",
+   "period": "2025-Q3",
+   "sector": "Accommodation & Food Services",
+   "value": 900.0
+  },
+  {
+   "level": 2,
+   "observation_id": "aa64dbae0d994944",
+   "path": "Total Changes In Employment > Services Producing Industries > Accommodation & Food Services",
+   "period": "2025-Q4",
+   "sector": "Accommodation & Food Services",
+   "value": 800.0
+  },
+  {
+   "level": 2,
+   "observation_id": "ed4756ac69dee071",
+   "path": "Total Changes In Employment > Services Producing Industries > Accommodation & Food Services",
+   "period": "2026-Q1",
+   "sector": "Accommodation & Food Services",
+   "value": -2000.0
+  },
+  {
+   "level": 2,
+   "observation_id": "b77a262b4df5b7eb",
+   "path": "Total Changes In Employment > Services Producing Industries > Accommodation & Food Services",
+   "period": "2026-Q2",
+   "sector": "Accommodation & Food Services",
+   "value": -2200.0
+  },
+  {
+   "level": 3,
+   "observation_id": "a9369ca268b46ad9",
+   "path": "Total Changes In Employment > Services Producing Industries > Real Estate, Professional Services And Administrative & Support Services > Administrative & Support Services",
+   "period": "2024-Q1",
+   "sector": "Administrative & Support Services",
+   "value": 3200.0
+  },
+  {
+   "level": 3,
+   "observation_id": "0b9c8546f4337e27",
+   "path": "Total Changes In Employment > Services Producing Industries > Real Estate, Professional Services And Administrative & Support Services > Administrative & Support Services",
+   "period": "2024-Q2",
+   "sector": "Administrative & Support Services",
+   "value": -300.0
+  },
+  {
+   "level": 3,
+   "observation_id": "3fe218a3a8e81b4b",
+   "path": "Total Changes In Employment > Services Producing Industries > Real Estate, Professional Services And Administrative & Support Services > Administrative & Support Services",
+   "period": "2024-Q3",
+   "sector": "Administrative & Support Services",
+   "value": 2900.0
+  },
+  {
+   "level": 3,
+   "observation_id": "80a20a66769d5405",
+   "path": "Total Changes In Employment > Services Producing Industries > Real Estate, Professional Services And Administrative & Support Services > Administrative & Support Services",
+   "period": "2024-Q4",
+   "sector": "Administrative & Support Services",
+   "value": 100.0
+  },
+  {
+   "level": 3,
+   "observation_id": "6898a3b501816717",
+   "path": "Total Changes In Employment > Services Producing Industries > Real Estate, Professional Services And Administrative & Support Services > Administrative & Support Services",
+   "period": "2025-Q1",
+   "sector": "Administrative & Support Services",
+   "value": 1100.0
+  },
+  {
+   "level": 3,
+   "observation_id": "8792dde137042e30",
+   "path": "Total Changes In Employment > Services Producing Industries > Real Estate, Professional Services And Administrative & Support Services > Administrative & Support Services",
+   "period": "2025-Q2",
+   "sector": "Administrative & Support Services",
+   "value": 3500.0
+  },
+  {
+   "level": 3,
+   "observation_id": "1697395b1f4690fa",
+   "path": "Total Changes In Employment > Services Producing Industries > Real Estate, Professional Services And Administrative & Support Services > Administrative & Support Services",
+   "period": "2025-Q3",
+   "sector": "Administrative & Support Services",
+   "value": -3200.0
+  },
+  {
+   "level": 3,
+   "observation_id": "61e3730e9e1ca7fa",
+   "path": "Total Changes In Employment > Services Producing Industries > Real Estate, Professional Services And Administrative & Support Services > Administrative & Support Services",
+   "period": "2025-Q4",
+   "sector": "Administrative & Support Services",
+   "value": 3500.0
+  },
+  {
+   "level": 3,
+   "observation_id": "7d9a978c8101c9fe",
+   "path": "Total Changes In Employment > Services Producing Industries > Real Estate, Professional Services And Administrative & Support Services > Administrative & Support Services",
+   "period": "2026-Q1",
+   "sector": "Administrative & Support Services",
+   "value": 4800.0
+  },
+  {
+   "level": 3,
+   "observation_id": "d75108722d4ded2e",
+   "path": "Total Changes In Employment > Services Producing Industries > Real Estate, Professional Services And Administrative & Support Services > Administrative & Support Services",
+   "period": "2026-Q2",
+   "sector": "Administrative & Support Services",
+   "value": -1600.0
+  },
+  {
+   "level": 3,
+   "observation_id": "a1a213507013179f",
+   "path": "Total Changes In Employment > Services Producing Industries > Other Services Industries > Arts, Entertainment & Recreation",
+   "period": "2024-Q1",
+   "sector": "Arts, Entertainment & Recreation",
+   "value": -700.0
+  },
+  {
+   "level": 3,
+   "observation_id": "b2bbf729bff11eac",
+   "path": "Total Changes In Employment > Services Producing Industries > Other Services Industries > Arts, Entertainment & Recreation",
+   "period": "2024-Q2",
+   "sector": "Arts, Entertainment & Recreation",
+   "value": 1300.0
+  },
+  {
+   "level": 3,
+   "observation_id": "1f77513f0326a77e",
+   "path": "Total Changes In Employment > Services Producing Industries > Other Services Industries > Arts, Entertainment & Recreation",
+   "period": "2024-Q3",
+   "sector": "Arts, Entertainment & Recreation",
+   "value": 900.0
+  },
+  {
+   "level": 3,
+   "observation_id": "f5448c69ac04e7fd",
+   "path": "Total Changes In Employment > Services Producing Industries > Other Services Industries > Arts, Entertainment & Recreation",
+   "period": "2024-Q4",
+   "sector": "Arts, Entertainment & Recreation",
+   "value": -100.0
+  },
+  {
+   "level": 3,
+   "observation_id": "7f5d5cef621d53dc",
+   "path": "Total Changes In Employment > Services Producing Industries > Other Services Industries > Arts, Entertainment & Recreation",
+   "period": "2025-Q1",
+   "sector": "Arts, Entertainment & Recreation",
+   "value": -200.0
+  },
+  {
+   "level": 3,
+   "observation_id": "e1c54d9e3dbb4551",
+   "path": "Total Changes In Employment > Services Producing Industries > Other Services Industries > Arts, Entertainment & Recreation",
+   "period": "2025-Q2",
+   "sector": "Arts, Entertainment & Recreation",
+   "value": 900.0
+  },
+  {
+   "level": 3,
+   "observation_id": "c9ae73c2ebd43f1a",
+   "path": "Total Changes In Employment > Services Producing Industries > Other Services Industries > Arts, Entertainment & Recreation",
+   "period": "2025-Q3",
+   "sector": "Arts, Entertainment & Recreation",
+   "value": 1600.0
+  },
+  {
+   "level": 3,
+   "observation_id": "1c8a4c2e9cc101bd",
+   "path": "Total Changes In Employment > Services Producing Industries > Other Services Industries > Arts, Entertainment & Recreation",
+   "period": "2025-Q4",
+   "sector": "Arts, Entertainment & Recreation",
+   "value": 100.0
+  },
+  {
+   "level": 3,
+   "observation_id": "ab76c62bcbdd1492",
+   "path": "Total Changes In Employment > Services Producing Industries > Other Services Industries > Arts, Entertainment & Recreation",
+   "period": "2026-Q1",
+   "sector": "Arts, Entertainment & Recreation",
+   "value": 200.0
+  },
+  {
+   "level": 3,
+   "observation_id": "652b6fec3df7ee8e",
+   "path": "Total Changes In Employment > Services Producing Industries > Other Services Industries > Arts, Entertainment & Recreation",
+   "period": "2026-Q2",
+   "sector": "Arts, Entertainment & Recreation",
+   "value": 400.0
+  },
+  {
+   "level": 2,
+   "observation_id": "d9ced3fa7f4c7d7c",
+   "path": "Total Changes In Employment > Goods Producing Industries > Construction",
+   "period": "2024-Q1",
+   "sector": "Construction",
+   "value": -2400.0
+  },
+  {
+   "level": 2,
+   "observation_id": "2cc8a62ca88a4f89",
+   "path": "Total Changes In Employment > Goods Producing Industries > Construction",
+   "period": "2024-Q2",
+   "sector": "Construction",
+   "value": 5700.0
+  },
+  {
+   "level": 2,
+   "observation_id": "1a857f5b908876c9",
+   "path": "Total Changes In Employment > Goods Producing Industries > Construction",
+   "period": "2024-Q3",
+   "sector": "Construction",
+   "value": 3700.0
+  },
+  {
+   "level": 2,
+   "observation_id": "5a168e6e9edf909a",
+   "path": "Total Changes In Employment > Goods Producing Industries > Construction",
+   "period": "2024-Q4",
+   "sector": "Construction",
+   "value": 4500.0
+  },
+  {
+   "level": 2,
+   "observation_id": "d6036a648a545ca8",
+   "path": "Total Changes In Employment > Goods Producing Industries > Construction",
+   "period": "2025-Q1",
+   "sector": "Construction",
+   "value": -1000.0
+  },
+  {
+   "level": 2,
+   "observation_id": "09f92200616f848c",
+   "path": "Total Changes In Employment > Goods Producing Industries > Construction",
+   "period": "2025-Q2",
+   "sector": "Construction",
+   "value": 5800.0
+  },
+  {
+   "level": 2,
+   "observation_id": "1c7be8f8bcced414",
+   "path": "Total Changes In Employment > Goods Producing Industries > Construction",
+   "period": "2025-Q3",
+   "sector": "Construction",
+   "value": 13800.0
+  },
+  {
+   "level": 2,
+   "observation_id": "477af467ae65164e",
+   "path": "Total Changes In Employment > Goods Producing Industries > Construction",
+   "period": "2025-Q4",
+   "sector": "Construction",
+   "value": 8800.0
+  },
+  {
+   "level": 2,
+   "observation_id": "8c7d800bef663672",
+   "path": "Total Changes In Employment > Goods Producing Industries > Construction",
+   "period": "2026-Q1",
+   "sector": "Construction",
+   "value": 2500.0
+  },
+  {
+   "level": 2,
+   "observation_id": "e8b4ab29998a17d4",
+   "path": "Total Changes In Employment > Goods Producing Industries > Construction",
+   "period": "2026-Q2",
+   "sector": "Construction",
+   "value": 7200.0
+  },
+  {
+   "level": 4,
+   "observation_id": "fb484029e594170d",
+   "path": "Total Changes In Employment > Services Producing Industries > Other Services Industries > Public Administration & Education > Education",
+   "period": "2024-Q1",
+   "sector": "Education",
+   "value": 1600.0
+  },
+  {
+   "level": 4,
+   "observation_id": "c52423fca1a0dc8d",
+   "path": "Total Changes In Employment > Services Producing Industries > Other Services Industries > Public Administration & Education > Education",
+   "period": "2024-Q2",
+   "sector": "Education",
+   "value": 0.0
+  },
+  {
+   "level": 4,
+   "observation_id": "e81db83cc35774c4",
+   "path": "Total Changes In Employment > Services Producing Industries > Other Services Industries > Public Administration & Education > Education",
+   "period": "2024-Q3",
+   "sector": "Education",
+   "value": 100.0
+  },
+  {
+   "level": 4,
+   "observation_id": "2bb5b9a00b1cecab",
+   "path": "Total Changes In Employment > Services Producing Industries > Other Services Industries > Public Administration & Education > Education",
+   "period": "2024-Q4",
+   "sector": "Education",
+   "value": 200.0
+  },
+  {
+   "level": 4,
+   "observation_id": "7a4c64e2e682c19e",
+   "path": "Total Changes In Employment > Services Producing Industries > Other Services Industries > Public Administration & Education > Education",
+   "period": "2025-Q1",
+   "sector": "Education",
+   "value": 100.0
+  },
+  {
+   "level": 4,
+   "observation_id": "6aca836d84b8b7b0",
+   "path": "Total Changes In Employment > Services Producing Industries > Other Services Industries > Public Administration & Education > Education",
+   "period": "2025-Q2",
+   "sector": "Education",
+   "value": 100.0
+  },
+  {
+   "level": 4,
+   "observation_id": "fba7a721d5e4c3e5",
+   "path": "Total Changes In Employment > Services Producing Industries > Other Services Industries > Public Administration & Education > Education",
+   "period": "2025-Q3",
+   "sector": "Education",
+   "value": -500.0
+  },
+  {
+   "level": 4,
+   "observation_id": "a506c3e87bc5d4bc",
+   "path": "Total Changes In Employment > Services Producing Industries > Other Services Industries > Public Administration & Education > Education",
+   "period": "2025-Q4",
+   "sector": "Education",
+   "value": -500.0
+  },
+  {
+   "level": 4,
+   "observation_id": "8b3b3780ffff552d",
+   "path": "Total Changes In Employment > Services Producing Industries > Other Services Industries > Public Administration & Education > Education",
+   "period": "2026-Q1",
+   "sector": "Education",
+   "value": 900.0
+  },
+  {
+   "level": 4,
+   "observation_id": "ed506ca93fa83d95",
+   "path": "Total Changes In Employment > Services Producing Industries > Other Services Industries > Public Administration & Education > Education",
+   "period": "2026-Q2",
+   "sector": "Education",
+   "value": 300.0
+  },
+  {
+   "level": 2,
+   "observation_id": "81575f22c814ab54",
+   "path": "Total Changes In Employment > Services Producing Industries > Financial & Insurance Services",
+   "period": "2024-Q1",
+   "sector": "Financial & Insurance Services",
+   "value": 1900.0
+  },
+  {
+   "level": 2,
+   "observation_id": "55b71bf4d035f314",
+   "path": "Total Changes In Employment > Services Producing Industries > Financial & Insurance Services",
+   "period": "2024-Q2",
+   "sector": "Financial & Insurance Services",
+   "value": 1000.0
+  },
+  {
+   "level": 2,
+   "observation_id": "6b7be5c26771d305",
+   "path": "Total Changes In Employment > Services Producing Industries > Financial & Insurance Services",
+   "period": "2024-Q3",
+   "sector": "Financial & Insurance Services",
+   "value": 1200.0
+  },
+  {
+   "level": 2,
+   "observation_id": "370a518ebb7ea638",
+   "path": "Total Changes In Employment > Services Producing Industries > Financial & Insurance Services",
+   "period": "2024-Q4",
+   "sector": "Financial & Insurance Services",
+   "value": 800.0
+  },
+  {
+   "level": 2,
+   "observation_id": "f2af80eba6a94230",
+   "path": "Total Changes In Employment > Services Producing Industries > Financial & Insurance Services",
+   "period": "2025-Q1",
+   "sector": "Financial & Insurance Services",
+   "value": 2500.0
+  },
+  {
+   "level": 2,
+   "observation_id": "d4b4353d6397668d",
+   "path": "Total Changes In Employment > Services Producing Industries > Financial & Insurance Services",
+   "period": "2025-Q2",
+   "sector": "Financial & Insurance Services",
+   "value": 5700.0
+  },
+  {
+   "level": 2,
+   "observation_id": "2f9a7bf95ef895d1",
+   "path": "Total Changes In Employment > Services Producing Industries > Financial & Insurance Services",
+   "period": "2025-Q3",
+   "sector": "Financial & Insurance Services",
+   "value": 2100.0
+  },
+  {
+   "level": 2,
+   "observation_id": "bec83dd699f2aaa9",
+   "path": "Total Changes In Employment > Services Producing Industries > Financial & Insurance Services",
+   "period": "2025-Q4",
+   "sector": "Financial & Insurance Services",
+   "value": -1300.0
+  },
+  {
+   "level": 2,
+   "observation_id": "1c011f2c68c882bc",
+   "path": "Total Changes In Employment > Services Producing Industries > Financial & Insurance Services",
+   "period": "2026-Q1",
+   "sector": "Financial & Insurance Services",
+   "value": -1300.0
+  },
+  {
+   "level": 2,
+   "observation_id": "c45ec976ad31a439",
+   "path": "Total Changes In Employment > Services Producing Industries > Financial & Insurance Services",
+   "period": "2026-Q2",
+   "sector": "Financial & Insurance Services",
+   "value": 1400.0
+  },
+  {
+   "level": 3,
+   "observation_id": "1bcc34a36d4f2af1",
+   "path": "Total Changes In Employment > Services Producing Industries > Accommodation & Food Services > Food & Beverage Services",
+   "period": "2024-Q1",
+   "sector": "Food & Beverage Services",
+   "value": 300.0
+  },
+  {
+   "level": 3,
+   "observation_id": "266774122181098a",
+   "path": "Total Changes In Employment > Services Producing Industries > Accommodation & Food Services > Food & Beverage Services",
+   "period": "2024-Q2",
+   "sector": "Food & Beverage Services",
+   "value": 200.0
+  },
+  {
+   "level": 3,
+   "observation_id": "b1b5b24dc88e09cb",
+   "path": "Total Changes In Employment > Services Producing Industries > Accommodation & Food Services > Food & Beverage Services",
+   "period": "2024-Q3",
+   "sector": "Food & Beverage Services",
+   "value": 1200.0
+  },
+  {
+   "level": 3,
+   "observation_id": "747e76a049ddda44",
+   "path": "Total Changes In Employment > Services Producing Industries > Accommodation & Food Services > Food & Beverage Services",
+   "period": "2024-Q4",
+   "sector": "Food & Beverage Services",
+   "value": -1400.0
+  },
+  {
+   "level": 3,
+   "observation_id": "0159a76fc11a1d2b",
+   "path": "Total Changes In Employment > Services Producing Industries > Accommodation & Food Services > Food & Beverage Services",
+   "period": "2025-Q1",
+   "sector": "Food & Beverage Services",
+   "value": -100.0
+  },
+  {
+   "level": 3,
+   "observation_id": "723efae8660674c4",
+   "path": "Total Changes In Employment > Services Producing Industries > Accommodation & Food Services > Food & Beverage Services",
+   "period": "2025-Q2",
+   "sector": "Food & Beverage Services",
+   "value": -1200.0
+  },
+  {
+   "level": 3,
+   "observation_id": "5fc1fbb2df48463b",
+   "path": "Total Changes In Employment > Services Producing Industries > Accommodation & Food Services > Food & Beverage Services",
+   "period": "2025-Q3",
+   "sector": "Food & Beverage Services",
+   "value": 300.0
+  },
+  {
+   "level": 3,
+   "observation_id": "99c1ee937488f478",
+   "path": "Total Changes In Employment > Services Producing Industries > Accommodation & Food Services > Food & Beverage Services",
+   "period": "2025-Q4",
+   "sector": "Food & Beverage Services",
+   "value": 1100.0
+  },
+  {
+   "level": 3,
+   "observation_id": "1664611595629c18",
+   "path": "Total Changes In Employment > Services Producing Industries > Accommodation & Food Services > Food & Beverage Services",
+   "period": "2026-Q1",
+   "sector": "Food & Beverage Services",
+   "value": -1500.0
+  },
+  {
+   "level": 3,
+   "observation_id": "282940927c92f684",
+   "path": "Total Changes In Employment > Services Producing Industries > Accommodation & Food Services > Food & Beverage Services",
+   "period": "2026-Q2",
+   "sector": "Food & Beverage Services",
+   "value": -1900.0
+  },
+  {
+   "level": 1,
+   "observation_id": "849b47175c13ce5b",
+   "path": "Total Changes In Employment > Goods Producing Industries",
+   "period": "2024-Q1",
+   "sector": "Goods Producing Industries",
+   "value": -6000.0
+  },
+  {
+   "level": 1,
+   "observation_id": "f87b0151b814dbbf",
+   "path": "Total Changes In Employment > Goods Producing Industries",
+   "period": "2024-Q2",
+   "sector": "Goods Producing Industries",
+   "value": 7100.0
+  },
+  {
+   "level": 1,
+   "observation_id": "dc44f751818202be",
+   "path": "Total Changes In Employment > Goods Producing Industries",
+   "period": "2024-Q3",
+   "sector": "Goods Producing Industries",
+   "value": 4400.0
+  },
+  {
+   "level": 1,
+   "observation_id": "6c0a332de417b359",
+   "path": "Total Changes In Employment > Goods Producing Industries",
+   "period": "2024-Q4",
+   "sector": "Goods Producing Industries",
+   "value": 4300.0
+  },
+  {
+   "level": 1,
+   "observation_id": "32c98248b21a20e3",
+   "path": "Total Changes In Employment > Goods Producing Industries",
+   "period": "2025-Q1",
+   "sector": "Goods Producing Industries",
+   "value": -1800.0
+  },
+  {
+   "level": 1,
+   "observation_id": "e39bea99b3267515",
+   "path": "Total Changes In Employment > Goods Producing Industries",
+   "period": "2025-Q2",
+   "sector": "Goods Producing Industries",
+   "value": 6700.0
+  },
+  {
+   "level": 1,
+   "observation_id": "112a0b004fb204c8",
+   "path": "Total Changes In Employment > Goods Producing Industries",
+   "period": "2025-Q3",
+   "sector": "Goods Producing Industries",
+   "value": 19900.0
+  },
+  {
+   "level": 1,
+   "observation_id": "cbc0be9ca9a97e1d",
+   "path": "Total Changes In Employment > Goods Producing Industries",
+   "period": "2025-Q4",
+   "sector": "Goods Producing Industries",
+   "value": 11100.0
+  },
+  {
+   "level": 1,
+   "observation_id": "fc198f1b8f5c38ba",
+   "path": "Total Changes In Employment > Goods Producing Industries",
+   "period": "2026-Q1",
+   "sector": "Goods Producing Industries",
+   "value": 2100.0
+  },
+  {
+   "level": 1,
+   "observation_id": "7c982fff2f499ce8",
+   "path": "Total Changes In Employment > Goods Producing Industries",
+   "period": "2026-Q2",
+   "sector": "Goods Producing Industries",
+   "value": 9800.0
+  },
+  {
+   "level": 3,
+   "observation_id": "77a991b298ff8748",
+   "path": "Total Changes In Employment > Services Producing Industries > Other Services Industries > Health & Social Services",
+   "period": "2024-Q1",
+   "sector": "Health & Social Services",
+   "value": 3300.0
+  },
+  {
+   "level": 3,
+   "observation_id": "50bb6adb8aa622bf",
+   "path": "Total Changes In Employment > Services Producing Industries > Other Services Industries > Health & Social Services",
+   "period": "2024-Q2",
+   "sector": "Health & Social Services",
+   "value": 2200.0
+  },
+  {
+   "level": 3,
+   "observation_id": "66328942784f0a8d",
+   "path": "Total Changes In Employment > Services Producing Industries > Other Services Industries > Health & Social Services",
+   "period": "2024-Q3",
+   "sector": "Health & Social Services",
+   "value": 3400.0
+  },
+  {
+   "level": 3,
+   "observation_id": "dfce08f60887341f",
+   "path": "Total Changes In Employment > Services Producing Industries > Other Services Industries > Health & Social Services",
+   "period": "2024-Q4",
+   "sector": "Health & Social Services",
+   "value": 1700.0
+  },
+  {
+   "level": 3,
+   "observation_id": "5eddb338187e99f9",
+   "path": "Total Changes In Employment > Services Producing Industries > Other Services Industries > Health & Social Services",
+   "period": "2025-Q1",
+   "sector": "Health & Social Services",
+   "value": 3000.0
+  },
+  {
+   "level": 3,
+   "observation_id": "c2134f640f339aa8",
+   "path": "Total Changes In Employment > Services Producing Industries > Other Services Industries > Health & Social Services",
+   "period": "2025-Q2",
+   "sector": "Health & Social Services",
+   "value": 1800.0
+  },
+  {
+   "level": 3,
+   "observation_id": "59952b9f4a95d301",
+   "path": "Total Changes In Employment > Services Producing Industries > Other Services Industries > Health & Social Services",
+   "period": "2025-Q3",
+   "sector": "Health & Social Services",
+   "value": 2100.0
+  },
+  {
+   "level": 3,
+   "observation_id": "2d6d0e7c15b7125c",
+   "path": "Total Changes In Employment > Services Producing Industries > Other Services Industries > Health & Social Services",
+   "period": "2025-Q4",
+   "sector": "Health & Social Services",
+   "value": 1200.0
+  },
+  {
+   "level": 3,
+   "observation_id": "a894f604b2a5d340",
+   "path": "Total Changes In Employment > Services Producing Industries > Other Services Industries > Health & Social Services",
+   "period": "2026-Q1",
+   "sector": "Health & Social Services",
+   "value": 100.0
+  },
+  {
+   "level": 3,
+   "observation_id": "a8730c6db43ddaa2",
+   "path": "Total Changes In Employment > Services Producing Industries > Other Services Industries > Health & Social Services",
+   "period": "2026-Q2",
+   "sector": "Health & Social Services",
+   "value": 1600.0
+  },
+  {
+   "level": 2,
+   "observation_id": "f7d10bb6623c5520",
+   "path": "Total Changes In Employment > Services Producing Industries > Information & Communications",
+   "period": "2024-Q1",
+   "sector": "Information & Communications",
+   "value": -800.0
+  },
+  {
+   "level": 2,
+   "observation_id": "079583c0986578fd",
+   "path": "Total Changes In Employment > Services Producing Industries > Information & Communications",
+   "period": "2024-Q2",
+   "sector": "Information & Communications",
+   "value": -900.0
+  },
+  {
+   "level": 2,
+   "observation_id": "09eafb4895648df4",
+   "path": "Total Changes In Employment > Services Producing Industries > Information & Communications",
+   "period": "2024-Q3",
+   "sector": "Information & Communications",
+   "value": 2500.0
+  },
+  {
+   "level": 2,
+   "observation_id": "641b991f0e557c9d",
+   "path": "Total Changes In Employment > Services Producing Industries > Information & Communications",
+   "period": "2024-Q4",
+   "sector": "Information & Communications",
+   "value": -1100.0
+  },
+  {
+   "level": 2,
+   "observation_id": "a93b33e1fff9fef1",
+   "path": "Total Changes In Employment > Services Producing Industries > Information & Communications",
+   "period": "2025-Q1",
+   "sector": "Information & Communications",
+   "value": -1600.0
+  },
+  {
+   "level": 2,
+   "observation_id": "075ca5b15a787e71",
+   "path": "Total Changes In Employment > Services Producing Industries > Information & Communications",
+   "period": "2025-Q2",
+   "sector": "Information & Communications",
+   "value": -1700.0
+  },
+  {
+   "level": 2,
+   "observation_id": "1eb21b8e6e8cb759",
+   "path": "Total Changes In Employment > Services Producing Industries > Information & Communications",
+   "period": "2025-Q3",
+   "sector": "Information & Communications",
+   "value": -700.0
+  },
+  {
+   "level": 2,
+   "observation_id": "a57481237bf5b114",
+   "path": "Total Changes In Employment > Services Producing Industries > Information & Communications",
+   "period": "2025-Q4",
+   "sector": "Information & Communications",
+   "value": -1700.0
+  },
+  {
+   "level": 2,
+   "observation_id": "7117f005d9148e67",
+   "path": "Total Changes In Employment > Services Producing Industries > Information & Communications",
+   "period": "2026-Q1",
+   "sector": "Information & Communications",
+   "value": -900.0
+  },
+  {
+   "level": 2,
+   "observation_id": "38f86f5496a83b62",
+   "path": "Total Changes In Employment > Services Producing Industries > Information & Communications",
+   "period": "2026-Q2",
+   "sector": "Information & Communications",
+   "value": -500.0
+  },
+  {
+   "level": 2,
+   "observation_id": "b97b778c6fc1dfcf",
+   "path": "Total Changes In Employment > Goods Producing Industries > Manufacturing",
+   "period": "2024-Q1",
+   "sector": "Manufacturing",
+   "value": -3800.0
+  },
+  {
+   "level": 2,
+   "observation_id": "ebbef01d4b3d6bf6",
+   "path": "Total Changes In Employment > Goods Producing Industries > Manufacturing",
+   "period": "2024-Q2",
+   "sector": "Manufacturing",
+   "value": 1000.0
+  },
+  {
+   "level": 2,
+   "observation_id": "72fd0cfc86fa8aa5",
+   "path": "Total Changes In Employment > Goods Producing Industries > Manufacturing",
+   "period": "2024-Q3",
+   "sector": "Manufacturing",
+   "value": 1600.0
+  },
+  {
+   "level": 2,
+   "observation_id": "5098ccbe49969f65",
+   "path": "Total Changes In Employment > Goods Producing Industries > Manufacturing",
+   "period": "2024-Q4",
+   "sector": "Manufacturing",
+   "value": 300.0
+  },
+  {
+   "level": 2,
+   "observation_id": "952ddb0a576e8530",
+   "path": "Total Changes In Employment > Goods Producing Industries > Manufacturing",
+   "period": "2025-Q1",
+   "sector": "Manufacturing",
+   "value": -400.0
+  },
+  {
+   "level": 2,
+   "observation_id": "01d520a079f8404b",
+   "path": "Total Changes In Employment > Goods Producing Industries > Manufacturing",
+   "period": "2025-Q2",
+   "sector": "Manufacturing",
+   "value": 900.0
+  },
+  {
+   "level": 2,
+   "observation_id": "3938123c35993197",
+   "path": "Total Changes In Employment > Goods Producing Industries > Manufacturing",
+   "period": "2025-Q3",
+   "sector": "Manufacturing",
+   "value": 5500.0
+  },
+  {
+   "level": 2,
+   "observation_id": "8c23403fe28d990f",
+   "path": "Total Changes In Employment > Goods Producing Industries > Manufacturing",
+   "period": "2025-Q4",
+   "sector": "Manufacturing",
+   "value": 2400.0
+  },
+  {
+   "level": 2,
+   "observation_id": "eb6403ecce922e2a",
+   "path": "Total Changes In Employment > Goods Producing Industries > Manufacturing",
+   "period": "2026-Q1",
+   "sector": "Manufacturing",
+   "value": -200.0
+  },
+  {
+   "level": 2,
+   "observation_id": "4b418b1f8c95c267",
+   "path": "Total Changes In Employment > Goods Producing Industries > Manufacturing",
+   "period": "2026-Q2",
+   "sector": "Manufacturing",
+   "value": 3000.0
+  },
+  {
+   "level": 3,
+   "observation_id": "3e54840fc7728671",
+   "path": "Total Changes In Employment > Services Producing Industries > Other Services Industries > Other Services - Others",
+   "period": "2024-Q1",
+   "sector": "Other Services - Others",
+   "value": 4800.0
+  },
+  {
+   "level": 3,
+   "observation_id": "a3c4e222b188068c",
+   "path": "Total Changes In Employment > Services Producing Industries > Other Services Industries > Other Services - Others",
+   "period": "2024-Q2",
+   "sector": "Other Services - Others",
+   "value": 5500.0
+  },
+  {
+   "level": 3,
+   "observation_id": "599a3a0cbfb603e4",
+   "path": "Total Changes In Employment > Services Producing Industries > Other Services Industries > Other Services - Others",
+   "period": "2024-Q3",
+   "sector": "Other Services - Others",
+   "value": 3300.0
+  },
+  {
+   "level": 3,
+   "observation_id": "4a8ff3be28682252",
+   "path": "Total Changes In Employment > Services Producing Industries > Other Services Industries > Other Services - Others",
+   "period": "2024-Q4",
+   "sector": "Other Services - Others",
+   "value": 3400.0
+  },
+  {
+   "level": 3,
+   "observation_id": "5173aec405ce604c",
+   "path": "Total Changes In Employment > Services Producing Industries > Other Services Industries > Other Services - Others",
+   "period": "2025-Q1",
+   "sector": "Other Services - Others",
+   "value": 3500.0
+  },
+  {
+   "level": 3,
+   "observation_id": "4e5eda9498ffb8af",
+   "path": "Total Changes In Employment > Services Producing Industries > Other Services Industries > Other Services - Others",
+   "period": "2025-Q2",
+   "sector": "Other Services - Others",
+   "value": 3800.0
+  },
+  {
+   "level": 3,
+   "observation_id": "3a3704d1dcc1b298",
+   "path": "Total Changes In Employment > Services Producing Industries > Other Services Industries > Other Services - Others",
+   "period": "2025-Q3",
+   "sector": "Other Services - Others",
+   "value": 9600.0
+  },
+  {
+   "level": 3,
+   "observation_id": "a662b950836b773e",
+   "path": "Total Changes In Employment > Services Producing Industries > Other Services Industries > Other Services - Others",
+   "period": "2025-Q4",
+   "sector": "Other Services - Others",
+   "value": 4000.0
+  },
+  {
+   "level": 3,
+   "observation_id": "780c19168058f4ce",
+   "path": "Total Changes In Employment > Services Producing Industries > Other Services Industries > Other Services - Others",
+   "period": "2026-Q1",
+   "sector": "Other Services - Others",
+   "value": 2900.0
+  },
+  {
+   "level": 3,
+   "observation_id": "1879d1303ce29395",
+   "path": "Total Changes In Employment > Services Producing Industries > Other Services Industries > Other Services - Others",
+   "period": "2026-Q2",
+   "sector": "Other Services - Others",
+   "value": 3500.0
+  },
+  {
+   "level": 2,
+   "observation_id": "4e7a36c4caa538e3",
+   "path": "Total Changes In Employment > Services Producing Industries > Other Services Industries",
+   "period": "2024-Q1",
+   "sector": "Other Services Industries",
+   "value": 10800.0
+  },
+  {
+   "level": 2,
+   "observation_id": "46c35f741b04dac5",
+   "path": "Total Changes In Employment > Services Producing Industries > Other Services Industries",
+   "period": "2024-Q2",
+   "sector": "Other Services Industries",
+   "value": 8800.0
+  },
+  {
+   "level": 2,
+   "observation_id": "0df71caaea2ef4c4",
+   "path": "Total Changes In Employment > Services Producing Industries > Other Services Industries",
+   "period": "2024-Q3",
+   "sector": "Other Services Industries",
+   "value": 8900.0
+  },
+  {
+   "level": 2,
+   "observation_id": "eea3312e5edaaab6",
+   "path": "Total Changes In Employment > Services Producing Industries > Other Services Industries",
+   "period": "2024-Q4",
+   "sector": "Other Services Industries",
+   "value": 5000.0
+  },
+  {
+   "level": 2,
+   "observation_id": "52baa7e2d6ad6773",
+   "path": "Total Changes In Employment > Services Producing Industries > Other Services Industries",
+   "period": "2025-Q1",
+   "sector": "Other Services Industries",
+   "value": 8000.0
+  },
+  {
+   "level": 2,
+   "observation_id": "e2fa208f56c7526c",
+   "path": "Total Changes In Employment > Services Producing Industries > Other Services Industries",
+   "period": "2025-Q2",
+   "sector": "Other Services Industries",
+   "value": 6700.0
+  },
+  {
+   "level": 2,
+   "observation_id": "c871c1d6b33d8c61",
+   "path": "Total Changes In Employment > Services Producing Industries > Other Services Industries",
+   "period": "2025-Q3",
+   "sector": "Other Services Industries",
+   "value": 13600.0
+  },
+  {
+   "level": 2,
+   "observation_id": "02b0a6640093a471",
+   "path": "Total Changes In Employment > Services Producing Industries > Other Services Industries",
+   "period": "2025-Q4",
+   "sector": "Other Services Industries",
+   "value": 5900.0
+  },
+  {
+   "level": 2,
+   "observation_id": "c8129bfd7f4d79e4",
+   "path": "Total Changes In Employment > Services Producing Industries > Other Services Industries",
+   "period": "2026-Q1",
+   "sector": "Other Services Industries",
+   "value": 5400.0
+  },
+  {
+   "level": 2,
+   "observation_id": "8f298995e11bf645",
+   "path": "Total Changes In Employment > Services Producing Industries > Other Services Industries",
+   "period": "2026-Q2",
+   "sector": "Other Services Industries",
+   "value": 7400.0
+  },
+  {
+   "level": 2,
+   "observation_id": "a61ffe6104024626",
+   "path": "Total Changes In Employment > Goods Producing Industries > Others",
+   "period": "2024-Q1",
+   "sector": "Others",
+   "value": 100.0
+  },
+  {
+   "level": 2,
+   "observation_id": "e40a715e036fdf87",
+   "path": "Total Changes In Employment > Goods Producing Industries > Others",
+   "period": "2024-Q2",
+   "sector": "Others",
+   "value": 400.0
+  },
+  {
+   "level": 2,
+   "observation_id": "08b9cf43e71af7e8",
+   "path": "Total Changes In Employment > Goods Producing Industries > Others",
+   "period": "2024-Q3",
+   "sector": "Others",
+   "value": -900.0
+  },
+  {
+   "level": 2,
+   "observation_id": "3e89ee97780c3174",
+   "path": "Total Changes In Employment > Goods Producing Industries > Others",
+   "period": "2024-Q4",
+   "sector": "Others",
+   "value": -600.0
+  },
+  {
+   "level": 2,
+   "observation_id": "18091f6973079a7e",
+   "path": "Total Changes In Employment > Goods Producing Industries > Others",
+   "period": "2025-Q1",
+   "sector": "Others",
+   "value": -300.0
+  },
+  {
+   "level": 2,
+   "observation_id": "5fc3d2610869534a",
+   "path": "Total Changes In Employment > Goods Producing Industries > Others",
+   "period": "2025-Q2",
+   "sector": "Others",
+   "value": 100.0
+  },
+  {
+   "level": 2,
+   "observation_id": "a81bda7ee4ab6a96",
+   "path": "Total Changes In Employment > Goods Producing Industries > Others",
+   "period": "2025-Q3",
+   "sector": "Others",
+   "value": 600.0
+  },
+  {
+   "level": 2,
+   "observation_id": "54381f0b8ad8a1af",
+   "path": "Total Changes In Employment > Goods Producing Industries > Others",
+   "period": "2025-Q4",
+   "sector": "Others",
+   "value": -100.0
+  },
+  {
+   "level": 2,
+   "observation_id": "4406f50d02f5901e",
+   "path": "Total Changes In Employment > Goods Producing Industries > Others",
+   "period": "2026-Q1",
+   "sector": "Others",
+   "value": -300.0
+  },
+  {
+   "level": 2,
+   "observation_id": "ec5ad9101f86ea4d",
+   "path": "Total Changes In Employment > Goods Producing Industries > Others",
+   "period": "2026-Q2",
+   "sector": "Others",
+   "value": -400.0
+  },
+  {
+   "level": 3,
+   "observation_id": "3f08b751c5fa08d4",
+   "path": "Total Changes In Employment > Services Producing Industries > Real Estate, Professional Services And Administrative & Support Services > Professional Services",
+   "period": "2024-Q1",
+   "sector": "Professional Services",
+   "value": -1600.0
+  },
+  {
+   "level": 3,
+   "observation_id": "ef9b2dde19d48f73",
+   "path": "Total Changes In Employment > Services Producing Industries > Real Estate, Professional Services And Administrative & Support Services > Professional Services",
+   "period": "2024-Q2",
+   "sector": "Professional Services",
+   "value": -200.0
+  },
+  {
+   "level": 3,
+   "observation_id": "39781c3520eeafdc",
+   "path": "Total Changes In Employment > Services Producing Industries > Real Estate, Professional Services And Administrative & Support Services > Professional Services",
+   "period": "2024-Q3",
+   "sector": "Professional Services",
+   "value": 3000.0
+  },
+  {
+   "level": 3,
+   "observation_id": "f2338fb224dc4f92",
+   "path": "Total Changes In Employment > Services Producing Industries > Real Estate, Professional Services And Administrative & Support Services > Professional Services",
+   "period": "2024-Q4",
+   "sector": "Professional Services",
+   "value": 2000.0
+  },
+  {
+   "level": 3,
+   "observation_id": "f03e2aac1e519ce6",
+   "path": "Total Changes In Employment > Services Producing Industries > Real Estate, Professional Services And Administrative & Support Services > Professional Services",
+   "period": "2025-Q1",
+   "sector": "Professional Services",
+   "value": -1200.0
+  },
+  {
+   "level": 3,
+   "observation_id": "77e9e5959f3eac40",
+   "path": "Total Changes In Employment > Services Producing Industries > Real Estate, Professional Services And Administrative & Support Services > Professional Services",
+   "period": "2025-Q2",
+   "sector": "Professional Services",
+   "value": -2600.0
+  },
+  {
+   "level": 3,
+   "observation_id": "ed2ce6277b29b3d1",
+   "path": "Total Changes In Employment > Services Producing Industries > Real Estate, Professional Services And Administrative & Support Services > Professional Services",
+   "period": "2025-Q3",
+   "sector": "Professional Services",
+   "value": 0.0
+  },
+  {
+   "level": 3,
+   "observation_id": "2891d90257099254",
+   "path": "Total Changes In Employment > Services Producing Industries > Real Estate, Professional Services And Administrative & Support Services > Professional Services",
+   "period": "2025-Q4",
+   "sector": "Professional Services",
+   "value": 1300.0
+  },
+  {
+   "level": 3,
+   "observation_id": "479a717e209a2b82",
+   "path": "Total Changes In Employment > Services Producing Industries > Real Estate, Professional Services And Administrative & Support Services > Professional Services",
+   "period": "2026-Q1",
+   "sector": "Professional Services",
+   "value": 300.0
+  },
+  {
+   "level": 3,
+   "observation_id": "3a6348183f3215ad",
+   "path": "Total Changes In Employment > Services Producing Industries > Real Estate, Professional Services And Administrative & Support Services > Professional Services",
+   "period": "2026-Q2",
+   "sector": "Professional Services",
+   "value": 400.0
+  },
+  {
+   "level": 4,
+   "observation_id": "2028ffcd0cf42eb1",
+   "path": "Total Changes In Employment > Services Producing Industries > Other Services Industries > Public Administration & Education > Public Administration & Defence",
+   "period": "2024-Q1",
+   "sector": "Public Administration & Defence",
+   "value": 1800.0
+  },
+  {
+   "level": 4,
+   "observation_id": "be6a63fefefa4972",
+   "path": "Total Changes In Employment > Services Producing Industries > Other Services Industries > Public Administration & Education > Public Administration & Defence",
+   "period": "2024-Q2",
+   "sector": "Public Administration & Defence",
+   "value": -200.0
+  },
+  {
+   "level": 4,
+   "observation_id": "e5e18e3aebc830c7",
+   "path": "Total Changes In Employment > Services Producing Industries > Other Services Industries > Public Administration & Education > Public Administration & Defence",
+   "period": "2024-Q3",
+   "sector": "Public Administration & Defence",
+   "value": 1200.0
+  },
+  {
+   "level": 4,
+   "observation_id": "2a15bac8240fd9cb",
+   "path": "Total Changes In Employment > Services Producing Industries > Other Services Industries > Public Administration & Education > Public Administration & Defence",
+   "period": "2024-Q4",
+   "sector": "Public Administration & Defence",
+   "value": -200.0
+  },
+  {
+   "level": 4,
+   "observation_id": "b896c47c9db92c01",
+   "path": "Total Changes In Employment > Services Producing Industries > Other Services Industries > Public Administration & Education > Public Administration & Defence",
+   "period": "2025-Q1",
+   "sector": "Public Administration & Defence",
+   "value": 1500.0
+  },
+  {
+   "level": 4,
+   "observation_id": "7e8d20fe39aa18bf",
+   "path": "Total Changes In Employment > Services Producing Industries > Other Services Industries > Public Administration & Education > Public Administration & Defence",
+   "period": "2025-Q2",
+   "sector": "Public Administration & Defence",
+   "value": 100.0
+  },
+  {
+   "level": 4,
+   "observation_id": "68b97f5797a9553a",
+   "path": "Total Changes In Employment > Services Producing Industries > Other Services Industries > Public Administration & Education > Public Administration & Defence",
+   "period": "2025-Q3",
+   "sector": "Public Administration & Defence",
+   "value": 800.0
+  },
+  {
+   "level": 4,
+   "observation_id": "93bc29ef2a18a91e",
+   "path": "Total Changes In Employment > Services Producing Industries > Other Services Industries > Public Administration & Education > Public Administration & Defence",
+   "period": "2025-Q4",
+   "sector": "Public Administration & Defence",
+   "value": 1000.0
+  },
+  {
+   "level": 4,
+   "observation_id": "04c8c1b8246935d7",
+   "path": "Total Changes In Employment > Services Producing Industries > Other Services Industries > Public Administration & Education > Public Administration & Defence",
+   "period": "2026-Q1",
+   "sector": "Public Administration & Defence",
+   "value": 1300.0
+  },
+  {
+   "level": 4,
+   "observation_id": "4eee925952fed71e",
+   "path": "Total Changes In Employment > Services Producing Industries > Other Services Industries > Public Administration & Education > Public Administration & Defence",
+   "period": "2026-Q2",
+   "sector": "Public Administration & Defence",
+   "value": 1500.0
+  },
+  {
+   "level": 3,
+   "observation_id": "20aa49238ca340db",
+   "path": "Total Changes In Employment > Services Producing Industries > Other Services Industries > Public Administration & Education",
+   "period": "2024-Q1",
+   "sector": "Public Administration & Education",
+   "value": 3400.0
+  },
+  {
+   "level": 3,
+   "observation_id": "b8bf8947d79d226f",
+   "path": "Total Changes In Employment > Services Producing Industries > Other Services Industries > Public Administration & Education",
+   "period": "2024-Q2",
+   "sector": "Public Administration & Education",
+   "value": -200.0
+  },
+  {
+   "level": 3,
+   "observation_id": "c1a452bff7769440",
+   "path": "Total Changes In Employment > Services Producing Industries > Other Services Industries > Public Administration & Education",
+   "period": "2024-Q3",
+   "sector": "Public Administration & Education",
+   "value": 1300.0
+  },
+  {
+   "level": 3,
+   "observation_id": "6f4ac416d944bc66",
+   "path": "Total Changes In Employment > Services Producing Industries > Other Services Industries > Public Administration & Education",
+   "period": "2024-Q4",
+   "sector": "Public Administration & Education",
+   "value": 0.0
+  },
+  {
+   "level": 3,
+   "observation_id": "1c531d50b69ba1c8",
+   "path": "Total Changes In Employment > Services Producing Industries > Other Services Industries > Public Administration & Education",
+   "period": "2025-Q1",
+   "sector": "Public Administration & Education",
+   "value": 1600.0
+  },
+  {
+   "level": 3,
+   "observation_id": "60bb64a7112fdba1",
+   "path": "Total Changes In Employment > Services Producing Industries > Other Services Industries > Public Administration & Education",
+   "period": "2025-Q2",
+   "sector": "Public Administration & Education",
+   "value": 200.0
+  },
+  {
+   "level": 3,
+   "observation_id": "eedce08e305fe616",
+   "path": "Total Changes In Employment > Services Producing Industries > Other Services Industries > Public Administration & Education",
+   "period": "2025-Q3",
+   "sector": "Public Administration & Education",
+   "value": 300.0
+  },
+  {
+   "level": 3,
+   "observation_id": "d81273236d14fc95",
+   "path": "Total Changes In Employment > Services Producing Industries > Other Services Industries > Public Administration & Education",
+   "period": "2025-Q4",
+   "sector": "Public Administration & Education",
+   "value": 600.0
+  },
+  {
+   "level": 3,
+   "observation_id": "e2cbe725cf1690c6",
+   "path": "Total Changes In Employment > Services Producing Industries > Other Services Industries > Public Administration & Education",
+   "period": "2026-Q1",
+   "sector": "Public Administration & Education",
+   "value": 2200.0
+  },
+  {
+   "level": 3,
+   "observation_id": "fff64fdb5d10daf5",
+   "path": "Total Changes In Employment > Services Producing Industries > Other Services Industries > Public Administration & Education",
+   "period": "2026-Q2",
+   "sector": "Public Administration & Education",
+   "value": 1900.0
+  },
+  {
+   "level": 3,
+   "observation_id": "124e31bfedda7b11",
+   "path": "Total Changes In Employment > Services Producing Industries > Real Estate, Professional Services And Administrative & Support Services > Real Estate Services",
+   "period": "2024-Q1",
+   "sector": "Real Estate Services",
+   "value": 1100.0
+  },
+  {
+   "level": 3,
+   "observation_id": "cc1f49f735cd13d4",
+   "path": "Total Changes In Employment > Services Producing Industries > Real Estate, Professional Services And Administrative & Support Services > Real Estate Services",
+   "period": "2024-Q2",
+   "sector": "Real Estate Services",
+   "value": 500.0
+  },
+  {
+   "level": 3,
+   "observation_id": "b958c65d54ef5b28",
+   "path": "Total Changes In Employment > Services Producing Industries > Real Estate, Professional Services And Administrative & Support Services > Real Estate Services",
+   "period": "2024-Q3",
+   "sector": "Real Estate Services",
+   "value": 900.0
+  },
+  {
+   "level": 3,
+   "observation_id": "bbd85bfb99dd6286",
+   "path": "Total Changes In Employment > Services Producing Industries > Real Estate, Professional Services And Administrative & Support Services > Real Estate Services",
+   "period": "2024-Q4",
+   "sector": "Real Estate Services",
+   "value": 1500.0
+  },
+  {
+   "level": 3,
+   "observation_id": "31c64c688fceb39d",
+   "path": "Total Changes In Employment > Services Producing Industries > Real Estate, Professional Services And Administrative & Support Services > Real Estate Services",
+   "period": "2025-Q1",
+   "sector": "Real Estate Services",
+   "value": -700.0
+  },
+  {
+   "level": 3,
+   "observation_id": "3c5a1e5d8d8f977e",
+   "path": "Total Changes In Employment > Services Producing Industries > Real Estate, Professional Services And Administrative & Support Services > Real Estate Services",
+   "period": "2025-Q2",
+   "sector": "Real Estate Services",
+   "value": -2500.0
+  },
+  {
+   "level": 3,
+   "observation_id": "626db23df9cd8eed",
+   "path": "Total Changes In Employment > Services Producing Industries > Real Estate, Professional Services And Administrative & Support Services > Real Estate Services",
+   "period": "2025-Q3",
+   "sector": "Real Estate Services",
+   "value": -1200.0
+  },
+  {
+   "level": 3,
+   "observation_id": "b5934cbd036137e1",
+   "path": "Total Changes In Employment > Services Producing Industries > Real Estate, Professional Services And Administrative & Support Services > Real Estate Services",
+   "period": "2025-Q4",
+   "sector": "Real Estate Services",
+   "value": 500.0
+  },
+  {
+   "level": 3,
+   "observation_id": "4130ef4d0984ee4e",
+   "path": "Total Changes In Employment > Services Producing Industries > Real Estate, Professional Services And Administrative & Support Services > Real Estate Services",
+   "period": "2026-Q1",
+   "sector": "Real Estate Services",
+   "value": 1000.0
+  },
+  {
+   "level": 3,
+   "observation_id": "514a398f135fb1b8",
+   "path": "Total Changes In Employment > Services Producing Industries > Real Estate, Professional Services And Administrative & Support Services > Real Estate Services",
+   "period": "2026-Q2",
+   "sector": "Real Estate Services",
+   "value": -100.0
+  },
+  {
+   "level": 2,
+   "observation_id": "b7f762232046693c",
+   "path": "Total Changes In Employment > Services Producing Industries > Real Estate, Professional Services And Administrative & Support Services",
+   "period": "2024-Q1",
+   "sector": "Real Estate, Professional Services And Administrative & Support Services",
+   "value": 2600.0
+  },
+  {
+   "level": 2,
+   "observation_id": "f39bc691e9da70c1",
+   "path": "Total Changes In Employment > Services Producing Industries > Real Estate, Professional Services And Administrative & Support Services",
+   "period": "2024-Q2",
+   "sector": "Real Estate, Professional Services And Administrative & Support Services",
+   "value": 0.0
+  },
+  {
+   "level": 2,
+   "observation_id": "a8555efa55f47911",
+   "path": "Total Changes In Employment > Services Producing Industries > Real Estate, Professional Services And Administrative & Support Services",
+   "period": "2024-Q3",
+   "sector": "Real Estate, Professional Services And Administrative & Support Services",
+   "value": 6800.0
+  },
+  {
+   "level": 2,
+   "observation_id": "cff4a080b1bbde63",
+   "path": "Total Changes In Employment > Services Producing Industries > Real Estate, Professional Services And Administrative & Support Services",
+   "period": "2024-Q4",
+   "sector": "Real Estate, Professional Services And Administrative & Support Services",
+   "value": 3600.0
+  },
+  {
+   "level": 2,
+   "observation_id": "72ecf0fc2723f724",
+   "path": "Total Changes In Employment > Services Producing Industries > Real Estate, Professional Services And Administrative & Support Services",
+   "period": "2025-Q1",
+   "sector": "Real Estate, Professional Services And Administrative & Support Services",
+   "value": -900.0
+  },
+  {
+   "level": 2,
+   "observation_id": "154d80f123d1f5c7",
+   "path": "Total Changes In Employment > Services Producing Industries > Real Estate, Professional Services And Administrative & Support Services",
+   "period": "2025-Q2",
+   "sector": "Real Estate, Professional Services And Administrative & Support Services",
+   "value": -1700.0
+  },
+  {
+   "level": 2,
+   "observation_id": "01c756e01e7f1946",
+   "path": "Total Changes In Employment > Services Producing Industries > Real Estate, Professional Services And Administrative & Support Services",
+   "period": "2025-Q3",
+   "sector": "Real Estate, Professional Services And Administrative & Support Services",
+   "value": -4400.0
+  },
+  {
+   "level": 2,
+   "observation_id": "ae4c5585915e7100",
+   "path": "Total Changes In Employment > Services Producing Industries > Real Estate, Professional Services And Administrative & Support Services",
+   "period": "2025-Q4",
+   "sector": "Real Estate, Professional Services And Administrative & Support Services",
+   "value": 5300.0
+  },
+  {
+   "level": 2,
+   "observation_id": "8530778cbaf4bd36",
+   "path": "Total Changes In Employment > Services Producing Industries > Real Estate, Professional Services And Administrative & Support Services",
+   "period": "2026-Q1",
+   "sector": "Real Estate, Professional Services And Administrative & Support Services",
+   "value": 6100.0
+  },
+  {
+   "level": 2,
+   "observation_id": "24c0a241fa87adfd",
+   "path": "Total Changes In Employment > Services Producing Industries > Real Estate, Professional Services And Administrative & Support Services",
+   "period": "2026-Q2",
+   "sector": "Real Estate, Professional Services And Administrative & Support Services",
+   "value": -1300.0
+  },
+  {
+   "level": 3,
+   "observation_id": "bfd1d33a2ace78bb",
+   "path": "Total Changes In Employment > Services Producing Industries > Wholesale & Retail Trade > Retail Trade",
+   "period": "2024-Q1",
+   "sector": "Retail Trade",
+   "value": -1500.0
+  },
+  {
+   "level": 3,
+   "observation_id": "484c1feaae66370c",
+   "path": "Total Changes In Employment > Services Producing Industries > Wholesale & Retail Trade > Retail Trade",
+   "period": "2024-Q2",
+   "sector": "Retail Trade",
+   "value": -1200.0
+  },
+  {
+   "level": 3,
+   "observation_id": "69348e44b6c77270",
+   "path": "Total Changes In Employment > Services Producing Industries > Wholesale & Retail Trade > Retail Trade",
+   "period": "2024-Q3",
+   "sector": "Retail Trade",
+   "value": -600.0
+  },
+  {
+   "level": 3,
+   "observation_id": "aa95691e14332193",
+   "path": "Total Changes In Employment > Services Producing Industries > Wholesale & Retail Trade > Retail Trade",
+   "period": "2024-Q4",
+   "sector": "Retail Trade",
+   "value": 1400.0
+  },
+  {
+   "level": 3,
+   "observation_id": "60de3a513fbcc32f",
+   "path": "Total Changes In Employment > Services Producing Industries > Wholesale & Retail Trade > Retail Trade",
+   "period": "2025-Q1",
+   "sector": "Retail Trade",
+   "value": -2400.0
+  },
+  {
+   "level": 3,
+   "observation_id": "97e6716a6d82e892",
+   "path": "Total Changes In Employment > Services Producing Industries > Wholesale & Retail Trade > Retail Trade",
+   "period": "2025-Q2",
+   "sector": "Retail Trade",
+   "value": -2300.0
+  },
+  {
+   "level": 3,
+   "observation_id": "2ad2ab63543997a1",
+   "path": "Total Changes In Employment > Services Producing Industries > Wholesale & Retail Trade > Retail Trade",
+   "period": "2025-Q3",
+   "sector": "Retail Trade",
+   "value": 1000.0
+  },
+  {
+   "level": 3,
+   "observation_id": "edfcb3aa3b99bd91",
+   "path": "Total Changes In Employment > Services Producing Industries > Wholesale & Retail Trade > Retail Trade",
+   "period": "2025-Q4",
+   "sector": "Retail Trade",
+   "value": 2600.0
+  },
+  {
+   "level": 3,
+   "observation_id": "b9bfec90d1eab577",
+   "path": "Total Changes In Employment > Services Producing Industries > Wholesale & Retail Trade > Retail Trade",
+   "period": "2026-Q1",
+   "sector": "Retail Trade",
+   "value": 200.0
+  },
+  {
+   "level": 3,
+   "observation_id": "a8c17576fb8a1a71",
+   "path": "Total Changes In Employment > Services Producing Industries > Wholesale & Retail Trade > Retail Trade",
+   "period": "2026-Q2",
+   "sector": "Retail Trade",
+   "value": -800.0
+  },
+  {
+   "level": 1,
+   "observation_id": "fb634f2b1fc71755",
+   "path": "Total Changes In Employment > Services Producing Industries",
+   "period": "2024-Q1",
+   "sector": "Services Producing Industries",
+   "value": 14100.0
+  },
+  {
+   "level": 1,
+   "observation_id": "b74d6a5199e1ea57",
+   "path": "Total Changes In Employment > Services Producing Industries",
+   "period": "2024-Q2",
+   "sector": "Services Producing Industries",
+   "value": 7800.0
+  },
+  {
+   "level": 1,
+   "observation_id": "252d690f9d71b268",
+   "path": "Total Changes In Employment > Services Producing Industries",
+   "period": "2024-Q3",
+   "sector": "Services Producing Industries",
+   "value": 20500.0
+  },
+  {
+   "level": 1,
+   "observation_id": "e459ad033091f463",
+   "path": "Total Changes In Employment > Services Producing Industries",
+   "period": "2024-Q4",
+   "sector": "Services Producing Industries",
+   "value": 7600.0
+  },
+  {
+   "level": 1,
+   "observation_id": "7ee17addae1d6370",
+   "path": "Total Changes In Employment > Services Producing Industries",
+   "period": "2025-Q1",
+   "sector": "Services Producing Industries",
+   "value": 8700.0
+  },
+  {
+   "level": 1,
+   "observation_id": "11b44819a4bdf53c",
+   "path": "Total Changes In Employment > Services Producing Industries",
+   "period": "2025-Q2",
+   "sector": "Services Producing Industries",
+   "value": 6200.0
+  },
+  {
+   "level": 1,
+   "observation_id": "8bb46fe84860c5ec",
+   "path": "Total Changes In Employment > Services Producing Industries",
+   "period": "2025-Q3",
+   "sector": "Services Producing Industries",
+   "value": 10300.0
+  },
+  {
+   "level": 1,
+   "observation_id": "ed8cab12e9314825",
+   "path": "Total Changes In Employment > Services Producing Industries",
+   "period": "2025-Q4",
+   "sector": "Services Producing Industries",
+   "value": 9800.0
+  },
+  {
+   "level": 1,
+   "observation_id": "0c00e70e46966b25",
+   "path": "Total Changes In Employment > Services Producing Industries",
+   "period": "2026-Q1",
+   "sector": "Services Producing Industries",
+   "value": 10900.0
+  },
+  {
+   "level": 1,
+   "observation_id": "a6d9518930fdf20a",
+   "path": "Total Changes In Employment > Services Producing Industries",
+   "period": "2026-Q2",
+   "sector": "Services Producing Industries",
+   "value": 4900.0
+  },
+  {
+   "level": 0,
+   "observation_id": "2071980ded59e8a5",
+   "path": "Total Changes In Employment",
+   "period": "2024-Q1",
+   "sector": "Total Changes In Employment",
+   "value": 8100.0
+  },
+  {
+   "level": 0,
+   "observation_id": "43c6874d6b1fa22d",
+   "path": "Total Changes In Employment",
+   "period": "2024-Q2",
+   "sector": "Total Changes In Employment",
+   "value": 14900.0
+  },
+  {
+   "level": 0,
+   "observation_id": "169e3bcd0fcedbcb",
+   "path": "Total Changes In Employment",
+   "period": "2024-Q3",
+   "sector": "Total Changes In Employment",
+   "value": 24900.0
+  },
+  {
+   "level": 0,
+   "observation_id": "ac7b5b5f6e976b10",
+   "path": "Total Changes In Employment",
+   "period": "2024-Q4",
+   "sector": "Total Changes In Employment",
+   "value": 11900.0
+  },
+  {
+   "level": 0,
+   "observation_id": "419707331a9abcf4",
+   "path": "Total Changes In Employment",
+   "period": "2025-Q1",
+   "sector": "Total Changes In Employment",
+   "value": 6900.0
+  },
+  {
+   "level": 0,
+   "observation_id": "8f223ce5b16f1bd9",
+   "path": "Total Changes In Employment",
+   "period": "2025-Q2",
+   "sector": "Total Changes In Employment",
+   "value": 12900.0
+  },
+  {
+   "level": 0,
+   "observation_id": "d36d0541315596c1",
+   "path": "Total Changes In Employment",
+   "period": "2025-Q3",
+   "sector": "Total Changes In Employment",
+   "value": 30200.0
+  },
+  {
+   "level": 0,
+   "observation_id": "196411966d74baa0",
+   "path": "Total Changes In Employment",
+   "period": "2025-Q4",
+   "sector": "Total Changes In Employment",
+   "value": 20800.0
+  },
+  {
+   "level": 0,
+   "observation_id": "a8146d27628629cc",
+   "path": "Total Changes In Employment",
+   "period": "2026-Q1",
+   "sector": "Total Changes In Employment",
+   "value": 13000.0
+  },
+  {
+   "level": 0,
+   "observation_id": "fa8b0c600d4d60ca",
+   "path": "Total Changes In Employment",
+   "period": "2026-Q2",
+   "sector": "Total Changes In Employment",
+   "value": 14700.0
+  },
+  {
+   "level": 2,
+   "observation_id": "043b9ed85088c9b9",
+   "path": "Total Changes In Employment > Services Producing Industries > Transportation & Storage",
+   "period": "2024-Q1",
+   "sector": "Transportation & Storage",
+   "value": 1100.0
+  },
+  {
+   "level": 2,
+   "observation_id": "e28de25ef48e8147",
+   "path": "Total Changes In Employment > Services Producing Industries > Transportation & Storage",
+   "period": "2024-Q2",
+   "sector": "Transportation & Storage",
+   "value": 1100.0
+  },
+  {
+   "level": 2,
+   "observation_id": "db36d83180f0ac10",
+   "path": "Total Changes In Employment > Services Producing Industries > Transportation & Storage",
+   "period": "2024-Q3",
+   "sector": "Transportation & Storage",
+   "value": 1900.0
+  },
+  {
+   "level": 2,
+   "observation_id": "ef7caf2505500026",
+   "path": "Total Changes In Employment > Services Producing Industries > Transportation & Storage",
+   "period": "2024-Q4",
+   "sector": "Transportation & Storage",
+   "value": -900.0
+  },
+  {
+   "level": 2,
+   "observation_id": "eb24268cee573d3e",
+   "path": "Total Changes In Employment > Services Producing Industries > Transportation & Storage",
+   "period": "2025-Q1",
+   "sector": "Transportation & Storage",
+   "value": 2400.0
+  },
+  {
+   "level": 2,
+   "observation_id": "493ff31cca2a903c",
+   "path": "Total Changes In Employment > Services Producing Industries > Transportation & Storage",
+   "period": "2025-Q2",
+   "sector": "Transportation & Storage",
+   "value": 600.0
+  },
+  {
+   "level": 2,
+   "observation_id": "69fd785846b066c3",
+   "path": "Total Changes In Employment > Services Producing Industries > Transportation & Storage",
+   "period": "2025-Q3",
+   "sector": "Transportation & Storage",
+   "value": 300.0
+  },
+  {
+   "level": 2,
+   "observation_id": "d9c028bc25f120f9",
+   "path": "Total Changes In Employment > Services Producing Industries > Transportation & Storage",
+   "period": "2025-Q4",
+   "sector": "Transportation & Storage",
+   "value": 100.0
+  },
+  {
+   "level": 2,
+   "observation_id": "6e6d4759964f6d64",
+   "path": "Total Changes In Employment > Services Producing Industries > Transportation & Storage",
+   "period": "2026-Q1",
+   "sector": "Transportation & Storage",
+   "value": 3100.0
+  },
+  {
+   "level": 2,
+   "observation_id": "4809c0dd8fa4b0b9",
+   "path": "Total Changes In Employment > Services Producing Industries > Transportation & Storage",
+   "period": "2026-Q2",
+   "sector": "Transportation & Storage",
+   "value": 2400.0
+  },
+  {
+   "level": 2,
+   "observation_id": "24f75c18266e0142",
+   "path": "Total Changes In Employment > Services Producing Industries > Wholesale & Retail Trade",
+   "period": "2024-Q1",
+   "sector": "Wholesale & Retail Trade",
+   "value": -1900.0
+  },
+  {
+   "level": 2,
+   "observation_id": "02ce732a02162dcf",
+   "path": "Total Changes In Employment > Services Producing Industries > Wholesale & Retail Trade",
+   "period": "2024-Q2",
+   "sector": "Wholesale & Retail Trade",
+   "value": -2600.0
+  },
+  {
+   "level": 2,
+   "observation_id": "ae216ec149ed029c",
+   "path": "Total Changes In Employment > Services Producing Industries > Wholesale & Retail Trade",
+   "period": "2024-Q3",
+   "sector": "Wholesale & Retail Trade",
+   "value": -3400.0
+  },
+  {
+   "level": 2,
+   "observation_id": "623cad4bfdfe057f",
+   "path": "Total Changes In Employment > Services Producing Industries > Wholesale & Retail Trade",
+   "period": "2024-Q4",
+   "sector": "Wholesale & Retail Trade",
+   "value": 2600.0
+  },
+  {
+   "level": 2,
+   "observation_id": "9880bc4046919f90",
+   "path": "Total Changes In Employment > Services Producing Industries > Wholesale & Retail Trade",
+   "period": "2025-Q1",
+   "sector": "Wholesale & Retail Trade",
+   "value": -1700.0
+  },
+  {
+   "level": 2,
+   "observation_id": "8dfc3bf650a4d2b4",
+   "path": "Total Changes In Employment > Services Producing Industries > Wholesale & Retail Trade",
+   "period": "2025-Q2",
+   "sector": "Wholesale & Retail Trade",
+   "value": -2100.0
+  },
+  {
+   "level": 2,
+   "observation_id": "0828517faeba2e77",
+   "path": "Total Changes In Employment > Services Producing Industries > Wholesale & Retail Trade",
+   "period": "2025-Q3",
+   "sector": "Wholesale & Retail Trade",
+   "value": -1600.0
+  },
+  {
+   "level": 2,
+   "observation_id": "788510b32e6004c1",
+   "path": "Total Changes In Employment > Services Producing Industries > Wholesale & Retail Trade",
+   "period": "2025-Q4",
+   "sector": "Wholesale & Retail Trade",
+   "value": 700.0
+  },
+  {
+   "level": 2,
+   "observation_id": "86a3fd822156e1d8",
+   "path": "Total Changes In Employment > Services Producing Industries > Wholesale & Retail Trade",
+   "period": "2026-Q1",
+   "sector": "Wholesale & Retail Trade",
+   "value": 600.0
+  },
+  {
+   "level": 2,
+   "observation_id": "a4f3466fd6ab028f",
+   "path": "Total Changes In Employment > Services Producing Industries > Wholesale & Retail Trade",
+   "period": "2026-Q2",
+   "sector": "Wholesale & Retail Trade",
+   "value": -2300.0
+  },
+  {
+   "level": 3,
+   "observation_id": "fe34c2f3577b0d8e",
+   "path": "Total Changes In Employment > Services Producing Industries > Wholesale & Retail Trade > Wholesale Trade",
+   "period": "2024-Q1",
+   "sector": "Wholesale Trade",
+   "value": -500.0
+  },
+  {
+   "level": 3,
+   "observation_id": "5b74710464a5a65c",
+   "path": "Total Changes In Employment > Services Producing Industries > Wholesale & Retail Trade > Wholesale Trade",
+   "period": "2024-Q2",
+   "sector": "Wholesale Trade",
+   "value": -1400.0
+  },
+  {
+   "level": 3,
+   "observation_id": "f7eb3112a18ba9cd",
+   "path": "Total Changes In Employment > Services Producing Industries > Wholesale & Retail Trade > Wholesale Trade",
+   "period": "2024-Q3",
+   "sector": "Wholesale Trade",
+   "value": -2800.0
+  },
+  {
+   "level": 3,
+   "observation_id": "7afa57b82e9231a5",
+   "path": "Total Changes In Employment > Services Producing Industries > Wholesale & Retail Trade > Wholesale Trade",
+   "period": "2024-Q4",
+   "sector": "Wholesale Trade",
+   "value": 1200.0
+  },
+  {
+   "level": 3,
+   "observation_id": "6f9982ac60749f16",
+   "path": "Total Changes In Employment > Services Producing Industries > Wholesale & Retail Trade > Wholesale Trade",
+   "period": "2025-Q1",
+   "sector": "Wholesale Trade",
+   "value": 700.0
+  },
+  {
+   "level": 3,
+   "observation_id": "5a4b1633a234e313",
+   "path": "Total Changes In Employment > Services Producing Industries > Wholesale & Retail Trade > Wholesale Trade",
+   "period": "2025-Q2",
+   "sector": "Wholesale Trade",
+   "value": 300.0
+  },
+  {
+   "level": 3,
+   "observation_id": "9942692807840203",
+   "path": "Total Changes In Employment > Services Producing Industries > Wholesale & Retail Trade > Wholesale Trade",
+   "period": "2025-Q3",
+   "sector": "Wholesale Trade",
+   "value": -2600.0
+  },
+  {
+   "level": 3,
+   "observation_id": "d914d123604a198a",
+   "path": "Total Changes In Employment > Services Producing Industries > Wholesale & Retail Trade > Wholesale Trade",
+   "period": "2025-Q4",
+   "sector": "Wholesale Trade",
+   "value": -1900.0
+  },
+  {
+   "level": 3,
+   "observation_id": "f5bb17896169546b",
+   "path": "Total Changes In Employment > Services Producing Industries > Wholesale & Retail Trade > Wholesale Trade",
+   "period": "2026-Q1",
+   "sector": "Wholesale Trade",
+   "value": 400.0
+  },
+  {
+   "level": 3,
+   "observation_id": "c5775449fa591800",
+   "path": "Total Changes In Employment > Services Producing Industries > Wholesale & Retail Trade > Wholesale Trade",
+   "period": "2026-Q2",
+   "sector": "Wholesale Trade",
+   "value": -1500.0
+  }
+ ],
+ "schema_version": "export-0.1"
+}

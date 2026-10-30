@@ -1,0 +1,52 @@
+{
+  "collectionIds": [],
+  "columnMetadata": {
+    "map": {
+      "c_33419ihufa8m0ts07qtjb15zw": "quarter",
+      "c_67i8iighl1iavungilw6l48mv": "retrench",
+      "c_6gl98ptkq9zbr8qdlgewwjkfe": "industry"
+    },
+    "metaMapping": {
+      "c_33419ihufa8m0ts07qtjb15zw": {
+        "columnTitle": "Quarter",
+        "dataType": "Quarter (Q)",
+        "index": "0",
+        "isCategorical": true,
+        "name": "quarter"
+      },
+      "c_67i8iighl1iavungilw6l48mv": {
+        "columnTitle": "Retrench",
+        "dataType": "Text",
+        "index": "2",
+        "isCategorical": true,
+        "name": "retrench"
+      },
+      "c_6gl98ptkq9zbr8qdlgewwjkfe": {
+        "columnTitle": "Industry",
+        "dataType": "Text",
+        "index": "1",
+        "isCategorical": true,
+        "name": "industry"
+      }
+    },
+    "order": [
+      "c_33419ihufa8m0ts07qtjb15zw",
+      "c_6gl98ptkq9zbr8qdlgewwjkfe",
+      "c_67i8iighl1iavungilw6l48mv"
+    ]
+  },
+  "contactEmails": [
+    "ng_li_mei@mom.gov.sg",
+    "samantha_teo@mom.gov.sg"
+  ],
+  "coverageEnd": "2026-06-30T08:00:00+08:00",
+  "coverageStart": "1998-01-01T08:00:00+08:00",
+  "createdAt": "2026-03-23T09:19:24+08:00",
+  "datasetId": "d_61d92d31ca400be135190614277da825",
+  "datasetSize": 196392,
+  "description": "Retrenchment refers to the termination of permanent employees due to redundancy and early termination of term contract employees due to redundancy.\n\nSource: Labour Market Survey, Manpower Research & Statistics Department, MOM\nBefore 2006, data pertain to private sector establishments (each with at least 25 employees). From 2006 onwards, it also includes\nthe public sector.\n",
+  "format": "CSV",
+  "lastUpdatedAt": "2026-09-22T17:25:03+08:00",
+  "managedBy": "Ministry of Manpower",
+  "name": "Number of Retrenched Employees by Industry - Quarterly"
+}

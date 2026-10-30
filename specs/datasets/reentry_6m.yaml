@@ -1,0 +1,22 @@
+source_id: reentry_6m
+adapter: quarterly_long
+period_col: quarter
+expected_columns:
+- quarter
+- reentry_rate_6mth
+measures:
+- column: reentry_rate_6mth
+  indicator_id: reentry_rate_6m
+  unit: percent
+  population: unverified_basis
+  adjustment: unspecified
+  definition: Rate of re-entry into employment within 6 months after retrenchment. Dataset has no description. The Q2 2026 MOM report describes a resident rate of re-entry into employment; the population
+    is therefore recorded as unverified_basis until the report definition is matched to this series.
+  plausible_range:
+  - 0
+  - 100
+expected_first_period: 2000-Q1
+expected_last_period: 2026-Q2
+missing_tokens:
+- na
+- '-'

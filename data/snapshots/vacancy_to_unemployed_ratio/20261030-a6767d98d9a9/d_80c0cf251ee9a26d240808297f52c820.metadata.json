@@ -1,0 +1,44 @@
+{
+  "collectionIds": [],
+  "columnMetadata": {
+    "map": {
+      "c_4bpc6hh4rg00zit2ioect7xko": "jv_to_ue",
+      "c_dv6jucfbtm3b7do61gw26dl2c": "quarter"
+    },
+    "metaMapping": {
+      "c_4bpc6hh4rg00zit2ioect7xko": {
+        "columnTitle": "Jv To Ue",
+        "dataType": "Numeric",
+        "index": "1",
+        "isCategorical": false,
+        "name": "jv_to_ue",
+        "unitOfMeasure": "ratio"
+      },
+      "c_dv6jucfbtm3b7do61gw26dl2c": {
+        "columnTitle": "Quarter",
+        "dataType": "Quarter (Q)",
+        "index": "0",
+        "isCategorical": false,
+        "name": "quarter"
+      }
+    },
+    "order": [
+      "c_dv6jucfbtm3b7do61gw26dl2c",
+      "c_4bpc6hh4rg00zit2ioect7xko"
+    ]
+  },
+  "contactEmails": [
+    "ng_li_mei@mom.gov.sg",
+    "samantha_teo@mom.gov.sg"
+  ],
+  "coverageEnd": "2026-06-30T08:00:00+08:00",
+  "coverageStart": "1998-01-01T08:00:00+08:00",
+  "createdAt": "2026-03-23T15:56:02+08:00",
+  "datasetId": "d_80c0cf251ee9a26d240808297f52c820",
+  "datasetSize": 1603,
+  "description": "Data are seasonally adjusted.\nSource: Labour Market Survey, Manpower Research & Statistics Department, MOM\nBefore 2006, data pertain to private sector establishments (each with at least 25 employees). From 2006 onwards, it also includes\nthe public sector.\n",
+  "format": "CSV",
+  "lastUpdatedAt": "2026-09-22T17:58:01+08:00",
+  "managedBy": "Ministry of Manpower",
+  "name": "Job Vacancy to Unemployed Person Ratio - Quarterly"
+}

@@ -1,0 +1,151 @@
+source_id: retrenched_by_industry
+adapter: quarterly_long_dimension
+period_col: quarter
+expected_columns:
+- quarter
+- industry
+- retrench
+measures:
+- column: retrench
+  indicator_id: retrenched_employees_by_industry
+  unit: persons
+  population: establishments
+  adjustment: not_applicable
+  definition: Retrenched employees by industry (values rounded to the nearest 10 in the source; '-' marks cells the publisher does not publish a number for). Industry names changed over time with SSIC revisions;
+    the hierarchy below applies to the 2024-Q1 to 2026-Q2 window. Labour Market Survey of establishments (MRSD, MOM). From 2006 the scope includes the public sector.
+  plausible_range:
+  - 0
+  - 12000
+expected_first_period: 1998-Q1
+expected_last_period: 2026-Q2
+missing_tokens:
+- na
+- '-'
+dimension_col: industry
+industry_hierarchy:
+  manufacturing:
+    level: 1
+    parent: null
+  food, beverages and tobacco:
+    level: 2
+    parent: manufacturing
+  paper,rubber,plastic products and printing:
+    level: 2
+    parent: manufacturing
+  petroleum, chemical and pharmaceutical products:
+    level: 2
+    parent: manufacturing
+  fabricated metal products, machinery and equipment:
+    level: 2
+    parent: manufacturing
+  electronic, computer and optical products:
+    level: 2
+    parent: manufacturing
+  transport equipment:
+    level: 2
+    parent: manufacturing
+  other manufacturing industries:
+    level: 2
+    parent: manufacturing
+  construction:
+    level: 1
+    parent: null
+  services:
+    level: 1
+    parent: null
+  wholesale and retail trade:
+    level: 2
+    parent: services
+  wholesale trade:
+    level: 3
+    parent: wholesale and retail trade
+  retail trade:
+    level: 3
+    parent: wholesale and retail trade
+  transportation and storage:
+    level: 2
+    parent: services
+  land transport and supporting services:
+    level: 3
+    parent: transportation and storage
+  water transport and supporting services:
+    level: 3
+    parent: transportation and storage
+  air transport and supporting services:
+    level: 3
+    parent: transportation and storage
+  other transport and storage services:
+    level: 3
+    parent: transportation and storage
+  accommodation and food services:
+    level: 2
+    parent: services
+  accommodation:
+    level: 3
+    parent: accommodation and food services
+  food and beverage services:
+    level: 3
+    parent: accommodation and food services
+  information and communications:
+    level: 2
+    parent: services
+  telecommunications, broadcasting and publishing:
+    level: 3
+    parent: information and communications
+  it and other information services:
+    level: 3
+    parent: information and communications
+  financial and insurance services:
+    level: 2
+    parent: services
+  financial services:
+    level: 3
+    parent: financial and insurance services
+  insurance services:
+    level: 3
+    parent: financial and insurance services
+  real estate services:
+    level: 2
+    parent: services
+  professional services:
+    level: 2
+    parent: services
+  legal, accounting and management services:
+    level: 3
+    parent: professional services
+  architectural and engineering services:
+    level: 3
+    parent: professional services
+  other professional services:
+    level: 3
+    parent: professional services
+  administrative and support services:
+    level: 2
+    parent: services
+  security and investigation:
+    level: 3
+    parent: administrative and support services
+  cleaning and landscaping:
+    level: 3
+    parent: administrative and support services
+  other administrative and support services:
+    level: 3
+    parent: administrative and support services
+  community, social and personal services:
+    level: 2
+    parent: services
+  public administration and education:
+    level: 3
+    parent: community, social and personal services
+  health and social services:
+    level: 3
+    parent: community, social and personal services
+  arts, entertainment and recreation:
+    level: 3
+    parent: community, social and personal services
+  other community, social and personal services:
+    level: 3
+    parent: community, social and personal services
+  others:
+    level: 1
+    parent: null

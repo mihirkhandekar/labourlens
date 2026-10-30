@@ -1,0 +1,70 @@
+{
+  "citizen_unemployment_rate": {
+    "snapshots": 1,
+    "status": "baseline_only_no_earlier_snapshot"
+  },
+  "employment_change_by_sector": {
+    "snapshots": 1,
+    "status": "baseline_only_no_earlier_snapshot"
+  },
+  "job_vacancy_count": {
+    "snapshots": 1,
+    "status": "baseline_only_no_earlier_snapshot"
+  },
+  "job_vacancy_rate": {
+    "snapshots": 1,
+    "status": "baseline_only_no_earlier_snapshot"
+  },
+  "overall_unemployment_rate": {
+    "snapshots": 1,
+    "status": "baseline_only_no_earlier_snapshot"
+  },
+  "recruitment_rate": {
+    "snapshots": 1,
+    "status": "baseline_only_no_earlier_snapshot"
+  },
+  "reentry_12m": {
+    "snapshots": 1,
+    "status": "baseline_only_no_earlier_snapshot"
+  },
+  "reentry_6m": {
+    "snapshots": 1,
+    "status": "baseline_only_no_earlier_snapshot"
+  },
+  "resident_unemployment_rate": {
+    "snapshots": 1,
+    "status": "baseline_only_no_earlier_snapshot"
+  },
+  "resignation_rate": {
+    "snapshots": 1,
+    "status": "baseline_only_no_earlier_snapshot"
+  },
+  "retrenched_by_industry": {
+    "snapshots": 1,
+    "status": "baseline_only_no_earlier_snapshot"
+  },
+  "retrenched_employees": {
+    "snapshots": 1,
+    "status": "baseline_only_no_earlier_snapshot"
+  },
+  "retrenched_permanent": {
+    "snapshots": 1,
+    "status": "baseline_only_no_earlier_snapshot"
+  },
+  "retrenched_term_contract": {
+    "snapshots": 1,
+    "status": "baseline_only_no_earlier_snapshot"
+  },
+  "unemployed_overall": {
+    "snapshots": 1,
+    "status": "baseline_only_no_earlier_snapshot"
+  },
+  "unemployed_residents": {
+    "snapshots": 1,
+    "status": "baseline_only_no_earlier_snapshot"
+  },
+  "vacancy_to_unemployed_ratio": {
+    "snapshots": 1,
+    "status": "baseline_only_no_earlier_snapshot"
+  }
+}

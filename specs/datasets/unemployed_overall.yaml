@@ -1,0 +1,30 @@
+source_id: unemployed_overall
+adapter: quarter_end_month
+period_col: period
+expected_columns:
+- period
+- residential_status
+- seasonally_adj_unemp
+- non_seasonally_adj_unemp
+constant_columns:
+  residential_status: overall
+measures:
+- column: seasonally_adj_unemp
+  indicator_id: unemployed_persons
+  unit: persons
+  population: overall
+  adjustment: seasonally_adjusted
+  definition: Quarterly number of unemployed persons from the Labour Force Survey. Number of unemployed persons, overall population.
+  plausible_range: &id001
+  - 1000
+  - 300000
+- column: non_seasonally_adj_unemp
+  indicator_id: unemployed_persons
+  unit: persons
+  population: overall
+  adjustment: not_adjusted
+  definition: Quarterly number of unemployed persons from the Labour Force Survey. Number of unemployed persons, overall population.
+  plausible_range: *id001
+expected_first_period: 1992-Q1
+expected_last_period: 2026-Q2
+missing_tokens: []

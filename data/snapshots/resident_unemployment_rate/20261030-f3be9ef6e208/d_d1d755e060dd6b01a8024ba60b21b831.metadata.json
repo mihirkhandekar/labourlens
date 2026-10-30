@@ -1,0 +1,62 @@
+{
+  "collectionIds": [],
+  "columnMetadata": {
+    "map": {
+      "c_3qpbuum1qjw7fzvppb3sfco4a": "residential_status",
+      "c_c1k2b92ht3rm0h0b9wcsc2giq": "non_seasonally_adj_unemp_rate",
+      "c_etivbz53wmqt7qayiuytukrun": "period",
+      "c_ki9cy96evqo5mh95x1xegna8": "seasonally_adj_unemp_rate"
+    },
+    "metaMapping": {
+      "c_3qpbuum1qjw7fzvppb3sfco4a": {
+        "columnTitle": "Residential Status",
+        "dataType": "Text",
+        "index": "1",
+        "isCategorical": true,
+        "name": "residential_status"
+      },
+      "c_c1k2b92ht3rm0h0b9wcsc2giq": {
+        "columnTitle": "Non Seasonally Adj Unemp Rate",
+        "dataType": "Numeric (Percentage)",
+        "index": "3",
+        "isCategorical": false,
+        "name": "non_seasonally_adj_unemp_rate",
+        "unitOfMeasure": "percent"
+      },
+      "c_etivbz53wmqt7qayiuytukrun": {
+        "columnTitle": "Period",
+        "dataType": "Month (YYYY-MM)",
+        "index": "0",
+        "isCategorical": false,
+        "name": "period"
+      },
+      "c_ki9cy96evqo5mh95x1xegna8": {
+        "columnTitle": "Seasonally Adj Unemp Rate",
+        "dataType": "Numeric (Percentage)",
+        "index": "2",
+        "isCategorical": false,
+        "name": "seasonally_adj_unemp_rate",
+        "unitOfMeasure": "percent"
+      }
+    },
+    "order": [
+      "c_etivbz53wmqt7qayiuytukrun",
+      "c_3qpbuum1qjw7fzvppb3sfco4a",
+      "c_ki9cy96evqo5mh95x1xegna8",
+      "c_c1k2b92ht3rm0h0b9wcsc2giq"
+    ]
+  },
+  "contactEmails": [
+    "ng_mun_yi@mom.gov.sg"
+  ],
+  "coverageEnd": "2026-06-01T08:00:00+08:00",
+  "coverageStart": "1992-03-01T08:00:00+08:00",
+  "createdAt": "2026-02-26T19:44:39+08:00",
+  "datasetId": "d_d1d755e060dd6b01a8024ba60b21b831",
+  "datasetSize": 3625,
+  "description": "Data refer to the quarterly resident unemployment rate.\nResidents refer to Singapore Citizens and Permanent Residents.\nSeasonally adjusted data are revised using the latest set of seasonal factors and updated in line with standard seasonal adjustment procedure. The revision is done once a year, taking into account observations for the latest available year.\nSource: Labour Force Survey, Manpower Research & Statistics Department, MOM, except data for June 1995, June 2000 and June 2005, which are from the Population Census 2000, General Household Surveys 1995 & 2005 conducted by the Singapore Department of Statistics.",
+  "format": "CSV",
+  "lastUpdatedAt": "2026-09-29T10:48:50+08:00",
+  "managedBy": "Ministry of Manpower",
+  "name": "Resident Unemployment Rate, Quarterly"
+}

@@ -1,0 +1,186 @@
+[
+  {
+    "body_font_size_median": 8.04,
+    "dropped_short_blocks": 559,
+    "flags": {
+      "empty": 0,
+      "garbled": 0,
+      "multicolumn_uncertain": 0,
+      "ok": 364,
+      "table_unreliable": 525
+    },
+    "pages": 64,
+    "passages": 889,
+    "source_id": "mom-2025-q3-final",
+    "status": "ok"
+  },
+  {
+    "body_font_size_median": 7.98,
+    "dropped_short_blocks": 621,
+    "flags": {
+      "empty": 0,
+      "garbled": 5,
+      "multicolumn_uncertain": 0,
+      "ok": 423,
+      "table_unreliable": 635
+    },
+    "pages": 64,
+    "passages": 1063,
+    "source_id": "mom-2025-q4-final",
+    "status": "ok"
+  },
+  {
+    "body_font_size_median": 8.04,
+    "dropped_short_blocks": 522,
+    "flags": {
+      "empty": 0,
+      "garbled": 5,
+      "multicolumn_uncertain": 0,
+      "ok": 336,
+      "table_unreliable": 527
+    },
+    "pages": 59,
+    "passages": 868,
+    "source_id": "mom-2026-q1-final",
+    "status": "ok"
+  },
+  {
+    "body_font_size_median": 8.64,
+    "dropped_short_blocks": 491,
+    "flags": {
+      "empty": 0,
+      "garbled": 5,
+      "multicolumn_uncertain": 0,
+      "ok": 355,
+      "table_unreliable": 546
+    },
+    "pages": 59,
+    "passages": 906,
+    "source_id": "mom-2026-q2-final",
+    "status": "ok"
+  },
+  {
+    "catalog_publication_date": "2026-07-31",
+    "date_matches_catalog": true,
+    "page_first_date": "2026-07-31",
+    "passages": 18,
+    "source_id": "mom-2026-q2-advance",
+    "status": "ok"
+  },
+  {
+    "catalog_publication_date": "2026-09-21",
+    "date_matches_catalog": true,
+    "page_first_date": "2026-09-21",
+    "passages": 12,
+    "source_id": "mom-2026-q2-final-release",
+    "status": "ok"
+  },
+  {
+    "body_font_size_median": 10.5,
+    "dropped_short_blocks": 274,
+    "flags": {
+      "empty": 0,
+      "garbled": 0,
+      "multicolumn_uncertain": 0,
+      "ok": 198,
+      "table_unreliable": 0
+    },
+    "pages": 80,
+    "passages": 198,
+    "source_id": "mom-lf2025-survey-findings",
+    "status": "ok"
+  },
+  {
+    "body_font_size_median": 10.5,
+    "dropped_short_blocks": 1,
+    "flags": {
+      "empty": 0,
+      "garbled": 0,
+      "multicolumn_uncertain": 0,
+      "ok": 1,
+      "table_unreliable": 0
+    },
+    "pages": 1,
+    "passages": 1,
+    "source_id": "mom-lf2025-survey-highlights",
+    "status": "ok"
+  },
+  {
+    "body_font_size_median": 10.5,
+    "dropped_short_blocks": 61,
+    "flags": {
+      "empty": 0,
+      "garbled": 0,
+      "multicolumn_uncertain": 0,
+      "ok": 105,
+      "table_unreliable": 10
+    },
+    "pages": 12,
+    "passages": 115,
+    "source_id": "mom-lf2025-coverage-methodology",
+    "status": "ok"
+  },
+  {
+    "body_font_size_median": 10.5,
+    "dropped_short_blocks": 10,
+    "flags": {
+      "empty": 0,
+      "garbled": 0,
+      "multicolumn_uncertain": 0,
+      "ok": 4,
+      "table_unreliable": 0
+    },
+    "pages": 1,
+    "passages": 4,
+    "source_id": "mom-lf2025-copyright",
+    "status": "ok"
+  },
+  {
+    "catalog_publication_date": "2025-10-30",
+    "date_matches_catalog": true,
+    "page_first_date": "2025-10-30",
+    "passages": 25,
+    "source_id": "mom-2025-q3-advance",
+    "status": "ok"
+  },
+  {
+    "catalog_publication_date": "2025-12-11",
+    "date_matches_catalog": true,
+    "page_first_date": "2025-12-11",
+    "passages": 18,
+    "source_id": "mom-2025-q3-final-release",
+    "status": "ok"
+  },
+  {
+    "catalog_publication_date": "2026-01-29",
+    "date_matches_catalog": true,
+    "page_first_date": "2026-01-29",
+    "passages": 23,
+    "source_id": "mom-2025-q4-advance",
+    "status": "ok"
+  },
+  {
+    "catalog_publication_date": "2026-03-20",
+    "date_matches_catalog": true,
+    "page_first_date": "2026-03-20",
+    "passages": 20,
+    "source_id": "mom-2025-q4-final-release",
+    "status": "ok"
+  },
+  {
+    "catalog_publication_date": "2026-04-30",
+    "date_matches_catalog": true,
+    "page_first_date": "2026-04-30",
+    "passages": 19,
+    "source_id": "mom-2026-q1-advance",
+    "status": "ok"
+  },
+  {
+    "catalog_publication_date": "2026-06-15",
+    "date_matches_catalog": true,
+    "page_first_date": "2026-06-15",
+    "passages": 8,
+    "source_id": "mom-2026-q1-final-release",
+    "status": "ok"
+  }
+]

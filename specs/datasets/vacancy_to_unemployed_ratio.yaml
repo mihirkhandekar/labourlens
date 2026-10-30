@@ -1,0 +1,21 @@
+source_id: vacancy_to_unemployed_ratio
+adapter: quarterly_long
+period_col: quarter
+expected_columns:
+- quarter
+- jv_to_ue
+measures:
+- column: jv_to_ue
+  indicator_id: job_vacancy_to_unemployed_ratio
+  unit: ratio
+  population: not_applicable
+  adjustment: seasonally_adjusted
+  definition: Job vacancies per unemployed person (a ratio, NOT a percentage). Seasonally adjusted. Labour Market Survey of establishments (MRSD, MOM). From 2006 the scope includes the public sector.
+  plausible_range:
+  - 0
+  - 5
+expected_first_period: 1998-Q1
+expected_last_period: 2026-Q2
+missing_tokens:
+- na
+- '-'

@@ -1,0 +1,3366 @@
+{
+ "note": "Rounded to 10 by the publisher. null = '-' in source (not a published number, not zero).",
+ "rows": [
+  {
+   "industry": "accommodation",
+   "level": 3,
+   "observation_id": "1a3fb1a00fa800d9",
+   "path": "services > accommodation and food services > accommodation",
+   "period": "2024-Q1",
+   "value": 10.0
+  },
+  {
+   "industry": "accommodation",
+   "level": 3,
+   "observation_id": "f7dd6f8be5e329de",
+   "path": "services > accommodation and food services > accommodation",
+   "period": "2024-Q2",
+   "value": 10.0
+  },
+  {
+   "industry": "accommodation",
+   "level": 3,
+   "observation_id": "dbaa5d4f12940cc6",
+   "path": "services > accommodation and food services > accommodation",
+   "period": "2024-Q3",
+   "value": 10.0
+  },
+  {
+   "industry": "accommodation",
+   "level": 3,
+   "observation_id": "05cb21cfc6f40801",
+   "path": "services > accommodation and food services > accommodation",
+   "period": "2024-Q4",
+   "value": null
+  },
+  {
+   "industry": "accommodation",
+   "level": 3,
+   "observation_id": "d91903279ed00109",
+   "path": "services > accommodation and food services > accommodation",
+   "period": "2025-Q1",
+   "value": 30.0
+  },
+  {
+   "industry": "accommodation",
+   "level": 3,
+   "observation_id": "2c3428bfb7429049",
+   "path": "services > accommodation and food services > accommodation",
+   "period": "2025-Q2",
+   "value": 60.0
+  },
+  {
+   "industry": "accommodation",
+   "level": 3,
+   "observation_id": "8a35c8e10673e9ca",
+   "path": "services > accommodation and food services > accommodation",
+   "period": "2025-Q3",
+   "value": null
+  },
+  {
+   "industry": "accommodation",
+   "level": 3,
+   "observation_id": "dd8c51e7508cf1a0",
+   "path": "services > accommodation and food services > accommodation",
+   "period": "2025-Q4",
+   "value": null
+  },
+  {
+   "industry": "accommodation",
+   "level": 3,
+   "observation_id": "a06c6bab40339f04",
+   "path": "services > accommodation and food services > accommodation",
+   "period": "2026-Q1",
+   "value": null
+  },
+  {
+   "industry": "accommodation",
+   "level": 3,
+   "observation_id": "f0cebc859faee151",
+   "path": "services > accommodation and food services > accommodation",
+   "period": "2026-Q2",
+   "value": 10.0
+  },
+  {
+   "industry": "accommodation and food services",
+   "level": 2,
+   "observation_id": "c3a215f52fa4ed19",
+   "path": "services > accommodation and food services",
+   "period": "2024-Q1",
+   "value": 70.0
+  },
+  {
+   "industry": "accommodation and food services",
+   "level": 2,
+   "observation_id": "ffbe80e5b442ffe7",
+   "path": "services > accommodation and food services",
+   "period": "2024-Q2",
+   "value": 40.0
+  },
+  {
+   "industry": "accommodation and food services",
+   "level": 2,
+   "observation_id": "acf95574082ba050",
+   "path": "services > accommodation and food services",
+   "period": "2024-Q3",
+   "value": 50.0
+  },
+  {
+   "industry": "accommodation and food services",
+   "level": 2,
+   "observation_id": "647fe961b1899a0c",
+   "path": "services > accommodation and food services",
+   "period": "2024-Q4",
+   "value": 20.0
+  },
+  {
+   "industry": "accommodation and food services",
+   "level": 2,
+   "observation_id": "4b32d7be7ac2dcea",
+   "path": "services > accommodation and food services",
+   "period": "2025-Q1",
+   "value": 40.0
+  },
+  {
+   "industry": "accommodation and food services",
+   "level": 2,
+   "observation_id": "f7b50400564a2e01",
+   "path": "services > accommodation and food services",
+   "period": "2025-Q2",
+   "value": 90.0
+  },
+  {
+   "industry": "accommodation and food services",
+   "level": 2,
+   "observation_id": "a6fbd2baddf77ce5",
+   "path": "services > accommodation and food services",
+   "period": "2025-Q3",
+   "value": 40.0
+  },
+  {
+   "industry": "accommodation and food services",
+   "level": 2,
+   "observation_id": "213c666b6633b2cb",
+   "path": "services > accommodation and food services",
+   "period": "2025-Q4",
+   "value": 70.0
+  },
+  {
+   "industry": "accommodation and food services",
+   "level": 2,
+   "observation_id": "dd545c78f207dbae",
+   "path": "services > accommodation and food services",
+   "period": "2026-Q1",
+   "value": 150.0
+  },
+  {
+   "industry": "accommodation and food services",
+   "level": 2,
+   "observation_id": "ecfd027177da3336",
+   "path": "services > accommodation and food services",
+   "period": "2026-Q2",
+   "value": 180.0
+  },
+  {
+   "industry": "administrative and support services",
+   "level": 2,
+   "observation_id": "36ee52d73b0fd89d",
+   "path": "services > administrative and support services",
+   "period": "2024-Q1",
+   "value": 190.0
+  },
+  {
+   "industry": "administrative and support services",
+   "level": 2,
+   "observation_id": "8e8704e8fd4058f4",
+   "path": "services > administrative and support services",
+   "period": "2024-Q2",
+   "value": 190.0
+  },
+  {
+   "industry": "administrative and support services",
+   "level": 2,
+   "observation_id": "baf0bd0acfbfeb05",
+   "path": "services > administrative and support services",
+   "period": "2024-Q3",
+   "value": 80.0
+  },
+  {
+   "industry": "administrative and support services",
+   "level": 2,
+   "observation_id": "7bc516420e9524c7",
+   "path": "services > administrative and support services",
+   "period": "2024-Q4",
+   "value": 80.0
+  },
+  {
+   "industry": "administrative and support services",
+   "level": 2,
+   "observation_id": "32f76bcf70b097f3",
+   "path": "services > administrative and support services",
+   "period": "2025-Q1",
+   "value": 60.0
+  },
+  {
+   "industry": "administrative and support services",
+   "level": 2,
+   "observation_id": "62523c2d9ce7af8a",
+   "path": "services > administrative and support services",
+   "period": "2025-Q2",
+   "value": 150.0
+  },
+  {
+   "industry": "administrative and support services",
+   "level": 2,
+   "observation_id": "e6b0fb9f287528a9",
+   "path": "services > administrative and support services",
+   "period": "2025-Q3",
+   "value": 160.0
+  },
+  {
+   "industry": "administrative and support services",
+   "level": 2,
+   "observation_id": "275038a555b75dbb",
+   "path": "services > administrative and support services",
+   "period": "2025-Q4",
+   "value": 130.0
+  },
+  {
+   "industry": "administrative and support services",
+   "level": 2,
+   "observation_id": "9b79edafe3bfc228",
+   "path": "services > administrative and support services",
+   "period": "2026-Q1",
+   "value": 140.0
+  },
+  {
+   "industry": "administrative and support services",
+   "level": 2,
+   "observation_id": "9f68e4e455062f30",
+   "path": "services > administrative and support services",
+   "period": "2026-Q2",
+   "value": 140.0
+  },
+  {
+   "industry": "air transport and supporting services",
+   "level": 3,
+   "observation_id": "3002f327e14b0242",
+   "path": "services > transportation and storage > air transport and supporting services",
+   "period": "2024-Q1",
+   "value": null
+  },
+  {
+   "industry": "air transport and supporting services",
+   "level": 3,
+   "observation_id": "28058c14f09153ad",
+   "path": "services > transportation and storage > air transport and supporting services",
+   "period": "2024-Q2",
+   "value": null
+  },
+  {
+   "industry": "air transport and supporting services",
+   "level": 3,
+   "observation_id": "85e2112ca6ade61c",
+   "path": "services > transportation and storage > air transport and supporting services",
+   "period": "2024-Q3",
+   "value": null
+  },
+  {
+   "industry": "air transport and supporting services",
+   "level": 3,
+   "observation_id": "60c6d2175613db74",
+   "path": "services > transportation and storage > air transport and supporting services",
+   "period": "2024-Q4",
+   "value": null
+  },
+  {
+   "industry": "air transport and supporting services",
+   "level": 3,
+   "observation_id": "94104d66a3c9f8f2",
+   "path": "services > transportation and storage > air transport and supporting services",
+   "period": "2025-Q1",
+   "value": 10.0
+  },
+  {
+   "industry": "air transport and supporting services",
+   "level": 3,
+   "observation_id": "9469a5ebefe18d02",
+   "path": "services > transportation and storage > air transport and supporting services",
+   "period": "2025-Q2",
+   "value": 10.0
+  },
+  {
+   "industry": "air transport and supporting services",
+   "level": 3,
+   "observation_id": "3a77181b0c8cf401",
+   "path": "services > transportation and storage > air transport and supporting services",
+   "period": "2025-Q3",
+   "value": 450.0
+  },
+  {
+   "industry": "air transport and supporting services",
+   "level": 3,
+   "observation_id": "1d7e07937831ca44",
+   "path": "services > transportation and storage > air transport and supporting services",
+   "period": "2025-Q4",
+   "value": 60.0
+  },
+  {
+   "industry": "air transport and supporting services",
+   "level": 3,
+   "observation_id": "0b8d05906e92dbe1",
+   "path": "services > transportation and storage > air transport and supporting services",
+   "period": "2026-Q1",
+   "value": null
+  },
+  {
+   "industry": "air transport and supporting services",
+   "level": 3,
+   "observation_id": "90fe5ff77dd1c3e3",
+   "path": "services > transportation and storage > air transport and supporting services",
+   "period": "2026-Q2",
+   "value": 20.0
+  },
+  {
+   "industry": "architectural and engineering services",
+   "level": 3,
+   "observation_id": "ad3375d995a7cfd6",
+   "path": "services > professional services > architectural and engineering services",
+   "period": "2024-Q1",
+   "value": 160.0
+  },
+  {
+   "industry": "architectural and engineering services",
+   "level": 3,
+   "observation_id": "0141548866f7cecf",
+   "path": "services > professional services > architectural and engineering services",
+   "period": "2024-Q2",
+   "value": 80.0
+  },
+  {
+   "industry": "architectural and engineering services",
+   "level": 3,
+   "observation_id": "c1be94ba69d6390b",
+   "path": "services > professional services > architectural and engineering services",
+   "period": "2024-Q3",
+   "value": 60.0
+  },
+  {
+   "industry": "architectural and engineering services",
+   "level": 3,
+   "observation_id": "f50e380cd2815faa",
+   "path": "services > professional services > architectural and engineering services",
+   "period": "2024-Q4",
+   "value": 70.0
+  },
+  {
+   "industry": "architectural and engineering services",
+   "level": 3,
+   "observation_id": "6516b33f6adf396b",
+   "path": "services > professional services > architectural and engineering services",
+   "period": "2025-Q1",
+   "value": 140.0
+  },
+  {
+   "industry": "architectural and engineering services",
+   "level": 3,
+   "observation_id": "3d06574dd51b4752",
+   "path": "services > professional services > architectural and engineering services",
+   "period": "2025-Q2",
+   "value": 90.0
+  },
+  {
+   "industry": "architectural and engineering services",
+   "level": 3,
+   "observation_id": "8b6eab7aff336a1d",
+   "path": "services > professional services > architectural and engineering services",
+   "period": "2025-Q3",
+   "value": 110.0
+  },
+  {
+   "industry": "architectural and engineering services",
+   "level": 3,
+   "observation_id": "30753082d9884c4a",
+   "path": "services > professional services > architectural and engineering services",
+   "period": "2025-Q4",
+   "value": 50.0
+  },
+  {
+   "industry": "architectural and engineering services",
+   "level": 3,
+   "observation_id": "784c4beb2ea1d1dd",
+   "path": "services > professional services > architectural and engineering services",
+   "period": "2026-Q1",
+   "value": 30.0
+  },
+  {
+   "industry": "architectural and engineering services",
+   "level": 3,
+   "observation_id": "ed2ef427cb447a7a",
+   "path": "services > professional services > architectural and engineering services",
+   "period": "2026-Q2",
+   "value": 70.0
+  },
+  {
+   "industry": "arts, entertainment and recreation",
+   "level": 3,
+   "observation_id": "0c70bf2263adae93",
+   "path": "services > community, social and personal services > arts, entertainment and recreation",
+   "period": "2024-Q1",
+   "value": null
+  },
+  {
+   "industry": "arts, entertainment and recreation",
+   "level": 3,
+   "observation_id": "57a68f395a0ba43c",
+   "path": "services > community, social and personal services > arts, entertainment and recreation",
+   "period": "2024-Q2",
+   "value": 40.0
+  },
+  {
+   "industry": "arts, entertainment and recreation",
+   "level": 3,
+   "observation_id": "7cbc2ae09ef58262",
+   "path": "services > community, social and personal services > arts, entertainment and recreation",
+   "period": "2024-Q3",
+   "value": null
+  },
+  {
+   "industry": "arts, entertainment and recreation",
+   "level": 3,
+   "observation_id": "77f4b915f1278b76",
+   "path": "services > community, social and personal services > arts, entertainment and recreation",
+   "period": "2024-Q4",
+   "value": null
+  },
+  {
+   "industry": "arts, entertainment and recreation",
+   "level": 3,
+   "observation_id": "3846c58902eb613f",
+   "path": "services > community, social and personal services > arts, entertainment and recreation",
+   "period": "2025-Q1",
+   "value": 10.0
+  },
+  {
+   "industry": "arts, entertainment and recreation",
+   "level": 3,
+   "observation_id": "b921b3a56a53ef01",
+   "path": "services > community, social and personal services > arts, entertainment and recreation",
+   "period": "2025-Q2",
+   "value": 10.0
+  },
+  {
+   "industry": "arts, entertainment and recreation",
+   "level": 3,
+   "observation_id": "f00dd822737b2ec9",
+   "path": "services > community, social and personal services > arts, entertainment and recreation",
+   "period": "2025-Q3",
+   "value": 10.0
+  },
+  {
+   "industry": "arts, entertainment and recreation",
+   "level": 3,
+   "observation_id": "dcfa0854b1f7ba24",
+   "path": "services > community, social and personal services > arts, entertainment and recreation",
+   "period": "2025-Q4",
+   "value": 20.0
+  },
+  {
+   "industry": "arts, entertainment and recreation",
+   "level": 3,
+   "observation_id": "35f087c975e63b8e",
+   "path": "services > community, social and personal services > arts, entertainment and recreation",
+   "period": "2026-Q1",
+   "value": 20.0
+  },
+  {
+   "industry": "arts, entertainment and recreation",
+   "level": 3,
+   "observation_id": "b60236b91a44c37c",
+   "path": "services > community, social and personal services > arts, entertainment and recreation",
+   "period": "2026-Q2",
+   "value": 10.0
+  },
+  {
+   "industry": "cleaning and landscaping",
+   "level": 3,
+   "observation_id": "d921b5d657ee770d",
+   "path": "services > administrative and support services > cleaning and landscaping",
+   "period": "2024-Q1",
+   "value": null
+  },
+  {
+   "industry": "cleaning and landscaping",
+   "level": 3,
+   "observation_id": "2bd219a260867e4a",
+   "path": "services > administrative and support services > cleaning and landscaping",
+   "period": "2024-Q2",
+   "value": null
+  },
+  {
+   "industry": "cleaning and landscaping",
+   "level": 3,
+   "observation_id": "095fecb63184be20",
+   "path": "services > administrative and support services > cleaning and landscaping",
+   "period": "2024-Q3",
+   "value": null
+  },
+  {
+   "industry": "cleaning and landscaping",
+   "level": 3,
+   "observation_id": "34382c8d926de1c5",
+   "path": "services > administrative and support services > cleaning and landscaping",
+   "period": "2024-Q4",
+   "value": null
+  },
+  {
+   "industry": "cleaning and landscaping",
+   "level": 3,
+   "observation_id": "17cb25e8570b2042",
+   "path": "services > administrative and support services > cleaning and landscaping",
+   "period": "2025-Q1",
+   "value": null
+  },
+  {
+   "industry": "cleaning and landscaping",
+   "level": 3,
+   "observation_id": "927bb83361f27205",
+   "path": "services > administrative and support services > cleaning and landscaping",
+   "period": "2025-Q2",
+   "value": null
+  },
+  {
+   "industry": "cleaning and landscaping",
+   "level": 3,
+   "observation_id": "dd103852cdb3128d",
+   "path": "services > administrative and support services > cleaning and landscaping",
+   "period": "2025-Q3",
+   "value": null
+  },
+  {
+   "industry": "cleaning and landscaping",
+   "level": 3,
+   "observation_id": "d65f4d86f0033b8b",
+   "path": "services > administrative and support services > cleaning and landscaping",
+   "period": "2025-Q4",
+   "value": null
+  },
+  {
+   "industry": "cleaning and landscaping",
+   "level": 3,
+   "observation_id": "6e0a76c6292e69fa",
+   "path": "services > administrative and support services > cleaning and landscaping",
+   "period": "2026-Q1",
+   "value": null
+  },
+  {
+   "industry": "cleaning and landscaping",
+   "level": 3,
+   "observation_id": "479eb9e9bc11a004",
+   "path": "services > administrative and support services > cleaning and landscaping",
+   "period": "2026-Q2",
+   "value": null
+  },
+  {
+   "industry": "community, social and personal services",
+   "level": 2,
+   "observation_id": "e7db33351b5b0ed0",
+   "path": "services > community, social and personal services",
+   "period": "2024-Q1",
+   "value": 20.0
+  },
+  {
+   "industry": "community, social and personal services",
+   "level": 2,
+   "observation_id": "47d395285f7e9038",
+   "path": "services > community, social and personal services",
+   "period": "2024-Q2",
+   "value": 100.0
+  },
+  {
+   "industry": "community, social and personal services",
+   "level": 2,
+   "observation_id": "c15e8d5237b718d8",
+   "path": "services > community, social and personal services",
+   "period": "2024-Q3",
+   "value": 40.0
+  },
+  {
+   "industry": "community, social and personal services",
+   "level": 2,
+   "observation_id": "542bfccd62bce693",
+   "path": "services > community, social and personal services",
+   "period": "2024-Q4",
+   "value": 210.0
+  },
+  {
+   "industry": "community, social and personal services",
+   "level": 2,
+   "observation_id": "4d800535c891be8b",
+   "path": "services > community, social and personal services",
+   "period": "2025-Q1",
+   "value": 60.0
+  },
+  {
+   "industry": "community, social and personal services",
+   "level": 2,
+   "observation_id": "7af119453dec0d69",
+   "path": "services > community, social and personal services",
+   "period": "2025-Q2",
+   "value": 120.0
+  },
+  {
+   "industry": "community, social and personal services",
+   "level": 2,
+   "observation_id": "5882127f36a941be",
+   "path": "services > community, social and personal services",
+   "period": "2025-Q3",
+   "value": 50.0
+  },
+  {
+   "industry": "community, social and personal services",
+   "level": 2,
+   "observation_id": "7beea6f6611d53a1",
+   "path": "services > community, social and personal services",
+   "period": "2025-Q4",
+   "value": 240.0
+  },
+  {
+   "industry": "community, social and personal services",
+   "level": 2,
+   "observation_id": "70f3344e31cedb9d",
+   "path": "services > community, social and personal services",
+   "period": "2026-Q1",
+   "value": 100.0
+  },
+  {
+   "industry": "community, social and personal services",
+   "level": 2,
+   "observation_id": "1a57fbd31edfae6f",
+   "path": "services > community, social and personal services",
+   "period": "2026-Q2",
+   "value": 110.0
+  },
+  {
+   "industry": "construction",
+   "level": 1,
+   "observation_id": "895890dfa285626c",
+   "path": "construction",
+   "period": "2024-Q1",
+   "value": 120.0
+  },
+  {
+   "industry": "construction",
+   "level": 1,
+   "observation_id": "8e513e959971bf7c",
+   "path": "construction",
+   "period": "2024-Q2",
+   "value": 100.0
+  },
+  {
+   "industry": "construction",
+   "level": 1,
+   "observation_id": "0defbe786017abb0",
+   "path": "construction",
+   "period": "2024-Q3",
+   "value": 140.0
+  },
+  {
+   "industry": "construction",
+   "level": 1,
+   "observation_id": "d80b0fa9cc80e7a9",
+   "path": "construction",
+   "period": "2024-Q4",
+   "value": 90.0
+  },
+  {
+   "industry": "construction",
+   "level": 1,
+   "observation_id": "5ec1abd18df6d8d4",
+   "path": "construction",
+   "period": "2025-Q1",
+   "value": 240.0
+  },
+  {
+   "industry": "construction",
+   "level": 1,
+   "observation_id": "1e437d5e863fa1e3",
+   "path": "construction",
+   "period": "2025-Q2",
+   "value": 140.0
+  },
+  {
+   "industry": "construction",
+   "level": 1,
+   "observation_id": "46b7a71324e988de",
+   "path": "construction",
+   "period": "2025-Q3",
+   "value": 60.0
+  },
+  {
+   "industry": "construction",
+   "level": 1,
+   "observation_id": "8439c2d367304505",
+   "path": "construction",
+   "period": "2025-Q4",
+   "value": 140.0
+  },
+  {
+   "industry": "construction",
+   "level": 1,
+   "observation_id": "45406f79585f42b4",
+   "path": "construction",
+   "period": "2026-Q1",
+   "value": 80.0
+  },
+  {
+   "industry": "construction",
+   "level": 1,
+   "observation_id": "37185ad86984ca6f",
+   "path": "construction",
+   "period": "2026-Q2",
+   "value": 170.0
+  },
+  {
+   "industry": "electronic, computer and optical products",
+   "level": 2,
+   "observation_id": "1dd404f7fa1de80e",
+   "path": "manufacturing > electronic, computer and optical products",
+   "period": "2024-Q1",
+   "value": 190.0
+  },
+  {
+   "industry": "electronic, computer and optical products",
+   "level": 2,
+   "observation_id": "4197d5ecbe987bba",
+   "path": "manufacturing > electronic, computer and optical products",
+   "period": "2024-Q2",
+   "value": 140.0
+  },
+  {
+   "industry": "electronic, computer and optical products",
+   "level": 2,
+   "observation_id": "0a63c6e6635d152b",
+   "path": "manufacturing > electronic, computer and optical products",
+   "period": "2024-Q3",
+   "value": 160.0
+  },
+  {
+   "industry": "electronic, computer and optical products",
+   "level": 2,
+   "observation_id": "831320a1205e8fc1",
+   "path": "manufacturing > electronic, computer and optical products",
+   "period": "2024-Q4",
+   "value": 290.0
+  },
+  {
+   "industry": "electronic, computer and optical products",
+   "level": 2,
+   "observation_id": "e6fb4c6f77ada17f",
+   "path": "manufacturing > electronic, computer and optical products",
+   "period": "2025-Q1",
+   "value": 280.0
+  },
+  {
+   "industry": "electronic, computer and optical products",
+   "level": 2,
+   "observation_id": "f12999f2479d1487",
+   "path": "manufacturing > electronic, computer and optical products",
+   "period": "2025-Q2",
+   "value": 150.0
+  },
+  {
+   "industry": "electronic, computer and optical products",
+   "level": 2,
+   "observation_id": "fbf2221ff92d4e2a",
+   "path": "manufacturing > electronic, computer and optical products",
+   "period": "2025-Q3",
+   "value": 170.0
+  },
+  {
+   "industry": "electronic, computer and optical products",
+   "level": 2,
+   "observation_id": "ba91ab0b29ca27ee",
+   "path": "manufacturing > electronic, computer and optical products",
+   "period": "2025-Q4",
+   "value": 140.0
+  },
+  {
+   "industry": "electronic, computer and optical products",
+   "level": 2,
+   "observation_id": "905a5020bb42f7aa",
+   "path": "manufacturing > electronic, computer and optical products",
+   "period": "2026-Q1",
+   "value": 150.0
+  },
+  {
+   "industry": "electronic, computer and optical products",
+   "level": 2,
+   "observation_id": "c262226fff047cb6",
+   "path": "manufacturing > electronic, computer and optical products",
+   "period": "2026-Q2",
+   "value": 120.0
+  },
+  {
+   "industry": "fabricated metal products, machinery and equipment",
+   "level": 2,
+   "observation_id": "1032f04cfa11de89",
+   "path": "manufacturing > fabricated metal products, machinery and equipment",
+   "period": "2024-Q1",
+   "value": 300.0
+  },
+  {
+   "industry": "fabricated metal products, machinery and equipment",
+   "level": 2,
+   "observation_id": "47b47fc7230ee6d0",
+   "path": "manufacturing > fabricated metal products, machinery and equipment",
+   "period": "2024-Q2",
+   "value": 100.0
+  },
+  {
+   "industry": "fabricated metal products, machinery and equipment",
+   "level": 2,
+   "observation_id": "6d890e6573d74d23",
+   "path": "manufacturing > fabricated metal products, machinery and equipment",
+   "period": "2024-Q3",
+   "value": 260.0
+  },
+  {
+   "industry": "fabricated metal products, machinery and equipment",
+   "level": 2,
+   "observation_id": "e4eb1fb0e361c161",
+   "path": "manufacturing > fabricated metal products, machinery and equipment",
+   "period": "2024-Q4",
+   "value": 180.0
+  },
+  {
+   "industry": "fabricated metal products, machinery and equipment",
+   "level": 2,
+   "observation_id": "a71d02e119d93e36",
+   "path": "manufacturing > fabricated metal products, machinery and equipment",
+   "period": "2025-Q1",
+   "value": 470.0
+  },
+  {
+   "industry": "fabricated metal products, machinery and equipment",
+   "level": 2,
+   "observation_id": "6714d49097cb033d",
+   "path": "manufacturing > fabricated metal products, machinery and equipment",
+   "period": "2025-Q2",
+   "value": 150.0
+  },
+  {
+   "industry": "fabricated metal products, machinery and equipment",
+   "level": 2,
+   "observation_id": "e3f10d8954af42a5",
+   "path": "manufacturing > fabricated metal products, machinery and equipment",
+   "period": "2025-Q3",
+   "value": 190.0
+  },
+  {
+   "industry": "fabricated metal products, machinery and equipment",
+   "level": 2,
+   "observation_id": "6fea28790d1491c9",
+   "path": "manufacturing > fabricated metal products, machinery and equipment",
+   "period": "2025-Q4",
+   "value": 140.0
+  },
+  {
+   "industry": "fabricated metal products, machinery and equipment",
+   "level": 2,
+   "observation_id": "c12d800348b70a3d",
+   "path": "manufacturing > fabricated metal products, machinery and equipment",
+   "period": "2026-Q1",
+   "value": 180.0
+  },
+  {
+   "industry": "fabricated metal products, machinery and equipment",
+   "level": 2,
+   "observation_id": "35c5d0f41ca5d52b",
+   "path": "manufacturing > fabricated metal products, machinery and equipment",
+   "period": "2026-Q2",
+   "value": 240.0
+  },
+  {
+   "industry": "financial and insurance services",
+   "level": 2,
+   "observation_id": "da5b188404718ced",
+   "path": "services > financial and insurance services",
+   "period": "2024-Q1",
+   "value": 390.0
+  },
+  {
+   "industry": "financial and insurance services",
+   "level": 2,
+   "observation_id": "c62d0ce9bdc42d6b",
+   "path": "services > financial and insurance services",
+   "period": "2024-Q2",
+   "value": 600.0
+  },
+  {
+   "industry": "financial and insurance services",
+   "level": 2,
+   "observation_id": "f4359746a99fcb47",
+   "path": "services > financial and insurance services",
+   "period": "2024-Q3",
+   "value": 270.0
+  },
+  {
+   "industry": "financial and insurance services",
+   "level": 2,
+   "observation_id": "e08f3eec183677b4",
+   "path": "services > financial and insurance services",
+   "period": "2024-Q4",
+   "value": 620.0
+  },
+  {
+   "industry": "financial and insurance services",
+   "level": 2,
+   "observation_id": "a782ad332de93dc6",
+   "path": "services > financial and insurance services",
+   "period": "2025-Q1",
+   "value": 510.0
+  },
+  {
+   "industry": "financial and insurance services",
+   "level": 2,
+   "observation_id": "a4fb2028803eede5",
+   "path": "services > financial and insurance services",
+   "period": "2025-Q2",
+   "value": 580.0
+  },
+  {
+   "industry": "financial and insurance services",
+   "level": 2,
+   "observation_id": "8bac35a0946b2ee7",
+   "path": "services > financial and insurance services",
+   "period": "2025-Q3",
+   "value": 730.0
+  },
+  {
+   "industry": "financial and insurance services",
+   "level": 2,
+   "observation_id": "e2318c5b670e2272",
+   "path": "services > financial and insurance services",
+   "period": "2025-Q4",
+   "value": 540.0
+  },
+  {
+   "industry": "financial and insurance services",
+   "level": 2,
+   "observation_id": "0a4367c3f00a9bb0",
+   "path": "services > financial and insurance services",
+   "period": "2026-Q1",
+   "value": 610.0
+  },
+  {
+   "industry": "financial and insurance services",
+   "level": 2,
+   "observation_id": "1033198cbba9e704",
+   "path": "services > financial and insurance services",
+   "period": "2026-Q2",
+   "value": 760.0
+  },
+  {
+   "industry": "financial services",
+   "level": 3,
+   "observation_id": "727e0177f08242ea",
+   "path": "services > financial and insurance services > financial services",
+   "period": "2024-Q1",
+   "value": 370.0
+  },
+  {
+   "industry": "financial services",
+   "level": 3,
+   "observation_id": "8203b623ff050661",
+   "path": "services > financial and insurance services > financial services",
+   "period": "2024-Q2",
+   "value": 550.0
+  },
+  {
+   "industry": "financial services",
+   "level": 3,
+   "observation_id": "2240824202e4d8aa",
+   "path": "services > financial and insurance services > financial services",
+   "period": "2024-Q3",
+   "value": 240.0
+  },
+  {
+   "industry": "financial services",
+   "level": 3,
+   "observation_id": "319046024b1ff26c",
+   "path": "services > financial and insurance services > financial services",
+   "period": "2024-Q4",
+   "value": 530.0
+  },
+  {
+   "industry": "financial services",
+   "level": 3,
+   "observation_id": "a159904e0962ecb3",
+   "path": "services > financial and insurance services > financial services",
+   "period": "2025-Q1",
+   "value": 480.0
+  },
+  {
+   "industry": "financial services",
+   "level": 3,
+   "observation_id": "54deffbd9a07c837",
+   "path": "services > financial and insurance services > financial services",
+   "period": "2025-Q2",
+   "value": 560.0
+  },
+  {
+   "industry": "financial services",
+   "level": 3,
+   "observation_id": "0870a5c060cf38c7",
+   "path": "services > financial and insurance services > financial services",
+   "period": "2025-Q3",
+   "value": 700.0
+  },
+  {
+   "industry": "financial services",
+   "level": 3,
+   "observation_id": "7afc7cd0d36eac8e",
+   "path": "services > financial and insurance services > financial services",
+   "period": "2025-Q4",
+   "value": 510.0
+  },
+  {
+   "industry": "financial services",
+   "level": 3,
+   "observation_id": "df3352dce20034b4",
+   "path": "services > financial and insurance services > financial services",
+   "period": "2026-Q1",
+   "value": 560.0
+  },
+  {
+   "industry": "financial services",
+   "level": 3,
+   "observation_id": "28c655574e3b0f89",
+   "path": "services > financial and insurance services > financial services",
+   "period": "2026-Q2",
+   "value": 710.0
+  },
+  {
+   "industry": "food and beverage services",
+   "level": 3,
+   "observation_id": "f092588f7458efb0",
+   "path": "services > accommodation and food services > food and beverage services",
+   "period": "2024-Q1",
+   "value": 70.0
+  },
+  {
+   "industry": "food and beverage services",
+   "level": 3,
+   "observation_id": "3174285ae9b86b6b",
+   "path": "services > accommodation and food services > food and beverage services",
+   "period": "2024-Q2",
+   "value": 30.0
+  },
+  {
+   "industry": "food and beverage services",
+   "level": 3,
+   "observation_id": "44d07f97435c4c72",
+   "path": "services > accommodation and food services > food and beverage services",
+   "period": "2024-Q3",
+   "value": 40.0
+  },
+  {
+   "industry": "food and beverage services",
+   "level": 3,
+   "observation_id": "0044c8c17a558e3f",
+   "path": "services > accommodation and food services > food and beverage services",
+   "period": "2024-Q4",
+   "value": 20.0
+  },
+  {
+   "industry": "food and beverage services",
+   "level": 3,
+   "observation_id": "b8fc85fea53ace8a",
+   "path": "services > accommodation and food services > food and beverage services",
+   "period": "2025-Q1",
+   "value": 10.0
+  },
+  {
+   "industry": "food and beverage services",
+   "level": 3,
+   "observation_id": "2d0e4bf499416d5f",
+   "path": "services > accommodation and food services > food and beverage services",
+   "period": "2025-Q2",
+   "value": 30.0
+  },
+  {
+   "industry": "food and beverage services",
+   "level": 3,
+   "observation_id": "142d78de32d6f7fc",
+   "path": "services > accommodation and food services > food and beverage services",
+   "period": "2025-Q3",
+   "value": 40.0
+  },
+  {
+   "industry": "food and beverage services",
+   "level": 3,
+   "observation_id": "ad73c25891d86940",
+   "path": "services > accommodation and food services > food and beverage services",
+   "period": "2025-Q4",
+   "value": 70.0
+  },
+  {
+   "industry": "food and beverage services",
+   "level": 3,
+   "observation_id": "4f562336ac6ac1e5",
+   "path": "services > accommodation and food services > food and beverage services",
+   "period": "2026-Q1",
+   "value": 150.0
+  },
+  {
+   "industry": "food and beverage services",
+   "level": 3,
+   "observation_id": "1df5bddb854e5cc5",
+   "path": "services > accommodation and food services > food and beverage services",
+   "period": "2026-Q2",
+   "value": 170.0
+  },
+  {
+   "industry": "food, beverages and tobacco",
+   "level": 2,
+   "observation_id": "66f5c1b352167969",
+   "path": "manufacturing > food, beverages and tobacco",
+   "period": "2024-Q1",
+   "value": 10.0
+  },
+  {
+   "industry": "food, beverages and tobacco",
+   "level": 2,
+   "observation_id": "ea99331a51c0c70d",
+   "path": "manufacturing > food, beverages and tobacco",
+   "period": "2024-Q2",
+   "value": 30.0
+  },
+  {
+   "industry": "food, beverages and tobacco",
+   "level": 2,
+   "observation_id": "e705eb7196fa8a35",
+   "path": "manufacturing > food, beverages and tobacco",
+   "period": "2024-Q3",
+   "value": 10.0
+  },
+  {
+   "industry": "food, beverages and tobacco",
+   "level": 2,
+   "observation_id": "6bc385e87db8553c",
+   "path": "manufacturing > food, beverages and tobacco",
+   "period": "2024-Q4",
+   "value": 10.0
+  },
+  {
+   "industry": "food, beverages and tobacco",
+   "level": 2,
+   "observation_id": "6f6306ffafb50a3d",
+   "path": "manufacturing > food, beverages and tobacco",
+   "period": "2025-Q1",
+   "value": 50.0
+  },
+  {
+   "industry": "food, beverages and tobacco",
+   "level": 2,
+   "observation_id": "ecefdb5864a8bf56",
+   "path": "manufacturing > food, beverages and tobacco",
+   "period": "2025-Q2",
+   "value": 50.0
+  },
+  {
+   "industry": "food, beverages and tobacco",
+   "level": 2,
+   "observation_id": "e35b48187d814b36",
+   "path": "manufacturing > food, beverages and tobacco",
+   "period": "2025-Q3",
+   "value": 10.0
+  },
+  {
+   "industry": "food, beverages and tobacco",
+   "level": 2,
+   "observation_id": "be5e4c15b70d3252",
+   "path": "manufacturing > food, beverages and tobacco",
+   "period": "2025-Q4",
+   "value": 10.0
+  },
+  {
+   "industry": "food, beverages and tobacco",
+   "level": 2,
+   "observation_id": "213b5534167da0a6",
+   "path": "manufacturing > food, beverages and tobacco",
+   "period": "2026-Q1",
+   "value": 30.0
+  },
+  {
+   "industry": "food, beverages and tobacco",
+   "level": 2,
+   "observation_id": "8fdd80d05a918a57",
+   "path": "manufacturing > food, beverages and tobacco",
+   "period": "2026-Q2",
+   "value": 210.0
+  },
+  {
+   "industry": "health and social services",
+   "level": 3,
+   "observation_id": "40470018a0f65aea",
+   "path": "services > community, social and personal services > health and social services",
+   "period": "2024-Q1",
+   "value": 10.0
+  },
+  {
+   "industry": "health and social services",
+   "level": 3,
+   "observation_id": "5f479268fb0a2acd",
+   "path": "services > community, social and personal services > health and social services",
+   "period": "2024-Q2",
+   "value": 10.0
+  },
+  {
+   "industry": "health and social services",
+   "level": 3,
+   "observation_id": "175705d5f26a10b0",
+   "path": "services > community, social and personal services > health and social services",
+   "period": "2024-Q3",
+   "value": 20.0
+  },
+  {
+   "industry": "health and social services",
+   "level": 3,
+   "observation_id": "c9fb7bd1195c52d0",
+   "path": "services > community, social and personal services > health and social services",
+   "period": "2024-Q4",
+   "value": 30.0
+  },
+  {
+   "industry": "health and social services",
+   "level": 3,
+   "observation_id": "425038be277961be",
+   "path": "services > community, social and personal services > health and social services",
+   "period": "2025-Q1",
+   "value": 10.0
+  },
+  {
+   "industry": "health and social services",
+   "level": 3,
+   "observation_id": "039470449ecbd3b9",
+   "path": "services > community, social and personal services > health and social services",
+   "period": "2025-Q2",
+   "value": 20.0
+  },
+  {
+   "industry": "health and social services",
+   "level": 3,
+   "observation_id": "3180747f79b37966",
+   "path": "services > community, social and personal services > health and social services",
+   "period": "2025-Q3",
+   "value": 10.0
+  },
+  {
+   "industry": "health and social services",
+   "level": 3,
+   "observation_id": "ee24cc0dc3aba540",
+   "path": "services > community, social and personal services > health and social services",
+   "period": "2025-Q4",
+   "value": 150.0
+  },
+  {
+   "industry": "health and social services",
+   "level": 3,
+   "observation_id": "ae26aad79c72362c",
+   "path": "services > community, social and personal services > health and social services",
+   "period": "2026-Q1",
+   "value": 60.0
+  },
+  {
+   "industry": "health and social services",
+   "level": 3,
+   "observation_id": "ed2c57950f5b1182",
+   "path": "services > community, social and personal services > health and social services",
+   "period": "2026-Q2",
+   "value": 40.0
+  },
+  {
+   "industry": "information and communications",
+   "level": 2,
+   "observation_id": "863d9926cd01f292",
+   "path": "services > information and communications",
+   "period": "2024-Q1",
+   "value": 580.0
+  },
+  {
+   "industry": "information and communications",
+   "level": 2,
+   "observation_id": "c5673a7060775fde",
+   "path": "services > information and communications",
+   "period": "2024-Q2",
+   "value": 400.0
+  },
+  {
+   "industry": "information and communications",
+   "level": 2,
+   "observation_id": "9ce3071a734c83c0",
+   "path": "services > information and communications",
+   "period": "2024-Q3",
+   "value": 670.0
+  },
+  {
+   "industry": "information and communications",
+   "level": 2,
+   "observation_id": "c4820632a19eec2a",
+   "path": "services > information and communications",
+   "period": "2024-Q4",
+   "value": 410.0
+  },
+  {
+   "industry": "information and communications",
+   "level": 2,
+   "observation_id": "37b328ad5bb3994d",
+   "path": "services > information and communications",
+   "period": "2025-Q1",
+   "value": 380.0
+  },
+  {
+   "industry": "information and communications",
+   "level": 2,
+   "observation_id": "e079b6eb4022b720",
+   "path": "services > information and communications",
+   "period": "2025-Q2",
+   "value": 500.0
+  },
+  {
+   "industry": "information and communications",
+   "level": 2,
+   "observation_id": "54d7015dc86f3b87",
+   "path": "services > information and communications",
+   "period": "2025-Q3",
+   "value": 580.0
+  },
+  {
+   "industry": "information and communications",
+   "level": 2,
+   "observation_id": "9b0a8a8ee14206ee",
+   "path": "services > information and communications",
+   "period": "2025-Q4",
+   "value": 480.0
+  },
+  {
+   "industry": "information and communications",
+   "level": 2,
+   "observation_id": "85a4990563056639",
+   "path": "services > information and communications",
+   "period": "2026-Q1",
+   "value": 530.0
+  },
+  {
+   "industry": "information and communications",
+   "level": 2,
+   "observation_id": "aab5b6397f106f05",
+   "path": "services > information and communications",
+   "period": "2026-Q2",
+   "value": 720.0
+  },
+  {
+   "industry": "insurance services",
+   "level": 3,
+   "observation_id": "4c8b537992b35ee1",
+   "path": "services > financial and insurance services > insurance services",
+   "period": "2024-Q1",
+   "value": 20.0
+  },
+  {
+   "industry": "insurance services",
+   "level": 3,
+   "observation_id": "dbc598ab27310b6c",
+   "path": "services > financial and insurance services > insurance services",
+   "period": "2024-Q2",
+   "value": 40.0
+  },
+  {
+   "industry": "insurance services",
+   "level": 3,
+   "observation_id": "d2bbf87ab05fac27",
+   "path": "services > financial and insurance services > insurance services",
+   "period": "2024-Q3",
+   "value": 40.0
+  },
+  {
+   "industry": "insurance services",
+   "level": 3,
+   "observation_id": "bd961684b4bff658",
+   "path": "services > financial and insurance services > insurance services",
+   "period": "2024-Q4",
+   "value": 90.0
+  },
+  {
+   "industry": "insurance services",
+   "level": 3,
+   "observation_id": "16dce502de0a7bba",
+   "path": "services > financial and insurance services > insurance services",
+   "period": "2025-Q1",
+   "value": 30.0
+  },
+  {
+   "industry": "insurance services",
+   "level": 3,
+   "observation_id": "75ddcc8f82f04446",
+   "path": "services > financial and insurance services > insurance services",
+   "period": "2025-Q2",
+   "value": 20.0
+  },
+  {
+   "industry": "insurance services",
+   "level": 3,
+   "observation_id": "c2e277b40829ec54",
+   "path": "services > financial and insurance services > insurance services",
+   "period": "2025-Q3",
+   "value": 40.0
+  },
+  {
+   "industry": "insurance services",
+   "level": 3,
+   "observation_id": "28a241f602eb2909",
+   "path": "services > financial and insurance services > insurance services",
+   "period": "2025-Q4",
+   "value": 30.0
+  },
+  {
+   "industry": "insurance services",
+   "level": 3,
+   "observation_id": "6722587338acfe48",
+   "path": "services > financial and insurance services > insurance services",
+   "period": "2026-Q1",
+   "value": 50.0
+  },
+  {
+   "industry": "insurance services",
+   "level": 3,
+   "observation_id": "96386d3cee7d4fd2",
+   "path": "services > financial and insurance services > insurance services",
+   "period": "2026-Q2",
+   "value": 50.0
+  },
+  {
+   "industry": "it and other information services",
+   "level": 3,
+   "observation_id": "a3d3da6b96f7af00",
+   "path": "services > information and communications > it and other information services",
+   "period": "2024-Q1",
+   "value": 470.0
+  },
+  {
+   "industry": "it and other information services",
+   "level": 3,
+   "observation_id": "9fc3dec81b2b4c59",
+   "path": "services > information and communications > it and other information services",
+   "period": "2024-Q2",
+   "value": 300.0
+  },
+  {
+   "industry": "it and other information services",
+   "level": 3,
+   "observation_id": "9d838679b8ad7777",
+   "path": "services > information and communications > it and other information services",
+   "period": "2024-Q3",
+   "value": 450.0
+  },
+  {
+   "industry": "it and other information services",
+   "level": 3,
+   "observation_id": "e77917b75f90175c",
+   "path": "services > information and communications > it and other information services",
+   "period": "2024-Q4",
+   "value": 280.0
+  },
+  {
+   "industry": "it and other information services",
+   "level": 3,
+   "observation_id": "7a2738e8d0e7fd92",
+   "path": "services > information and communications > it and other information services",
+   "period": "2025-Q1",
+   "value": 310.0
+  },
+  {
+   "industry": "it and other information services",
+   "level": 3,
+   "observation_id": "0d3823bbd1f1db81",
+   "path": "services > information and communications > it and other information services",
+   "period": "2025-Q2",
+   "value": 410.0
+  },
+  {
+   "industry": "it and other information services",
+   "level": 3,
+   "observation_id": "1ec9df79bd7221ba",
+   "path": "services > information and communications > it and other information services",
+   "period": "2025-Q3",
+   "value": 380.0
+  },
+  {
+   "industry": "it and other information services",
+   "level": 3,
+   "observation_id": "1cfc9d830ae8d96c",
+   "path": "services > information and communications > it and other information services",
+   "period": "2025-Q4",
+   "value": 370.0
+  },
+  {
+   "industry": "it and other information services",
+   "level": 3,
+   "observation_id": "843988ab0bb51fe2",
+   "path": "services > information and communications > it and other information services",
+   "period": "2026-Q1",
+   "value": 440.0
+  },
+  {
+   "industry": "it and other information services",
+   "level": 3,
+   "observation_id": "da07f517f5110e0a",
+   "path": "services > information and communications > it and other information services",
+   "period": "2026-Q2",
+   "value": 560.0
+  },
+  {
+   "industry": "land transport and supporting services",
+   "level": 3,
+   "observation_id": "e0deca03aec8b1cb",
+   "path": "services > transportation and storage > land transport and supporting services",
+   "period": "2024-Q1",
+   "value": 10.0
+  },
+  {
+   "industry": "land transport and supporting services",
+   "level": 3,
+   "observation_id": "dc367e0af3ca145f",
+   "path": "services > transportation and storage > land transport and supporting services",
+   "period": "2024-Q2",
+   "value": 20.0
+  },
+  {
+   "industry": "land transport and supporting services",
+   "level": 3,
+   "observation_id": "ff45301aa3cec786",
+   "path": "services > transportation and storage > land transport and supporting services",
+   "period": "2024-Q3",
+   "value": 10.0
+  },
+  {
+   "industry": "land transport and supporting services",
+   "level": 3,
+   "observation_id": "91a6215a8cb46918",
+   "path": "services > transportation and storage > land transport and supporting services",
+   "period": "2024-Q4",
+   "value": null
+  },
+  {
+   "industry": "land transport and supporting services",
+   "level": 3,
+   "observation_id": "c583927960d90b5b",
+   "path": "services > transportation and storage > land transport and supporting services",
+   "period": "2025-Q1",
+   "value": 50.0
+  },
+  {
+   "industry": "land transport and supporting services",
+   "level": 3,
+   "observation_id": "efae8cd0e43bc268",
+   "path": "services > transportation and storage > land transport and supporting services",
+   "period": "2025-Q2",
+   "value": null
+  },
+  {
+   "industry": "land transport and supporting services",
+   "level": 3,
+   "observation_id": "ab86877406768425",
+   "path": "services > transportation and storage > land transport and supporting services",
+   "period": "2025-Q3",
+   "value": null
+  },
+  {
+   "industry": "land transport and supporting services",
+   "level": 3,
+   "observation_id": "324107fad6c4c853",
+   "path": "services > transportation and storage > land transport and supporting services",
+   "period": "2025-Q4",
+   "value": null
+  },
+  {
+   "industry": "land transport and supporting services",
+   "level": 3,
+   "observation_id": "c32accbb78cb150b",
+   "path": "services > transportation and storage > land transport and supporting services",
+   "period": "2026-Q1",
+   "value": 10.0
+  },
+  {
+   "industry": "land transport and supporting services",
+   "level": 3,
+   "observation_id": "222c6249502f8bf5",
+   "path": "services > transportation and storage > land transport and supporting services",
+   "period": "2026-Q2",
+   "value": null
+  },
+  {
+   "industry": "legal, accounting and management services",
+   "level": 3,
+   "observation_id": "4dc69c5ab94f037f",
+   "path": "services > professional services > legal, accounting and management services",
+   "period": "2024-Q1",
+   "value": 200.0
+  },
+  {
+   "industry": "legal, accounting and management services",
+   "level": 3,
+   "observation_id": "8ed7464b70845e15",
+   "path": "services > professional services > legal, accounting and management services",
+   "period": "2024-Q2",
+   "value": 290.0
+  },
+  {
+   "industry": "legal, accounting and management services",
+   "level": 3,
+   "observation_id": "cd4f2958918345b4",
+   "path": "services > professional services > legal, accounting and management services",
+   "period": "2024-Q3",
+   "value": 210.0
+  },
+  {
+   "industry": "legal, accounting and management services",
+   "level": 3,
+   "observation_id": "3a83946e883c35df",
+   "path": "services > professional services > legal, accounting and management services",
+   "period": "2024-Q4",
+   "value": 350.0
+  },
+  {
+   "industry": "legal, accounting and management services",
+   "level": 3,
+   "observation_id": "71414258a0bb4463",
+   "path": "services > professional services > legal, accounting and management services",
+   "period": "2025-Q1",
+   "value": 200.0
+  },
+  {
+   "industry": "legal, accounting and management services",
+   "level": 3,
+   "observation_id": "ae1cf1132d6a5a73",
+   "path": "services > professional services > legal, accounting and management services",
+   "period": "2025-Q2",
+   "value": 240.0
+  },
+  {
+   "industry": "legal, accounting and management services",
+   "level": 3,
+   "observation_id": "febfdbbb5d4de157",
+   "path": "services > professional services > legal, accounting and management services",
+   "period": "2025-Q3",
+   "value": 290.0
+  },
+  {
+   "industry": "legal, accounting and management services",
+   "level": 3,
+   "observation_id": "bb910501724047c2",
+   "path": "services > professional services > legal, accounting and management services",
+   "period": "2025-Q4",
+   "value": 240.0
+  },
+  {
+   "industry": "legal, accounting and management services",
+   "level": 3,
+   "observation_id": "7ddaa98688bb081c",
+   "path": "services > professional services > legal, accounting and management services",
+   "period": "2026-Q1",
+   "value": 310.0
+  },
+  {
+   "industry": "legal, accounting and management services",
+   "level": 3,
+   "observation_id": "056c2393d7004c84",
+   "path": "services > professional services > legal, accounting and management services",
+   "period": "2026-Q2",
+   "value": 380.0
+  },
+  {
+   "industry": "manufacturing",
+   "level": 1,
+   "observation_id": "771dd4663c7d1910",
+   "path": "manufacturing",
+   "period": "2024-Q1",
+   "value": 660.0
+  },
+  {
+   "industry": "manufacturing",
+   "level": 1,
+   "observation_id": "1d3364bd1051ecbe",
+   "path": "manufacturing",
+   "period": "2024-Q2",
+   "value": 690.0
+  },
+  {
+   "industry": "manufacturing",
+   "level": 1,
+   "observation_id": "804aad2eb03ab0d3",
+   "path": "manufacturing",
+   "period": "2024-Q3",
+   "value": 580.0
+  },
+  {
+   "industry": "manufacturing",
+   "level": 1,
+   "observation_id": "8047b554562fb543",
+   "path": "manufacturing",
+   "period": "2024-Q4",
+   "value": 850.0
+  },
+  {
+   "industry": "manufacturing",
+   "level": 1,
+   "observation_id": "b47a213f986def70",
+   "path": "manufacturing",
+   "period": "2025-Q1",
+   "value": 1020.0
+  },
+  {
+   "industry": "manufacturing",
+   "level": 1,
+   "observation_id": "63cf373ff7c8914e",
+   "path": "manufacturing",
+   "period": "2025-Q2",
+   "value": 650.0
+  },
+  {
+   "industry": "manufacturing",
+   "level": 1,
+   "observation_id": "e43042d8ab68d732",
+   "path": "manufacturing",
+   "period": "2025-Q3",
+   "value": 550.0
+  },
+  {
+   "industry": "manufacturing",
+   "level": 1,
+   "observation_id": "0dc4082ebe0bfa30",
+   "path": "manufacturing",
+   "period": "2025-Q4",
+   "value": 570.0
+  },
+  {
+   "industry": "manufacturing",
+   "level": 1,
+   "observation_id": "dcb8cceadfd7150b",
+   "path": "manufacturing",
+   "period": "2026-Q1",
+   "value": 670.0
+  },
+  {
+   "industry": "manufacturing",
+   "level": 1,
+   "observation_id": "1126f6fe774a50df",
+   "path": "manufacturing",
+   "period": "2026-Q2",
+   "value": 870.0
+  },
+  {
+   "industry": "other administrative and support services",
+   "level": 3,
+   "observation_id": "53045294f30fa471",
+   "path": "services > administrative and support services > other administrative and support services",
+   "period": "2024-Q1",
+   "value": 140.0
+  },
+  {
+   "industry": "other administrative and support services",
+   "level": 3,
+   "observation_id": "239c1fcce82f7733",
+   "path": "services > administrative and support services > other administrative and support services",
+   "period": "2024-Q2",
+   "value": 190.0
+  },
+  {
+   "industry": "other administrative and support services",
+   "level": 3,
+   "observation_id": "11cadd65d9c7b637",
+   "path": "services > administrative and support services > other administrative and support services",
+   "period": "2024-Q3",
+   "value": 70.0
+  },
+  {
+   "industry": "other administrative and support services",
+   "level": 3,
+   "observation_id": "304a773adac7ebb2",
+   "path": "services > administrative and support services > other administrative and support services",
+   "period": "2024-Q4",
+   "value": 80.0
+  },
+  {
+   "industry": "other administrative and support services",
+   "level": 3,
+   "observation_id": "e26f5c0349890534",
+   "path": "services > administrative and support services > other administrative and support services",
+   "period": "2025-Q1",
+   "value": 50.0
+  },
+  {
+   "industry": "other administrative and support services",
+   "level": 3,
+   "observation_id": "519dfc787beeab77",
+   "path": "services > administrative and support services > other administrative and support services",
+   "period": "2025-Q2",
+   "value": 140.0
+  },
+  {
+   "industry": "other administrative and support services",
+   "level": 3,
+   "observation_id": "81fb9438a987350f",
+   "path": "services > administrative and support services > other administrative and support services",
+   "period": "2025-Q3",
+   "value": 160.0
+  },
+  {
+   "industry": "other administrative and support services",
+   "level": 3,
+   "observation_id": "16950fe24b3ab200",
+   "path": "services > administrative and support services > other administrative and support services",
+   "period": "2025-Q4",
+   "value": 130.0
+  },
+  {
+   "industry": "other administrative and support services",
+   "level": 3,
+   "observation_id": "2e30bc06f2b54a85",
+   "path": "services > administrative and support services > other administrative and support services",
+   "period": "2026-Q1",
+   "value": 140.0
+  },
+  {
+   "industry": "other administrative and support services",
+   "level": 3,
+   "observation_id": "d679f4164a5c8775",
+   "path": "services > administrative and support services > other administrative and support services",
+   "period": "2026-Q2",
+   "value": 130.0
+  },
+  {
+   "industry": "other community, social and personal services",
+   "level": 3,
+   "observation_id": "75dbc16b69b5d02b",
+   "path": "services > community, social and personal services > other community, social and personal services",
+   "period": "2024-Q1",
+   "value": 10.0
+  },
+  {
+   "industry": "other community, social and personal services",
+   "level": 3,
+   "observation_id": "aa684334a5807aea",
+   "path": "services > community, social and personal services > other community, social and personal services",
+   "period": "2024-Q2",
+   "value": 10.0
+  },
+  {
+   "industry": "other community, social and personal services",
+   "level": 3,
+   "observation_id": "1367be57adc22a0a",
+   "path": "services > community, social and personal services > other community, social and personal services",
+   "period": "2024-Q3",
+   "value": 20.0
+  },
+  {
+   "industry": "other community, social and personal services",
+   "level": 3,
+   "observation_id": "187ba3b7fc574112",
+   "path": "services > community, social and personal services > other community, social and personal services",
+   "period": "2024-Q4",
+   "value": 20.0
+  },
+  {
+   "industry": "other community, social and personal services",
+   "level": 3,
+   "observation_id": "be1b75b0ed4d4ddb",
+   "path": "services > community, social and personal services > other community, social and personal services",
+   "period": "2025-Q1",
+   "value": 10.0
+  },
+  {
+   "industry": "other community, social and personal services",
+   "level": 3,
+   "observation_id": "26644cc8ecc0eed9",
+   "path": "services > community, social and personal services > other community, social and personal services",
+   "period": "2025-Q2",
+   "value": 20.0
+  },
+  {
+   "industry": "other community, social and personal services",
+   "level": 3,
+   "observation_id": "42b7063d4b0ed2dc",
+   "path": "services > community, social and personal services > other community, social and personal services",
+   "period": "2025-Q3",
+   "value": 20.0
+  },
+  {
+   "industry": "other community, social and personal services",
+   "level": 3,
+   "observation_id": "5cc58c95fc68f050",
+   "path": "services > community, social and personal services > other community, social and personal services",
+   "period": "2025-Q4",
+   "value": 50.0
+  },
+  {
+   "industry": "other community, social and personal services",
+   "level": 3,
+   "observation_id": "e1c68f6700a5b8e3",
+   "path": "services > community, social and personal services > other community, social and personal services",
+   "period": "2026-Q1",
+   "value": 20.0
+  },
+  {
+   "industry": "other community, social and personal services",
+   "level": 3,
+   "observation_id": "7518acc8380f3dbe",
+   "path": "services > community, social and personal services > other community, social and personal services",
+   "period": "2026-Q2",
+   "value": 40.0
+  },
+  {
+   "industry": "other manufacturing industries",
+   "level": 2,
+   "observation_id": "bd13d69ed5fa6bd4",
+   "path": "manufacturing > other manufacturing industries",
+   "period": "2024-Q1",
+   "value": 40.0
+  },
+  {
+   "industry": "other manufacturing industries",
+   "level": 2,
+   "observation_id": "488279d667d5f7fb",
+   "path": "manufacturing > other manufacturing industries",
+   "period": "2024-Q2",
+   "value": 30.0
+  },
+  {
+   "industry": "other manufacturing industries",
+   "level": 2,
+   "observation_id": "5dd3a9b6b89e257c",
+   "path": "manufacturing > other manufacturing industries",
+   "period": "2024-Q3",
+   "value": 40.0
+  },
+  {
+   "industry": "other manufacturing industries",
+   "level": 2,
+   "observation_id": "69eacc78f5a0f6a4",
+   "path": "manufacturing > other manufacturing industries",
+   "period": "2024-Q4",
+   "value": 30.0
+  },
+  {
+   "industry": "other manufacturing industries",
+   "level": 2,
+   "observation_id": "6a80d28f57fd756d",
+   "path": "manufacturing > other manufacturing industries",
+   "period": "2025-Q1",
+   "value": 40.0
+  },
+  {
+   "industry": "other manufacturing industries",
+   "level": 2,
+   "observation_id": "dd4569bf6546fb0a",
+   "path": "manufacturing > other manufacturing industries",
+   "period": "2025-Q2",
+   "value": 50.0
+  },
+  {
+   "industry": "other manufacturing industries",
+   "level": 2,
+   "observation_id": "f81d0ec6cfa81ae5",
+   "path": "manufacturing > other manufacturing industries",
+   "period": "2025-Q3",
+   "value": 40.0
+  },
+  {
+   "industry": "other manufacturing industries",
+   "level": 2,
+   "observation_id": "54af3b0ee2c6afb2",
+   "path": "manufacturing > other manufacturing industries",
+   "period": "2025-Q4",
+   "value": 30.0
+  },
+  {
+   "industry": "other manufacturing industries",
+   "level": 2,
+   "observation_id": "c865af64abe2969b",
+   "path": "manufacturing > other manufacturing industries",
+   "period": "2026-Q1",
+   "value": 60.0
+  },
+  {
+   "industry": "other manufacturing industries",
+   "level": 2,
+   "observation_id": "66d659e93a466c56",
+   "path": "manufacturing > other manufacturing industries",
+   "period": "2026-Q2",
+   "value": 50.0
+  },
+  {
+   "industry": "other professional services",
+   "level": 3,
+   "observation_id": "4be4f54dd34b5b83",
+   "path": "services > professional services > other professional services",
+   "period": "2024-Q1",
+   "value": 120.0
+  },
+  {
+   "industry": "other professional services",
+   "level": 3,
+   "observation_id": "162cbf33feb1bff8",
+   "path": "services > professional services > other professional services",
+   "period": "2024-Q2",
+   "value": 110.0
+  },
+  {
+   "industry": "other professional services",
+   "level": 3,
+   "observation_id": "382225e701639bf3",
+   "path": "services > professional services > other professional services",
+   "period": "2024-Q3",
+   "value": 120.0
+  },
+  {
+   "industry": "other professional services",
+   "level": 3,
+   "observation_id": "95c328e839dcf219",
+   "path": "services > professional services > other professional services",
+   "period": "2024-Q4",
+   "value": 120.0
+  },
+  {
+   "industry": "other professional services",
+   "level": 3,
+   "observation_id": "959bd1181080721f",
+   "path": "services > professional services > other professional services",
+   "period": "2025-Q1",
+   "value": 200.0
+  },
+  {
+   "industry": "other professional services",
+   "level": 3,
+   "observation_id": "1ad60e83d872d559",
+   "path": "services > professional services > other professional services",
+   "period": "2025-Q2",
+   "value": 120.0
+  },
+  {
+   "industry": "other professional services",
+   "level": 3,
+   "observation_id": "fc1796b602e44c47",
+   "path": "services > professional services > other professional services",
+   "period": "2025-Q3",
+   "value": 100.0
+  },
+  {
+   "industry": "other professional services",
+   "level": 3,
+   "observation_id": "cea4b00263dcf5ba",
+   "path": "services > professional services > other professional services",
+   "period": "2025-Q4",
+   "value": 120.0
+  },
+  {
+   "industry": "other professional services",
+   "level": 3,
+   "observation_id": "4633ee8c56147f42",
+   "path": "services > professional services > other professional services",
+   "period": "2026-Q1",
+   "value": 230.0
+  },
+  {
+   "industry": "other professional services",
+   "level": 3,
+   "observation_id": "c0ad0e90d086393d",
+   "path": "services > professional services > other professional services",
+   "period": "2026-Q2",
+   "value": 150.0
+  },
+  {
+   "industry": "other transport and storage services",
+   "level": 3,
+   "observation_id": "44990169c77f0361",
+   "path": "services > transportation and storage > other transport and storage services",
+   "period": "2024-Q1",
+   "value": 110.0
+  },
+  {
+   "industry": "other transport and storage services",
+   "level": 3,
+   "observation_id": "6a768ea609b841ab",
+   "path": "services > transportation and storage > other transport and storage services",
+   "period": "2024-Q2",
+   "value": 100.0
+  },
+  {
+   "industry": "other transport and storage services",
+   "level": 3,
+   "observation_id": "d4d7e15cff20af3b",
+   "path": "services > transportation and storage > other transport and storage services",
+   "period": "2024-Q3",
+   "value": 120.0
+  },
+  {
+   "industry": "other transport and storage services",
+   "level": 3,
+   "observation_id": "1b3299f4e5c6891e",
+   "path": "services > transportation and storage > other transport and storage services",
+   "period": "2024-Q4",
+   "value": 20.0
+  },
+  {
+   "industry": "other transport and storage services",
+   "level": 3,
+   "observation_id": "121c10d4aa282247",
+   "path": "services > transportation and storage > other transport and storage services",
+   "period": "2025-Q1",
+   "value": 40.0
+  },
+  {
+   "industry": "other transport and storage services",
+   "level": 3,
+   "observation_id": "aec3b8058714f1a9",
+   "path": "services > transportation and storage > other transport and storage services",
+   "period": "2025-Q2",
+   "value": 80.0
+  },
+  {
+   "industry": "other transport and storage services",
+   "level": 3,
+   "observation_id": "73a6fe7ef7817dd1",
+   "path": "services > transportation and storage > other transport and storage services",
+   "period": "2025-Q3",
+   "value": 120.0
+  },
+  {
+   "industry": "other transport and storage services",
+   "level": 3,
+   "observation_id": "c574de26f4edf621",
+   "path": "services > transportation and storage > other transport and storage services",
+   "period": "2025-Q4",
+   "value": 100.0
+  },
+  {
+   "industry": "other transport and storage services",
+   "level": 3,
+   "observation_id": "f91ff8f40af0dbb1",
+   "path": "services > transportation and storage > other transport and storage services",
+   "period": "2026-Q1",
+   "value": 90.0
+  },
+  {
+   "industry": "other transport and storage services",
+   "level": 3,
+   "observation_id": "7db89444700217d3",
+   "path": "services > transportation and storage > other transport and storage services",
+   "period": "2026-Q2",
+   "value": 70.0
+  },
+  {
+   "industry": "others",
+   "level": 1,
+   "observation_id": "d8c3f5c8aac48ffc",
+   "path": "others",
+   "period": "2024-Q1",
+   "value": null
+  },
+  {
+   "industry": "others",
+   "level": 1,
+   "observation_id": "847fb1a9fe939e00",
+   "path": "others",
+   "period": "2024-Q2",
+   "value": null
+  },
+  {
+   "industry": "others",
+   "level": 1,
+   "observation_id": "1592a420fc9e4c95",
+   "path": "others",
+   "period": "2024-Q3",
+   "value": 100.0
+  },
+  {
+   "industry": "others",
+   "level": 1,
+   "observation_id": "635321fb7d43b28f",
+   "path": "others",
+   "period": "2024-Q4",
+   "value": 10.0
+  },
+  {
+   "industry": "others",
+   "level": 1,
+   "observation_id": "7d6ea6d8e10ab13c",
+   "path": "others",
+   "period": "2025-Q1",
+   "value": 10.0
+  },
+  {
+   "industry": "others",
+   "level": 1,
+   "observation_id": "f8ac8a43e06f03c5",
+   "path": "others",
+   "period": "2025-Q2",
+   "value": null
+  },
+  {
+   "industry": "others",
+   "level": 1,
+   "observation_id": "320bf273cb4dd666",
+   "path": "others",
+   "period": "2025-Q3",
+   "value": 40.0
+  },
+  {
+   "industry": "others",
+   "level": 1,
+   "observation_id": "d9dc570187963b71",
+   "path": "others",
+   "period": "2025-Q4",
+   "value": 100.0
+  },
+  {
+   "industry": "others",
+   "level": 1,
+   "observation_id": "5e9622a46b908a72",
+   "path": "others",
+   "period": "2026-Q1",
+   "value": null
+  },
+  {
+   "industry": "others",
+   "level": 1,
+   "observation_id": "92d18076b5040715",
+   "path": "others",
+   "period": "2026-Q2",
+   "value": null
+  },
+  {
+   "industry": "paper,rubber,plastic products and printing",
+   "level": 2,
+   "observation_id": "689aabcfb4d8fe87",
+   "path": "manufacturing > paper,rubber,plastic products and printing",
+   "period": "2024-Q1",
+   "value": 20.0
+  },
+  {
+   "industry": "paper,rubber,plastic products and printing",
+   "level": 2,
+   "observation_id": "d5894fd94b368e5e",
+   "path": "manufacturing > paper,rubber,plastic products and printing",
+   "period": "2024-Q2",
+   "value": 270.0
+  },
+  {
+   "industry": "paper,rubber,plastic products and printing",
+   "level": 2,
+   "observation_id": "d184d4da0a6867fc",
+   "path": "manufacturing > paper,rubber,plastic products and printing",
+   "period": "2024-Q3",
+   "value": 20.0
+  },
+  {
+   "industry": "paper,rubber,plastic products and printing",
+   "level": 2,
+   "observation_id": "c8dbc6bc0ca45be4",
+   "path": "manufacturing > paper,rubber,plastic products and printing",
+   "period": "2024-Q4",
+   "value": 70.0
+  },
+  {
+   "industry": "paper,rubber,plastic products and printing",
+   "level": 2,
+   "observation_id": "edc638fe2da6e0ef",
+   "path": "manufacturing > paper,rubber,plastic products and printing",
+   "period": "2025-Q1",
+   "value": 50.0
+  },
+  {
+   "industry": "paper,rubber,plastic products and printing",
+   "level": 2,
+   "observation_id": "a9247954a8150d77",
+   "path": "manufacturing > paper,rubber,plastic products and printing",
+   "period": "2025-Q2",
+   "value": null
+  },
+  {
+   "industry": "paper,rubber,plastic products and printing",
+   "level": 2,
+   "observation_id": "1371ef5161c913b2",
+   "path": "manufacturing > paper,rubber,plastic products and printing",
+   "period": "2025-Q3",
+   "value": null
+  },
+  {
+   "industry": "paper,rubber,plastic products and printing",
+   "level": 2,
+   "observation_id": "08d4c5755e643a6b",
+   "path": "manufacturing > paper,rubber,plastic products and printing",
+   "period": "2025-Q4",
+   "value": 10.0
+  },
+  {
+   "industry": "paper,rubber,plastic products and printing",
+   "level": 2,
+   "observation_id": "c6e63aef9caf3ab9",
+   "path": "manufacturing > paper,rubber,plastic products and printing",
+   "period": "2026-Q1",
+   "value": 20.0
+  },
+  {
+   "industry": "paper,rubber,plastic products and printing",
+   "level": 2,
+   "observation_id": "000e3e6f81174995",
+   "path": "manufacturing > paper,rubber,plastic products and printing",
+   "period": "2026-Q2",
+   "value": 10.0
+  },
+  {
+   "industry": "petroleum, chemical and pharmaceutical products",
+   "level": 2,
+   "observation_id": "63ed94478689031e",
+   "path": "manufacturing > petroleum, chemical and pharmaceutical products",
+   "period": "2024-Q1",
+   "value": 100.0
+  },
+  {
+   "industry": "petroleum, chemical and pharmaceutical products",
+   "level": 2,
+   "observation_id": "b59e4ce32de8d3c0",
+   "path": "manufacturing > petroleum, chemical and pharmaceutical products",
+   "period": "2024-Q2",
+   "value": 110.0
+  },
+  {
+   "industry": "petroleum, chemical and pharmaceutical products",
+   "level": 2,
+   "observation_id": "5843b29c406d5459",
+   "path": "manufacturing > petroleum, chemical and pharmaceutical products",
+   "period": "2024-Q3",
+   "value": 90.0
+  },
+  {
+   "industry": "petroleum, chemical and pharmaceutical products",
+   "level": 2,
+   "observation_id": "b04fc977f5a19a56",
+   "path": "manufacturing > petroleum, chemical and pharmaceutical products",
+   "period": "2024-Q4",
+   "value": 260.0
+  },
+  {
+   "industry": "petroleum, chemical and pharmaceutical products",
+   "level": 2,
+   "observation_id": "a288428d72d12bd7",
+   "path": "manufacturing > petroleum, chemical and pharmaceutical products",
+   "period": "2025-Q1",
+   "value": 120.0
+  },
+  {
+   "industry": "petroleum, chemical and pharmaceutical products",
+   "level": 2,
+   "observation_id": "add7ea30449e29cf",
+   "path": "manufacturing > petroleum, chemical and pharmaceutical products",
+   "period": "2025-Q2",
+   "value": 200.0
+  },
+  {
+   "industry": "petroleum, chemical and pharmaceutical products",
+   "level": 2,
+   "observation_id": "1764caa91e4a7b90",
+   "path": "manufacturing > petroleum, chemical and pharmaceutical products",
+   "period": "2025-Q3",
+   "value": 130.0
+  },
+  {
+   "industry": "petroleum, chemical and pharmaceutical products",
+   "level": 2,
+   "observation_id": "39b22ded89707384",
+   "path": "manufacturing > petroleum, chemical and pharmaceutical products",
+   "period": "2025-Q4",
+   "value": 250.0
+  },
+  {
+   "industry": "petroleum, chemical and pharmaceutical products",
+   "level": 2,
+   "observation_id": "d7094075d3c475e2",
+   "path": "manufacturing > petroleum, chemical and pharmaceutical products",
+   "period": "2026-Q1",
+   "value": 180.0
+  },
+  {
+   "industry": "petroleum, chemical and pharmaceutical products",
+   "level": 2,
+   "observation_id": "0a898aaaf8ae3e4e",
+   "path": "manufacturing > petroleum, chemical and pharmaceutical products",
+   "period": "2026-Q2",
+   "value": 230.0
+  },
+  {
+   "industry": "professional services",
+   "level": 2,
+   "observation_id": "a052b85381bc9506",
+   "path": "services > professional services",
+   "period": "2024-Q1",
+   "value": 480.0
+  },
+  {
+   "industry": "professional services",
+   "level": 2,
+   "observation_id": "a30d1741c827b1d8",
+   "path": "services > professional services",
+   "period": "2024-Q2",
+   "value": 470.0
+  },
+  {
+   "industry": "professional services",
+   "level": 2,
+   "observation_id": "876765f498d7b880",
+   "path": "services > professional services",
+   "period": "2024-Q3",
+   "value": 390.0
+  },
+  {
+   "industry": "professional services",
+   "level": 2,
+   "observation_id": "a444cf6154435c0f",
+   "path": "services > professional services",
+   "period": "2024-Q4",
+   "value": 530.0
+  },
+  {
+   "industry": "professional services",
+   "level": 2,
+   "observation_id": "36107303c295c719",
+   "path": "services > professional services",
+   "period": "2025-Q1",
+   "value": 550.0
+  },
+  {
+   "industry": "professional services",
+   "level": 2,
+   "observation_id": "39ed3cd9d84becd1",
+   "path": "services > professional services",
+   "period": "2025-Q2",
+   "value": 450.0
+  },
+  {
+   "industry": "professional services",
+   "level": 2,
+   "observation_id": "253d12e5a84900ac",
+   "path": "services > professional services",
+   "period": "2025-Q3",
+   "value": 500.0
+  },
+  {
+   "industry": "professional services",
+   "level": 2,
+   "observation_id": "f3332ad8ec73a825",
+   "path": "services > professional services",
+   "period": "2025-Q4",
+   "value": 410.0
+  },
+  {
+   "industry": "professional services",
+   "level": 2,
+   "observation_id": "6dd6b24f67b6700a",
+   "path": "services > professional services",
+   "period": "2026-Q1",
+   "value": 570.0
+  },
+  {
+   "industry": "professional services",
+   "level": 2,
+   "observation_id": "cb018e3b3cce1e4f",
+   "path": "services > professional services",
+   "period": "2026-Q2",
+   "value": 600.0
+  },
+  {
+   "industry": "public administration and education",
+   "level": 3,
+   "observation_id": "01d6d7cd5015572b",
+   "path": "services > community, social and personal services > public administration and education",
+   "period": "2024-Q1",
+   "value": 10.0
+  },
+  {
+   "industry": "public administration and education",
+   "level": 3,
+   "observation_id": "62e467806543ab6e",
+   "path": "services > community, social and personal services > public administration and education",
+   "period": "2024-Q2",
+   "value": 40.0
+  },
+  {
+   "industry": "public administration and education",
+   "level": 3,
+   "observation_id": "0b542cec5036cbfb",
+   "path": "services > community, social and personal services > public administration and education",
+   "period": "2024-Q3",
+   "value": null
+  },
+  {
+   "industry": "public administration and education",
+   "level": 3,
+   "observation_id": "dd27e6821945022f",
+   "path": "services > community, social and personal services > public administration and education",
+   "period": "2024-Q4",
+   "value": 160.0
+  },
+  {
+   "industry": "public administration and education",
+   "level": 3,
+   "observation_id": "a41c11cad8191baf",
+   "path": "services > community, social and personal services > public administration and education",
+   "period": "2025-Q1",
+   "value": 40.0
+  },
+  {
+   "industry": "public administration and education",
+   "level": 3,
+   "observation_id": "dd39bd8ec23d0e6e",
+   "path": "services > community, social and personal services > public administration and education",
+   "period": "2025-Q2",
+   "value": 70.0
+  },
+  {
+   "industry": "public administration and education",
+   "level": 3,
+   "observation_id": "8ad16705a6153385",
+   "path": "services > community, social and personal services > public administration and education",
+   "period": "2025-Q3",
+   "value": 10.0
+  },
+  {
+   "industry": "public administration and education",
+   "level": 3,
+   "observation_id": "1eaab56ad91171f6",
+   "path": "services > community, social and personal services > public administration and education",
+   "period": "2025-Q4",
+   "value": 30.0
+  },
+  {
+   "industry": "public administration and education",
+   "level": 3,
+   "observation_id": "ff05b9dbef037491",
+   "path": "services > community, social and personal services > public administration and education",
+   "period": "2026-Q1",
+   "value": null
+  },
+  {
+   "industry": "public administration and education",
+   "level": 3,
+   "observation_id": "7e93aa71698581f9",
+   "path": "services > community, social and personal services > public administration and education",
+   "period": "2026-Q2",
+   "value": 20.0
+  },
+  {
+   "industry": "real estate services",
+   "level": 2,
+   "observation_id": "2bd8ed5938730267",
+   "path": "services > real estate services",
+   "period": "2024-Q1",
+   "value": 20.0
+  },
+  {
+   "industry": "real estate services",
+   "level": 2,
+   "observation_id": "cfb737b26b23bf96",
+   "path": "services > real estate services",
+   "period": "2024-Q2",
+   "value": 40.0
+  },
+  {
+   "industry": "real estate services",
+   "level": 2,
+   "observation_id": "cad4bb23fd52a399",
+   "path": "services > real estate services",
+   "period": "2024-Q3",
+   "value": 10.0
+  },
+  {
+   "industry": "real estate services",
+   "level": 2,
+   "observation_id": "6c8ce43e97826ba3",
+   "path": "services > real estate services",
+   "period": "2024-Q4",
+   "value": 10.0
+  },
+  {
+   "industry": "real estate services",
+   "level": 2,
+   "observation_id": "8acabd329b2f6eab",
+   "path": "services > real estate services",
+   "period": "2025-Q1",
+   "value": 10.0
+  },
+  {
+   "industry": "real estate services",
+   "level": 2,
+   "observation_id": "73f5d5104a5cfa62",
+   "path": "services > real estate services",
+   "period": "2025-Q2",
+   "value": 30.0
+  },
+  {
+   "industry": "real estate services",
+   "level": 2,
+   "observation_id": "ad71052341dee945",
+   "path": "services > real estate services",
+   "period": "2025-Q3",
+   "value": 10.0
+  },
+  {
+   "industry": "real estate services",
+   "level": 2,
+   "observation_id": "6392b087dd65f03c",
+   "path": "services > real estate services",
+   "period": "2025-Q4",
+   "value": 40.0
+  },
+  {
+   "industry": "real estate services",
+   "level": 2,
+   "observation_id": "6c1d78178d883704",
+   "path": "services > real estate services",
+   "period": "2026-Q1",
+   "value": 10.0
+  },
+  {
+   "industry": "real estate services",
+   "level": 2,
+   "observation_id": "200fd33d2eb7a790",
+   "path": "services > real estate services",
+   "period": "2026-Q2",
+   "value": 60.0
+  },
+  {
+   "industry": "retail trade",
+   "level": 3,
+   "observation_id": "1953f421ee3c8b8c",
+   "path": "services > wholesale and retail trade > retail trade",
+   "period": "2024-Q1",
+   "value": 20.0
+  },
+  {
+   "industry": "retail trade",
+   "level": 3,
+   "observation_id": "bc6497f072656c48",
+   "path": "services > wholesale and retail trade > retail trade",
+   "period": "2024-Q2",
+   "value": 50.0
+  },
+  {
+   "industry": "retail trade",
+   "level": 3,
+   "observation_id": "754de3de0109c098",
+   "path": "services > wholesale and retail trade > retail trade",
+   "period": "2024-Q3",
+   "value": 100.0
+  },
+  {
+   "industry": "retail trade",
+   "level": 3,
+   "observation_id": "61a8eaf4ed0eb237",
+   "path": "services > wholesale and retail trade > retail trade",
+   "period": "2024-Q4",
+   "value": 100.0
+  },
+  {
+   "industry": "retail trade",
+   "level": 3,
+   "observation_id": "7865f8a0a493a887",
+   "path": "services > wholesale and retail trade > retail trade",
+   "period": "2025-Q1",
+   "value": 140.0
+  },
+  {
+   "industry": "retail trade",
+   "level": 3,
+   "observation_id": "7733fe9e3b4abd21",
+   "path": "services > wholesale and retail trade > retail trade",
+   "period": "2025-Q2",
+   "value": 100.0
+  },
+  {
+   "industry": "retail trade",
+   "level": 3,
+   "observation_id": "efffed28b5607a29",
+   "path": "services > wholesale and retail trade > retail trade",
+   "period": "2025-Q3",
+   "value": 50.0
+  },
+  {
+   "industry": "retail trade",
+   "level": 3,
+   "observation_id": "c3f9580053adee21",
+   "path": "services > wholesale and retail trade > retail trade",
+   "period": "2025-Q4",
+   "value": 160.0
+  },
+  {
+   "industry": "retail trade",
+   "level": 3,
+   "observation_id": "a24bc8ecb6f6c786",
+   "path": "services > wholesale and retail trade > retail trade",
+   "period": "2026-Q1",
+   "value": 150.0
+  },
+  {
+   "industry": "retail trade",
+   "level": 3,
+   "observation_id": "799795a3496d6344",
+   "path": "services > wholesale and retail trade > retail trade",
+   "period": "2026-Q2",
+   "value": 170.0
+  },
+  {
+   "industry": "security and investigation",
+   "level": 3,
+   "observation_id": "f37ed48729f461a7",
+   "path": "services > administrative and support services > security and investigation",
+   "period": "2024-Q1",
+   "value": 50.0
+  },
+  {
+   "industry": "security and investigation",
+   "level": 3,
+   "observation_id": "eea3ac71bc3a991f",
+   "path": "services > administrative and support services > security and investigation",
+   "period": "2024-Q2",
+   "value": null
+  },
+  {
+   "industry": "security and investigation",
+   "level": 3,
+   "observation_id": "4c27fbae8953026e",
+   "path": "services > administrative and support services > security and investigation",
+   "period": "2024-Q3",
+   "value": null
+  },
+  {
+   "industry": "security and investigation",
+   "level": 3,
+   "observation_id": "4c2340fad62a58b5",
+   "path": "services > administrative and support services > security and investigation",
+   "period": "2024-Q4",
+   "value": null
+  },
+  {
+   "industry": "security and investigation",
+   "level": 3,
+   "observation_id": "7c4fdcf7ca4d0a0e",
+   "path": "services > administrative and support services > security and investigation",
+   "period": "2025-Q1",
+   "value": null
+  },
+  {
+   "industry": "security and investigation",
+   "level": 3,
+   "observation_id": "cf3fe563caa7e67e",
+   "path": "services > administrative and support services > security and investigation",
+   "period": "2025-Q2",
+   "value": 10.0
+  },
+  {
+   "industry": "security and investigation",
+   "level": 3,
+   "observation_id": "2cca5188863e8aad",
+   "path": "services > administrative and support services > security and investigation",
+   "period": "2025-Q3",
+   "value": null
+  },
+  {
+   "industry": "security and investigation",
+   "level": 3,
+   "observation_id": "a0704ed804a6088d",
+   "path": "services > administrative and support services > security and investigation",
+   "period": "2025-Q4",
+   "value": null
+  },
+  {
+   "industry": "security and investigation",
+   "level": 3,
+   "observation_id": "c4320a2d08b8c43f",
+   "path": "services > administrative and support services > security and investigation",
+   "period": "2026-Q1",
+   "value": null
+  },
+  {
+   "industry": "security and investigation",
+   "level": 3,
+   "observation_id": "1af26bbe2bab5fef",
+   "path": "services > administrative and support services > security and investigation",
+   "period": "2026-Q2",
+   "value": null
+  },
+  {
+   "industry": "services",
+   "level": 1,
+   "observation_id": "0dd59ab8af76c1ea",
+   "path": "services",
+   "period": "2024-Q1",
+   "value": 2250.0
+  },
+  {
+   "industry": "services",
+   "level": 1,
+   "observation_id": "6ab9e22939e1a145",
+   "path": "services",
+   "period": "2024-Q2",
+   "value": 2470.0
+  },
+  {
+   "industry": "services",
+   "level": 1,
+   "observation_id": "3c9ae306b9f295da",
+   "path": "services",
+   "period": "2024-Q3",
+   "value": 2220.0
+  },
+  {
+   "industry": "services",
+   "level": 1,
+   "observation_id": "797ddaec7318cb83",
+   "path": "services",
+   "period": "2024-Q4",
+   "value": 2730.0
+  },
+  {
+   "industry": "services",
+   "level": 1,
+   "observation_id": "0b9e32ed515dd53c",
+   "path": "services",
+   "period": "2025-Q1",
+   "value": 2330.0
+  },
+  {
+   "industry": "services",
+   "level": 1,
+   "observation_id": "4cbc964a7d9e9b11",
+   "path": "services",
+   "period": "2025-Q2",
+   "value": 2750.0
+  },
+  {
+   "industry": "services",
+   "level": 1,
+   "observation_id": "eed2492ea03c40ab",
+   "path": "services",
+   "period": "2025-Q3",
+   "value": 3020.0
+  },
+  {
+   "industry": "services",
+   "level": 1,
+   "observation_id": "cd615a333121e422",
+   "path": "services",
+   "period": "2025-Q4",
+   "value": 2880.0
+  },
+  {
+   "industry": "services",
+   "level": 1,
+   "observation_id": "c3fccc98054a60af",
+   "path": "services",
+   "period": "2026-Q1",
+   "value": 3080.0
+  },
+  {
+   "industry": "services",
+   "level": 1,
+   "observation_id": "9629aaaf0ca0d83f",
+   "path": "services",
+   "period": "2026-Q2",
+   "value": 3580.0
+  },
+  {
+   "industry": "telecommunications, broadcasting and publishing",
+   "level": 3,
+   "observation_id": "1474aed938a78a4f",
+   "path": "services > information and communications > telecommunications, broadcasting and publishing",
+   "period": "2024-Q1",
+   "value": 120.0
+  },
+  {
+   "industry": "telecommunications, broadcasting and publishing",
+   "level": 3,
+   "observation_id": "24de307f8cb82504",
+   "path": "services > information and communications > telecommunications, broadcasting and publishing",
+   "period": "2024-Q2",
+   "value": 100.0
+  },
+  {
+   "industry": "telecommunications, broadcasting and publishing",
+   "level": 3,
+   "observation_id": "cb703f9855d5d855",
+   "path": "services > information and communications > telecommunications, broadcasting and publishing",
+   "period": "2024-Q3",
+   "value": 220.0
+  },
+  {
+   "industry": "telecommunications, broadcasting and publishing",
+   "level": 3,
+   "observation_id": "e725c72076b4f415",
+   "path": "services > information and communications > telecommunications, broadcasting and publishing",
+   "period": "2024-Q4",
+   "value": 130.0
+  },
+  {
+   "industry": "telecommunications, broadcasting and publishing",
+   "level": 3,
+   "observation_id": "e3215fad004c375a",
+   "path": "services > information and communications > telecommunications, broadcasting and publishing",
+   "period": "2025-Q1",
+   "value": 70.0
+  },
+  {
+   "industry": "telecommunications, broadcasting and publishing",
+   "level": 3,
+   "observation_id": "fe67dde02a7054c9",
+   "path": "services > information and communications > telecommunications, broadcasting and publishing",
+   "period": "2025-Q2",
+   "value": 90.0
+  },
+  {
+   "industry": "telecommunications, broadcasting and publishing",
+   "level": 3,
+   "observation_id": "e3838527d3c295bb",
+   "path": "services > information and communications > telecommunications, broadcasting and publishing",
+   "period": "2025-Q3",
+   "value": 200.0
+  },
+  {
+   "industry": "telecommunications, broadcasting and publishing",
+   "level": 3,
+   "observation_id": "457b9df73c494002",
+   "path": "services > information and communications > telecommunications, broadcasting and publishing",
+   "period": "2025-Q4",
+   "value": 110.0
+  },
+  {
+   "industry": "telecommunications, broadcasting and publishing",
+   "level": 3,
+   "observation_id": "f9b0d4ad794b1d90",
+   "path": "services > information and communications > telecommunications, broadcasting and publishing",
+   "period": "2026-Q1",
+   "value": 90.0
+  },
+  {
+   "industry": "telecommunications, broadcasting and publishing",
+   "level": 3,
+   "observation_id": "6b93bb58b07070e8",
+   "path": "services > information and communications > telecommunications, broadcasting and publishing",
+   "period": "2026-Q2",
+   "value": 160.0
+  },
+  {
+   "industry": "transport equipment",
+   "level": 2,
+   "observation_id": "866cf5c1040be0cc",
+   "path": "manufacturing > transport equipment",
+   "period": "2024-Q1",
+   "value": 10.0
+  },
+  {
+   "industry": "transport equipment",
+   "level": 2,
+   "observation_id": "976212e1573c1cb7",
+   "path": "manufacturing > transport equipment",
+   "period": "2024-Q2",
+   "value": 20.0
+  },
+  {
+   "industry": "transport equipment",
+   "level": 2,
+   "observation_id": "7e509c31f3eed8a8",
+   "path": "manufacturing > transport equipment",
+   "period": "2024-Q3",
+   "value": null
+  },
+  {
+   "industry": "transport equipment",
+   "level": 2,
+   "observation_id": "4c513ba6ca063a94",
+   "path": "manufacturing > transport equipment",
+   "period": "2024-Q4",
+   "value": 10.0
+  },
+  {
+   "industry": "transport equipment",
+   "level": 2,
+   "observation_id": "029f9e04f780cdac",
+   "path": "manufacturing > transport equipment",
+   "period": "2025-Q1",
+   "value": 10.0
+  },
+  {
+   "industry": "transport equipment",
+   "level": 2,
+   "observation_id": "30e29c612bce4142",
+   "path": "manufacturing > transport equipment",
+   "period": "2025-Q2",
+   "value": 50.0
+  },
+  {
+   "industry": "transport equipment",
+   "level": 2,
+   "observation_id": "c79c86cbffdc8ac9",
+   "path": "manufacturing > transport equipment",
+   "period": "2025-Q3",
+   "value": null
+  },
+  {
+   "industry": "transport equipment",
+   "level": 2,
+   "observation_id": "59a29f0201c3761f",
+   "path": "manufacturing > transport equipment",
+   "period": "2025-Q4",
+   "value": null
+  },
+  {
+   "industry": "transport equipment",
+   "level": 2,
+   "observation_id": "d4343f069932b47d",
+   "path": "manufacturing > transport equipment",
+   "period": "2026-Q1",
+   "value": 50.0
+  },
+  {
+   "industry": "transport equipment",
+   "level": 2,
+   "observation_id": "bf526c620a6442c0",
+   "path": "manufacturing > transport equipment",
+   "period": "2026-Q2",
+   "value": 20.0
+  },
+  {
+   "industry": "transportation and storage",
+   "level": 2,
+   "observation_id": "3aa5f3c63ebfdaaa",
+   "path": "services > transportation and storage",
+   "period": "2024-Q1",
+   "value": 150.0
+  },
+  {
+   "industry": "transportation and storage",
+   "level": 2,
+   "observation_id": "cc268d71bf5c9a50",
+   "path": "services > transportation and storage",
+   "period": "2024-Q2",
+   "value": 140.0
+  },
+  {
+   "industry": "transportation and storage",
+   "level": 2,
+   "observation_id": "99852fc8a155fc47",
+   "path": "services > transportation and storage",
+   "period": "2024-Q3",
+   "value": 140.0
+  },
+  {
+   "industry": "transportation and storage",
+   "level": 2,
+   "observation_id": "a2fe7f869159522b",
+   "path": "services > transportation and storage",
+   "period": "2024-Q4",
+   "value": 90.0
+  },
+  {
+   "industry": "transportation and storage",
+   "level": 2,
+   "observation_id": "a21043dba9288914",
+   "path": "services > transportation and storage",
+   "period": "2025-Q1",
+   "value": 140.0
+  },
+  {
+   "industry": "transportation and storage",
+   "level": 2,
+   "observation_id": "7a12b9b2a7ca89f4",
+   "path": "services > transportation and storage",
+   "period": "2025-Q2",
+   "value": 220.0
+  },
+  {
+   "industry": "transportation and storage",
+   "level": 2,
+   "observation_id": "91de42c1f55abc99",
+   "path": "services > transportation and storage",
+   "period": "2025-Q3",
+   "value": 630.0
+  },
+  {
+   "industry": "transportation and storage",
+   "level": 2,
+   "observation_id": "81817801eb20d068",
+   "path": "services > transportation and storage",
+   "period": "2025-Q4",
+   "value": 190.0
+  },
+  {
+   "industry": "transportation and storage",
+   "level": 2,
+   "observation_id": "c620e9fe7fb38f88",
+   "path": "services > transportation and storage",
+   "period": "2026-Q1",
+   "value": 160.0
+  },
+  {
+   "industry": "transportation and storage",
+   "level": 2,
+   "observation_id": "5001d73d3fd020c3",
+   "path": "services > transportation and storage",
+   "period": "2026-Q2",
+   "value": 190.0
+  },
+  {
+   "industry": "water transport and supporting services",
+   "level": 3,
+   "observation_id": "d94812ff2560be74",
+   "path": "services > transportation and storage > water transport and supporting services",
+   "period": "2024-Q1",
+   "value": 30.0
+  },
+  {
+   "industry": "water transport and supporting services",
+   "level": 3,
+   "observation_id": "7b0e7fabce1d3338",
+   "path": "services > transportation and storage > water transport and supporting services",
+   "period": "2024-Q2",
+   "value": 20.0
+  },
+  {
+   "industry": "water transport and supporting services",
+   "level": 3,
+   "observation_id": "ccb083d2a6b62a24",
+   "path": "services > transportation and storage > water transport and supporting services",
+   "period": "2024-Q3",
+   "value": 20.0
+  },
+  {
+   "industry": "water transport and supporting services",
+   "level": 3,
+   "observation_id": "41d2c731e5b2bf7b",
+   "path": "services > transportation and storage > water transport and supporting services",
+   "period": "2024-Q4",
+   "value": 60.0
+  },
+  {
+   "industry": "water transport and supporting services",
+   "level": 3,
+   "observation_id": "dc56634dab05a40b",
+   "path": "services > transportation and storage > water transport and supporting services",
+   "period": "2025-Q1",
+   "value": 40.0
+  },
+  {
+   "industry": "water transport and supporting services",
+   "level": 3,
+   "observation_id": "39da75c80e8e68db",
+   "path": "services > transportation and storage > water transport and supporting services",
+   "period": "2025-Q2",
+   "value": 130.0
+  },
+  {
+   "industry": "water transport and supporting services",
+   "level": 3,
+   "observation_id": "0fbb88319852df30",
+   "path": "services > transportation and storage > water transport and supporting services",
+   "period": "2025-Q3",
+   "value": 50.0
+  },
+  {
+   "industry": "water transport and supporting services",
+   "level": 3,
+   "observation_id": "3cc327524739d8da",
+   "path": "services > transportation and storage > water transport and supporting services",
+   "period": "2025-Q4",
+   "value": 40.0
+  },
+  {
+   "industry": "water transport and supporting services",
+   "level": 3,
+   "observation_id": "e73bc4719401f3fe",
+   "path": "services > transportation and storage > water transport and supporting services",
+   "period": "2026-Q1",
+   "value": 50.0
+  },
+  {
+   "industry": "water transport and supporting services",
+   "level": 3,
+   "observation_id": "e6dd00658cbbef5d",
+   "path": "services > transportation and storage > water transport and supporting services",
+   "period": "2026-Q2",
+   "value": 100.0
+  },
+  {
+   "industry": "wholesale and retail trade",
+   "level": 2,
+   "observation_id": "375e45edb4b98d98",
+   "path": "services > wholesale and retail trade",
+   "period": "2024-Q1",
+   "value": 350.0
+  },
+  {
+   "industry": "wholesale and retail trade",
+   "level": 2,
+   "observation_id": "8778013ad570b38a",
+   "path": "services > wholesale and retail trade",
+   "period": "2024-Q2",
+   "value": 500.0
+  },
+  {
+   "industry": "wholesale and retail trade",
+   "level": 2,
+   "observation_id": "f77fbcadbff1aeb7",
+   "path": "services > wholesale and retail trade",
+   "period": "2024-Q3",
+   "value": 570.0
+  },
+  {
+   "industry": "wholesale and retail trade",
+   "level": 2,
+   "observation_id": "102af3c15d273dc4",
+   "path": "services > wholesale and retail trade",
+   "period": "2024-Q4",
+   "value": 760.0
+  },
+  {
+   "industry": "wholesale and retail trade",
+   "level": 2,
+   "observation_id": "81042942b48784b8",
+   "path": "services > wholesale and retail trade",
+   "period": "2025-Q1",
+   "value": 600.0
+  },
+  {
+   "industry": "wholesale and retail trade",
+   "level": 2,
+   "observation_id": "3d38d6fab18d4739",
+   "path": "services > wholesale and retail trade",
+   "period": "2025-Q2",
+   "value": 600.0
+  },
+  {
+   "industry": "wholesale and retail trade",
+   "level": 2,
+   "observation_id": "9903f5e9d609c376",
+   "path": "services > wholesale and retail trade",
+   "period": "2025-Q3",
+   "value": 330.0
+  },
+  {
+   "industry": "wholesale and retail trade",
+   "level": 2,
+   "observation_id": "96ddb1b8be23ac6b",
+   "path": "services > wholesale and retail trade",
+   "period": "2025-Q4",
+   "value": 790.0
+  },
+  {
+   "industry": "wholesale and retail trade",
+   "level": 2,
+   "observation_id": "bbe6047c5584f334",
+   "path": "services > wholesale and retail trade",
+   "period": "2026-Q1",
+   "value": 810.0
+  },
+  {
+   "industry": "wholesale and retail trade",
+   "level": 2,
+   "observation_id": "3eb8d230790e13e4",
+   "path": "services > wholesale and retail trade",
+   "period": "2026-Q2",
+   "value": 830.0
+  },
+  {
+   "industry": "wholesale trade",
+   "level": 3,
+   "observation_id": "86b2a31000197a1f",
+   "path": "services > wholesale and retail trade > wholesale trade",
+   "period": "2024-Q1",
+   "value": 330.0
+  },
+  {
+   "industry": "wholesale trade",
+   "level": 3,
+   "observation_id": "48fe3d64b921d657",
+   "path": "services > wholesale and retail trade > wholesale trade",
+   "period": "2024-Q2",
+   "value": 450.0
+  },
+  {
+   "industry": "wholesale trade",
+   "level": 3,
+   "observation_id": "0325ba8ddfdf894f",
+   "path": "services > wholesale and retail trade > wholesale trade",
+   "period": "2024-Q3",
+   "value": 480.0
+  },
+  {
+   "industry": "wholesale trade",
+   "level": 3,
+   "observation_id": "8f77aa8b990e1a56",
+   "path": "services > wholesale and retail trade > wholesale trade",
+   "period": "2024-Q4",
+   "value": 650.0
+  },
+  {
+   "industry": "wholesale trade",
+   "level": 3,
+   "observation_id": "f4ef3e313d013694",
+   "path": "services > wholesale and retail trade > wholesale trade",
+   "period": "2025-Q1",
+   "value": 460.0
+  },
+  {
+   "industry": "wholesale trade",
+   "level": 3,
+   "observation_id": "4788e866f59bdfd9",
+   "path": "services > wholesale and retail trade > wholesale trade",
+   "period": "2025-Q2",
+   "value": 500.0
+  },
+  {
+   "industry": "wholesale trade",
+   "level": 3,
+   "observation_id": "e0520bb00642927a",
+   "path": "services > wholesale and retail trade > wholesale trade",
+   "period": "2025-Q3",
+   "value": 290.0
+  },
+  {
+   "industry": "wholesale trade",
+   "level": 3,
+   "observation_id": "481e199129852035",
+   "path": "services > wholesale and retail trade > wholesale trade",
+   "period": "2025-Q4",
+   "value": 630.0
+  },
+  {
+   "industry": "wholesale trade",
+   "level": 3,
+   "observation_id": "4dcbdd55746bea91",
+   "path": "services > wholesale and retail trade > wholesale trade",
+   "period": "2026-Q1",
+   "value": 670.0
+  },
+  {
+   "industry": "wholesale trade",
+   "level": 3,
+   "observation_id": "603f0e1639a5abb7",
+   "path": "services > wholesale and retail trade > wholesale trade",
+   "period": "2026-Q2",
+   "value": 660.0
+  }
+ ],
+ "schema_version": "export-0.1"
+}

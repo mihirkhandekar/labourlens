@@ -1,0 +1,60 @@
+{
+  "collectionIds": [],
+  "columnMetadata": {
+    "map": {
+      "c_3xgme8ngh9hor5t36988i38pu": "non_seasonally_adj_unemp",
+      "c_brgk7w8akjzvrrkuva5nvy7ed": "residential_status",
+      "c_but6eg2t15hombsu7ac94odb2": "seasonally_adj_unemp",
+      "c_cntfd5m33gpw08a171to8tsaf": "period"
+    },
+    "metaMapping": {
+      "c_3xgme8ngh9hor5t36988i38pu": {
+        "columnTitle": "Non Seasonally Adj Unemp",
+        "dataType": "Numeric",
+        "index": "3",
+        "isCategorical": false,
+        "name": "non_seasonally_adj_unemp"
+      },
+      "c_brgk7w8akjzvrrkuva5nvy7ed": {
+        "columnTitle": "Residential Status",
+        "dataType": "Text",
+        "index": "1",
+        "isCategorical": true,
+        "name": "residential_status"
+      },
+      "c_but6eg2t15hombsu7ac94odb2": {
+        "columnTitle": "Seasonally Adj Unemp",
+        "dataType": "Numeric",
+        "index": "2",
+        "isCategorical": false,
+        "name": "seasonally_adj_unemp"
+      },
+      "c_cntfd5m33gpw08a171to8tsaf": {
+        "columnTitle": "Period",
+        "dataType": "Month (YYYY-MM)",
+        "index": "0",
+        "isCategorical": false,
+        "name": "period"
+      }
+    },
+    "order": [
+      "c_cntfd5m33gpw08a171to8tsaf",
+      "c_brgk7w8akjzvrrkuva5nvy7ed",
+      "c_but6eg2t15hombsu7ac94odb2",
+      "c_3xgme8ngh9hor5t36988i38pu"
+    ]
+  },
+  "contactEmails": [
+    "ng_mun_yi@mom.gov.sg"
+  ],
+  "coverageEnd": "2026-06-01T08:00:00+08:00",
+  "coverageStart": "1992-03-01T08:00:00+08:00",
+  "createdAt": "2026-02-26T19:47:47+08:00",
+  "datasetId": "d_50f76f080c7e80c3b6acd4dfc9f29174",
+  "datasetSize": 4222,
+  "description": "Data refer to the quarterly number of unemployed residents.\nResidents refer to Singapore Citizens and Permanent Residents.\nSeasonally adjusted data are revised using the latest set of seasonal factors and updated in line with standard seasonal adjustment procedure. The revision is done once a year, taking into account observations for the latest available year.\nSource: Labour Force Survey, Manpower Research & Statistics Department, MOM, except data for June 1995, June 2000 and June 2005, which are from the Population Census 2000, General Household Surveys 1995 & 2005 conducted by the Singapore Department of Statistics.",
+  "format": "CSV",
+  "lastUpdatedAt": "2026-09-29T10:48:09+08:00",
+  "managedBy": "Ministry of Manpower",
+  "name": "Number of Unemployed Residents, Quarterly"
+}

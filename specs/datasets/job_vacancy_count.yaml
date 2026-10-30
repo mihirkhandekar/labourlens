@@ -1,0 +1,21 @@
+source_id: job_vacancy_count
+adapter: quarterly_long
+period_col: quarter
+expected_columns:
+- quarter
+- job_vacancy
+measures:
+- column: job_vacancy
+  indicator_id: job_vacancies
+  unit: persons
+  population: establishments
+  adjustment: unspecified
+  definition: Number of job vacancies at quarter end. Publisher does not state SA status. Labour Market Survey of establishments (MRSD, MOM). From 2006 the scope includes the public sector.
+  plausible_range:
+  - 1000
+  - 200000
+expected_first_period: 1998-Q1
+expected_last_period: 2026-Q2
+missing_tokens:
+- na
+- '-'

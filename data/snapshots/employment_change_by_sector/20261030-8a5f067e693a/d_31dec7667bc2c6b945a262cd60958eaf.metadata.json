@@ -1,0 +1,1454 @@
+{
+  "collectionIds": [],
+  "columnMetadata": {
+    "map": {
+      "c_1319tn2vt7s4vjkv38u6og4sb": "20183Q",
+      "c_13j1ewvxnt2hd6g4gmcjnfbof": "20024Q",
+      "c_1b5h75ufu8uzg3allzcs33yg1": "20254Q",
+      "c_1bwrhy7alvunglvki9czwbdc0": "20252Q",
+      "c_1pa151bpakb090wnq74bw38zo": "20104Q",
+      "c_1x70gqqlphhrm3tax58zvuh7q": "20231Q",
+      "c_1xuj57mz1u4nr2v8gx1j0arg3": "20034Q",
+      "c_1z3so3dh5i54v7tr5ho2x7qy5": "20073Q",
+      "c_234c9684abc0p4gf1r2ri5ig4": "20203Q",
+      "c_25ssp220edq0m9x3ftz7i81wt": "20134Q",
+      "c_295z6016r47wkjr33t9xqqksu": "20131Q",
+      "c_2fz5sfbvl1wr08mlrgnpba8b7": "19953Q",
+      "c_2j47tn42ifoe0ijezlb1ie6d6": "19931Q",
+      "c_2k0n3nbj6s5gm03t6tvq2q80y": "19914Q",
+      "c_2lm560e6ex5h75ee53f3386h2": "20142Q",
+      "c_2nriy6o94l5rzsfwgws5a48vm": "20222Q",
+      "c_2ntfcwpvm6p9sfdr80ncmk48l": "20124Q",
+      "c_2wd8hn04vunyovcq0afgirnio": "20204Q",
+      "c_2xgwave8sccmfyoecjdo8gxim": "19972Q",
+      "c_2zyjhgnukccfvsx4n63jyiezr": "20054Q",
+      "c_30tprx3myyihug9zczbqmvuip": "19913Q",
+      "c_332m4brx7t570vp3lbgxfwb5w": "19961Q",
+      "c_339u2se78fvfksml4m4z1369v": "19992Q",
+      "c_37lqrfjfmply7f9iors2mw6n9": "20212Q",
+      "c_3pwzr3kn6hu6h78pv1u1e6rmd": "20261Q",
+      "c_3skpy7yj5mda5qxv02czacy4e": "20062Q",
+      "c_3v0ackl37kardpv2fwukntcab": "19971Q",
+      "c_44wvar6zngf8x9gchrj4gfaof": "20243Q",
+      "c_48t6mlo6wgn8b8u39xawhdzhb": "20141Q",
+      "c_4cuolvmufqpv6woioe46xb2bx": "20234Q",
+      "c_4d0445dnqovyp4hiyqrhoad2o": "20064Q",
+      "c_4d33zpownacr1ol7deehaxuef": "20122Q",
+      "c_4f6pcl5m4byfd034o8n1p9vot": "20251Q",
+      "c_4inf0ml00sdiyor89c7qs861z": "19964Q",
+      "c_4isuunha0b3y69vm8c2q3imv5": "19984Q",
+      "c_4njc8n8p1marfvzb1loyhb4ic": "20163Q",
+      "c_4ou2o35j4v70xbmrsl7a96c1v": "20182Q",
+      "c_4rdpomw28kyjr3g2foo8vmcxd": "20041Q",
+      "c_4rqvb7hks0iovkimkms1du11e": "20001Q",
+      "c_4sd46dhf6mmizp5mvczr23z7x": "19932Q",
+      "c_4vfu8qt8w7q6pmhnmnn6c0mkv": "20181Q",
+      "c_4xva9omdszeer6qz4740fcuiz": "20244Q",
+      "c_56xaeuuhmejr7a6uohiet3wq5": "20084Q",
+      "c_5f723ak3orw0s9iz2cei4gq4j": "19941Q",
+      "c_5hitjk4yzqy1xu7xiwgup8i39": "20091Q",
+      "c_5l9s6kqhsnsdyllch5612oj54": "20233Q",
+      "c_5sfdwm0tz6j5h2ionvs2qij5w": "19981Q",
+      "c_5sozh2pfwhdae2747xfzpyd81": "19924Q",
+      "c_5t1tnkolhw5m4fxbnkw8k07vy": "20072Q",
+      "c_5vgi97pr5oolsk70rsd06pgad": "20241Q",
+      "c_64xf7s58c0dj3a35lte2b4xcd": "20031Q",
+      "c_67dqf3ec54zujmoe8pj6gunvf": "19983Q",
+      "c_68x91ml0nxypyahoyfpc5hmaf": "19963Q",
+      "c_6c22ckg12oa4seva7vg6ypt05": "20023Q",
+      "c_6c41gghbceb58plifm5wlebm4": "19973Q",
+      "c_6huxnaukwvzpbengaufzgs31c": "20044Q",
+      "c_6ji5qj4ve9krmk6o7fdczeycu": "20111Q",
+      "c_6jutj3ynn215dgv67vulfkgci": "DataSeries",
+      "c_6u2vpzziibxj0diixjevaboc9": "20144Q",
+      "c_6xkv63rnez8fjwssczrcf7ibb": "20151Q",
+      "c_7382bwd5culhg0kfbwrwf05ud": "19911Q",
+      "c_76lk0zp1l771o2upo6t1t3pix": "20164Q",
+      "c_78822qxspg9lcx1h7xjbte2p5": "20153Q",
+      "c_7cetmkjdigym3q3blilxj1ze8": "19922Q",
+      "c_7cizqel1uebdo55j6ubvq24qf": "20003Q",
+      "c_7kossttk03b8s7pr186hjqxff": "20191Q",
+      "c_7ppbiwjvzefuy0asi3yp2zli0": "19994Q",
+      "c_7zm2x9610dto01snejf41ezyc": "19951Q",
+      "c_810jtxwqz5u3kfp29lfmdh2m8": "20154Q",
+      "c_82yzcnkm13vjy5xosgsvddghu": "20004Q",
+      "c_84q4nc8b1std7934sxk4wivtw": "20093Q",
+      "c_85vvide06gq0flu06fk2kd5vx": "20173Q",
+      "c_8a217z0shm1jaik4nrccxo1qg": "20162Q",
+      "c_8cu35bh0ukl5ivncp2v3lp1jb": "20192Q",
+      "c_8de4xznt1n1izes7zok922vem": "19934Q",
+      "c_8kxzoiwgxavyb9h5j1lb6x9y2": "19921Q",
+      "c_8luvizocr9ntuy4i0p8nzp1g0": "19962Q",
+      "c_8mkercciy1k62glheigtu7e6q": "20053Q",
+      "c_8smalc8x4lt457z39j9l9z0ho": "20013Q",
+      "c_8snbrm6wqyk2uazt7vn0gt8nm": "20033Q",
+      "c_8tqk6kaky83j2uemqtwfw5b3o": "20051Q",
+      "c_8u2jg03h99nozfk2sr6g6bf98": "19954Q",
+      "c_8v98lfa7a1kjzpmw33go23g9b": "20194Q",
+      "c_8vpmzmr99zzlbzf8j1lb7151d": "20262Q",
+      "c_8xhvpsgvuk1f9ckkmhcqfm22h": "20083Q",
+      "c_9127ebhjd2iuagop2ps88853f": "20123Q",
+      "c_91flc2hfn7o9x0gpix6tcoan4": "20253Q",
+      "c_92j0x6vsjmz0agufdcovyzx4j": "19982Q",
+      "c_94i2ilk7i9uqmwks47bq5sa99": "20102Q",
+      "c_9lbkujnsrevgybjozey4nnme8": "20021Q",
+      "c_9mrixci52jmi7s9q1gaio10d": "20032Q",
+      "c_9uw3g5y0wqdj90syplljp41k1": "20063Q",
+      "c_9wm8olvlq7p3f8i0j5aw6eya": "20022Q",
+      "c_9xgcl3yknddtc1c73i71zs3xt": "20074Q",
+      "c_a1q5zrfuhfv9dlpqp8yjme9to": "19923Q",
+      "c_a5qpxp4skpi1sfanh6rzi59ol": "20121Q",
+      "c_abyy3npxkk4b6bz43eqaxydus": "20043Q",
+      "c_afwhvwt26sy4670peber0xi3r": "19942Q",
+      "c_ai4m7ccg88wruiiarbft1gdnl": "20052Q",
+      "c_amofgpwvxq5p1wyae0lz1ofun": "20184Q",
+      "c_avmehi8tm8kyqq2kekuidfahx": "20171Q",
+      "c_ayycrbkjws7x8khdeegukmubw": "20232Q",
+      "c_b7zk5uomprmptpw8tmmd7z8vd": "20161Q",
+      "c_bb9p1zfwiiolftnj97b7zuk99": "20214Q",
+      "c_bh2epft49qbwhbwawwcvtuj1a": "19933Q",
+      "c_bhrugzjwoc5yi4xxnypiaftxc": "19993Q",
+      "c_bk73waw3tfm6eobf5zyi5vwju": "20113Q",
+      "c_bywkf8sbre42c7p1qc5qlykjt": "20101Q",
+      "c_bzuhzrn5d1edhn1nerk09fu2e": "20221Q",
+      "c_c11cps8kldompjwdudkcrgn3t": "20223Q",
+      "c_c43hhjkv23aaefqz8q48n1xx5": "20061Q",
+      "c_c6ez9u436kypkp7xxz9rvzron": "19991Q",
+      "c_c7vzga5f11tmb76a6ch8pwscn": "19943Q",
+      "c_c9ejvsrrj8d4lirrwrnl3fhvl": "20114Q",
+      "c_c9gb89taa101dcmtd1zdysxif": "20103Q",
+      "c_ca3gfm3kmhunknms692x7ubqn": "20213Q",
+      "c_cdai8ivyvkp00nvxoudmjzlof": "20143Q",
+      "c_cf8kugofdl6ol44sst60nn45t": "20014Q",
+      "c_ckyjcejq1jpbyact6qfqtyq5p": "20112Q",
+      "c_clfnzyz1fbygy3fbf12ov6bd7": "20071Q",
+      "c_coxbnj2102e5m44no95o4zmbc": "20211Q",
+      "c_csz6a7cmq4cg94f206e33jecn": "20042Q",
+      "c_d7clsf7v57wo4z02qw2hnl8q0": "20224Q",
+      "c_d7t6y9mtqr26qr2gah12f0f6h": "20002Q",
+      "c_db4dg6ppuu5m635if7wtq10l2": "20152Q",
+      "c_de1p7kjdonvzm1z3r2o8ocnwc": "19912Q",
+      "c_dgc99bugrsvtqm17nxvf5fs0n": "20174Q",
+      "c_dk0rwwqj3ru4rjz6acse9qkda": "20242Q",
+      "c_dmvah9yazjupjia824371di7g": "19974Q",
+      "c_dscwmy7kxi0papkst030erx4m": "20092Q",
+      "c_dxssnndw7too4dzvhzvlno7k8": "20082Q",
+      "c_e2sr3u5tn8as3mn4td3a2iv3s": "20011Q",
+      "c_e5ecrmgfjt7f4ypn9j3tgf9ia": "20202Q",
+      "c_eahjv5oc07wir8snbvj242xe7": "19944Q",
+      "c_eg8k52sc8h9dvxz1bid4ppbi2": "20133Q",
+      "c_eh2fr0qng66er9pl5n59sex2p": "20094Q",
+      "c_eh43wvq02pjqjig1j8ri6rtg7": "20193Q",
+      "c_ertwj1aqp0bjxinmo8xaz9xp1": "20201Q",
+      "c_espplqdvz4695256uio8zmvv6": "20132Q",
+      "c_jc2dtey4qbld42b53b5pf9n0": "20012Q",
+      "c_nmrs8rhagljl9qwbtejuap90": "19952Q",
+      "c_vs5bwnitdjna3it8dze5p5im": "20081Q",
+      "c_zvm5319udwh1vo83zxt9w9xf": "20172Q"
+    },
+    "metaMapping": {
+      "c_1319tn2vt7s4vjkv38u6og4sb": {
+        "columnTitle": "2018 3Q",
+        "dataType": "Text",
+        "index": "32",
+        "isCategorical": false,
+        "name": "20183Q",
+        "unitOfMeasure": "Number"
+      },
+      "c_13j1ewvxnt2hd6g4gmcjnfbof": {
+        "columnTitle": "2002 4Q",
+        "dataType": "Text",
+        "index": "95",
+        "isCategorical": true,
+        "name": "20024Q",
+        "unitOfMeasure": "Number"
+      },
+      "c_1b5h75ufu8uzg3allzcs33yg1": {
+        "columnTitle": "2025 4Q",
+        "dataType": "Numeric",
+        "index": "3",
+        "isCategorical": false,
+        "name": "20254Q",
+        "unitOfMeasure": "Number"
+      },
+      "c_1bwrhy7alvunglvki9czwbdc0": {
+        "columnTitle": "2025 2Q",
+        "dataType": "Numeric",
+        "index": "5",
+        "isCategorical": false,
+        "name": "20252Q",
+        "unitOfMeasure": "Number"
+      },
+      "c_1pa151bpakb090wnq74bw38zo": {
+        "columnTitle": "2010 4Q",
+        "dataType": "Text",
+        "index": "63",
+        "isCategorical": true,
+        "name": "20104Q",
+        "unitOfMeasure": "Number"
+      },
+      "c_1x70gqqlphhrm3tax58zvuh7q": {
+        "columnTitle": "2023 1Q",
+        "dataType": "Numeric",
+        "index": "14",
+        "isCategorical": false,
+        "name": "20231Q",
+        "unitOfMeasure": "Number"
+      },
+      "c_1xuj57mz1u4nr2v8gx1j0arg3": {
+        "columnTitle": "2003 4Q",
+        "dataType": "Text",
+        "index": "91",
+        "isCategorical": true,
+        "name": "20034Q",
+        "unitOfMeasure": "Number"
+      },
+      "c_1z3so3dh5i54v7tr5ho2x7qy5": {
+        "columnTitle": "2007 3Q",
+        "dataType": "Text",
+        "index": "76",
+        "isCategorical": true,
+        "name": "20073Q",
+        "unitOfMeasure": "Number"
+      },
+      "c_234c9684abc0p4gf1r2ri5ig4": {
+        "columnTitle": "2020 3Q",
+        "dataType": "Text",
+        "index": "24",
+        "isCategorical": false,
+        "name": "20203Q",
+        "unitOfMeasure": "Number"
+      },
+      "c_25ssp220edq0m9x3ftz7i81wt": {
+        "columnTitle": "2013 4Q",
+        "dataType": "Text",
+        "index": "51",
+        "isCategorical": true,
+        "name": "20134Q",
+        "unitOfMeasure": "Number"
+      },
+      "c_295z6016r47wkjr33t9xqqksu": {
+        "columnTitle": "2013 1Q",
+        "dataType": "Text",
+        "index": "54",
+        "isCategorical": true,
+        "name": "20131Q",
+        "unitOfMeasure": "Number"
+      },
+      "c_2fz5sfbvl1wr08mlrgnpba8b7": {
+        "columnTitle": "1995 3Q",
+        "dataType": "Text",
+        "index": "124",
+        "isCategorical": true,
+        "name": "19953Q",
+        "unitOfMeasure": "Number"
+      },
+      "c_2j47tn42ifoe0ijezlb1ie6d6": {
+        "columnTitle": "1993 1Q",
+        "dataType": "Text",
+        "index": "134",
+        "isCategorical": true,
+        "name": "19931Q",
+        "unitOfMeasure": "Number"
+      },
+      "c_2k0n3nbj6s5gm03t6tvq2q80y": {
+        "columnTitle": "1991 4Q",
+        "dataType": "Text",
+        "index": "139",
+        "isCategorical": true,
+        "name": "19914Q",
+        "unitOfMeasure": "Number"
+      },
+      "c_2lm560e6ex5h75ee53f3386h2": {
+        "columnTitle": "2014 2Q",
+        "dataType": "Text",
+        "index": "49",
+        "isCategorical": true,
+        "name": "20142Q",
+        "unitOfMeasure": "Number"
+      },
+      "c_2nriy6o94l5rzsfwgws5a48vm": {
+        "columnTitle": "2022 2Q",
+        "dataType": "Numeric",
+        "index": "17",
+        "isCategorical": false,
+        "name": "20222Q",
+        "unitOfMeasure": "Number"
+      },
+      "c_2ntfcwpvm6p9sfdr80ncmk48l": {
+        "columnTitle": "2012 4Q",
+        "dataType": "Text",
+        "index": "55",
+        "isCategorical": true,
+        "name": "20124Q",
+        "unitOfMeasure": "Number"
+      },
+      "c_2wd8hn04vunyovcq0afgirnio": {
+        "columnTitle": "2020 4Q",
+        "dataType": "Text",
+        "index": "23",
+        "isCategorical": false,
+        "name": "20204Q",
+        "unitOfMeasure": "Number"
+      },
+      "c_2xgwave8sccmfyoecjdo8gxim": {
+        "columnTitle": "1997 2Q",
+        "dataType": "Text",
+        "index": "117",
+        "isCategorical": true,
+        "name": "19972Q",
+        "unitOfMeasure": "Number"
+      },
+      "c_2zyjhgnukccfvsx4n63jyiezr": {
+        "columnTitle": "2005 4Q",
+        "dataType": "Text",
+        "index": "83",
+        "isCategorical": true,
+        "name": "20054Q",
+        "unitOfMeasure": "Number"
+      },
+      "c_30tprx3myyihug9zczbqmvuip": {
+        "columnTitle": "1991 3Q",
+        "dataType": "Text",
+        "index": "140",
+        "isCategorical": true,
+        "name": "19913Q",
+        "unitOfMeasure": "Number"
+      },
+      "c_332m4brx7t570vp3lbgxfwb5w": {
+        "columnTitle": "1996 1Q",
+        "dataType": "Text",
+        "index": "122",
+        "isCategorical": true,
+        "name": "19961Q",
+        "unitOfMeasure": "Number"
+      },
+      "c_339u2se78fvfksml4m4z1369v": {
+        "columnTitle": "1999 2Q",
+        "dataType": "Text",
+        "index": "109",
+        "isCategorical": true,
+        "name": "19992Q",
+        "unitOfMeasure": "Number"
+      },
+      "c_37lqrfjfmply7f9iors2mw6n9": {
+        "columnTitle": "2021 2Q",
+        "dataType": "Text",
+        "index": "21",
+        "isCategorical": false,
+        "name": "20212Q",
+        "unitOfMeasure": "Number"
+      },
+      "c_3pwzr3kn6hu6h78pv1u1e6rmd": {
+        "columnTitle": "2026 1Q",
+        "dataType": "Numeric",
+        "index": "2",
+        "isCategorical": false,
+        "name": "20261Q",
+        "unitOfMeasure": "Number"
+      },
+      "c_3skpy7yj5mda5qxv02czacy4e": {
+        "columnTitle": "2006 2Q",
+        "dataType": "Text",
+        "index": "81",
+        "isCategorical": true,
+        "name": "20062Q",
+        "unitOfMeasure": "Number"
+      },
+      "c_3v0ackl37kardpv2fwukntcab": {
+        "columnTitle": "1997 1Q",
+        "dataType": "Text",
+        "index": "118",
+        "isCategorical": true,
+        "name": "19971Q",
+        "unitOfMeasure": "Number"
+      },
+      "c_44wvar6zngf8x9gchrj4gfaof": {
+        "columnTitle": "2024 3Q",
+        "dataType": "Numeric",
+        "index": "8",
+        "isCategorical": false,
+        "name": "20243Q",
+        "unitOfMeasure": "Number"
+      },
+      "c_48t6mlo6wgn8b8u39xawhdzhb": {
+        "columnTitle": "2014 1Q",
+        "dataType": "Text",
+        "index": "50",
+        "isCategorical": true,
+        "name": "20141Q",
+        "unitOfMeasure": "Number"
+      },
+      "c_4cuolvmufqpv6woioe46xb2bx": {
+        "columnTitle": "2023 4Q",
+        "dataType": "Numeric",
+        "index": "11",
+        "isCategorical": false,
+        "name": "20234Q",
+        "unitOfMeasure": "Number"
+      },
+      "c_4d0445dnqovyp4hiyqrhoad2o": {
+        "columnTitle": "2006 4Q",
+        "dataType": "Text",
+        "index": "79",
+        "isCategorical": true,
+        "name": "20064Q",
+        "unitOfMeasure": "Number"
+      },
+      "c_4d33zpownacr1ol7deehaxuef": {
+        "columnTitle": "2012 2Q",
+        "dataType": "Text",
+        "index": "57",
+        "isCategorical": true,
+        "name": "20122Q",
+        "unitOfMeasure": "Number"
+      },
+      "c_4f6pcl5m4byfd034o8n1p9vot": {
+        "columnTitle": "2025 1Q",
+        "dataType": "Numeric",
+        "index": "6",
+        "isCategorical": false,
+        "name": "20251Q",
+        "unitOfMeasure": "Number"
+      },
+      "c_4inf0ml00sdiyor89c7qs861z": {
+        "columnTitle": "1996 4Q",
+        "dataType": "Text",
+        "index": "119",
+        "isCategorical": true,
+        "name": "19964Q",
+        "unitOfMeasure": "Number"
+      },
+      "c_4isuunha0b3y69vm8c2q3imv5": {
+        "columnTitle": "1998 4Q",
+        "dataType": "Text",
+        "index": "111",
+        "isCategorical": true,
+        "name": "19984Q",
+        "unitOfMeasure": "Number"
+      },
+      "c_4njc8n8p1marfvzb1loyhb4ic": {
+        "columnTitle": "2016 3Q",
+        "dataType": "Text",
+        "index": "40",
+        "isCategorical": true,
+        "name": "20163Q",
+        "unitOfMeasure": "Number"
+      },
+      "c_4ou2o35j4v70xbmrsl7a96c1v": {
+        "columnTitle": "2018 2Q",
+        "dataType": "Text",
+        "index": "33",
+        "isCategorical": false,
+        "name": "20182Q",
+        "unitOfMeasure": "Number"
+      },
+      "c_4rdpomw28kyjr3g2foo8vmcxd": {
+        "columnTitle": "2004 1Q",
+        "dataType": "Text",
+        "index": "90",
+        "isCategorical": true,
+        "name": "20041Q",
+        "unitOfMeasure": "Number"
+      },
+      "c_4rqvb7hks0iovkimkms1du11e": {
+        "columnTitle": "2000 1Q",
+        "dataType": "Text",
+        "index": "106",
+        "isCategorical": true,
+        "name": "20001Q",
+        "unitOfMeasure": "Number"
+      },
+      "c_4sd46dhf6mmizp5mvczr23z7x": {
+        "columnTitle": "1993 2Q",
+        "dataType": "Text",
+        "index": "133",
+        "isCategorical": true,
+        "name": "19932Q",
+        "unitOfMeasure": "Number"
+      },
+      "c_4vfu8qt8w7q6pmhnmnn6c0mkv": {
+        "columnTitle": "2018 1Q",
+        "dataType": "Text",
+        "index": "34",
+        "isCategorical": false,
+        "name": "20181Q",
+        "unitOfMeasure": "Number"
+      },
+      "c_4xva9omdszeer6qz4740fcuiz": {
+        "columnTitle": "2024 4Q",
+        "dataType": "Numeric",
+        "index": "7",
+        "isCategorical": false,
+        "name": "20244Q",
+        "unitOfMeasure": "Number"
+      },
+      "c_56xaeuuhmejr7a6uohiet3wq5": {
+        "columnTitle": "2008 4Q",
+        "dataType": "Text",
+        "index": "71",
+        "isCategorical": true,
+        "name": "20084Q",
+        "unitOfMeasure": "Number"
+      },
+      "c_5f723ak3orw0s9iz2cei4gq4j": {
+        "columnTitle": "1994 1Q",
+        "dataType": "Text",
+        "index": "130",
+        "isCategorical": true,
+        "name": "19941Q",
+        "unitOfMeasure": "Number"
+      },
+      "c_5hitjk4yzqy1xu7xiwgup8i39": {
+        "columnTitle": "2009 1Q",
+        "dataType": "Text",
+        "index": "70",
+        "isCategorical": true,
+        "name": "20091Q",
+        "unitOfMeasure": "Number"
+      },
+      "c_5l9s6kqhsnsdyllch5612oj54": {
+        "columnTitle": "2023 3Q",
+        "dataType": "Numeric",
+        "index": "12",
+        "isCategorical": false,
+        "name": "20233Q",
+        "unitOfMeasure": "Number"
+      },
+      "c_5sfdwm0tz6j5h2ionvs2qij5w": {
+        "columnTitle": "1998 1Q",
+        "dataType": "Text",
+        "index": "114",
+        "isCategorical": true,
+        "name": "19981Q",
+        "unitOfMeasure": "Number"
+      },
+      "c_5sozh2pfwhdae2747xfzpyd81": {
+        "columnTitle": "1992 4Q",
+        "dataType": "Text",
+        "index": "135",
+        "isCategorical": true,
+        "name": "19924Q",
+        "unitOfMeasure": "Number"
+      },
+      "c_5t1tnkolhw5m4fxbnkw8k07vy": {
+        "columnTitle": "2007 2Q",
+        "dataType": "Text",
+        "index": "77",
+        "isCategorical": true,
+        "name": "20072Q",
+        "unitOfMeasure": "Number"
+      },
+      "c_5vgi97pr5oolsk70rsd06pgad": {
+        "columnTitle": "2024 1Q",
+        "dataType": "Numeric",
+        "index": "10",
+        "isCategorical": false,
+        "name": "20241Q",
+        "unitOfMeasure": "Number"
+      },
+      "c_64xf7s58c0dj3a35lte2b4xcd": {
+        "columnTitle": "2003 1Q",
+        "dataType": "Text",
+        "index": "94",
+        "isCategorical": true,
+        "name": "20031Q",
+        "unitOfMeasure": "Number"
+      },
+      "c_67dqf3ec54zujmoe8pj6gunvf": {
+        "columnTitle": "1998 3Q",
+        "dataType": "Text",
+        "index": "112",
+        "isCategorical": true,
+        "name": "19983Q",
+        "unitOfMeasure": "Number"
+      },
+      "c_68x91ml0nxypyahoyfpc5hmaf": {
+        "columnTitle": "1996 3Q",
+        "dataType": "Text",
+        "index": "120",
+        "isCategorical": true,
+        "name": "19963Q",
+        "unitOfMeasure": "Number"
+      },
+      "c_6c22ckg12oa4seva7vg6ypt05": {
+        "columnTitle": "2002 3Q",
+        "dataType": "Text",
+        "index": "96",
+        "isCategorical": true,
+        "name": "20023Q",
+        "unitOfMeasure": "Number"
+      },
+      "c_6c41gghbceb58plifm5wlebm4": {
+        "columnTitle": "1997 3Q",
+        "dataType": "Text",
+        "index": "116",
+        "isCategorical": true,
+        "name": "19973Q",
+        "unitOfMeasure": "Number"
+      },
+      "c_6huxnaukwvzpbengaufzgs31c": {
+        "columnTitle": "2004 4Q",
+        "dataType": "Text",
+        "index": "87",
+        "isCategorical": true,
+        "name": "20044Q",
+        "unitOfMeasure": "Number"
+      },
+      "c_6ji5qj4ve9krmk6o7fdczeycu": {
+        "columnTitle": "2011 1Q",
+        "dataType": "Text",
+        "index": "62",
+        "isCategorical": true,
+        "name": "20111Q",
+        "unitOfMeasure": "Number"
+      },
+      "c_6jutj3ynn215dgv67vulfkgci": {
+        "columnTitle": "Data Series",
+        "dataType": "Text",
+        "index": "0",
+        "isCategorical": false,
+        "name": "DataSeries",
+        "unitOfMeasure": "Number"
+      },
+      "c_6u2vpzziibxj0diixjevaboc9": {
+        "columnTitle": "2014 4Q",
+        "dataType": "Text",
+        "index": "47",
+        "isCategorical": true,
+        "name": "20144Q",
+        "unitOfMeasure": "Number"
+      },
+      "c_6xkv63rnez8fjwssczrcf7ibb": {
+        "columnTitle": "2015 1Q",
+        "dataType": "Text",
+        "index": "46",
+        "isCategorical": true,
+        "name": "20151Q",
+        "unitOfMeasure": "Number"
+      },
+      "c_7382bwd5culhg0kfbwrwf05ud": {
+        "columnTitle": "1991 1Q",
+        "dataType": "Text",
+        "index": "142",
+        "isCategorical": true,
+        "name": "19911Q",
+        "unitOfMeasure": "Number"
+      },
+      "c_76lk0zp1l771o2upo6t1t3pix": {
+        "columnTitle": "2016 4Q",
+        "dataType": "Text",
+        "index": "39",
+        "isCategorical": true,
+        "name": "20164Q",
+        "unitOfMeasure": "Number"
+      },
+      "c_78822qxspg9lcx1h7xjbte2p5": {
+        "columnTitle": "2015 3Q",
+        "dataType": "Text",
+        "index": "44",
+        "isCategorical": true,
+        "name": "20153Q",
+        "unitOfMeasure": "Number"
+      },
+      "c_7cetmkjdigym3q3blilxj1ze8": {
+        "columnTitle": "1992 2Q",
+        "dataType": "Text",
+        "index": "137",
+        "isCategorical": true,
+        "name": "19922Q",
+        "unitOfMeasure": "Number"
+      },
+      "c_7cizqel1uebdo55j6ubvq24qf": {
+        "columnTitle": "2000 3Q",
+        "dataType": "Text",
+        "index": "104",
+        "isCategorical": true,
+        "name": "20003Q",
+        "unitOfMeasure": "Number"
+      },
+      "c_7kossttk03b8s7pr186hjqxff": {
+        "columnTitle": "2019 1Q",
+        "dataType": "Text",
+        "index": "30",
+        "isCategorical": false,
+        "name": "20191Q",
+        "unitOfMeasure": "Number"
+      },
+      "c_7ppbiwjvzefuy0asi3yp2zli0": {
+        "columnTitle": "1999 4Q",
+        "dataType": "Text",
+        "index": "107",
+        "isCategorical": true,
+        "name": "19994Q",
+        "unitOfMeasure": "Number"
+      },
+      "c_7zm2x9610dto01snejf41ezyc": {
+        "columnTitle": "1995 1Q",
+        "dataType": "Text",
+        "index": "126",
+        "isCategorical": true,
+        "name": "19951Q",
+        "unitOfMeasure": "Number"
+      },
+      "c_810jtxwqz5u3kfp29lfmdh2m8": {
+        "columnTitle": "2015 4Q",
+        "dataType": "Text",
+        "index": "43",
+        "isCategorical": true,
+        "name": "20154Q",
+        "unitOfMeasure": "Number"
+      },
+      "c_82yzcnkm13vjy5xosgsvddghu": {
+        "columnTitle": "2000 4Q",
+        "dataType": "Text",
+        "index": "103",
+        "isCategorical": true,
+        "name": "20004Q",
+        "unitOfMeasure": "Number"
+      },
+      "c_84q4nc8b1std7934sxk4wivtw": {
+        "columnTitle": "2009 3Q",
+        "dataType": "Text",
+        "index": "68",
+        "isCategorical": true,
+        "name": "20093Q",
+        "unitOfMeasure": "Number"
+      },
+      "c_85vvide06gq0flu06fk2kd5vx": {
+        "columnTitle": "2017 3Q",
+        "dataType": "Text",
+        "index": "36",
+        "isCategorical": false,
+        "name": "20173Q",
+        "unitOfMeasure": "Number"
+      },
+      "c_8a217z0shm1jaik4nrccxo1qg": {
+        "columnTitle": "2016 2Q",
+        "dataType": "Text",
+        "index": "41",
+        "isCategorical": true,
+        "name": "20162Q",
+        "unitOfMeasure": "Number"
+      },
+      "c_8cu35bh0ukl5ivncp2v3lp1jb": {
+        "columnTitle": "2019 2Q",
+        "dataType": "Text",
+        "index": "29",
+        "isCategorical": false,
+        "name": "20192Q",
+        "unitOfMeasure": "Number"
+      },
+      "c_8de4xznt1n1izes7zok922vem": {
+        "columnTitle": "1993 4Q",
+        "dataType": "Text",
+        "index": "131",
+        "isCategorical": true,
+        "name": "19934Q",
+        "unitOfMeasure": "Number"
+      },
+      "c_8kxzoiwgxavyb9h5j1lb6x9y2": {
+        "columnTitle": "1992 1Q",
+        "dataType": "Text",
+        "index": "138",
+        "isCategorical": true,
+        "name": "19921Q",
+        "unitOfMeasure": "Number"
+      },
+      "c_8luvizocr9ntuy4i0p8nzp1g0": {
+        "columnTitle": "1996 2Q",
+        "dataType": "Text",
+        "index": "121",
+        "isCategorical": true,
+        "name": "19962Q",
+        "unitOfMeasure": "Number"
+      },
+      "c_8mkercciy1k62glheigtu7e6q": {
+        "columnTitle": "2005 3Q",
+        "dataType": "Text",
+        "index": "84",
+        "isCategorical": true,
+        "name": "20053Q",
+        "unitOfMeasure": "Number"
+      },
+      "c_8smalc8x4lt457z39j9l9z0ho": {
+        "columnTitle": "2001 3Q",
+        "dataType": "Text",
+        "index": "100",
+        "isCategorical": true,
+        "name": "20013Q",
+        "unitOfMeasure": "Number"
+      },
+      "c_8snbrm6wqyk2uazt7vn0gt8nm": {
+        "columnTitle": "2003 3Q",
+        "dataType": "Text",
+        "index": "92",
+        "isCategorical": true,
+        "name": "20033Q",
+        "unitOfMeasure": "Number"
+      },
+      "c_8tqk6kaky83j2uemqtwfw5b3o": {
+        "columnTitle": "2005 1Q",
+        "dataType": "Text",
+        "index": "86",
+        "isCategorical": true,
+        "name": "20051Q",
+        "unitOfMeasure": "Number"
+      },
+      "c_8u2jg03h99nozfk2sr6g6bf98": {
+        "columnTitle": "1995 4Q",
+        "dataType": "Text",
+        "index": "123",
+        "isCategorical": true,
+        "name": "19954Q",
+        "unitOfMeasure": "Number"
+      },
+      "c_8v98lfa7a1kjzpmw33go23g9b": {
+        "columnTitle": "2019 4Q",
+        "dataType": "Text",
+        "index": "27",
+        "isCategorical": false,
+        "name": "20194Q",
+        "unitOfMeasure": "Number"
+      },
+      "c_8vpmzmr99zzlbzf8j1lb7151d": {
+        "columnTitle": "2026 2Q",
+        "dataType": "Numeric",
+        "index": "1",
+        "isCategorical": false,
+        "name": "20262Q",
+        "unitOfMeasure": "Number"
+      },
+      "c_8xhvpsgvuk1f9ckkmhcqfm22h": {
+        "columnTitle": "2008 3Q",
+        "dataType": "Text",
+        "index": "72",
+        "isCategorical": true,
+        "name": "20083Q",
+        "unitOfMeasure": "Number"
+      },
+      "c_9127ebhjd2iuagop2ps88853f": {
+        "columnTitle": "2012 3Q",
+        "dataType": "Text",
+        "index": "56",
+        "isCategorical": true,
+        "name": "20123Q",
+        "unitOfMeasure": "Number"
+      },
+      "c_91flc2hfn7o9x0gpix6tcoan4": {
+        "columnTitle": "2025 3Q",
+        "dataType": "Numeric",
+        "index": "4",
+        "isCategorical": false,
+        "name": "20253Q",
+        "unitOfMeasure": "Number"
+      },
+      "c_92j0x6vsjmz0agufdcovyzx4j": {
+        "columnTitle": "1998 2Q",
+        "dataType": "Text",
+        "index": "113",
+        "isCategorical": true,
+        "name": "19982Q",
+        "unitOfMeasure": "Number"
+      },
+      "c_94i2ilk7i9uqmwks47bq5sa99": {
+        "columnTitle": "2010 2Q",
+        "dataType": "Text",
+        "index": "65",
+        "isCategorical": true,
+        "name": "20102Q",
+        "unitOfMeasure": "Number"
+      },
+      "c_9lbkujnsrevgybjozey4nnme8": {
+        "columnTitle": "2002 1Q",
+        "dataType": "Text",
+        "index": "98",
+        "isCategorical": true,
+        "name": "20021Q",
+        "unitOfMeasure": "Number"
+      },
+      "c_9mrixci52jmi7s9q1gaio10d": {
+        "columnTitle": "2003 2Q",
+        "dataType": "Text",
+        "index": "93",
+        "isCategorical": true,
+        "name": "20032Q",
+        "unitOfMeasure": "Number"
+      },
+      "c_9uw3g5y0wqdj90syplljp41k1": {
+        "columnTitle": "2006 3Q",
+        "dataType": "Text",
+        "index": "80",
+        "isCategorical": true,
+        "name": "20063Q",
+        "unitOfMeasure": "Number"
+      },
+      "c_9wm8olvlq7p3f8i0j5aw6eya": {
+        "columnTitle": "2002 2Q",
+        "dataType": "Text",
+        "index": "97",
+        "isCategorical": true,
+        "name": "20022Q",
+        "unitOfMeasure": "Number"
+      },
+      "c_9xgcl3yknddtc1c73i71zs3xt": {
+        "columnTitle": "2007 4Q",
+        "dataType": "Text",
+        "index": "75",
+        "isCategorical": true,
+        "name": "20074Q",
+        "unitOfMeasure": "Number"
+      },
+      "c_a1q5zrfuhfv9dlpqp8yjme9to": {
+        "columnTitle": "1992 3Q",
+        "dataType": "Text",
+        "index": "136",
+        "isCategorical": true,
+        "name": "19923Q",
+        "unitOfMeasure": "Number"
+      },
+      "c_a5qpxp4skpi1sfanh6rzi59ol": {
+        "columnTitle": "2012 1Q",
+        "dataType": "Text",
+        "index": "58",
+        "isCategorical": true,
+        "name": "20121Q",
+        "unitOfMeasure": "Number"
+      },
+      "c_abyy3npxkk4b6bz43eqaxydus": {
+        "columnTitle": "2004 3Q",
+        "dataType": "Text",
+        "index": "88",
+        "isCategorical": true,
+        "name": "20043Q",
+        "unitOfMeasure": "Number"
+      },
+      "c_afwhvwt26sy4670peber0xi3r": {
+        "columnTitle": "1994 2Q",
+        "dataType": "Text",
+        "index": "129",
+        "isCategorical": true,
+        "name": "19942Q",
+        "unitOfMeasure": "Number"
+      },
+      "c_ai4m7ccg88wruiiarbft1gdnl": {
+        "columnTitle": "2005 2Q",
+        "dataType": "Text",
+        "index": "85",
+        "isCategorical": true,
+        "name": "20052Q",
+        "unitOfMeasure": "Number"
+      },
+      "c_amofgpwvxq5p1wyae0lz1ofun": {
+        "columnTitle": "2018 4Q",
+        "dataType": "Text",
+        "index": "31",
+        "isCategorical": false,
+        "name": "20184Q",
+        "unitOfMeasure": "Number"
+      },
+      "c_avmehi8tm8kyqq2kekuidfahx": {
+        "columnTitle": "2017 1Q",
+        "dataType": "Text",
+        "index": "38",
+        "isCategorical": false,
+        "name": "20171Q",
+        "unitOfMeasure": "Number"
+      },
+      "c_ayycrbkjws7x8khdeegukmubw": {
+        "columnTitle": "2023 2Q",
+        "dataType": "Numeric",
+        "index": "13",
+        "isCategorical": false,
+        "name": "20232Q",
+        "unitOfMeasure": "Number"
+      },
+      "c_b7zk5uomprmptpw8tmmd7z8vd": {
+        "columnTitle": "2016 1Q",
+        "dataType": "Text",
+        "index": "42",
+        "isCategorical": true,
+        "name": "20161Q",
+        "unitOfMeasure": "Number"
+      },
+      "c_bb9p1zfwiiolftnj97b7zuk99": {
+        "columnTitle": "2021 4Q",
+        "dataType": "Text",
+        "index": "19",
+        "isCategorical": false,
+        "name": "20214Q",
+        "unitOfMeasure": "Number"
+      },
+      "c_bh2epft49qbwhbwawwcvtuj1a": {
+        "columnTitle": "1993 3Q",
+        "dataType": "Text",
+        "index": "132",
+        "isCategorical": true,
+        "name": "19933Q",
+        "unitOfMeasure": "Number"
+      },
+      "c_bhrugzjwoc5yi4xxnypiaftxc": {
+        "columnTitle": "1999 3Q",
+        "dataType": "Text",
+        "index": "108",
+        "isCategorical": true,
+        "name": "19993Q",
+        "unitOfMeasure": "Number"
+      },
+      "c_bk73waw3tfm6eobf5zyi5vwju": {
+        "columnTitle": "2011 3Q",
+        "dataType": "Text",
+        "index": "60",
+        "isCategorical": true,
+        "name": "20113Q",
+        "unitOfMeasure": "Number"
+      },
+      "c_bywkf8sbre42c7p1qc5qlykjt": {
+        "columnTitle": "2010 1Q",
+        "dataType": "Text",
+        "index": "66",
+        "isCategorical": true,
+        "name": "20101Q",
+        "unitOfMeasure": "Number"
+      },
+      "c_bzuhzrn5d1edhn1nerk09fu2e": {
+        "columnTitle": "2022 1Q",
+        "dataType": "Numeric",
+        "index": "18",
+        "isCategorical": false,
+        "name": "20221Q",
+        "unitOfMeasure": "Number"
+      },
+      "c_c11cps8kldompjwdudkcrgn3t": {
+        "columnTitle": "2022 3Q",
+        "dataType": "Numeric",
+        "index": "16",
+        "isCategorical": false,
+        "name": "20223Q",
+        "unitOfMeasure": "Number"
+      },
+      "c_c43hhjkv23aaefqz8q48n1xx5": {
+        "columnTitle": "2006 1Q",
+        "dataType": "Text",
+        "index": "82",
+        "isCategorical": true,
+        "name": "20061Q",
+        "unitOfMeasure": "Number"
+      },
+      "c_c6ez9u436kypkp7xxz9rvzron": {
+        "columnTitle": "1999 1Q",
+        "dataType": "Text",
+        "index": "110",
+        "isCategorical": true,
+        "name": "19991Q",
+        "unitOfMeasure": "Number"
+      },
+      "c_c7vzga5f11tmb76a6ch8pwscn": {
+        "columnTitle": "1994 3Q",
+        "dataType": "Text",
+        "index": "128",
+        "isCategorical": true,
+        "name": "19943Q",
+        "unitOfMeasure": "Number"
+      },
+      "c_c9ejvsrrj8d4lirrwrnl3fhvl": {
+        "columnTitle": "2011 4Q",
+        "dataType": "Text",
+        "index": "59",
+        "isCategorical": true,
+        "name": "20114Q",
+        "unitOfMeasure": "Number"
+      },
+      "c_c9gb89taa101dcmtd1zdysxif": {
+        "columnTitle": "2010 3Q",
+        "dataType": "Text",
+        "index": "64",
+        "isCategorical": true,
+        "name": "20103Q",
+        "unitOfMeasure": "Number"
+      },
+      "c_ca3gfm3kmhunknms692x7ubqn": {
+        "columnTitle": "2021 3Q",
+        "dataType": "Text",
+        "index": "20",
+        "isCategorical": false,
+        "name": "20213Q",
+        "unitOfMeasure": "Number"
+      },
+      "c_cdai8ivyvkp00nvxoudmjzlof": {
+        "columnTitle": "2014 3Q",
+        "dataType": "Text",
+        "index": "48",
+        "isCategorical": true,
+        "name": "20143Q",
+        "unitOfMeasure": "Number"
+      },
+      "c_cf8kugofdl6ol44sst60nn45t": {
+        "columnTitle": "2001 4Q",
+        "dataType": "Text",
+        "index": "99",
+        "isCategorical": true,
+        "name": "20014Q",
+        "unitOfMeasure": "Number"
+      },
+      "c_ckyjcejq1jpbyact6qfqtyq5p": {
+        "columnTitle": "2011 2Q",
+        "dataType": "Text",
+        "index": "61",
+        "isCategorical": true,
+        "name": "20112Q",
+        "unitOfMeasure": "Number"
+      },
+      "c_clfnzyz1fbygy3fbf12ov6bd7": {
+        "columnTitle": "2007 1Q",
+        "dataType": "Text",
+        "index": "78",
+        "isCategorical": true,
+        "name": "20071Q",
+        "unitOfMeasure": "Number"
+      },
+      "c_coxbnj2102e5m44no95o4zmbc": {
+        "columnTitle": "2021 1Q",
+        "dataType": "Text",
+        "index": "22",
+        "isCategorical": false,
+        "name": "20211Q",
+        "unitOfMeasure": "Number"
+      },
+      "c_csz6a7cmq4cg94f206e33jecn": {
+        "columnTitle": "2004 2Q",
+        "dataType": "Text",
+        "index": "89",
+        "isCategorical": true,
+        "name": "20042Q",
+        "unitOfMeasure": "Number"
+      },
+      "c_d7clsf7v57wo4z02qw2hnl8q0": {
+        "columnTitle": "2022 4Q",
+        "dataType": "Numeric",
+        "index": "15",
+        "isCategorical": false,
+        "name": "20224Q",
+        "unitOfMeasure": "Number"
+      },
+      "c_d7t6y9mtqr26qr2gah12f0f6h": {
+        "columnTitle": "2000 2Q",
+        "dataType": "Text",
+        "index": "105",
+        "isCategorical": true,
+        "name": "20002Q",
+        "unitOfMeasure": "Number"
+      },
+      "c_db4dg6ppuu5m635if7wtq10l2": {
+        "columnTitle": "2015 2Q",
+        "dataType": "Text",
+        "index": "45",
+        "isCategorical": true,
+        "name": "20152Q",
+        "unitOfMeasure": "Number"
+      },
+      "c_de1p7kjdonvzm1z3r2o8ocnwc": {
+        "columnTitle": "1991 2Q",
+        "dataType": "Text",
+        "index": "141",
+        "isCategorical": true,
+        "name": "19912Q",
+        "unitOfMeasure": "Number"
+      },
+      "c_dgc99bugrsvtqm17nxvf5fs0n": {
+        "columnTitle": "2017 4Q",
+        "dataType": "Text",
+        "index": "35",
+        "isCategorical": false,
+        "name": "20174Q",
+        "unitOfMeasure": "Number"
+      },
+      "c_dk0rwwqj3ru4rjz6acse9qkda": {
+        "columnTitle": "2024 2Q",
+        "dataType": "Numeric",
+        "index": "9",
+        "isCategorical": false,
+        "name": "20242Q",
+        "unitOfMeasure": "Number"
+      },
+      "c_dmvah9yazjupjia824371di7g": {
+        "columnTitle": "1997 4Q",
+        "dataType": "Text",
+        "index": "115",
+        "isCategorical": true,
+        "name": "19974Q",
+        "unitOfMeasure": "Number"
+      },
+      "c_dscwmy7kxi0papkst030erx4m": {
+        "columnTitle": "2009 2Q",
+        "dataType": "Text",
+        "index": "69",
+        "isCategorical": true,
+        "name": "20092Q",
+        "unitOfMeasure": "Number"
+      },
+      "c_dxssnndw7too4dzvhzvlno7k8": {
+        "columnTitle": "2008 2Q",
+        "dataType": "Text",
+        "index": "73",
+        "isCategorical": true,
+        "name": "20082Q",
+        "unitOfMeasure": "Number"
+      },
+      "c_e2sr3u5tn8as3mn4td3a2iv3s": {
+        "columnTitle": "2001 1Q",
+        "dataType": "Text",
+        "index": "102",
+        "isCategorical": true,
+        "name": "20011Q",
+        "unitOfMeasure": "Number"
+      },
+      "c_e5ecrmgfjt7f4ypn9j3tgf9ia": {
+        "columnTitle": "2020 2Q",
+        "dataType": "Text",
+        "index": "25",
+        "isCategorical": false,
+        "name": "20202Q",
+        "unitOfMeasure": "Number"
+      },
+      "c_eahjv5oc07wir8snbvj242xe7": {
+        "columnTitle": "1994 4Q",
+        "dataType": "Text",
+        "index": "127",
+        "isCategorical": true,
+        "name": "19944Q",
+        "unitOfMeasure": "Number"
+      },
+      "c_eg8k52sc8h9dvxz1bid4ppbi2": {
+        "columnTitle": "2013 3Q",
+        "dataType": "Text",
+        "index": "52",
+        "isCategorical": true,
+        "name": "20133Q",
+        "unitOfMeasure": "Number"
+      },
+      "c_eh2fr0qng66er9pl5n59sex2p": {
+        "columnTitle": "2009 4Q",
+        "dataType": "Text",
+        "index": "67",
+        "isCategorical": true,
+        "name": "20094Q",
+        "unitOfMeasure": "Number"
+      },
+      "c_eh43wvq02pjqjig1j8ri6rtg7": {
+        "columnTitle": "2019 3Q",
+        "dataType": "Text",
+        "index": "28",
+        "isCategorical": false,
+        "name": "20193Q",
+        "unitOfMeasure": "Number"
+      },
+      "c_ertwj1aqp0bjxinmo8xaz9xp1": {
+        "columnTitle": "2020 1Q",
+        "dataType": "Text",
+        "index": "26",
+        "isCategorical": false,
+        "name": "20201Q",
+        "unitOfMeasure": "Number"
+      },
+      "c_espplqdvz4695256uio8zmvv6": {
+        "columnTitle": "2013 2Q",
+        "dataType": "Text",
+        "index": "53",
+        "isCategorical": true,
+        "name": "20132Q",
+        "unitOfMeasure": "Number"
+      },
+      "c_jc2dtey4qbld42b53b5pf9n0": {
+        "columnTitle": "2001 2Q",
+        "dataType": "Text",
+        "index": "101",
+        "isCategorical": true,
+        "name": "20012Q",
+        "unitOfMeasure": "Number"
+      },
+      "c_nmrs8rhagljl9qwbtejuap90": {
+        "columnTitle": "1995 2Q",
+        "dataType": "Text",
+        "index": "125",
+        "isCategorical": true,
+        "name": "19952Q",
+        "unitOfMeasure": "Number"
+      },
+      "c_vs5bwnitdjna3it8dze5p5im": {
+        "columnTitle": "2008 1Q",
+        "dataType": "Text",
+        "index": "74",
+        "isCategorical": true,
+        "name": "20081Q",
+        "unitOfMeasure": "Number"
+      },
+      "c_zvm5319udwh1vo83zxt9w9xf": {
+        "columnTitle": "2017 2Q",
+        "dataType": "Text",
+        "index": "37",
+        "isCategorical": false,
+        "name": "20172Q",
+        "unitOfMeasure": "Number"
+      }
+    },
+    "order": [
+      "c_6jutj3ynn215dgv67vulfkgci",
+      "c_8vpmzmr99zzlbzf8j1lb7151d",
+      "c_3pwzr3kn6hu6h78pv1u1e6rmd",
+      "c_1b5h75ufu8uzg3allzcs33yg1",
+      "c_91flc2hfn7o9x0gpix6tcoan4",
+      "c_1bwrhy7alvunglvki9czwbdc0",
+      "c_4f6pcl5m4byfd034o8n1p9vot",
+      "c_4xva9omdszeer6qz4740fcuiz",
+      "c_44wvar6zngf8x9gchrj4gfaof",
+      "c_dk0rwwqj3ru4rjz6acse9qkda",
+      "c_5vgi97pr5oolsk70rsd06pgad",
+      "c_4cuolvmufqpv6woioe46xb2bx",
+      "c_5l9s6kqhsnsdyllch5612oj54",
+      "c_ayycrbkjws7x8khdeegukmubw",
+      "c_1x70gqqlphhrm3tax58zvuh7q",
+      "c_d7clsf7v57wo4z02qw2hnl8q0",
+      "c_c11cps8kldompjwdudkcrgn3t",
+      "c_2nriy6o94l5rzsfwgws5a48vm",
+      "c_bzuhzrn5d1edhn1nerk09fu2e",
+      "c_bb9p1zfwiiolftnj97b7zuk99",
+      "c_ca3gfm3kmhunknms692x7ubqn",
+      "c_37lqrfjfmply7f9iors2mw6n9",
+      "c_coxbnj2102e5m44no95o4zmbc",
+      "c_2wd8hn04vunyovcq0afgirnio",
+      "c_234c9684abc0p4gf1r2ri5ig4",
+      "c_e5ecrmgfjt7f4ypn9j3tgf9ia",
+      "c_ertwj1aqp0bjxinmo8xaz9xp1",
+      "c_8v98lfa7a1kjzpmw33go23g9b",
+      "c_eh43wvq02pjqjig1j8ri6rtg7",
+      "c_8cu35bh0ukl5ivncp2v3lp1jb",
+      "c_7kossttk03b8s7pr186hjqxff",
+      "c_amofgpwvxq5p1wyae0lz1ofun",
+      "c_1319tn2vt7s4vjkv38u6og4sb",
+      "c_4ou2o35j4v70xbmrsl7a96c1v",
+      "c_4vfu8qt8w7q6pmhnmnn6c0mkv",
+      "c_dgc99bugrsvtqm17nxvf5fs0n",
+      "c_85vvide06gq0flu06fk2kd5vx",
+      "c_zvm5319udwh1vo83zxt9w9xf",
+      "c_avmehi8tm8kyqq2kekuidfahx",
+      "c_76lk0zp1l771o2upo6t1t3pix",
+      "c_4njc8n8p1marfvzb1loyhb4ic",
+      "c_8a217z0shm1jaik4nrccxo1qg",
+      "c_b7zk5uomprmptpw8tmmd7z8vd",
+      "c_810jtxwqz5u3kfp29lfmdh2m8",
+      "c_78822qxspg9lcx1h7xjbte2p5",
+      "c_db4dg6ppuu5m635if7wtq10l2",
+      "c_6xkv63rnez8fjwssczrcf7ibb",
+      "c_6u2vpzziibxj0diixjevaboc9",
+      "c_cdai8ivyvkp00nvxoudmjzlof",
+      "c_2lm560e6ex5h75ee53f3386h2",
+      "c_48t6mlo6wgn8b8u39xawhdzhb",
+      "c_25ssp220edq0m9x3ftz7i81wt",
+      "c_eg8k52sc8h9dvxz1bid4ppbi2",
+      "c_espplqdvz4695256uio8zmvv6",
+      "c_295z6016r47wkjr33t9xqqksu",
+      "c_2ntfcwpvm6p9sfdr80ncmk48l",
+      "c_9127ebhjd2iuagop2ps88853f",
+      "c_4d33zpownacr1ol7deehaxuef",
+      "c_a5qpxp4skpi1sfanh6rzi59ol",
+      "c_c9ejvsrrj8d4lirrwrnl3fhvl",
+      "c_bk73waw3tfm6eobf5zyi5vwju",
+      "c_ckyjcejq1jpbyact6qfqtyq5p",
+      "c_6ji5qj4ve9krmk6o7fdczeycu",
+      "c_1pa151bpakb090wnq74bw38zo",
+      "c_c9gb89taa101dcmtd1zdysxif",
+      "c_94i2ilk7i9uqmwks47bq5sa99",
+      "c_bywkf8sbre42c7p1qc5qlykjt",
+      "c_eh2fr0qng66er9pl5n59sex2p",
+      "c_84q4nc8b1std7934sxk4wivtw",
+      "c_dscwmy7kxi0papkst030erx4m",
+      "c_5hitjk4yzqy1xu7xiwgup8i39",
+      "c_56xaeuuhmejr7a6uohiet3wq5",
+      "c_8xhvpsgvuk1f9ckkmhcqfm22h",
+      "c_dxssnndw7too4dzvhzvlno7k8",
+      "c_vs5bwnitdjna3it8dze5p5im",
+      "c_9xgcl3yknddtc1c73i71zs3xt",
+      "c_1z3so3dh5i54v7tr5ho2x7qy5",
+      "c_5t1tnkolhw5m4fxbnkw8k07vy",
+      "c_clfnzyz1fbygy3fbf12ov6bd7",
+      "c_4d0445dnqovyp4hiyqrhoad2o",
+      "c_9uw3g5y0wqdj90syplljp41k1",
+      "c_3skpy7yj5mda5qxv02czacy4e",
+      "c_c43hhjkv23aaefqz8q48n1xx5",
+      "c_2zyjhgnukccfvsx4n63jyiezr",
+      "c_8mkercciy1k62glheigtu7e6q",
+      "c_ai4m7ccg88wruiiarbft1gdnl",
+      "c_8tqk6kaky83j2uemqtwfw5b3o",
+      "c_6huxnaukwvzpbengaufzgs31c",
+      "c_abyy3npxkk4b6bz43eqaxydus",
+      "c_csz6a7cmq4cg94f206e33jecn",
+      "c_4rdpomw28kyjr3g2foo8vmcxd",
+      "c_1xuj57mz1u4nr2v8gx1j0arg3",
+      "c_8snbrm6wqyk2uazt7vn0gt8nm",
+      "c_9mrixci52jmi7s9q1gaio10d",
+      "c_64xf7s58c0dj3a35lte2b4xcd",
+      "c_13j1ewvxnt2hd6g4gmcjnfbof",
+      "c_6c22ckg12oa4seva7vg6ypt05",
+      "c_9wm8olvlq7p3f8i0j5aw6eya",
+      "c_9lbkujnsrevgybjozey4nnme8",
+      "c_cf8kugofdl6ol44sst60nn45t",
+      "c_8smalc8x4lt457z39j9l9z0ho",
+      "c_jc2dtey4qbld42b53b5pf9n0",
+      "c_e2sr3u5tn8as3mn4td3a2iv3s",
+      "c_82yzcnkm13vjy5xosgsvddghu",
+      "c_7cizqel1uebdo55j6ubvq24qf",
+      "c_d7t6y9mtqr26qr2gah12f0f6h",
+      "c_4rqvb7hks0iovkimkms1du11e",
+      "c_7ppbiwjvzefuy0asi3yp2zli0",
+      "c_bhrugzjwoc5yi4xxnypiaftxc",
+      "c_339u2se78fvfksml4m4z1369v",
+      "c_c6ez9u436kypkp7xxz9rvzron",
+      "c_4isuunha0b3y69vm8c2q3imv5",
+      "c_67dqf3ec54zujmoe8pj6gunvf",
+      "c_92j0x6vsjmz0agufdcovyzx4j",
+      "c_5sfdwm0tz6j5h2ionvs2qij5w",
+      "c_dmvah9yazjupjia824371di7g",
+      "c_6c41gghbceb58plifm5wlebm4",
+      "c_2xgwave8sccmfyoecjdo8gxim",
+      "c_3v0ackl37kardpv2fwukntcab",
+      "c_4inf0ml00sdiyor89c7qs861z",
+      "c_68x91ml0nxypyahoyfpc5hmaf",
+      "c_8luvizocr9ntuy4i0p8nzp1g0",
+      "c_332m4brx7t570vp3lbgxfwb5w",
+      "c_8u2jg03h99nozfk2sr6g6bf98",
+      "c_2fz5sfbvl1wr08mlrgnpba8b7",
+      "c_nmrs8rhagljl9qwbtejuap90",
+      "c_7zm2x9610dto01snejf41ezyc",
+      "c_eahjv5oc07wir8snbvj242xe7",
+      "c_c7vzga5f11tmb76a6ch8pwscn",
+      "c_afwhvwt26sy4670peber0xi3r",
+      "c_5f723ak3orw0s9iz2cei4gq4j",
+      "c_8de4xznt1n1izes7zok922vem",
+      "c_bh2epft49qbwhbwawwcvtuj1a",
+      "c_4sd46dhf6mmizp5mvczr23z7x",
+      "c_2j47tn42ifoe0ijezlb1ie6d6",
+      "c_5sozh2pfwhdae2747xfzpyd81",
+      "c_a1q5zrfuhfv9dlpqp8yjme9to",
+      "c_7cetmkjdigym3q3blilxj1ze8",
+      "c_8kxzoiwgxavyb9h5j1lb6x9y2",
+      "c_2k0n3nbj6s5gm03t6tvq2q80y",
+      "c_30tprx3myyihug9zczbqmvuip",
+      "c_de1p7kjdonvzm1z3r2o8ocnwc",
+      "c_7382bwd5culhg0kfbwrwf05ud"
+    ]
+  },
+  "contactEmails": [
+    "feedback@data.gov.sg"
+  ],
+  "coverageEnd": "2026-06-30T08:00:00+08:00",
+  "coverageStart": "1991-01-01T08:00:00+08:00",
+  "createdAt": "2024-10-24T14:26:12+08:00",
+  "datasetId": "d_31dec7667bc2c6b945a262cd60958eaf",
+  "datasetSize": 22830,
+  "description": "Source: MINISTRY OF MANPOWER\r\n\r\nFootnotes: Employment change refers to the change in the number of persons who are in employment, derived by taking the difference in the employment level at the end of the reference period compared with the end of the preceding period.  A positive change refers to the additional number of persons who are in employment, while a negative change refers to the decline in number of persons in employment.  Data may not add up to the total due to rounding.  The industries are classified based on SSIC 2020 from 2009 onwards and SSIC 2005 from 2002 to 2008.  Data are revised at the industry level to reflect updates in industry classification of firms based on SSIC 2020.\r\n\r\nAdapted from: https://tablebuilder.singstat.gov.sg/table/TS/M183891",
+  "format": "CSV",
+  "lastUpdatedAt": "2026-10-12T20:00:36+08:00",
+  "managedBy": "Singapore Department of Statistics",
+  "name": "Changes In Employment By Sector, (Compared To The Previous Period), Quarterly"
+}

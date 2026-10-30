@@ -1,0 +1,41 @@
+{
+  "collectionIds": [],
+  "columnMetadata": {
+    "map": {
+      "c_b70r35sdyqk9ohua54okej0ta": "reentry_rate_6mth",
+      "c_dr7x63nsthai20uftk5i5qgot": "quarter"
+    },
+    "metaMapping": {
+      "c_b70r35sdyqk9ohua54okej0ta": {
+        "columnTitle": "Reentry Rate 6mth",
+        "dataType": "Text",
+        "index": "1",
+        "isCategorical": false,
+        "name": "reentry_rate_6mth"
+      },
+      "c_dr7x63nsthai20uftk5i5qgot": {
+        "columnTitle": "Quarter",
+        "dataType": "Quarter (Q)",
+        "index": "0",
+        "isCategorical": false,
+        "name": "quarter"
+      }
+    },
+    "order": [
+      "c_dr7x63nsthai20uftk5i5qgot",
+      "c_b70r35sdyqk9ohua54okej0ta"
+    ]
+  },
+  "contactEmails": [
+    "LEE_Wan_Ning@mom.gov.sg"
+  ],
+  "coverageEnd": "2026-06-30T08:00:00+08:00",
+  "coverageStart": "2000-01-01T08:00:00+08:00",
+  "createdAt": "2026-03-20T16:54:25+08:00",
+  "datasetId": "d_4d3ce3e889fdf1da6bd6e9d52667db91",
+  "datasetSize": 1493,
+  "format": "CSV",
+  "lastUpdatedAt": "2026-10-06T10:59:47+08:00",
+  "managedBy": "Ministry of Manpower",
+  "name": "Rate of Re-entry Into Employment (Within 6 Months Post-Retrenchment), Quarterly"
+}

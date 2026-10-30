@@ -1,0 +1,64 @@
+"""labourlens command line. Milestone 1 commands only: fetch, build, validate, trace, report."""
+
+from __future__ import annotations
+
+import argparse
+import sys
+
+
+def main(argv: list[str] | None = None) -> int:
+    p = argparse.ArgumentParser(prog="labourlens")
+    sub = p.add_subparsers(dest="cmd", required=True)
+
+    f = sub.add_parser("fetch", help="download official sources into immutable snapshots")
+    f.add_argument("--kind", choices=["all", "datasets", "documents"], default="all")
+    f.add_argument("--only", nargs="*", help="restrict to these source_ids")
+
+    sub.add_parser("build", help="normalize datasets, extract passages, validate, write reports")
+
+    sub.add_parser("eda", help="generate EDA figures and findings from the validated store")
+    sub.add_parser("review-sheets", help="generate unreviewed human spot-check sheets")
+    sub.add_parser("export", help="export presentation-ready JSON for the interactive report page")
+    sub.add_parser("revisions", help="report historical-value changes between dataset snapshots")
+
+    t = sub.add_parser("trace", help="print provenance for an observation_id or passage_id")
+    t.add_argument("id")
+
+    args = p.parse_args(argv)
+    if args.cmd == "fetch":
+        from labourlens.data import fetch
+
+        fetch.run(args.kind, args.only)
+        return 0
+    if args.cmd == "build":
+        from labourlens.data import build
+
+        return build.run()
+    if args.cmd == "eda":
+        from labourlens.data import eda
+
+        eda.run()
+        return 0
+    if args.cmd == "review-sheets":
+        from labourlens.data import review
+
+        review.run()
+        return 0
+    if args.cmd == "export":
+        from labourlens.data import export
+
+        export.run()
+        return 0
+    if args.cmd == "revisions":
+        from labourlens.data import revisions
+
+        return revisions.run()
+    if args.cmd == "trace":
+        from labourlens.data import trace
+
+        return trace.run(args.id)
+    return 2
+
+
+if __name__ == "__main__":
+    sys.exit(main())

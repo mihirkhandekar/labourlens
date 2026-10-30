@@ -1,0 +1,43 @@
+{
+  "collectionIds": [],
+  "columnMetadata": {
+    "map": {
+      "c_37nsrf7dmth4sexp7se1ypy70": "recruitment_rate",
+      "c_58wtvtmrx4y562xzkwu2ahepq": "quarter"
+    },
+    "metaMapping": {
+      "c_37nsrf7dmth4sexp7se1ypy70": {
+        "columnTitle": "Recruitment Rate",
+        "dataType": "Numeric (Percentage)",
+        "index": "1",
+        "isCategorical": false,
+        "name": "recruitment_rate"
+      },
+      "c_58wtvtmrx4y562xzkwu2ahepq": {
+        "columnTitle": "Quarter",
+        "dataType": "Quarter (Q)",
+        "index": "0",
+        "isCategorical": false,
+        "name": "quarter"
+      }
+    },
+    "order": [
+      "c_58wtvtmrx4y562xzkwu2ahepq",
+      "c_37nsrf7dmth4sexp7se1ypy70"
+    ]
+  },
+  "contactEmails": [
+    "ng_li_mei@mom.gov.sg",
+    "samantha_teo@mom.gov.sg"
+  ],
+  "coverageEnd": "2026-06-30T08:00:00+08:00",
+  "coverageStart": "1998-01-01T08:00:00+08:00",
+  "createdAt": "2026-03-23T15:03:45+08:00",
+  "datasetId": "d_80247eca3da78635ed9e89aa5831e883",
+  "datasetSize": 1482,
+  "description": "Average Monthly Recruitment Rate during a quarter is defined as the average number of persons recruited in a month during the quarter divided by the average number of employees in the establishment. The annual figures are the simple averages of the quarterly figures.\nSource: Labour Market Survey, Manpower Research & Statistics Department, MOM\nBefore 2006, data pertain to private sector establishments (each with at least 25 employees). From 2006 onwards, it also includes\nthe public sector.\n",
+  "format": "CSV",
+  "lastUpdatedAt": "2026-09-22T17:41:33+08:00",
+  "managedBy": "Ministry of Manpower",
+  "name": "Average Monthly Recruitment Rate - Quarterly"
+}

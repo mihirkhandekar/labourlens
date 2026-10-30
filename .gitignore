@@ -1,0 +1,26 @@
+# OS / editor
+.DS_Store
+
+# Private to owner (interview prep, scratch research) — never shared with reviewers
+study/
+private/
+
+# Raw downloads; MOM report PDFs are all-rights-reserved (see docs/decisions.md D-001)
+data/raw/
+data/passages/
+
+# Secrets
+.env
+.env.*
+!.env.example
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+.pytest_cache/
+.ruff_cache/
+
+# Assessment brief: do not commit without recruiter permission
+Tech Challenge - GenAI Engineer v1.0.pdf
+reference/

@@ -1,0 +1,21 @@
+source_id: retrenched_permanent
+adapter: quarterly_long
+period_col: quarter
+expected_columns:
+- quarter
+- retrench_permanent
+measures:
+- column: retrench_permanent
+  indicator_id: retrenched_permanent_employees
+  unit: persons
+  population: establishments
+  adjustment: not_applicable
+  definition: Termination of permanent employees due to redundancy. Labour Market Survey of establishments (MRSD, MOM). From 2006 the scope includes the public sector.
+  plausible_range:
+  - 100
+  - 20000
+expected_first_period: 1998-Q1
+expected_last_period: 2026-Q2
+missing_tokens:
+- na
+- '-'

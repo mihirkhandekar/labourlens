@@ -1,0 +1,24 @@
+source_id: employment_change_by_sector
+adapter: sector_wide
+label_col: DataSeries
+indent_width: 4
+period_regex: ^(\d{4})([1-4])Q$
+measures:
+- column: '*'
+  indicator_id: employment_change
+  unit: persons
+  population: unverified_basis
+  adjustment: not_applicable
+  definition: Change in the number of employed persons versus the previous quarter (end-of-period employment level difference). Data may not add up to the total due to rounding. Industries follow SSIC 2020
+    (revised). The dataset total (e.g. 14,700 for 2026-Q2) differs from MOM's headline total employment change (11,400 final, excluding migrant domestic workers); the population basis of this dataset is
+    unverified.
+  plausible_range:
+  - -150000
+  - 100000
+expected_first_period: 1991-Q1
+expected_last_period: 2026-Q2
+missing_tokens:
+- na
+- '-'
+- ''
+sum_tolerance_per_child: 100
