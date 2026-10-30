@@ -9,7 +9,7 @@ dimension_col: occupation
 measures:
 - column: job_vacancy
   indicator_id: job_vacancies_by_occupation
-  unit: persons
+  unit: vacancies
   population: establishments
   adjustment: unspecified
   definition: 'Number of Job Vacancy by Occupation - Quarterly. Source: Labour Market Survey, Manpower Research & Statistics Department, MOM
