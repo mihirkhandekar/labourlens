@@ -90,6 +90,22 @@ def rate_ci(rows, key, where=lambda r: True, pred=bool) -> dict:
     return {"rate": round(statistics.fmean(vals), 3), "ci95": [round(lo, 3), round(hi, 3)], "n": len(vals)}
 
 
+def pooled_ci(rows: list[dict], num, den, n: int = 2000, seed: int = 7) -> dict:
+    """Pooled ratio (e.g. supported claims / all claims) with a bootstrap CI that resamples CASES, since claims in one answer are not independent."""
+    rows = [r for r in rows if den(r)]
+    if not rows:
+        return {"rate": None, "n": 0}
+    rng = random.Random(seed)
+    point = sum(num(r) for r in rows) / sum(den(r) for r in rows)
+    stats = []
+    for _ in range(n):
+        smp = rng.choices(rows, k=len(rows))
+        d = sum(den(r) for r in smp)
+        stats.append(sum(num(r) for r in smp) / d if d else point)
+    stats.sort()
+    return {"rate": round(point, 3), "ci95": [round(stats[int(0.025 * n)], 3), round(stats[int(0.975 * n) - 1], 3)], "n": sum(den(r) for r in rows), "n_cases": len(rows)}
+
+
 def aggregate(rows: list[dict]) -> dict:
     answered = [r for r in rows if "claims_supported" in r]
     tot_claims = sum(r["claims_supported"] + r["claims_partial"] + r["claims_unsupported"] for r in answered)
@@ -104,10 +120,10 @@ def aggregate(rows: list[dict]) -> dict:
         "gold_cited_any": rate_ci(rows, "gold_cited"),
         "answers_with_ungrounded_numbers": rate_ci(rows, "ungrounded_numbers"),
         "claims_judged": tot_claims,
-        "claim_supported_rate": round(sum(r["claims_supported"] for r in answered) / tot_claims, 3) if tot_claims else None,
-        "claim_unsupported_rate": round(sum(r["claims_unsupported"] for r in answered) / tot_claims, 3) if tot_claims else None,
+        "claim_supported_rate": pooled_ci(answered, lambda r: r["claims_supported"], lambda r: r["claims_supported"] + r["claims_partial"] + r["claims_unsupported"]),
+        "claim_unsupported_rate": pooled_ci(answered, lambda r: r["claims_unsupported"], lambda r: r["claims_supported"] + r["claims_partial"] + r["claims_unsupported"]),
         "answers_with_any_unsupported_claim": rate_ci(answered, "claims_unsupported"),
-        "fact_coverage": round(sum(r["facts_covered"] for r in answered) / facts, 3) if facts else None,
+        "fact_coverage": pooled_ci(answered, lambda r: r["facts_covered"], lambda r: r["facts_total"]),
         "answers_contradicting_a_reference_fact": rate_ci(answered, "facts_contradicted"),
         "latency_p50_s": round(statistics.median(r["seconds"] for r in rows), 1),
         "latency_p95_s": round(sorted(r["seconds"] for r in rows)[max(0, int(len(rows) * 0.95) - 1)], 1),

@@ -1,0 +1,1 @@
+"""Curated, offline presentation artifacts."""

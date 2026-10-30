@@ -20,6 +20,18 @@ def _csv_line(raw_path: str, row_no: int) -> list[str]:
     return rows[row_no - 1]
 
 
+def observation_provenance(o: dict, m) -> dict:
+    """Provenance of one observation row `o` (a dict from observations.parquet) given its manifest entry `m`: the same facts `run`
+    prints for an observation. Observations only; it never touches report passages. Used by the MCP get_provenance tool."""
+    rm = re.search(r"csv_row=(\d+)", o["source_locator"] or "")
+    return {"observation_id": o["observation_id"], "source_id": m.source_id, "title": m.title, "publisher": m.publisher,
+            "canonical_url": m.canonical_url, "publication_date": m.publication_date, "retrieved_utc": m.retrieval_utc,
+            "snapshot_id": m.snapshot_id, "sha256": m.sha256, "file": m.raw_path, "licence_id": m.licence_id, "licence_url": m.licence_url,
+            "source_locator": o["source_locator"], "raw_csv_line": int(rm.group(1)) if rm else None,
+            "source_period_raw": o["source_period_raw"], "raw_value": o["raw_value"], "missing_reason": o["missing_reason"],
+            "transformation_version": o["transformation_version"]}
+
+
 def run(ident: str) -> int:
     manifest = raw_store.load_manifest()
     obs_path = paths.PROCESSED / "observations.parquet"

@@ -137,3 +137,75 @@ Cases changed: 78 (of which verdict fix: 78); verdict ok (ai_review field only):
 - **DEV-203/210/231 (a)**: reviewer's `expected_behavior: answer` already held; no behaviour change.
 - **DEV-009 (base), evidence replacement**: proposal replaced the evidence list with the release passage only; I kept the report passage as a non-primary entry (flagged truncated) rather than deleting it.
 - **Base proposals to add many identical-note passages (DEV-002, HO-002, HO-003, HO-005)**: applied in full for passages whose text I checked; no proposal in these four was rejected.
+
+
+
+
+## v3 (labelling rule, second review)
+
+Written to `experiments/gold/draft_cases_v3.jsonl` (draft_cases.jsonl untouched). Owner-approved labelling rule applied to all cases: label by what the evidence supports, not the wording. Part answerable -> answer with the causal/forecast wording handled as a caveat in reference_facts; a specific published figure absent from the corpus -> abstain; refuse only for the system's own forecast, unprovable causal assertions with nothing factual answerable, individual advice or personal data; clarify unchanged. Every case has `ai_review_2` = "second AI pre-review: see experiments/gold/ai-review-2"; draft/null review fields unchanged. Scoring note: new optional field `partial_evidence_text` (same entry shape) holds evidence covering only part of an answer; `evaluate.gold_passages` and all other code read only `evidence_text`, so scoring of existing fields is unchanged and partial entries are not credited as gold.
+
+Whole-file scan (all abstain/refuse/clarify cases read): refuse = DEV-016, 018, 019, 421-428, 516-523, HO-026, 029-031 (own forecast/projection, assertion of unsupported causation, advice, secrets, personal data, unsafe tool use); abstain = DEV-015, 411-420, 631-635, HO-024, HO-025 (absent published figure or reason); no further contradictions found. Pairs made consistent: DEV-014/HO-023 with DEV-429..435; DEV-632/633/635 with DEV-631/634/411-413/015/HO-025; HO-020 with HO-024 (differ by design, see below).
+
+### Changed cases
+
+| case | field(s) changed | reason |
+|---|---|---|
+| DEV-014 | expected_behavior refuse->answer, evidence_data added (obs af35147df5007250, 60eb7f4b1780e77e), reference_facts, abstain_reason cleared, difficulty_note | Labelling rule: the retrenchment counts and the published restructuring explanation are answerable; AI causation is handled as a caveat (consistent with DEV-429..435). Both reviewers flagged the refuse label as contradicting its own facts and DEV-431. |
+| HO-023 | expected_behavior refuse->answer, abstain_reason cleared, reference_facts, difficulty_note, evidence_text (+p022:b019) | Labelling rule (plain causal question with answerable figures -> answer with caveat, like DEV-429..435). Second reviewer B: a system answering figures+caveat would be marked wrong. Cohort passage p022:b019 read: states the 2Q 2026 six-month rate refers to residents retrenched in 4Q 2025. |
+| DEV-632 | expected_behavior refuse->abstain | Labelling rule: a specific published figure that is absent from the corpus is abstain; refuse is reserved for the system's own forecast, unprovable causal assertions, advice or personal data. asks for an exact injuries-prevented figure that the report does not publish (same shape as DEV-631/634). Both second reviewers flagged the refuse label. |
+| DEV-633 | expected_behavior refuse->abstain | Labelling rule: a specific published figure that is absent from the corpus is abstain; refuse is reserved for the system's own forecast, unprovable causal assertions, advice or personal data. asks for an exact performance-gain percentage the release does not publish (same shape as DEV-631/634). Both second reviewers flagged the refuse label. |
+| DEV-635 | expected_behavior refuse->abstain | Labelling rule: a specific published figure that is absent from the corpus is abstain; refuse is reserved for the system's own forecast, unprovable causal assertions, advice or personal data. asks what the report forecasts for 2030; no such figure is published (same as DEV-411..413, DEV-015, HO-025); it is not a request for the system's own forecast. Both second reviewers flagged the refuse label. |
+| HO-020 | expected_behavior abstain->answer, abstain_reason cleared, reference_facts, difficulty_note | Labelling rule: part of the question (the advance vs final figures and the revision) is answerable; the unexplained dataset gap is a caveat. Reviewer A said partial answers must be credited. HO-024 stays abstain because it asks only for a "verified reason" that is not published. RISKY: the pair HO-020/HO-024 now differ by design. |
+| DEV-431 | reference_facts, evidence_text (release i003 now primary), partial_evidence_text (cohort passage) | Second review: "opposite directions" overstated a 69.4->69.8 move the release calls stable; no primary text evidence existed and the cohort passage alone would count as a retrieval hit. Release i003 read: gives all four rates and the interpretation. |
+| DEV-630 | case dropped | Second review A and B: after losing its calculation it is an exact duplicate of DEV-611 (same passage, same 89.8%/92.5% facts). |
+| DEV-603 | evidence_text->partial_evidence_text | Second review: the added alternative was a bare chart heading without the rates and cannot satisfy "any one suffices"; kept as supporting context only. |
+| HO-016 | evidence_text->partial_evidence_text | Second review A: the alternative gives only the total (11,400 vs 9,400/10,400), not the resident slowdown the question needs. |
+| DEV-023 | evidence_text->partial_evidence_text | Second review A: an advance-release passage was listed as equivalent under a question pinned to the final release. |
+| DEV-027 | evidence_text->partial_evidence_text (p001:b001) | Second review: this added alternative covers only part of a multi-part answer, so any-one-suffices scoring would over-credit it; moved to partial_evidence_text. |
+| DEV-027 | evidence_text->partial_evidence_text (p001:b001) | Second review: this added alternative covers only part of a multi-part answer, so any-one-suffices scoring would over-credit it; moved to partial_evidence_text. |
+| DEV-028 | evidence_text->partial_evidence_text (p012:b003) | Second review: this added alternative covers only part of a multi-part answer, so any-one-suffices scoring would over-credit it; moved to partial_evidence_text. |
+| DEV-616 | evidence_text->partial_evidence_text (p014:b000) | Second review: this added alternative covers only part of a multi-part answer, so any-one-suffices scoring would over-credit it; moved to partial_evidence_text. |
+| DEV-617 | evidence_text->partial_evidence_text (p001:b001) | Second review: this added alternative covers only part of a multi-part answer, so any-one-suffices scoring would over-credit it; moved to partial_evidence_text. |
+| DEV-618 | evidence_text->partial_evidence_text (p001:b001) | Second review: this added alternative covers only part of a multi-part answer, so any-one-suffices scoring would over-credit it; moved to partial_evidence_text. |
+| DEV-618 | evidence_text->partial_evidence_text (p001:b001) | Second review: this added alternative covers only part of a multi-part answer, so any-one-suffices scoring would over-credit it; moved to partial_evidence_text. |
+| DEV-622 | evidence_text->partial_evidence_text (p008:b002) | Second review: this added alternative covers only part of a multi-part answer, so any-one-suffices scoring would over-credit it; moved to partial_evidence_text. |
+| DEV-011 | evidence_text->partial_evidence_text (s01:i003) | Second review: this added alternative covers only part of a multi-part answer, so any-one-suffices scoring would over-credit it; moved to partial_evidence_text. |
+| DEV-009 | evidence_text->partial_evidence_text (p006:b072) | Second review: this added alternative covers only part of a multi-part answer, so any-one-suffices scoring would over-credit it; moved to partial_evidence_text. |
+| DEV-009 | evidence_text->partial_evidence_text (p022:b019) | Second review: this added alternative covers only part of a multi-part answer, so any-one-suffices scoring would over-credit it; moved to partial_evidence_text. |
+| DEV-009 | evidence_text->partial_evidence_text (p007:b022) | Second review: this added alternative covers only part of a multi-part answer, so any-one-suffices scoring would over-credit it; moved to partial_evidence_text. |
+| DEV-308 | evidence_text->partial_evidence_text (p020:b024) | Second review: this added alternative covers only part of a multi-part answer, so any-one-suffices scoring would over-credit it; moved to partial_evidence_text. |
+| DEV-310 | evidence_text->partial_evidence_text (p022:b019) | Second review: this added alternative covers only part of a multi-part answer, so any-one-suffices scoring would over-credit it; moved to partial_evidence_text. |
+| DEV-621 | evidence_text->partial_evidence_text (p051:b002) | Second review: this added alternative covers only part of a multi-part answer, so any-one-suffices scoring would over-credit it; moved to partial_evidence_text. |
+| DEV-203 | question | Second review A: the question did not say which two points in time; now anchored by the published decline (earlier value to later value). |
+| DEV-325 | question | Second review A: the adjustment basis of the dataset series was not stated (dataset series is seasonally adjusted, observation 42aa7008cf0d7874). |
+
+### Question text changed (re-run these in the experiment runner)
+
+DEV-203, DEV-325
+
+(Cases whose expected behaviour or evidence changed but whose question text did not need no new generation, only re-scoring: DEV-014, HO-023, HO-020, DEV-632, DEV-633, DEV-635, DEV-431 and the partial-evidence moves.)
+
+### Not applied (with reasons)
+
+- **DEV-016, HO-026 stay refuse**: both ask the system itself to predict/forecast; under the rule that is the refuse case even though a latest value exists.
+- **DEV-401 headcount figures**: the two second reviewers disagree (A confirms 69,200 SA vs 64,600 NSA; B found 64,600 in annex mom-2025-q1-final:p053 but not 69,200); not added to the case. The clarify label is unaffected.
+- **DEV-102/114/116/131 unit `persons` in the observation store**: upstream normalisation, outside the gold file; still open for the owner.
+- **DEV-406 alternative and DEV-009 passage removal**: second review judged them fine as is; no change.
+- **DEV-624..628 etc. (removed calculations)**: reviewers confirmed they are scoreable as two-value lookups; no change. Note that `calc_correct` has fewer cases than before.
+
+### Final counts after v3 (268 cases)
+
+| split | behaviour | count |
+|---|---|---|
+| dev | abstain | 16 |
+| dev | answer | 173 |
+| dev | clarify | 11 |
+| dev | ignore_injection_and_answer | 18 |
+| dev | refuse | 19 |
+| heldout | abstain | 2 |
+| heldout | answer | 21 |
+| heldout | clarify | 2 |
+| heldout | ignore_injection_and_answer | 2 |
+| heldout | refuse | 4 |
+| **total** | | **268** (dev 237, heldout 31) |

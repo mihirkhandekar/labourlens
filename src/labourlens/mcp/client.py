@@ -1,44 +1,58 @@
-"""MCP client for the statistics server, with the trust-boundary controls the assessment asks for.
+"""MCP client for the LabourLens statistics server, with the trust-boundary controls the assessment asks for.
 
 Controls (each is exercised by tests/mcp and the threat suite)
-- Server allow-listing: only servers registered in ALLOWED_SERVERS can be started; the command is fixed in code.
-- Minimal environment: the subprocess gets the SDK's safe default environment only (no OPENAI_API_KEY or other secrets).
-- Capability check: server name, server version and the exact tool allow-list are verified after connecting; unexpected
-  tools are ignored and reported, a missing tool is an error.
-- Argument validation before sending: arguments are checked against the tool's advertised JSON schema.
+- Server allow-listing: only servers registered in ALLOWED_SERVERS can be started or contacted. A stdio server's command is fixed in
+  code. An http server is a fixed loopback URL; the client refuses any non-loopback host and sends the bearer token (read from the
+  environment variable named in the entry) only to that URL.
+- Minimal environment: a stdio subprocess gets the SDK's safe default environment only (no OPENAI_API_KEY or other secrets).
+- Capability check: server name, server version and the tool allow-list are verified after connecting. Required tools must exist;
+  tools outside the allow-list are ignored and reported, never callable.
+- Argument validation before sending: arguments are checked against that tool's advertised JSON schema.
 - Timeouts: connect, per-call (SDK read timeout plus a hard anyio deadline) and a response size cap.
-- Response validation: structured content must parse as StatisticResult; anything else is a malformed response, never a
+- Response validation: structured content must parse as the tool's result model; anything else is a malformed response, never a
   silent fallback to made-up or direct data.
-- Untrusted content: strings are sanitised; rows whose text matches injection heuristics are quarantined and counted.
+- Untrusted content: every string in every result is sanitised and scanned with the injection heuristics. List items that match are
+  quarantined and counted; a match anywhere else in the result refuses the whole result.
 - Failure taxonomy: invalid_arguments / not_found / too_large (caller can correct) versus timeout, unavailable, malformed,
-  oversized (operational: reported as a failure, never as missing evidence).
+  oversized, quarantined (operational: reported as a failure, never as missing evidence).
 """
 
 from __future__ import annotations
 
 import asyncio
 import json
+import os
 import sys
 import threading
 import time
 from dataclasses import dataclass, field
+from typing import Any, Generic, TypeVar
+from urllib.parse import urlparse
 
 import anyio
 import jsonschema
 from mcp import ClientSession, StdioServerParameters
 from mcp.client.stdio import stdio_client
+from mcp.client.streamable_http import streamable_http_client
+from mcp.shared._httpx_utils import create_mcp_http_client
 from mcp.shared.exceptions import MCPError
-from pydantic import ValidationError
+from pydantic import BaseModel, ValidationError
 
 from labourlens.agent.tools import ToolResult, TransientToolError
-from labourlens.mcp.server import SERVER_NAME, SERVER_VERSION, TOOL_NAME, StatisticResult
+from labourlens.mcp.http_server import MIN_TOKEN_CHARS, TOKEN_ENV, is_loopback
+from labourlens.mcp.models import (RESULT_MODELS, ComparePeriodsResult, DescribeDatasetResult, DimensionValuesResult, LatestValueResult, ListDatasetsResult,
+                                   ProvenanceResult, RevisionsResult, SeriesSummaryResult, StatisticResult)
+from labourlens.mcp.server import ALL_TOOLS, SERVER_NAME, SERVER_VERSION, TOOL_NAME
 from labourlens.security.guards import injection_flags, sanitize_text
 
+_COMMON = {"expected_name": SERVER_NAME, "allowed_versions": {SERVER_VERSION}, "required_tools": {TOOL_NAME}, "allowed_tools": set(ALL_TOOLS)}
 ALLOWED_SERVERS: dict[str, dict] = {
-    "labourlens-stats": {"command": sys.executable, "args": ["-m", "labourlens.mcp.server"], "expected_name": SERVER_NAME,
-                         "allowed_versions": {SERVER_VERSION}, "allowed_tools": {TOOL_NAME}},
+    "labourlens-stats": {"transport": "stdio", "command": sys.executable, "args": ["-m", "labourlens.mcp.server"], **_COMMON},
+    # Same server over loopback streamable HTTP. Start it yourself (see docs/deploy.md); the token is read from LABOURLENS_MCP_TOKEN.
+    "labourlens-stats-http": {"transport": "http", "url": "http://127.0.0.1:8765/mcp", "token_env": TOKEN_ENV, **_COMMON},
 }
 CONNECT_TIMEOUT_S, CALL_TIMEOUT_S, MAX_RESPONSE_BYTES = 20.0, 8.0, 200_000
+CORRECTABLE = ("invalid_arguments", "not_found", "too_large")
 
 
 def register_test_server(name: str, mode: str) -> str:
@@ -48,9 +62,15 @@ def register_test_server(name: str, mode: str) -> str:
     return name
 
 
+def register_http_server(name: str, url: str, token_env: str = TOKEN_ENV) -> str:
+    """Test/demo only: allow-list an http server at `url` (still subject to the loopback rule, which is checked on connect)."""
+    ALLOWED_SERVERS[name] = {**ALLOWED_SERVERS["labourlens-stats-http"], "url": url, "token_env": token_env}
+    return name
+
 
 class McpClientError(Exception):
-    """kind: timeout | unavailable | malformed | oversized | not_allowed | capability_missing | version_mismatch"""
+    """kind: timeout | unavailable | malformed | oversized | quarantined | not_allowed | capability_missing | version_mismatch
+    plus the correctable kinds invalid_arguments | not_found | too_large | tool_error"""
 
     def __init__(self, kind: str, message: str = "") -> None:
         super().__init__(f"{kind}: {message}")
@@ -66,24 +86,97 @@ class StatsReply:
     bytes: int = 0
 
 
+T = TypeVar("T", bound=BaseModel)
+
+
+@dataclass
+class ToolReply(Generic[T]):
+    """A validated, sanitised tool result. `quarantined` counts list items dropped because their text looked like an instruction."""
+    result: T
+    quarantined: int = 0
+    ignored_tools: list[str] = field(default_factory=list)
+    seconds: float = 0.0
+    bytes: int = 0
+
+
+def _sanitize(v: Any) -> Any:
+    if isinstance(v, str):
+        return sanitize_text(v)
+    if isinstance(v, list):
+        return [_sanitize(x) for x in v]
+    if isinstance(v, dict):
+        return {k: _sanitize(x) for k, x in v.items()}
+    return v
+
+
+def _flagged(v: Any) -> bool:
+    """True if any string anywhere inside `v` (including dict keys) matches the injection heuristics."""
+    if isinstance(v, str):
+        return bool(injection_flags(v))
+    if isinstance(v, list):
+        return any(_flagged(x) for x in v)
+    if isinstance(v, dict):
+        return any(_flagged(k) or _flagged(x) for k, x in v.items())
+    return False
+
+
+def screen_result(model: BaseModel) -> tuple[dict, int]:
+    """Sanitise every string of a result and quarantine suspicious list items. Returns (clean dict, quarantined count).
+    Raises McpClientError("quarantined") when instruction-like text sits outside a list, since there is no item to drop."""
+    d = _sanitize(model.model_dump())
+    quarantined = 0
+    for k, v in list(d.items()):
+        if isinstance(v, list):
+            keep = [x for x in v if not _flagged(x)]
+            quarantined += len(v) - len(keep)
+            d[k] = keep
+    if _flagged({k: v for k, v in d.items() if not isinstance(v, list)}):
+        raise McpClientError("quarantined", "a non-list field of the result contains instruction-like text")
+    return d, quarantined
+
+
+def _check_http_url(url: str) -> None:
+    u = urlparse(url)
+    if u.scheme not in ("http", "https") or not u.hostname or u.username or u.password:
+        raise McpClientError("not_allowed", "http server URL must be http(s)://host:port/path without credentials")
+    if not is_loopback(u.hostname):
+        raise McpClientError("not_allowed", f"refusing non-loopback host {u.hostname!r}: the bearer token is only sent to loopback servers")
+
+
 class McpStatsClient:
     def __init__(self, server: str = "labourlens-stats", call_timeout_s: float = CALL_TIMEOUT_S, connect_timeout_s: float = CONNECT_TIMEOUT_S) -> None:
         if server not in ALLOWED_SERVERS:
             raise McpClientError("not_allowed", f"server {server!r} is not on the allow-list")
         self.spec, self.call_timeout_s, self.connect_timeout_s = ALLOWED_SERVERS[server], call_timeout_s, connect_timeout_s
+        if self.spec.get("transport", "stdio") == "http":
+            _check_http_url(self.spec["url"])
         self.session: ClientSession | None = None
-        self.schema: dict | None = None
+        self.schemas: dict[str, dict] = {}
         self.ignored_tools: list[str] = []
         self.transcript: list[dict] = []  # protocol-level activity for the demo (no secrets: names, sizes, timings)
         self._stack = None
+
+    @property
+    def schema(self) -> dict | None:
+        return self.schemas.get(TOOL_NAME)
+
+    async def _open_transport(self):
+        if self.spec.get("transport", "stdio") == "http":
+            token = os.environ.get(self.spec["token_env"], "")
+            if len(token) < MIN_TOKEN_CHARS:
+                raise McpClientError("not_allowed", f"environment variable {self.spec['token_env']} is not set to a token of at least {MIN_TOKEN_CHARS} characters")
+            http = create_mcp_http_client(headers={"Authorization": f"Bearer {token}"})
+            await self._stack.enter_async_context(http)
+            return await self._stack.enter_async_context(streamable_http_client(self.spec["url"], http_client=http))
+        params = StdioServerParameters(command=self.spec["command"], args=self.spec["args"], env=self.spec.get("env"))
+        return await self._stack.enter_async_context(stdio_client(params))
 
     async def __aenter__(self) -> "McpStatsClient":
         from contextlib import AsyncExitStack
 
         self._stack = AsyncExitStack()
         try:
-            params = StdioServerParameters(command=self.spec["command"], args=self.spec["args"], env=self.spec.get("env"))
-            r, w = await self._stack.enter_async_context(stdio_client(params))
+            r, w = await self._open_transport()
             self.session = await self._stack.enter_async_context(ClientSession(r, w, read_timeout_seconds=self.connect_timeout_s))
             with anyio.fail_after(self.connect_timeout_s):  # the scope must not span the transport context managers
                 await self.session.initialize()
@@ -94,7 +187,7 @@ class McpStatsClient:
         except McpClientError:
             await self._close()
             raise
-        except BaseException as e:  # server missing, crashed on start, closed pipe
+        except BaseException as e:  # server missing, crashed on start, closed pipe, HTTP refusal (for example 401)
             await self._close()
             raise McpClientError("unavailable", type(e).__name__) from e
         return self
@@ -115,7 +208,7 @@ class McpStatsClient:
         s = self.session
         info = s.server_info
         self.transcript.append({"step": "initialize", "server": getattr(info, "name", None), "version": getattr(info, "version", None),
-                                "protocol": s.protocol_version})
+                                "protocol": s.protocol_version, "transport": self.spec.get("transport", "stdio")})
         if info is None or info.name != self.spec["expected_name"]:
             raise McpClientError("not_allowed", f"unexpected server name {getattr(info, 'name', None)!r}")
         if info.version not in self.spec["allowed_versions"]:
@@ -124,10 +217,10 @@ class McpStatsClient:
         names = {t.name for t in tools}
         self.transcript.append({"step": "tools/list", "tools": sorted(names)})
         self.ignored_tools = sorted(names - self.spec["allowed_tools"])
-        missing = self.spec["allowed_tools"] - names
+        missing = self.spec["required_tools"] - names
         if missing:
             raise McpClientError("capability_missing", f"missing tools {sorted(missing)}")
-        self.schema = next(t.input_schema for t in tools if t.name == TOOL_NAME)
+        self.schemas = {t.name: t.input_schema for t in tools if t.name in self.spec["allowed_tools"]}
 
     async def list_resources(self) -> list[str]:
         res = await self.session.list_resources()
@@ -153,32 +246,37 @@ class McpStatsClient:
         self.transcript.append({"step": "resources/read", "uri": uri, "bytes": len(text), "seconds": round(time.perf_counter() - t0, 3)})
         return doc
 
-    async def get_statistic(self, **args) -> StatsReply:
+    async def call(self, tool: str, **args) -> ToolReply:
+        """Call one allow-listed tool and return its validated, sanitised result model."""
+        if tool not in self.spec["allowed_tools"]:
+            raise McpClientError("not_allowed", f"tool {tool!r} is not on the allow-list")
         if self.session is None:
             raise McpClientError("unavailable", "not connected")
+        if tool not in self.schemas:
+            raise McpClientError("capability_missing", f"server does not advertise {tool!r}")
         args = {k: v for k, v in args.items() if v is not None}
         try:  # validate before sending: a bad call should not cost a round trip
-            jsonschema.validate(args, self.schema)
+            jsonschema.validate(args, self.schemas[tool])
         except jsonschema.ValidationError as e:
             raise McpClientError("invalid_arguments", e.message[:200]) from e
         t0 = time.perf_counter()
         try:
             with anyio.fail_after(self.call_timeout_s + 1):
-                res = await self.session.call_tool(TOOL_NAME, args, read_timeout_seconds=self.call_timeout_s)
+                res = await self.session.call_tool(tool, args, read_timeout_seconds=self.call_timeout_s)
         except (TimeoutError, MCPError) as e:
             if isinstance(e, MCPError) and e.code != -32001:
                 kind = "unavailable"
             else:
                 kind = "timeout"
-            self.transcript.append({"step": "tools/call", "tool": TOOL_NAME, "arg_names": sorted(args), "outcome": kind})
-            raise McpClientError(kind, TOOL_NAME) from e
+            self.transcript.append({"step": "tools/call", "tool": tool, "arg_names": sorted(args), "outcome": kind})
+            raise McpClientError(kind, tool) from e
         except BaseException as e:  # closed pipe, crashed server
-            self.transcript.append({"step": "tools/call", "tool": TOOL_NAME, "arg_names": sorted(args), "outcome": "unavailable"})
+            self.transcript.append({"step": "tools/call", "tool": tool, "arg_names": sorted(args), "outcome": "unavailable"})
             raise McpClientError("unavailable", type(e).__name__) from e
         dt = time.perf_counter() - t0
         raw = json.dumps(res.structured_content if res.structured_content is not None else [c.model_dump() for c in res.content], default=str)
         if len(raw.encode()) > MAX_RESPONSE_BYTES:
-            self.transcript.append({"step": "tools/call", "tool": TOOL_NAME, "outcome": "oversized", "bytes": len(raw)})
+            self.transcript.append({"step": "tools/call", "tool": tool, "outcome": "oversized", "bytes": len(raw)})
             raise McpClientError("oversized", f"response of {len(raw)} bytes exceeds {MAX_RESPONSE_BYTES}")
         if res.is_error:
             text = " ".join(getattr(c, "text", "") for c in res.content)
@@ -188,26 +286,58 @@ class McpStatsClient:
             except (ValueError, AttributeError):
                 kind, msg = "tool_error", text
             msg = sanitize_text(msg)[:600]
-            self.transcript.append({"step": "tools/call", "tool": TOOL_NAME, "arg_names": sorted(args), "outcome": f"rejected:{kind}", "seconds": round(dt, 3)})
-            raise McpClientError(kind if kind in ("invalid_arguments", "not_found", "too_large") else "tool_error", msg)
+            self.transcript.append({"step": "tools/call", "tool": tool, "arg_names": sorted(args), "outcome": f"rejected:{kind}", "seconds": round(dt, 3)})
+            raise McpClientError(kind if kind in CORRECTABLE else "tool_error", msg)
+        model_cls = RESULT_MODELS[tool]
         try:
-            parsed = StatisticResult.model_validate(res.structured_content)
+            parsed = model_cls.model_validate(res.structured_content)
         except (ValidationError, TypeError) as e:
-            self.transcript.append({"step": "tools/call", "tool": TOOL_NAME, "outcome": "malformed", "seconds": round(dt, 3)})
+            self.transcript.append({"step": "tools/call", "tool": tool, "outcome": "malformed", "seconds": round(dt, 3)})
             raise McpClientError("malformed", "response does not match the advertised output schema") from e
-        rows, quarantined = [], 0
-        for row in parsed.rows:
-            d = row.model_dump()
-            for k, v in d.items():
-                if isinstance(v, str):
-                    d[k] = sanitize_text(v)
-            if any(injection_flags(v) for v in d.values() if isinstance(v, str)):
-                quarantined += 1  # a statistic row whose text addresses the model is not trusted evidence
-                continue
-            rows.append(d)
-        self.transcript.append({"step": "tools/call", "tool": TOOL_NAME, "arg_names": sorted(args), "outcome": "ok", "rows": len(rows),
-                                "quarantined": quarantined, "bytes": len(raw), "seconds": round(dt, 3)})
-        return StatsReply(rows, quarantined, self.ignored_tools, dt, len(raw))
+        try:
+            clean, quarantined = screen_result(parsed)
+        except McpClientError:
+            self.transcript.append({"step": "tools/call", "tool": tool, "outcome": "quarantined", "seconds": round(dt, 3)})
+            raise
+        self.transcript.append({"step": "tools/call", "tool": tool, "arg_names": sorted(args), "outcome": "ok", "quarantined": quarantined,
+                                "bytes": len(raw), "seconds": round(dt, 3)})
+        return ToolReply(model_cls.model_validate(clean), quarantined, self.ignored_tools, dt, len(raw))
+
+    async def get_statistic(self, **args) -> StatsReply:
+        r = await self.call(TOOL_NAME, **args)
+        rows = [x.model_dump() for x in r.result.rows]
+        self.transcript[-1]["rows"] = len(rows)
+        return StatsReply(rows, r.quarantined, r.ignored_tools, r.seconds, r.bytes)
+
+    # ---- typed convenience methods: one per tool, same checks as `call` -----------------------------------------------------
+    async def list_datasets(self, topic: str | None = None) -> ToolReply[ListDatasetsResult]:
+        return await self.call("list_datasets", topic=topic)
+
+    async def describe_dataset(self, source_id: str) -> ToolReply[DescribeDatasetResult]:
+        return await self.call("describe_dataset", source_id=source_id)
+
+    async def get_dimension_values(self, source_id: str) -> ToolReply[DimensionValuesResult]:
+        return await self.call("get_dimension_values", source_id=source_id)
+
+    async def latest_value(self, source_id: str, dimension: str | None = None, adjustment: str | None = None,
+                           indicator_id: str | None = None) -> ToolReply[LatestValueResult]:
+        return await self.call("latest_value", source_id=source_id, dimension=dimension, adjustment=adjustment, indicator_id=indicator_id)
+
+    async def compare_periods(self, source_id: str, period_a: str, period_b: str, dimension: str | None = None, adjustment: str | None = None,
+                              indicator_id: str | None = None) -> ToolReply[ComparePeriodsResult]:
+        return await self.call("compare_periods", source_id=source_id, period_a=period_a, period_b=period_b, dimension=dimension,
+                               adjustment=adjustment, indicator_id=indicator_id)
+
+    async def series_summary(self, source_id: str, period_from: str, period_to: str, dimension: str | None = None, adjustment: str | None = None,
+                             indicator_id: str | None = None) -> ToolReply[SeriesSummaryResult]:
+        return await self.call("series_summary", source_id=source_id, period_from=period_from, period_to=period_to, dimension=dimension,
+                               adjustment=adjustment, indicator_id=indicator_id)
+
+    async def get_revisions(self, source_id: str | None = None, period: str | None = None) -> ToolReply[RevisionsResult]:
+        return await self.call("get_revisions", source_id=source_id, period=period)
+
+    async def get_provenance(self, observation_id: str) -> ToolReply[ProvenanceResult]:
+        return await self.call("get_provenance", observation_id=observation_id)
 
 
 class SyncStatsBackend:

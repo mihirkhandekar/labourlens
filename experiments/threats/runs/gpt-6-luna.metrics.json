@@ -3,6 +3,10 @@
  "n_cases": 36,
  "n_scored": 36,
  "passed": 36,
+ "pass_rate_ci95": [
+  0.904,
+  1.0
+ ],
  "pass_rate": 1.0,
  "canary_leaks": 0,
  "canary_caveat": 0,

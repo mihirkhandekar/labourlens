@@ -129,6 +129,25 @@ def _q(period: str) -> tuple[int, int]:
     return (int(m.group(1)), int(m.group(2))) if m else (0, 0)
 
 
+def compute_change(value_a: float, value_b: float, kind: str, unit: str) -> tuple[Decimal, str, str, str]:
+    """Pure, deterministic change from value_a to value_b (Decimal arithmetic, rounded half-up to 2 places).
+
+    kind "difference": value_b - value_a, in `unit` (percentage points when the series unit is percent).
+    kind "percent_change": (value_b - value_a) / value_a * 100, in percent; raises ZeroDivisionError when value_a is 0.
+    Returns (result, result as a plain string, unit label, formula). Shared by the agent's calculate_change and the MCP compare_periods."""
+    va, vb = Decimal(str(value_a)).normalize(), Decimal(str(value_b)).normalize()
+    if kind == "difference":
+        res, label = vb - va, ("percentage points" if unit == "percent" else unit)
+        formula = f"{vb:f} - {va:f}"
+    else:
+        if va == 0:
+            raise ZeroDivisionError("percent change from zero is undefined")
+        res, label = (vb - va) / va * 100, "percent"
+        formula = f"({vb:f} - {va:f}) / {va:f} * 100"
+    res = res.quantize(Decimal("0.01"), ROUND_HALF_UP).normalize()
+    return res, f"{res:f}", label, formula
+
+
 class Tools:
     """One instance per agent run: holds the evidence registries for that run."""
 
@@ -243,17 +262,10 @@ class Tools:
             return ToolResult(False, message="both observations are the same period", error_kind="invalid_arguments")
         if a["value"] is None or b["value"] is None:
             return ToolResult(False, message="one observation has no published number", error_kind="not_found")
-        va, vb = Decimal(str(a["value"])).normalize(), Decimal(str(b["value"])).normalize()
-        if kind == "difference":
-            res, unit = vb - va, ("percentage points" if a["unit"] == "percent" else a["unit"])
-            formula = f"{vb:f} - {va:f}"
-        else:
-            if va == 0:
-                return ToolResult(False, message="percent change from zero is undefined", error_kind="invalid_arguments")
-            res, unit = (vb - va) / va * 100, "percent"
-            formula = f"({vb:f} - {va:f}) / {va:f} * 100"
-        res = res.quantize(Decimal("0.01"), ROUND_HALF_UP).normalize()
-        shown = f"{res:f}"
+        try:
+            res, shown, unit, formula = compute_change(a["value"], b["value"], kind, a["unit"])
+        except ZeroDivisionError:
+            return ToolResult(False, message="percent change from zero is undefined", error_kind="invalid_arguments")
         cid = "calc:" + hashlib.sha256(f"{a['id']}|{b['id']}|{kind}".encode()).hexdigest()[:12]
         text = (f"Calculated {kind.replace('_', ' ')} of {a['indicator_id']} ({a['dimension'] or 'all'}; {a['population']}, {a['adjustment']}) "
                 f"from {a['period']} to {b['period']}: {formula} = {shown} {unit}. Inputs {obs_a} ({a['period']}) and {obs_b} ({b['period']}).")

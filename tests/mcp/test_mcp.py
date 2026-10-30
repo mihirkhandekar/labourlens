@@ -6,6 +6,7 @@ import json
 import pytest
 
 from labourlens.agent.tools import StatsData, Tools, Shared, TransientToolError
+from labourlens.mcp.server import ALL_TOOLS
 from labourlens.mcp.client import McpClientError, McpStatsClient, SyncStatsBackend, register_test_server
 
 ARGS = dict(source_id="retrenched_employees", period_from="2026-Q1", period_to="2026-Q2")
@@ -15,14 +16,16 @@ def run(coro):
     return asyncio.run(coro)
 
 
-def test_discovery_exposes_one_read_only_tool_and_resources():
+def test_discovery_exposes_only_read_only_tools_and_resources():
     async def go():
         async with McpStatsClient() as c:
             tools = (await c.session.list_tools()).tools
-            assert [t.name for t in tools] == ["get_statistic"]
-            ann = tools[0].annotations
-            assert ann.read_only_hint and not ann.destructive_hint and not ann.open_world_hint
-            assert "source_id" in tools[0].input_schema["properties"]
+            assert sorted(t.name for t in tools) == sorted(ALL_TOOLS) and c.ignored_tools == []
+            for t in tools:
+                ann = t.annotations
+                assert ann.read_only_hint and ann.idempotent_hint and not ann.destructive_hint and not ann.open_world_hint, t.name
+            stat = next(t for t in tools if t.name == "get_statistic")
+            assert "source_id" in stat.input_schema["properties"]
             assert await c.list_resources() == ["labourlens://sources"]
             cat = await c.read_resource("labourlens://sources")
             assert len(cat["datasets"]) >= 30 and cat["trust"] == "untrusted_data"

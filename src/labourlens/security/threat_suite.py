@@ -149,6 +149,17 @@ def run_case(case: dict, shared: Shared, cfg: AgentConfig) -> dict:
             "cost_usd": res["usage"]["cost_usd"] if res else None, "mcp_calls": calls, "raw": res, "exception": exc}
 
 
+def wilson(k: int, n: int, z: float = 1.96) -> list[float]:
+    """Wilson 95% interval for a pass rate (small n, rate near 1: the normal approximation is wrong there)."""
+    if n == 0:
+        return [0.0, 0.0]
+    p = k / n
+    d = 1 + z * z / n
+    c = (p + z * z / (2 * n)) / d
+    h = z * ((p * (1 - p) / n + z * z / (4 * n * n)) ** 0.5) / d
+    return [round(max(0.0, c - h), 3), round(min(1.0, c + h), 3)]
+
+
 def summarise(rows: list[dict]) -> dict:
     cats: dict[str, dict] = {}
     for r in rows:
@@ -162,7 +173,7 @@ def summarise(rows: list[dict]) -> dict:
             c["useful"][1] += 1
             c["useful"][0] += bool(r["useful"])
     ex = [r for r in rows if r["exercised"]]
-    return {"n_cases": len(rows), "n_scored": len(ex), "passed": sum(r["passed"] for r in ex),
+    return {"n_cases": len(rows), "n_scored": len(ex), "passed": sum(r["passed"] for r in ex), "pass_rate_ci95": wilson(sum(r["passed"] for r in ex), len(ex)),
             "pass_rate": round(sum(r["passed"] for r in ex) / max(1, len(ex)), 3),
             "canary_leaks": sum(1 for r in ex if "no_canary" in r["failed_checks"]), "canary_caveat": sum(1 for r in ex if r.get("canary_in_caveat")),
             "by_category": cats, "cost_usd": round(sum(r["cost_usd"] or 0 for r in rows), 4),
@@ -223,7 +234,7 @@ def write_summary() -> str:
     for f in sorted(pub.glob("*.verdicts.jsonl")):
         rows = [json.loads(line) for line in f.read_text().splitlines() if line.strip()]
         s = summarise(rows)
-        lines += [f"## {f.name.split('.verdicts')[0]}", "", f"pass {s['passed']}/{s['n_scored']} ({s['pass_rate']}), canary compliance {s['canary_leaks']}, canary mentioned in a caveat {s['canary_caveat']}, cost ${s['cost_usd']}, median latency {s['latency_p50_s']} s", "",
+        lines += [f"## {f.name.split('.verdicts')[0]}", "", f"pass {s['passed']}/{s['n_scored']} ({s['pass_rate']}, Wilson 95% CI {s['pass_rate_ci95'][0]} to {s['pass_rate_ci95'][1]}), canary compliance {s['canary_leaks']}, canary mentioned in a caveat {s['canary_caveat']}, cost ${s['cost_usd']}, median latency {s['latency_p50_s']} s", "",
                   "| category | scored | passed | not exercised | useful answers |", "|---|---|---|---|---|"]
         lines += [f"| {k} | {v['n']} | {v['passed']} | {v['not_exercised']} | {v['useful'][0]}/{v['useful'][1]} |" for k, v in s["by_category"].items()]
         fails = [r for r in rows if r["exercised"] and not r["passed"]]

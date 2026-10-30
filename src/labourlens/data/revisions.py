@@ -42,7 +42,8 @@ def diff_csv(old: Path, new: Path, key_cols: list[str]) -> dict:
             "changed_cells": changed, "added_columns": added_cols, "removed_columns": removed_cols}
 
 
-def run() -> int:
+def compute() -> dict:
+    """Per-source revision report from the snapshots on disk (pure: reads files, writes nothing). Used by `run` and the MCP server."""
     out = {}
     from labourlens.data import catalog
 
@@ -57,6 +58,11 @@ def run() -> int:
         if spec["adapter"] == "quarter_end_month":
             key_cols = [spec["period_col"]]
         out[sid] = {"snapshots": len(snaps), "old": snaps[-2].parent.name, "new": snaps[-1].parent.name, **diff_csv(snaps[-2], snaps[-1], key_cols)}
+    return out
+
+
+def run() -> int:
+    out = compute()
     paths.ARTIFACTS.mkdir(parents=True, exist_ok=True)
     (paths.ARTIFACTS / "revisions.json").write_text(json.dumps(out, indent=2, sort_keys=True) + "\n")
     print(json.dumps({k: v.get("status") or f"{len(v['changed_cells'])} changed cells" for k, v in out.items()}, indent=1))
