@@ -1,0 +1,4701 @@
+quarter,industry,resignation_rate
+1998-Q1,manufacturing,2.4
+1998-Q1,"food, beverages and tobacco",3.9
+1998-Q1,textile and wearing apparel,3.7
+1998-Q1,paper products and publishing,2.7
+1998-Q1,petroleum and chemical products,1.4
+1998-Q1,rubber and plastic products,3.1
+1998-Q1,fabricated metal products,2.3
+1998-Q1,machinery and equipment,2
+1998-Q1,electrical products,2.5
+1998-Q1,electronic products,2.4
+1998-Q1,medical and precision instruments,2.1
+1998-Q1,transport equipment,1.9
+1998-Q1,other manufacturing industries,1.9
+1998-Q1,construction,2.1
+1998-Q1,services,2.7
+1998-Q1,wholesale and retail trade,3.5
+1998-Q1,wholesale trade,2.4
+1998-Q1,retail trade,6.4
+1998-Q1,hotels and restaurants,4.8
+1998-Q1,hotels,3.5
+1998-Q1,restaurants,5.8
+1998-Q1,"transport, storage and communications",1.7
+1998-Q1,financial intermediation,1.7
+1998-Q1,financial institutions,1.7
+1998-Q1,insurance and pension funding,1.7
+1998-Q1,business and real estate services,2.8
+1998-Q1,"community, social and personal services",2.4
+1998-Q1,others,1.9
+1998-Q2,manufacturing,2.1
+1998-Q2,"food, beverages and tobacco",3.5
+1998-Q2,textile and wearing apparel,2.5
+1998-Q2,paper products and publishing,1.9
+1998-Q2,petroleum and chemical products,1.4
+1998-Q2,rubber and plastic products,3
+1998-Q2,fabricated metal products,2.4
+1998-Q2,machinery and equipment,1.8
+1998-Q2,electrical products,1.6
+1998-Q2,electronic products,2
+1998-Q2,medical and precision instruments,1.5
+1998-Q2,transport equipment,1.9
+1998-Q2,other manufacturing industries,1.6
+1998-Q2,construction,2.2
+1998-Q2,services,2.4
+1998-Q2,wholesale and retail trade,2.8
+1998-Q2,wholesale trade,2.1
+1998-Q2,retail trade,4.5
+1998-Q2,hotels and restaurants,3.9
+1998-Q2,hotels,3.1
+1998-Q2,restaurants,4.6
+1998-Q2,"transport, storage and communications",1.7
+1998-Q2,financial intermediation,1.4
+1998-Q2,financial institutions,1.4
+1998-Q2,insurance and pension funding,1.4
+1998-Q2,business and real estate services,2.8
+1998-Q2,"community, social and personal services",2.2
+1998-Q2,others,2
+1998-Q3,manufacturing,1.6
+1998-Q3,"food, beverages and tobacco",2.9
+1998-Q3,textile and wearing apparel,1.9
+1998-Q3,paper products and publishing,1.7
+1998-Q3,petroleum and chemical products,0.9
+1998-Q3,rubber and plastic products,2
+1998-Q3,fabricated metal products,2.2
+1998-Q3,machinery and equipment,1.5
+1998-Q3,electrical products,1.3
+1998-Q3,electronic products,1.4
+1998-Q3,medical and precision instruments,1.2
+1998-Q3,transport equipment,1.4
+1998-Q3,other manufacturing industries,1.7
+1998-Q3,construction,1.9
+1998-Q3,services,2.1
+1998-Q3,wholesale and retail trade,2.3
+1998-Q3,wholesale trade,1.9
+1998-Q3,retail trade,3.7
+1998-Q3,hotels and restaurants,3.1
+1998-Q3,hotels,2.3
+1998-Q3,restaurants,3.7
+1998-Q3,"transport, storage and communications",1.2
+1998-Q3,financial intermediation,1.2
+1998-Q3,financial institutions,1.2
+1998-Q3,insurance and pension funding,1.1
+1998-Q3,business and real estate services,2.8
+1998-Q3,"community, social and personal services",1.9
+1998-Q3,others,2.1
+1998-Q4,manufacturing,1.3
+1998-Q4,"food, beverages and tobacco",2.3
+1998-Q4,textile and wearing apparel,1.4
+1998-Q4,paper products and publishing,1.1
+1998-Q4,petroleum and chemical products,0.5
+1998-Q4,rubber and plastic products,1.7
+1998-Q4,fabricated metal products,1.7
+1998-Q4,machinery and equipment,1.6
+1998-Q4,electrical products,0.9
+1998-Q4,electronic products,0.9
+1998-Q4,medical and precision instruments,0.8
+1998-Q4,transport equipment,1.4
+1998-Q4,other manufacturing industries,1.5
+1998-Q4,construction,2.2
+1998-Q4,services,1.8
+1998-Q4,wholesale and retail trade,2
+1998-Q4,wholesale trade,1.5
+1998-Q4,retail trade,3.5
+1998-Q4,hotels and restaurants,3.5
+1998-Q4,hotels,1.5
+1998-Q4,restaurants,4.8
+1998-Q4,"transport, storage and communications",0.8
+1998-Q4,financial intermediation,0.8
+1998-Q4,financial institutions,0.8
+1998-Q4,insurance and pension funding,0.7
+1998-Q4,business and real estate services,2.5
+1998-Q4,"community, social and personal services",1.5
+1998-Q4,others,1.3
+1999-Q1,manufacturing,1.6
+1999-Q1,"food, beverages and tobacco",2.6
+1999-Q1,textile and wearing apparel,1.8
+1999-Q1,paper products and publishing,1.7
+1999-Q1,petroleum and chemical products,0.8
+1999-Q1,rubber and plastic products,2.2
+1999-Q1,fabricated metal products,1.9
+1999-Q1,machinery and equipment,1.7
+1999-Q1,electrical products,2
+1999-Q1,electronic products,1.5
+1999-Q1,medical and precision instruments,1.7
+1999-Q1,transport equipment,1.3
+1999-Q1,other manufacturing industries,1.6
+1999-Q1,construction,2.2
+1999-Q1,services,2.3
+1999-Q1,wholesale and retail trade,2.6
+1999-Q1,wholesale trade,1.9
+1999-Q1,retail trade,4.7
+1999-Q1,hotels and restaurants,4.5
+1999-Q1,hotels,2.9
+1999-Q1,restaurants,5.5
+1999-Q1,"transport, storage and communications",1.4
+1999-Q1,financial intermediation,1.2
+1999-Q1,financial institutions,1.2
+1999-Q1,insurance and pension funding,1.4
+1999-Q1,business and real estate services,2.6
+1999-Q1,"community, social and personal services",2
+1999-Q1,others,1.6
+1999-Q2,manufacturing,2.1
+1999-Q2,"food, beverages and tobacco",2.8
+1999-Q2,textile and wearing apparel,2.2
+1999-Q2,paper products and publishing,1.9
+1999-Q2,petroleum and chemical products,1.1
+1999-Q2,rubber and plastic products,2.9
+1999-Q2,fabricated metal products,2.8
+1999-Q2,machinery and equipment,2.3
+1999-Q2,electrical products,2.3
+1999-Q2,electronic products,2
+1999-Q2,medical and precision instruments,2
+1999-Q2,transport equipment,1.4
+1999-Q2,other manufacturing industries,1.7
+1999-Q2,construction,2.2
+1999-Q2,services,2.5
+1999-Q2,wholesale and retail trade,3
+1999-Q2,wholesale trade,2.2
+1999-Q2,retail trade,5.2
+1999-Q2,hotels and restaurants,4
+1999-Q2,hotels,2.9
+1999-Q2,restaurants,4.7
+1999-Q2,"transport, storage and communications",1.3
+1999-Q2,financial intermediation,1.5
+1999-Q2,financial institutions,1.5
+1999-Q2,insurance and pension funding,1.4
+1999-Q2,business and real estate services,3
+1999-Q2,"community, social and personal services",2.4
+1999-Q2,others,1.4
+1999-Q3,manufacturing,2
+1999-Q3,"food, beverages and tobacco",3.2
+1999-Q3,textile and wearing apparel,2.1
+1999-Q3,paper products and publishing,2.1
+1999-Q3,petroleum and chemical products,1.2
+1999-Q3,rubber and plastic products,2.9
+1999-Q3,fabricated metal products,2.6
+1999-Q3,machinery and equipment,1.9
+1999-Q3,electrical products,2.1
+1999-Q3,electronic products,2
+1999-Q3,medical and precision instruments,1.8
+1999-Q3,transport equipment,1.4
+1999-Q3,other manufacturing industries,2
+1999-Q3,construction,2.2
+1999-Q3,services,2.6
+1999-Q3,wholesale and retail trade,3
+1999-Q3,wholesale trade,2.5
+1999-Q3,retail trade,4.3
+1999-Q3,hotels and restaurants,4.5
+1999-Q3,hotels,3.5
+1999-Q3,restaurants,5.1
+1999-Q3,"transport, storage and communications",1.4
+1999-Q3,financial intermediation,1.6
+1999-Q3,financial institutions,1.6
+1999-Q3,insurance and pension funding,1.8
+1999-Q3,business and real estate services,3.2
+1999-Q3,"community, social and personal services",2.2
+1999-Q3,others,0.7
+1999-Q4,manufacturing,1.9
+1999-Q4,"food, beverages and tobacco",2.8
+1999-Q4,textile and wearing apparel,1.2
+1999-Q4,paper products and publishing,1.5
+1999-Q4,petroleum and chemical products,0.9
+1999-Q4,rubber and plastic products,2.7
+1999-Q4,fabricated metal products,2
+1999-Q4,machinery and equipment,1.3
+1999-Q4,electrical products,1.2
+1999-Q4,electronic products,2.4
+1999-Q4,medical and precision instruments,1.2
+1999-Q4,transport equipment,1.6
+1999-Q4,other manufacturing industries,1.5
+1999-Q4,construction,2
+1999-Q4,services,2.2
+1999-Q4,wholesale and retail trade,2.5
+1999-Q4,wholesale trade,1.7
+1999-Q4,retail trade,4.3
+1999-Q4,hotels and restaurants,3.7
+1999-Q4,hotels,3
+1999-Q4,restaurants,4.2
+1999-Q4,"transport, storage and communications",1.3
+1999-Q4,financial intermediation,1.2
+1999-Q4,financial institutions,1.2
+1999-Q4,insurance and pension funding,1.3
+1999-Q4,business and real estate services,3
+1999-Q4,"community, social and personal services",1.9
+1999-Q4,others,0.6
+2000-Q1,manufacturing,2.4
+2000-Q1,"food, beverages and tobacco",3.5
+2000-Q1,paper products and printing,2.8
+2000-Q1,"petroleum, chemical and pharmaceutical products",1.2
+2000-Q1,rubber and plastic products,2.6
+2000-Q1,fabricated metal products,2.8
+2000-Q1,machinery and equipment,2.3
+2000-Q1,electrical products,2.4
+2000-Q1,electronic products,2.6
+2000-Q1,medical and precision instruments,2.7
+2000-Q1,transport equipment,1.9
+2000-Q1,other manufacturing industries,2.2
+2000-Q1,construction,2.1
+2000-Q1,services producing industries,3
+2000-Q1,wholesale and retail trade,3.7
+2000-Q1,wholesale trade,2.6
+2000-Q1,retail trade,6.3
+2000-Q1,transport and storage,1.6
+2000-Q1,land transport and supporting services,1.5
+2000-Q1,water transport and supporting services,1.3
+2000-Q1,air transport and supporting services,0.6
+2000-Q1,other transport and storage services,3.1
+2000-Q1,hotels and restaurants,4.8
+2000-Q1,hotels,4.1
+2000-Q1,restaurants,5.2
+2000-Q1,information and communications,2.8
+2000-Q1,broadcasting and publishing,3.2
+2000-Q1,telecommunications,2
+2000-Q1,it and other information services,3.1
+2000-Q1,financial services,1.8
+2000-Q1,financial institutions,1.8
+2000-Q1,insurance,2
+2000-Q1,real estate and leasing services,3.9
+2000-Q1,professional services,2.5
+2000-Q1,"legal, accounting and management services",2.5
+2000-Q1,architectural and engineering services,2.1
+2000-Q1,other professional services,3.4
+2000-Q1,administrative and support services,5.3
+2000-Q1,"community, social and personal services",2.7
+2000-Q1,education,3.7
+2000-Q1,"health, social and community services",2.2
+2000-Q1,"other community, social and personal services",2.8
+2000-Q1,others,2.7
+2000-Q2,manufacturing,2.4
+2000-Q2,"food, beverages and tobacco",3.4
+2000-Q2,paper products and printing,3.2
+2000-Q2,"petroleum, chemical and pharmaceutical products",1.4
+2000-Q2,rubber and plastic products,3.5
+2000-Q2,fabricated metal products,2.2
+2000-Q2,machinery and equipment,2.2
+2000-Q2,electrical products,2.3
+2000-Q2,electronic products,2.5
+2000-Q2,medical and precision instruments,2.5
+2000-Q2,transport equipment,1.8
+2000-Q2,other manufacturing industries,2.2
+2000-Q2,construction,2.3
+2000-Q2,services producing industries,3
+2000-Q2,wholesale and retail trade,3.5
+2000-Q2,wholesale trade,2.6
+2000-Q2,retail trade,5.7
+2000-Q2,transport and storage,1.8
+2000-Q2,land transport and supporting services,1.8
+2000-Q2,water transport and supporting services,1.5
+2000-Q2,air transport and supporting services,0.5
+2000-Q2,other transport and storage services,3.2
+2000-Q2,hotels and restaurants,4.4
+2000-Q2,hotels,4.1
+2000-Q2,restaurants,4.7
+2000-Q2,information and communications,3.1
+2000-Q2,broadcasting and publishing,2.7
+2000-Q2,telecommunications,2.4
+2000-Q2,it and other information services,3.9
+2000-Q2,financial services,2.2
+2000-Q2,financial institutions,2.2
+2000-Q2,insurance,2.2
+2000-Q2,real estate and leasing services,3.8
+2000-Q2,professional services,2.5
+2000-Q2,"legal, accounting and management services",2.6
+2000-Q2,architectural and engineering services,2
+2000-Q2,other professional services,3.4
+2000-Q2,administrative and support services,5.2
+2000-Q2,"community, social and personal services",2.7
+2000-Q2,education,2.4
+2000-Q2,"health, social and community services",2.4
+2000-Q2,"other community, social and personal services",3.2
+2000-Q2,others,3
+2000-Q3,manufacturing,2.1
+2000-Q3,"food, beverages and tobacco",2.4
+2000-Q3,paper products and printing,2.4
+2000-Q3,"petroleum, chemical and pharmaceutical products",1.3
+2000-Q3,rubber and plastic products,3.2
+2000-Q3,fabricated metal products,2.4
+2000-Q3,machinery and equipment,2.1
+2000-Q3,electrical products,2
+2000-Q3,electronic products,2.2
+2000-Q3,medical and precision instruments,2.2
+2000-Q3,transport equipment,1.5
+2000-Q3,other manufacturing industries,1.9
+2000-Q3,construction,2.1
+2000-Q3,services producing industries,2.9
+2000-Q3,wholesale and retail trade,3.2
+2000-Q3,wholesale trade,2.6
+2000-Q3,retail trade,4.8
+2000-Q3,transport and storage,1.6
+2000-Q3,land transport and supporting services,1.4
+2000-Q3,water transport and supporting services,1.4
+2000-Q3,air transport and supporting services,0.6
+2000-Q3,other transport and storage services,2.7
+2000-Q3,hotels and restaurants,4.5
+2000-Q3,hotels,3.2
+2000-Q3,restaurants,5.2
+2000-Q3,information and communications,3.1
+2000-Q3,broadcasting and publishing,3.1
+2000-Q3,telecommunications,2.2
+2000-Q3,it and other information services,3.7
+2000-Q3,financial services,2.2
+2000-Q3,financial institutions,2.1
+2000-Q3,insurance,2.2
+2000-Q3,real estate and leasing services,3.9
+2000-Q3,professional services,2.8
+2000-Q3,"legal, accounting and management services",2.8
+2000-Q3,architectural and engineering services,2.5
+2000-Q3,other professional services,3.3
+2000-Q3,administrative and support services,5
+2000-Q3,"community, social and personal services",2.4
+2000-Q3,education,2.1
+2000-Q3,"health, social and community services",1.9
+2000-Q3,"other community, social and personal services",3.2
+2000-Q3,others,2.7
+2000-Q4,manufacturing,1.6
+2000-Q4,"food, beverages and tobacco",2.3
+2000-Q4,paper products and printing,1.7
+2000-Q4,"petroleum, chemical and pharmaceutical products",0.8
+2000-Q4,rubber and plastic products,2.4
+2000-Q4,fabricated metal products,1.9
+2000-Q4,machinery and equipment,1.8
+2000-Q4,electrical products,1.2
+2000-Q4,electronic products,1.7
+2000-Q4,medical and precision instruments,1.3
+2000-Q4,transport equipment,0.9
+2000-Q4,other manufacturing industries,1.5
+2000-Q4,construction,2.2
+2000-Q4,services producing industries,2.2
+2000-Q4,wholesale and retail trade,2.7
+2000-Q4,wholesale trade,1.8
+2000-Q4,retail trade,4.8
+2000-Q4,transport and storage,1.2
+2000-Q4,land transport and supporting services,1
+2000-Q4,water transport and supporting services,1.3
+2000-Q4,air transport and supporting services,0.5
+2000-Q4,other transport and storage services,1.8
+2000-Q4,hotels and restaurants,4.2
+2000-Q4,hotels,2.3
+2000-Q4,restaurants,5.2
+2000-Q4,information and communications,2.5
+2000-Q4,broadcasting and publishing,2.7
+2000-Q4,telecommunications,1.6
+2000-Q4,it and other information services,3
+2000-Q4,financial services,1.4
+2000-Q4,financial institutions,1.4
+2000-Q4,insurance,1.3
+2000-Q4,real estate and leasing services,3
+2000-Q4,professional services,2
+2000-Q4,"legal, accounting and management services",1.9
+2000-Q4,architectural and engineering services,2.1
+2000-Q4,other professional services,2
+2000-Q4,administrative and support services,4
+2000-Q4,"community, social and personal services",1.5
+2000-Q4,education,1.6
+2000-Q4,"health, social and community services",1.3
+2000-Q4,"other community, social and personal services",1.8
+2000-Q4,others,1.7
+2001-Q1,manufacturing,2.4
+2001-Q1,"food, beverages and tobacco",3.4
+2001-Q1,paper products and printing,3.2
+2001-Q1,"petroleum, chemical and pharmaceutical products",1.4
+2001-Q1,rubber and plastic products,3.5
+2001-Q1,fabricated metal products,3.2
+2001-Q1,machinery and equipment,2.1
+2001-Q1,electrical products,2.9
+2001-Q1,electronic products,2.6
+2001-Q1,medical and precision instruments,2.2
+2001-Q1,transport equipment,1.3
+2001-Q1,other manufacturing industries,2
+2001-Q1,construction,2.7
+2001-Q1,services producing industries,2.9
+2001-Q1,wholesale and retail trade,3.7
+2001-Q1,wholesale trade,2.7
+2001-Q1,retail trade,6.6
+2001-Q1,transport and storage,1.7
+2001-Q1,land transport and supporting services,1.5
+2001-Q1,water transport and supporting services,1.7
+2001-Q1,air transport and supporting services,0.7
+2001-Q1,other transport and storage services,2.9
+2001-Q1,hotels and restaurants,4.9
+2001-Q1,hotels,3.8
+2001-Q1,restaurants,5.6
+2001-Q1,information and communications,2.7
+2001-Q1,broadcasting and publishing,2.5
+2001-Q1,telecommunications,2.2
+2001-Q1,it and other information services,3.2
+2001-Q1,financial services,1.7
+2001-Q1,financial institutions,1.7
+2001-Q1,insurance,2.1
+2001-Q1,real estate and leasing services,3.9
+2001-Q1,professional services,2.3
+2001-Q1,"legal, accounting and management services",2.2
+2001-Q1,architectural and engineering services,2.3
+2001-Q1,other professional services,2.4
+2001-Q1,administrative and support services,4.7
+2001-Q1,"community, social and personal services",2.5
+2001-Q1,education,2.6
+2001-Q1,"health, social and community services",2.1
+2001-Q1,"other community, social and personal services",3
+2001-Q1,others,3.4
+2001-Q2,manufacturing,1.8
+2001-Q2,"food, beverages and tobacco",2.5
+2001-Q2,paper products and printing,2.3
+2001-Q2,"petroleum, chemical and pharmaceutical products",1.1
+2001-Q2,rubber and plastic products,2.6
+2001-Q2,fabricated metal products,2.6
+2001-Q2,machinery and equipment,1.8
+2001-Q2,electrical products,2
+2001-Q2,electronic products,1.6
+2001-Q2,medical and precision instruments,1.5
+2001-Q2,transport equipment,1.3
+2001-Q2,other manufacturing industries,1.8
+2001-Q2,construction,2.5
+2001-Q2,services producing industries,2.6
+2001-Q2,wholesale and retail trade,3.1
+2001-Q2,wholesale trade,2.2
+2001-Q2,retail trade,5.7
+2001-Q2,transport and storage,1.4
+2001-Q2,land transport and supporting services,1.5
+2001-Q2,water transport and supporting services,1.4
+2001-Q2,air transport and supporting services,0.4
+2001-Q2,other transport and storage services,2.3
+2001-Q2,hotels and restaurants,4.4
+2001-Q2,hotels,3.4
+2001-Q2,restaurants,4.9
+2001-Q2,information and communications,2.3
+2001-Q2,broadcasting and publishing,1.9
+2001-Q2,telecommunications,1.8
+2001-Q2,it and other information services,2.9
+2001-Q2,financial services,1.7
+2001-Q2,financial institutions,1.6
+2001-Q2,insurance,2
+2001-Q2,real estate and leasing services,3.6
+2001-Q2,professional services,2.4
+2001-Q2,"legal, accounting and management services",2.6
+2001-Q2,architectural and engineering services,1.9
+2001-Q2,other professional services,3
+2001-Q2,administrative and support services,4.6
+2001-Q2,"community, social and personal services",2.2
+2001-Q2,education,2.2
+2001-Q2,"health, social and community services",1.6
+2001-Q2,"other community, social and personal services",2.8
+2001-Q2,others,3.2
+2001-Q3,manufacturing,1.6
+2001-Q3,"food, beverages and tobacco",2.2
+2001-Q3,paper products and printing,2
+2001-Q3,"petroleum, chemical and pharmaceutical products",1
+2001-Q3,rubber and plastic products,2.1
+2001-Q3,fabricated metal products,2.1
+2001-Q3,machinery and equipment,1.6
+2001-Q3,electrical products,1.2
+2001-Q3,electronic products,1.4
+2001-Q3,medical and precision instruments,1.2
+2001-Q3,transport equipment,1.1
+2001-Q3,other manufacturing industries,1.9
+2001-Q3,construction,2.4
+2001-Q3,services producing industries,2.3
+2001-Q3,wholesale and retail trade,2.6
+2001-Q3,wholesale trade,1.9
+2001-Q3,retail trade,4.4
+2001-Q3,transport and storage,1.1
+2001-Q3,land transport and supporting services,1.1
+2001-Q3,water transport and supporting services,1.3
+2001-Q3,air transport and supporting services,0.5
+2001-Q3,other transport and storage services,1.7
+2001-Q3,hotels and restaurants,4.8
+2001-Q3,hotels,2.6
+2001-Q3,restaurants,6.3
+2001-Q3,information and communications,1.8
+2001-Q3,broadcasting and publishing,2.3
+2001-Q3,telecommunications,1.2
+2001-Q3,it and other information services,2
+2001-Q3,financial services,1.5
+2001-Q3,financial institutions,1.5
+2001-Q3,insurance,1.5
+2001-Q3,real estate and leasing services,3.1
+2001-Q3,professional services,2
+2001-Q3,"legal, accounting and management services",1.9
+2001-Q3,architectural and engineering services,2.2
+2001-Q3,other professional services,2.3
+2001-Q3,administrative and support services,4.5
+2001-Q3,"community, social and personal services",1.9
+2001-Q3,education,1.7
+2001-Q3,"health, social and community services",1.6
+2001-Q3,"other community, social and personal services",2.3
+2001-Q3,others,2.9
+2001-Q4,manufacturing,1.2
+2001-Q4,"food, beverages and tobacco",1.4
+2001-Q4,paper products and printing,1.2
+2001-Q4,"petroleum, chemical and pharmaceutical products",0.5
+2001-Q4,rubber and plastic products,1.7
+2001-Q4,fabricated metal products,2
+2001-Q4,machinery and equipment,1.1
+2001-Q4,electrical products,0.8
+2001-Q4,electronic products,1.1
+2001-Q4,medical and precision instruments,0.6
+2001-Q4,transport equipment,0.8
+2001-Q4,other manufacturing industries,1.9
+2001-Q4,construction,2.2
+2001-Q4,services producing industries,1.8
+2001-Q4,wholesale and retail trade,2
+2001-Q4,wholesale trade,1.3
+2001-Q4,retail trade,3.8
+2001-Q4,transport and storage,1
+2001-Q4,land transport and supporting services,0.7
+2001-Q4,water transport and supporting services,1.4
+2001-Q4,air transport and supporting services,0.3
+2001-Q4,other transport and storage services,1.6
+2001-Q4,hotels and restaurants,3.6
+2001-Q4,hotels,1.7
+2001-Q4,restaurants,4.7
+2001-Q4,information and communications,1.4
+2001-Q4,broadcasting and publishing,1.6
+2001-Q4,telecommunications,0.8
+2001-Q4,it and other information services,1.5
+2001-Q4,financial services,0.9
+2001-Q4,financial institutions,0.9
+2001-Q4,insurance,0.8
+2001-Q4,real estate and leasing services,3.2
+2001-Q4,professional services,1.7
+2001-Q4,"legal, accounting and management services",1.5
+2001-Q4,architectural and engineering services,2.1
+2001-Q4,other professional services,1.4
+2001-Q4,administrative and support services,4.2
+2001-Q4,"community, social and personal services",1.4
+2001-Q4,education,1.1
+2001-Q4,"health, social and community services",1.2
+2001-Q4,"other community, social and personal services",1.9
+2001-Q4,others,2.3
+2002-Q1,manufacturing,1.5
+2002-Q1,"food, beverages and tobacco",1.6
+2002-Q1,paper products and printing,1.7
+2002-Q1,"petroleum, chemical and pharmaceutical products",0.8
+2002-Q1,rubber and plastic products,2.4
+2002-Q1,fabricated metal products,2.8
+2002-Q1,machinery and equipment,1.7
+2002-Q1,electrical products,1
+2002-Q1,electronic products,1.4
+2002-Q1,medical and precision instruments,1.4
+2002-Q1,transport equipment,0.9
+2002-Q1,other manufacturing industries,1.7
+2002-Q1,construction,2.1
+2002-Q1,services producing industries,2.1
+2002-Q1,wholesale and retail trade,2.4
+2002-Q1,wholesale trade,1.7
+2002-Q1,retail trade,4.1
+2002-Q1,transport and storage,1.2
+2002-Q1,land transport and supporting services,1
+2002-Q1,water transport and supporting services,1.3
+2002-Q1,air transport and supporting services,0.5
+2002-Q1,other transport and storage services,2
+2002-Q1,hotels and restaurants,4.6
+2002-Q1,hotels,2.6
+2002-Q1,restaurants,5.6
+2002-Q1,information and communications,1.6
+2002-Q1,broadcasting and publishing,1.5
+2002-Q1,telecommunications,1.1
+2002-Q1,it and other information services,1.9
+2002-Q1,financial services,1
+2002-Q1,financial institutions,1
+2002-Q1,insurance,1.1
+2002-Q1,real estate and leasing services,3.7
+2002-Q1,professional services,1.5
+2002-Q1,"legal, accounting and management services",1.8
+2002-Q1,architectural and engineering services,1.3
+2002-Q1,other professional services,1.1
+2002-Q1,administrative and support services,4.3
+2002-Q1,"community, social and personal services",1.9
+2002-Q1,education,2.1
+2002-Q1,"health, social and community services",1.6
+2002-Q1,"other community, social and personal services",2
+2002-Q1,others,2.4
+2002-Q2,manufacturing,1.8
+2002-Q2,"food, beverages and tobacco",2.2
+2002-Q2,paper products and printing,2.5
+2002-Q2,"petroleum, chemical and pharmaceutical products",1
+2002-Q2,rubber and plastic products,2.8
+2002-Q2,fabricated metal products,2.8
+2002-Q2,machinery and equipment,2
+2002-Q2,electrical products,1.8
+2002-Q2,electronic products,1.7
+2002-Q2,medical and precision instruments,1.5
+2002-Q2,transport equipment,1.1
+2002-Q2,other manufacturing industries,1.7
+2002-Q2,construction,2.2
+2002-Q2,services producing industries,2.4
+2002-Q2,wholesale and retail trade,2.5
+2002-Q2,wholesale trade,1.7
+2002-Q2,retail trade,4.6
+2002-Q2,transport and storage,1.2
+2002-Q2,land transport and supporting services,1.6
+2002-Q2,water transport and supporting services,1.1
+2002-Q2,air transport and supporting services,0.5
+2002-Q2,other transport and storage services,1.8
+2002-Q2,hotels and restaurants,4.6
+2002-Q2,hotels,3
+2002-Q2,restaurants,5.6
+2002-Q2,information and communications,2.1
+2002-Q2,broadcasting and publishing,1.9
+2002-Q2,telecommunications,1
+2002-Q2,it and other information services,2.9
+2002-Q2,financial services,1.3
+2002-Q2,financial institutions,1.3
+2002-Q2,insurance,1.1
+2002-Q2,real estate and leasing services,3.8
+2002-Q2,professional services,2.1
+2002-Q2,"legal, accounting and management services",2.3
+2002-Q2,architectural and engineering services,1.8
+2002-Q2,other professional services,1.8
+2002-Q2,administrative and support services,4.9
+2002-Q2,"community, social and personal services",2
+2002-Q2,education,1.9
+2002-Q2,"health, social and community services",1.9
+2002-Q2,"other community, social and personal services",2.1
+2002-Q2,others,2.9
+2002-Q3,manufacturing,1.8
+2002-Q3,"food, beverages and tobacco",2.5
+2002-Q3,paper products and printing,1.9
+2002-Q3,"petroleum, chemical and pharmaceutical products",0.9
+2002-Q3,rubber and plastic products,2.5
+2002-Q3,fabricated metal products,2.3
+2002-Q3,machinery and equipment,1.8
+2002-Q3,electrical products,1.3
+2002-Q3,electronic products,1.8
+2002-Q3,medical and precision instruments,1.3
+2002-Q3,transport equipment,1.3
+2002-Q3,other manufacturing industries,1.8
+2002-Q3,construction,2
+2002-Q3,services producing industries,2.4
+2002-Q3,wholesale and retail trade,2.6
+2002-Q3,wholesale trade,1.9
+2002-Q3,retail trade,4.3
+2002-Q3,transport and storage,1.3
+2002-Q3,land transport and supporting services,1.4
+2002-Q3,water transport and supporting services,1.2
+2002-Q3,air transport and supporting services,0.6
+2002-Q3,other transport and storage services,1.9
+2002-Q3,hotels and restaurants,4.8
+2002-Q3,hotels,2.9
+2002-Q3,restaurants,5.7
+2002-Q3,information and communications,1.8
+2002-Q3,broadcasting and publishing,2
+2002-Q3,telecommunications,1.2
+2002-Q3,it and other information services,2.2
+2002-Q3,financial services,1.4
+2002-Q3,financial institutions,1.4
+2002-Q3,insurance,1.5
+2002-Q3,real estate and leasing services,3.8
+2002-Q3,professional services,2.6
+2002-Q3,"legal, accounting and management services",2.7
+2002-Q3,architectural and engineering services,2.7
+2002-Q3,other professional services,2.2
+2002-Q3,administrative and support services,3.9
+2002-Q3,"community, social and personal services",2.1
+2002-Q3,education,2
+2002-Q3,"health, social and community services",1.8
+2002-Q3,"other community, social and personal services",2.6
+2002-Q3,others,3.7
+2002-Q4,manufacturing,1.5
+2002-Q4,"food, beverages and tobacco",1.6
+2002-Q4,paper products and printing,1.5
+2002-Q4,"petroleum, chemical and pharmaceutical products",0.5
+2002-Q4,rubber and plastic products,2.1
+2002-Q4,fabricated metal products,2.2
+2002-Q4,machinery and equipment,1.4
+2002-Q4,electrical products,0.6
+2002-Q4,electronic products,1.9
+2002-Q4,medical and precision instruments,0.9
+2002-Q4,transport equipment,1
+2002-Q4,other manufacturing industries,1.5
+2002-Q4,construction,2.3
+2002-Q4,services producing industries,2
+2002-Q4,wholesale and retail trade,2.3
+2002-Q4,wholesale trade,1.6
+2002-Q4,retail trade,4.2
+2002-Q4,transport and storage,1
+2002-Q4,land transport and supporting services,1.4
+2002-Q4,water transport and supporting services,1.1
+2002-Q4,air transport and supporting services,0.4
+2002-Q4,other transport and storage services,1.4
+2002-Q4,hotels and restaurants,4.4
+2002-Q4,hotels,2.1
+2002-Q4,restaurants,5.5
+2002-Q4,information and communications,1.3
+2002-Q4,broadcasting and publishing,1.8
+2002-Q4,telecommunications,0.6
+2002-Q4,it and other information services,1.5
+2002-Q4,financial services,1
+2002-Q4,financial institutions,1
+2002-Q4,insurance,1.3
+2002-Q4,real estate and leasing services,2.8
+2002-Q4,professional services,1.8
+2002-Q4,"legal, accounting and management services",1.9
+2002-Q4,architectural and engineering services,1.8
+2002-Q4,other professional services,1.3
+2002-Q4,administrative and support services,2.9
+2002-Q4,"community, social and personal services",1.6
+2002-Q4,education,1.8
+2002-Q4,"health, social and community services",1.2
+2002-Q4,"other community, social and personal services",2.1
+2002-Q4,others,3.1
+2003-Q1,manufacturing,1.8
+2003-Q1,"food, beverages and tobacco",2.8
+2003-Q1,paper products and printing,1.7
+2003-Q1,"petroleum, chemical and pharmaceutical products",0.8
+2003-Q1,rubber and plastic products,2.4
+2003-Q1,fabricated metal products,2.1
+2003-Q1,machinery and equipment,2
+2003-Q1,electrical products,1.2
+2003-Q1,electronic products,2.1
+2003-Q1,medical and precision instruments,1.6
+2003-Q1,transport equipment,1.2
+2003-Q1,other manufacturing industries,1.6
+2003-Q1,construction,2.2
+2003-Q1,services producing industries,2.4
+2003-Q1,wholesale and retail trade,2.7
+2003-Q1,wholesale trade,1.9
+2003-Q1,retail trade,4.9
+2003-Q1,transport and storage,1.1
+2003-Q1,land transport and supporting services,1.5
+2003-Q1,water transport and supporting services,0.8
+2003-Q1,air transport and supporting services,0.6
+2003-Q1,other transport and storage services,1.8
+2003-Q1,hotels and restaurants,4.9
+2003-Q1,hotels,3.2
+2003-Q1,restaurants,5.8
+2003-Q1,information and communications,1.5
+2003-Q1,broadcasting and publishing,1.3
+2003-Q1,telecommunications,1.3
+2003-Q1,it and other information services,1.8
+2003-Q1,financial services,1.2
+2003-Q1,financial institutions,1.2
+2003-Q1,insurance,1.3
+2003-Q1,real estate and leasing services,3.3
+2003-Q1,professional services,1.8
+2003-Q1,"legal, accounting and management services",2.2
+2003-Q1,architectural and engineering services,1.3
+2003-Q1,other professional services,1.5
+2003-Q1,administrative and support services,4.4
+2003-Q1,"community, social and personal services",2
+2003-Q1,education,2.5
+2003-Q1,"health, social and community services",1.6
+2003-Q1,"other community, social and personal services",2.2
+2003-Q1,others,2.3
+2003-Q2,manufacturing,1.7
+2003-Q2,"food, beverages and tobacco",2.7
+2003-Q2,paper products and printing,1.8
+2003-Q2,"petroleum, chemical and pharmaceutical products",0.8
+2003-Q2,rubber and plastic products,2.6
+2003-Q2,fabricated metal products,2.2
+2003-Q2,machinery and equipment,1.9
+2003-Q2,electrical products,1.1
+2003-Q2,electronic products,1.5
+2003-Q2,medical and precision instruments,1.1
+2003-Q2,transport equipment,1.6
+2003-Q2,other manufacturing industries,2.1
+2003-Q2,construction,2.4
+2003-Q2,services producing industries,2.3
+2003-Q2,wholesale and retail trade,2.5
+2003-Q2,wholesale trade,1.8
+2003-Q2,retail trade,4.3
+2003-Q2,transport and storage,1.1
+2003-Q2,land transport and supporting services,1.1
+2003-Q2,water transport and supporting services,1
+2003-Q2,air transport and supporting services,0.4
+2003-Q2,other transport and storage services,1.8
+2003-Q2,hotels and restaurants,4.5
+2003-Q2,hotels,2.6
+2003-Q2,restaurants,5.5
+2003-Q2,information and communications,1.6
+2003-Q2,broadcasting and publishing,1.6
+2003-Q2,telecommunications,1.2
+2003-Q2,it and other information services,1.9
+2003-Q2,financial services,1.3
+2003-Q2,financial institutions,1.2
+2003-Q2,insurance,1.5
+2003-Q2,real estate and leasing services,3.3
+2003-Q2,professional services,1.7
+2003-Q2,"legal, accounting and management services",2
+2003-Q2,architectural and engineering services,1.5
+2003-Q2,other professional services,1.4
+2003-Q2,administrative and support services,5.1
+2003-Q2,"community, social and personal services",1.9
+2003-Q2,education,2
+2003-Q2,"health, social and community services",1.7
+2003-Q2,"other community, social and personal services",2.2
+2003-Q2,others,3.2
+2003-Q3,manufacturing,1.5
+2003-Q3,"food, beverages and tobacco",2.3
+2003-Q3,paper products and printing,1.9
+2003-Q3,"petroleum, chemical and pharmaceutical products",0.8
+2003-Q3,rubber and plastic products,2.7
+2003-Q3,fabricated metal products,2
+2003-Q3,machinery and equipment,1.4
+2003-Q3,electrical products,1.3
+2003-Q3,electronic products,1.3
+2003-Q3,medical and precision instruments,1.2
+2003-Q3,transport equipment,1.1
+2003-Q3,other manufacturing industries,2
+2003-Q3,construction,1.9
+2003-Q3,services producing industries,2.4
+2003-Q3,wholesale and retail trade,2.5
+2003-Q3,wholesale trade,1.7
+2003-Q3,retail trade,4.4
+2003-Q3,transport and storage,1.2
+2003-Q3,land transport and supporting services,1.4
+2003-Q3,water transport and supporting services,1.2
+2003-Q3,air transport and supporting services,0.7
+2003-Q3,other transport and storage services,1.7
+2003-Q3,hotels and restaurants,4.9
+2003-Q3,hotels,2.8
+2003-Q3,restaurants,5.9
+2003-Q3,information and communications,1.8
+2003-Q3,broadcasting and publishing,1.4
+2003-Q3,telecommunications,1
+2003-Q3,it and other information services,2.7
+2003-Q3,financial services,1.3
+2003-Q3,financial institutions,1.3
+2003-Q3,insurance,1.2
+2003-Q3,real estate and leasing services,3.5
+2003-Q3,professional services,1.9
+2003-Q3,"legal, accounting and management services",2.1
+2003-Q3,architectural and engineering services,1.6
+2003-Q3,other professional services,1.8
+2003-Q3,administrative and support services,4.1
+2003-Q3,"community, social and personal services",2
+2003-Q3,education,2.1
+2003-Q3,"health, social and community services",1.6
+2003-Q3,"other community, social and personal services",2.4
+2003-Q3,others,2.9
+2003-Q4,manufacturing,1.2
+2003-Q4,"food, beverages and tobacco",2.7
+2003-Q4,paper products and printing,1
+2003-Q4,"petroleum, chemical and pharmaceutical products",0.6
+2003-Q4,rubber and plastic products,2.6
+2003-Q4,fabricated metal products,1.6
+2003-Q4,machinery and equipment,1.1
+2003-Q4,electrical products,1.2
+2003-Q4,electronic products,1
+2003-Q4,medical and precision instruments,1.2
+2003-Q4,transport equipment,0.8
+2003-Q4,other manufacturing industries,1.5
+2003-Q4,construction,1.7
+2003-Q4,services producing industries,2.1
+2003-Q4,wholesale and retail trade,2.1
+2003-Q4,wholesale trade,1.4
+2003-Q4,retail trade,3.7
+2003-Q4,transport and storage,1
+2003-Q4,land transport and supporting services,0.9
+2003-Q4,water transport and supporting services,0.9
+2003-Q4,air transport and supporting services,0.7
+2003-Q4,other transport and storage services,1.5
+2003-Q4,hotels and restaurants,4.6
+2003-Q4,hotels,2.6
+2003-Q4,restaurants,5.6
+2003-Q4,information and communications,1.5
+2003-Q4,broadcasting and publishing,1.1
+2003-Q4,telecommunications,0.7
+2003-Q4,it and other information services,2.2
+2003-Q4,financial services,1
+2003-Q4,financial institutions,1.1
+2003-Q4,insurance,0.7
+2003-Q4,real estate and leasing services,2.8
+2003-Q4,professional services,2.2
+2003-Q4,"legal, accounting and management services",2.2
+2003-Q4,architectural and engineering services,2.3
+2003-Q4,other professional services,1.6
+2003-Q4,administrative and support services,4.4
+2003-Q4,"community, social and personal services",1.6
+2003-Q4,education,1.5
+2003-Q4,"health, social and community services",1.2
+2003-Q4,"other community, social and personal services",2.3
+2003-Q4,others,3
+2004-Q1,manufacturing,2
+2004-Q1,"food, beverages and tobacco",4.1
+2004-Q1,paper products and printing,2.1
+2004-Q1,"petroleum, chemical and pharmaceutical products",1
+2004-Q1,rubber and plastic products,3.3
+2004-Q1,fabricated metal products,2.4
+2004-Q1,machinery and equipment,2.1
+2004-Q1,electrical products,1.6
+2004-Q1,electronic products,1.8
+2004-Q1,medical and precision instruments,2.3
+2004-Q1,transport equipment,1.3
+2004-Q1,other manufacturing industries,2
+2004-Q1,construction,2
+2004-Q1,services producing industries,2.6
+2004-Q1,wholesale and retail trade,2.8
+2004-Q1,wholesale trade,1.9
+2004-Q1,retail trade,4.9
+2004-Q1,transport and storage,1.3
+2004-Q1,land transport and supporting services,1
+2004-Q1,water transport and supporting services,1.1
+2004-Q1,air transport and supporting services,0.8
+2004-Q1,other transport and storage services,2
+2004-Q1,hotels and restaurants,5.1
+2004-Q1,hotels,3.5
+2004-Q1,restaurants,5.9
+2004-Q1,information and communications,1.8
+2004-Q1,broadcasting and publishing,1.4
+2004-Q1,telecommunications,1.1
+2004-Q1,it and other information services,2.5
+2004-Q1,financial services,1.4
+2004-Q1,financial institutions,1.4
+2004-Q1,insurance,1.2
+2004-Q1,real estate and leasing services,3.5
+2004-Q1,professional services,2.2
+2004-Q1,"legal, accounting and management services",2.5
+2004-Q1,architectural and engineering services,2.2
+2004-Q1,other professional services,1.7
+2004-Q1,administrative and support services,4.9
+2004-Q1,"community, social and personal services",2.1
+2004-Q1,education,1.9
+2004-Q1,"health, social and community services",1.6
+2004-Q1,"other community, social and personal services",2.8
+2004-Q1,others,2.5
+2004-Q2,manufacturing,1.9
+2004-Q2,"food, beverages and tobacco",3.1
+2004-Q2,paper products and printing,1.8
+2004-Q2,"petroleum, chemical and pharmaceutical products",1
+2004-Q2,rubber and plastic products,3.2
+2004-Q2,fabricated metal products,2.1
+2004-Q2,machinery and equipment,2.3
+2004-Q2,electrical products,1.6
+2004-Q2,electronic products,1.7
+2004-Q2,medical and precision instruments,2
+2004-Q2,transport equipment,1.4
+2004-Q2,other manufacturing industries,2.2
+2004-Q2,construction,1.9
+2004-Q2,services producing industries,2.6
+2004-Q2,wholesale and retail trade,2.7
+2004-Q2,wholesale trade,1.9
+2004-Q2,retail trade,4.3
+2004-Q2,transport and storage,1.4
+2004-Q2,land transport and supporting services,1.2
+2004-Q2,water transport and supporting services,1.3
+2004-Q2,air transport and supporting services,0.6
+2004-Q2,other transport and storage services,2.2
+2004-Q2,hotels and restaurants,4.9
+2004-Q2,hotels,3.3
+2004-Q2,restaurants,5.7
+2004-Q2,information and communications,2.1
+2004-Q2,broadcasting and publishing,2
+2004-Q2,telecommunications,1.1
+2004-Q2,it and other information services,3
+2004-Q2,financial services,1.7
+2004-Q2,financial institutions,1.6
+2004-Q2,insurance,1.7
+2004-Q2,real estate and leasing services,4.1
+2004-Q2,professional services,2.3
+2004-Q2,"legal, accounting and management services",2.4
+2004-Q2,architectural and engineering services,2.2
+2004-Q2,other professional services,2.4
+2004-Q2,administrative and support services,3.7
+2004-Q2,"community, social and personal services",2.2
+2004-Q2,education,1.7
+2004-Q2,"health, social and community services",2
+2004-Q2,"other community, social and personal services",2.8
+2004-Q2,others,2.9
+2004-Q3,manufacturing,1.7
+2004-Q3,"food, beverages and tobacco",2.7
+2004-Q3,paper products and printing,1.9
+2004-Q3,"petroleum, chemical and pharmaceutical products",0.9
+2004-Q3,rubber and plastic products,2.3
+2004-Q3,fabricated metal products,2
+2004-Q3,machinery and equipment,1.8
+2004-Q3,electrical products,1.3
+2004-Q3,electronic products,1.8
+2004-Q3,medical and precision instruments,1.5
+2004-Q3,transport equipment,1.1
+2004-Q3,other manufacturing industries,2.1
+2004-Q3,construction,1.8
+2004-Q3,services producing industries,2.5
+2004-Q3,wholesale and retail trade,2.7
+2004-Q3,wholesale trade,2
+2004-Q3,retail trade,4.1
+2004-Q3,transport and storage,1.5
+2004-Q3,land transport and supporting services,1.7
+2004-Q3,water transport and supporting services,1.2
+2004-Q3,air transport and supporting services,0.8
+2004-Q3,other transport and storage services,2.1
+2004-Q3,hotels and restaurants,4.4
+2004-Q3,hotels,2.8
+2004-Q3,restaurants,5
+2004-Q3,information and communications,2.2
+2004-Q3,broadcasting and publishing,2
+2004-Q3,telecommunications,1.5
+2004-Q3,it and other information services,3
+2004-Q3,financial services,1.8
+2004-Q3,financial institutions,1.7
+2004-Q3,insurance,2
+2004-Q3,real estate and leasing services,3.7
+2004-Q3,professional services,2.3
+2004-Q3,"legal, accounting and management services",2.6
+2004-Q3,architectural and engineering services,1.8
+2004-Q3,other professional services,2.2
+2004-Q3,administrative and support services,3.8
+2004-Q3,"community, social and personal services",1.9
+2004-Q3,education,1.6
+2004-Q3,"health, social and community services",1.7
+2004-Q3,"other community, social and personal services",2.5
+2004-Q3,others,3.4
+2004-Q4,manufacturing,1.2
+2004-Q4,"food, beverages and tobacco",1.8
+2004-Q4,paper products and printing,1.6
+2004-Q4,"petroleum, chemical and pharmaceutical products",0.7
+2004-Q4,rubber and plastic products,1.9
+2004-Q4,fabricated metal products,1.3
+2004-Q4,machinery and equipment,1.2
+2004-Q4,electrical products,0.7
+2004-Q4,electronic products,1.4
+2004-Q4,medical and precision instruments,0.9
+2004-Q4,transport equipment,0.8
+2004-Q4,other manufacturing industries,1.4
+2004-Q4,construction,1.7
+2004-Q4,services producing industries,2.2
+2004-Q4,wholesale and retail trade,2.6
+2004-Q4,wholesale trade,1.9
+2004-Q4,retail trade,4.3
+2004-Q4,transport and storage,1
+2004-Q4,land transport and supporting services,1.2
+2004-Q4,water transport and supporting services,0.9
+2004-Q4,air transport and supporting services,0.5
+2004-Q4,other transport and storage services,1.6
+2004-Q4,hotels and restaurants,4.3
+2004-Q4,hotels,2.3
+2004-Q4,restaurants,5.1
+2004-Q4,information and communications,1.9
+2004-Q4,broadcasting and publishing,1.5
+2004-Q4,telecommunications,1.1
+2004-Q4,it and other information services,2.7
+2004-Q4,financial services,1.3
+2004-Q4,financial institutions,1.4
+2004-Q4,insurance,1
+2004-Q4,real estate and leasing services,3
+2004-Q4,professional services,1.9
+2004-Q4,"legal, accounting and management services",2.2
+2004-Q4,architectural and engineering services,1.4
+2004-Q4,other professional services,1.9
+2004-Q4,administrative and support services,3.5
+2004-Q4,"community, social and personal services",1.7
+2004-Q4,education,1.1
+2004-Q4,"health, social and community services",1.2
+2004-Q4,"other community, social and personal services",2.6
+2004-Q4,others,2.8
+2005-Q1,manufacturing,1.7
+2005-Q1,"food, beverages and tobacco",2.6
+2005-Q1,paper products and printing,2.3
+2005-Q1,"petroleum, chemical and pharmaceutical products",0.9
+2005-Q1,rubber and plastic products,2.5
+2005-Q1,fabricated metal products,2.1
+2005-Q1,machinery and equipment,1.6
+2005-Q1,electrical products,1.1
+2005-Q1,electronic products,1.8
+2005-Q1,medical and precision instruments,1.6
+2005-Q1,transport equipment,0.8
+2005-Q1,other manufacturing industries,2.2
+2005-Q1,construction,1.7
+2005-Q1,services producing industries,2.5
+2005-Q1,wholesale and retail trade,2.9
+2005-Q1,wholesale trade,2.2
+2005-Q1,retail trade,4.5
+2005-Q1,transport and storage,1.2
+2005-Q1,land transport and supporting services,1.3
+2005-Q1,water transport and supporting services,0.9
+2005-Q1,air transport and supporting services,0.6
+2005-Q1,other transport and storage services,1.9
+2005-Q1,hotels and restaurants,4.8
+2005-Q1,hotels,3.4
+2005-Q1,restaurants,5.4
+2005-Q1,information and communications,2
+2005-Q1,broadcasting and publishing,2.2
+2005-Q1,telecommunications,1.3
+2005-Q1,it and other information services,2.6
+2005-Q1,financial services,1.5
+2005-Q1,financial institutions,1.5
+2005-Q1,insurance,1.4
+2005-Q1,real estate and leasing services,3.5
+2005-Q1,professional services,2
+2005-Q1,"legal, accounting and management services",2.3
+2005-Q1,architectural and engineering services,1.5
+2005-Q1,other professional services,1.9
+2005-Q1,administrative and support services,3.9
+2005-Q1,"community, social and personal services",2
+2005-Q1,education,1.6
+2005-Q1,"health, social and community services",1.8
+2005-Q1,"other community, social and personal services",2.5
+2005-Q1,others,2.8
+2005-Q2,manufacturing,1.8
+2005-Q2,"food, beverages and tobacco",2.6
+2005-Q2,paper products and printing,2.2
+2005-Q2,"petroleum, chemical and pharmaceutical products",1.1
+2005-Q2,rubber and plastic products,2.5
+2005-Q2,fabricated metal products,2.1
+2005-Q2,machinery and equipment,1.6
+2005-Q2,electrical products,1.5
+2005-Q2,electronic products,1.9
+2005-Q2,medical and precision instruments,1.7
+2005-Q2,transport equipment,1.2
+2005-Q2,other manufacturing industries,2.3
+2005-Q2,construction,2
+2005-Q2,services producing industries,2.5
+2005-Q2,wholesale and retail trade,2.8
+2005-Q2,wholesale trade,2.3
+2005-Q2,retail trade,4.2
+2005-Q2,transport and storage,1.3
+2005-Q2,land transport and supporting services,1.1
+2005-Q2,water transport and supporting services,1.2
+2005-Q2,air transport and supporting services,0.5
+2005-Q2,other transport and storage services,2.3
+2005-Q2,hotels and restaurants,4.7
+2005-Q2,hotels,3.1
+2005-Q2,restaurants,5.4
+2005-Q2,information and communications,2.2
+2005-Q2,broadcasting and publishing,2.1
+2005-Q2,telecommunications,1.7
+2005-Q2,it and other information services,2.6
+2005-Q2,financial services,1.8
+2005-Q2,financial institutions,1.8
+2005-Q2,insurance,1.8
+2005-Q2,real estate and leasing services,3.4
+2005-Q2,professional services,2.4
+2005-Q2,"legal, accounting and management services",2.4
+2005-Q2,architectural and engineering services,2.1
+2005-Q2,other professional services,2.5
+2005-Q2,administrative and support services,3.6
+2005-Q2,"community, social and personal services",2
+2005-Q2,education,1.7
+2005-Q2,"health, social and community services",1.5
+2005-Q2,"other community, social and personal services",2.7
+2005-Q2,others,2.7
+2005-Q3,manufacturing,1.6
+2005-Q3,"food, beverages and tobacco",2.4
+2005-Q3,paper products and printing,1.8
+2005-Q3,"petroleum, chemical and pharmaceutical products",1.1
+2005-Q3,rubber and plastic products,2.3
+2005-Q3,fabricated metal products,2
+2005-Q3,machinery and equipment,1.6
+2005-Q3,electrical products,1.1
+2005-Q3,electronic products,1.6
+2005-Q3,medical and precision instruments,1.5
+2005-Q3,transport equipment,1.1
+2005-Q3,other manufacturing industries,1.7
+2005-Q3,construction,1.7
+2005-Q3,services producing industries,2.5
+2005-Q3,wholesale and retail trade,2.6
+2005-Q3,wholesale trade,2
+2005-Q3,retail trade,4
+2005-Q3,transport and storage,1.4
+2005-Q3,land transport and supporting services,1.5
+2005-Q3,water transport and supporting services,1.3
+2005-Q3,air transport and supporting services,0.7
+2005-Q3,other transport and storage services,2
+2005-Q3,hotels and restaurants,4.2
+2005-Q3,hotels,2.9
+2005-Q3,restaurants,4.8
+2005-Q3,information and communications,2.3
+2005-Q3,broadcasting and publishing,2
+2005-Q3,telecommunications,1.6
+2005-Q3,it and other information services,2.8
+2005-Q3,financial services,2
+2005-Q3,financial institutions,2
+2005-Q3,insurance,1.8
+2005-Q3,real estate and leasing services,3.3
+2005-Q3,professional services,2.4
+2005-Q3,"legal, accounting and management services",2.5
+2005-Q3,architectural and engineering services,2.2
+2005-Q3,other professional services,2.2
+2005-Q3,administrative and support services,3.5
+2005-Q3,"community, social and personal services",1.9
+2005-Q3,education,1.5
+2005-Q3,"health, social and community services",1.6
+2005-Q3,"other community, social and personal services",2.5
+2005-Q3,others,2.4
+2005-Q4,manufacturing,1.2
+2005-Q4,"food, beverages and tobacco",1.9
+2005-Q4,paper products and printing,1.1
+2005-Q4,"petroleum, chemical and pharmaceutical products",0.6
+2005-Q4,rubber and plastic products,1.6
+2005-Q4,fabricated metal products,1.6
+2005-Q4,machinery and equipment,1.2
+2005-Q4,electrical products,1.1
+2005-Q4,electronic products,1.1
+2005-Q4,medical and precision instruments,1.1
+2005-Q4,transport equipment,0.9
+2005-Q4,other manufacturing industries,1.3
+2005-Q4,construction,1.8
+2005-Q4,services producing industries,2.1
+2005-Q4,wholesale and retail trade,2.2
+2005-Q4,wholesale trade,1.6
+2005-Q4,retail trade,3.7
+2005-Q4,transport and storage,1.1
+2005-Q4,land transport and supporting services,1.1
+2005-Q4,water transport and supporting services,1
+2005-Q4,air transport and supporting services,0.6
+2005-Q4,other transport and storage services,1.5
+2005-Q4,hotels and restaurants,4.1
+2005-Q4,hotels,2.4
+2005-Q4,restaurants,4.9
+2005-Q4,information and communications,1.5
+2005-Q4,broadcasting and publishing,1.5
+2005-Q4,telecommunications,1
+2005-Q4,it and other information services,1.9
+2005-Q4,financial services,1.6
+2005-Q4,financial institutions,1.5
+2005-Q4,insurance,1.6
+2005-Q4,real estate and leasing services,2.9
+2005-Q4,professional services,2.1
+2005-Q4,"legal, accounting and management services",2.4
+2005-Q4,architectural and engineering services,2
+2005-Q4,other professional services,1.7
+2005-Q4,administrative and support services,2.9
+2005-Q4,"community, social and personal services",1.5
+2005-Q4,education,1.6
+2005-Q4,"health, social and community services",1.1
+2005-Q4,"other community, social and personal services",2.1
+2005-Q4,others,2.9
+2006-Q1,manufacturing,1.7
+2006-Q1,"food, beverages and tobacco",2.8
+2006-Q1,"paper,rubber,plastic products and printing",2.3
+2006-Q1,"petroleum, chemical and pharmaceutical products",0.9
+2006-Q1,"fabricated metal products, machinery and equipment",1.9
+2006-Q1,"electronic, computer and optical products",1.6
+2006-Q1,transport equipment,1
+2006-Q1,other manufacturing industries,1.9
+2006-Q1,construction,1.9
+2006-Q1,services,2.2
+2006-Q1,wholesale and retail trade,2.6
+2006-Q1,wholesale trade,2
+2006-Q1,retail trade,3.9
+2006-Q1,transportation and storage,1.4
+2006-Q1,land transport and supporting services,1.6
+2006-Q1,water transport and supporting services,1.1
+2006-Q1,air transport and supporting services,0.5
+2006-Q1,other transport and storage services,2.3
+2006-Q1,accommodation and food services,4.3
+2006-Q1,accommodation,3
+2006-Q1,food and beverage services,4.9
+2006-Q1,information and communications,1.9
+2006-Q1,"telecommunications, broadcasting and publishing",1.5
+2006-Q1,it and other information services,2.2
+2006-Q1,financial and insurance services,1.6
+2006-Q1,financial services,1.6
+2006-Q1,insurance services,1.6
+2006-Q1,real estate services,2.7
+2006-Q1,professional services,2.5
+2006-Q1,"legal, accounting and management services",2.6
+2006-Q1,architectural and engineering services,2.3
+2006-Q1,other professional services,2.6
+2006-Q1,administrative and support services,3.4
+2006-Q1,security and investigation,3.7
+2006-Q1,cleaning and landscaping,3.8
+2006-Q1,other administrative and support services,2.8
+2006-Q1,"community, social and personal services",1.5
+2006-Q1,public administration and education,1.1
+2006-Q1,health and social services,1.5
+2006-Q1,"arts, entertainment and recreation",1.8
+2006-Q1,"other community, social and personal services",3
+2006-Q1,others,1.1
+2006-Q2,manufacturing,1.7
+2006-Q2,"food, beverages and tobacco",2.9
+2006-Q2,"paper,rubber,plastic products and printing",2.1
+2006-Q2,"petroleum, chemical and pharmaceutical products",1
+2006-Q2,"fabricated metal products, machinery and equipment",2
+2006-Q2,"electronic, computer and optical products",1.7
+2006-Q2,transport equipment,1.1
+2006-Q2,other manufacturing industries,1.9
+2006-Q2,construction,1.8
+2006-Q2,services,2.3
+2006-Q2,wholesale and retail trade,2.8
+2006-Q2,wholesale trade,2
+2006-Q2,retail trade,4.5
+2006-Q2,transportation and storage,1.5
+2006-Q2,land transport and supporting services,2.2
+2006-Q2,water transport and supporting services,0.8
+2006-Q2,air transport and supporting services,0.5
+2006-Q2,other transport and storage services,2.3
+2006-Q2,accommodation and food services,4.6
+2006-Q2,accommodation,3.1
+2006-Q2,food and beverage services,5.2
+2006-Q2,information and communications,2
+2006-Q2,"telecommunications, broadcasting and publishing",1.7
+2006-Q2,it and other information services,2.3
+2006-Q2,financial and insurance services,2.1
+2006-Q2,financial services,2.1
+2006-Q2,insurance services,2.2
+2006-Q2,real estate services,3.3
+2006-Q2,professional services,2.4
+2006-Q2,"legal, accounting and management services",2.6
+2006-Q2,architectural and engineering services,2.3
+2006-Q2,other professional services,2.2
+2006-Q2,administrative and support services,3.1
+2006-Q2,security and investigation,3.3
+2006-Q2,cleaning and landscaping,3.8
+2006-Q2,other administrative and support services,2.2
+2006-Q2,"community, social and personal services",1.2
+2006-Q2,public administration and education,0.7
+2006-Q2,health and social services,1.4
+2006-Q2,"arts, entertainment and recreation",2
+2006-Q2,"other community, social and personal services",3.4
+2006-Q2,others,1.3
+2006-Q3,manufacturing,1.6
+2006-Q3,"food, beverages and tobacco",2.3
+2006-Q3,"paper,rubber,plastic products and printing",2
+2006-Q3,"petroleum, chemical and pharmaceutical products",1.1
+2006-Q3,"fabricated metal products, machinery and equipment",1.7
+2006-Q3,"electronic, computer and optical products",1.4
+2006-Q3,transport equipment,1.1
+2006-Q3,other manufacturing industries,2.2
+2006-Q3,construction,1.6
+2006-Q3,services,2.4
+2006-Q3,wholesale and retail trade,2.8
+2006-Q3,wholesale trade,2.1
+2006-Q3,retail trade,4.3
+2006-Q3,transportation and storage,1.6
+2006-Q3,land transport and supporting services,1.7
+2006-Q3,water transport and supporting services,1.3
+2006-Q3,air transport and supporting services,1
+2006-Q3,other transport and storage services,2.4
+2006-Q3,accommodation and food services,4.5
+2006-Q3,accommodation,2.7
+2006-Q3,food and beverage services,5.3
+2006-Q3,information and communications,2.3
+2006-Q3,"telecommunications, broadcasting and publishing",2
+2006-Q3,it and other information services,2.5
+2006-Q3,financial and insurance services,2.1
+2006-Q3,financial services,2.1
+2006-Q3,insurance services,1.9
+2006-Q3,real estate services,3.8
+2006-Q3,professional services,2.3
+2006-Q3,"legal, accounting and management services",2.7
+2006-Q3,architectural and engineering services,1.9
+2006-Q3,other professional services,2.1
+2006-Q3,administrative and support services,3.5
+2006-Q3,security and investigation,3.6
+2006-Q3,cleaning and landscaping,4.4
+2006-Q3,other administrative and support services,2.5
+2006-Q3,"community, social and personal services",1.2
+2006-Q3,public administration and education,0.8
+2006-Q3,health and social services,1.4
+2006-Q3,"arts, entertainment and recreation",2.1
+2006-Q3,"other community, social and personal services",2.5
+2006-Q3,others,1
+2006-Q4,manufacturing,1.1
+2006-Q4,"food, beverages and tobacco",1.9
+2006-Q4,"paper,rubber,plastic products and printing",1.4
+2006-Q4,"petroleum, chemical and pharmaceutical products",0.9
+2006-Q4,"fabricated metal products, machinery and equipment",1.3
+2006-Q4,"electronic, computer and optical products",0.9
+2006-Q4,transport equipment,0.9
+2006-Q4,other manufacturing industries,1.3
+2006-Q4,construction,1.5
+2006-Q4,services,2
+2006-Q4,wholesale and retail trade,2.3
+2006-Q4,wholesale trade,1.6
+2006-Q4,retail trade,3.9
+2006-Q4,transportation and storage,1.2
+2006-Q4,land transport and supporting services,1.1
+2006-Q4,water transport and supporting services,1
+2006-Q4,air transport and supporting services,0.7
+2006-Q4,other transport and storage services,1.8
+2006-Q4,accommodation and food services,4.3
+2006-Q4,accommodation,2
+2006-Q4,food and beverage services,5.3
+2006-Q4,information and communications,1.9
+2006-Q4,"telecommunications, broadcasting and publishing",1.7
+2006-Q4,it and other information services,2.1
+2006-Q4,financial and insurance services,1.6
+2006-Q4,financial services,1.6
+2006-Q4,insurance services,1.5
+2006-Q4,real estate services,3.3
+2006-Q4,professional services,2
+2006-Q4,"legal, accounting and management services",2.4
+2006-Q4,architectural and engineering services,1.6
+2006-Q4,other professional services,1.7
+2006-Q4,administrative and support services,3.4
+2006-Q4,security and investigation,3.4
+2006-Q4,cleaning and landscaping,4.2
+2006-Q4,other administrative and support services,2.5
+2006-Q4,"community, social and personal services",0.8
+2006-Q4,public administration and education,0.5
+2006-Q4,health and social services,1.1
+2006-Q4,"arts, entertainment and recreation",1.6
+2006-Q4,"other community, social and personal services",1.8
+2006-Q4,others,0.9
+2007-Q1,manufacturing,1.5
+2007-Q1,"food, beverages and tobacco",2.5
+2007-Q1,"paper,rubber,plastic products and printing",2.2
+2007-Q1,"petroleum, chemical and pharmaceutical products",1.1
+2007-Q1,"fabricated metal products, machinery and equipment",1.7
+2007-Q1,"electronic, computer and optical products",1.4
+2007-Q1,transport equipment,1.1
+2007-Q1,other manufacturing industries,1.7
+2007-Q1,construction,1.6
+2007-Q1,services,2.2
+2007-Q1,wholesale and retail trade,2.8
+2007-Q1,wholesale trade,2.1
+2007-Q1,retail trade,4.2
+2007-Q1,transportation and storage,1.3
+2007-Q1,land transport and supporting services,1.3
+2007-Q1,water transport and supporting services,1.1
+2007-Q1,air transport and supporting services,0.8
+2007-Q1,other transport and storage services,2
+2007-Q1,accommodation and food services,4.3
+2007-Q1,accommodation,2.5
+2007-Q1,food and beverage services,5
+2007-Q1,information and communications,2
+2007-Q1,"telecommunications, broadcasting and publishing",2.1
+2007-Q1,it and other information services,2
+2007-Q1,financial and insurance services,1.7
+2007-Q1,financial services,1.7
+2007-Q1,insurance services,1.7
+2007-Q1,real estate services,3.1
+2007-Q1,professional services,2
+2007-Q1,"legal, accounting and management services",2.2
+2007-Q1,architectural and engineering services,1.9
+2007-Q1,other professional services,1.7
+2007-Q1,administrative and support services,3.8
+2007-Q1,security and investigation,4.2
+2007-Q1,cleaning and landscaping,4.4
+2007-Q1,other administrative and support services,2.7
+2007-Q1,"community, social and personal services",1.2
+2007-Q1,public administration and education,0.8
+2007-Q1,health and social services,1.5
+2007-Q1,"arts, entertainment and recreation",2.7
+2007-Q1,"other community, social and personal services",2
+2007-Q1,others,1
+2007-Q2,manufacturing,1.7
+2007-Q2,"food, beverages and tobacco",2.6
+2007-Q2,"paper,rubber,plastic products and printing",2.3
+2007-Q2,"petroleum, chemical and pharmaceutical products",1.2
+2007-Q2,"fabricated metal products, machinery and equipment",1.9
+2007-Q2,"electronic, computer and optical products",1.7
+2007-Q2,transport equipment,1.1
+2007-Q2,other manufacturing industries,1.9
+2007-Q2,construction,1.7
+2007-Q2,services,2.5
+2007-Q2,wholesale and retail trade,3.2
+2007-Q2,wholesale trade,2.3
+2007-Q2,retail trade,4.9
+2007-Q2,transportation and storage,1.5
+2007-Q2,land transport and supporting services,1.6
+2007-Q2,water transport and supporting services,1.3
+2007-Q2,air transport and supporting services,0.5
+2007-Q2,other transport and storage services,2.4
+2007-Q2,accommodation and food services,5
+2007-Q2,accommodation,3.1
+2007-Q2,food and beverage services,5.8
+2007-Q2,information and communications,2.5
+2007-Q2,"telecommunications, broadcasting and publishing",2.1
+2007-Q2,it and other information services,3
+2007-Q2,financial and insurance services,2.3
+2007-Q2,financial services,2.3
+2007-Q2,insurance services,2.3
+2007-Q2,real estate services,3.6
+2007-Q2,professional services,2.3
+2007-Q2,"legal, accounting and management services",2.5
+2007-Q2,architectural and engineering services,2.2
+2007-Q2,other professional services,2.2
+2007-Q2,administrative and support services,3.9
+2007-Q2,security and investigation,3.8
+2007-Q2,cleaning and landscaping,4.8
+2007-Q2,other administrative and support services,3.1
+2007-Q2,"community, social and personal services",1.2
+2007-Q2,public administration and education,0.7
+2007-Q2,health and social services,1.5
+2007-Q2,"arts, entertainment and recreation",2.1
+2007-Q2,"other community, social and personal services",2.9
+2007-Q2,others,1.4
+2007-Q3,manufacturing,1.6
+2007-Q3,"food, beverages and tobacco",2.5
+2007-Q3,"paper,rubber,plastic products and printing",2.1
+2007-Q3,"petroleum, chemical and pharmaceutical products",1.3
+2007-Q3,"fabricated metal products, machinery and equipment",1.8
+2007-Q3,"electronic, computer and optical products",1.7
+2007-Q3,transport equipment,1.1
+2007-Q3,other manufacturing industries,1.8
+2007-Q3,construction,1.7
+2007-Q3,services,2.4
+2007-Q3,wholesale and retail trade,2.7
+2007-Q3,wholesale trade,2.2
+2007-Q3,retail trade,4.1
+2007-Q3,transportation and storage,1.6
+2007-Q3,land transport and supporting services,1.9
+2007-Q3,water transport and supporting services,1.3
+2007-Q3,air transport and supporting services,0.8
+2007-Q3,other transport and storage services,2.3
+2007-Q3,accommodation and food services,4.5
+2007-Q3,accommodation,2.8
+2007-Q3,food and beverage services,5.1
+2007-Q3,information and communications,2.6
+2007-Q3,"telecommunications, broadcasting and publishing",2.3
+2007-Q3,it and other information services,2.9
+2007-Q3,financial and insurance services,2.2
+2007-Q3,financial services,2.2
+2007-Q3,insurance services,2.1
+2007-Q3,real estate services,3.3
+2007-Q3,professional services,2.4
+2007-Q3,"legal, accounting and management services",2.5
+2007-Q3,architectural and engineering services,2.2
+2007-Q3,other professional services,2.4
+2007-Q3,administrative and support services,3.8
+2007-Q3,security and investigation,3.7
+2007-Q3,cleaning and landscaping,4.9
+2007-Q3,other administrative and support services,2.8
+2007-Q3,"community, social and personal services",1.3
+2007-Q3,public administration and education,0.8
+2007-Q3,health and social services,1.6
+2007-Q3,"arts, entertainment and recreation",2.4
+2007-Q3,"other community, social and personal services",2.8
+2007-Q3,others,1.8
+2007-Q4,manufacturing,1.2
+2007-Q4,"food, beverages and tobacco",1.9
+2007-Q4,"paper,rubber,plastic products and printing",1.6
+2007-Q4,"petroleum, chemical and pharmaceutical products",0.7
+2007-Q4,"fabricated metal products, machinery and equipment",1.4
+2007-Q4,"electronic, computer and optical products",1.1
+2007-Q4,transport equipment,1
+2007-Q4,other manufacturing industries,1.2
+2007-Q4,construction,1.5
+2007-Q4,services,2
+2007-Q4,wholesale and retail trade,2.3
+2007-Q4,wholesale trade,1.8
+2007-Q4,retail trade,3.4
+2007-Q4,transportation and storage,1.3
+2007-Q4,land transport and supporting services,1.8
+2007-Q4,water transport and supporting services,1.1
+2007-Q4,air transport and supporting services,0.6
+2007-Q4,other transport and storage services,1.8
+2007-Q4,accommodation and food services,3.7
+2007-Q4,accommodation,2.1
+2007-Q4,food and beverage services,4.3
+2007-Q4,information and communications,2
+2007-Q4,"telecommunications, broadcasting and publishing",1.9
+2007-Q4,it and other information services,2.2
+2007-Q4,financial and insurance services,1.4
+2007-Q4,financial services,1.4
+2007-Q4,insurance services,1.6
+2007-Q4,real estate services,3
+2007-Q4,professional services,2
+2007-Q4,"legal, accounting and management services",2.3
+2007-Q4,architectural and engineering services,1.7
+2007-Q4,other professional services,2
+2007-Q4,administrative and support services,3.8
+2007-Q4,security and investigation,4.1
+2007-Q4,cleaning and landscaping,4.5
+2007-Q4,other administrative and support services,2.6
+2007-Q4,"community, social and personal services",1
+2007-Q4,public administration and education,0.5
+2007-Q4,health and social services,1.1
+2007-Q4,"arts, entertainment and recreation",2.4
+2007-Q4,"other community, social and personal services",2.5
+2007-Q4,others,1.7
+2008-Q1,manufacturing,1.7
+2008-Q1,"food, beverages and tobacco",2.1
+2008-Q1,"paper,rubber,plastic products and printing",1.8
+2008-Q1,"petroleum, chemical and pharmaceutical products",0.9
+2008-Q1,"fabricated metal products, machinery and equipment",1.8
+2008-Q1,"electronic, computer and optical products",1.8
+2008-Q1,transport equipment,1.4
+2008-Q1,other manufacturing industries,2
+2008-Q1,construction,1.8
+2008-Q1,services,2.3
+2008-Q1,wholesale and retail trade,2.8
+2008-Q1,wholesale trade,2.1
+2008-Q1,retail trade,4.3
+2008-Q1,transportation and storage,1.7
+2008-Q1,land transport and supporting services,2.2
+2008-Q1,water transport and supporting services,1.3
+2008-Q1,air transport and supporting services,1
+2008-Q1,other transport and storage services,2.3
+2008-Q1,accommodation and food services,4.1
+2008-Q1,accommodation,2.4
+2008-Q1,food and beverage services,4.7
+2008-Q1,information and communications,2.1
+2008-Q1,"telecommunications, broadcasting and publishing",1.9
+2008-Q1,it and other information services,2.3
+2008-Q1,financial and insurance services,1.3
+2008-Q1,financial services,1.2
+2008-Q1,insurance services,1.6
+2008-Q1,real estate services,3.1
+2008-Q1,professional services,2.1
+2008-Q1,"legal, accounting and management services",2.4
+2008-Q1,architectural and engineering services,1.9
+2008-Q1,other professional services,1.6
+2008-Q1,administrative and support services,3.9
+2008-Q1,security and investigation,3.8
+2008-Q1,cleaning and landscaping,4.5
+2008-Q1,other administrative and support services,3.2
+2008-Q1,"community, social and personal services",1.3
+2008-Q1,public administration and education,0.8
+2008-Q1,health and social services,1.4
+2008-Q1,"arts, entertainment and recreation",2.6
+2008-Q1,"other community, social and personal services",2.8
+2008-Q1,others,2.1
+2008-Q2,manufacturing,1.9
+2008-Q2,"food, beverages and tobacco",3
+2008-Q2,"paper,rubber,plastic products and printing",2.2
+2008-Q2,"petroleum, chemical and pharmaceutical products",1.3
+2008-Q2,"fabricated metal products, machinery and equipment",2
+2008-Q2,"electronic, computer and optical products",1.9
+2008-Q2,transport equipment,1.7
+2008-Q2,other manufacturing industries,2
+2008-Q2,construction,1.9
+2008-Q2,services,2.5
+2008-Q2,wholesale and retail trade,3
+2008-Q2,wholesale trade,2.4
+2008-Q2,retail trade,4.4
+2008-Q2,transportation and storage,1.8
+2008-Q2,land transport and supporting services,2.7
+2008-Q2,water transport and supporting services,1.5
+2008-Q2,air transport and supporting services,0.6
+2008-Q2,other transport and storage services,2.5
+2008-Q2,accommodation and food services,4.5
+2008-Q2,accommodation,2.9
+2008-Q2,food and beverage services,5.1
+2008-Q2,information and communications,2.4
+2008-Q2,"telecommunications, broadcasting and publishing",2.2
+2008-Q2,it and other information services,2.7
+2008-Q2,financial and insurance services,1.8
+2008-Q2,financial services,1.7
+2008-Q2,insurance services,2.4
+2008-Q2,real estate services,3.3
+2008-Q2,professional services,2.4
+2008-Q2,"legal, accounting and management services",2.5
+2008-Q2,architectural and engineering services,2.2
+2008-Q2,other professional services,2.7
+2008-Q2,administrative and support services,4.2
+2008-Q2,security and investigation,4.6
+2008-Q2,cleaning and landscaping,4.8
+2008-Q2,other administrative and support services,3.1
+2008-Q2,"community, social and personal services",1.4
+2008-Q2,public administration and education,0.7
+2008-Q2,health and social services,1.4
+2008-Q2,"arts, entertainment and recreation",3
+2008-Q2,"other community, social and personal services",3.4
+2008-Q2,others,2.4
+2008-Q3,manufacturing,1.6
+2008-Q3,"food, beverages and tobacco",2.5
+2008-Q3,"paper,rubber,plastic products and printing",1.9
+2008-Q3,"petroleum, chemical and pharmaceutical products",1
+2008-Q3,"fabricated metal products, machinery and equipment",1.7
+2008-Q3,"electronic, computer and optical products",1.5
+2008-Q3,transport equipment,1.3
+2008-Q3,other manufacturing industries,1.8
+2008-Q3,construction,1.7
+2008-Q3,services,2.2
+2008-Q3,wholesale and retail trade,2.5
+2008-Q3,wholesale trade,2
+2008-Q3,retail trade,3.6
+2008-Q3,transportation and storage,1.6
+2008-Q3,land transport and supporting services,2.1
+2008-Q3,water transport and supporting services,1.3
+2008-Q3,air transport and supporting services,0.9
+2008-Q3,other transport and storage services,2.2
+2008-Q3,accommodation and food services,3.9
+2008-Q3,accommodation,2.4
+2008-Q3,food and beverage services,4.4
+2008-Q3,information and communications,2.4
+2008-Q3,"telecommunications, broadcasting and publishing",1.9
+2008-Q3,it and other information services,2.7
+2008-Q3,financial and insurance services,1.8
+2008-Q3,financial services,1.7
+2008-Q3,insurance services,2.2
+2008-Q3,real estate services,3
+2008-Q3,professional services,2.1
+2008-Q3,"legal, accounting and management services",2.1
+2008-Q3,architectural and engineering services,2
+2008-Q3,other professional services,2.4
+2008-Q3,administrative and support services,3.6
+2008-Q3,security and investigation,3.8
+2008-Q3,cleaning and landscaping,3.9
+2008-Q3,other administrative and support services,3
+2008-Q3,"community, social and personal services",1.3
+2008-Q3,public administration and education,0.8
+2008-Q3,health and social services,1.6
+2008-Q3,"arts, entertainment and recreation",2.5
+2008-Q3,"other community, social and personal services",2.6
+2008-Q3,others,2.2
+2008-Q4,manufacturing,1.3
+2008-Q4,"food, beverages and tobacco",2.3
+2008-Q4,"paper,rubber,plastic products and printing",1.3
+2008-Q4,"petroleum, chemical and pharmaceutical products",0.6
+2008-Q4,"fabricated metal products, machinery and equipment",1.4
+2008-Q4,"electronic, computer and optical products",1
+2008-Q4,transport equipment,1.3
+2008-Q4,other manufacturing industries,1.3
+2008-Q4,construction,1.5
+2008-Q4,services,1.7
+2008-Q4,wholesale and retail trade,2.1
+2008-Q4,wholesale trade,1.4
+2008-Q4,retail trade,3.5
+2008-Q4,transportation and storage,1.2
+2008-Q4,land transport and supporting services,1.6
+2008-Q4,water transport and supporting services,1.1
+2008-Q4,air transport and supporting services,0.4
+2008-Q4,other transport and storage services,1.7
+2008-Q4,accommodation and food services,3.2
+2008-Q4,accommodation,1.7
+2008-Q4,food and beverage services,3.8
+2008-Q4,information and communications,1.6
+2008-Q4,"telecommunications, broadcasting and publishing",1.2
+2008-Q4,it and other information services,2
+2008-Q4,financial and insurance services,1.1
+2008-Q4,financial services,1
+2008-Q4,insurance services,1.4
+2008-Q4,real estate services,2.5
+2008-Q4,professional services,1.7
+2008-Q4,"legal, accounting and management services",2.1
+2008-Q4,architectural and engineering services,1.4
+2008-Q4,other professional services,1.5
+2008-Q4,administrative and support services,3
+2008-Q4,security and investigation,3.3
+2008-Q4,cleaning and landscaping,3.4
+2008-Q4,other administrative and support services,2.4
+2008-Q4,"community, social and personal services",0.8
+2008-Q4,public administration and education,0.4
+2008-Q4,health and social services,1
+2008-Q4,"arts, entertainment and recreation",1.4
+2008-Q4,"other community, social and personal services",2.1
+2008-Q4,others,1.8
+2009-Q1,manufacturing,1.6
+2009-Q1,"food, beverages and tobacco",2.6
+2009-Q1,"paper,rubber,plastic products and printing",1.7
+2009-Q1,"petroleum, chemical and pharmaceutical products",0.6
+2009-Q1,"fabricated metal products, machinery and equipment",1.6
+2009-Q1,"electronic, computer and optical products",1.4
+2009-Q1,transport equipment,1.8
+2009-Q1,other manufacturing industries,1.7
+2009-Q1,construction,1.7
+2009-Q1,services,1.9
+2009-Q1,wholesale and retail trade,2.3
+2009-Q1,wholesale trade,1.5
+2009-Q1,retail trade,4.1
+2009-Q1,transportation and storage,1.3
+2009-Q1,land transport and supporting services,1.6
+2009-Q1,water transport and supporting services,1.1
+2009-Q1,air transport and supporting services,0.5
+2009-Q1,other transport and storage services,1.8
+2009-Q1,accommodation and food services,3.7
+2009-Q1,accommodation,1.9
+2009-Q1,food and beverage services,4.2
+2009-Q1,information and communications,1.6
+2009-Q1,"telecommunications, broadcasting and publishing",1.3
+2009-Q1,it and other information services,1.8
+2009-Q1,financial and insurance services,0.9
+2009-Q1,financial services,0.9
+2009-Q1,insurance services,1.3
+2009-Q1,real estate services,2.7
+2009-Q1,professional services,1.6
+2009-Q1,"legal, accounting and management services",1.9
+2009-Q1,architectural and engineering services,1.3
+2009-Q1,other professional services,1.3
+2009-Q1,administrative and support services,3
+2009-Q1,security and investigation,3.1
+2009-Q1,cleaning and landscaping,3.6
+2009-Q1,other administrative and support services,2.3
+2009-Q1,"community, social and personal services",1.1
+2009-Q1,public administration and education,0.7
+2009-Q1,health and social services,1.2
+2009-Q1,"arts, entertainment and recreation",2
+2009-Q1,"other community, social and personal services",2.4
+2009-Q1,others,2.4
+2009-Q2,manufacturing,1.6
+2009-Q2,"food, beverages and tobacco",3.4
+2009-Q2,"paper,rubber,plastic products and printing",1.4
+2009-Q2,"petroleum, chemical and pharmaceutical products",0.6
+2009-Q2,"fabricated metal products, machinery and equipment",1.8
+2009-Q2,"electronic, computer and optical products",1.4
+2009-Q2,transport equipment,1.5
+2009-Q2,other manufacturing industries,1.7
+2009-Q2,construction,1.7
+2009-Q2,services,1.9
+2009-Q2,wholesale and retail trade,2.2
+2009-Q2,wholesale trade,1.5
+2009-Q2,retail trade,3.6
+2009-Q2,transportation and storage,1.2
+2009-Q2,land transport and supporting services,1.5
+2009-Q2,water transport and supporting services,0.8
+2009-Q2,air transport and supporting services,0.4
+2009-Q2,other transport and storage services,1.9
+2009-Q2,accommodation and food services,4
+2009-Q2,accommodation,2.4
+2009-Q2,food and beverage services,4.6
+2009-Q2,information and communications,1.4
+2009-Q2,"telecommunications, broadcasting and publishing",1.1
+2009-Q2,it and other information services,1.8
+2009-Q2,financial and insurance services,1.2
+2009-Q2,financial services,1.1
+2009-Q2,insurance services,1.6
+2009-Q2,real estate services,2.7
+2009-Q2,professional services,1.4
+2009-Q2,"legal, accounting and management services",1.7
+2009-Q2,architectural and engineering services,1.1
+2009-Q2,other professional services,1.7
+2009-Q2,administrative and support services,3.2
+2009-Q2,security and investigation,3.2
+2009-Q2,cleaning and landscaping,4
+2009-Q2,other administrative and support services,2.3
+2009-Q2,"community, social and personal services",1
+2009-Q2,public administration and education,0.6
+2009-Q2,health and social services,1.2
+2009-Q2,"arts, entertainment and recreation",1.7
+2009-Q2,"other community, social and personal services",2.6
+2009-Q2,others,2
+2009-Q3,manufacturing,1.5
+2009-Q3,"food, beverages and tobacco",2.5
+2009-Q3,"paper,rubber,plastic products and printing",1.7
+2009-Q3,"petroleum, chemical and pharmaceutical products",0.8
+2009-Q3,"fabricated metal products, machinery and equipment",1.5
+2009-Q3,"electronic, computer and optical products",1.6
+2009-Q3,transport equipment,1.4
+2009-Q3,other manufacturing industries,1.4
+2009-Q3,construction,1.6
+2009-Q3,services,2
+2009-Q3,wholesale and retail trade,2.4
+2009-Q3,wholesale trade,1.7
+2009-Q3,retail trade,3.8
+2009-Q3,transportation and storage,1.4
+2009-Q3,land transport and supporting services,1.8
+2009-Q3,water transport and supporting services,1.1
+2009-Q3,air transport and supporting services,0.7
+2009-Q3,other transport and storage services,1.9
+2009-Q3,accommodation and food services,4
+2009-Q3,accommodation,2.7
+2009-Q3,food and beverage services,4.3
+2009-Q3,information and communications,1.7
+2009-Q3,"telecommunications, broadcasting and publishing",1.3
+2009-Q3,it and other information services,2.1
+2009-Q3,financial and insurance services,1.2
+2009-Q3,financial services,1.2
+2009-Q3,insurance services,1.4
+2009-Q3,real estate services,3.2
+2009-Q3,professional services,1.8
+2009-Q3,"legal, accounting and management services",2.1
+2009-Q3,architectural and engineering services,1.4
+2009-Q3,other professional services,2
+2009-Q3,administrative and support services,3.5
+2009-Q3,security and investigation,3.7
+2009-Q3,cleaning and landscaping,3.9
+2009-Q3,other administrative and support services,3.1
+2009-Q3,"community, social and personal services",1.1
+2009-Q3,public administration and education,0.6
+2009-Q3,health and social services,1.2
+2009-Q3,"arts, entertainment and recreation",2.2
+2009-Q3,"other community, social and personal services",2.5
+2009-Q3,others,1.8
+2009-Q4,manufacturing,1.2
+2009-Q4,"food, beverages and tobacco",2.2
+2009-Q4,"paper,rubber,plastic products and printing",1.3
+2009-Q4,"petroleum, chemical and pharmaceutical products",0.7
+2009-Q4,"fabricated metal products, machinery and equipment",1.1
+2009-Q4,"electronic, computer and optical products",1.1
+2009-Q4,transport equipment,1.3
+2009-Q4,other manufacturing industries,1.1
+2009-Q4,construction,1.7
+2009-Q4,services,1.9
+2009-Q4,wholesale and retail trade,2.6
+2009-Q4,wholesale trade,2
+2009-Q4,retail trade,3.6
+2009-Q4,transportation and storage,1.2
+2009-Q4,land transport and supporting services,1.4
+2009-Q4,water transport and supporting services,1
+2009-Q4,air transport and supporting services,0.6
+2009-Q4,other transport and storage services,1.6
+2009-Q4,accommodation and food services,3.7
+2009-Q4,accommodation,2.6
+2009-Q4,food and beverage services,4
+2009-Q4,information and communications,1.7
+2009-Q4,"telecommunications, broadcasting and publishing",1.1
+2009-Q4,it and other information services,2.1
+2009-Q4,financial and insurance services,1.2
+2009-Q4,financial services,1.2
+2009-Q4,insurance services,1.3
+2009-Q4,real estate services,2.9
+2009-Q4,professional services,1.7
+2009-Q4,"legal, accounting and management services",2
+2009-Q4,architectural and engineering services,1.2
+2009-Q4,other professional services,2
+2009-Q4,administrative and support services,3.4
+2009-Q4,security and investigation,2.7
+2009-Q4,cleaning and landscaping,4.9
+2009-Q4,other administrative and support services,3.1
+2009-Q4,"community, social and personal services",0.8
+2009-Q4,public administration and education,0.4
+2009-Q4,health and social services,0.9
+2009-Q4,"arts, entertainment and recreation",1.5
+2009-Q4,"other community, social and personal services",1.9
+2009-Q4,others,1.7
+2010-Q1,manufacturing,1.5
+2010-Q1,"food, beverages and tobacco",2.5
+2010-Q1,"paper,rubber,plastic products and printing",2
+2010-Q1,"petroleum, chemical and pharmaceutical products",0.7
+2010-Q1,"fabricated metal products, machinery and equipment",1.5
+2010-Q1,"electronic, computer and optical products",1.6
+2010-Q1,transport equipment,1.2
+2010-Q1,other manufacturing industries,1.6
+2010-Q1,construction,1.7
+2010-Q1,services,2.3
+2010-Q1,wholesale and retail trade,3.3
+2010-Q1,wholesale trade,2.3
+2010-Q1,retail trade,5.3
+2010-Q1,transportation and storage,1.6
+2010-Q1,land transport and supporting services,1.7
+2010-Q1,water transport and supporting services,1
+2010-Q1,air transport and supporting services,0.9
+2010-Q1,other transport and storage services,2.4
+2010-Q1,accommodation and food services,4.2
+2010-Q1,accommodation,3.3
+2010-Q1,food and beverage services,4.5
+2010-Q1,information and communications,1.9
+2010-Q1,"telecommunications, broadcasting and publishing",1.3
+2010-Q1,it and other information services,2.4
+2010-Q1,financial and insurance services,1.3
+2010-Q1,financial services,1.3
+2010-Q1,insurance services,1.4
+2010-Q1,real estate services,3.1
+2010-Q1,professional services,1.8
+2010-Q1,"legal, accounting and management services",2.2
+2010-Q1,architectural and engineering services,1.4
+2010-Q1,other professional services,1.8
+2010-Q1,administrative and support services,3.7
+2010-Q1,security and investigation,3.5
+2010-Q1,cleaning and landscaping,5.4
+2010-Q1,other administrative and support services,2.8
+2010-Q1,"community, social and personal services",1.3
+2010-Q1,public administration and education,0.7
+2010-Q1,health and social services,1.5
+2010-Q1,"arts, entertainment and recreation",2.1
+2010-Q1,"other community, social and personal services",2.7
+2010-Q1,others,1.2
+2010-Q2,manufacturing,1.8
+2010-Q2,"food, beverages and tobacco",3
+2010-Q2,"paper,rubber,plastic products and printing",2.5
+2010-Q2,"petroleum, chemical and pharmaceutical products",0.9
+2010-Q2,"fabricated metal products, machinery and equipment",1.8
+2010-Q2,"electronic, computer and optical products",1.9
+2010-Q2,transport equipment,1.4
+2010-Q2,other manufacturing industries,1.8
+2010-Q2,construction,2
+2010-Q2,services,2.5
+2010-Q2,wholesale and retail trade,3.4
+2010-Q2,wholesale trade,2.7
+2010-Q2,retail trade,4.9
+2010-Q2,transportation and storage,1.8
+2010-Q2,land transport and supporting services,2
+2010-Q2,water transport and supporting services,1.5
+2010-Q2,air transport and supporting services,0.7
+2010-Q2,other transport and storage services,2.6
+2010-Q2,accommodation and food services,4
+2010-Q2,accommodation,3.6
+2010-Q2,food and beverage services,4.1
+2010-Q2,information and communications,2.4
+2010-Q2,"telecommunications, broadcasting and publishing",1.8
+2010-Q2,it and other information services,2.9
+2010-Q2,financial and insurance services,1.9
+2010-Q2,financial services,1.9
+2010-Q2,insurance services,2
+2010-Q2,real estate services,3.2
+2010-Q2,professional services,2.1
+2010-Q2,"legal, accounting and management services",2.4
+2010-Q2,architectural and engineering services,1.6
+2010-Q2,other professional services,2.5
+2010-Q2,administrative and support services,4.3
+2010-Q2,security and investigation,5.1
+2010-Q2,cleaning and landscaping,5
+2010-Q2,other administrative and support services,3.4
+2010-Q2,"community, social and personal services",1.3
+2010-Q2,public administration and education,0.7
+2010-Q2,health and social services,1.4
+2010-Q2,"arts, entertainment and recreation",2.2
+2010-Q2,"other community, social and personal services",2.6
+2010-Q2,others,1.6
+2010-Q3,manufacturing,1.6
+2010-Q3,"food, beverages and tobacco",3.2
+2010-Q3,"paper,rubber,plastic products and printing",2.4
+2010-Q3,"petroleum, chemical and pharmaceutical products",1
+2010-Q3,"fabricated metal products, machinery and equipment",1.6
+2010-Q3,"electronic, computer and optical products",1.6
+2010-Q3,transport equipment,1.2
+2010-Q3,other manufacturing industries,1.7
+2010-Q3,construction,1.8
+2010-Q3,services,2.4
+2010-Q3,wholesale and retail trade,2.8
+2010-Q3,wholesale trade,2.2
+2010-Q3,retail trade,4.2
+2010-Q3,transportation and storage,1.7
+2010-Q3,land transport and supporting services,1.8
+2010-Q3,water transport and supporting services,1.3
+2010-Q3,air transport and supporting services,0.9
+2010-Q3,other transport and storage services,2.5
+2010-Q3,accommodation and food services,4.4
+2010-Q3,accommodation,3.2
+2010-Q3,food and beverage services,4.8
+2010-Q3,information and communications,2.2
+2010-Q3,"telecommunications, broadcasting and publishing",1.9
+2010-Q3,it and other information services,2.5
+2010-Q3,financial and insurance services,1.9
+2010-Q3,financial services,1.9
+2010-Q3,insurance services,1.9
+2010-Q3,real estate services,3.3
+2010-Q3,professional services,2
+2010-Q3,"legal, accounting and management services",2.3
+2010-Q3,architectural and engineering services,1.5
+2010-Q3,other professional services,2.2
+2010-Q3,administrative and support services,4.4
+2010-Q3,security and investigation,4.2
+2010-Q3,cleaning and landscaping,5.2
+2010-Q3,other administrative and support services,3.5
+2010-Q3,"community, social and personal services",1.3
+2010-Q3,public administration and education,0.8
+2010-Q3,health and social services,1.3
+2010-Q3,"arts, entertainment and recreation",2.3
+2010-Q3,"other community, social and personal services",2.8
+2010-Q3,others,2.1
+2010-Q4,manufacturing,1.2
+2010-Q4,"food, beverages and tobacco",2.6
+2010-Q4,"paper,rubber,plastic products and printing",1.5
+2010-Q4,"petroleum, chemical and pharmaceutical products",0.8
+2010-Q4,"fabricated metal products, machinery and equipment",1.2
+2010-Q4,"electronic, computer and optical products",1.2
+2010-Q4,transport equipment,1.1
+2010-Q4,other manufacturing industries,1.2
+2010-Q4,construction,1.6
+2010-Q4,services,2
+2010-Q4,wholesale and retail trade,2.2
+2010-Q4,wholesale trade,1.4
+2010-Q4,retail trade,4.2
+2010-Q4,transportation and storage,1.3
+2010-Q4,land transport and supporting services,1.4
+2010-Q4,water transport and supporting services,1.1
+2010-Q4,air transport and supporting services,0.9
+2010-Q4,other transport and storage services,1.8
+2010-Q4,accommodation and food services,3.8
+2010-Q4,accommodation,2.1
+2010-Q4,food and beverage services,4.3
+2010-Q4,information and communications,1.8
+2010-Q4,"telecommunications, broadcasting and publishing",1.5
+2010-Q4,it and other information services,2
+2010-Q4,financial and insurance services,1.4
+2010-Q4,financial services,1.4
+2010-Q4,insurance services,1.7
+2010-Q4,real estate services,3.5
+2010-Q4,professional services,1.7
+2010-Q4,"legal, accounting and management services",1.6
+2010-Q4,architectural and engineering services,1.5
+2010-Q4,other professional services,2.2
+2010-Q4,administrative and support services,4
+2010-Q4,security and investigation,4.5
+2010-Q4,cleaning and landscaping,4.9
+2010-Q4,other administrative and support services,2.6
+2010-Q4,"community, social and personal services",0.9
+2010-Q4,public administration and education,0.5
+2010-Q4,health and social services,1.1
+2010-Q4,"arts, entertainment and recreation",1.5
+2010-Q4,"other community, social and personal services",2.2
+2010-Q4,others,1.4
+2011-Q1,manufacturing,1.6
+2011-Q1,"food, beverages and tobacco",2.8
+2011-Q1,"paper,rubber,plastic products and printing",2
+2011-Q1,"petroleum, chemical and pharmaceutical products",0.8
+2011-Q1,"fabricated metal products, machinery and equipment",1.5
+2011-Q1,"electronic, computer and optical products",1.8
+2011-Q1,transport equipment,1.2
+2011-Q1,other manufacturing industries,1.9
+2011-Q1,construction,1.5
+2011-Q1,services,2.2
+2011-Q1,wholesale and retail trade,2.8
+2011-Q1,wholesale trade,1.8
+2011-Q1,retail trade,5
+2011-Q1,transportation and storage,1.6
+2011-Q1,land transport and supporting services,1.7
+2011-Q1,water transport and supporting services,1.2
+2011-Q1,air transport and supporting services,0.9
+2011-Q1,other transport and storage services,2.2
+2011-Q1,accommodation and food services,4.1
+2011-Q1,accommodation,2.6
+2011-Q1,food and beverage services,4.5
+2011-Q1,information and communications,1.6
+2011-Q1,"telecommunications, broadcasting and publishing",1.4
+2011-Q1,it and other information services,1.9
+2011-Q1,financial and insurance services,1.2
+2011-Q1,financial services,1.2
+2011-Q1,insurance services,1.4
+2011-Q1,real estate services,3.3
+2011-Q1,professional services,1.7
+2011-Q1,"legal, accounting and management services",1.7
+2011-Q1,architectural and engineering services,1.6
+2011-Q1,other professional services,2.1
+2011-Q1,administrative and support services,4.2
+2011-Q1,security and investigation,4.4
+2011-Q1,cleaning and landscaping,5.3
+2011-Q1,other administrative and support services,2.8
+2011-Q1,"community, social and personal services",1.2
+2011-Q1,public administration and education,0.7
+2011-Q1,health and social services,1.4
+2011-Q1,"arts, entertainment and recreation",1.8
+2011-Q1,"other community, social and personal services",2.4
+2011-Q1,others,1.9
+2011-Q2,manufacturing,1.7
+2011-Q2,"food, beverages and tobacco",2.8
+2011-Q2,"paper,rubber,plastic products and printing",2.4
+2011-Q2,"petroleum, chemical and pharmaceutical products",1
+2011-Q2,"fabricated metal products, machinery and equipment",1.6
+2011-Q2,"electronic, computer and optical products",1.8
+2011-Q2,transport equipment,1.3
+2011-Q2,other manufacturing industries,2
+2011-Q2,construction,2
+2011-Q2,services,2.3
+2011-Q2,wholesale and retail trade,2.5
+2011-Q2,wholesale trade,1.8
+2011-Q2,retail trade,4.3
+2011-Q2,transportation and storage,1.6
+2011-Q2,land transport and supporting services,1.9
+2011-Q2,water transport and supporting services,1.3
+2011-Q2,air transport and supporting services,0.6
+2011-Q2,other transport and storage services,2.5
+2011-Q2,accommodation and food services,4.4
+2011-Q2,accommodation,3.4
+2011-Q2,food and beverage services,4.8
+2011-Q2,information and communications,2
+2011-Q2,"telecommunications, broadcasting and publishing",1.9
+2011-Q2,it and other information services,2
+2011-Q2,financial and insurance services,1.8
+2011-Q2,financial services,1.8
+2011-Q2,insurance services,2
+2011-Q2,real estate services,3.5
+2011-Q2,professional services,1.9
+2011-Q2,"legal, accounting and management services",2
+2011-Q2,architectural and engineering services,1.9
+2011-Q2,other professional services,2
+2011-Q2,administrative and support services,4.1
+2011-Q2,security and investigation,4.6
+2011-Q2,cleaning and landscaping,4.8
+2011-Q2,other administrative and support services,2.9
+2011-Q2,"community, social and personal services",1.3
+2011-Q2,public administration and education,0.8
+2011-Q2,health and social services,1.4
+2011-Q2,"arts, entertainment and recreation",2.3
+2011-Q2,"other community, social and personal services",2.7
+2011-Q2,others,1.6
+2011-Q3,manufacturing,1.7
+2011-Q3,"food, beverages and tobacco",3
+2011-Q3,"paper,rubber,plastic products and printing",2.1
+2011-Q3,"petroleum, chemical and pharmaceutical products",0.9
+2011-Q3,"fabricated metal products, machinery and equipment",1.8
+2011-Q3,"electronic, computer and optical products",1.7
+2011-Q3,transport equipment,1.4
+2011-Q3,other manufacturing industries,1.9
+2011-Q3,construction,1.8
+2011-Q3,services,2.3
+2011-Q3,wholesale and retail trade,2.6
+2011-Q3,wholesale trade,2.1
+2011-Q3,retail trade,4
+2011-Q3,transportation and storage,1.8
+2011-Q3,land transport and supporting services,1.9
+2011-Q3,water transport and supporting services,1.5
+2011-Q3,air transport and supporting services,1.2
+2011-Q3,other transport and storage services,2.5
+2011-Q3,accommodation and food services,4.3
+2011-Q3,accommodation,3.1
+2011-Q3,food and beverage services,4.6
+2011-Q3,information and communications,2.2
+2011-Q3,"telecommunications, broadcasting and publishing",1.8
+2011-Q3,it and other information services,2.4
+2011-Q3,financial and insurance services,1.7
+2011-Q3,financial services,1.6
+2011-Q3,insurance services,2
+2011-Q3,real estate services,3.3
+2011-Q3,professional services,2.1
+2011-Q3,"legal, accounting and management services",2.3
+2011-Q3,architectural and engineering services,1.6
+2011-Q3,other professional services,2.3
+2011-Q3,administrative and support services,3.9
+2011-Q3,security and investigation,4.3
+2011-Q3,cleaning and landscaping,4.2
+2011-Q3,other administrative and support services,3.1
+2011-Q3,"community, social and personal services",1.3
+2011-Q3,public administration and education,0.8
+2011-Q3,health and social services,1.5
+2011-Q3,"arts, entertainment and recreation",2
+2011-Q3,"other community, social and personal services",2.7
+2011-Q3,others,2
+2011-Q4,manufacturing,1.3
+2011-Q4,"food, beverages and tobacco",2.3
+2011-Q4,"paper,rubber,plastic products and printing",1.5
+2011-Q4,"petroleum, chemical and pharmaceutical products",0.8
+2011-Q4,"fabricated metal products, machinery and equipment",1.3
+2011-Q4,"electronic, computer and optical products",1.2
+2011-Q4,transport equipment,1.1
+2011-Q4,other manufacturing industries,1.3
+2011-Q4,construction,1.6
+2011-Q4,services,1.9
+2011-Q4,wholesale and retail trade,2.3
+2011-Q4,wholesale trade,1.8
+2011-Q4,retail trade,3.6
+2011-Q4,transportation and storage,1.3
+2011-Q4,land transport and supporting services,1.2
+2011-Q4,water transport and supporting services,0.9
+2011-Q4,air transport and supporting services,0.9
+2011-Q4,other transport and storage services,1.9
+2011-Q4,accommodation and food services,3.9
+2011-Q4,accommodation,2.2
+2011-Q4,food and beverage services,4.4
+2011-Q4,information and communications,1.7
+2011-Q4,"telecommunications, broadcasting and publishing",1.5
+2011-Q4,it and other information services,1.7
+2011-Q4,financial and insurance services,1.2
+2011-Q4,financial services,1.1
+2011-Q4,insurance services,1.6
+2011-Q4,real estate services,2.6
+2011-Q4,professional services,1.6
+2011-Q4,"legal, accounting and management services",1.7
+2011-Q4,architectural and engineering services,1.3
+2011-Q4,other professional services,1.9
+2011-Q4,administrative and support services,3.6
+2011-Q4,security and investigation,4.7
+2011-Q4,cleaning and landscaping,4
+2011-Q4,other administrative and support services,2.3
+2011-Q4,"community, social and personal services",1
+2011-Q4,public administration and education,0.5
+2011-Q4,health and social services,1.1
+2011-Q4,"arts, entertainment and recreation",1.5
+2011-Q4,"other community, social and personal services",2.1
+2011-Q4,others,1.3
+2012-Q1,manufacturing,1.7
+2012-Q1,"food, beverages and tobacco",2.5
+2012-Q1,"paper,rubber,plastic products and printing",2.3
+2012-Q1,"petroleum, chemical and pharmaceutical products",1
+2012-Q1,"fabricated metal products, machinery and equipment",1.8
+2012-Q1,"electronic, computer and optical products",1.8
+2012-Q1,transport equipment,1.2
+2012-Q1,other manufacturing industries,2
+2012-Q1,construction,1.9
+2012-Q1,services,2.4
+2012-Q1,wholesale and retail trade,3.2
+2012-Q1,wholesale trade,2.4
+2012-Q1,retail trade,4.9
+2012-Q1,transportation and storage,1.7
+2012-Q1,land transport and supporting services,1.5
+2012-Q1,water transport and supporting services,1.4
+2012-Q1,air transport and supporting services,1
+2012-Q1,other transport and storage services,2.5
+2012-Q1,accommodation and food services,4.5
+2012-Q1,accommodation,3.4
+2012-Q1,food and beverage services,4.8
+2012-Q1,information and communications,2.2
+2012-Q1,"telecommunications, broadcasting and publishing",1.9
+2012-Q1,it and other information services,2.4
+2012-Q1,financial and insurance services,1
+2012-Q1,financial services,0.9
+2012-Q1,insurance services,1.4
+2012-Q1,real estate services,3.3
+2012-Q1,professional services,1.8
+2012-Q1,"legal, accounting and management services",1.7
+2012-Q1,architectural and engineering services,1.7
+2012-Q1,other professional services,2
+2012-Q1,administrative and support services,4.3
+2012-Q1,security and investigation,4.6
+2012-Q1,cleaning and landscaping,5.2
+2012-Q1,other administrative and support services,3.1
+2012-Q1,"community, social and personal services",1.3
+2012-Q1,public administration and education,0.8
+2012-Q1,health and social services,1.5
+2012-Q1,"arts, entertainment and recreation",1.8
+2012-Q1,"other community, social and personal services",2.7
+2012-Q1,others,1.6
+2012-Q2,manufacturing,1.8
+2012-Q2,"food, beverages and tobacco",2.6
+2012-Q2,"paper,rubber,plastic products and printing",2.4
+2012-Q2,"petroleum, chemical and pharmaceutical products",1
+2012-Q2,"fabricated metal products, machinery and equipment",1.9
+2012-Q2,"electronic, computer and optical products",1.7
+2012-Q2,transport equipment,1.5
+2012-Q2,other manufacturing industries,2
+2012-Q2,construction,2
+2012-Q2,services,2.4
+2012-Q2,wholesale and retail trade,3.1
+2012-Q2,wholesale trade,2.5
+2012-Q2,retail trade,4.4
+2012-Q2,transportation and storage,1.8
+2012-Q2,land transport and supporting services,1.7
+2012-Q2,water transport and supporting services,1.6
+2012-Q2,air transport and supporting services,0.9
+2012-Q2,other transport and storage services,2.7
+2012-Q2,accommodation and food services,4.7
+2012-Q2,accommodation,3.6
+2012-Q2,food and beverage services,5
+2012-Q2,information and communications,1.8
+2012-Q2,"telecommunications, broadcasting and publishing",1.6
+2012-Q2,it and other information services,2
+2012-Q2,financial and insurance services,1.4
+2012-Q2,financial services,1.4
+2012-Q2,insurance services,1.6
+2012-Q2,real estate services,3.6
+2012-Q2,professional services,1.8
+2012-Q2,"legal, accounting and management services",1.9
+2012-Q2,architectural and engineering services,1.7
+2012-Q2,other professional services,2.1
+2012-Q2,administrative and support services,4.6
+2012-Q2,security and investigation,5
+2012-Q2,cleaning and landscaping,5.3
+2012-Q2,other administrative and support services,3.4
+2012-Q2,"community, social and personal services",1.3
+2012-Q2,public administration and education,0.8
+2012-Q2,health and social services,1.5
+2012-Q2,"arts, entertainment and recreation",2.1
+2012-Q2,"other community, social and personal services",2.6
+2012-Q2,others,2
+2012-Q3,manufacturing,1.6
+2012-Q3,"food, beverages and tobacco",2.6
+2012-Q3,"paper,rubber,plastic products and printing",1.9
+2012-Q3,"petroleum, chemical and pharmaceutical products",1.1
+2012-Q3,"fabricated metal products, machinery and equipment",1.6
+2012-Q3,"electronic, computer and optical products",1.6
+2012-Q3,transport equipment,1.3
+2012-Q3,other manufacturing industries,1.7
+2012-Q3,construction,1.8
+2012-Q3,services,2.3
+2012-Q3,wholesale and retail trade,2.6
+2012-Q3,wholesale trade,1.9
+2012-Q3,retail trade,4.5
+2012-Q3,transportation and storage,1.7
+2012-Q3,land transport and supporting services,1.7
+2012-Q3,water transport and supporting services,1.5
+2012-Q3,air transport and supporting services,1
+2012-Q3,other transport and storage services,2.5
+2012-Q3,accommodation and food services,4.2
+2012-Q3,accommodation,2.9
+2012-Q3,food and beverage services,4.6
+2012-Q3,information and communications,2.1
+2012-Q3,"telecommunications, broadcasting and publishing",1.9
+2012-Q3,it and other information services,2.2
+2012-Q3,financial and insurance services,1.5
+2012-Q3,financial services,1.4
+2012-Q3,insurance services,1.8
+2012-Q3,real estate services,3.4
+2012-Q3,professional services,2.1
+2012-Q3,"legal, accounting and management services",2.2
+2012-Q3,architectural and engineering services,1.8
+2012-Q3,other professional services,2.1
+2012-Q3,administrative and support services,4.1
+2012-Q3,security and investigation,4.7
+2012-Q3,cleaning and landscaping,4.3
+2012-Q3,other administrative and support services,3.2
+2012-Q3,"community, social and personal services",1.2
+2012-Q3,public administration and education,0.7
+2012-Q3,health and social services,1.4
+2012-Q3,"arts, entertainment and recreation",2.2
+2012-Q3,"other community, social and personal services",2.5
+2012-Q3,others,1.7
+2012-Q4,manufacturing,1.2
+2012-Q4,"food, beverages and tobacco",2.2
+2012-Q4,"paper,rubber,plastic products and printing",1.4
+2012-Q4,"petroleum, chemical and pharmaceutical products",0.7
+2012-Q4,"fabricated metal products, machinery and equipment",1.3
+2012-Q4,"electronic, computer and optical products",1
+2012-Q4,transport equipment,1
+2012-Q4,other manufacturing industries,1.4
+2012-Q4,construction,1.8
+2012-Q4,services,2
+2012-Q4,wholesale and retail trade,2.6
+2012-Q4,wholesale trade,2
+2012-Q4,retail trade,3.9
+2012-Q4,transportation and storage,1.4
+2012-Q4,land transport and supporting services,1.2
+2012-Q4,water transport and supporting services,1.2
+2012-Q4,air transport and supporting services,0.7
+2012-Q4,other transport and storage services,2.1
+2012-Q4,accommodation and food services,3.7
+2012-Q4,accommodation,2.8
+2012-Q4,food and beverage services,4
+2012-Q4,information and communications,1.9
+2012-Q4,"telecommunications, broadcasting and publishing",1.5
+2012-Q4,it and other information services,2.2
+2012-Q4,financial and insurance services,1.1
+2012-Q4,financial services,1
+2012-Q4,insurance services,1.5
+2012-Q4,real estate services,3
+2012-Q4,professional services,1.6
+2012-Q4,"legal, accounting and management services",1.6
+2012-Q4,architectural and engineering services,1.5
+2012-Q4,other professional services,1.6
+2012-Q4,administrative and support services,3.6
+2012-Q4,security and investigation,4
+2012-Q4,cleaning and landscaping,4.1
+2012-Q4,other administrative and support services,2.7
+2012-Q4,"community, social and personal services",1
+2012-Q4,public administration and education,0.5
+2012-Q4,health and social services,1
+2012-Q4,"arts, entertainment and recreation",1.8
+2012-Q4,"other community, social and personal services",2.3
+2012-Q4,others,1.4
+2013-Q1,manufacturing,1.6
+2013-Q1,"food, beverages and tobacco",2.4
+2013-Q1,"paper,rubber,plastic products and printing",1.9
+2013-Q1,"petroleum, chemical and pharmaceutical products",0.9
+2013-Q1,"fabricated metal products, machinery and equipment",1.6
+2013-Q1,"electronic, computer and optical products",1.7
+2013-Q1,transport equipment,1.1
+2013-Q1,other manufacturing industries,1.9
+2013-Q1,construction,2.1
+2013-Q1,services,2.3
+2013-Q1,wholesale and retail trade,3.2
+2013-Q1,wholesale trade,2.5
+2013-Q1,retail trade,5
+2013-Q1,transportation and storage,1.7
+2013-Q1,land transport and supporting services,1.4
+2013-Q1,water transport and supporting services,1.5
+2013-Q1,air transport and supporting services,1
+2013-Q1,other transport and storage services,2.5
+2013-Q1,accommodation and food services,4.2
+2013-Q1,accommodation,3.1
+2013-Q1,food and beverage services,4.5
+2013-Q1,information and communications,1.9
+2013-Q1,"telecommunications, broadcasting and publishing",1.7
+2013-Q1,it and other information services,2.1
+2013-Q1,financial and insurance services,1.2
+2013-Q1,financial services,1.1
+2013-Q1,insurance services,1.4
+2013-Q1,real estate services,3
+2013-Q1,professional services,1.8
+2013-Q1,"legal, accounting and management services",2
+2013-Q1,architectural and engineering services,1.7
+2013-Q1,other professional services,1.7
+2013-Q1,administrative and support services,3.9
+2013-Q1,security and investigation,4.2
+2013-Q1,cleaning and landscaping,4.4
+2013-Q1,other administrative and support services,3
+2013-Q1,"community, social and personal services",1.2
+2013-Q1,public administration and education,0.7
+2013-Q1,health and social services,1.4
+2013-Q1,"arts, entertainment and recreation",1.9
+2013-Q1,"other community, social and personal services",2.4
+2013-Q1,others,1.8
+2013-Q2,manufacturing,1.6
+2013-Q2,"food, beverages and tobacco",2.5
+2013-Q2,"paper,rubber,plastic products and printing",2
+2013-Q2,"petroleum, chemical and pharmaceutical products",1
+2013-Q2,"fabricated metal products, machinery and equipment",1.8
+2013-Q2,"electronic, computer and optical products",1.4
+2013-Q2,transport equipment,1.2
+2013-Q2,other manufacturing industries,2
+2013-Q2,construction,2.2
+2013-Q2,services,2.4
+2013-Q2,wholesale and retail trade,3.4
+2013-Q2,wholesale trade,2.9
+2013-Q2,retail trade,4.6
+2013-Q2,transportation and storage,1.7
+2013-Q2,land transport and supporting services,1.4
+2013-Q2,water transport and supporting services,1.7
+2013-Q2,air transport and supporting services,0.9
+2013-Q2,other transport and storage services,2.5
+2013-Q2,accommodation and food services,4.5
+2013-Q2,accommodation,3.7
+2013-Q2,food and beverage services,4.7
+2013-Q2,information and communications,2.2
+2013-Q2,"telecommunications, broadcasting and publishing",1.8
+2013-Q2,it and other information services,2.5
+2013-Q2,financial and insurance services,1.5
+2013-Q2,financial services,1.4
+2013-Q2,insurance services,1.9
+2013-Q2,real estate services,2.9
+2013-Q2,professional services,1.9
+2013-Q2,"legal, accounting and management services",1.9
+2013-Q2,architectural and engineering services,1.9
+2013-Q2,other professional services,2
+2013-Q2,administrative and support services,3.8
+2013-Q2,security and investigation,4.2
+2013-Q2,cleaning and landscaping,4.1
+2013-Q2,other administrative and support services,3
+2013-Q2,"community, social and personal services",1.2
+2013-Q2,public administration and education,0.7
+2013-Q2,health and social services,1.3
+2013-Q2,"arts, entertainment and recreation",2
+2013-Q2,"other community, social and personal services",2.7
+2013-Q2,others,1.9
+2013-Q3,manufacturing,1.6
+2013-Q3,"food, beverages and tobacco",2.6
+2013-Q3,"paper,rubber,plastic products and printing",1.8
+2013-Q3,"petroleum, chemical and pharmaceutical products",1.1
+2013-Q3,"fabricated metal products, machinery and equipment",1.7
+2013-Q3,"electronic, computer and optical products",1.5
+2013-Q3,transport equipment,1.2
+2013-Q3,other manufacturing industries,1.7
+2013-Q3,construction,1.7
+2013-Q3,services,2.2
+2013-Q3,wholesale and retail trade,2.5
+2013-Q3,wholesale trade,1.9
+2013-Q3,retail trade,4
+2013-Q3,transportation and storage,1.8
+2013-Q3,land transport and supporting services,1.5
+2013-Q3,water transport and supporting services,2.1
+2013-Q3,air transport and supporting services,1
+2013-Q3,other transport and storage services,2.5
+2013-Q3,accommodation and food services,3.9
+2013-Q3,accommodation,3.2
+2013-Q3,food and beverage services,4
+2013-Q3,information and communications,2.1
+2013-Q3,"telecommunications, broadcasting and publishing",1.7
+2013-Q3,it and other information services,2.4
+2013-Q3,financial and insurance services,1.7
+2013-Q3,financial services,1.7
+2013-Q3,insurance services,1.8
+2013-Q3,real estate services,3.3
+2013-Q3,professional services,2
+2013-Q3,"legal, accounting and management services",2.1
+2013-Q3,architectural and engineering services,1.9
+2013-Q3,other professional services,1.8
+2013-Q3,administrative and support services,3.8
+2013-Q3,security and investigation,3.9
+2013-Q3,cleaning and landscaping,4.1
+2013-Q3,other administrative and support services,3.2
+2013-Q3,"community, social and personal services",1.3
+2013-Q3,public administration and education,0.8
+2013-Q3,health and social services,1.3
+2013-Q3,"arts, entertainment and recreation",2.2
+2013-Q3,"other community, social and personal services",2.6
+2013-Q3,others,1.6
+2013-Q4,manufacturing,1.2
+2013-Q4,"food, beverages and tobacco",2.2
+2013-Q4,"paper,rubber,plastic products and printing",1.4
+2013-Q4,"petroleum, chemical and pharmaceutical products",0.9
+2013-Q4,"fabricated metal products, machinery and equipment",1.3
+2013-Q4,"electronic, computer and optical products",0.9
+2013-Q4,transport equipment,1
+2013-Q4,other manufacturing industries,1.4
+2013-Q4,construction,1.9
+2013-Q4,services,1.9
+2013-Q4,wholesale and retail trade,2.4
+2013-Q4,wholesale trade,1.8
+2013-Q4,retail trade,3.7
+2013-Q4,transportation and storage,1.4
+2013-Q4,land transport and supporting services,1.2
+2013-Q4,water transport and supporting services,1
+2013-Q4,air transport and supporting services,0.8
+2013-Q4,other transport and storage services,2.2
+2013-Q4,accommodation and food services,3.7
+2013-Q4,accommodation,2.3
+2013-Q4,food and beverage services,4
+2013-Q4,information and communications,1.7
+2013-Q4,"telecommunications, broadcasting and publishing",1.4
+2013-Q4,it and other information services,1.9
+2013-Q4,financial and insurance services,1.1
+2013-Q4,financial services,1.1
+2013-Q4,insurance services,1.5
+2013-Q4,real estate services,2.9
+2013-Q4,professional services,1.4
+2013-Q4,"legal, accounting and management services",1.5
+2013-Q4,architectural and engineering services,1.2
+2013-Q4,other professional services,1.4
+2013-Q4,administrative and support services,3.8
+2013-Q4,security and investigation,3.7
+2013-Q4,cleaning and landscaping,4.4
+2013-Q4,other administrative and support services,3.3
+2013-Q4,"community, social and personal services",0.9
+2013-Q4,public administration and education,0.5
+2013-Q4,health and social services,1
+2013-Q4,"arts, entertainment and recreation",1.7
+2013-Q4,"other community, social and personal services",1.8
+2013-Q4,others,0.8
+2014-Q1,manufacturing,1.6
+2014-Q1,"food, beverages and tobacco",2.7
+2014-Q1,"paper,rubber,plastic products and printing",2
+2014-Q1,"petroleum, chemical and pharmaceutical products",0.9
+2014-Q1,"fabricated metal products, machinery and equipment",1.6
+2014-Q1,"electronic, computer and optical products",1.7
+2014-Q1,transport equipment,1.1
+2014-Q1,other manufacturing industries,1.7
+2014-Q1,construction,2
+2014-Q1,services,2.3
+2014-Q1,wholesale and retail trade,3.1
+2014-Q1,wholesale trade,2.3
+2014-Q1,retail trade,4.7
+2014-Q1,transportation and storage,1.7
+2014-Q1,land transport and supporting services,1.5
+2014-Q1,water transport and supporting services,1
+2014-Q1,air transport and supporting services,1.2
+2014-Q1,other transport and storage services,2.8
+2014-Q1,accommodation and food services,4.3
+2014-Q1,accommodation,2.7
+2014-Q1,food and beverage services,4.7
+2014-Q1,information and communications,1.9
+2014-Q1,"telecommunications, broadcasting and publishing",1.5
+2014-Q1,it and other information services,2.1
+2014-Q1,financial and insurance services,1
+2014-Q1,financial services,1
+2014-Q1,insurance services,1.4
+2014-Q1,real estate services,3.5
+2014-Q1,professional services,1.6
+2014-Q1,"legal, accounting and management services",1.5
+2014-Q1,architectural and engineering services,1.7
+2014-Q1,other professional services,1.5
+2014-Q1,administrative and support services,4
+2014-Q1,security and investigation,4
+2014-Q1,cleaning and landscaping,4.4
+2014-Q1,other administrative and support services,3.7
+2014-Q1,"community, social and personal services",1.2
+2014-Q1,public administration and education,0.8
+2014-Q1,health and social services,1.3
+2014-Q1,"arts, entertainment and recreation",1.9
+2014-Q1,"other community, social and personal services",2.2
+2014-Q1,others,1.9
+2014-Q2,manufacturing,1.7
+2014-Q2,"food, beverages and tobacco",2.7
+2014-Q2,"paper,rubber,plastic products and printing",2
+2014-Q2,"petroleum, chemical and pharmaceutical products",1.2
+2014-Q2,"fabricated metal products, machinery and equipment",1.9
+2014-Q2,"electronic, computer and optical products",1.6
+2014-Q2,transport equipment,1.4
+2014-Q2,other manufacturing industries,2
+2014-Q2,construction,2.1
+2014-Q2,services,2.4
+2014-Q2,wholesale and retail trade,3
+2014-Q2,wholesale trade,2.3
+2014-Q2,retail trade,4.5
+2014-Q2,transportation and storage,1.8
+2014-Q2,land transport and supporting services,1.8
+2014-Q2,water transport and supporting services,1.3
+2014-Q2,air transport and supporting services,0.9
+2014-Q2,other transport and storage services,2.9
+2014-Q2,accommodation and food services,4.9
+2014-Q2,accommodation,3.6
+2014-Q2,food and beverage services,5.2
+2014-Q2,information and communications,1.8
+2014-Q2,"telecommunications, broadcasting and publishing",1.6
+2014-Q2,it and other information services,2
+2014-Q2,financial and insurance services,1.6
+2014-Q2,financial services,1.5
+2014-Q2,insurance services,2.1
+2014-Q2,real estate services,3.7
+2014-Q2,professional services,1.9
+2014-Q2,"legal, accounting and management services",1.8
+2014-Q2,architectural and engineering services,2.1
+2014-Q2,other professional services,1.8
+2014-Q2,administrative and support services,4.4
+2014-Q2,security and investigation,4.4
+2014-Q2,cleaning and landscaping,5.4
+2014-Q2,other administrative and support services,3.5
+2014-Q2,"community, social and personal services",1.2
+2014-Q2,public administration and education,0.7
+2014-Q2,health and social services,1.3
+2014-Q2,"arts, entertainment and recreation",2.5
+2014-Q2,"other community, social and personal services",2.1
+2014-Q2,others,1.5
+2014-Q3,manufacturing,1.6
+2014-Q3,"food, beverages and tobacco",3.3
+2014-Q3,"paper,rubber,plastic products and printing",2.1
+2014-Q3,"petroleum, chemical and pharmaceutical products",1.9
+2014-Q3,"fabricated metal products, machinery and equipment",1.6
+2014-Q3,"electronic, computer and optical products",1.5
+2014-Q3,transport equipment,1.2
+2014-Q3,other manufacturing industries,1.6
+2014-Q3,construction,1.8
+2014-Q3,services,2.3
+2014-Q3,wholesale and retail trade,2.4
+2014-Q3,wholesale trade,2
+2014-Q3,retail trade,3.4
+2014-Q3,transportation and storage,1.8
+2014-Q3,land transport and supporting services,1.6
+2014-Q3,water transport and supporting services,1.3
+2014-Q3,air transport and supporting services,1.3
+2014-Q3,other transport and storage services,2.7
+2014-Q3,accommodation and food services,4.3
+2014-Q3,accommodation,3.2
+2014-Q3,food and beverage services,4.5
+2014-Q3,information and communications,1.8
+2014-Q3,"telecommunications, broadcasting and publishing",1.5
+2014-Q3,it and other information services,2
+2014-Q3,financial and insurance services,1.6
+2014-Q3,financial services,1.6
+2014-Q3,insurance services,2.2
+2014-Q3,real estate services,3.5
+2014-Q3,professional services,2
+2014-Q3,"legal, accounting and management services",2.1
+2014-Q3,architectural and engineering services,2.1
+2014-Q3,other professional services,1.9
+2014-Q3,administrative and support services,3.9
+2014-Q3,security and investigation,3.3
+2014-Q3,cleaning and landscaping,4.6
+2014-Q3,other administrative and support services,3.7
+2014-Q3,"community, social and personal services",1.3
+2014-Q3,public administration and education,0.8
+2014-Q3,health and social services,1.4
+2014-Q3,"arts, entertainment and recreation",2.2
+2014-Q3,"other community, social and personal services",2.3
+2014-Q3,others,1.5
+2014-Q4,manufacturing,1.3
+2014-Q4,"food, beverages and tobacco",2.3
+2014-Q4,"paper,rubber,plastic products and printing",1.5
+2014-Q4,"petroleum, chemical and pharmaceutical products",0.8
+2014-Q4,"fabricated metal products, machinery and equipment",1.3
+2014-Q4,"electronic, computer and optical products",1.1
+2014-Q4,transport equipment,1.1
+2014-Q4,other manufacturing industries,1.5
+2014-Q4,construction,1.6
+2014-Q4,services,1.8
+2014-Q4,wholesale and retail trade,1.9
+2014-Q4,wholesale trade,1.3
+2014-Q4,retail trade,3.2
+2014-Q4,transportation and storage,1.3
+2014-Q4,land transport and supporting services,1.2
+2014-Q4,water transport and supporting services,1.1
+2014-Q4,air transport and supporting services,0.8
+2014-Q4,other transport and storage services,2
+2014-Q4,accommodation and food services,3.6
+2014-Q4,accommodation,2.3
+2014-Q4,food and beverage services,3.9
+2014-Q4,information and communications,1.6
+2014-Q4,"telecommunications, broadcasting and publishing",1.3
+2014-Q4,it and other information services,1.8
+2014-Q4,financial and insurance services,1.2
+2014-Q4,financial services,1.1
+2014-Q4,insurance services,1.7
+2014-Q4,real estate services,2.9
+2014-Q4,professional services,1.6
+2014-Q4,"legal, accounting and management services",1.9
+2014-Q4,architectural and engineering services,1.3
+2014-Q4,other professional services,1.7
+2014-Q4,administrative and support services,3.6
+2014-Q4,security and investigation,3.3
+2014-Q4,cleaning and landscaping,4.5
+2014-Q4,other administrative and support services,2.9
+2014-Q4,"community, social and personal services",0.9
+2014-Q4,public administration and education,0.5
+2014-Q4,health and social services,1
+2014-Q4,"arts, entertainment and recreation",1.7
+2014-Q4,"other community, social and personal services",2.1
+2014-Q4,others,1.3
+2015-Q1,manufacturing,1.6
+2015-Q1,"food, beverages and tobacco",2.6
+2015-Q1,"paper,rubber,plastic products and printing",1.6
+2015-Q1,"petroleum, chemical and pharmaceutical products",0.9
+2015-Q1,"fabricated metal products, machinery and equipment",1.7
+2015-Q1,"electronic, computer and optical products",1.6
+2015-Q1,transport equipment,1.3
+2015-Q1,other manufacturing industries,2
+2015-Q1,construction,1.8
+2015-Q1,services,2
+2015-Q1,wholesale and retail trade,2.3
+2015-Q1,wholesale trade,1.5
+2015-Q1,retail trade,4.2
+2015-Q1,transportation and storage,1.5
+2015-Q1,land transport and supporting services,1.3
+2015-Q1,water transport and supporting services,1
+2015-Q1,air transport and supporting services,1.1
+2015-Q1,other transport and storage services,2.4
+2015-Q1,accommodation and food services,3.9
+2015-Q1,accommodation,2.8
+2015-Q1,food and beverage services,4.2
+2015-Q1,information and communications,1.6
+2015-Q1,"telecommunications, broadcasting and publishing",1.5
+2015-Q1,it and other information services,1.6
+2015-Q1,financial and insurance services,1
+2015-Q1,financial services,1
+2015-Q1,insurance services,1.4
+2015-Q1,real estate services,3
+2015-Q1,professional services,1.7
+2015-Q1,"legal, accounting and management services",1.7
+2015-Q1,architectural and engineering services,1.5
+2015-Q1,other professional services,2
+2015-Q1,administrative and support services,3.6
+2015-Q1,security and investigation,3.4
+2015-Q1,cleaning and landscaping,4.4
+2015-Q1,other administrative and support services,2.8
+2015-Q1,"community, social and personal services",1.2
+2015-Q1,public administration and education,0.7
+2015-Q1,health and social services,1.3
+2015-Q1,"arts, entertainment and recreation",2.3
+2015-Q1,"other community, social and personal services",2.1
+2015-Q1,others,1.4
+2015-Q2,manufacturing,1.7
+2015-Q2,"food, beverages and tobacco",3.2
+2015-Q2,"paper,rubber,plastic products and printing",2.2
+2015-Q2,"petroleum, chemical and pharmaceutical products",1.1
+2015-Q2,"fabricated metal products, machinery and equipment",1.8
+2015-Q2,"electronic, computer and optical products",1.6
+2015-Q2,transport equipment,1.5
+2015-Q2,other manufacturing industries,1.6
+2015-Q2,construction,2.1
+2015-Q2,services,2.2
+2015-Q2,wholesale and retail trade,2.5
+2015-Q2,wholesale trade,2
+2015-Q2,retail trade,3.7
+2015-Q2,transportation and storage,1.5
+2015-Q2,land transport and supporting services,1.4
+2015-Q2,water transport and supporting services,1.1
+2015-Q2,air transport and supporting services,1
+2015-Q2,other transport and storage services,2.4
+2015-Q2,accommodation and food services,4.6
+2015-Q2,accommodation,3.6
+2015-Q2,food and beverage services,4.8
+2015-Q2,information and communications,1.8
+2015-Q2,"telecommunications, broadcasting and publishing",1.7
+2015-Q2,it and other information services,1.9
+2015-Q2,financial and insurance services,1.5
+2015-Q2,financial services,1.4
+2015-Q2,insurance services,1.9
+2015-Q2,real estate services,3.4
+2015-Q2,professional services,2
+2015-Q2,"legal, accounting and management services",2
+2015-Q2,architectural and engineering services,1.8
+2015-Q2,other professional services,2.2
+2015-Q2,administrative and support services,3.8
+2015-Q2,security and investigation,3.4
+2015-Q2,cleaning and landscaping,4.5
+2015-Q2,other administrative and support services,3.5
+2015-Q2,"community, social and personal services",1.2
+2015-Q2,public administration and education,0.7
+2015-Q2,health and social services,1.3
+2015-Q2,"arts, entertainment and recreation",2.2
+2015-Q2,"other community, social and personal services",2.1
+2015-Q2,others,1.4
+2015-Q3,manufacturing,1.5
+2015-Q3,"food, beverages and tobacco",2.6
+2015-Q3,"paper,rubber,plastic products and printing",1.6
+2015-Q3,"petroleum, chemical and pharmaceutical products",1.3
+2015-Q3,"fabricated metal products, machinery and equipment",1.6
+2015-Q3,"electronic, computer and optical products",1.3
+2015-Q3,transport equipment,1.3
+2015-Q3,other manufacturing industries,1.5
+2015-Q3,construction,1.7
+2015-Q3,services,2
+2015-Q3,wholesale and retail trade,2.1
+2015-Q3,wholesale trade,1.8
+2015-Q3,retail trade,2.9
+2015-Q3,transportation and storage,1.6
+2015-Q3,land transport and supporting services,1.6
+2015-Q3,water transport and supporting services,1.2
+2015-Q3,air transport and supporting services,1.2
+2015-Q3,other transport and storage services,2.2
+2015-Q3,accommodation and food services,3.7
+2015-Q3,accommodation,3.2
+2015-Q3,food and beverage services,3.8
+2015-Q3,information and communications,1.9
+2015-Q3,"telecommunications, broadcasting and publishing",1.5
+2015-Q3,it and other information services,2.1
+2015-Q3,financial and insurance services,1.6
+2015-Q3,financial services,1.5
+2015-Q3,insurance services,1.8
+2015-Q3,real estate services,3
+2015-Q3,professional services,1.8
+2015-Q3,"legal, accounting and management services",1.8
+2015-Q3,architectural and engineering services,1.6
+2015-Q3,other professional services,2.2
+2015-Q3,administrative and support services,3.1
+2015-Q3,security and investigation,2.9
+2015-Q3,cleaning and landscaping,3.7
+2015-Q3,other administrative and support services,2.8
+2015-Q3,"community, social and personal services",1.1
+2015-Q3,public administration and education,0.6
+2015-Q3,health and social services,1.2
+2015-Q3,"arts, entertainment and recreation",2.4
+2015-Q3,"other community, social and personal services",1.6
+2015-Q3,others,1.4
+2015-Q4,manufacturing,1.1
+2015-Q4,"food, beverages and tobacco",2.2
+2015-Q4,"paper,rubber,plastic products and printing",1
+2015-Q4,"petroleum, chemical and pharmaceutical products",0.7
+2015-Q4,"fabricated metal products, machinery and equipment",1.2
+2015-Q4,"electronic, computer and optical products",0.9
+2015-Q4,transport equipment,1.1
+2015-Q4,other manufacturing industries,1.1
+2015-Q4,construction,1.7
+2015-Q4,services,1.8
+2015-Q4,wholesale and retail trade,1.9
+2015-Q4,wholesale trade,1.4
+2015-Q4,retail trade,2.9
+2015-Q4,transportation and storage,1.2
+2015-Q4,land transport and supporting services,1.1
+2015-Q4,water transport and supporting services,0.9
+2015-Q4,air transport and supporting services,0.8
+2015-Q4,other transport and storage services,1.7
+2015-Q4,accommodation and food services,3.8
+2015-Q4,accommodation,2.3
+2015-Q4,food and beverage services,4.2
+2015-Q4,information and communications,1.8
+2015-Q4,"telecommunications, broadcasting and publishing",1.4
+2015-Q4,it and other information services,2.1
+2015-Q4,financial and insurance services,1.2
+2015-Q4,financial services,1.1
+2015-Q4,insurance services,1.6
+2015-Q4,real estate services,2.8
+2015-Q4,professional services,1.7
+2015-Q4,"legal, accounting and management services",1.8
+2015-Q4,architectural and engineering services,1.4
+2015-Q4,other professional services,1.8
+2015-Q4,administrative and support services,3.3
+2015-Q4,security and investigation,2.9
+2015-Q4,cleaning and landscaping,4.2
+2015-Q4,other administrative and support services,2.7
+2015-Q4,"community, social and personal services",0.8
+2015-Q4,public administration and education,0.5
+2015-Q4,health and social services,0.9
+2015-Q4,"arts, entertainment and recreation",1.7
+2015-Q4,"other community, social and personal services",1.6
+2015-Q4,others,1.3
+2016-Q1,manufacturing,1.5
+2016-Q1,"food, beverages and tobacco",2.7
+2016-Q1,"paper,rubber,plastic products and printing",1.6
+2016-Q1,"petroleum, chemical and pharmaceutical products",0.8
+2016-Q1,"fabricated metal products, machinery and equipment",1.6
+2016-Q1,"electronic, computer and optical products",1.6
+2016-Q1,transport equipment,1.2
+2016-Q1,other manufacturing industries,1.6
+2016-Q1,construction,1.6
+2016-Q1,services,2
+2016-Q1,wholesale and retail trade,2.4
+2016-Q1,wholesale trade,1.8
+2016-Q1,retail trade,3.8
+2016-Q1,transportation and storage,1.4
+2016-Q1,land transport and supporting services,1.3
+2016-Q1,water transport and supporting services,1
+2016-Q1,air transport and supporting services,1
+2016-Q1,other transport and storage services,2.1
+2016-Q1,accommodation and food services,3.9
+2016-Q1,accommodation,2.9
+2016-Q1,food and beverage services,4.1
+2016-Q1,information and communications,1.8
+2016-Q1,"telecommunications, broadcasting and publishing",1.6
+2016-Q1,it and other information services,2
+2016-Q1,financial and insurance services,1
+2016-Q1,financial services,0.9
+2016-Q1,insurance services,1.4
+2016-Q1,real estate services,2.7
+2016-Q1,professional services,1.5
+2016-Q1,"legal, accounting and management services",1.6
+2016-Q1,architectural and engineering services,1.4
+2016-Q1,other professional services,1.8
+2016-Q1,administrative and support services,3.5
+2016-Q1,security and investigation,2.8
+2016-Q1,cleaning and landscaping,4.2
+2016-Q1,other administrative and support services,3.4
+2016-Q1,"community, social and personal services",1.1
+2016-Q1,public administration and education,0.7
+2016-Q1,health and social services,1.3
+2016-Q1,"arts, entertainment and recreation",1.6
+2016-Q1,"other community, social and personal services",2
+2016-Q1,others,1.3
+2016-Q2,manufacturing,1.6
+2016-Q2,"food, beverages and tobacco",2.6
+2016-Q2,"paper,rubber,plastic products and printing",1.9
+2016-Q2,"petroleum, chemical and pharmaceutical products",0.9
+2016-Q2,"fabricated metal products, machinery and equipment",1.8
+2016-Q2,"electronic, computer and optical products",1.5
+2016-Q2,transport equipment,1.5
+2016-Q2,other manufacturing industries,1.6
+2016-Q2,construction,1.8
+2016-Q2,services,2.1
+2016-Q2,wholesale and retail trade,2.4
+2016-Q2,wholesale trade,2
+2016-Q2,retail trade,3.4
+2016-Q2,transportation and storage,1.5
+2016-Q2,land transport and supporting services,1.5
+2016-Q2,water transport and supporting services,1
+2016-Q2,air transport and supporting services,0.9
+2016-Q2,other transport and storage services,2.4
+2016-Q2,accommodation and food services,3.9
+2016-Q2,accommodation,3.1
+2016-Q2,food and beverage services,4
+2016-Q2,information and communications,1.9
+2016-Q2,"telecommunications, broadcasting and publishing",1.6
+2016-Q2,it and other information services,2.1
+2016-Q2,financial and insurance services,1.3
+2016-Q2,financial services,1.3
+2016-Q2,insurance services,1.6
+2016-Q2,real estate services,3.1
+2016-Q2,professional services,1.8
+2016-Q2,"legal, accounting and management services",1.9
+2016-Q2,architectural and engineering services,1.6
+2016-Q2,other professional services,1.7
+2016-Q2,administrative and support services,3.8
+2016-Q2,security and investigation,3.1
+2016-Q2,cleaning and landscaping,4.6
+2016-Q2,other administrative and support services,3.5
+2016-Q2,"community, social and personal services",1.2
+2016-Q2,public administration and education,0.9
+2016-Q2,health and social services,1.2
+2016-Q2,"arts, entertainment and recreation",1.8
+2016-Q2,"other community, social and personal services",2.2
+2016-Q2,others,1.4
+2016-Q3,manufacturing,1.5
+2016-Q3,"food, beverages and tobacco",2.9
+2016-Q3,"paper,rubber,plastic products and printing",1.8
+2016-Q3,"petroleum, chemical and pharmaceutical products",1
+2016-Q3,"fabricated metal products, machinery and equipment",1.5
+2016-Q3,"electronic, computer and optical products",1.4
+2016-Q3,transport equipment,1.1
+2016-Q3,other manufacturing industries,1.5
+2016-Q3,construction,1.6
+2016-Q3,services,1.9
+2016-Q3,wholesale and retail trade,2
+2016-Q3,wholesale trade,1.6
+2016-Q3,retail trade,2.8
+2016-Q3,transportation and storage,1.4
+2016-Q3,land transport and supporting services,1.3
+2016-Q3,water transport and supporting services,1.1
+2016-Q3,air transport and supporting services,1
+2016-Q3,other transport and storage services,2
+2016-Q3,accommodation and food services,3.5
+2016-Q3,accommodation,2.6
+2016-Q3,food and beverage services,3.7
+2016-Q3,information and communications,1.7
+2016-Q3,"telecommunications, broadcasting and publishing",1.5
+2016-Q3,it and other information services,1.8
+2016-Q3,financial and insurance services,1.3
+2016-Q3,financial services,1.3
+2016-Q3,insurance services,1.6
+2016-Q3,real estate services,3.1
+2016-Q3,professional services,1.7
+2016-Q3,"legal, accounting and management services",1.8
+2016-Q3,architectural and engineering services,1.7
+2016-Q3,other professional services,1.6
+2016-Q3,administrative and support services,3.3
+2016-Q3,security and investigation,2.6
+2016-Q3,cleaning and landscaping,3.9
+2016-Q3,other administrative and support services,3.1
+2016-Q3,"community, social and personal services",1
+2016-Q3,public administration and education,0.7
+2016-Q3,health and social services,1.1
+2016-Q3,"arts, entertainment and recreation",1.6
+2016-Q3,"other community, social and personal services",1.8
+2016-Q3,others,1.1
+2016-Q4,manufacturing,1.2
+2016-Q4,"food, beverages and tobacco",2.1
+2016-Q4,"paper,rubber,plastic products and printing",1.4
+2016-Q4,"petroleum, chemical and pharmaceutical products",0.8
+2016-Q4,"fabricated metal products, machinery and equipment",1.1
+2016-Q4,"electronic, computer and optical products",1
+2016-Q4,transport equipment,1.3
+2016-Q4,other manufacturing industries,1
+2016-Q4,construction,1.7
+2016-Q4,services,1.7
+2016-Q4,wholesale and retail trade,1.7
+2016-Q4,wholesale trade,1.2
+2016-Q4,retail trade,2.7
+2016-Q4,transportation and storage,1.1
+2016-Q4,land transport and supporting services,1
+2016-Q4,water transport and supporting services,0.9
+2016-Q4,air transport and supporting services,0.8
+2016-Q4,other transport and storage services,1.7
+2016-Q4,accommodation and food services,3.2
+2016-Q4,accommodation,1.7
+2016-Q4,food and beverage services,3.5
+2016-Q4,information and communications,1.5
+2016-Q4,"telecommunications, broadcasting and publishing",1.1
+2016-Q4,it and other information services,1.7
+2016-Q4,financial and insurance services,1.2
+2016-Q4,financial services,1.1
+2016-Q4,insurance services,1.6
+2016-Q4,real estate services,2.5
+2016-Q4,professional services,1.5
+2016-Q4,"legal, accounting and management services",1.7
+2016-Q4,architectural and engineering services,1.4
+2016-Q4,other professional services,1.4
+2016-Q4,administrative and support services,3.4
+2016-Q4,security and investigation,2.8
+2016-Q4,cleaning and landscaping,3.9
+2016-Q4,other administrative and support services,3.4
+2016-Q4,"community, social and personal services",0.8
+2016-Q4,public administration and education,0.5
+2016-Q4,health and social services,0.9
+2016-Q4,"arts, entertainment and recreation",1.6
+2016-Q4,"other community, social and personal services",1.6
+2016-Q4,others,1.1
+2017-Q1,manufacturing,1.6
+2017-Q1,"food, beverages and tobacco",2.5
+2017-Q1,"paper,rubber,plastic products and printing",1.7
+2017-Q1,"petroleum, chemical and pharmaceutical products",0.8
+2017-Q1,"fabricated metal products, machinery and equipment",1.6
+2017-Q1,"electronic, computer and optical products",1.6
+2017-Q1,transport equipment,1.5
+2017-Q1,other manufacturing industries,1.4
+2017-Q1,construction,1.7
+2017-Q1,services,1.9
+2017-Q1,wholesale and retail trade,2.2
+2017-Q1,wholesale trade,1.6
+2017-Q1,retail trade,3.5
+2017-Q1,transportation and storage,1.3
+2017-Q1,land transport and supporting services,1.2
+2017-Q1,water transport and supporting services,0.9
+2017-Q1,air transport and supporting services,1
+2017-Q1,other transport and storage services,1.8
+2017-Q1,accommodation and food services,3.6
+2017-Q1,accommodation,2.6
+2017-Q1,food and beverage services,3.8
+2017-Q1,information and communications,1.3
+2017-Q1,"telecommunications, broadcasting and publishing",1.1
+2017-Q1,it and other information services,1.5
+2017-Q1,financial and insurance services,0.9
+2017-Q1,financial services,0.9
+2017-Q1,insurance services,1.4
+2017-Q1,real estate services,3
+2017-Q1,professional services,1.5
+2017-Q1,"legal, accounting and management services",1.6
+2017-Q1,architectural and engineering services,1.4
+2017-Q1,other professional services,1.3
+2017-Q1,administrative and support services,3.7
+2017-Q1,security and investigation,3.1
+2017-Q1,cleaning and landscaping,4.1
+2017-Q1,other administrative and support services,3.9
+2017-Q1,"community, social and personal services",1
+2017-Q1,public administration and education,0.6
+2017-Q1,health and social services,1.2
+2017-Q1,"arts, entertainment and recreation",1.5
+2017-Q1,"other community, social and personal services",2
+2017-Q1,others,1.3
+2017-Q2,manufacturing,1.6
+2017-Q2,"food, beverages and tobacco",3.1
+2017-Q2,"paper,rubber,plastic products and printing",1.8
+2017-Q2,"petroleum, chemical and pharmaceutical products",0.9
+2017-Q2,"fabricated metal products, machinery and equipment",1.7
+2017-Q2,"electronic, computer and optical products",1.7
+2017-Q2,transport equipment,1.3
+2017-Q2,other manufacturing industries,1.4
+2017-Q2,construction,1.9
+2017-Q2,services,2
+2017-Q2,wholesale and retail trade,2.1
+2017-Q2,wholesale trade,1.6
+2017-Q2,retail trade,3.2
+2017-Q2,transportation and storage,1.4
+2017-Q2,land transport and supporting services,1.4
+2017-Q2,water transport and supporting services,1.1
+2017-Q2,air transport and supporting services,0.7
+2017-Q2,other transport and storage services,2.1
+2017-Q2,accommodation and food services,4
+2017-Q2,accommodation,3.2
+2017-Q2,food and beverage services,4.1
+2017-Q2,information and communications,1.6
+2017-Q2,"telecommunications, broadcasting and publishing",1.3
+2017-Q2,it and other information services,1.9
+2017-Q2,financial and insurance services,1.4
+2017-Q2,financial services,1.4
+2017-Q2,insurance services,1.8
+2017-Q2,real estate services,2.8
+2017-Q2,professional services,1.6
+2017-Q2,"legal, accounting and management services",1.6
+2017-Q2,architectural and engineering services,1.6
+2017-Q2,other professional services,1.4
+2017-Q2,administrative and support services,3.5
+2017-Q2,security and investigation,2.9
+2017-Q2,cleaning and landscaping,4
+2017-Q2,other administrative and support services,3.5
+2017-Q2,"community, social and personal services",1
+2017-Q2,public administration and education,0.7
+2017-Q2,health and social services,1.1
+2017-Q2,"arts, entertainment and recreation",1.9
+2017-Q2,"other community, social and personal services",2.1
+2017-Q2,others,1
+2017-Q3,manufacturing,1.6
+2017-Q3,"food, beverages and tobacco",2.3
+2017-Q3,"paper,rubber,plastic products and printing",1.7
+2017-Q3,"petroleum, chemical and pharmaceutical products",1
+2017-Q3,"fabricated metal products, machinery and equipment",1.6
+2017-Q3,"electronic, computer and optical products",1.6
+2017-Q3,transport equipment,1.5
+2017-Q3,other manufacturing industries,1.3
+2017-Q3,construction,1.7
+2017-Q3,services,1.9
+2017-Q3,wholesale and retail trade,2
+2017-Q3,wholesale trade,1.6
+2017-Q3,retail trade,2.9
+2017-Q3,transportation and storage,1.3
+2017-Q3,land transport and supporting services,1.5
+2017-Q3,water transport and supporting services,0.8
+2017-Q3,air transport and supporting services,0.9
+2017-Q3,other transport and storage services,1.9
+2017-Q3,accommodation and food services,3.2
+2017-Q3,accommodation,2.6
+2017-Q3,food and beverage services,3.4
+2017-Q3,information and communications,1.7
+2017-Q3,"telecommunications, broadcasting and publishing",1.4
+2017-Q3,it and other information services,1.9
+2017-Q3,financial and insurance services,1.4
+2017-Q3,financial services,1.4
+2017-Q3,insurance services,1.8
+2017-Q3,real estate services,2.7
+2017-Q3,professional services,1.6
+2017-Q3,"legal, accounting and management services",1.6
+2017-Q3,architectural and engineering services,1.5
+2017-Q3,other professional services,1.5
+2017-Q3,administrative and support services,3.7
+2017-Q3,security and investigation,3
+2017-Q3,cleaning and landscaping,4.6
+2017-Q3,other administrative and support services,3.2
+2017-Q3,"community, social and personal services",1
+2017-Q3,public administration and education,0.7
+2017-Q3,health and social services,1.1
+2017-Q3,"arts, entertainment and recreation",1.5
+2017-Q3,"other community, social and personal services",1.3
+2017-Q3,others,2.3
+2017-Q4,manufacturing,1.3
+2017-Q4,"food, beverages and tobacco",2.1
+2017-Q4,"paper,rubber,plastic products and printing",1.6
+2017-Q4,"petroleum, chemical and pharmaceutical products",0.7
+2017-Q4,"fabricated metal products, machinery and equipment",1.3
+2017-Q4,"electronic, computer and optical products",1.3
+2017-Q4,transport equipment,1.4
+2017-Q4,other manufacturing industries,1.2
+2017-Q4,construction,1.8
+2017-Q4,services,1.7
+2017-Q4,wholesale and retail trade,1.8
+2017-Q4,wholesale trade,1.4
+2017-Q4,retail trade,2.6
+2017-Q4,transportation and storage,1.2
+2017-Q4,land transport and supporting services,1.1
+2017-Q4,water transport and supporting services,0.8
+2017-Q4,air transport and supporting services,0.8
+2017-Q4,other transport and storage services,1.7
+2017-Q4,accommodation and food services,3.5
+2017-Q4,accommodation,1.8
+2017-Q4,food and beverage services,3.9
+2017-Q4,information and communications,1.6
+2017-Q4,"telecommunications, broadcasting and publishing",1.1
+2017-Q4,it and other information services,1.9
+2017-Q4,financial and insurance services,1.3
+2017-Q4,financial services,1.2
+2017-Q4,insurance services,1.5
+2017-Q4,real estate services,2.3
+2017-Q4,professional services,1.6
+2017-Q4,"legal, accounting and management services",1.5
+2017-Q4,architectural and engineering services,1.6
+2017-Q4,other professional services,1.6
+2017-Q4,administrative and support services,3.6
+2017-Q4,security and investigation,3
+2017-Q4,cleaning and landscaping,4.3
+2017-Q4,other administrative and support services,3
+2017-Q4,"community, social and personal services",0.8
+2017-Q4,public administration and education,0.5
+2017-Q4,health and social services,0.9
+2017-Q4,"arts, entertainment and recreation",1.3
+2017-Q4,"other community, social and personal services",2
+2017-Q4,others,1
+2018-Q1,manufacturing,1.6
+2018-Q1,"food, beverages and tobacco",2.7
+2018-Q1,"paper,rubber,plastic products and printing",1.8
+2018-Q1,"petroleum, chemical and pharmaceutical products",0.9
+2018-Q1,"fabricated metal products, machinery and equipment",1.5
+2018-Q1,"electronic, computer and optical products",1.9
+2018-Q1,transport equipment,1.3
+2018-Q1,other manufacturing industries,1.4
+2018-Q1,construction,1.6
+2018-Q1,services,1.9
+2018-Q1,wholesale and retail trade,2.3
+2018-Q1,wholesale trade,1.6
+2018-Q1,retail trade,3.7
+2018-Q1,transportation and storage,1.4
+2018-Q1,land transport and supporting services,1.4
+2018-Q1,water transport and supporting services,1
+2018-Q1,air transport and supporting services,1
+2018-Q1,other transport and storage services,2.1
+2018-Q1,accommodation and food services,3.3
+2018-Q1,accommodation,2.5
+2018-Q1,food and beverage services,3.4
+2018-Q1,information and communications,1.7
+2018-Q1,"telecommunications, broadcasting and publishing",1.5
+2018-Q1,it and other information services,1.8
+2018-Q1,financial and insurance services,1
+2018-Q1,financial services,1
+2018-Q1,insurance services,1.3
+2018-Q1,real estate services,2.4
+2018-Q1,professional services,1.6
+2018-Q1,"legal, accounting and management services",1.6
+2018-Q1,architectural and engineering services,1.6
+2018-Q1,other professional services,1.7
+2018-Q1,administrative and support services,3.5
+2018-Q1,security and investigation,3.2
+2018-Q1,cleaning and landscaping,4.3
+2018-Q1,other administrative and support services,2.4
+2018-Q1,"community, social and personal services",1.1
+2018-Q1,public administration and education,0.7
+2018-Q1,health and social services,1.3
+2018-Q1,"arts, entertainment and recreation",1.5
+2018-Q1,"other community, social and personal services",2.2
+2018-Q1,others,1.8
+2018-Q2,manufacturing,1.8
+2018-Q2,"food, beverages and tobacco",3.3
+2018-Q2,"paper,rubber,plastic products and printing",2.2
+2018-Q2,"petroleum, chemical and pharmaceutical products",0.9
+2018-Q2,"fabricated metal products, machinery and equipment",1.7
+2018-Q2,"electronic, computer and optical products",1.8
+2018-Q2,transport equipment,1.5
+2018-Q2,other manufacturing industries,1.4
+2018-Q2,construction,2
+2018-Q2,services,2.1
+2018-Q2,wholesale and retail trade,2.3
+2018-Q2,wholesale trade,1.8
+2018-Q2,retail trade,3.3
+2018-Q2,transportation and storage,1.5
+2018-Q2,land transport and supporting services,1.6
+2018-Q2,water transport and supporting services,1.1
+2018-Q2,air transport and supporting services,1
+2018-Q2,other transport and storage services,2.1
+2018-Q2,accommodation and food services,3.6
+2018-Q2,accommodation,3.1
+2018-Q2,food and beverage services,3.8
+2018-Q2,information and communications,1.7
+2018-Q2,"telecommunications, broadcasting and publishing",1.3
+2018-Q2,it and other information services,2
+2018-Q2,financial and insurance services,1.6
+2018-Q2,financial services,1.5
+2018-Q2,insurance services,1.9
+2018-Q2,real estate services,2.8
+2018-Q2,professional services,1.7
+2018-Q2,"legal, accounting and management services",1.7
+2018-Q2,architectural and engineering services,1.7
+2018-Q2,other professional services,1.9
+2018-Q2,administrative and support services,3.7
+2018-Q2,security and investigation,3.2
+2018-Q2,cleaning and landscaping,4.5
+2018-Q2,other administrative and support services,2.8
+2018-Q2,"community, social and personal services",1.2
+2018-Q2,public administration and education,0.8
+2018-Q2,health and social services,1.2
+2018-Q2,"arts, entertainment and recreation",1.9
+2018-Q2,"other community, social and personal services",2.7
+2018-Q2,others,1.4
+2018-Q3,manufacturing,1.5
+2018-Q3,"food, beverages and tobacco",2.8
+2018-Q3,"paper,rubber,plastic products and printing",1.6
+2018-Q3,"petroleum, chemical and pharmaceutical products",1
+2018-Q3,"fabricated metal products, machinery and equipment",1.5
+2018-Q3,"electronic, computer and optical products",1.6
+2018-Q3,transport equipment,1.2
+2018-Q3,other manufacturing industries,1.5
+2018-Q3,construction,1.7
+2018-Q3,services,1.8
+2018-Q3,wholesale and retail trade,1.9
+2018-Q3,wholesale trade,1.5
+2018-Q3,retail trade,2.8
+2018-Q3,transportation and storage,1.2
+2018-Q3,land transport and supporting services,1.1
+2018-Q3,water transport and supporting services,0.9
+2018-Q3,air transport and supporting services,1
+2018-Q3,other transport and storage services,1.7
+2018-Q3,accommodation and food services,2.9
+2018-Q3,accommodation,2.4
+2018-Q3,food and beverage services,3
+2018-Q3,information and communications,1.5
+2018-Q3,"telecommunications, broadcasting and publishing",1.1
+2018-Q3,it and other information services,1.7
+2018-Q3,financial and insurance services,1.5
+2018-Q3,financial services,1.5
+2018-Q3,insurance services,1.7
+2018-Q3,real estate services,2.5
+2018-Q3,professional services,1.6
+2018-Q3,"legal, accounting and management services",1.6
+2018-Q3,architectural and engineering services,1.6
+2018-Q3,other professional services,1.8
+2018-Q3,administrative and support services,3.3
+2018-Q3,security and investigation,2.5
+2018-Q3,cleaning and landscaping,4.3
+2018-Q3,other administrative and support services,2.3
+2018-Q3,"community, social and personal services",1.1
+2018-Q3,public administration and education,0.8
+2018-Q3,health and social services,1.2
+2018-Q3,"arts, entertainment and recreation",1.5
+2018-Q3,"other community, social and personal services",1.8
+2018-Q3,others,1.3
+2018-Q4,manufacturing,1.3
+2018-Q4,"food, beverages and tobacco",2.5
+2018-Q4,"paper,rubber,plastic products and printing",1.2
+2018-Q4,"petroleum, chemical and pharmaceutical products",0.7
+2018-Q4,"fabricated metal products, machinery and equipment",1.1
+2018-Q4,"electronic, computer and optical products",1.1
+2018-Q4,transport equipment,1.2
+2018-Q4,other manufacturing industries,1.5
+2018-Q4,construction,1.7
+2018-Q4,services,1.7
+2018-Q4,wholesale and retail trade,1.7
+2018-Q4,wholesale trade,1.4
+2018-Q4,retail trade,2.3
+2018-Q4,transportation and storage,1.2
+2018-Q4,land transport and supporting services,1
+2018-Q4,water transport and supporting services,0.7
+2018-Q4,air transport and supporting services,1
+2018-Q4,other transport and storage services,1.8
+2018-Q4,accommodation and food services,3.2
+2018-Q4,accommodation,1.8
+2018-Q4,food and beverage services,3.5
+2018-Q4,information and communications,1.3
+2018-Q4,"telecommunications, broadcasting and publishing",0.9
+2018-Q4,it and other information services,1.5
+2018-Q4,financial and insurance services,1.4
+2018-Q4,financial services,1.4
+2018-Q4,insurance services,1.4
+2018-Q4,real estate services,2.2
+2018-Q4,professional services,1.6
+2018-Q4,"legal, accounting and management services",1.5
+2018-Q4,architectural and engineering services,1.8
+2018-Q4,other professional services,1.7
+2018-Q4,administrative and support services,3.3
+2018-Q4,security and investigation,3.1
+2018-Q4,cleaning and landscaping,3.9
+2018-Q4,other administrative and support services,2.5
+2018-Q4,"community, social and personal services",0.9
+2018-Q4,public administration and education,0.5
+2018-Q4,health and social services,1
+2018-Q4,"arts, entertainment and recreation",1.2
+2018-Q4,"other community, social and personal services",2.5
+2018-Q4,others,1.1
+2019-Q1,manufacturing,1.7
+2019-Q1,"food, beverages and tobacco",3
+2019-Q1,"paper,rubber,plastic products and printing",1.9
+2019-Q1,"petroleum, chemical and pharmaceutical products",0.8
+2019-Q1,"fabricated metal products, machinery and equipment",1.8
+2019-Q1,"electronic, computer and optical products",1.8
+2019-Q1,transport equipment,1.3
+2019-Q1,other manufacturing industries,1.7
+2019-Q1,construction,2
+2019-Q1,services,1.8
+2019-Q1,wholesale and retail trade,1.7
+2019-Q1,wholesale trade,1.4
+2019-Q1,retail trade,2.4
+2019-Q1,transportation and storage,1.5
+2019-Q1,land transport and supporting services,1.1
+2019-Q1,water transport and supporting services,1
+2019-Q1,air transport and supporting services,1.1
+2019-Q1,other transport and storage services,2.3
+2019-Q1,accommodation and food services,3.4
+2019-Q1,accommodation,2.5
+2019-Q1,food and beverage services,3.5
+2019-Q1,information and communications,1.6
+2019-Q1,"telecommunications, broadcasting and publishing",1.3
+2019-Q1,it and other information services,1.7
+2019-Q1,financial and insurance services,1.1
+2019-Q1,financial services,1.1
+2019-Q1,insurance services,1.3
+2019-Q1,real estate services,2.8
+2019-Q1,professional services,1.7
+2019-Q1,"legal, accounting and management services",1.7
+2019-Q1,architectural and engineering services,1.7
+2019-Q1,other professional services,1.8
+2019-Q1,administrative and support services,3.5
+2019-Q1,security and investigation,3.5
+2019-Q1,cleaning and landscaping,4
+2019-Q1,other administrative and support services,2.7
+2019-Q1,"community, social and personal services",1.1
+2019-Q1,public administration and education,0.8
+2019-Q1,health and social services,1.3
+2019-Q1,"arts, entertainment and recreation",1.4
+2019-Q1,"other community, social and personal services",1.9
+2019-Q1,others,1.2
+2019-Q2,manufacturing,1.7
+2019-Q2,"food, beverages and tobacco",3.4
+2019-Q2,"paper,rubber,plastic products and printing",1.8
+2019-Q2,"petroleum, chemical and pharmaceutical products",0.9
+2019-Q2,"fabricated metal products, machinery and equipment",1.6
+2019-Q2,"electronic, computer and optical products",1.8
+2019-Q2,transport equipment,1.4
+2019-Q2,other manufacturing industries,1.7
+2019-Q2,construction,2
+2019-Q2,services,2.1
+2019-Q2,wholesale and retail trade,2
+2019-Q2,wholesale trade,1.7
+2019-Q2,retail trade,2.8
+2019-Q2,transportation and storage,1.4
+2019-Q2,land transport and supporting services,1.2
+2019-Q2,water transport and supporting services,1
+2019-Q2,air transport and supporting services,0.9
+2019-Q2,other transport and storage services,2.3
+2019-Q2,accommodation and food services,3.9
+2019-Q2,accommodation,3
+2019-Q2,food and beverage services,4.1
+2019-Q2,information and communications,1.8
+2019-Q2,"telecommunications, broadcasting and publishing",1.3
+2019-Q2,it and other information services,1.9
+2019-Q2,financial and insurance services,1.5
+2019-Q2,financial services,1.4
+2019-Q2,insurance services,1.8
+2019-Q2,real estate services,3.1
+2019-Q2,professional services,1.8
+2019-Q2,"legal, accounting and management services",1.7
+2019-Q2,architectural and engineering services,1.9
+2019-Q2,other professional services,2
+2019-Q2,administrative and support services,3.9
+2019-Q2,security and investigation,4.1
+2019-Q2,cleaning and landscaping,4
+2019-Q2,other administrative and support services,3.4
+2019-Q2,"community, social and personal services",1.2
+2019-Q2,public administration and education,0.8
+2019-Q2,health and social services,1.2
+2019-Q2,"arts, entertainment and recreation",2
+2019-Q2,"other community, social and personal services",2.1
+2019-Q2,others,1.3
+2019-Q3,manufacturing,1.4
+2019-Q3,"food, beverages and tobacco",2.3
+2019-Q3,"paper,rubber,plastic products and printing",1.6
+2019-Q3,"petroleum, chemical and pharmaceutical products",0.9
+2019-Q3,"fabricated metal products, machinery and equipment",1.4
+2019-Q3,"electronic, computer and optical products",1.4
+2019-Q3,transport equipment,1.3
+2019-Q3,other manufacturing industries,1.3
+2019-Q3,construction,1.8
+2019-Q3,services,1.9
+2019-Q3,wholesale and retail trade,1.7
+2019-Q3,wholesale trade,1.4
+2019-Q3,retail trade,2.4
+2019-Q3,transportation and storage,1.4
+2019-Q3,land transport and supporting services,1.2
+2019-Q3,water transport and supporting services,1
+2019-Q3,air transport and supporting services,0.9
+2019-Q3,other transport and storage services,2.2
+2019-Q3,accommodation and food services,3.4
+2019-Q3,accommodation,2.6
+2019-Q3,food and beverage services,3.5
+2019-Q3,information and communications,1.7
+2019-Q3,"telecommunications, broadcasting and publishing",1.1
+2019-Q3,it and other information services,1.9
+2019-Q3,financial and insurance services,1.3
+2019-Q3,financial services,1.3
+2019-Q3,insurance services,1.8
+2019-Q3,real estate services,2.4
+2019-Q3,professional services,1.7
+2019-Q3,"legal, accounting and management services",1.6
+2019-Q3,architectural and engineering services,1.7
+2019-Q3,other professional services,2
+2019-Q3,administrative and support services,3.6
+2019-Q3,security and investigation,4
+2019-Q3,cleaning and landscaping,4
+2019-Q3,other administrative and support services,2.7
+2019-Q3,"community, social and personal services",1.1
+2019-Q3,public administration and education,0.8
+2019-Q3,health and social services,1.2
+2019-Q3,"arts, entertainment and recreation",1.6
+2019-Q3,"other community, social and personal services",1.7
+2019-Q3,others,1.1
+2019-Q4,manufacturing,1
+2019-Q4,"food, beverages and tobacco",1.6
+2019-Q4,"paper,rubber,plastic products and printing",1.1
+2019-Q4,"petroleum, chemical and pharmaceutical products",0.7
+2019-Q4,"fabricated metal products, machinery and equipment",0.9
+2019-Q4,"electronic, computer and optical products",1
+2019-Q4,transport equipment,0.8
+2019-Q4,other manufacturing industries,1
+2019-Q4,construction,1.4
+2019-Q4,services,1.6
+2019-Q4,wholesale and retail trade,1.5
+2019-Q4,wholesale trade,1.3
+2019-Q4,retail trade,2.1
+2019-Q4,transportation and storage,1.1
+2019-Q4,land transport and supporting services,0.9
+2019-Q4,water transport and supporting services,0.8
+2019-Q4,air transport and supporting services,0.9
+2019-Q4,other transport and storage services,1.7
+2019-Q4,accommodation and food services,3.1
+2019-Q4,accommodation,2
+2019-Q4,food and beverage services,3.3
+2019-Q4,information and communications,1.4
+2019-Q4,"telecommunications, broadcasting and publishing",1
+2019-Q4,it and other information services,1.6
+2019-Q4,financial and insurance services,1
+2019-Q4,financial services,0.9
+2019-Q4,insurance services,1.5
+2019-Q4,real estate services,1.7
+2019-Q4,professional services,1.4
+2019-Q4,"legal, accounting and management services",1.5
+2019-Q4,architectural and engineering services,1.4
+2019-Q4,other professional services,1.3
+2019-Q4,administrative and support services,3.2
+2019-Q4,security and investigation,3.7
+2019-Q4,cleaning and landscaping,3.4
+2019-Q4,other administrative and support services,2.5
+2019-Q4,"community, social and personal services",0.8
+2019-Q4,public administration and education,0.4
+2019-Q4,health and social services,1.1
+2019-Q4,"arts, entertainment and recreation",1.5
+2019-Q4,"other community, social and personal services",1.4
+2019-Q4,others,1
+2020-Q1,manufacturing,1.3
+2020-Q1,"food, beverages and tobacco",1.8
+2020-Q1,"paper,rubber,plastic products and printing",1.5
+2020-Q1,"petroleum, chemical and pharmaceutical products",0.7
+2020-Q1,"fabricated metal products, machinery and equipment",1.2
+2020-Q1,"electronic, computer and optical products",1.1
+2020-Q1,transport equipment,1.3
+2020-Q1,other manufacturing industries,1.4
+2020-Q1,construction,1.8
+2020-Q1,services,1.7
+2020-Q1,wholesale and retail trade,1.8
+2020-Q1,wholesale trade,1.5
+2020-Q1,retail trade,2.3
+2020-Q1,transportation and storage,1.2
+2020-Q1,land transport and supporting services,0.9
+2020-Q1,water transport and supporting services,1
+2020-Q1,air transport and supporting services,1.1
+2020-Q1,other transport and storage services,1.6
+2020-Q1,accommodation and food services,3.4
+2020-Q1,accommodation,2.3
+2020-Q1,food and beverage services,3.6
+2020-Q1,information and communications,1.4
+2020-Q1,"telecommunications, broadcasting and publishing",1.1
+2020-Q1,it and other information services,1.6
+2020-Q1,financial and insurance services,0.9
+2020-Q1,financial services,0.9
+2020-Q1,insurance services,1.2
+2020-Q1,real estate services,1.7
+2020-Q1,professional services,1.4
+2020-Q1,"legal, accounting and management services",1.4
+2020-Q1,architectural and engineering services,1.4
+2020-Q1,other professional services,1.4
+2020-Q1,administrative and support services,3.3
+2020-Q1,security and investigation,3.5
+2020-Q1,cleaning and landscaping,3.8
+2020-Q1,other administrative and support services,2.4
+2020-Q1,"community, social and personal services",1.1
+2020-Q1,public administration and education,0.7
+2020-Q1,health and social services,1.3
+2020-Q1,"arts, entertainment and recreation",1.6
+2020-Q1,"other community, social and personal services",1.9
+2020-Q1,others,1.2
+2020-Q2,manufacturing,0.9
+2020-Q2,"food, beverages and tobacco",2.4
+2020-Q2,"paper,rubber,plastic products and printing",1.3
+2020-Q2,"petroleum, chemical and pharmaceutical products",0.6
+2020-Q2,"fabricated metal products, machinery and equipment",0.8
+2020-Q2,"electronic, computer and optical products",0.8
+2020-Q2,transport equipment,0.5
+2020-Q2,other manufacturing industries,0.9
+2020-Q2,construction,0.7
+2020-Q2,services,1.5
+2020-Q2,wholesale and retail trade,1.6
+2020-Q2,wholesale trade,1.3
+2020-Q2,retail trade,2.1
+2020-Q2,transportation and storage,0.9
+2020-Q2,land transport and supporting services,1
+2020-Q2,water transport and supporting services,0.6
+2020-Q2,air transport and supporting services,0.6
+2020-Q2,other transport and storage services,1.4
+2020-Q2,accommodation and food services,3.2
+2020-Q2,accommodation,2.2
+2020-Q2,food and beverage services,3.3
+2020-Q2,information and communications,1.4
+2020-Q2,"telecommunications, broadcasting and publishing",1.5
+2020-Q2,it and other information services,1.4
+2020-Q2,financial and insurance services,0.8
+2020-Q2,financial services,0.7
+2020-Q2,insurance services,1.2
+2020-Q2,real estate services,1.5
+2020-Q2,professional services,1.4
+2020-Q2,"legal, accounting and management services",1.7
+2020-Q2,architectural and engineering services,1
+2020-Q2,other professional services,1
+2020-Q2,administrative and support services,3.2
+2020-Q2,security and investigation,4
+2020-Q2,cleaning and landscaping,3.3
+2020-Q2,other administrative and support services,2.2
+2020-Q2,"community, social and personal services",0.8
+2020-Q2,public administration and education,0.5
+2020-Q2,health and social services,0.8
+2020-Q2,"arts, entertainment and recreation",1.5
+2020-Q2,"other community, social and personal services",1.5
+2020-Q2,others,0.8
+2020-Q3,manufacturing,1.3
+2020-Q3,"food, beverages and tobacco",2.3
+2020-Q3,"paper,rubber,plastic products and printing",1.6
+2020-Q3,"petroleum, chemical and pharmaceutical products",0.8
+2020-Q3,"fabricated metal products, machinery and equipment",1.2
+2020-Q3,"electronic, computer and optical products",1.3
+2020-Q3,transport equipment,1
+2020-Q3,other manufacturing industries,1.3
+2020-Q3,construction,1.6
+2020-Q3,services,1.6
+2020-Q3,wholesale and retail trade,1.8
+2020-Q3,wholesale trade,1.4
+2020-Q3,retail trade,2.6
+2020-Q3,transportation and storage,1.1
+2020-Q3,land transport and supporting services,1.1
+2020-Q3,water transport and supporting services,0.7
+2020-Q3,air transport and supporting services,0.7
+2020-Q3,other transport and storage services,1.6
+2020-Q3,accommodation and food services,4.1
+2020-Q3,accommodation,1.9
+2020-Q3,food and beverage services,4.5
+2020-Q3,information and communications,1.5
+2020-Q3,"telecommunications, broadcasting and publishing",0.9
+2020-Q3,it and other information services,1.7
+2020-Q3,financial and insurance services,0.9
+2020-Q3,financial services,0.8
+2020-Q3,insurance services,1.2
+2020-Q3,real estate services,1.4
+2020-Q3,professional services,1.1
+2020-Q3,"legal, accounting and management services",1.1
+2020-Q3,architectural and engineering services,1.3
+2020-Q3,other professional services,0.8
+2020-Q3,administrative and support services,3
+2020-Q3,security and investigation,2.8
+2020-Q3,cleaning and landscaping,3.4
+2020-Q3,other administrative and support services,2.4
+2020-Q3,"community, social and personal services",0.9
+2020-Q3,public administration and education,0.6
+2020-Q3,health and social services,0.9
+2020-Q3,"arts, entertainment and recreation",1.5
+2020-Q3,"other community, social and personal services",1.7
+2020-Q3,others,0.9
+2020-Q4,manufacturing,1.4
+2020-Q4,"food, beverages and tobacco",2.5
+2020-Q4,"paper,rubber,plastic products and printing",2.3
+2020-Q4,"petroleum, chemical and pharmaceutical products",0.7
+2020-Q4,"fabricated metal products, machinery and equipment",1.4
+2020-Q4,"electronic, computer and optical products",1
+2020-Q4,transport equipment,1.4
+2020-Q4,other manufacturing industries,1.4
+2020-Q4,construction,1.6
+2020-Q4,services,1.5
+2020-Q4,wholesale and retail trade,1.5
+2020-Q4,wholesale trade,1.2
+2020-Q4,retail trade,2.3
+2020-Q4,transportation and storage,1.1
+2020-Q4,land transport and supporting services,0.9
+2020-Q4,water transport and supporting services,0.8
+2020-Q4,air transport and supporting services,0.8
+2020-Q4,other transport and storage services,1.5
+2020-Q4,accommodation and food services,3.2
+2020-Q4,accommodation,2.1
+2020-Q4,food and beverage services,3.3
+2020-Q4,information and communications,1.8
+2020-Q4,"telecommunications, broadcasting and publishing",1.2
+2020-Q4,it and other information services,2
+2020-Q4,financial and insurance services,0.9
+2020-Q4,financial services,0.8
+2020-Q4,insurance services,1.1
+2020-Q4,real estate services,1.7
+2020-Q4,professional services,1.3
+2020-Q4,"legal, accounting and management services",1.3
+2020-Q4,architectural and engineering services,1.4
+2020-Q4,other professional services,1.2
+2020-Q4,administrative and support services,2.9
+2020-Q4,security and investigation,3.4
+2020-Q4,cleaning and landscaping,3
+2020-Q4,other administrative and support services,2.1
+2020-Q4,"community, social and personal services",0.8
+2020-Q4,public administration and education,0.5
+2020-Q4,health and social services,1
+2020-Q4,"arts, entertainment and recreation",1.2
+2020-Q4,"other community, social and personal services",1.4
+2020-Q4,others,0.8
+2021-Q1,manufacturing,1.5
+2021-Q1,"food, beverages and tobacco",2.8
+2021-Q1,"paper,rubber,plastic products and printing",1.8
+2021-Q1,"petroleum, chemical and pharmaceutical products",0.8
+2021-Q1,"fabricated metal products, machinery and equipment",1.6
+2021-Q1,"electronic, computer and optical products",1.3
+2021-Q1,transport equipment,1
+2021-Q1,other manufacturing industries,1.5
+2021-Q1,construction,1.3
+2021-Q1,services,1.8
+2021-Q1,wholesale and retail trade,1.9
+2021-Q1,wholesale trade,1.4
+2021-Q1,retail trade,3
+2021-Q1,transportation and storage,1.2
+2021-Q1,land transport and supporting services,1
+2021-Q1,water transport and supporting services,0.9
+2021-Q1,air transport and supporting services,1.1
+2021-Q1,other transport and storage services,1.8
+2021-Q1,accommodation and food services,3.5
+2021-Q1,accommodation,3.1
+2021-Q1,food and beverage services,3.6
+2021-Q1,information and communications,1.8
+2021-Q1,"telecommunications, broadcasting and publishing",1.3
+2021-Q1,it and other information services,2
+2021-Q1,financial and insurance services,0.8
+2021-Q1,financial services,0.8
+2021-Q1,insurance services,1.1
+2021-Q1,real estate services,2
+2021-Q1,professional services,1.7
+2021-Q1,"legal, accounting and management services",1.7
+2021-Q1,architectural and engineering services,1.5
+2021-Q1,other professional services,1.7
+2021-Q1,administrative and support services,3.1
+2021-Q1,security and investigation,3.7
+2021-Q1,cleaning and landscaping,3.2
+2021-Q1,other administrative and support services,2.4
+2021-Q1,"community, social and personal services",1.1
+2021-Q1,public administration and education,0.9
+2021-Q1,health and social services,1.3
+2021-Q1,"arts, entertainment and recreation",1.6
+2021-Q1,"other community, social and personal services",1.5
+2021-Q1,others,1
+2021-Q2,manufacturing,1.7
+2021-Q2,"food, beverages and tobacco",2.9
+2021-Q2,"paper,rubber,plastic products and printing",2
+2021-Q2,"petroleum, chemical and pharmaceutical products",1.2
+2021-Q2,"fabricated metal products, machinery and equipment",1.6
+2021-Q2,"electronic, computer and optical products",1.7
+2021-Q2,transport equipment,1.2
+2021-Q2,other manufacturing industries,1.7
+2021-Q2,construction,1.4
+2021-Q2,services,1.9
+2021-Q2,wholesale and retail trade,2
+2021-Q2,wholesale trade,1.7
+2021-Q2,retail trade,2.8
+2021-Q2,transportation and storage,1.5
+2021-Q2,land transport and supporting services,1.3
+2021-Q2,water transport and supporting services,1.2
+2021-Q2,air transport and supporting services,1
+2021-Q2,other transport and storage services,2.2
+2021-Q2,accommodation and food services,3.4
+2021-Q2,accommodation,3.3
+2021-Q2,food and beverage services,3.4
+2021-Q2,information and communications,1.9
+2021-Q2,"telecommunications, broadcasting and publishing",1.3
+2021-Q2,it and other information services,2.2
+2021-Q2,financial and insurance services,1.3
+2021-Q2,financial services,1.3
+2021-Q2,insurance services,1.6
+2021-Q2,real estate services,2.5
+2021-Q2,professional services,1.7
+2021-Q2,"legal, accounting and management services",1.8
+2021-Q2,architectural and engineering services,1.5
+2021-Q2,other professional services,1.8
+2021-Q2,administrative and support services,3.4
+2021-Q2,security and investigation,3.8
+2021-Q2,cleaning and landscaping,3.4
+2021-Q2,other administrative and support services,2.8
+2021-Q2,"community, social and personal services",1.1
+2021-Q2,public administration and education,0.8
+2021-Q2,health and social services,1.2
+2021-Q2,"arts, entertainment and recreation",1.7
+2021-Q2,"other community, social and personal services",1.9
+2021-Q2,others,1.1
+2021-Q3,manufacturing,1.6
+2021-Q3,"food, beverages and tobacco",2.3
+2021-Q3,"paper,rubber,plastic products and printing",1.9
+2021-Q3,"petroleum, chemical and pharmaceutical products",1.3
+2021-Q3,"fabricated metal products, machinery and equipment",1.4
+2021-Q3,"electronic, computer and optical products",1.8
+2021-Q3,transport equipment,1.2
+2021-Q3,other manufacturing industries,1.6
+2021-Q3,construction,1.4
+2021-Q3,services,1.8
+2021-Q3,wholesale and retail trade,1.5
+2021-Q3,wholesale trade,1.3
+2021-Q3,retail trade,2
+2021-Q3,transportation and storage,1.5
+2021-Q3,land transport and supporting services,1.3
+2021-Q3,water transport and supporting services,1.3
+2021-Q3,air transport and supporting services,1.1
+2021-Q3,other transport and storage services,2
+2021-Q3,accommodation and food services,3.2
+2021-Q3,accommodation,2.5
+2021-Q3,food and beverage services,3.3
+2021-Q3,information and communications,2.1
+2021-Q3,"telecommunications, broadcasting and publishing",1.5
+2021-Q3,it and other information services,2.3
+2021-Q3,financial and insurance services,1.7
+2021-Q3,financial services,1.8
+2021-Q3,insurance services,1.7
+2021-Q3,real estate services,2.3
+2021-Q3,professional services,1.8
+2021-Q3,"legal, accounting and management services",1.9
+2021-Q3,architectural and engineering services,1.6
+2021-Q3,other professional services,1.8
+2021-Q3,administrative and support services,2.9
+2021-Q3,security and investigation,3.3
+2021-Q3,cleaning and landscaping,3.2
+2021-Q3,other administrative and support services,2.2
+2021-Q3,"community, social and personal services",1.1
+2021-Q3,public administration and education,0.9
+2021-Q3,health and social services,1.3
+2021-Q3,"arts, entertainment and recreation",1.6
+2021-Q3,"other community, social and personal services",1.5
+2021-Q3,others,1
+2021-Q4,manufacturing,1.4
+2021-Q4,"food, beverages and tobacco",2.2
+2021-Q4,"paper,rubber,plastic products and printing",1.8
+2021-Q4,"petroleum, chemical and pharmaceutical products",1.1
+2021-Q4,"fabricated metal products, machinery and equipment",1.3
+2021-Q4,"electronic, computer and optical products",1.4
+2021-Q4,transport equipment,1.2
+2021-Q4,other manufacturing industries,1.3
+2021-Q4,construction,1.3
+2021-Q4,services,1.7
+2021-Q4,wholesale and retail trade,1.6
+2021-Q4,wholesale trade,1.3
+2021-Q4,retail trade,2.2
+2021-Q4,transportation and storage,1.4
+2021-Q4,land transport and supporting services,1.3
+2021-Q4,water transport and supporting services,1
+2021-Q4,air transport and supporting services,1
+2021-Q4,other transport and storage services,2
+2021-Q4,accommodation and food services,2.9
+2021-Q4,accommodation,3.1
+2021-Q4,food and beverage services,2.9
+2021-Q4,information and communications,2.4
+2021-Q4,"telecommunications, broadcasting and publishing",1.8
+2021-Q4,it and other information services,2.6
+2021-Q4,financial and insurance services,1.5
+2021-Q4,financial services,1.4
+2021-Q4,insurance services,1.8
+2021-Q4,real estate services,1.8
+2021-Q4,professional services,1.6
+2021-Q4,"legal, accounting and management services",1.7
+2021-Q4,architectural and engineering services,1.4
+2021-Q4,other professional services,1.6
+2021-Q4,administrative and support services,2.9
+2021-Q4,security and investigation,3.4
+2021-Q4,cleaning and landscaping,2.7
+2021-Q4,other administrative and support services,2.9
+2021-Q4,"community, social and personal services",1
+2021-Q4,public administration and education,0.7
+2021-Q4,health and social services,1.2
+2021-Q4,"arts, entertainment and recreation",1.2
+2021-Q4,"other community, social and personal services",1.6
+2021-Q4,others,1.2
+2022-Q1,manufacturing,1.5
+2022-Q1,"food, beverages and tobacco",2.2
+2022-Q1,"paper,rubber,plastic products and printing",1.5
+2022-Q1,"petroleum, chemical and pharmaceutical products",1.1
+2022-Q1,"fabricated metal products, machinery and equipment",1.6
+2022-Q1,"electronic, computer and optical products",1.7
+2022-Q1,transport equipment,1.3
+2022-Q1,other manufacturing industries,1.4
+2022-Q1,construction,1.3
+2022-Q1,services,1.8
+2022-Q1,wholesale and retail trade,1.8
+2022-Q1,wholesale trade,1.5
+2022-Q1,retail trade,2.6
+2022-Q1,transportation and storage,1.4
+2022-Q1,land transport and supporting services,1.3
+2022-Q1,water transport and supporting services,0.9
+2022-Q1,air transport and supporting services,1.3
+2022-Q1,other transport and storage services,1.7
+2022-Q1,accommodation and food services,3
+2022-Q1,accommodation,3.2
+2022-Q1,food and beverage services,3
+2022-Q1,information and communications,2.3
+2022-Q1,"telecommunications, broadcasting and publishing",2.2
+2022-Q1,it and other information services,2.3
+2022-Q1,financial and insurance services,1.4
+2022-Q1,financial services,1.4
+2022-Q1,insurance services,1.5
+2022-Q1,real estate services,1.9
+2022-Q1,professional services,1.6
+2022-Q1,"legal, accounting and management services",1.8
+2022-Q1,architectural and engineering services,1.4
+2022-Q1,other professional services,1.4
+2022-Q1,administrative and support services,3.2
+2022-Q1,security and investigation,2.7
+2022-Q1,cleaning and landscaping,3.8
+2022-Q1,other administrative and support services,2.6
+2022-Q1,"community, social and personal services",1.3
+2022-Q1,public administration and education,0.8
+2022-Q1,health and social services,1.6
+2022-Q1,"arts, entertainment and recreation",1.4
+2022-Q1,"other community, social and personal services",1.8
+2022-Q1,others,1.1
+2022-Q2,manufacturing,1.6
+2022-Q2,"food, beverages and tobacco",2.4
+2022-Q2,"paper,rubber,plastic products and printing",1.7
+2022-Q2,"petroleum, chemical and pharmaceutical products",1.2
+2022-Q2,"fabricated metal products, machinery and equipment",1.6
+2022-Q2,"electronic, computer and optical products",1.4
+2022-Q2,transport equipment,1.4
+2022-Q2,other manufacturing industries,1.5
+2022-Q2,construction,1.3
+2022-Q2,services,1.9
+2022-Q2,wholesale and retail trade,2
+2022-Q2,wholesale trade,1.7
+2022-Q2,retail trade,2.6
+2022-Q2,transportation and storage,1.7
+2022-Q2,land transport and supporting services,1.7
+2022-Q2,water transport and supporting services,1.1
+2022-Q2,air transport and supporting services,1.4
+2022-Q2,other transport and storage services,2.3
+2022-Q2,accommodation and food services,3.4
+2022-Q2,accommodation,3.7
+2022-Q2,food and beverage services,3.3
+2022-Q2,information and communications,2.3
+2022-Q2,"telecommunications, broadcasting and publishing",2.2
+2022-Q2,it and other information services,2.4
+2022-Q2,financial and insurance services,1.3
+2022-Q2,financial services,1.2
+2022-Q2,insurance services,1.8
+2022-Q2,real estate services,2
+2022-Q2,professional services,1.7
+2022-Q2,"legal, accounting and management services",1.8
+2022-Q2,architectural and engineering services,1.6
+2022-Q2,other professional services,1.7
+2022-Q2,administrative and support services,3.3
+2022-Q2,security and investigation,3.3
+2022-Q2,cleaning and landscaping,3.1
+2022-Q2,other administrative and support services,3.7
+2022-Q2,"community, social and personal services",1.3
+2022-Q2,public administration and education,0.9
+2022-Q2,health and social services,1.5
+2022-Q2,"arts, entertainment and recreation",1.8
+2022-Q2,"other community, social and personal services",1.6
+2022-Q2,others,1.4
+2022-Q3,manufacturing,1.5
+2022-Q3,"food, beverages and tobacco",2.2
+2022-Q3,"paper,rubber,plastic products and printing",1.6
+2022-Q3,"petroleum, chemical and pharmaceutical products",1.2
+2022-Q3,"fabricated metal products, machinery and equipment",1.5
+2022-Q3,"electronic, computer and optical products",1.5
+2022-Q3,transport equipment,1.3
+2022-Q3,other manufacturing industries,1.4
+2022-Q3,construction,1.3
+2022-Q3,services,1.9
+2022-Q3,wholesale and retail trade,1.8
+2022-Q3,wholesale trade,1.5
+2022-Q3,retail trade,2.4
+2022-Q3,transportation and storage,1.7
+2022-Q3,land transport and supporting services,1.3
+2022-Q3,water transport and supporting services,1.1
+2022-Q3,air transport and supporting services,1.5
+2022-Q3,other transport and storage services,2.3
+2022-Q3,accommodation and food services,3
+2022-Q3,accommodation,3.8
+2022-Q3,food and beverage services,2.8
+2022-Q3,information and communications,2.1
+2022-Q3,"telecommunications, broadcasting and publishing",1.7
+2022-Q3,it and other information services,2.3
+2022-Q3,financial and insurance services,1.7
+2022-Q3,financial services,1.6
+2022-Q3,insurance services,2
+2022-Q3,real estate services,2
+2022-Q3,professional services,1.6
+2022-Q3,"legal, accounting and management services",1.7
+2022-Q3,architectural and engineering services,1.5
+2022-Q3,other professional services,1.6
+2022-Q3,administrative and support services,3.3
+2022-Q3,security and investigation,3.8
+2022-Q3,cleaning and landscaping,3
+2022-Q3,other administrative and support services,3.2
+2022-Q3,"community, social and personal services",1.2
+2022-Q3,public administration and education,0.9
+2022-Q3,health and social services,1.5
+2022-Q3,"arts, entertainment and recreation",1.6
+2022-Q3,"other community, social and personal services",1.6
+2022-Q3,others,1.3
+2022-Q4,manufacturing,1.2
+2022-Q4,"food, beverages and tobacco",1.6
+2022-Q4,"paper,rubber,plastic products and printing",1.3
+2022-Q4,"petroleum, chemical and pharmaceutical products",1
+2022-Q4,"fabricated metal products, machinery and equipment",1.1
+2022-Q4,"electronic, computer and optical products",1.3
+2022-Q4,transport equipment,1
+2022-Q4,other manufacturing industries,1.2
+2022-Q4,construction,1.3
+2022-Q4,services,1.5
+2022-Q4,wholesale and retail trade,1.4
+2022-Q4,wholesale trade,1.2
+2022-Q4,retail trade,2
+2022-Q4,transportation and storage,1.2
+2022-Q4,land transport and supporting services,1
+2022-Q4,water transport and supporting services,0.7
+2022-Q4,air transport and supporting services,1
+2022-Q4,other transport and storage services,1.8
+2022-Q4,accommodation and food services,2.6
+2022-Q4,accommodation,2.6
+2022-Q4,food and beverage services,2.6
+2022-Q4,information and communications,1.8
+2022-Q4,"telecommunications, broadcasting and publishing",1.5
+2022-Q4,it and other information services,1.9
+2022-Q4,financial and insurance services,1.2
+2022-Q4,financial services,1.2
+2022-Q4,insurance services,1.6
+2022-Q4,real estate services,1.5
+2022-Q4,professional services,1.3
+2022-Q4,"legal, accounting and management services",1.4
+2022-Q4,architectural and engineering services,1.3
+2022-Q4,other professional services,1.4
+2022-Q4,administrative and support services,2.8
+2022-Q4,security and investigation,3
+2022-Q4,cleaning and landscaping,3
+2022-Q4,other administrative and support services,2.3
+2022-Q4,"community, social and personal services",0.9
+2022-Q4,public administration and education,0.6
+2022-Q4,health and social services,1.1
+2022-Q4,"arts, entertainment and recreation",1.2
+2022-Q4,"other community, social and personal services",1.4
+2022-Q4,others,1
+2023-Q1,manufacturing,1.3
+2023-Q1,"food, beverages and tobacco",2.1
+2023-Q1,"paper,rubber,plastic products and printing",1.6
+2023-Q1,"petroleum, chemical and pharmaceutical products",0.8
+2023-Q1,"fabricated metal products, machinery and equipment",1.2
+2023-Q1,"electronic, computer and optical products",1.3
+2023-Q1,transport equipment,0.9
+2023-Q1,other manufacturing industries,1.4
+2023-Q1,construction,1.3
+2023-Q1,services,1.5
+2023-Q1,wholesale and retail trade,1.5
+2023-Q1,wholesale trade,1
+2023-Q1,retail trade,2.6
+2023-Q1,transportation and storage,1.4
+2023-Q1,land transport and supporting services,1.3
+2023-Q1,water transport and supporting services,1.1
+2023-Q1,air transport and supporting services,1
+2023-Q1,other transport and storage services,1.9
+2023-Q1,accommodation and food services,2.6
+2023-Q1,accommodation,2.6
+2023-Q1,food and beverage services,2.6
+2023-Q1,information and communications,1.5
+2023-Q1,"telecommunications, broadcasting and publishing",1.2
+2023-Q1,it and other information services,1.6
+2023-Q1,financial and insurance services,1.1
+2023-Q1,financial services,1.1
+2023-Q1,insurance services,1.3
+2023-Q1,real estate services,1.8
+2023-Q1,professional services,1.2
+2023-Q1,"legal, accounting and management services",1.2
+2023-Q1,architectural and engineering services,1.3
+2023-Q1,other professional services,1.1
+2023-Q1,administrative and support services,2.5
+2023-Q1,security and investigation,2.8
+2023-Q1,cleaning and landscaping,2.9
+2023-Q1,other administrative and support services,1.8
+2023-Q1,"community, social and personal services",1.1
+2023-Q1,public administration and education,0.7
+2023-Q1,health and social services,1.2
+2023-Q1,"arts, entertainment and recreation",1.6
+2023-Q1,"other community, social and personal services",1.6
+2023-Q1,others,0.8
+2023-Q2,manufacturing,1.3
+2023-Q2,"food, beverages and tobacco",1.9
+2023-Q2,"paper,rubber,plastic products and printing",1.6
+2023-Q2,"petroleum, chemical and pharmaceutical products",0.9
+2023-Q2,"fabricated metal products, machinery and equipment",1.2
+2023-Q2,"electronic, computer and optical products",1.3
+2023-Q2,transport equipment,1.1
+2023-Q2,other manufacturing industries,1.2
+2023-Q2,construction,1.4
+2023-Q2,services,1.6
+2023-Q2,wholesale and retail trade,1.5
+2023-Q2,wholesale trade,1.2
+2023-Q2,retail trade,1.8
+2023-Q2,transportation and storage,1.3
+2023-Q2,land transport and supporting services,1.3
+2023-Q2,water transport and supporting services,1
+2023-Q2,air transport and supporting services,1
+2023-Q2,other transport and storage services,1.7
+2023-Q2,accommodation and food services,2.7
+2023-Q2,accommodation,2.5
+2023-Q2,food and beverage services,2.7
+2023-Q2,information and communications,1.5
+2023-Q2,"telecommunications, broadcasting and publishing",1.2
+2023-Q2,it and other information services,1.6
+2023-Q2,financial and insurance services,1.1
+2023-Q2,financial services,1.1
+2023-Q2,insurance services,1.5
+2023-Q2,real estate services,1.8
+2023-Q2,professional services,1.3
+2023-Q2,"legal, accounting and management services",1.2
+2023-Q2,architectural and engineering services,1.3
+2023-Q2,other professional services,1.3
+2023-Q2,administrative and support services,3
+2023-Q2,security and investigation,3.2
+2023-Q2,cleaning and landscaping,3.3
+2023-Q2,other administrative and support services,2.2
+2023-Q2,"community, social and personal services",1.1
+2023-Q2,public administration and education,0.7
+2023-Q2,health and social services,1.3
+2023-Q2,"arts, entertainment and recreation",1.8
+2023-Q2,"other community, social and personal services",1.9
+2023-Q2,others,0.8
+2023-Q3,manufacturing,1.3
+2023-Q3,"food, beverages and tobacco",1.8
+2023-Q3,"paper,rubber,plastic products and printing",1.1
+2023-Q3,"petroleum, chemical and pharmaceutical products",0.8
+2023-Q3,"fabricated metal products, machinery and equipment",1.3
+2023-Q3,"electronic, computer and optical products",1.2
+2023-Q3,transport equipment,1.1
+2023-Q3,other manufacturing industries,1.3
+2023-Q3,construction,1.2
+2023-Q3,services,1.5
+2023-Q3,wholesale and retail trade,1.4
+2023-Q3,wholesale trade,1.1
+2023-Q3,retail trade,2
+2023-Q3,transportation and storage,1.3
+2023-Q3,land transport and supporting services,1
+2023-Q3,water transport and supporting services,1.2
+2023-Q3,air transport and supporting services,1
+2023-Q3,other transport and storage services,1.7
+2023-Q3,accommodation and food services,2.5
+2023-Q3,accommodation,2
+2023-Q3,food and beverage services,2.6
+2023-Q3,information and communications,1.6
+2023-Q3,"telecommunications, broadcasting and publishing",1.3
+2023-Q3,it and other information services,1.7
+2023-Q3,financial and insurance services,1.1
+2023-Q3,financial services,1
+2023-Q3,insurance services,1.6
+2023-Q3,real estate services,1.3
+2023-Q3,professional services,1.4
+2023-Q3,"legal, accounting and management services",1.4
+2023-Q3,architectural and engineering services,1.4
+2023-Q3,other professional services,1.3
+2023-Q3,administrative and support services,2.7
+2023-Q3,security and investigation,2.6
+2023-Q3,cleaning and landscaping,3
+2023-Q3,other administrative and support services,2.4
+2023-Q3,"community, social and personal services",1.1
+2023-Q3,public administration and education,0.8
+2023-Q3,health and social services,1.4
+2023-Q3,"arts, entertainment and recreation",1.2
+2023-Q3,"other community, social and personal services",1.2
+2023-Q3,others,1.3
+2023-Q4,manufacturing,1
+2023-Q4,"food, beverages and tobacco",1.5
+2023-Q4,"paper,rubber,plastic products and printing",1
+2023-Q4,"petroleum, chemical and pharmaceutical products",0.7
+2023-Q4,"fabricated metal products, machinery and equipment",1
+2023-Q4,"electronic, computer and optical products",0.7
+2023-Q4,transport equipment,1.1
+2023-Q4,other manufacturing industries,1.2
+2023-Q4,construction,1.3
+2023-Q4,services,1.4
+2023-Q4,wholesale and retail trade,1.3
+2023-Q4,wholesale trade,1
+2023-Q4,retail trade,1.9
+2023-Q4,transportation and storage,1.2
+2023-Q4,land transport and supporting services,0.9
+2023-Q4,water transport and supporting services,1.1
+2023-Q4,air transport and supporting services,1.1
+2023-Q4,other transport and storage services,1.6
+2023-Q4,accommodation and food services,2.5
+2023-Q4,accommodation,2.1
+2023-Q4,food and beverage services,2.5
+2023-Q4,information and communications,1.4
+2023-Q4,"telecommunications, broadcasting and publishing",0.9
+2023-Q4,it and other information services,1.6
+2023-Q4,financial and insurance services,0.9
+2023-Q4,financial services,0.9
+2023-Q4,insurance services,1
+2023-Q4,real estate services,1.3
+2023-Q4,professional services,1.4
+2023-Q4,"legal, accounting and management services",1.2
+2023-Q4,architectural and engineering services,1.6
+2023-Q4,other professional services,1.3
+2023-Q4,administrative and support services,2.5
+2023-Q4,security and investigation,2.9
+2023-Q4,cleaning and landscaping,2.9
+2023-Q4,other administrative and support services,1.7
+2023-Q4,"community, social and personal services",0.9
+2023-Q4,public administration and education,0.5
+2023-Q4,health and social services,1.1
+2023-Q4,"arts, entertainment and recreation",1.1
+2023-Q4,"other community, social and personal services",1.7
+2023-Q4,others,1.1
+2024-Q1,manufacturing,1.2
+2024-Q1,"food, beverages and tobacco",1.7
+2024-Q1,"paper,rubber,plastic products and printing",1.4
+2024-Q1,"petroleum, chemical and pharmaceutical products",0.9
+2024-Q1,"fabricated metal products, machinery and equipment",1.1
+2024-Q1,"electronic, computer and optical products",1.2
+2024-Q1,transport equipment,1.1
+2024-Q1,other manufacturing industries,1.2
+2024-Q1,construction,1.4
+2024-Q1,services,1.4
+2024-Q1,wholesale and retail trade,1.6
+2024-Q1,wholesale trade,1.3
+2024-Q1,retail trade,2.1
+2024-Q1,transportation and storage,1.2
+2024-Q1,land transport and supporting services,1.1
+2024-Q1,water transport and supporting services,1
+2024-Q1,air transport and supporting services,1.1
+2024-Q1,other transport and storage services,1.3
+2024-Q1,accommodation and food services,2.5
+2024-Q1,accommodation,2
+2024-Q1,food and beverage services,2.6
+2024-Q1,information and communications,1.3
+2024-Q1,"telecommunications, broadcasting and publishing",1
+2024-Q1,it and other information services,1.5
+2024-Q1,financial and insurance services,0.8
+2024-Q1,financial services,0.8
+2024-Q1,insurance services,0.9
+2024-Q1,real estate services,1.4
+2024-Q1,professional services,1.3
+2024-Q1,"legal, accounting and management services",1.3
+2024-Q1,architectural and engineering services,1.3
+2024-Q1,other professional services,1
+2024-Q1,administrative and support services,2.6
+2024-Q1,security and investigation,3
+2024-Q1,cleaning and landscaping,2.6
+2024-Q1,other administrative and support services,2
+2024-Q1,"community, social and personal services",1
+2024-Q1,public administration and education,0.6
+2024-Q1,health and social services,1.3
+2024-Q1,"arts, entertainment and recreation",1.3
+2024-Q1,"other community, social and personal services",1.7
+2024-Q1,others,0.8
+2024-Q2,manufacturing,1.2
+2024-Q2,"food, beverages and tobacco",1.5
+2024-Q2,"paper,rubber,plastic products and printing",1.2
+2024-Q2,"petroleum, chemical and pharmaceutical products",0.9
+2024-Q2,"fabricated metal products, machinery and equipment",1.1
+2024-Q2,"electronic, computer and optical products",1.1
+2024-Q2,transport equipment,1
+2024-Q2,other manufacturing industries,1.4
+2024-Q2,construction,1.4
+2024-Q2,services,1.4
+2024-Q2,wholesale and retail trade,1.6
+2024-Q2,wholesale trade,1.3
+2024-Q2,retail trade,2.2
+2024-Q2,transportation and storage,1.1
+2024-Q2,land transport and supporting services,0.9
+2024-Q2,water transport and supporting services,1.1
+2024-Q2,air transport and supporting services,0.9
+2024-Q2,other transport and storage services,1.4
+2024-Q2,accommodation and food services,2.2
+2024-Q2,accommodation,2.1
+2024-Q2,food and beverage services,2.2
+2024-Q2,information and communications,1.4
+2024-Q2,"telecommunications, broadcasting and publishing",1.4
+2024-Q2,it and other information services,1.4
+2024-Q2,financial and insurance services,0.9
+2024-Q2,financial services,0.9
+2024-Q2,insurance services,1.1
+2024-Q2,real estate services,1.7
+2024-Q2,professional services,1.3
+2024-Q2,"legal, accounting and management services",1.3
+2024-Q2,architectural and engineering services,1.3
+2024-Q2,other professional services,1.2
+2024-Q2,administrative and support services,2.3
+2024-Q2,security and investigation,2.4
+2024-Q2,cleaning and landscaping,2.7
+2024-Q2,other administrative and support services,1.5
+2024-Q2,"community, social and personal services",1
+2024-Q2,public administration and education,0.6
+2024-Q2,health and social services,1.2
+2024-Q2,"arts, entertainment and recreation",1.1
+2024-Q2,"other community, social and personal services",1.7
+2024-Q2,others,0.9
+2024-Q3,manufacturing,1
+2024-Q3,"food, beverages and tobacco",1.5
+2024-Q3,"paper,rubber,plastic products and printing",1
+2024-Q3,"petroleum, chemical and pharmaceutical products",0.7
+2024-Q3,"fabricated metal products, machinery and equipment",1
+2024-Q3,"electronic, computer and optical products",0.8
+2024-Q3,transport equipment,0.9
+2024-Q3,other manufacturing industries,1.1
+2024-Q3,construction,1
+2024-Q3,services,1.4
+2024-Q3,wholesale and retail trade,1.4
+2024-Q3,wholesale trade,1
+2024-Q3,retail trade,2.2
+2024-Q3,transportation and storage,1.2
+2024-Q3,land transport and supporting services,1.1
+2024-Q3,water transport and supporting services,1
+2024-Q3,air transport and supporting services,1.1
+2024-Q3,other transport and storage services,1.5
+2024-Q3,accommodation and food services,2.3
+2024-Q3,accommodation,2.4
+2024-Q3,food and beverage services,2.3
+2024-Q3,information and communications,1.7
+2024-Q3,"telecommunications, broadcasting and publishing",1.4
+2024-Q3,it and other information services,1.8
+2024-Q3,financial and insurance services,1.1
+2024-Q3,financial services,1.1
+2024-Q3,insurance services,1.2
+2024-Q3,real estate services,1.3
+2024-Q3,professional services,1.5
+2024-Q3,"legal, accounting and management services",1.6
+2024-Q3,architectural and engineering services,1.4
+2024-Q3,other professional services,1.5
+2024-Q3,administrative and support services,2
+2024-Q3,security and investigation,2.1
+2024-Q3,cleaning and landscaping,2.3
+2024-Q3,other administrative and support services,1.3
+2024-Q3,"community, social and personal services",0.9
+2024-Q3,public administration and education,0.6
+2024-Q3,health and social services,1.2
+2024-Q3,"arts, entertainment and recreation",1.7
+2024-Q3,"other community, social and personal services",1.3
+2024-Q3,others,1.1
+2024-Q4,manufacturing,0.8
+2024-Q4,"food, beverages and tobacco",1.2
+2024-Q4,"paper,rubber,plastic products and printing",0.8
+2024-Q4,"petroleum, chemical and pharmaceutical products",0.5
+2024-Q4,"fabricated metal products, machinery and equipment",0.8
+2024-Q4,"electronic, computer and optical products",0.6
+2024-Q4,transport equipment,0.7
+2024-Q4,other manufacturing industries,0.9
+2024-Q4,construction,1.1
+2024-Q4,services,1.2
+2024-Q4,wholesale and retail trade,1.3
+2024-Q4,wholesale trade,1.1
+2024-Q4,retail trade,1.8
+2024-Q4,transportation and storage,1
+2024-Q4,land transport and supporting services,1
+2024-Q4,water transport and supporting services,0.7
+2024-Q4,air transport and supporting services,1.2
+2024-Q4,other transport and storage services,1.2
+2024-Q4,accommodation and food services,2.2
+2024-Q4,accommodation,1.6
+2024-Q4,food and beverage services,2.2
+2024-Q4,information and communications,1.4
+2024-Q4,"telecommunications, broadcasting and publishing",1.2
+2024-Q4,it and other information services,1.5
+2024-Q4,financial and insurance services,0.8
+2024-Q4,financial services,0.8
+2024-Q4,insurance services,0.9
+2024-Q4,real estate services,0.9
+2024-Q4,professional services,1.1
+2024-Q4,"legal, accounting and management services",1.4
+2024-Q4,architectural and engineering services,0.9
+2024-Q4,other professional services,0.9
+2024-Q4,administrative and support services,2
+2024-Q4,security and investigation,2.5
+2024-Q4,cleaning and landscaping,2.1
+2024-Q4,other administrative and support services,1.3
+2024-Q4,"community, social and personal services",0.8
+2024-Q4,public administration and education,0.5
+2024-Q4,health and social services,1
+2024-Q4,"arts, entertainment and recreation",1.2
+2024-Q4,"other community, social and personal services",1.4
+2024-Q4,others,0.7
+2025-Q1,manufacturing,0.9
+2025-Q1,"food, beverages and tobacco",1.2
+2025-Q1,"paper,rubber,plastic products and printing",1.1
+2025-Q1,"petroleum, chemical and pharmaceutical products",0.6
+2025-Q1,"fabricated metal products, machinery and equipment",1
+2025-Q1,"electronic, computer and optical products",0.9
+2025-Q1,transport equipment,0.9
+2025-Q1,other manufacturing industries,0.9
+2025-Q1,construction,1.1
+2025-Q1,services,1.3
+2025-Q1,wholesale and retail trade,1.6
+2025-Q1,wholesale trade,1.3
+2025-Q1,retail trade,2
+2025-Q1,transportation and storage,1.1
+2025-Q1,land transport and supporting services,1
+2025-Q1,water transport and supporting services,0.8
+2025-Q1,air transport and supporting services,1.2
+2025-Q1,other transport and storage services,1.2
+2025-Q1,accommodation and food services,2.2
+2025-Q1,accommodation,2
+2025-Q1,food and beverage services,2.2
+2025-Q1,information and communications,1.3
+2025-Q1,"telecommunications, broadcasting and publishing",1
+2025-Q1,it and other information services,1.3
+2025-Q1,financial and insurance services,0.7
+2025-Q1,financial services,0.7
+2025-Q1,insurance services,0.8
+2025-Q1,real estate services,1.1
+2025-Q1,professional services,1.1
+2025-Q1,"legal, accounting and management services",1.1
+2025-Q1,architectural and engineering services,1.1
+2025-Q1,other professional services,1
+2025-Q1,administrative and support services,2
+2025-Q1,security and investigation,2
+2025-Q1,cleaning and landscaping,2.2
+2025-Q1,other administrative and support services,1.6
+2025-Q1,"community, social and personal services",1
+2025-Q1,public administration and education,0.6
+2025-Q1,health and social services,1.1
+2025-Q1,"arts, entertainment and recreation",1.3
+2025-Q1,"other community, social and personal services",1.5
+2025-Q1,others,0.9
+2025-Q2,manufacturing,0.9
+2025-Q2,"food, beverages and tobacco",1.4
+2025-Q2,"paper,rubber,plastic products and printing",1.1
+2025-Q2,"petroleum, chemical and pharmaceutical products",0.7
+2025-Q2,"fabricated metal products, machinery and equipment",0.9
+2025-Q2,"electronic, computer and optical products",0.8
+2025-Q2,transport equipment,0.7
+2025-Q2,other manufacturing industries,1
+2025-Q2,construction,1.2
+2025-Q2,services,1.3
+2025-Q2,wholesale and retail trade,1.2
+2025-Q2,wholesale trade,0.9
+2025-Q2,retail trade,1.9
+2025-Q2,transportation and storage,1
+2025-Q2,land transport and supporting services,0.8
+2025-Q2,water transport and supporting services,0.9
+2025-Q2,air transport and supporting services,0.9
+2025-Q2,other transport and storage services,1.3
+2025-Q2,accommodation and food services,2.2
+2025-Q2,accommodation,2.1
+2025-Q2,food and beverage services,2.2
+2025-Q2,information and communications,1.4
+2025-Q2,"telecommunications, broadcasting and publishing",1.1
+2025-Q2,it and other information services,1.5
+2025-Q2,financial and insurance services,0.9
+2025-Q2,financial services,0.9
+2025-Q2,insurance services,1.2
+2025-Q2,real estate services,1.3
+2025-Q2,professional services,1.3
+2025-Q2,"legal, accounting and management services",1.3
+2025-Q2,architectural and engineering services,1.2
+2025-Q2,other professional services,1.5
+2025-Q2,administrative and support services,1.9
+2025-Q2,security and investigation,1.7
+2025-Q2,cleaning and landscaping,2.1
+2025-Q2,other administrative and support services,1.6
+2025-Q2,"community, social and personal services",0.9
+2025-Q2,public administration and education,0.6
+2025-Q2,health and social services,1.1
+2025-Q2,"arts, entertainment and recreation",1
+2025-Q2,"other community, social and personal services",1.5
+2025-Q2,others,0.8
+2025-Q3,manufacturing,1
+2025-Q3,"food, beverages and tobacco",1.5
+2025-Q3,"paper,rubber,plastic products and printing",0.9
+2025-Q3,"petroleum, chemical and pharmaceutical products",0.5
+2025-Q3,"fabricated metal products, machinery and equipment",1
+2025-Q3,"electronic, computer and optical products",0.9
+2025-Q3,transport equipment,0.9
+2025-Q3,other manufacturing industries,1.2
+2025-Q3,construction,1.2
+2025-Q3,services,1.2
+2025-Q3,wholesale and retail trade,1.2
+2025-Q3,wholesale trade,1
+2025-Q3,retail trade,1.5
+2025-Q3,transportation and storage,1
+2025-Q3,land transport and supporting services,0.9
+2025-Q3,water transport and supporting services,0.8
+2025-Q3,air transport and supporting services,1
+2025-Q3,other transport and storage services,1.3
+2025-Q3,accommodation and food services,2.2
+2025-Q3,accommodation,1.9
+2025-Q3,food and beverage services,2.3
+2025-Q3,information and communications,1.4
+2025-Q3,"telecommunications, broadcasting and publishing",0.9
+2025-Q3,it and other information services,1.6
+2025-Q3,financial and insurance services,0.9
+2025-Q3,financial services,0.9
+2025-Q3,insurance services,1.2
+2025-Q3,real estate services,1
+2025-Q3,professional services,1.1
+2025-Q3,"legal, accounting and management services",1.2
+2025-Q3,architectural and engineering services,1.1
+2025-Q3,other professional services,1.1
+2025-Q3,administrative and support services,1.5
+2025-Q3,security and investigation,1.3
+2025-Q3,cleaning and landscaping,1.4
+2025-Q3,other administrative and support services,1.8
+2025-Q3,"community, social and personal services",0.9
+2025-Q3,public administration and education,0.6
+2025-Q3,health and social services,1.1
+2025-Q3,"arts, entertainment and recreation",1.6
+2025-Q3,"other community, social and personal services",1.4
+2025-Q3,others,0.9
+2025-Q4,manufacturing,0.9
+2025-Q4,"food, beverages and tobacco",1.5
+2025-Q4,"paper,rubber,plastic products and printing",0.9
+2025-Q4,"petroleum, chemical and pharmaceutical products",0.6
+2025-Q4,"fabricated metal products, machinery and equipment",0.9
+2025-Q4,"electronic, computer and optical products",0.7
+2025-Q4,transport equipment,0.9
+2025-Q4,other manufacturing industries,1
+2025-Q4,construction,1.3
+2025-Q4,services,1.2
+2025-Q4,wholesale and retail trade,1.2
+2025-Q4,wholesale trade,1
+2025-Q4,retail trade,1.4
+2025-Q4,transportation and storage,1.1
+2025-Q4,land transport and supporting services,0.6
+2025-Q4,water transport and supporting services,0.7
+2025-Q4,air transport and supporting services,1.2
+2025-Q4,other transport and storage services,1.6
+2025-Q4,accommodation and food services,2.2
+2025-Q4,accommodation,2.7
+2025-Q4,food and beverage services,2.1
+2025-Q4,information and communications,1.2
+2025-Q4,"telecommunications, broadcasting and publishing",0.8
+2025-Q4,it and other information services,1.3
+2025-Q4,financial and insurance services,0.9
+2025-Q4,financial services,0.9
+2025-Q4,insurance services,0.9
+2025-Q4,real estate services,1
+2025-Q4,professional services,1.3
+2025-Q4,"legal, accounting and management services",1.4
+2025-Q4,architectural and engineering services,1.3
+2025-Q4,other professional services,1.2
+2025-Q4,administrative and support services,1.9
+2025-Q4,security and investigation,1.7
+2025-Q4,cleaning and landscaping,2.2
+2025-Q4,other administrative and support services,1.4
+2025-Q4,"community, social and personal services",0.8
+2025-Q4,public administration and education,0.5
+2025-Q4,health and social services,0.8
+2025-Q4,"arts, entertainment and recreation",1.6
+2025-Q4,"other community, social and personal services",1.4
+2025-Q4,others,0.4
+2026-Q1,manufacturing,1
+2026-Q1,"food, beverages and tobacco",1.1
+2026-Q1,"paper,rubber,plastic products and printing",1.1
+2026-Q1,"petroleum, chemical and pharmaceutical products",0.6
+2026-Q1,"fabricated metal products, machinery and equipment",0.8
+2026-Q1,"electronic, computer and optical products",1.5
+2026-Q1,transport equipment,0.6
+2026-Q1,other manufacturing industries,1
+2026-Q1,construction,1.1
+2026-Q1,services,1
+2026-Q1,wholesale and retail trade,1
+2026-Q1,wholesale trade,0.8
+2026-Q1,retail trade,1.4
+2026-Q1,transportation and storage,0.9
+2026-Q1,land transport and supporting services,0.5
+2026-Q1,water transport and supporting services,0.8
+2026-Q1,air transport and supporting services,0.8
+2026-Q1,other transport and storage services,1.3
+2026-Q1,accommodation and food services,1.7
+2026-Q1,accommodation,1.5
+2026-Q1,food and beverage services,1.8
+2026-Q1,information and communications,1
+2026-Q1,"telecommunications, broadcasting and publishing",0.7
+2026-Q1,it and other information services,1.1
+2026-Q1,financial and insurance services,0.6
+2026-Q1,financial services,0.5
+2026-Q1,insurance services,0.7
+2026-Q1,real estate services,1.1
+2026-Q1,professional services,1
+2026-Q1,"legal, accounting and management services",1
+2026-Q1,architectural and engineering services,0.9
+2026-Q1,other professional services,1
+2026-Q1,administrative and support services,1.3
+2026-Q1,security and investigation,1.3
+2026-Q1,cleaning and landscaping,1.6
+2026-Q1,other administrative and support services,1
+2026-Q1,"community, social and personal services",0.8
+2026-Q1,public administration and education,0.6
+2026-Q1,health and social services,0.7
+2026-Q1,"arts, entertainment and recreation",1
+2026-Q1,"other community, social and personal services",1.4
+2026-Q1,others,0.4
+2026-Q2,manufacturing,0.9
+2026-Q2,"food, beverages and tobacco",1.7
+2026-Q2,"paper,rubber,plastic products and printing",1
+2026-Q2,"petroleum, chemical and pharmaceutical products",1.4
+2026-Q2,"fabricated metal products, machinery and equipment",0.8
+2026-Q2,"electronic, computer and optical products",0.7
+2026-Q2,transport equipment,0.6
+2026-Q2,other manufacturing industries,0.7
+2026-Q2,construction,1.1
+2026-Q2,services,1
+2026-Q2,wholesale and retail trade,1.4
+2026-Q2,wholesale trade,1.3
+2026-Q2,retail trade,1.5
+2026-Q2,transportation and storage,0.8
+2026-Q2,land transport and supporting services,0.5
+2026-Q2,water transport and supporting services,0.6
+2026-Q2,air transport and supporting services,0.5
+2026-Q2,other transport and storage services,1.3
+2026-Q2,accommodation and food services,1.7
+2026-Q2,accommodation,2.4
+2026-Q2,food and beverage services,1.6
+2026-Q2,information and communications,1.3
+2026-Q2,"telecommunications, broadcasting and publishing",0.6
+2026-Q2,it and other information services,1.6
+2026-Q2,financial and insurance services,0.7
+2026-Q2,financial services,0.7
+2026-Q2,insurance services,0.7
+2026-Q2,real estate services,1
+2026-Q2,professional services,0.9
+2026-Q2,"legal, accounting and management services",1
+2026-Q2,architectural and engineering services,0.7
+2026-Q2,other professional services,1
+2026-Q2,administrative and support services,1.1
+2026-Q2,security and investigation,0.9
+2026-Q2,cleaning and landscaping,1.2
+2026-Q2,other administrative and support services,1.2
+2026-Q2,"community, social and personal services",0.6
+2026-Q2,public administration and education,0.5
+2026-Q2,health and social services,0.6
+2026-Q2,"arts, entertainment and recreation",0.9
+2026-Q2,"other community, social and personal services",1.3
+2026-Q2,others,0.8

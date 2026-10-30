@@ -1,0 +1,97 @@
+datasets:
+- source_id: job_vacancies_by_industry
+  dataset_id: d_3f17bbf67d31d4d402caa8755eb74afc
+  title: Number of Job Vacancy by Industry - Quarterly
+  publisher: Ministry of Manpower
+  tier: tier2
+  canonical_url: https://data.gov.sg/datasets/d_3f17bbf67d31d4d402caa8755eb74afc/view
+- source_id: job_vacancies_by_occupation
+  dataset_id: d_86dffa3d28e4c3ee085c3f99abad6e9f
+  title: Number of Job Vacancy by Occupation - Quarterly
+  publisher: Ministry of Manpower
+  tier: tier2
+  canonical_url: https://data.gov.sg/datasets/d_86dffa3d28e4c3ee085c3f99abad6e9f/view
+- source_id: job_vacancy_rate_by_industry
+  dataset_id: d_fe705c7af162331d36cc31193f8f50c9
+  title: Job Vacancy Rate by Industry - Quarterly
+  publisher: Ministry of Manpower
+  tier: tier2
+  canonical_url: https://data.gov.sg/datasets/d_fe705c7af162331d36cc31193f8f50c9/view
+- source_id: job_vacancy_rate_by_occupation
+  dataset_id: d_1e10046c33418c507bb2483c26dca489
+  title: Job Vacancy Rate by Occupation - Quarterly
+  publisher: Ministry of Manpower
+  tier: tier2
+  canonical_url: https://data.gov.sg/datasets/d_1e10046c33418c507bb2483c26dca489/view
+- source_id: recruitment_rate_by_industry
+  dataset_id: d_c60fe8fad219569c04428f35b07359f3
+  title: Average Monthly Recruitment Rate by Industry - Quarterly
+  publisher: Ministry of Manpower
+  tier: tier2
+  canonical_url: https://data.gov.sg/datasets/d_c60fe8fad219569c04428f35b07359f3/view
+- source_id: recruitment_rate_by_occupation
+  dataset_id: d_c5e8a6caedd74f7512a4d29c67da1f1c
+  title: Average Monthly Recruitment Rate by Occupation - Quarterly
+  publisher: Ministry of Manpower
+  tier: tier2
+  canonical_url: https://data.gov.sg/datasets/d_c5e8a6caedd74f7512a4d29c67da1f1c/view
+- source_id: resignation_rate_by_industry
+  dataset_id: d_167005620b4d1422d32660db9960191b
+  title: Average Monthly Resignation Rate by Industry - Quarterly
+  publisher: Ministry of Manpower
+  tier: tier2
+  canonical_url: https://data.gov.sg/datasets/d_167005620b4d1422d32660db9960191b/view
+- source_id: resignation_rate_by_occupation
+  dataset_id: d_e7923b1ac9574659bdd50ad40f16526a
+  title: Average Monthly Resignation Rate by Occupation - Quarterly
+  publisher: Ministry of Manpower
+  tier: tier2
+  canonical_url: https://data.gov.sg/datasets/d_e7923b1ac9574659bdd50ad40f16526a/view
+- source_id: unemployed_citizens
+  dataset_id: d_8a02327def3434883960d1dce5567ab5
+  title: Number of Unemployed Citizens, Quarterly
+  publisher: Ministry of Manpower
+  tier: tier2
+  canonical_url: https://data.gov.sg/datasets/d_8a02327def3434883960d1dce5567ab5/view
+- source_id: short_workweek_temporary_layoff
+  dataset_id: d_31d4c1a2de1f880c005dad945ff44d5d
+  title: Employees on Short Work-Week or Temporary Layoff - Quarterly
+  publisher: Ministry of Manpower
+  tier: tier2
+  canonical_url: https://data.gov.sg/datasets/d_31d4c1a2de1f880c005dad945ff44d5d/view
+- source_id: retrenched_permanent_by_industry
+  dataset_id: d_5dd6b3b64be667ecb0077e624f21fa11
+  title: Number of Retrenched Permanent Employees by Industry - Quarterly
+  publisher: Ministry of Manpower
+  tier: tier2
+  canonical_url: https://data.gov.sg/datasets/d_5dd6b3b64be667ecb0077e624f21fa11/view
+- source_id: retrenched_term_contract_by_industry
+  dataset_id: d_21b59ce2a62b1638cffc98e2ec5f6b45
+  title: Number of Retrenched Term Contract Employees by Industry - Quarterly
+  publisher: Ministry of Manpower
+  tier: tier2
+  canonical_url: https://data.gov.sg/datasets/d_21b59ce2a62b1638cffc98e2ec5f6b45/view
+- source_id: retrenched_by_occupation
+  dataset_id: d_a6246f522f3ea0cf265e3ef3ad59fe8e
+  title: Number of Retrenched Employees by Occupation - Quarterly
+  publisher: Ministry of Manpower
+  tier: tier2
+  canonical_url: https://data.gov.sg/datasets/d_a6246f522f3ea0cf265e3ef3ad59fe8e/view
+- source_id: retrenched_permanent_by_occupation
+  dataset_id: d_554647914a6f42266cd45c29250d8d85
+  title: Number of Retrenched Permanent Employees by Occupation - Quarterly
+  publisher: Ministry of Manpower
+  tier: tier2
+  canonical_url: https://data.gov.sg/datasets/d_554647914a6f42266cd45c29250d8d85/view
+- source_id: retrenched_term_contract_by_occupation
+  dataset_id: d_c693cf178591afd5b40701e0195e76dd
+  title: Number of Retrenched Term Contract Employees by Occupation - Quarterly
+  publisher: Ministry of Manpower
+  tier: tier2
+  canonical_url: https://data.gov.sg/datasets/d_c693cf178591afd5b40701e0195e76dd/view
+- source_id: short_workweek_temporary_layoff_by_industry
+  dataset_id: d_2398b9988baf18a9e2108b246004f5ff
+  title: Employees on Short Work-Week or Temporary Layoff by Broad Industry - Quarterly
+  publisher: Ministry of Manpower
+  tier: tier2
+  canonical_url: https://data.gov.sg/datasets/d_2398b9988baf18a9e2108b246004f5ff/view

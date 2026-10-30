@@ -1,0 +1,61 @@
+{
+  "collectionIds": [],
+  "columnMetadata": {
+    "map": {
+      "c_2axbby6v78qvzg8c6o3bf7oqp": "short_work_week",
+      "c_5yi72gjghl7mk06sbf7cyb9tu": "total",
+      "c_8ws2hlkm8w12ljij8iiqnpckh": "quarter",
+      "c_bzrmvzsna52rndc7wx83g4jla": "temporary_layoff"
+    },
+    "metaMapping": {
+      "c_2axbby6v78qvzg8c6o3bf7oqp": {
+        "columnTitle": "Short Work Week",
+        "dataType": "Text",
+        "index": "2",
+        "isCategorical": false,
+        "name": "short_work_week"
+      },
+      "c_5yi72gjghl7mk06sbf7cyb9tu": {
+        "columnTitle": "Total",
+        "dataType": "Text",
+        "index": "1",
+        "isCategorical": false,
+        "name": "total"
+      },
+      "c_8ws2hlkm8w12ljij8iiqnpckh": {
+        "columnTitle": "Quarter",
+        "dataType": "Quarter (Q)",
+        "index": "0",
+        "isCategorical": false,
+        "name": "quarter"
+      },
+      "c_bzrmvzsna52rndc7wx83g4jla": {
+        "columnTitle": "Temporary Layoff",
+        "dataType": "Text",
+        "index": "3",
+        "isCategorical": false,
+        "name": "temporary_layoff"
+      }
+    },
+    "order": [
+      "c_8ws2hlkm8w12ljij8iiqnpckh",
+      "c_5yi72gjghl7mk06sbf7cyb9tu",
+      "c_2axbby6v78qvzg8c6o3bf7oqp",
+      "c_bzrmvzsna52rndc7wx83g4jla"
+    ]
+  },
+  "contactEmails": [
+    "ng_li_mei@mom.gov.sg",
+    "samantha_teo@mom.gov.sg"
+  ],
+  "coverageEnd": "2025-12-31T08:00:00+08:00",
+  "coverageStart": "1998-01-01T08:00:00+08:00",
+  "createdAt": "2026-03-23T13:42:03+08:00",
+  "datasetId": "d_31d4c1a2de1f880c005dad945ff44d5d",
+  "datasetSize": 2459,
+  "description": "Source: Labour Market Survey, Manpower Research & Statistics Department, MOM\nBefore 2006, data pertain to private sector establishments (each with at least 25 employees). From 2006 onwards, it also includes\nthe public sector.\n",
+  "format": "CSV",
+  "lastUpdatedAt": "2026-03-23T13:46:05+08:00",
+  "managedBy": "Ministry of Manpower",
+  "name": "Employees on Short Work-Week or Temporary Layoff - Quarterly"
+}

@@ -13,11 +13,11 @@
 | 7 | `employment_change_by_sector` | 2025-Q1 | Arts, Entertainment & Recreation | -200 | persons | csv_row=26;series='Arts, Entertainment & Recreation';col=20251Q | `7f5d5cef621d53dc` | [view](https://data.gov.sg/datasets/d_31dec7667bc2c6b945a262cd60958eaf/view) |
 | 8 | `employment_change_by_sector` | 2026-Q1 | Real Estate, Professional Services And Administrative & Support Services | 6100 | persons | csv_row=17;series='Real Estate, Professional Services And Administrative & Support Services';col=20261Q | `8530778cbaf4bd36` | [view](https://data.gov.sg/datasets/d_31dec7667bc2c6b945a262cd60958eaf/view) |
 | 9 | `job_vacancy_count` | 2025-Q4 | - | 75700 | persons | csv_row=113;col=job_vacancy | `642a17683020895f` | [view](https://data.gov.sg/datasets/d_59a34aef12e0ecf666de5746e50586e8/view) |
-| 10 | `reentry_12m` | 2026-Q1 | - | 69.4 | percent | csv_row=106;col=reentry_rate_12mth | `3caa17cea0c127f9` | [view](https://data.gov.sg/datasets/d_614b0fa2aa808afced2982c37e846d13/view) |
-| 11 | `recruitment_rate` | 2026-Q2 | - | 1.4 | percent | csv_row=115;col=recruitment_rate | `34f29d4137febe3e` | [view](https://data.gov.sg/datasets/d_80247eca3da78635ed9e89aa5831e883/view) |
-| 12 | `reentry_6m` | 2024-Q3 | - | 60.4 | percent | csv_row=100;col=reentry_rate_6mth | `4f1bd645d3fcca0a` | [view](https://data.gov.sg/datasets/d_4d3ce3e889fdf1da6bd6e9d52667db91/view) |
+| 10 | `recruitment_rate_by_occupation` | 2025-Q3 | production and transport operators, cleaners and labourers | 2.1 | percent | csv_row=334;col=recruitment_rate | `bd6e4286a15fb297` | [view](https://data.gov.sg/datasets/d_c5e8a6caedd74f7512a4d29c67da1f1c/view) |
+| 11 | `recruitment_rate_by_industry` | 2024-Q4 | transport equipment | 1.2 | percent | csv_row=4414;col=recruitment_rate | `2d282c9a1ae8c215` | [view](https://data.gov.sg/datasets/d_c60fe8fad219569c04428f35b07359f3/view) |
+| 12 | `resignation_rate` | 2026-Q1 | - | 1 | percent | csv_row=114;col=resignation_rate | `236138a9f359e9af` | [view](https://data.gov.sg/datasets/d_e58adb04ca812651cfecfa82acdf6c35/view) |
 | 13 | `retrenched_by_industry` | 2024-Q4 | accommodation | null (dash_marker_publisher_does_not_define_nil_vs_suppressed) | persons | csv_row=4427;col=retrench | `05cb21cfc6f40801` | [view](https://data.gov.sg/datasets/d_61d92d31ca400be135190614277da825/view) |
-| 14 | `resident_unemployment_rate` | 2012-Q1 | - | 2.9 | percent | csv_row=82;col=seasonally_adj_unemp_rate | `101879819ed80387` | [view](https://data.gov.sg/datasets/d_d1d755e060dd6b01a8024ba60b21b831/view) |
+| 14 | `resident_unemployment_rate` | 2020-Q1 | - | 3.1 | percent | csv_row=114;col=non_seasonally_adj_unemp_rate | `2b6e9c88c668657c` | [view](https://data.gov.sg/datasets/d_d1d755e060dd6b01a8024ba60b21b831/view) |
 
 ## Reviewer results
 

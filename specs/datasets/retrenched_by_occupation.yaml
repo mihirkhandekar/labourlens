@@ -1,0 +1,32 @@
+source_id: retrenched_by_occupation
+adapter: quarterly_long
+period_col: quarter
+expected_columns:
+- quarter
+- occupation
+- retrench
+dimension_col: occupation
+measures:
+- column: retrench
+  indicator_id: retrenched_by_occupation
+  unit: persons
+  population: establishments
+  adjustment: unspecified
+  definition: 'Number of Retrenched Employees by Occupation - Quarterly. Retrenchment refers to the termination of permanent employees due to redundancy and early termination of term
+    contract employees due to redundancy.
+
+
+    Source: Labour Market Survey, Manpower Research & Statistics Department, MOM
+
+    Before 2006, data pertain to private sector establishments (each with at least 25 employees). From 2006 onwards, it also includes
+
+    the public sector. The dataset description does not state seasonal-adjustment status. Dimension labels are preserved as published; categories may include aggregates and must not
+    be summed without a verified hierarchy.'
+  plausible_range:
+  - 0
+  - 10000
+expected_first_period: 1998-Q1
+expected_last_period: 2026-Q2
+missing_tokens:
+- na
+- '-'

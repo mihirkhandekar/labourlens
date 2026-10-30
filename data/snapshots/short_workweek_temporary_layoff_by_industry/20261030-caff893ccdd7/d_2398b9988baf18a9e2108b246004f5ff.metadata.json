@@ -1,0 +1,70 @@
+{
+  "collectionIds": [],
+  "columnMetadata": {
+    "map": {
+      "c_177atcabk8d6sr012agnfbqlu": "industry",
+      "c_1gr2he7eerdq7i7mani4bcz43": "quarter",
+      "c_6m39pcp4mg5zmrfyur0hda3so": "total",
+      "c_cj0dbpe0ixh910tmzxdtg034g": "temporary_layoff",
+      "c_dgueg2z38ayn2e83tx2il96fl": "short_work_week"
+    },
+    "metaMapping": {
+      "c_177atcabk8d6sr012agnfbqlu": {
+        "columnTitle": "Industry",
+        "dataType": "Text",
+        "index": "1",
+        "isCategorical": true,
+        "name": "industry"
+      },
+      "c_1gr2he7eerdq7i7mani4bcz43": {
+        "columnTitle": "Quarter",
+        "dataType": "Quarter (Q)",
+        "index": "0",
+        "isCategorical": false,
+        "name": "quarter"
+      },
+      "c_6m39pcp4mg5zmrfyur0hda3so": {
+        "columnTitle": "Total",
+        "dataType": "Text",
+        "index": "2",
+        "isCategorical": false,
+        "name": "total"
+      },
+      "c_cj0dbpe0ixh910tmzxdtg034g": {
+        "columnTitle": "Temporary Layoff",
+        "dataType": "Text",
+        "index": "4",
+        "isCategorical": true,
+        "name": "temporary_layoff"
+      },
+      "c_dgueg2z38ayn2e83tx2il96fl": {
+        "columnTitle": "Short Work Week",
+        "dataType": "Text",
+        "index": "3",
+        "isCategorical": false,
+        "name": "short_work_week"
+      }
+    },
+    "order": [
+      "c_1gr2he7eerdq7i7mani4bcz43",
+      "c_177atcabk8d6sr012agnfbqlu",
+      "c_6m39pcp4mg5zmrfyur0hda3so",
+      "c_dgueg2z38ayn2e83tx2il96fl",
+      "c_cj0dbpe0ixh910tmzxdtg034g"
+    ]
+  },
+  "contactEmails": [
+    "ng_li_mei@mom.gov.sg",
+    "samantha_teo@mom.gov.sg"
+  ],
+  "coverageEnd": "2025-12-31T08:00:00+08:00",
+  "coverageStart": "1998-01-01T08:00:00+08:00",
+  "createdAt": "2026-03-23T13:52:18+08:00",
+  "datasetId": "d_2398b9988baf18a9e2108b246004f5ff",
+  "datasetSize": 13163,
+  "description": "Source: Labour Market Survey, Manpower Research & Statistics Department, MOM\nBefore 2006, data pertain to private sector establishments (each with at least 25 employees). From 2006 onwards, it also includes\nthe public sector.\n",
+  "format": "CSV",
+  "lastUpdatedAt": "2026-03-23T13:56:33+08:00",
+  "managedBy": "Ministry of Manpower",
+  "name": "Employees on Short Work-Week or Temporary Layoff by Broad Industry - Quarterly"
+}

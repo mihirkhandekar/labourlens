@@ -1,0 +1,53 @@
+{
+  "collectionIds": [],
+  "columnMetadata": {
+    "map": {
+      "c_6aju0yrh1os0q9h490q4gem92": "quarter",
+      "c_74oijde3mla5h08it1n1fdcim": "industry",
+      "c_cavn270wumj07z2ispkssg6by": "resignation_rate"
+    },
+    "metaMapping": {
+      "c_6aju0yrh1os0q9h490q4gem92": {
+        "columnTitle": "Quarter",
+        "dataType": "Quarter (Q)",
+        "index": "0",
+        "isCategorical": true,
+        "name": "quarter"
+      },
+      "c_74oijde3mla5h08it1n1fdcim": {
+        "columnTitle": "Industry",
+        "dataType": "Text",
+        "index": "1",
+        "isCategorical": true,
+        "name": "industry"
+      },
+      "c_cavn270wumj07z2ispkssg6by": {
+        "columnTitle": "Resignation Rate",
+        "dataType": "Text",
+        "index": "2",
+        "isCategorical": true,
+        "name": "resignation_rate",
+        "unitOfMeasure": "percent"
+      }
+    },
+    "order": [
+      "c_6aju0yrh1os0q9h490q4gem92",
+      "c_74oijde3mla5h08it1n1fdcim",
+      "c_cavn270wumj07z2ispkssg6by"
+    ]
+  },
+  "contactEmails": [
+    "ng_li_mei@mom.gov.sg",
+    "samantha_teo@mom.gov.sg"
+  ],
+  "coverageEnd": "2026-06-30T08:00:00+08:00",
+  "coverageStart": "1998-01-01T08:00:00+08:00",
+  "createdAt": "2026-03-23T15:37:54+08:00",
+  "datasetId": "d_167005620b4d1422d32660db9960191b",
+  "datasetSize": 198641,
+  "description": "Average Monthly Resignation Rate during a quarter is defined as the average number of persons who resigned in a month during the quarter divided by the average number of employees in the establishment. The annual figures are the simple averages of the quarterly figures\nSource: Labour Market Survey, Manpower Research & Statistics Department, MOM\nBefore 2006, data pertain to private sector establishments (each with at least 25 employees). From 2006 onwards, it also includes\nthe public sector.\n",
+  "format": "CSV",
+  "lastUpdatedAt": "2026-09-22T17:52:08+08:00",
+  "managedBy": "Ministry of Manpower",
+  "name": "Average Monthly Resignation Rate by Industry - Quarterly"
+}

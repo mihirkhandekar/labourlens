@@ -1,0 +1,53 @@
+{
+  "collectionIds": [],
+  "columnMetadata": {
+    "map": {
+      "c_506q8us3649881zx6xz0jbz1m": "recruitment_rate",
+      "c_5xuffdthxlf3xumq02j9me8c4": "quarter",
+      "c_6qqfyeq7xu5ccwfnboiixsb6y": "occupation"
+    },
+    "metaMapping": {
+      "c_506q8us3649881zx6xz0jbz1m": {
+        "columnTitle": "Recruitment Rate",
+        "dataType": "Text",
+        "index": "2",
+        "isCategorical": true,
+        "name": "recruitment_rate",
+        "unitOfMeasure": "percent"
+      },
+      "c_5xuffdthxlf3xumq02j9me8c4": {
+        "columnTitle": "Quarter",
+        "dataType": "Quarter (Q)",
+        "index": "0",
+        "isCategorical": false,
+        "name": "quarter"
+      },
+      "c_6qqfyeq7xu5ccwfnboiixsb6y": {
+        "columnTitle": "Occupation",
+        "dataType": "Text",
+        "index": "1",
+        "isCategorical": true,
+        "name": "occupation"
+      }
+    },
+    "order": [
+      "c_5xuffdthxlf3xumq02j9me8c4",
+      "c_6qqfyeq7xu5ccwfnboiixsb6y",
+      "c_506q8us3649881zx6xz0jbz1m"
+    ]
+  },
+  "contactEmails": [
+    "ng_li_mei@mom.gov.sg",
+    "samantha_teo@mom.gov.sg"
+  ],
+  "coverageEnd": "2026-06-30T08:00:00+08:00",
+  "coverageStart": "1998-01-01T08:00:00+08:00",
+  "createdAt": "2026-03-23T15:19:19+08:00",
+  "datasetId": "d_c5e8a6caedd74f7512a4d29c67da1f1c",
+  "datasetSize": 21967,
+  "description": "Average Monthly Recruitment Rate during a quarter is defined as the average number of persons recruited in a month during the quarter divided by the average number of employees in the establishment. The annual figures are the simple averages of the quarterly figures.\nSource: Labour Market Survey, Manpower Research & Statistics Department, MOM\nBefore 2006, data pertain to private sector establishments (each with at least 25 employees). From 2006 onwards, it also includes\nthe public sector.\n",
+  "format": "CSV",
+  "lastUpdatedAt": "2026-09-22T17:43:14+08:00",
+  "managedBy": "Ministry of Manpower",
+  "name": "Average Monthly Recruitment Rate by Occupation - Quarterly"
+}

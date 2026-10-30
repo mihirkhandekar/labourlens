@@ -22,18 +22,18 @@
  },
  "metrics": {
   "n_cases": 24,
-  "n_chunks": 751,
-  "corpus_hash": "18f9bbd060883ad1cb57b8469dbfcccd317c4763347f1b8380314e1a4b837efb",
-  "hit@1": 0.3333,
-  "hit@3": 0.4583,
-  "hit@5": 0.5,
-  "hit@10": 0.75,
-  "page_hit@5": 0.5417,
-  "page_hit@10": 0.7917,
-  "mrr": 0.4272,
-  "passage_recall@5": 0.4097,
-  "ctx_words@5": 513.0,
-  "latency_ms_p50": 0.183,
+  "n_chunks": 2468,
+  "corpus_hash": "47338ddb864f0d1977a691821bda1d02a377602f30ffb283f414eed446a250d4",
+  "hit@1": 0.25,
+  "hit@3": 0.375,
+  "hit@5": 0.4583,
+  "hit@10": 0.625,
+  "page_hit@5": 0.5,
+  "page_hit@10": 0.625,
+  "mrr": 0.347,
+  "passage_recall@5": 0.3333,
+  "ctx_words@5": 481.9,
+  "latency_ms_p50": 0.212,
   "by_family_hit@5": {
    "adversarial": {
     "n": 3,
@@ -53,7 +53,7 @@
    },
    "revision_conflict": {
     "n": 4,
-    "hit@5": 0.5
+    "hit@5": 0.25
    }
   }
  }

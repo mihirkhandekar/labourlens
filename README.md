@@ -7,7 +7,7 @@
 ## What exists today
 | | |
 |---|---|
-| 17 official datasets | fetched, snapshotted, hashed, normalised into 10,896 observations (880 in the 2024-Q1 to 2026-Q2 answer scope) |
+| 33 official datasets | fetched, snapshotted, hashed, normalised into 43,662 observations (3,790 in the 2024-Q1 to 2026-Q2 answer scope) |
 | 16 MOM documents | fetched locally and parsed into page-located passages (not redistributed; see rights below) |
 | Quality | 142 automated checks, 0 failed; 3 documented warnings (`artifacts/data-quality/quality-report.md`) |
 | Tests | 51 passing (`artifacts/tests/pytest-m1.txt`) |

@@ -22,18 +22,18 @@
  },
  "metrics": {
   "n_cases": 24,
-  "n_chunks": 1929,
-  "corpus_hash": "c512bdfe5b060e665df3ec7bd83fceccdd72cb683651b32de3b4efaff8e8ae2c",
-  "hit@1": 0.2083,
-  "hit@3": 0.2917,
-  "hit@5": 0.4167,
-  "hit@10": 0.5,
-  "page_hit@5": 0.4583,
-  "page_hit@10": 0.5417,
-  "mrr": 0.2907,
-  "passage_recall@5": 0.2708,
-  "ctx_words@5": 201.6,
-  "latency_ms_p50": 0.166,
+  "n_chunks": 6360,
+  "corpus_hash": "bb9980c601dd0678afad75542625766781610346d6751eb399c72d1a006c1904",
+  "hit@1": 0.125,
+  "hit@3": 0.1667,
+  "hit@5": 0.3333,
+  "hit@10": 0.4167,
+  "page_hit@5": 0.375,
+  "page_hit@10": 0.4583,
+  "mrr": 0.1939,
+  "passage_recall@5": 0.2292,
+  "ctx_words@5": 169.1,
+  "latency_ms_p50": 0.218,
   "by_family_hit@5": {
    "adversarial": {
     "n": 3,
@@ -45,7 +45,7 @@
    },
    "factual_lookup": {
     "n": 8,
-    "hit@5": 0.375
+    "hit@5": 0.25
    },
    "numerical_comparison": {
     "n": 2,
@@ -53,7 +53,7 @@
    },
    "revision_conflict": {
     "n": 4,
-    "hit@5": 0.25
+    "hit@5": 0.0
    }
   }
  }

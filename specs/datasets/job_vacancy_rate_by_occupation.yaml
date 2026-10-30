@@ -1,0 +1,26 @@
+source_id: job_vacancy_rate_by_occupation
+adapter: quarterly_long
+period_col: quarter
+expected_columns:
+- quarter
+- occupation
+- job_vacancy_rate
+dimension_col: occupation
+measures:
+- column: job_vacancy_rate
+  indicator_id: job_vacancy_rate_by_occupation
+  unit: percent
+  population: establishments
+  adjustment: unspecified
+  definition: "Job Vacancy Rate by Occupation - Quarterly. Job Vacancy Rate for a quarter is defined as the total number of job vacancies divided by the total demand for manpower at\
+    \ the end of the quarter. \nSource: Labour Market Survey, Manpower Research & Statistics Department, MOM\nBefore 2006, data pertain to private sector establishments (each with at\
+    \ least 25 employees). From 2006 onwards, it also includes\nthe public sector. The dataset description does not state seasonal-adjustment status. Dimension labels are preserved as\
+    \ published; categories may include aggregates and must not be summed without a verified hierarchy."
+  plausible_range:
+  - 0
+  - 10
+expected_first_period: 1998-Q1
+expected_last_period: 2026-Q2
+missing_tokens:
+- na
+- '-'

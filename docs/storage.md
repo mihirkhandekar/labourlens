@@ -14,7 +14,7 @@ Today (M1, built) and planned (later milestones, **PROPOSAL** until decided at t
 | 7. Answer and trace logs | Runs, tool calls, citations, feedback | planned `experiments/` and `feedback.jsonl` | Metadata yes, MOM text no | M4 to M6 |
 
 ## Why files and not a database server
-The corpus is small (4,187 passages across 16 documents; 17 datasets, 10,896 rows). Files in Parquet and JSONL are reproducible, diffable, easy to hash, and need no service to run. DuckDB can query the Parquet directly when needed. A database server would add setup and failure modes without helping the assessment. Revisit if the corpus grows by orders of magnitude.
+The corpus is small (13,484 passages across 46 documents; 33 datasets, 43,662 rows). Files in Parquet and JSONL are reproducible, diffable, easy to hash, and need no service to run. DuckDB can query the Parquet directly when needed. A database server would add setup and failure modes without helping the assessment. Revisit if the corpus grows by orders of magnitude.
 
 ## Rebuild rule
 Everything from layer 3 up is derived and can be rebuilt from layers 1 and 2 with `labourlens build`. A reviewer without the MOM documents can rebuild all statistical layers from the committed CSV snapshots; passages need `labourlens fetch --kind documents` run locally.

@@ -1,0 +1,31 @@
+source_id: retrenched_term_contract_by_industry
+adapter: quarterly_long
+period_col: quarter
+expected_columns:
+- quarter
+- industry
+- retrench_term_contract
+dimension_col: industry
+measures:
+- column: retrench_term_contract
+  indicator_id: retrenched_term_contract_by_industry
+  unit: persons
+  population: establishments
+  adjustment: unspecified
+  definition: 'Number of Retrenched Term Contract Employees by Industry - Quarterly. Retrenchment of Term Contract Employees refers to early termination of term contract employees due
+    to redundancy.
+
+    Source: Labour Market Survey, Manpower Research & Statistics Department, MOM
+
+    Before 2006, data pertain to private sector establishments (each with at least 25 employees). From 2006 onwards, it also includes
+
+    the public sector. The dataset description does not state seasonal-adjustment status. Dimension labels are preserved as published; categories may include aggregates and must not
+    be summed without a verified hierarchy.'
+  plausible_range:
+  - 0
+  - 3000
+expected_first_period: 1998-Q1
+expected_last_period: 2026-Q2
+missing_tokens:
+- na
+- '-'

@@ -1,0 +1,53 @@
+source_id: short_workweek_temporary_layoff
+adapter: quarterly_long
+period_col: quarter
+expected_columns:
+- quarter
+- total
+- short_work_week
+- temporary_layoff
+measures:
+- column: total
+  indicator_id: short_workweek_temporary_layoff_total
+  unit: persons
+  population: establishments
+  adjustment: unspecified
+  definition: 'Employees on Short Work-Week or Temporary Layoff - Quarterly. Source: Labour Market Survey, Manpower Research & Statistics Department, MOM
+
+    Before 2006, data pertain to private sector establishments (each with at least 25 employees). From 2006 onwards, it also includes
+
+    the public sector. The dataset description does not state seasonal-adjustment status. This measure is the published total column.'
+  plausible_range:
+  - 0
+  - 104000
+- column: short_work_week
+  indicator_id: short_workweek_temporary_layoff_short_work_week
+  unit: persons
+  population: establishments
+  adjustment: unspecified
+  definition: 'Employees on Short Work-Week or Temporary Layoff - Quarterly. Source: Labour Market Survey, Manpower Research & Statistics Department, MOM
+
+    Before 2006, data pertain to private sector establishments (each with at least 25 employees). From 2006 onwards, it also includes
+
+    the public sector. The dataset description does not state seasonal-adjustment status. This measure is the published short work week column.'
+  plausible_range:
+  - 0
+  - 50000
+- column: temporary_layoff
+  indicator_id: short_workweek_temporary_layoff_temporary_layoff
+  unit: persons
+  population: establishments
+  adjustment: unspecified
+  definition: 'Employees on Short Work-Week or Temporary Layoff - Quarterly. Source: Labour Market Survey, Manpower Research & Statistics Department, MOM
+
+    Before 2006, data pertain to private sector establishments (each with at least 25 employees). From 2006 onwards, it also includes
+
+    the public sector. The dataset description does not state seasonal-adjustment status. This measure is the published temporary layoff column.'
+  plausible_range:
+  - 0
+  - 55000
+expected_first_period: 1998-Q1
+expected_last_period: 2025-Q4
+missing_tokens:
+- na
+- '-'

@@ -182,5 +182,357 @@
     "passages": 8,
     "source_id": "mom-2026-q1-final-release",
     "status": "ok"
+  },
+  {
+    "body_font_size_median": 7.56,
+    "dropped_short_blocks": 522,
+    "flags": {
+      "empty": 0,
+      "garbled": 9,
+      "multicolumn_uncertain": 0,
+      "ok": 326,
+      "table_unreliable": 431
+    },
+    "pages": 53,
+    "passages": 766,
+    "source_id": "mom-2023-q1-final",
+    "status": "ok"
+  },
+  {
+    "body_font_size_median": 7.51,
+    "dropped_short_blocks": 406,
+    "flags": {
+      "empty": 0,
+      "garbled": 5,
+      "multicolumn_uncertain": 0,
+      "ok": 347,
+      "table_unreliable": 415
+    },
+    "pages": 54,
+    "passages": 767,
+    "source_id": "mom-2023-q2-final",
+    "status": "ok"
+  },
+  {
+    "body_font_size_median": 7.56,
+    "dropped_short_blocks": 441,
+    "flags": {
+      "empty": 0,
+      "garbled": 5,
+      "multicolumn_uncertain": 0,
+      "ok": 323,
+      "table_unreliable": 417
+    },
+    "pages": 54,
+    "passages": 745,
+    "source_id": "mom-2023-q3-final",
+    "status": "ok"
+  },
+  {
+    "body_font_size_median": 7.5,
+    "dropped_short_blocks": 509,
+    "flags": {
+      "empty": 0,
+      "garbled": 5,
+      "multicolumn_uncertain": 0,
+      "ok": 430,
+      "table_unreliable": 492
+    },
+    "pages": 67,
+    "passages": 927,
+    "source_id": "mom-2023-q4-final",
+    "status": "ok"
+  },
+  {
+    "body_font_size_median": 7.56,
+    "dropped_short_blocks": 442,
+    "flags": {
+      "empty": 0,
+      "garbled": 5,
+      "multicolumn_uncertain": 0,
+      "ok": 288,
+      "table_unreliable": 427
+    },
+    "pages": 54,
+    "passages": 720,
+    "source_id": "mom-2024-q1-final",
+    "status": "ok"
+  },
+  {
+    "body_font_size_median": 8.46,
+    "dropped_short_blocks": 482,
+    "flags": {
+      "empty": 0,
+      "garbled": 5,
+      "multicolumn_uncertain": 0,
+      "ok": 371,
+      "table_unreliable": 511
+    },
+    "pages": 55,
+    "passages": 887,
+    "source_id": "mom-2024-q2-final",
+    "status": "ok"
+  },
+  {
+    "body_font_size_median": 8.04,
+    "dropped_short_blocks": 485,
+    "flags": {
+      "empty": 0,
+      "garbled": 5,
+      "multicolumn_uncertain": 0,
+      "ok": 335,
+      "table_unreliable": 505
+    },
+    "pages": 55,
+    "passages": 845,
+    "source_id": "mom-2024-q3-final",
+    "status": "ok"
+  },
+  {
+    "body_font_size_median": 8.04,
+    "dropped_short_blocks": 515,
+    "flags": {
+      "empty": 0,
+      "garbled": 5,
+      "multicolumn_uncertain": 0,
+      "ok": 384,
+      "table_unreliable": 601
+    },
+    "pages": 57,
+    "passages": 990,
+    "source_id": "mom-2024-q4-final",
+    "status": "ok"
+  },
+  {
+    "body_font_size_median": 8.16,
+    "dropped_short_blocks": 467,
+    "flags": {
+      "empty": 0,
+      "garbled": 5,
+      "multicolumn_uncertain": 0,
+      "ok": 327,
+      "table_unreliable": 468
+    },
+    "pages": 55,
+    "passages": 800,
+    "source_id": "mom-2025-q1-final",
+    "status": "ok"
+  },
+  {
+    "body_font_size_median": 8.25,
+    "dropped_short_blocks": 488,
+    "flags": {
+      "empty": 0,
+      "garbled": 5,
+      "multicolumn_uncertain": 0,
+      "ok": 377,
+      "table_unreliable": 485
+    },
+    "pages": 61,
+    "passages": 867,
+    "source_id": "mom-2025-q2-final",
+    "status": "ok"
+  },
+  {
+    "catalog_publication_date": "2024-04-30",
+    "date_matches_catalog": true,
+    "page_first_date": "2024-04-30",
+    "passages": 21,
+    "source_id": "mom-2024-q1-advance",
+    "status": "ok"
+  },
+  {
+    "catalog_publication_date": "2024-06-20",
+    "date_matches_catalog": true,
+    "page_first_date": "2024-06-20",
+    "passages": 31,
+    "source_id": "mom-2024-q1-final-release",
+    "status": "ok"
+  },
+  {
+    "catalog_publication_date": "2024-07-31",
+    "date_matches_catalog": true,
+    "page_first_date": "2024-07-31",
+    "passages": 24,
+    "source_id": "mom-2024-q2-advance",
+    "status": "ok"
+  },
+  {
+    "catalog_publication_date": "2024-09-17",
+    "date_matches_catalog": true,
+    "page_first_date": "2024-09-17",
+    "passages": 37,
+    "source_id": "mom-2024-q2-final-release",
+    "status": "ok"
+  },
+  {
+    "catalog_publication_date": "2024-10-29",
+    "date_matches_catalog": true,
+    "page_first_date": "2024-10-29",
+    "passages": 22,
+    "source_id": "mom-2024-q3-advance",
+    "status": "ok"
+  },
+  {
+    "catalog_publication_date": "2024-12-09",
+    "date_matches_catalog": true,
+    "page_first_date": "2024-12-09",
+    "passages": 26,
+    "source_id": "mom-2024-q3-final-release",
+    "status": "ok"
+  },
+  {
+    "catalog_publication_date": "2025-01-27",
+    "date_matches_catalog": true,
+    "page_first_date": "2025-01-27",
+    "passages": 29,
+    "source_id": "mom-2024-q4-advance",
+    "status": "ok"
+  },
+  {
+    "catalog_publication_date": "2025-03-19",
+    "date_matches_catalog": true,
+    "page_first_date": "2025-03-19",
+    "passages": 32,
+    "source_id": "mom-2024-q4-final-release",
+    "status": "ok"
+  },
+  {
+    "catalog_publication_date": "2025-04-28",
+    "date_matches_catalog": true,
+    "page_first_date": "2025-04-28",
+    "passages": 24,
+    "source_id": "mom-2025-q1-advance",
+    "status": "ok"
+  },
+  {
+    "catalog_publication_date": "2025-06-27",
+    "date_matches_catalog": true,
+    "page_first_date": "2025-06-27",
+    "passages": 23,
+    "source_id": "mom-2025-q1-final-release",
+    "status": "ok"
+  },
+  {
+    "catalog_publication_date": "2025-07-30",
+    "date_matches_catalog": true,
+    "page_first_date": "2025-07-30",
+    "passages": 26,
+    "source_id": "mom-2025-q2-advance",
+    "status": "ok"
+  },
+  {
+    "catalog_publication_date": "2025-09-17",
+    "date_matches_catalog": true,
+    "page_first_date": "2025-09-17",
+    "passages": 25,
+    "source_id": "mom-2025-q2-final-release",
+    "status": "ok"
+  },
+  {
+    "body_font_size_median": 7.92,
+    "dropped_short_blocks": 58,
+    "flags": {
+      "empty": 0,
+      "garbled": 0,
+      "multicolumn_uncertain": 0,
+      "ok": 117,
+      "table_unreliable": 4
+    },
+    "pages": 34,
+    "passages": 121,
+    "source_id": "mom-jv2025",
+    "status": "ok"
+  },
+  {
+    "catalog_publication_date": "2026-03-20",
+    "date_matches_catalog": true,
+    "page_first_date": "2026-03-20",
+    "passages": 38,
+    "source_id": "mom-jv2025-release",
+    "status": "ok"
+  },
+  {
+    "body_font_size_median": 11.04,
+    "dropped_short_blocks": 240,
+    "flags": {
+      "empty": 0,
+      "garbled": 0,
+      "multicolumn_uncertain": 0,
+      "ok": 141,
+      "table_unreliable": 46
+    },
+    "pages": 33,
+    "passages": 187,
+    "source_id": "mom-wage-practices2024",
+    "status": "ok"
+  },
+  {
+    "catalog_publication_date": "2025-05-28",
+    "date_matches_catalog": true,
+    "page_first_date": "2025-05-28",
+    "passages": 26,
+    "source_id": "mom-wage-practices2024-release",
+    "status": "ok"
+  },
+  {
+    "body_font_size_median": 10.56,
+    "dropped_short_blocks": 114,
+    "flags": {
+      "empty": 0,
+      "garbled": 0,
+      "multicolumn_uncertain": 0,
+      "ok": 161,
+      "table_unreliable": 0
+    },
+    "pages": 73,
+    "passages": 161,
+    "source_id": "mom-lf2024-survey-findings",
+    "status": "ok"
+  },
+  {
+    "body_font_size_median": 9.12,
+    "dropped_short_blocks": 1,
+    "flags": {
+      "empty": 0,
+      "garbled": 0,
+      "multicolumn_uncertain": 0,
+      "ok": 4,
+      "table_unreliable": 0
+    },
+    "pages": 1,
+    "passages": 4,
+    "source_id": "mom-lf2024-survey-highlights",
+    "status": "ok"
+  },
+  {
+    "body_font_size_median": 10.56,
+    "dropped_short_blocks": 61,
+    "flags": {
+      "empty": 0,
+      "garbled": 0,
+      "multicolumn_uncertain": 0,
+      "ok": 105,
+      "table_unreliable": 10
+    },
+    "pages": 12,
+    "passages": 115,
+    "source_id": "mom-lf2024-coverage-methodology",
+    "status": "ok"
+  },
+  {
+    "body_font_size_median": 10.5,
+    "dropped_short_blocks": 3,
+    "flags": {
+      "empty": 0,
+      "garbled": 0,
+      "multicolumn_uncertain": 0,
+      "ok": 11,
+      "table_unreliable": 0
+    },
+    "pages": 2,
+    "passages": 11,
+    "source_id": "mom-lf2024-copyright",
+    "status": "ok"
   }
 ]

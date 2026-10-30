@@ -1,0 +1,53 @@
+{
+  "collectionIds": [],
+  "columnMetadata": {
+    "map": {
+      "c_3539cv8buu94nsh6c1v9yjj62": "quarter",
+      "c_b76hauv334x7f03b3wd3mhfys": "occupation",
+      "c_bi3qdczmm9pwcfk8putqyj1ax": "resignation_rate"
+    },
+    "metaMapping": {
+      "c_3539cv8buu94nsh6c1v9yjj62": {
+        "columnTitle": "Quarter",
+        "dataType": "Quarter (Q)",
+        "index": "0",
+        "isCategorical": false,
+        "name": "quarter"
+      },
+      "c_b76hauv334x7f03b3wd3mhfys": {
+        "columnTitle": "Occupation",
+        "dataType": "Text",
+        "index": "1",
+        "isCategorical": true,
+        "name": "occupation"
+      },
+      "c_bi3qdczmm9pwcfk8putqyj1ax": {
+        "columnTitle": "Resignation Rate",
+        "dataType": "Text",
+        "index": "2",
+        "isCategorical": true,
+        "name": "resignation_rate",
+        "unitOfMeasure": "percent"
+      }
+    },
+    "order": [
+      "c_3539cv8buu94nsh6c1v9yjj62",
+      "c_b76hauv334x7f03b3wd3mhfys",
+      "c_bi3qdczmm9pwcfk8putqyj1ax"
+    ]
+  },
+  "contactEmails": [
+    "ng_li_mei@mom.gov.sg",
+    "samantha_teo@mom.gov.sg"
+  ],
+  "coverageEnd": "2026-06-30T08:00:00+08:00",
+  "coverageStart": "1998-01-01T08:00:00+08:00",
+  "createdAt": "2026-03-23T15:46:59+08:00",
+  "datasetId": "d_e7923b1ac9574659bdd50ad40f16526a",
+  "datasetSize": 21963,
+  "description": "Average Monthly Resignation Rate during a quarter is defined as the average number of persons who resigned in a month during the quarter divided by the average number of employees in the establishment. The annual figures are the simple averages of the quarterly figures\nSource: Labour Market Survey, Manpower Research & Statistics Department, MOM\nBefore 2006, data pertain to private sector establishments (each with at least 25 employees). From 2006 onwards, it also includes\nthe public sector.\n",
+  "format": "CSV",
+  "lastUpdatedAt": "2026-09-22T17:53:20+08:00",
+  "managedBy": "Ministry of Manpower",
+  "name": "Average Monthly Resignation Rate by Occupation - Quarterly"
+}

@@ -1,0 +1,46 @@
+source_id: unemployed_citizens
+adapter: quarter_end_month
+period_col: period
+expected_columns:
+- period
+- residential_status
+- seasonally_adj_unemp
+- non_seasonally_adj_unemp
+constant_columns:
+  residential_status: citizen
+measures:
+- column: seasonally_adj_unemp
+  indicator_id: unemployed_citizens
+  unit: persons
+  population: citizen
+  adjustment: seasonally_adjusted
+  definition: 'Number of Unemployed Citizens, Quarterly. Data refer to the quarterly number of unemployed Singapore citizens.
+
+    Seasonally adjusted data are revised using the latest set of seasonal factors and updated in line with standard seasonal adjustment procedure. The revision is done once a year, taking
+    into account observations for the latest available year.
+
+    Source: Labour Force Survey, Manpower Research & Statistics Department, MOM, except data for June 1995, June 2000 and June 2005, which are from the Population Census 2000, General
+    Household Surveys 1995 & 2005 conducted by the Singapore Department of Statistics.'
+  plausible_range:
+  - 0
+  - 125000
+- column: non_seasonally_adj_unemp
+  indicator_id: unemployed_citizens
+  unit: persons
+  population: citizen
+  adjustment: not_adjusted
+  definition: 'Number of Unemployed Citizens, Quarterly. Data refer to the quarterly number of unemployed Singapore citizens.
+
+    Seasonally adjusted data are revised using the latest set of seasonal factors and updated in line with standard seasonal adjustment procedure. The revision is done once a year, taking
+    into account observations for the latest available year.
+
+    Source: Labour Force Survey, Manpower Research & Statistics Department, MOM, except data for June 1995, June 2000 and June 2005, which are from the Population Census 2000, General
+    Household Surveys 1995 & 2005 conducted by the Singapore Department of Statistics.'
+  plausible_range:
+  - 0
+  - 137000
+expected_first_period: 1992-Q1
+expected_last_period: 2026-Q2
+missing_tokens:
+- na
+- '-'

@@ -1,0 +1,53 @@
+{
+  "collectionIds": [],
+  "columnMetadata": {
+    "map": {
+      "c_498c1mpxxw2u7fue9vdpk0rz3": "quarter",
+      "c_6vtyxbmqiyzvzqf62hxer5ljq": "recruitment_rate",
+      "c_eaqettzimljh7lo8rut89sj6i": "industry"
+    },
+    "metaMapping": {
+      "c_498c1mpxxw2u7fue9vdpk0rz3": {
+        "columnTitle": "Quarter",
+        "dataType": "Quarter (Q)",
+        "index": "0",
+        "isCategorical": true,
+        "name": "quarter"
+      },
+      "c_6vtyxbmqiyzvzqf62hxer5ljq": {
+        "columnTitle": "Recruitment Rate",
+        "dataType": "Text",
+        "index": "2",
+        "isCategorical": true,
+        "name": "recruitment_rate",
+        "unitOfMeasure": "percent"
+      },
+      "c_eaqettzimljh7lo8rut89sj6i": {
+        "columnTitle": "Industry",
+        "dataType": "Text",
+        "index": "1",
+        "isCategorical": true,
+        "name": "industry"
+      }
+    },
+    "order": [
+      "c_498c1mpxxw2u7fue9vdpk0rz3",
+      "c_eaqettzimljh7lo8rut89sj6i",
+      "c_6vtyxbmqiyzvzqf62hxer5ljq"
+    ]
+  },
+  "contactEmails": [
+    "ng_li_mei@mom.gov.sg",
+    "samantha_teo@mom.gov.sg"
+  ],
+  "coverageEnd": "2026-06-30T08:00:00+08:00",
+  "coverageStart": "1998-01-01T08:00:00+08:00",
+  "createdAt": "2026-03-23T15:08:54+08:00",
+  "datasetId": "d_c60fe8fad219569c04428f35b07359f3",
+  "datasetSize": 198640,
+  "description": "Average Monthly Recruitment Rate during a quarter is defined as the average number of persons recruited in a month during the quarter divided by the average number of employees in the establishment. The annual figures are the simple averages of the quarterly figures.\nSource: Labour Market Survey, Manpower Research & Statistics Department, MOM\nBefore 2006, data pertain to private sector establishments (each with at least 25 employees). From 2006 onwards, it also includes\nthe public sector.\n",
+  "format": "CSV",
+  "lastUpdatedAt": "2026-09-22T17:42:30+08:00",
+  "managedBy": "Ministry of Manpower",
+  "name": "Average Monthly Recruitment Rate by Industry - Quarterly"
+}

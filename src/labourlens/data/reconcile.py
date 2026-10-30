@@ -18,6 +18,9 @@ from labourlens.models import DocumentPassage
 
 _PAT = re.compile(r"[Tt]otal employment[^.]{0,120}?(?:grew|increased|expanded|rose|grow|increase)[^.]{0,40}?by\s+([\d,]{4,7})")
 
+# Only quarters whose headline sentences were read by hand and match the pattern. An attempt to extend to 2024-Q1..2025-Q2
+# (30 Oct 2026) mismatched: wording differs by release, some advance releases give no figure, and one release states a
+# full-year total (44,500). Extending needs per-release verification, not a looser regex.
 QUARTERS = {
     "2025-Q3": ("mom-2025-q3-advance", "mom-2025-q3-final-release"),
     "2025-Q4": ("mom-2025-q4-advance", "mom-2025-q4-final-release"),

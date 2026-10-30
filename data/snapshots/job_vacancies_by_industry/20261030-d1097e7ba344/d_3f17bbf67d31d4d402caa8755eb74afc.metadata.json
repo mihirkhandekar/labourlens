@@ -1,0 +1,52 @@
+{
+  "collectionIds": [],
+  "columnMetadata": {
+    "map": {
+      "c_6gffyj0pim7in427k5w5c3o7r": "job_vacancy",
+      "c_7yjh4ujnvgcf0b87lry89h0qp": "industry",
+      "c_8nnvpr8qjz9kq9ynrqzc6a8il": "quarter"
+    },
+    "metaMapping": {
+      "c_6gffyj0pim7in427k5w5c3o7r": {
+        "columnTitle": "Job Vacancy",
+        "dataType": "Text",
+        "index": "2",
+        "isCategorical": true,
+        "name": "job_vacancy"
+      },
+      "c_7yjh4ujnvgcf0b87lry89h0qp": {
+        "columnTitle": "Industry",
+        "dataType": "Text",
+        "index": "1",
+        "isCategorical": true,
+        "name": "industry"
+      },
+      "c_8nnvpr8qjz9kq9ynrqzc6a8il": {
+        "columnTitle": "Quarter",
+        "dataType": "Quarter (Q)",
+        "index": "0",
+        "isCategorical": true,
+        "name": "quarter"
+      }
+    },
+    "order": [
+      "c_8nnvpr8qjz9kq9ynrqzc6a8il",
+      "c_7yjh4ujnvgcf0b87lry89h0qp",
+      "c_6gffyj0pim7in427k5w5c3o7r"
+    ]
+  },
+  "contactEmails": [
+    "ng_li_mei@mom.gov.sg",
+    "samantha_teo@mom.gov.sg"
+  ],
+  "coverageEnd": "2026-06-30T08:00:00+08:00",
+  "coverageStart": "1998-01-01T08:00:00+08:00",
+  "createdAt": "2026-03-23T14:16:13+08:00",
+  "datasetId": "d_3f17bbf67d31d4d402caa8755eb74afc",
+  "datasetSize": 202519,
+  "description": "Source: Labour Market Survey, Manpower Research & Statistics Department, MOM\nBefore 2006, data pertain to private sector establishments (each with at least 25 employees). From 2006 onwards, it also includes\nthe public sector.\n",
+  "format": "CSV",
+  "lastUpdatedAt": "2026-09-22T17:59:54+08:00",
+  "managedBy": "Ministry of Manpower",
+  "name": "Number of Job Vacancy by Industry - Quarterly"
+}

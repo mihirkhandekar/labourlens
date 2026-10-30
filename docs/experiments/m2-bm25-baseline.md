@@ -55,6 +55,10 @@ Rank of the first relevant chunk: 8 at rank 1, 3 at ranks 2 to 5, 6 at ranks 6 t
 | **Label granularity**: DEV-002's top chunk covers pp.2 to 3 but the gold passage is a neighbouring block on p.2 | DEV-002 | Why the lenient page-level metric is shown; also a question for the owner's review |
 All are retrieval errors in the project taxonomy; none involve generation yet. This analysis was written from the dev cases, so any fix tested on them must be confirmed on held-out.
 
+## Effect of the D-019 corpus expansion (MEASURED, dev n=24, same draft labels)
+The corpus grew from 16 to 46 documents (2,468 merge120 chunks). Gold passage ids are unchanged. Baseline merge120 moved from hit@10 0.71 and MRR 0.41 to **hit@10 0.58 and MRR 0.31**. merge200 also fell (hit@10 0.79 to 0.625). The ordering of chunking options held (merge200 best, blocks worst); the earlier stopwords and stemming findings were not clearly reproduced (stopwords off still slightly better, stemming still mixed). Raw output: `experiments/runs/dev-SUMMARY.md`.
+INFERENCE (not yet tested): the drop comes from near-duplicate sections in other quarters' reports ranking above the right quarter, since BM25 has no notion of reporting period. A period-aware filter or boost is a candidate M3/M6 experiment. The held-out pre-registration below still applies, but its numbers will be on the expanded corpus.
+
 ## Pre-registered held-out run (written before running it)
 After the owner reviews and freezes the gold set (hash recorded before any held-out run), run exactly three configs once on the held-out split and report all three whatever the outcome:
 1. `blocks` (unmodified reference)

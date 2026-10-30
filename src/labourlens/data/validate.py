@@ -107,10 +107,11 @@ def check_datasets(obs: pd.DataFrame, quarantine: pd.DataFrame, per_source: dict
         out.append(_check(f"dataset.{sid}.values_in_plausible_range", bad == 0, f"outside={bad}"))
         # in-scope completeness: every series x every quarter present as a row
         scope = o[o.in_answer_scope]
-        expected_q = _quarters(SCOPE_LO, SCOPE_HI)
+        last = min(SCOPE_HI, spec["expected_last_period"])  # a source that ends before the scope end is declared in its spec
+        expected_q = _quarters(SCOPE_LO, last)
         grp_cols = ["indicator_id", "population", "adjustment", "sector_path", "dimension"]
         incomplete = [g for g, df in scope.groupby(grp_cols) if sorted(df.period.unique()) != expected_q]
-        out.append(_check(f"dataset.{sid}.in_scope_rows_cover_10_quarters", not incomplete, f"series with gaps={len(incomplete)}"))
+        out.append(_check(f"dataset.{sid}.in_scope_rows_cover_declared_quarters", not incomplete, f"quarters expected {SCOPE_LO} to {last}; series with gaps={len(incomplete)}"))
         miss = scope[scope.value.isna()]
         out.append(_check(f"dataset.{sid}.in_scope_values_present", len(miss) == 0,
                           f"{len(miss)} of {len(scope)} in-scope cells have no published number "

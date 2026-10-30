@@ -7,9 +7,9 @@ Snapshot date: **2026-10-30**. Analysis window: **2024-Q1 to 2026-Q2** (answer s
 ## At a glance
 | | |
 |---|---|
-| Statistical datasets | 17 (4 core, 13 supporting), 10,896 normalised observations, 880 in answer scope |
+| Statistical datasets | 33 (4 core, 29 supporting; 16 added under D-019), 43,662 normalised observations, 3,790 in answer scope |
 | Documents | 16 (4 MOM quarterly reports, 8 advance/final press releases, 4 Labour Force 2025 PDFs) |
-| Quality checks | 142 run, 0 failed, 3 warnings (listed below) |
+| Quality checks | 254 run, 0 failed, 7 warnings (the 3 below plus per-dataset dash-marker warnings for the D-019 industry and occupation tables) |
 | Spot-check by a human | **Not yet done.** Sheets in `docs/human-review/` |
 | Tests | 51 pass (`artifacts/tests/pytest-m1.txt`) |
 

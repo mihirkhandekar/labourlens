@@ -1,7 +1,7 @@
 {
  "notable_checks": [
   {
-   "detail": "33 catalogued, missing=[]",
+   "detail": "79 catalogued, missing=[]",
    "name": "manifest.all_sources_present",
    "status": "pass"
   },
@@ -26,13 +26,33 @@
    "status": "pass"
   },
   {
-   "detail": "8 sources still have unresolved rights (kept local-only): ['mom-2026-q2-advance', 'mom-2026-q2-final-release', 'mom-2025-q3-advance', 'mom-2025-q3-final-release', 'mom-2025-q4-advance', 'mom-2025-q4-final-release', 'mom-2026-q1-advance', 'mom-2026-q1-final-release']",
+   "detail": "22 sources still have unresolved rights (kept local-only): ['mom-2026-q2-advance', 'mom-2026-q2-final-release', 'mom-2025-q3-advance', 'mom-2025-q3-final-release', 'mom-2025-q4-advance', 'mom-2025-q4-final-release', 'mom-2026-q1-advance', 'mom-2026-q1-final-release', 'mom-2024-q1-advance', 'mom-2024-q1-final-release', 'mom-2024-q2-advance', 'mom-2024-q2-final-release', 'mom-2024-q3-advance', 'mom-2024-q3-final-release', 'mom-2024-q4-advance', 'mom-2024-q4-final-release', 'mom-2025-q1-advance', 'mom-2025-q1-final-release', 'mom-2025-q2-advance', 'mom-2025-q2-final-release', 'mom-jv2025-release', 'mom-wage-practices2024-release']",
    "name": "rights.unresolved_sources_listed",
    "status": "warn"
   },
   {
    "detail": "47 of 420 in-scope cells have no published number (reasons: {'dash_marker_publisher_does_not_define_nil_vs_suppressed': np.int64(47)})",
    "name": "dataset.retrenched_by_industry.in_scope_values_present",
+   "status": "warn"
+  },
+  {
+   "detail": "50 of 420 in-scope cells have no published number (reasons: {'dash_marker_publisher_does_not_define_nil_vs_suppressed': np.int64(50)})",
+   "name": "dataset.retrenched_permanent_by_industry.in_scope_values_present",
+   "status": "warn"
+  },
+  {
+   "detail": "288 of 420 in-scope cells have no published number (reasons: {'dash_marker_publisher_does_not_define_nil_vs_suppressed': np.int64(288)})",
+   "name": "dataset.retrenched_term_contract_by_industry.in_scope_values_present",
+   "status": "warn"
+  },
+  {
+   "detail": "3 of 30 in-scope cells have no published number (reasons: {'dash_marker_publisher_does_not_define_nil_vs_suppressed': np.int64(3)})",
+   "name": "dataset.retrenched_term_contract_by_occupation.in_scope_values_present",
+   "status": "warn"
+  },
+  {
+   "detail": "28 of 96 in-scope cells have no published number (reasons: {'dash_marker_publisher_does_not_define_nil_vs_suppressed': np.int64(28)})",
+   "name": "dataset.short_workweek_temporary_layoff_by_industry.in_scope_values_present",
    "status": "warn"
   },
   {
@@ -63,7 +83,7 @@
  ],
  "schema_version": "export-0.1",
  "summary": {
-  "pass": 139,
-  "warn": 3
+  "pass": 247,
+  "warn": 7
  }
 }

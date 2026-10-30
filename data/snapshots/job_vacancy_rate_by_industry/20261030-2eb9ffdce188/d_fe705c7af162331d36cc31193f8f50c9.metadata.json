@@ -1,0 +1,53 @@
+{
+  "collectionIds": [],
+  "columnMetadata": {
+    "map": {
+      "c_3x6k6ypad6j1leu9tlpi9fqyk": "industry",
+      "c_66qyjuvjj6h76e6bsx3uxd3f0": "job_vacancy_rate",
+      "c_9vv0544m1mydllvxbmkqque0a": "quarter"
+    },
+    "metaMapping": {
+      "c_3x6k6ypad6j1leu9tlpi9fqyk": {
+        "columnTitle": "Industry",
+        "dataType": "Text",
+        "index": "1",
+        "isCategorical": true,
+        "name": "industry"
+      },
+      "c_66qyjuvjj6h76e6bsx3uxd3f0": {
+        "columnTitle": "Job Vacancy Rate",
+        "dataType": "Text",
+        "index": "2",
+        "isCategorical": true,
+        "name": "job_vacancy_rate",
+        "unitOfMeasure": "percent"
+      },
+      "c_9vv0544m1mydllvxbmkqque0a": {
+        "columnTitle": "Quarter",
+        "dataType": "Quarter (Q)",
+        "index": "0",
+        "isCategorical": true,
+        "name": "quarter"
+      }
+    },
+    "order": [
+      "c_9vv0544m1mydllvxbmkqque0a",
+      "c_3x6k6ypad6j1leu9tlpi9fqyk",
+      "c_66qyjuvjj6h76e6bsx3uxd3f0"
+    ]
+  },
+  "contactEmails": [
+    "ng_li_mei@mom.gov.sg",
+    "samantha_teo@mom.gov.sg"
+  ],
+  "coverageEnd": "2026-06-30T08:00:00+08:00",
+  "coverageStart": "1998-01-01T08:00:00+08:00",
+  "createdAt": "2026-03-23T14:39:53+08:00",
+  "datasetId": "d_fe705c7af162331d36cc31193f8f50c9",
+  "datasetSize": 198561,
+  "description": "Job Vacancy Rate for a quarter is defined as the total number of job vacancies divided by the total demand for manpower at the end of the quarter. \nSource: Labour Market Survey, Manpower Research & Statistics Department, MOM\nBefore 2006, data pertain to private sector establishments (each with at least 25 employees). From 2006 onwards, it also includes\nthe public sector.\n",
+  "format": "CSV",
+  "lastUpdatedAt": "2026-09-22T18:03:31+08:00",
+  "managedBy": "Ministry of Manpower",
+  "name": "Job Vacancy Rate by Industry - Quarterly"
+}

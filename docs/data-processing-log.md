@@ -18,13 +18,13 @@ Principle behind all of it: **never change a number silently, never guess a mean
 |---|---|---|---|---|
 | B1 | One YAML spec per dataset (expected columns, measures, unit, population, adjustment, missing tokens, plausible range) | Schema drift must fail loudly; the spec doubles as documentation | A bespoke parser per file | `specs/datasets/*.yaml`; test `test_schema_drift_is_fatal` |
 | B2 | Periods mapped to calendar quarters (`2026-Q2`). Unemployment files use `YYYY-MM`; only quarter-end months (03, 06, 09, 12) are accepted | Avoid silent mis-dating | Rounding odd months to a quarter | `normalize.py`; `test_periods_and_values.py` |
-| B3 | Values parsed with a strict numeric regex; undeclared text goes to a quarantine list | `float()` would hide thousand separators, `%`, and stray text | Coercion | quarantine = 0 rows on all 17 datasets |
+| B3 | Values parsed with a strict numeric regex; undeclared text goes to a quarantine list | `float()` would hide thousand separators, `%`, and stray text | Coercion | quarantine = 0 rows on all 33 datasets |
 | B4 | `na` and `-` become null with a reason; real zeros stay zero | Missing is not nil. The publisher does not say whether `-` means nil or suppressed | Filling with 0 | `test_quarterly_long_dash_and_na_are_null_not_zero`; 605 `-` industry cells, 47 in scope |
 | B5 | Wide sector table pivoted to long; leading-whitespace hierarchy (4 spaces per level) turned into `sector_path` and `sector_level`; odd indents and orphan rows quarantined | Keeps the parent-child structure so totals can be checked | Flattening the labels | check `sector.children_sum_to_parent_within_rounding` |
 | B6 | Hand-curated 42-industry hierarchy for `retrenched_by_industry` | The CSV is a flat list of industry names, but some are subtotals of others | Treating all industries as flat (would double count) | check `industry.children_sum_to_parent_within_rounding` |
 | B7 | Every series labelled with population (overall, resident, citizen, establishments, or `unverified_basis`) and adjustment (SA, not adjusted, not applicable, or `unspecified`) | The assessment's data-integrity rule: never mix definitions | One merged "unemployment" series | `StatisticalObservation` model |
 | B8 | Rate-style series without a documented adjustment (`resignation_rate`, `recruitment_rate`, `job_vacancy_rate`) labelled `unspecified`; `reentry_6m`, `reentry_12m` and the sector table population `unverified_basis` | The dataset pages do not say; we do not guess | Assuming SA | `docs/data-sheet.md` section 5 |
-| B9 | Scope flag `in_answer_scope` for 2024-Q1 to 2026-Q2; earlier history retained | Answers are bounded; history is context for charts | Dropping older rows | 880 of 10,896 rows in scope |
+| B9 | Scope flag `in_answer_scope` for 2024-Q1 to 2026-Q2; earlier history retained | Answers are bounded; history is context for charts | Dropping older rows | 3,790 of 43,662 rows in scope |
 | B10 | Plausible-range checks are **validation only** and never filter rows | Outlier removal would hide real shocks such as 2020 | Clipping outliers | checks `*.values_in_plausible_range` |
 | B11 | Observation ids are deterministic hashes of source, snapshot, indicator, period, population, adjustment, dimension | Same input gives the same ids; supports tracing and idempotence | Random ids | `test_build_is_idempotent` |
 | B12 | Nothing was imputed, forecast, seasonally adjusted by us, or converted between units | Out of scope and unverifiable | | |
@@ -72,3 +72,11 @@ All findings are descriptive, not causal. They were generated from the validated
 - No LLM involvement in any data step.
 - No MOM text committed, no PDF in git.
 - No claim of human verification yet.
+
+
+## D-019 corpus expansion (30 Oct 2026)
+- Added 30 documents (10 quarterly report PDFs 1Q2023 to 2Q2025, 12 advance/final releases 1Q24 to 2Q25, 8 context documents) and 16 quarterly datasets (job vacancy, recruitment, resignation, retrenchment by industry or occupation; citizen unemployment; short work-week). Result: 46 documents, 13,484 passages, 33 datasets, 43,662 observations, 254 checks, 0 failed.
+- Rejected at selection: 4 paid-hours datasets (the model has no hours unit) and 6 re-entry datasets (no publisher description).
+- Check change: `in_scope_rows_cover_10_quarters` became `in_scope_rows_cover_declared_quarters`. Two short work-week datasets end at 2025-Q4 (declared in their specs), so the expected quarter list stops at the spec's `expected_last_period`. This is not a weakened threshold: every declared quarter must still exist for every series.
+- Reconciliation was NOT extended. A trial extension to 2024-Q1..2025-Q2 mismatched: some advance releases give no figure, wording differs, and one final release gives a full-year total (44,500). The 4 hand-verified quarters remain. Also seen while reading (not investigated further): the 1Q 2024 total-employment change appears as 4,700 in the 2Q 2024 release and 3,200 in the 1Q 2025 release, a revision chain.
+- 22 sources have unresolved rights (all HTML releases); they stay local-only.
