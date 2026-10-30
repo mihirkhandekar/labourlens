@@ -1,0 +1,377 @@
+documents:
+- source_id: mom-2023-q1-final
+  source_type: report_pdf
+  title: Labour Market Report First Quarter 2023
+  publisher: Manpower Research and Statistics Department, Ministry of Manpower
+  canonical_url: https://stats.mom.gov.sg/Pages/Labour-Market-Report-1Q-2023.aspx
+  download_url: https://stats.mom.gov.sg/iMAS_PdfLibrary/mrsd-Labour-Market-Report-1Q-2023.pdf
+  publication_date: '2023-06-15'
+  release_stage: final
+  period_start: '2023-01-01'
+  period_end: '2023-03-31'
+  rights_status: verified_all_rights_reserved
+  rights_note: 'Copyright notice read in the PDF itself on 2026-10-30: ''All rights reserved. Further reproduction of this material is prohibited without the written permission of the
+    copyright holder.'' Not covered by the data.gov.sg Open Data Licence.'
+- source_id: mom-2023-q2-final
+  source_type: report_pdf
+  title: Labour Market Report Second Quarter 2023
+  publisher: Manpower Research and Statistics Department, Ministry of Manpower
+  canonical_url: https://stats.mom.gov.sg/Pages/Labour-Market-Report-2Q-2023.aspx
+  download_url: https://stats.mom.gov.sg/iMAS_PdfLibrary/mrsd-Labour-Market-Report-2Q-2023.pdf
+  publication_date: '2023-09-14'
+  release_stage: final
+  period_start: '2023-04-01'
+  period_end: '2023-06-30'
+  rights_status: verified_all_rights_reserved
+  rights_note: 'Copyright notice read in the PDF itself on 2026-10-30: ''All rights reserved. Further reproduction of this material is prohibited without the written permission of the
+    copyright holder.'' Not covered by the data.gov.sg Open Data Licence.'
+- source_id: mom-2023-q3-final
+  source_type: report_pdf
+  title: Labour Market Report Third Quarter 2023
+  publisher: Manpower Research and Statistics Department, Ministry of Manpower
+  canonical_url: https://stats.mom.gov.sg/Pages/Labour-Market-Report-3Q-2023.aspx
+  download_url: https://stats.mom.gov.sg/iMAS_PdfLibrary/mrsd-Labour-Market-Report-3Q-2023.pdf
+  publication_date: '2023-12-14'
+  release_stage: final
+  period_start: '2023-07-01'
+  period_end: '2023-09-30'
+  rights_status: verified_all_rights_reserved
+  rights_note: 'Copyright notice read in the PDF itself on 2026-10-30: ''All rights reserved. Further reproduction of this material is prohibited without the written permission of the
+    copyright holder.'' Not covered by the data.gov.sg Open Data Licence.'
+- source_id: mom-2023-q4-final
+  source_type: report_pdf
+  title: Labour Market Report Fourth Quarter 2023
+  publisher: Manpower Research and Statistics Department, Ministry of Manpower
+  canonical_url: https://stats.mom.gov.sg/Pages/Labour-Market-Report-4Q-2023.aspx
+  download_url: https://stats.mom.gov.sg/iMAS_PdfLibrary/mrsd-Labour-Market-Report-4Q-2023.pdf
+  publication_date: '2024-03-14'
+  release_stage: final
+  period_start: '2023-10-01'
+  period_end: '2023-12-31'
+  rights_status: verified_all_rights_reserved
+  rights_note: 'Copyright notice read in the PDF itself on 2026-10-30: ''All rights reserved. Further reproduction of this material is prohibited without the written permission of the
+    copyright holder.'' Not covered by the data.gov.sg Open Data Licence.'
+- source_id: mom-2024-q1-final
+  source_type: report_pdf
+  title: Labour Market Report First Quarter 2024
+  publisher: Manpower Research and Statistics Department, Ministry of Manpower
+  canonical_url: https://stats.mom.gov.sg/Pages/Labour-Market-Report-1Q-2024.aspx
+  download_url: https://stats.mom.gov.sg/iMAS_PdfLibrary/mrsd-Labour-Market-Report-1Q-2024.pdf
+  publication_date: '2024-06-20'
+  release_stage: final
+  period_start: '2024-01-01'
+  period_end: '2024-03-31'
+  rights_status: verified_all_rights_reserved
+  rights_note: 'Copyright notice read in the PDF itself on 2026-10-30: ''All rights reserved. Further reproduction of this material is prohibited without the written permission of the
+    copyright holder.'' Not covered by the data.gov.sg Open Data Licence.'
+- source_id: mom-2024-q2-final
+  source_type: report_pdf
+  title: Labour Market Report Second Quarter 2024
+  publisher: Manpower Research and Statistics Department, Ministry of Manpower
+  canonical_url: https://stats.mom.gov.sg/Pages/Labour-Market-Report-2Q-2024.aspx
+  download_url: https://stats.mom.gov.sg/iMAS_PdfLibrary/mrsd-Labour-Market-Report-2Q-2024.pdf
+  publication_date: '2024-09-17'
+  release_stage: final
+  period_start: '2024-04-01'
+  period_end: '2024-06-30'
+  rights_status: verified_all_rights_reserved
+  rights_note: 'Copyright notice read in the PDF itself on 2026-10-30: ''All rights reserved. Further reproduction of this material is prohibited without the written permission of the
+    copyright holder.'' Not covered by the data.gov.sg Open Data Licence.'
+- source_id: mom-2024-q3-final
+  source_type: report_pdf
+  title: Labour Market Report Third Quarter 2024
+  publisher: Manpower Research and Statistics Department, Ministry of Manpower
+  canonical_url: https://stats.mom.gov.sg/Pages/Labour-Market-Report-3Q-2024.aspx
+  download_url: https://stats.mom.gov.sg/iMAS_PdfLibrary/mrsd-Labour-Market-Report-3Q-2024.pdf
+  publication_date: '2024-12-09'
+  release_stage: final
+  period_start: '2024-07-01'
+  period_end: '2024-09-30'
+  rights_status: verified_all_rights_reserved
+  rights_note: 'Copyright notice read in the PDF itself on 2026-10-30: ''All rights reserved. Further reproduction of this material is prohibited without the written permission of the
+    copyright holder.'' Not covered by the data.gov.sg Open Data Licence.'
+- source_id: mom-2024-q4-final
+  source_type: report_pdf
+  title: Labour Market Report Fourth Quarter 2024
+  publisher: Manpower Research and Statistics Department, Ministry of Manpower
+  canonical_url: https://stats.mom.gov.sg/Pages/Labour-Market-Report-4Q-2024.aspx
+  download_url: https://stats.mom.gov.sg/iMAS_PdfLibrary/mrsd-Labour-Market-Report4Q-2024.pdf
+  publication_date: '2025-03-19'
+  release_stage: final
+  period_start: '2024-10-01'
+  period_end: '2024-12-31'
+  rights_status: verified_all_rights_reserved
+  rights_note: 'Copyright notice read in the PDF itself on 2026-10-30: ''All rights reserved. Further reproduction of this material is prohibited without the written permission of the
+    copyright holder.'' Not covered by the data.gov.sg Open Data Licence.'
+- source_id: mom-2025-q1-final
+  source_type: report_pdf
+  title: Labour Market Report First Quarter 2025
+  publisher: Manpower Research and Statistics Department, Ministry of Manpower
+  canonical_url: https://stats.mom.gov.sg/Pages/Labour-Market-Report-1Q-2025.aspx
+  download_url: https://stats.mom.gov.sg/iMAS_PdfLibrary/mrsd-Labour-Market-Report-1Q-2025.pdf
+  publication_date: '2025-06-27'
+  release_stage: final
+  period_start: '2025-01-01'
+  period_end: '2025-03-31'
+  rights_status: verified_all_rights_reserved
+  rights_note: 'Copyright notice read in the PDF itself on 2026-10-30: ''All rights reserved. Further reproduction of this material is prohibited without the written permission of the
+    copyright holder.'' Not covered by the data.gov.sg Open Data Licence.'
+- source_id: mom-2025-q2-final
+  source_type: report_pdf
+  title: Labour Market Report Second Quarter 2025
+  publisher: Manpower Research and Statistics Department, Ministry of Manpower
+  canonical_url: https://stats.mom.gov.sg/Pages/Labour-Market-Report-2Q-2025.aspx
+  download_url: https://stats.mom.gov.sg/iMAS_PdfLibrary/mrsd-Labour-Market-Report-2Q-2025.pdf
+  publication_date: '2025-09-17'
+  release_stage: final
+  period_start: '2025-04-01'
+  period_end: '2025-06-30'
+  rights_status: verified_all_rights_reserved
+  rights_note: 'Copyright notice read in the PDF itself on 2026-10-30: ''All rights reserved. Further reproduction of this material is prohibited without the written permission of the
+    copyright holder.'' Not covered by the data.gov.sg Open Data Licence.'
+- source_id: mom-2024-q1-advance
+  source_type: release_html
+  title: Labour Market Advance Release - First Quarter 2024
+  publisher: Ministry of Manpower
+  canonical_url: https://www.mom.gov.sg/newsroom/press-releases/2024/0430-labour-market-advance-release-first-quarter-2024
+  download_url: https://www.mom.gov.sg/newsroom/press-releases/2024/0430-labour-market-advance-release-first-quarter-2024
+  publication_date: '2024-04-30'
+  release_stage: advance
+  period_start: '2024-01-01'
+  period_end: '2024-03-31'
+  rights_status: unresolved
+  rights_note: Rights notice not yet read for this source.
+- source_id: mom-2024-q1-final-release
+  source_type: release_html
+  title: LABOUR MARKET IN 1Q 2024 (press release)
+  publisher: Ministry of Manpower
+  canonical_url: https://www.mom.gov.sg/newsroom/press-releases/2024/0620-labour-market-report-1q-2024
+  download_url: https://www.mom.gov.sg/newsroom/press-releases/2024/0620-labour-market-report-1q-2024
+  publication_date: '2024-06-20'
+  release_stage: final
+  period_start: '2024-01-01'
+  period_end: '2024-03-31'
+  rights_status: unresolved
+  rights_note: Rights notice not yet read for this source.
+- source_id: mom-2024-q2-advance
+  source_type: release_html
+  title: Labour Market Advance Release - Second Quarter 2024
+  publisher: Ministry of Manpower
+  canonical_url: https://www.mom.gov.sg/newsroom/press-releases/2024/0731-labour-market-advance-release-2q-2024
+  download_url: https://www.mom.gov.sg/newsroom/press-releases/2024/0731-labour-market-advance-release-2q-2024
+  publication_date: '2024-07-31'
+  release_stage: advance
+  period_start: '2024-04-01'
+  period_end: '2024-06-30'
+  rights_status: unresolved
+  rights_note: Rights notice not yet read for this source.
+- source_id: mom-2024-q2-final-release
+  source_type: release_html
+  title: Labour Market in 2Q 2024 (press release)
+  publisher: Ministry of Manpower
+  canonical_url: https://www.mom.gov.sg/newsroom/press-releases/2024/0917-labour-market-in-2q-2024
+  download_url: https://www.mom.gov.sg/newsroom/press-releases/2024/0917-labour-market-in-2q-2024
+  publication_date: '2024-09-17'
+  release_stage: final
+  period_start: '2024-04-01'
+  period_end: '2024-06-30'
+  rights_status: unresolved
+  rights_note: Rights notice not yet read for this source.
+- source_id: mom-2024-q3-advance
+  source_type: release_html
+  title: Labour Market Advance Release - Third Quarter 2024
+  publisher: Ministry of Manpower
+  canonical_url: https://www.mom.gov.sg/newsroom/press-releases/2024/1029-labour-market-advance-release-3q-2024
+  download_url: https://www.mom.gov.sg/newsroom/press-releases/2024/1029-labour-market-advance-release-3q-2024
+  publication_date: '2024-10-29'
+  release_stage: advance
+  period_start: '2024-07-01'
+  period_end: '2024-09-30'
+  rights_status: unresolved
+  rights_note: Rights notice not yet read for this source.
+- source_id: mom-2024-q3-final-release
+  source_type: release_html
+  title: Labour Market in 3Q 2024 (press release)
+  publisher: Ministry of Manpower
+  canonical_url: https://www.mom.gov.sg/newsroom/press-releases/2024/1209-lmr-3q
+  download_url: https://www.mom.gov.sg/newsroom/press-releases/2024/1209-lmr-3q
+  publication_date: '2024-12-09'
+  release_stage: final
+  period_start: '2024-07-01'
+  period_end: '2024-09-30'
+  rights_status: unresolved
+  rights_note: Rights notice not yet read for this source.
+- source_id: mom-2024-q4-advance
+  source_type: release_html
+  title: Labour Market Advance Release – Fourth Quarter 2024
+  publisher: Ministry of Manpower
+  canonical_url: https://www.mom.gov.sg/newsroom/press-releases/2025/0127-labour-market-advance-release---4q-2024
+  download_url: https://www.mom.gov.sg/newsroom/press-releases/2025/0127-labour-market-advance-release---4q-2024
+  publication_date: '2025-01-27'
+  release_stage: advance
+  period_start: '2024-10-01'
+  period_end: '2024-12-31'
+  rights_status: unresolved
+  rights_note: Rights notice not yet read for this source.
+- source_id: mom-2024-q4-final-release
+  source_type: release_html
+  title: Labour Market in 4Q 2024 (press release)
+  publisher: Ministry of Manpower
+  canonical_url: https://www.mom.gov.sg/newsroom/press-releases/2025/0319-labour-market-in-4q-2024
+  download_url: https://www.mom.gov.sg/newsroom/press-releases/2025/0319-labour-market-in-4q-2024
+  publication_date: '2025-03-19'
+  release_stage: final
+  period_start: '2024-10-01'
+  period_end: '2024-12-31'
+  rights_status: unresolved
+  rights_note: Rights notice not yet read for this source.
+- source_id: mom-2025-q1-advance
+  source_type: release_html
+  title: Labour Market Advance Release - First Quarter 2025
+  publisher: Ministry of Manpower
+  canonical_url: https://www.mom.gov.sg/newsroom/press-releases/2025/0428-labour-market-advance-release-1q-2025
+  download_url: https://www.mom.gov.sg/newsroom/press-releases/2025/0428-labour-market-advance-release-1q-2025
+  publication_date: '2025-04-28'
+  release_stage: advance
+  period_start: '2025-01-01'
+  period_end: '2025-03-31'
+  rights_status: unresolved
+  rights_note: Rights notice not yet read for this source.
+- source_id: mom-2025-q1-final-release
+  source_type: release_html
+  title: Labour Market Report First Quarter 2025 (press release)
+  publisher: Ministry of Manpower
+  canonical_url: https://www.mom.gov.sg/newsroom/press-releases/2025/0627-labour-market-report-1q-2025
+  download_url: https://www.mom.gov.sg/newsroom/press-releases/2025/0627-labour-market-report-1q-2025
+  publication_date: '2025-06-27'
+  release_stage: final
+  period_start: '2025-01-01'
+  period_end: '2025-03-31'
+  rights_status: unresolved
+  rights_note: Rights notice not yet read for this source.
+- source_id: mom-2025-q2-advance
+  source_type: release_html
+  title: Labour Market Advance Release - Second Quarter 2025
+  publisher: Ministry of Manpower
+  canonical_url: https://www.mom.gov.sg/newsroom/press-releases/2025/0730-labour-market-advance-release-second-quarter-2025
+  download_url: https://www.mom.gov.sg/newsroom/press-releases/2025/0730-labour-market-advance-release-second-quarter-2025
+  publication_date: '2025-07-30'
+  release_stage: advance
+  period_start: '2025-04-01'
+  period_end: '2025-06-30'
+  rights_status: unresolved
+  rights_note: Rights notice not yet read for this source.
+- source_id: mom-2025-q2-final-release
+  source_type: release_html
+  title: Labour Market Report 2Q 2025 (press release)
+  publisher: Ministry of Manpower
+  canonical_url: https://www.mom.gov.sg/newsroom/press-releases/2025/0917-labour-market-report-2q-2025
+  download_url: https://www.mom.gov.sg/newsroom/press-releases/2025/0917-labour-market-report-2q-2025
+  publication_date: '2025-09-17'
+  release_stage: final
+  period_start: '2025-04-01'
+  period_end: '2025-06-30'
+  rights_status: unresolved
+  rights_note: Rights notice not yet read for this source.
+- source_id: mom-jv2025
+  source_type: report_pdf
+  title: Job Vacancies 2025
+  publisher: Manpower Research and Statistics Department, Ministry of Manpower
+  canonical_url: https://stats.mom.gov.sg/Pages/Job-Vacancies-2025.aspx
+  download_url: https://stats.mom.gov.sg/iMAS_PdfLibrary/mrsd_JV2025.pdf
+  publication_date: '2026-03-20'
+  release_stage: annual
+  period_start: '2025-01-01'
+  period_end: '2025-12-31'
+  rights_status: verified_all_rights_reserved
+  rights_note: 'Copyright notice read in the PDF itself on 2026-10-30: ''All rights reserved. Further reproduction of this material is prohibited without the written permission of the
+    copyright holder.'' Not covered by the data.gov.sg Open Data Licence.'
+- source_id: mom-jv2025-release
+  source_type: release_html
+  title: 'Job Vacancies 2025: Labour demand gradually shifting to growth areas as firms adjust hiring plans'
+  publisher: Ministry of Manpower
+  canonical_url: https://www.mom.gov.sg/newsroom/press-releases/2026/0320-job-vacancies-report-2025
+  download_url: https://www.mom.gov.sg/newsroom/press-releases/2026/0320-job-vacancies-report-2025
+  publication_date: '2026-03-20'
+  release_stage: annual
+  period_start: '2025-01-01'
+  period_end: '2025-12-31'
+  rights_status: unresolved
+  rights_note: Rights notice not yet read for this source.
+- source_id: mom-wage-practices2024
+  source_type: report_pdf
+  title: Report on Wage Practices 2024
+  publisher: Manpower Research and Statistics Department, Ministry of Manpower
+  canonical_url: https://stats.mom.gov.sg/Pages/Report-On-Wage-Practices-2024.aspx
+  download_url: https://stats.mom.gov.sg/iMAS_PdfLibrary/mrsd-report-on-wage-practices-2024.pdf
+  publication_date: '2025-05-28'
+  release_stage: annual
+  period_start: '2024-01-01'
+  period_end: '2024-12-31'
+  rights_status: verified_all_rights_reserved
+  rights_note: 'Copyright notice read in the PDF itself on 2026-10-30: ''All rights reserved. Further reproduction of this material is prohibited without the written permission of the
+    copyright holder.'' Not covered by the data.gov.sg Open Data Licence.'
+- source_id: mom-wage-practices2024-release
+  source_type: release_html
+  title: Total wages continued to grow in 2024
+  publisher: Ministry of Manpower
+  canonical_url: https://www.mom.gov.sg/newsroom/press-releases/2025/0528-report-on-wage-practices-2024
+  download_url: https://www.mom.gov.sg/newsroom/press-releases/2025/0528-report-on-wage-practices-2024
+  publication_date: '2025-05-28'
+  release_stage: annual
+  period_start: '2024-01-01'
+  period_end: '2024-12-31'
+  rights_status: unresolved
+  rights_note: Rights notice not yet read for this source.
+- source_id: mom-lf2024-survey-findings
+  source_type: report_pdf
+  title: 'Labour Force in Singapore 2024: Survey Findings'
+  publisher: Manpower Research and Statistics Department, Ministry of Manpower
+  canonical_url: https://stats.mom.gov.sg/Pages/Labour-Force-In-Singapore-2024.aspx
+  download_url: https://stats.mom.gov.sg/iMAS_Tables1/LabourForce/LabourForce_2024/mrsd_2024LabourForce_survey_findings.pdf
+  publication_date: '2025-01-27'
+  release_stage: annual
+  period_start: '2024-01-01'
+  period_end: '2024-12-31'
+  rights_status: verified_all_rights_reserved
+  rights_note: 'Copyright notice read in ''mrsd_2024LabourForce_copyright.pdf'' on 2026-10-30: ''All rights reserved. Further reproduction of this material is prohibited without the
+    written permission of the copyright holder.'' Cite as ''MRSD, MOM''.'
+- source_id: mom-lf2024-survey-highlights
+  source_type: report_pdf
+  title: 'Labour Force in Singapore 2024: Survey Highlights'
+  publisher: Manpower Research and Statistics Department, Ministry of Manpower
+  canonical_url: https://stats.mom.gov.sg/Pages/Labour-Force-In-Singapore-2024.aspx
+  download_url: https://stats.mom.gov.sg/iMAS_Tables1/LabourForce/LabourForce_2024/mrsd_2024LabourForce_survey_highlights.pdf
+  publication_date: '2025-01-27'
+  release_stage: annual
+  period_start: '2024-01-01'
+  period_end: '2024-12-31'
+  rights_status: verified_all_rights_reserved
+  rights_note: 'Copyright notice read in ''mrsd_2024LabourForce_copyright.pdf'' on 2026-10-30: ''All rights reserved. Further reproduction of this material is prohibited without the
+    written permission of the copyright holder.'' Cite as ''MRSD, MOM''.'
+- source_id: mom-lf2024-coverage-methodology
+  source_type: report_pdf
+  title: 'Labour Force in Singapore 2024: Coverage and Methodology'
+  publisher: Manpower Research and Statistics Department, Ministry of Manpower
+  canonical_url: https://stats.mom.gov.sg/Pages/Labour-Force-In-Singapore-2024.aspx
+  download_url: https://stats.mom.gov.sg/iMAS_Tables1/LabourForce/LabourForce_2024/mrsd_2024LabourForce_coverage_methodology.pdf
+  publication_date: '2025-01-27'
+  release_stage: annual
+  period_start: '2024-01-01'
+  period_end: '2024-12-31'
+  rights_status: verified_all_rights_reserved
+  rights_note: 'Copyright notice read in ''mrsd_2024LabourForce_copyright.pdf'' on 2026-10-30: ''All rights reserved. Further reproduction of this material is prohibited without the
+    written permission of the copyright holder.'' Cite as ''MRSD, MOM''.'
+- source_id: mom-lf2024-copyright
+  source_type: report_pdf
+  title: 'Labour Force in Singapore 2024: Copyright notice'
+  publisher: Manpower Research and Statistics Department, Ministry of Manpower
+  canonical_url: https://stats.mom.gov.sg/Pages/Labour-Force-In-Singapore-2024.aspx
+  download_url: https://stats.mom.gov.sg/iMAS_Tables1/LabourForce/LabourForce_2024/mrsd_2024LabourForce_copyright.pdf
+  publication_date: '2025-01-27'
+  release_stage: annual
+  period_start: '2024-01-01'
+  period_end: '2024-12-31'
+  rights_status: verified_all_rights_reserved
+  rights_note: 'Copyright notice read in ''mrsd_2024LabourForce_copyright.pdf'' on 2026-10-30: ''All rights reserved. Further reproduction of this material is prohibited without the
+    written permission of the copyright holder.'' Cite as ''MRSD, MOM''.'
