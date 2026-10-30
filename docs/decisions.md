@@ -110,3 +110,6 @@ Annual wages and income (`d_bd83b453...` Basic Wage Changes by Industry; `d_e584
 
 ### D-011 — Human feedback loop in the interface (PROPOSAL)
 Design in `docs/human-feedback-design.md`. Recommended: build a structured feedback loop (claim, citation, abstention, error-type labels, blind side-by-side preference), store it append-only, feed metrics, triage and gold-set growth, and export preference pairs as a data format only. Do not claim RLHF: no reward model or fine-tuning is performed. Alternative: add a lightweight reward-model or DPO experiment on open weights, which is out of scope for the time budget. Decided at M6/M7 gates.
+
+### D-012 — Persist the BM25 index on disk (DECISION, owner, 30 Oct 2026)
+The M2 keyword index is built once and persisted under `data/index/`, with a hash of the passage corpus and parser version in its name. On load, a mismatch between the index's corpus hash and the current passages fails loudly instead of serving stale text. Index files are derived from MOM text and stay out of git. Alternative rejected: rebuild in memory on every start (simpler, but hides staleness and slows each run). Reversible.
