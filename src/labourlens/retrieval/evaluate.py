@@ -47,11 +47,13 @@ def gold_passages(case: dict) -> set[str]:
     return {pid for e in case["evidence_text"] for pid in e["passage_ids"]}
 
 
-def run_config(chunk_cfg: ck.ChunkConfig, bm_cfg: BM25Config, cases: list[dict], passages: list[dict]) -> dict:
+def run_config(chunk_cfg: ck.ChunkConfig, bm_cfg: BM25Config, cases: list[dict], passages: list[dict],
+               retriever=None, retriever_label: str = "bm25") -> dict:
+    """retriever: optional callable(chunks) -> object with .search(query, k); default is BM25 with bm_cfg."""
     chunks = ck.build_chunks(chunk_cfg, passages)
     by_id = {c.chunk_id: c for c in chunks}
     page_of = {p["passage_id"]: (p["source_id"], p["page_number"]) for p in passages}
-    idx = BM25Index.build(chunks, bm_cfg)
+    idx = retriever(chunks) if retriever else BM25Index.build(chunks, bm_cfg)
     rows, lat = [], []
     for case in cases:
         gold = gold_passages(case)
@@ -95,7 +97,7 @@ def run_config(chunk_cfg: ck.ChunkConfig, bm_cfg: BM25Config, cases: list[dict],
     for r in rows:
         fam.setdefault(r["family"], []).append(r)
     metrics["by_family_hit@5"] = {f: {"n": len(v), "hit@5": round(sum(1 for r in v if r["first_relevant_rank"] and r["first_relevant_rank"] <= 5) / len(v), 3)} for f, v in sorted(fam.items())}
-    return {"config": {"chunk": asdict(chunk_cfg), "bm25": asdict(bm_cfg)}, "metrics": metrics, "rows": rows}
+    return {"config": {"chunk": asdict(chunk_cfg), "bm25": asdict(bm_cfg), "retriever": retriever_label}, "metrics": metrics, "rows": rows}
 
 
 def write_run(exp_id: str, label: str, result: dict) -> Path:

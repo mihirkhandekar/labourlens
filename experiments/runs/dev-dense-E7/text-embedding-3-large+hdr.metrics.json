@@ -1,0 +1,61 @@
+{
+ "label": "text-embedding-3-large+hdr",
+ "config": {
+  "chunk": {
+   "name": "merge120",
+   "mode": "merge",
+   "target_words": 120,
+   "overlap_words": 30,
+   "include_flags": [
+    "ok"
+   ]
+  },
+  "bm25": {
+   "k1": 1.5,
+   "b": 0.75,
+   "tok": {
+    "stem": false,
+    "stopwords": true,
+    "period_normalise": true
+   }
+  },
+  "retriever": "dense:text-embedding-3-large+hdr"
+ },
+ "metrics": {
+  "n_cases": 24,
+  "n_chunks": 2468,
+  "corpus_hash": "47338ddb864f0d1977a691821bda1d02a377602f30ffb283f414eed446a250d4",
+  "hit@1": 0.4167,
+  "hit@3": 0.5417,
+  "hit@5": 0.625,
+  "hit@10": 0.7083,
+  "page_hit@5": 0.625,
+  "page_hit@10": 0.7083,
+  "mrr": 0.4962,
+  "passage_recall@5": 0.375,
+  "ctx_words@5": 356.9,
+  "latency_ms_p50": 12.815,
+  "by_family_hit@5": {
+   "adversarial": {
+    "n": 3,
+    "hit@5": 0.333
+   },
+   "cross_source_synthesis": {
+    "n": 7,
+    "hit@5": 0.714
+   },
+   "factual_lookup": {
+    "n": 8,
+    "hit@5": 0.625
+   },
+   "numerical_comparison": {
+    "n": 2,
+    "hit@5": 1.0
+   },
+   "revision_conflict": {
+    "n": 4,
+    "hit@5": 0.5
+   }
+  }
+ }
+}

@@ -1,0 +1,61 @@
+{
+ "label": "merge200 bm25",
+ "config": {
+  "chunk": {
+   "name": "merge200",
+   "mode": "merge",
+   "target_words": 200,
+   "overlap_words": 40,
+   "include_flags": [
+    "ok"
+   ]
+  },
+  "bm25": {
+   "k1": 1.5,
+   "b": 0.75,
+   "tok": {
+    "stem": false,
+    "stopwords": true,
+    "period_normalise": true
+   }
+  },
+  "retriever": "bm25"
+ },
+ "metrics": {
+  "n_cases": 24,
+  "n_chunks": 2106,
+  "corpus_hash": "753e717e316ce3bd633d7ce5cf0c0cac1c5cdc9a2af759014daf840a19602830",
+  "hit@1": 0.25,
+  "hit@3": 0.4583,
+  "hit@5": 0.5417,
+  "hit@10": 0.625,
+  "page_hit@5": 0.5833,
+  "page_hit@10": 0.6667,
+  "mrr": 0.3627,
+  "passage_recall@5": 0.375,
+  "ctx_words@5": 633.0,
+  "latency_ms_p50": 0.175,
+  "by_family_hit@5": {
+   "adversarial": {
+    "n": 3,
+    "hit@5": 0.667
+   },
+   "cross_source_synthesis": {
+    "n": 7,
+    "hit@5": 0.429
+   },
+   "factual_lookup": {
+    "n": 8,
+    "hit@5": 0.5
+   },
+   "numerical_comparison": {
+    "n": 2,
+    "hit@5": 1.0
+   },
+   "revision_conflict": {
+    "n": 4,
+    "hit@5": 0.5
+   }
+  }
+ }
+}

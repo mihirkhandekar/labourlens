@@ -1,0 +1,409 @@
+{
+ "E5/text-embedding-3-small": {
+  "n_cases": 24,
+  "n_chunks": 2468,
+  "corpus_hash": "47338ddb864f0d1977a691821bda1d02a377602f30ffb283f414eed446a250d4",
+  "hit@1": 0.25,
+  "hit@3": 0.5417,
+  "hit@5": 0.625,
+  "hit@10": 0.75,
+  "page_hit@5": 0.625,
+  "page_hit@10": 0.75,
+  "mrr": 0.4296,
+  "passage_recall@5": 0.3819,
+  "ctx_words@5": 406.5,
+  "latency_ms_p50": 389.85,
+  "by_family_hit@5": {
+   "adversarial": {
+    "n": 3,
+    "hit@5": 0.333
+   },
+   "cross_source_synthesis": {
+    "n": 7,
+    "hit@5": 0.571
+   },
+   "factual_lookup": {
+    "n": 8,
+    "hit@5": 0.75
+   },
+   "numerical_comparison": {
+    "n": 2,
+    "hit@5": 1.0
+   },
+   "revision_conflict": {
+    "n": 4,
+    "hit@5": 0.5
+   }
+  }
+ },
+ "E5/text-embedding-3-large": {
+  "n_cases": 24,
+  "n_chunks": 2468,
+  "corpus_hash": "47338ddb864f0d1977a691821bda1d02a377602f30ffb283f414eed446a250d4",
+  "hit@1": 0.4583,
+  "hit@3": 0.5833,
+  "hit@5": 0.5833,
+  "hit@10": 0.6667,
+  "page_hit@5": 0.5833,
+  "page_hit@10": 0.6667,
+  "mrr": 0.5314,
+  "passage_recall@5": 0.3299,
+  "ctx_words@5": 375.6,
+  "latency_ms_p50": 444.402,
+  "by_family_hit@5": {
+   "adversarial": {
+    "n": 3,
+    "hit@5": 0.333
+   },
+   "cross_source_synthesis": {
+    "n": 7,
+    "hit@5": 0.429
+   },
+   "factual_lookup": {
+    "n": 8,
+    "hit@5": 0.75
+   },
+   "numerical_comparison": {
+    "n": 2,
+    "hit@5": 1.0
+   },
+   "revision_conflict": {
+    "n": 4,
+    "hit@5": 0.5
+   }
+  }
+ },
+ "E5/text-embedding-ada-002": {
+  "n_cases": 24,
+  "n_chunks": 2468,
+  "corpus_hash": "47338ddb864f0d1977a691821bda1d02a377602f30ffb283f414eed446a250d4",
+  "hit@1": 0.4167,
+  "hit@3": 0.5,
+  "hit@5": 0.7083,
+  "hit@10": 0.875,
+  "page_hit@5": 0.7083,
+  "page_hit@10": 0.875,
+  "mrr": 0.5301,
+  "passage_recall@5": 0.4132,
+  "ctx_words@5": 415.5,
+  "latency_ms_p50": 654.717,
+  "by_family_hit@5": {
+   "adversarial": {
+    "n": 3,
+    "hit@5": 0.333
+   },
+   "cross_source_synthesis": {
+    "n": 7,
+    "hit@5": 0.714
+   },
+   "factual_lookup": {
+    "n": 8,
+    "hit@5": 0.875
+   },
+   "numerical_comparison": {
+    "n": 2,
+    "hit@5": 1.0
+   },
+   "revision_conflict": {
+    "n": 4,
+    "hit@5": 0.5
+   }
+  }
+ },
+ "E6/merge120 bm25": {
+  "n_cases": 24,
+  "n_chunks": 2468,
+  "corpus_hash": "47338ddb864f0d1977a691821bda1d02a377602f30ffb283f414eed446a250d4",
+  "hit@1": 0.2083,
+  "hit@3": 0.4167,
+  "hit@5": 0.4167,
+  "hit@10": 0.5833,
+  "page_hit@5": 0.4583,
+  "page_hit@10": 0.625,
+  "mrr": 0.3131,
+  "passage_recall@5": 0.2917,
+  "ctx_words@5": 456.3,
+  "latency_ms_p50": 0.185,
+  "by_family_hit@5": {
+   "adversarial": {
+    "n": 3,
+    "hit@5": 0.667
+   },
+   "cross_source_synthesis": {
+    "n": 7,
+    "hit@5": 0.286
+   },
+   "factual_lookup": {
+    "n": 8,
+    "hit@5": 0.375
+   },
+   "numerical_comparison": {
+    "n": 2,
+    "hit@5": 1.0
+   },
+   "revision_conflict": {
+    "n": 4,
+    "hit@5": 0.25
+   }
+  }
+ },
+ "E6/merge120 dense": {
+  "n_cases": 24,
+  "n_chunks": 2468,
+  "corpus_hash": "47338ddb864f0d1977a691821bda1d02a377602f30ffb283f414eed446a250d4",
+  "hit@1": 0.4583,
+  "hit@3": 0.5833,
+  "hit@5": 0.5833,
+  "hit@10": 0.6667,
+  "page_hit@5": 0.5833,
+  "page_hit@10": 0.6667,
+  "mrr": 0.5314,
+  "passage_recall@5": 0.3299,
+  "ctx_words@5": 375.6,
+  "latency_ms_p50": 5.396,
+  "by_family_hit@5": {
+   "adversarial": {
+    "n": 3,
+    "hit@5": 0.333
+   },
+   "cross_source_synthesis": {
+    "n": 7,
+    "hit@5": 0.429
+   },
+   "factual_lookup": {
+    "n": 8,
+    "hit@5": 0.75
+   },
+   "numerical_comparison": {
+    "n": 2,
+    "hit@5": 1.0
+   },
+   "revision_conflict": {
+    "n": 4,
+    "hit@5": 0.5
+   }
+  }
+ },
+ "E6/merge120 hybrid-rrf": {
+  "n_cases": 24,
+  "n_chunks": 2468,
+  "corpus_hash": "47338ddb864f0d1977a691821bda1d02a377602f30ffb283f414eed446a250d4",
+  "hit@1": 0.4167,
+  "hit@3": 0.5833,
+  "hit@5": 0.6667,
+  "hit@10": 0.7083,
+  "page_hit@5": 0.6667,
+  "page_hit@10": 0.7083,
+  "mrr": 0.5181,
+  "passage_recall@5": 0.4236,
+  "ctx_words@5": 411.5,
+  "latency_ms_p50": 6.15,
+  "by_family_hit@5": {
+   "adversarial": {
+    "n": 3,
+    "hit@5": 1.0
+   },
+   "cross_source_synthesis": {
+    "n": 7,
+    "hit@5": 0.429
+   },
+   "factual_lookup": {
+    "n": 8,
+    "hit@5": 0.75
+   },
+   "numerical_comparison": {
+    "n": 2,
+    "hit@5": 1.0
+   },
+   "revision_conflict": {
+    "n": 4,
+    "hit@5": 0.5
+   }
+  }
+ },
+ "E6/merge200 bm25": {
+  "n_cases": 24,
+  "n_chunks": 2106,
+  "corpus_hash": "753e717e316ce3bd633d7ce5cf0c0cac1c5cdc9a2af759014daf840a19602830",
+  "hit@1": 0.25,
+  "hit@3": 0.4583,
+  "hit@5": 0.5417,
+  "hit@10": 0.625,
+  "page_hit@5": 0.5833,
+  "page_hit@10": 0.6667,
+  "mrr": 0.3627,
+  "passage_recall@5": 0.375,
+  "ctx_words@5": 633.0,
+  "latency_ms_p50": 0.175,
+  "by_family_hit@5": {
+   "adversarial": {
+    "n": 3,
+    "hit@5": 0.667
+   },
+   "cross_source_synthesis": {
+    "n": 7,
+    "hit@5": 0.429
+   },
+   "factual_lookup": {
+    "n": 8,
+    "hit@5": 0.5
+   },
+   "numerical_comparison": {
+    "n": 2,
+    "hit@5": 1.0
+   },
+   "revision_conflict": {
+    "n": 4,
+    "hit@5": 0.5
+   }
+  }
+ },
+ "E6/merge200 dense": {
+  "n_cases": 24,
+  "n_chunks": 2106,
+  "corpus_hash": "753e717e316ce3bd633d7ce5cf0c0cac1c5cdc9a2af759014daf840a19602830",
+  "hit@1": 0.3333,
+  "hit@3": 0.5,
+  "hit@5": 0.5417,
+  "hit@10": 0.6667,
+  "page_hit@5": 0.5417,
+  "page_hit@10": 0.6667,
+  "mrr": 0.4434,
+  "passage_recall@5": 0.2882,
+  "ctx_words@5": 436.4,
+  "latency_ms_p50": 6.041,
+  "by_family_hit@5": {
+   "adversarial": {
+    "n": 3,
+    "hit@5": 0.333
+   },
+   "cross_source_synthesis": {
+    "n": 7,
+    "hit@5": 0.429
+   },
+   "factual_lookup": {
+    "n": 8,
+    "hit@5": 0.625
+   },
+   "numerical_comparison": {
+    "n": 2,
+    "hit@5": 1.0
+   },
+   "revision_conflict": {
+    "n": 4,
+    "hit@5": 0.5
+   }
+  }
+ },
+ "E6/merge200 hybrid-rrf": {
+  "n_cases": 24,
+  "n_chunks": 2106,
+  "corpus_hash": "753e717e316ce3bd633d7ce5cf0c0cac1c5cdc9a2af759014daf840a19602830",
+  "hit@1": 0.3333,
+  "hit@3": 0.5417,
+  "hit@5": 0.625,
+  "hit@10": 0.7917,
+  "page_hit@5": 0.6667,
+  "page_hit@10": 0.7917,
+  "mrr": 0.455,
+  "passage_recall@5": 0.4236,
+  "ctx_words@5": 507.2,
+  "latency_ms_p50": 6.88,
+  "by_family_hit@5": {
+   "adversarial": {
+    "n": 3,
+    "hit@5": 0.333
+   },
+   "cross_source_synthesis": {
+    "n": 7,
+    "hit@5": 0.429
+   },
+   "factual_lookup": {
+    "n": 8,
+    "hit@5": 0.875
+   },
+   "numerical_comparison": {
+    "n": 2,
+    "hit@5": 1.0
+   },
+   "revision_conflict": {
+    "n": 4,
+    "hit@5": 0.5
+   }
+  }
+ },
+ "E7/header=False": {
+  "n_cases": 24,
+  "n_chunks": 2468,
+  "corpus_hash": "47338ddb864f0d1977a691821bda1d02a377602f30ffb283f414eed446a250d4",
+  "hit@1": 0.4583,
+  "hit@3": 0.5833,
+  "hit@5": 0.5833,
+  "hit@10": 0.6667,
+  "page_hit@5": 0.5833,
+  "page_hit@10": 0.6667,
+  "mrr": 0.5314,
+  "passage_recall@5": 0.3299,
+  "ctx_words@5": 375.6,
+  "latency_ms_p50": 5.449,
+  "by_family_hit@5": {
+   "adversarial": {
+    "n": 3,
+    "hit@5": 0.333
+   },
+   "cross_source_synthesis": {
+    "n": 7,
+    "hit@5": 0.429
+   },
+   "factual_lookup": {
+    "n": 8,
+    "hit@5": 0.75
+   },
+   "numerical_comparison": {
+    "n": 2,
+    "hit@5": 1.0
+   },
+   "revision_conflict": {
+    "n": 4,
+    "hit@5": 0.5
+   }
+  }
+ },
+ "E7/header=True": {
+  "n_cases": 24,
+  "n_chunks": 2468,
+  "corpus_hash": "47338ddb864f0d1977a691821bda1d02a377602f30ffb283f414eed446a250d4",
+  "hit@1": 0.4167,
+  "hit@3": 0.5417,
+  "hit@5": 0.625,
+  "hit@10": 0.7083,
+  "page_hit@5": 0.625,
+  "page_hit@10": 0.7083,
+  "mrr": 0.4962,
+  "passage_recall@5": 0.375,
+  "ctx_words@5": 356.9,
+  "latency_ms_p50": 12.815,
+  "by_family_hit@5": {
+   "adversarial": {
+    "n": 3,
+    "hit@5": 0.333
+   },
+   "cross_source_synthesis": {
+    "n": 7,
+    "hit@5": 0.714
+   },
+   "factual_lookup": {
+    "n": 8,
+    "hit@5": 0.625
+   },
+   "numerical_comparison": {
+    "n": 2,
+    "hit@5": 1.0
+   },
+   "revision_conflict": {
+    "n": 4,
+    "hit@5": 0.5
+   }
+  }
+ }
+}

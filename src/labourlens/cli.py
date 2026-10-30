@@ -20,6 +20,8 @@ def main(argv: list[str] | None = None) -> int:
     sub.add_parser("review-sheets", help="generate unreviewed human spot-check sheets")
     rx = sub.add_parser("retrieval-exp", help="run BM25 experiments on a gold split")
     rx.add_argument("--split", default="dev", choices=["dev", "heldout"])
+    dx = sub.add_parser("dense-exp", help="run dense/hybrid embedding experiments (calls the OpenAI embeddings API; needs OPENAI_API_KEY)")
+    dx.add_argument("--split", default="dev", choices=["dev", "heldout"])
     sub.add_parser("gold-check", help="validate the gold set and regenerate the owner review sheet")
     sub.add_parser("export", help="export presentation-ready JSON for the interactive report page")
     sub.add_parser("revisions", help="report historical-value changes between dataset snapshots")
@@ -51,6 +53,11 @@ def main(argv: list[str] | None = None) -> int:
         from labourlens.retrieval import experiments
 
         experiments.run(args.split)
+        return 0
+    if args.cmd == "dense-exp":
+        from labourlens.retrieval import experiments_dense
+
+        experiments_dense.run(args.split)
         return 0
     if args.cmd == "gold-check":
         from labourlens import paths as _p
