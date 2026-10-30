@@ -1,6 +1,6 @@
 {
   "schema_version": "report-1.0",
-  "generated_at": "2026-10-30T16:38:52.792504+00:00",
+  "generated_at": "2026-10-30T16:53:02.482694+00:00",
   "summary": {
     "title": "LabourLens research workbench",
     "scope": [
@@ -1084,7 +1084,7 @@
     {
       "id": "job_vacancies",
       "title": "Job vacancies",
-      "unit": "persons",
+      "unit": "vacancies",
       "population": "establishments",
       "adjustment": "unspecified",
       "description": "Validated quarterly observations. Series definitions are kept apart.",
@@ -2014,7 +2014,7 @@
       {
         "id": "job_vacancies",
         "label": "Job vacancies",
-        "unit": "persons",
+        "unit": "vacancies",
         "period_from": "2024-Q1",
         "period_to": "2026-Q2",
         "start": 82200.0,
@@ -58461,7 +58461,7 @@
     "status": "available",
     "summary": "Validation outcomes, including warnings.",
     "metrics": {
-      "pass": 247,
+      "pass": 248,
       "warn": 7
     },
     "rows": [
@@ -58543,7 +58543,7 @@
     "The population basis of the dataset employment series is unverified."
   ],
   "provenance": {
-    "commit": "60e955d4d78d87251512094c021c78cebf3003e3",
+    "commit": "9480aaac7117dd2c409195892682715ac7417212",
     "artifacts": [
       {
         "path": "data/export/sources.json",
@@ -58553,7 +58553,7 @@
       {
         "path": "data/export/series.json",
         "status": "available",
-        "sha256": "3d7becd0896846c7a2a522f0582c3b873c41abbf28f837138c657f7ae21cf591"
+        "sha256": "cae5e845d1842fc0ba3075f4e75f97dd91341ef0523ad6e154bc12d42355715e"
       },
       {
         "path": "data/export/kpis.json",
@@ -59123,7 +59123,7 @@
       {
         "path": "data/export/quality.json",
         "status": "available",
-        "sha256": "58058f684fbbc459c2a75b251d3326473a44d9925718e96aadc37169f8194f6f"
+        "sha256": "01f9fcce369182c34769e96b7316668a84d1e40c23ae28c3920baab4e4f39a89"
       },
       {
         "path": "docs/mcp-demo-transcript.md",
