@@ -39,9 +39,15 @@ class AgentConfig:
     planner_prompt: str = "planner_v1"
     answer_prompt: str = "answer_v3"
     tool_timeout_s: float = TOOL_TIMEOUT_S
+    retrieval: str = "r3"  # D-030: period/release filter then rerank; "hybrid" is the earlier default, kept for comparison
+
+    def __post_init__(self) -> None:
+        if self.retrieval not in ("hybrid", "r3", "r3w"):
+            raise ValueError("retrieval must be hybrid, r3 or r3w")
 
     def key(self) -> str:
-        return f"planner={self.planner_model}|answer={self.answer_model}|{self.planner_prompt}|{self.answer_prompt}"
+        base = f"planner={self.planner_model}|answer={self.answer_model}|{self.planner_prompt}|{self.answer_prompt}"
+        return base if self.retrieval == "hybrid" else f"{base}|retrieval={self.retrieval}"
 
 
 def _nullable(t: str) -> dict:
@@ -108,6 +114,7 @@ def _usage(state: State, model: str, r: llm.LLMResult) -> dict:
 
 
 def build_graph(shared: Shared, tools: Tools, cfg: AgentConfig):
+    tools.retrieval, tools.tool_timeout_s = cfg.retrieval, cfg.tool_timeout_s
     planner_sys, planner_user, _ = load_prompt(cfg.planner_prompt)
     planner_sys = planner_sys.format(catalogue=shared.catalogue_text())
     answer_sys, answer_user, _ = load_prompt(cfg.answer_prompt)
@@ -119,6 +126,7 @@ def build_graph(shared: Shared, tools: Tools, cfg: AgentConfig):
         if not q or len(q) > MAX_QUESTION_CHARS:
             return {"outcome": "rejected_input", "errors": [f"question must be 1 to {MAX_QUESTION_CHARS} characters"],
                     "trace": _ev("validate_question", "rejected", length=len(q))}
+        tools.question = q
         return {"question": q, "trace": _ev("validate_question", "accepted", length=len(q), input_flags=injection_flags(q))}
 
     def after_validate(s: State):
@@ -185,6 +193,7 @@ def build_graph(shared: Shared, tools: Tools, cfg: AgentConfig):
 
     def execute_tool(s: State):
         events, errors, ops = [], [], s.get("tool_ops_failures", 0)
+        usage = dict(s.get("usage") or {})
         for call in s["planned"]:
             t0 = time.perf_counter()
             res, ops_err = _run_one(call)
@@ -195,12 +204,17 @@ def build_graph(shared: Shared, tools: Tools, cfg: AgentConfig):
                 errors.append(f"{call['tool']}: operational failure, tool unavailable")
                 events += _ev("execute_tool", "operational_failure", tool=call["tool"], args=args, error=ops_err, seconds=dt)
             elif res.ok:
-                events += _ev("execute_tool", "ok", tool=call["tool"], args=args, result=res.message[:300], new_items=[i.label for i in res.items], seconds=dt)
+                events += _ev("execute_tool", "ok", tool=call["tool"], args=args, result=res.message[:300], new_items=[i.label for i in res.items], seconds=dt,
+                              **res.retrieval_trace)
+                for key, value in res.usage.items():
+                    usage[key] = usage.get(key, 0) + value
+                if res.usage:
+                    usage["rerank_cost_usd"] = round(usage.get("rerank_cost_usd", 0) + res.usage["cost_usd"], 6)
             else:
                 errors.append(f"{call['tool']}({args}): {res.error_kind}: {res.message}")
                 events += _ev("execute_tool", "error", tool=call["tool"], args=args, error_kind=res.error_kind, message=res.message[:300], seconds=dt)
         return {"round": s.get("round", 0) + 1, "calls_used": s.get("calls_used", 0) + len(s["planned"]), "tool_errors": errors,
-                "tool_ops_failures": ops, "trace": events}
+                "tool_ops_failures": ops, "trace": events, **({"usage": usage} if usage else {})}
 
     def after_execute(s: State):
         return "plan_research" if s["round"] < MAX_ROUNDS and s["calls_used"] < MAX_CALLS else "assess_evidence"
@@ -284,7 +298,7 @@ def build_graph(shared: Shared, tools: Tools, cfg: AgentConfig):
 
 def run_agent(question: str, shared: Shared, cfg: AgentConfig = AgentConfig(), save_trace: bool = True, audit: dict | None = None) -> dict:
     """`audit`, if given, is {channel, session, ip, extra}: the run is appended to the audit log (labourlens.audit)."""
-    tools = Tools(shared)
+    tools = Tools(shared, cfg.retrieval, question, cfg.tool_timeout_s)
     graph = build_graph(shared, tools, cfg)
     t0 = time.perf_counter()
     final = graph.invoke({"question": question, "round": 0, "calls_used": 0, "attempts": 0, "trace": []}, {"recursion_limit": 40})

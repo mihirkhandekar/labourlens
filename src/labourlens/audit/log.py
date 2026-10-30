@@ -117,7 +117,11 @@ def run_record(res: dict, channel: str, session: str | None = None, ip: str | No
     """Build the audit record for one agent result (the dict returned by run_agent)."""
     trace = res["trace"]
     calls = [{"tool": e["detail"].get("tool"), "args": e["detail"].get("args"), "outcome": e["event"], "error_kind": e["detail"].get("error_kind"),
-              "seconds": e["detail"].get("seconds")} for e in trace if e["node"] == "execute_tool"]
+              "seconds": e["detail"].get("seconds"),
+              **{key: e["detail"][key] for key in (
+                  "retrieval", "hints", "filter_applied", "filtered_documents", "filtered_chunks", "widened",
+                  "reranked", "rerank_fallback", "rerank_seconds", "rerank_cost_usd"
+              ) if key in e["detail"]}} for e in trace if e["node"] == "execute_tool"]
     guard = [{"node": e["node"], "event": e["event"], **{k: v for k, v in e["detail"].items() if k in ("findings", "input_flags")}}
              for e in trace if e["event"] in ("output_blocked",) or e["detail"].get("input_flags") or e["detail"].get("findings")]
     notes = next((e["detail"].get("data_quality_notes") for e in reversed(trace) if e["node"] == "assess_evidence"), None) or []

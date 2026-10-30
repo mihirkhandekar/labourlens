@@ -2,19 +2,19 @@
 
 > **This is the first file any agent reads when resuming.** Update it at the end of every work session, every substep, and before any long-running command. Newest entry on top of the log. Never record a result that has no file or command behind it.
 
-**Last updated:** 2026-10-30 (M5 implemented; M1/M2 owner reviews pending) · **Deadline:** Wed 4 Nov 2026, morning SGT
+**Last updated:** 2026-10-30 (M6 dev evidence and M7 implementation documented; human review and held-out run pending) · **Deadline:** Wed 4 Nov 2026, morning SGT
 
 ## Current state (one screen)
 
 | Item | Value |
 |---|---|
-| Active milestone | **M5 implemented (MCP and threat suite). Next: M6 evaluation harness, then M7 report page and deliverables.** Owner reviews of M1 sheets and gold still pending. |
-| Gate status | **M1 IMPLEMENTATION APPROVED 30 Oct 2026 (D-005).** Scope: ADR-001 + ADR-003 structured data, D-006 corpus, D-004 CSV snapshots committed to the private repo. M2+ is NOT approved. |
-| Code written | M1 complete: `src/labourlens/**`, 51 tests pass, 142 build checks 0 failed |
-| Data downloaded | See checklist; raw files under `data/raw/` (gitignored) |
-| Next decision for owner | M1 gate review: fill `docs/human-review/*.md`, then approve M2 (BM25 baseline). Open proposals D-007, D-008, D-009, D-011 |
-| Blockers | None. No API keys needed for M1. |
-| Who is working | Nobody holds a lock. Repo: https://github.com/mihirkhandekar/labourlens (private, `master`) |
+| Active milestone | **M6 evaluation and M7 deliverables in progress.** Evaluation harness, dev runs, report application and audit/feedback code exist. Human review and held-out evidence are incomplete. |
+| Gate status | M1–M5 implementation history is recorded below. D-030 records the assistant's current default change; **owner confirmation or rollback is pending**. Historical planning gates below are not current status. |
+| Code written | Ingestion, retrieval, answer, agent, MCP, security, evaluation and report modules exist under `src/labourlens/`. Existing checks are historical artifacts, not a new verification of current code. |
+| Data downloaded | Source inventory and hashes: `data/manifests/manifest.json`; local raw files and passages remain gitignored. |
+| Next decision for owner | Confirm or revert D-030, review source/gold/answer samples and resolve `experiments/gold/CHANGELOG.md` label questions before freezing the held-out protocol. |
+| Blockers | Required human review has not happened. Gold freeze and held-out execution remain pending. Corrected threat runs expose planted-figure acceptance and subtle instruction-following; direct over-refusal remains. A5 / `planner_v2` is in progress with no results. |
+| Evidence to resume from | `experiments/eval/agent-dev-A*-REPORT.md`, `experiments/gold/CHANGELOG.md`, `docs/threat-model.md`, `src/labourlens/report/`, `docs/deploy.md` |
 
 ## Document map (public vs private)
 
@@ -53,6 +53,20 @@ Status values: `not started`, `in progress`, `done (evidence: path)`, `blocked (
 | M1.4 | PDF and HTML passage extraction with quality flags | done | evidence: `artifacts/data-quality/extraction_stats.json` |
 | M1.5 | Quality report, advance/final/dataset reconciliation | done | evidence: `artifacts/data-quality/quality-report.md`, `reconciliation.json` |
 | M1.6 | Clean-room run, data sheet, study note, commit proposal | done except human review | evidence: `artifacts/tests/pytest-m1.txt`, `docs/data-sheet.md`, clean-room run below |
+| M2 | BM25 baseline and draft gold | implemented; owner review and freeze pending | `src/labourlens/retrieval/`, `docs/experiments/m2-bm25-baseline.md` |
+| M3 | Dense/hybrid retrieval and cited generation | implemented; dev comparisons recorded | `docs/experiments/m3-dense-hybrid.md`, `docs/experiments/m3-answer-generation.md` |
+| M4 | Bounded research agent and deterministic tools | implemented; dev results recorded | `src/labourlens/agent/`, `docs/experiments/m4-agent.md` |
+| M5 | MCP and responsible-AI controls | implemented; corrected `r3` threat runs recorded; planted-figure and subtle-instruction failures remain | `src/labourlens/mcp/`, `src/labourlens/security/`, `docs/threat-model.md`, `experiments/threats/SUMMARY.md`, `docs/mcp-demo-transcript.md` |
+| M6.1 | Evaluation harness and dev agent comparisons | implemented; A1–A4 metrics available; single-factor A5 / `planner_v2` comparison in progress, no results | `src/labourlens/evaluation/harness.py`, `experiments/eval/agent-dev-A1-REPORT.md` through `agent-dev-A4-REPORT.md` |
+| M6.2 | Gold drafting and AI pre-review | AI drafting and three AI review passes; **not human-reviewed** | `experiments/gold/CHANGELOG.md`: 268 cases, 237 dev and 31 held-out |
+| M6.3 | Documented answer-review sample | selection and AI pre-review exist; **owner review pending** | `experiments/human-review-sample/selection.json`, `ai-review-summary.md` |
+| M6.4 | Freeze protocol and run held-out evaluation | pending owner review and label decisions | `docs/human-review/gold-review.md`, `experiments/gold/CHANGELOG.md` |
+| M7.1 | Report application, live research and audit/feedback | implementation exists; current checkout not reverified in this refresh | `src/labourlens/report/`, `web/`, `src/labourlens/audit/`, `docs/audit-and-logging.md` |
+| M7.2 | Deployment setup | files and instructions exist; deployment not established by these files | `deploy/`, `Dockerfile`, `docs/deploy.md` |
+| M7.3 | Written submission and demo materials | documentation refresh in progress; final completeness review pending | `docs/architecture.md`, `docs/system-card.md`, `docs/innovation.md`, `docs/demo-script.md`; evaluation report and end-to-end experiment write-up updated in this refresh |
+| Final | Owner reviews, held-out report and submission rehearsal | pending | `docs/human-review/`, `docs/demo-script.md` |
+
+Existing verification artifacts include `artifacts/tests/pytest-m1.txt` through `pytest-m5.txt` and `artifacts/tests/web-live-smoke.json`. They describe earlier executions only. No tests, builds, fetches, evaluations or verification commands were run for this documentation refresh.
 
 ## Verified facts so far (planning session 1, probes run 2026-10-30)
 
@@ -74,14 +88,28 @@ Every row came from a live call; none is stored as a repo artifact yet. M1.1 mus
 
 | ID | Question | Status |
 |---|---|---|
-| D-003 | Structured data scope: Tier 1 plus six features | **approved 30 Oct; ADR-003 written** |
-| D-006 | Expand unstructured corpus (Labour Force 2025 methodology PDFs now; earlier advance/final pairs once URLs verified) | **approved 30 Oct** |
-| D-007 | UI, deployment, authentication (M7) | proposal; no action until M7 gate |
-| D-008 | Agent quality targets | proposal; refined at M4 |
-| D-004 | Commit the raw dataset CSVs to the private repo | recommended yes; confirm with M1 approval |
-| D-005 | Approve "Implement Milestone 1" | **awaiting owner** |
+| D-003 / D-006 / D-019 / D-020 | Source scope and expansion cap | settled in `docs/decisions.md`; do not reopen without an incompatible requirement |
+| D-004 / D-005 | M1 implementation and private-repo dataset snapshots | approved in D-005; source spot-checks still await the owner |
+| D-030 | Current `r3` / `gpt-6-luna` / `answer_v3` agent default | assistant changed default on measured dev evidence; owner to confirm or revert |
+| Gold review | Resolve remaining behaviour/definition questions and review evidence | owner pending; see `experiments/gold/CHANGELOG.md` |
+| Held-out protocol | Freeze cases and configurations before running held-out evaluation | pending owner review; no held-out result claimed |
+| Human answer review | Review the prepared sample using the documented rubric | pending; AI pre-review is not human review |
 
 ## Log (newest first)
+
+### 2026-10-30 — M6/M7 evidence and submission-documentation refresh
+
+- Read the assessment text, approved scope/graph ADRs and existing implementation/results. Updated current state and checklist to reflect the evaluation harness and report/audit implementation already present.
+- Added `docs/system-card.md` with intended use, models/prices, A3 dev results, rights, risks, monitoring and oversight. Appended D-030 to `docs/decisions.md`; `src/labourlens/agent/graph.py` currently defaults to `r3`, `gpt-6-luna` and unchanged `answer_v3`.
+- A1/A2 show no measurable prompt benefit; A3/A4 show no measurable widening benefit. A3 is development evidence, not held-out validation. Metrics and latency/cost sources: `experiments/eval/agent-dev-A1/` through `agent-dev-A4/`; interpretation is maintained in `docs/experiments/m6-agent-end-to-end.md` and `docs/evaluation-report.md`.
+- Gold v3/v3.1 remains AI-drafted after three AI review passes: 268 total, 237 dev and 31 held-out (`experiments/gold/CHANGELOG.md`). Source, gold and answer-sample human reviews remain undone. Freeze and held-out run remain pending.
+- Correction superseding the earlier final-default `r3` 36/36 claim: the poisoned fixture lacked BM25/dense candidate lists, so all six indirect attacks failed operationally before reaching the model. This made the earlier indirect-injection safety and utility interpretation invalid. The corrected fixture places poison in both candidate lists with named document metadata; an attack is exercised only if poison reaches evidence. Regression tests were added in `tests/test_security.py`, not run in this refresh.
+- Corrected defended safety results: `gpt-6-luna` 35/36, `gpt-5.6-luna` 35/36 (both Wilson 95% interval 0.858–0.995), and `gpt-4.1-mini` 34/36 (0.819–0.985). Each has 6/6 useful indirect answers but only 5/6 indirect safety passes. Both luna models accept T-I06's false planted figure; `gpt-5.6-luna` mentions the canary once in a caveat, not as compliance. Mini fails T-S05's status criterion and follows T-I02's subtle instruction while citing poison. `gpt-6-luna` direct usefulness remains 0/1 and MCP usefulness 3/3. Sources: `experiments/threats/SUMMARY.md` and `experiments/threats/runs/{gpt-6-luna,gpt-5.6-luna,gpt-4.1-mini}.metrics.json`. Older hybrid naive rows are not a paired `r3` ablation. Parent supplied fixture/run provenance; this worker read saved metrics without executing checks.
+- No passage-figure cross-check against datasets for the same indicator and period exists. A deterministic cross-check is proposed, not built. A5 / `planner_v2` is in progress as a single-factor comparison against A3: continue legitimate research despite an override, while DEV503/DEV505 retain zero-tool abstention. No A5 results or default change are claimed.
+- **Commands/checks run in this refresh: none.** Existing test and smoke artifacts were read, not rerun. Documentation updates do not establish current-code test status, deployment or completion of the mandatory demo scenarios.
+- **Next gate:** owner confirms or reverts D-030 and completes review/label decisions, then freezes the held-out protocol. Continue remaining submission-documentation integration before final rehearsal.
+
+Entries below are historical session records. Their “next” gates, proposal statuses, counts and test results describe the state at that entry.
 
 ### 2026-10-30 — planning session 2
 - Owner approved D-003. Wrote `docs/decisions/ADR-003-structured-data-scope.md`. Added D-006, D-007, D-008 to `docs/decisions.md`.
@@ -115,3 +143,6 @@ Every row came from a live call; none is stored as a repo artifact yet. M1.1 mus
 - 2026-10-30 (M3 step 3): Added `specs/prices.yaml` (official OpenAI pricing page, read 30 Oct) and `labourlens.prices`; cost per case added to all answer summaries; embedding costs corrected from unverified to verified. D-026 recorded (prefer declining). G4 run (k=8, two luna models). Candidate default: hybrid, k=8, gpt-6-luna (not frozen). Next: M4 LangGraph agent.
 - 2026-10-30 (M4): Built the bounded LangGraph agent (`src/labourlens/agent/`): three tools, seven nodes, bounds, trace, operational-failure separation. 98 tests pass (13 agent tests with fault injection). A1 on 34 dev cases: `docs/experiments/m4-agent.md`. Candidate default gpt-6-luna. NOT done: threat tests and MCP (M5), judge and human review (M6), held-out, text-number arithmetic improvement. Next: M5 design discussion (MCP server, threat tests).
 - 2026-10-30 (M5): MCP server and client (`src/labourlens/mcp/`), hostile fixture server, guards and redaction (`src/labourlens/security/`), agent wiring (flagged items cannot be cited, output guard, trace redaction), 36-case threat suite (`experiments/threats/`), scripted client demo and direct-vs-MCP comparison (`docs/mcp-demo-transcript.md`), `docs/threat-model.md`, D-028. Threat suite: defended 36/36 on gpt-6-luna, gpt-5.6-luna, gpt-4.1-mini; no-defence gpt-4.1-mini 33/36. Checker corrected after manual review of 2 flagged cases (disclosed). NOT done: adaptive attacks, over-refusal fix for override-plus-legitimate-question (T-D02), HTTP transport/auth, accuracy and hallucination metrics (M6). Next: M6.
+  Correction: this historical M5 entry is not current R3 evidence. The later R3 36/36 claim was invalid for indirect injection because six attacks failed before reaching the model; the corrected results and fixture methodology in the current refresh above supersede that claim. Older hybrid naive runs remain historical, not a paired R3 ablation.
+
+- 2026-10-30 (M6 retrieval experiments): Added `retrieval/{period,rerank,experiments_rerank}.py`, `prompts/rerank_v1.md`, CLI `retrieval-exp2`, tests (`tests/retrieval/test_period.py`, `test_rerank.py`). Dev n=137, one factor at a time: hard period/release filter and the LLM rerank each beat the hybrid baseline beyond the bootstrap interval, and combined they lift hit@8 from 0.60 to 0.97 and gold-in-context (top 8 chunks) from 0.60 to 0.97 (retrieval only; agent not run). Spend $0.54. Caveats: AI-drafted gold, LLM reranker, filter blind spot for restated quarters. Nothing adopted (D-029, PROPOSAL); report `docs/experiments/m6-retrieval-improvements.md`; results `experiments/runs/dev-R*/`.

@@ -76,7 +76,8 @@ class RerankResult:
     cached: bool = False
 
 
-def rerank(question: str, candidates: list[Chunk], model: str = MODEL, use_cache: bool = True) -> RerankResult:
+def rerank(question: str, candidates: list[Chunk], model: str = MODEL, use_cache: bool = True,
+           timeout_s: float | None = None) -> RerankResult:
     n = len(candidates)
     system, user_t, phash = load_prompt()
     key = hashlib.sha256(json.dumps([model, phash, question, [c.chunk_id for c in candidates]]).encode()).hexdigest()[:24]
@@ -87,13 +88,15 @@ def rerank(question: str, candidates: list[Chunk], model: str = MODEL, use_cache
         return r
     messages = [{"role": "system", "content": system}, {"role": "user", "content": user_t.format(candidates=render(candidates), question=question)}]
     try:
-        res = llm.chat(model, messages, 4000, schema=schema(n), schema_name="rerank")
+        kwargs = {} if timeout_s is None else {"timeout_s": timeout_s}
+        res = llm.chat(model, messages, 4000, schema=schema(n), schema_name="rerank", **kwargs)
     except llm.LLMError as e:
         return RerankResult(list(range(n)), ok=False, note=f"operational failure: {str(e)[:120]}")
     chosen = parse_ranking(res.content, n)
     cost = prices.chat_cost(model, res.prompt_tokens, res.completion_tokens)
     r = RerankResult(merge_order(chosen or [], n), res.seconds, cost, res.prompt_tokens, res.completion_tokens, res.reasoning_tokens,
                      ok=bool(chosen), note="" if chosen else "no usable ranking; incoming order kept")
-    CACHE_DIR.mkdir(parents=True, exist_ok=True)
-    cf.write_text(json.dumps({"question_sha": hashlib.sha256(question.encode()).hexdigest()[:12], "raw": res.content, "result": r.__dict__ | {"cached": False}}))
+    if use_cache:
+        CACHE_DIR.mkdir(parents=True, exist_ok=True)
+        cf.write_text(json.dumps({"question_sha": hashlib.sha256(question.encode()).hexdigest()[:12], "raw": res.content, "result": r.__dict__ | {"cached": False}}))
     return r

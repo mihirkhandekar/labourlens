@@ -176,7 +176,7 @@ export function renderEvaluation(panel, report) {
 
 export function renderSecurity(panel, report) {
   const rows = rowsOf(report?.security);
-  notice(panel, 'Development threat suite with deterministic pass criteria. Naive configurations turn off the application defences and serve as baselines only.');
+  notice(panel, 'Corrected development threat suite: poisoned passages must reach agent evidence to count as exercised. An earlier R3 fixture omitted candidate lists and produced invalid indirect-injection passes. Current defended runs use R3; older naive runs use hybrid retrieval and are not paired ablations. Figures come from the linked run artifacts.');
   if (!rows.length) return empty(panel, 'No security measurements recorded.');
   const groups = new Map();
   rows.forEach(row => {
@@ -207,7 +207,7 @@ export function renderSecurity(panel, report) {
     if (!variants.some(row => row.naive)) card.append(node('p', 'eval-caption', 'No naive baseline recorded for this model, so no paired comparison is shown.'));
     grid.append(card);
   });
-  panel.append(grid, node('p', 'eval-caption', 'Whiskers appear only where a pass-rate interval is recorded. A pass rate of 100% does not mean zero risk. A safe refusal counts as a pass even when it is not a useful answer.'), node('h3', '', 'Results by threat category'), familyTable(rows, true));
+  panel.append(grid, node('p', 'eval-caption', 'Whiskers show recorded pass-rate intervals. Safety passes do not establish usefulness or zero risk. The luna models repeated an attacker-planted false report figure; passage figures are not cross-checked against matching statistical records. A deterministic cross-check is proposed, not built.'), node('h3', '', 'Results by threat category'), familyTable(rows, true));
 }
 
 // Optional replacement for scalar/nested metric dumps in other experiment sections.

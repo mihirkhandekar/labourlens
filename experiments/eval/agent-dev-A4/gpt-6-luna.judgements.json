@@ -1,0 +1,4356 @@
+{
+ "DEV-001": {
+  "claims": [
+   {
+    "index": 0,
+    "verdict": "supported",
+    "note": ""
+   }
+  ],
+  "facts": [
+   {
+    "index": 0,
+    "status": "covered",
+    "note": ""
+   }
+  ],
+  "cost_usd": 0.000829
+ },
+ "DEV-002": {
+  "claims": [
+   {
+    "index": 0,
+    "verdict": "supported",
+    "note": ""
+   }
+  ],
+  "facts": [
+   {
+    "index": 0,
+    "status": "covered",
+    "note": ""
+   }
+  ],
+  "cost_usd": 0.000643
+ },
+ "DEV-003": {
+  "claims": [
+   {
+    "index": 0,
+    "verdict": "supported",
+    "note": ""
+   }
+  ],
+  "facts": [
+   {
+    "index": 0,
+    "status": "covered",
+    "note": ""
+   }
+  ],
+  "cost_usd": 0.000746
+ },
+ "DEV-004": {
+  "claims": [
+   {
+    "index": 0,
+    "verdict": "supported",
+    "note": ""
+   }
+  ],
+  "facts": [
+   {
+    "index": 0,
+    "status": "missing",
+    "note": ""
+   }
+  ],
+  "cost_usd": 0.001119
+ },
+ "DEV-005": {
+  "claims": [
+   {
+    "index": 0,
+    "verdict": "supported",
+    "note": ""
+   }
+  ],
+  "facts": [
+   {
+    "index": 0,
+    "status": "covered",
+    "note": ""
+   }
+  ],
+  "cost_usd": 0.00086
+ },
+ "DEV-006": {
+  "claims": [
+   {
+    "index": 0,
+    "verdict": "supported",
+    "note": ""
+   }
+  ],
+  "facts": [
+   {
+    "index": 0,
+    "status": "covered",
+    "note": ""
+   }
+  ],
+  "cost_usd": 0.000889
+ },
+ "DEV-007": {
+  "claims": [
+   {
+    "index": 0,
+    "verdict": "supported",
+    "note": ""
+   }
+  ],
+  "facts": [
+   {
+    "index": 0,
+    "status": "covered",
+    "note": ""
+   }
+  ],
+  "cost_usd": 0.000824
+ },
+ "DEV-008": {
+  "claims": [
+   {
+    "index": 0,
+    "verdict": "supported",
+    "note": ""
+   }
+  ],
+  "facts": [
+   {
+    "index": 0,
+    "status": "missing",
+    "note": ""
+   }
+  ],
+  "cost_usd": 0.000989
+ },
+ "DEV-009": {
+  "claims": [
+   {
+    "index": 0,
+    "verdict": "supported",
+    "note": ""
+   },
+   {
+    "index": 1,
+    "verdict": "supported",
+    "note": ""
+   }
+  ],
+  "facts": [
+   {
+    "index": 0,
+    "status": "covered",
+    "note": ""
+   },
+   {
+    "index": 1,
+    "status": "missing",
+    "note": ""
+   }
+  ],
+  "cost_usd": 0.00151
+ },
+ "DEV-010": {
+  "claims": [
+   {
+    "index": 0,
+    "verdict": "supported",
+    "note": ""
+   },
+   {
+    "index": 1,
+    "verdict": "supported",
+    "note": ""
+   }
+  ],
+  "facts": [
+   {
+    "index": 0,
+    "status": "contradicted",
+    "note": "The answer says vacancies were fewer than unemployed people and gives different vacancy counts."
+   }
+  ],
+  "cost_usd": 0.001191
+ },
+ "DEV-011": {
+  "claims": [
+   {
+    "index": 0,
+    "verdict": "supported",
+    "note": ""
+   },
+   {
+    "index": 1,
+    "verdict": "partial",
+    "note": "The evidence gives 11,400 but does not identify the release as final or state that it supersedes the advance figure."
+   }
+  ],
+  "facts": [
+   {
+    "index": 0,
+    "status": "covered",
+    "note": ""
+   }
+  ],
+  "cost_usd": 0.001439
+ },
+ "DEV-012": {
+  "claims": [
+   {
+    "index": 0,
+    "verdict": "supported",
+    "note": ""
+   }
+  ],
+  "facts": [
+   {
+    "index": 0,
+    "status": "covered",
+    "note": ""
+   }
+  ],
+  "cost_usd": 0.000849
+ },
+ "DEV-013": null,
+ "DEV-014": {
+  "claims": [
+   {
+    "index": 0,
+    "verdict": "supported",
+    "note": ""
+   }
+  ],
+  "facts": [
+   {
+    "index": 0,
+    "status": "covered",
+    "note": ""
+   },
+   {
+    "index": 1,
+    "status": "covered",
+    "note": ""
+   },
+   {
+    "index": 2,
+    "status": "missing",
+    "note": ""
+   }
+  ],
+  "cost_usd": 0.001657
+ },
+ "DEV-015": null,
+ "DEV-016": null,
+ "DEV-017": {
+  "claims": [
+   {
+    "index": 0,
+    "verdict": "supported",
+    "note": ""
+   }
+  ],
+  "facts": [
+   {
+    "index": 0,
+    "status": "covered",
+    "note": ""
+   }
+  ],
+  "cost_usd": 0.000854
+ },
+ "DEV-018": null,
+ "DEV-019": null,
+ "DEV-020": {
+  "claims": [
+   {
+    "index": 0,
+    "verdict": "supported",
+    "note": ""
+   }
+  ],
+  "facts": [
+   {
+    "index": 0,
+    "status": "missing",
+    "note": ""
+   }
+  ],
+  "cost_usd": 0.001027
+ },
+ "DEV-021": {
+  "claims": [
+   {
+    "index": 0,
+    "verdict": "supported",
+    "note": ""
+   },
+   {
+    "index": 1,
+    "verdict": "supported",
+    "note": ""
+   }
+  ],
+  "facts": [
+   {
+    "index": 0,
+    "status": "missing",
+    "note": ""
+   }
+  ],
+  "cost_usd": 0.001824
+ },
+ "DEV-022": {
+  "claims": [
+   {
+    "index": 0,
+    "verdict": "supported",
+    "note": ""
+   },
+   {
+    "index": 1,
+    "verdict": "supported",
+    "note": ""
+   }
+  ],
+  "facts": [
+   {
+    "index": 0,
+    "status": "covered",
+    "note": ""
+   },
+   {
+    "index": 1,
+    "status": "covered",
+    "note": ""
+   }
+  ],
+  "cost_usd": 0.001128
+ },
+ "DEV-023": {
+  "claims": [
+   {
+    "index": 0,
+    "verdict": "supported",
+    "note": ""
+   }
+  ],
+  "facts": [
+   {
+    "index": 0,
+    "status": "covered",
+    "note": ""
+   }
+  ],
+  "cost_usd": 0.000777
+ },
+ "DEV-024": {
+  "claims": [
+   {
+    "index": 0,
+    "verdict": "supported",
+    "note": ""
+   }
+  ],
+  "facts": [
+   {
+    "index": 0,
+    "status": "covered",
+    "note": ""
+   }
+  ],
+  "cost_usd": 0.000747
+ },
+ "DEV-025": {
+  "claims": [
+   {
+    "index": 0,
+    "verdict": "supported",
+    "note": ""
+   },
+   {
+    "index": 1,
+    "verdict": "supported",
+    "note": ""
+   }
+  ],
+  "facts": [
+   {
+    "index": 0,
+    "status": "covered",
+    "note": ""
+   },
+   {
+    "index": 1,
+    "status": "covered",
+    "note": ""
+   },
+   {
+    "index": 2,
+    "status": "covered",
+    "note": ""
+   }
+  ],
+  "cost_usd": 0.001562
+ },
+ "DEV-026": {
+  "claims": [
+   {
+    "index": 0,
+    "verdict": "supported",
+    "note": ""
+   },
+   {
+    "index": 1,
+    "verdict": "supported",
+    "note": ""
+   }
+  ],
+  "facts": [
+   {
+    "index": 0,
+    "status": "covered",
+    "note": ""
+   },
+   {
+    "index": 1,
+    "status": "covered",
+    "note": ""
+   },
+   {
+    "index": 2,
+    "status": "missing",
+    "note": ""
+   }
+  ],
+  "cost_usd": 0.002087
+ },
+ "DEV-027": {
+  "claims": [
+   {
+    "index": 0,
+    "verdict": "supported",
+    "note": ""
+   },
+   {
+    "index": 1,
+    "verdict": "supported",
+    "note": ""
+   }
+  ],
+  "facts": [
+   {
+    "index": 0,
+    "status": "covered",
+    "note": ""
+   },
+   {
+    "index": 1,
+    "status": "covered",
+    "note": ""
+   },
+   {
+    "index": 2,
+    "status": "missing",
+    "note": ""
+   }
+  ],
+  "cost_usd": 0.001609
+ },
+ "DEV-028": {
+  "claims": [
+   {
+    "index": 0,
+    "verdict": "supported",
+    "note": ""
+   },
+   {
+    "index": 1,
+    "verdict": "supported",
+    "note": ""
+   },
+   {
+    "index": 2,
+    "verdict": "supported",
+    "note": ""
+   },
+   {
+    "index": 3,
+    "verdict": "supported",
+    "note": ""
+   },
+   {
+    "index": 4,
+    "verdict": "supported",
+    "note": ""
+   }
+  ],
+  "facts": [
+   {
+    "index": 0,
+    "status": "covered",
+    "note": ""
+   },
+   {
+    "index": 1,
+    "status": "covered",
+    "note": ""
+   },
+   {
+    "index": 2,
+    "status": "covered",
+    "note": ""
+   }
+  ],
+  "cost_usd": 0.002758
+ },
+ "DEV-029": {
+  "claims": [
+   {
+    "index": 0,
+    "verdict": "partial",
+    "note": "The evidence gives 3,500 for 3Q 2025 but does not identify it as an advance-release count."
+   },
+   {
+    "index": 1,
+    "verdict": "partial",
+    "note": "The counts support the comparison, but the evidence does not identify 3,670 as the final-release count."
+   }
+  ],
+  "facts": [
+   {
+    "index": 0,
+    "status": "covered",
+    "note": ""
+   },
+   {
+    "index": 1,
+    "status": "covered",
+    "note": ""
+   }
+  ],
+  "cost_usd": 0.002052
+ },
+ "DEV-030": {
+  "claims": [
+   {
+    "index": 0,
+    "verdict": "partial",
+    "note": "The figures are stated, but the excerpts do not identify the releases as advance and final."
+   },
+   {
+    "index": 1,
+    "verdict": "partial",
+    "note": "The incidences are stated, but the excerpts do not identify the releases as advance and final."
+   }
+  ],
+  "facts": [
+   {
+    "index": 0,
+    "status": "covered",
+    "note": ""
+   },
+   {
+    "index": 1,
+    "status": "covered",
+    "note": ""
+   },
+   {
+    "index": 2,
+    "status": "missing",
+    "note": ""
+   }
+  ],
+  "cost_usd": 0.002558
+ },
+ "DEV-031": {
+  "claims": [
+   {
+    "index": 0,
+    "verdict": "partial",
+    "note": "The evidence reports 41.6 hours but does not identify the annual Labour Force survey."
+   },
+   {
+    "index": 1,
+    "verdict": "partial",
+    "note": "The evidence reports 41.4 hours but does not identify the annual Labour Force survey."
+   },
+   {
+    "index": 2,
+    "verdict": "supported",
+    "note": ""
+   }
+  ],
+  "facts": [
+   {
+    "index": 0,
+    "status": "covered",
+    "note": ""
+   },
+   {
+    "index": 1,
+    "status": "covered",
+    "note": ""
+   }
+  ],
+  "cost_usd": 0.001898
+ },
+ "DEV-032": {
+  "claims": [
+   {
+    "index": 0,
+    "verdict": "supported",
+    "note": ""
+   },
+   {
+    "index": 1,
+    "verdict": "supported",
+    "note": ""
+   }
+  ],
+  "facts": [
+   {
+    "index": 0,
+    "status": "covered",
+    "note": ""
+   }
+  ],
+  "cost_usd": 0.001006
+ },
+ "DEV-033": {
+  "claims": [
+   {
+    "index": 0,
+    "verdict": "supported",
+    "note": ""
+   }
+  ],
+  "facts": [
+   {
+    "index": 0,
+    "status": "covered",
+    "note": ""
+   },
+   {
+    "index": 1,
+    "status": "missing",
+    "note": ""
+   }
+  ],
+  "cost_usd": 0.001697
+ },
+ "DEV-034": {
+  "claims": [
+   {
+    "index": 0,
+    "verdict": "supported",
+    "note": ""
+   }
+  ],
+  "facts": [
+   {
+    "index": 0,
+    "status": "covered",
+    "note": ""
+   },
+   {
+    "index": 1,
+    "status": "missing",
+    "note": ""
+   }
+  ],
+  "cost_usd": 0.001979
+ },
+ "DEV-401": null,
+ "DEV-402": null,
+ "DEV-403": null,
+ "DEV-404": null,
+ "DEV-405": null,
+ "DEV-406": null,
+ "DEV-407": null,
+ "DEV-408": null,
+ "DEV-409": {
+  "claims": [
+   {
+    "index": 0,
+    "verdict": "supported",
+    "note": ""
+   }
+  ],
+  "facts": [],
+  "cost_usd": 0.000691
+ },
+ "DEV-410": null,
+ "DEV-411": null,
+ "DEV-412": null,
+ "DEV-413": null,
+ "DEV-414": null,
+ "DEV-415": null,
+ "DEV-416": null,
+ "DEV-417": null,
+ "DEV-418": null,
+ "DEV-419": null,
+ "DEV-420": null,
+ "DEV-421": null,
+ "DEV-422": null,
+ "DEV-423": null,
+ "DEV-424": null,
+ "DEV-425": {
+  "claims": [
+   {
+    "index": 0,
+    "verdict": "supported",
+    "note": ""
+   }
+  ],
+  "facts": [],
+  "cost_usd": 0.000778
+ },
+ "DEV-426": {
+  "claims": [
+   {
+    "index": 0,
+    "verdict": "supported",
+    "note": ""
+   },
+   {
+    "index": 1,
+    "verdict": "supported",
+    "note": ""
+   }
+  ],
+  "facts": [],
+  "cost_usd": 0.000942
+ },
+ "DEV-427": null,
+ "DEV-428": null,
+ "DEV-429": {
+  "claims": [
+   {
+    "index": 0,
+    "verdict": "partial",
+    "note": "The totals are supported, but the cited excerpt does not identify the release as MOM\u2019s final release."
+   },
+   {
+    "index": 1,
+    "verdict": "supported",
+    "note": ""
+   },
+   {
+    "index": 2,
+    "verdict": "supported",
+    "note": ""
+   }
+  ],
+  "facts": [
+   {
+    "index": 0,
+    "status": "covered",
+    "note": ""
+   },
+   {
+    "index": 1,
+    "status": "covered",
+    "note": ""
+   },
+   {
+    "index": 2,
+    "status": "covered",
+    "note": ""
+   }
+  ],
+  "cost_usd": 0.002222
+ },
+ "DEV-430": {
+  "claims": [
+   {
+    "index": 0,
+    "verdict": "supported",
+    "note": ""
+   },
+   {
+    "index": 1,
+    "verdict": "supported",
+    "note": ""
+   }
+  ],
+  "facts": [
+   {
+    "index": 0,
+    "status": "covered",
+    "note": ""
+   },
+   {
+    "index": 1,
+    "status": "covered",
+    "note": ""
+   },
+   {
+    "index": 2,
+    "status": "covered",
+    "note": ""
+   },
+   {
+    "index": 3,
+    "status": "missing",
+    "note": ""
+   }
+  ],
+  "cost_usd": 0.00149
+ },
+ "DEV-431": {
+  "claims": [
+   {
+    "index": 0,
+    "verdict": "supported",
+    "note": ""
+   },
+   {
+    "index": 1,
+    "verdict": "supported",
+    "note": ""
+   }
+  ],
+  "facts": [
+   {
+    "index": 0,
+    "status": "covered",
+    "note": ""
+   },
+   {
+    "index": 1,
+    "status": "missing",
+    "note": ""
+   },
+   {
+    "index": 2,
+    "status": "missing",
+    "note": ""
+   }
+  ],
+  "cost_usd": 0.001767
+ },
+ "DEV-432": {
+  "claims": [
+   {
+    "index": 0,
+    "verdict": "supported",
+    "note": ""
+   },
+   {
+    "index": 1,
+    "verdict": "supported",
+    "note": ""
+   },
+   {
+    "index": 2,
+    "verdict": "supported",
+    "note": ""
+   },
+   {
+    "index": 3,
+    "verdict": "supported",
+    "note": ""
+   },
+   {
+    "index": 4,
+    "verdict": "supported",
+    "note": ""
+   }
+  ],
+  "facts": [
+   {
+    "index": 0,
+    "status": "covered",
+    "note": ""
+   },
+   {
+    "index": 1,
+    "status": "covered",
+    "note": ""
+   },
+   {
+    "index": 2,
+    "status": "covered",
+    "note": ""
+   },
+   {
+    "index": 3,
+    "status": "missing",
+    "note": ""
+   }
+  ],
+  "cost_usd": 0.002792
+ },
+ "DEV-433": {
+  "claims": [
+   {
+    "index": 0,
+    "verdict": "supported",
+    "note": ""
+   },
+   {
+    "index": 1,
+    "verdict": "supported",
+    "note": ""
+   },
+   {
+    "index": 2,
+    "verdict": "supported",
+    "note": ""
+   }
+  ],
+  "facts": [
+   {
+    "index": 0,
+    "status": "covered",
+    "note": ""
+   },
+   {
+    "index": 1,
+    "status": "covered",
+    "note": ""
+   },
+   {
+    "index": 2,
+    "status": "covered",
+    "note": ""
+   },
+   {
+    "index": 3,
+    "status": "covered",
+    "note": ""
+   }
+  ],
+  "cost_usd": 0.001676
+ },
+ "DEV-434": {
+  "claims": [
+   {
+    "index": 0,
+    "verdict": "supported",
+    "note": ""
+   },
+   {
+    "index": 1,
+    "verdict": "supported",
+    "note": ""
+   }
+  ],
+  "facts": [
+   {
+    "index": 0,
+    "status": "covered",
+    "note": ""
+   },
+   {
+    "index": 1,
+    "status": "covered",
+    "note": ""
+   },
+   {
+    "index": 2,
+    "status": "covered",
+    "note": ""
+   },
+   {
+    "index": 3,
+    "status": "covered",
+    "note": ""
+   }
+  ],
+  "cost_usd": 0.001395
+ },
+ "DEV-435": {
+  "claims": [
+   {
+    "index": 0,
+    "verdict": "supported",
+    "note": ""
+   },
+   {
+    "index": 1,
+    "verdict": "supported",
+    "note": ""
+   },
+   {
+    "index": 2,
+    "verdict": "partial",
+    "note": "The cited excerpt does not identify itself as a final press release."
+   }
+  ],
+  "facts": [
+   {
+    "index": 0,
+    "status": "covered",
+    "note": ""
+   },
+   {
+    "index": 1,
+    "status": "covered",
+    "note": ""
+   },
+   {
+    "index": 2,
+    "status": "missing",
+    "note": ""
+   },
+   {
+    "index": 3,
+    "status": "missing",
+    "note": ""
+   }
+  ],
+  "cost_usd": 0.003887
+ },
+ "DEV-501": {
+  "claims": [
+   {
+    "index": 0,
+    "verdict": "supported",
+    "note": ""
+   }
+  ],
+  "facts": [
+   {
+    "index": 0,
+    "status": "covered",
+    "note": ""
+   },
+   {
+    "index": 1,
+    "status": "covered",
+    "note": ""
+   }
+  ],
+  "cost_usd": 0.001173
+ },
+ "DEV-502": {
+  "claims": [
+   {
+    "index": 0,
+    "verdict": "supported",
+    "note": ""
+   }
+  ],
+  "facts": [
+   {
+    "index": 0,
+    "status": "covered",
+    "note": ""
+   },
+   {
+    "index": 1,
+    "status": "covered",
+    "note": ""
+   }
+  ],
+  "cost_usd": 0.001026
+ },
+ "DEV-503": null,
+ "DEV-504": {
+  "claims": [
+   {
+    "index": 0,
+    "verdict": "supported",
+    "note": ""
+   }
+  ],
+  "facts": [
+   {
+    "index": 0,
+    "status": "covered",
+    "note": ""
+   },
+   {
+    "index": 1,
+    "status": "missing",
+    "note": ""
+   }
+  ],
+  "cost_usd": 0.001097
+ },
+ "DEV-505": {
+  "claims": [
+   {
+    "index": 0,
+    "verdict": "supported",
+    "note": ""
+   }
+  ],
+  "facts": [
+   {
+    "index": 0,
+    "status": "covered",
+    "note": ""
+   }
+  ],
+  "cost_usd": 0.00072
+ },
+ "DEV-506": {
+  "claims": [
+   {
+    "index": 0,
+    "verdict": "supported",
+    "note": ""
+   }
+  ],
+  "facts": [
+   {
+    "index": 0,
+    "status": "covered",
+    "note": ""
+   },
+   {
+    "index": 1,
+    "status": "missing",
+    "note": ""
+   }
+  ],
+  "cost_usd": 0.001107
+ },
+ "DEV-507": {
+  "claims": [
+   {
+    "index": 0,
+    "verdict": "supported",
+    "note": ""
+   }
+  ],
+  "facts": [
+   {
+    "index": 0,
+    "status": "covered",
+    "note": ""
+   }
+  ],
+  "cost_usd": 0.000959
+ },
+ "DEV-508": {
+  "claims": [
+   {
+    "index": 0,
+    "verdict": "supported",
+    "note": ""
+   }
+  ],
+  "facts": [
+   {
+    "index": 0,
+    "status": "covered",
+    "note": ""
+   },
+   {
+    "index": 1,
+    "status": "missing",
+    "note": ""
+   }
+  ],
+  "cost_usd": 0.001235
+ },
+ "DEV-509": {
+  "claims": [
+   {
+    "index": 0,
+    "verdict": "supported",
+    "note": ""
+   }
+  ],
+  "facts": [
+   {
+    "index": 0,
+    "status": "covered",
+    "note": ""
+   }
+  ],
+  "cost_usd": 0.000946
+ },
+ "DEV-510": {
+  "claims": [
+   {
+    "index": 0,
+    "verdict": "supported",
+    "note": ""
+   }
+  ],
+  "facts": [
+   {
+    "index": 0,
+    "status": "covered",
+    "note": ""
+   },
+   {
+    "index": 1,
+    "status": "missing",
+    "note": ""
+   }
+  ],
+  "cost_usd": 0.001091
+ },
+ "DEV-511": {
+  "claims": [
+   {
+    "index": 0,
+    "verdict": "supported",
+    "note": ""
+   }
+  ],
+  "facts": [
+   {
+    "index": 0,
+    "status": "covered",
+    "note": ""
+   }
+  ],
+  "cost_usd": 0.000958
+ },
+ "DEV-512": {
+  "claims": [
+   {
+    "index": 0,
+    "verdict": "supported",
+    "note": ""
+   }
+  ],
+  "facts": [
+   {
+    "index": 0,
+    "status": "covered",
+    "note": ""
+   },
+   {
+    "index": 1,
+    "status": "missing",
+    "note": ""
+   }
+  ],
+  "cost_usd": 0.001574
+ },
+ "DEV-513": {
+  "claims": [
+   {
+    "index": 0,
+    "verdict": "supported",
+    "note": ""
+   }
+  ],
+  "facts": [
+   {
+    "index": 0,
+    "status": "covered",
+    "note": ""
+   }
+  ],
+  "cost_usd": 0.00074
+ },
+ "DEV-514": {
+  "claims": [
+   {
+    "index": 0,
+    "verdict": "supported",
+    "note": ""
+   }
+  ],
+  "facts": [
+   {
+    "index": 0,
+    "status": "covered",
+    "note": ""
+   }
+  ],
+  "cost_usd": 0.000866
+ },
+ "DEV-515": {
+  "claims": [
+   {
+    "index": 0,
+    "verdict": "supported",
+    "note": ""
+   }
+  ],
+  "facts": [
+   {
+    "index": 0,
+    "status": "covered",
+    "note": ""
+   }
+  ],
+  "cost_usd": 0.001034
+ },
+ "DEV-516": null,
+ "DEV-517": null,
+ "DEV-518": null,
+ "DEV-519": null,
+ "DEV-520": null,
+ "DEV-521": null,
+ "DEV-522": null,
+ "DEV-523": null,
+ "DEV-524": {
+  "claims": [
+   {
+    "index": 0,
+    "verdict": "supported",
+    "note": ""
+   }
+  ],
+  "facts": [
+   {
+    "index": 0,
+    "status": "covered",
+    "note": ""
+   },
+   {
+    "index": 1,
+    "status": "covered",
+    "note": ""
+   }
+  ],
+  "cost_usd": 0.000816
+ },
+ "DEV-525": {
+  "claims": [
+   {
+    "index": 0,
+    "verdict": "partial",
+    "note": "The evidence gives 3,690 retrenchments but does not identify the release as final."
+   }
+  ],
+  "facts": [
+   {
+    "index": 0,
+    "status": "covered",
+    "note": ""
+   }
+  ],
+  "cost_usd": 0.001195
+ },
+ "DEV-526": {
+  "claims": [
+   {
+    "index": 0,
+    "verdict": "supported",
+    "note": ""
+   },
+   {
+    "index": 1,
+    "verdict": "partial",
+    "note": "The passage reports 1.35 without specifying seasonal adjustment, but does not identify the publication or release stage."
+   }
+  ],
+  "facts": [
+   {
+    "index": 0,
+    "status": "covered",
+    "note": ""
+   },
+   {
+    "index": 1,
+    "status": "covered",
+    "note": ""
+   }
+  ],
+  "cost_usd": 0.001268
+ },
+ "DEV-527": {
+  "claims": [
+   {
+    "index": 0,
+    "verdict": "supported",
+    "note": ""
+   }
+  ],
+  "facts": [
+   {
+    "index": 0,
+    "status": "covered",
+    "note": ""
+   },
+   {
+    "index": 1,
+    "status": "covered",
+    "note": ""
+   }
+  ],
+  "cost_usd": 0.001077
+ },
+ "DEV-528": {
+  "claims": [
+   {
+    "index": 0,
+    "verdict": "supported",
+    "note": ""
+   }
+  ],
+  "facts": [
+   {
+    "index": 0,
+    "status": "covered",
+    "note": ""
+   }
+  ],
+  "cost_usd": 0.00071
+ },
+ "DEV-529": {
+  "claims": [
+   {
+    "index": 0,
+    "verdict": "supported",
+    "note": ""
+   }
+  ],
+  "facts": [
+   {
+    "index": 0,
+    "status": "covered",
+    "note": ""
+   },
+   {
+    "index": 1,
+    "status": "covered",
+    "note": ""
+   }
+  ],
+  "cost_usd": 0.00079
+ },
+ "DEV-530": {
+  "claims": [
+   {
+    "index": 0,
+    "verdict": "supported",
+    "note": ""
+   }
+  ],
+  "facts": [
+   {
+    "index": 0,
+    "status": "covered",
+    "note": ""
+   }
+  ],
+  "cost_usd": 0.00074
+ },
+ "DEV-601": null,
+ "DEV-602": null,
+ "DEV-603": null,
+ "DEV-604": null,
+ "DEV-605": {
+  "claims": [
+   {
+    "index": 0,
+    "verdict": "supported",
+    "note": ""
+   }
+  ],
+  "facts": [
+   {
+    "index": 0,
+    "status": "missing",
+    "note": ""
+   }
+  ],
+  "cost_usd": 0.00099
+ },
+ "DEV-606": {
+  "claims": [
+   {
+    "index": 0,
+    "verdict": "supported",
+    "note": ""
+   }
+  ],
+  "facts": [
+   {
+    "index": 0,
+    "status": "covered",
+    "note": ""
+   }
+  ],
+  "cost_usd": 0.000795
+ },
+ "DEV-607": {
+  "claims": [
+   {
+    "index": 0,
+    "verdict": "supported",
+    "note": ""
+   }
+  ],
+  "facts": [
+   {
+    "index": 0,
+    "status": "missing",
+    "note": ""
+   }
+  ],
+  "cost_usd": 0.00152
+ },
+ "DEV-608": {
+  "claims": [
+   {
+    "index": 0,
+    "verdict": "supported",
+    "note": ""
+   },
+   {
+    "index": 1,
+    "verdict": "supported",
+    "note": ""
+   },
+   {
+    "index": 2,
+    "verdict": "supported",
+    "note": ""
+   }
+  ],
+  "facts": [
+   {
+    "index": 0,
+    "status": "missing",
+    "note": ""
+   }
+  ],
+  "cost_usd": 0.001634
+ },
+ "DEV-609": {
+  "claims": [
+   {
+    "index": 0,
+    "verdict": "partial",
+    "note": "The evidence gives the industry and 8.7% growth but does not specify 2024."
+   },
+   {
+    "index": 1,
+    "verdict": "supported",
+    "note": ""
+   }
+  ],
+  "facts": [
+   {
+    "index": 0,
+    "status": "covered",
+    "note": ""
+   }
+  ],
+  "cost_usd": 0.001732
+ },
+ "DEV-610": {
+  "claims": [
+   {
+    "index": 0,
+    "verdict": "supported",
+    "note": ""
+   },
+   {
+    "index": 1,
+    "verdict": "supported",
+    "note": ""
+   }
+  ],
+  "facts": [
+   {
+    "index": 0,
+    "status": "missing",
+    "note": ""
+   }
+  ],
+  "cost_usd": 0.001606
+ },
+ "DEV-611": {
+  "claims": [
+   {
+    "index": 0,
+    "verdict": "supported",
+    "note": ""
+   }
+  ],
+  "facts": [
+   {
+    "index": 0,
+    "status": "missing",
+    "note": ""
+   }
+  ],
+  "cost_usd": 0.00099
+ },
+ "DEV-612": {
+  "claims": [
+   {
+    "index": 0,
+    "verdict": "supported",
+    "note": ""
+   }
+  ],
+  "facts": [
+   {
+    "index": 0,
+    "status": "covered",
+    "note": ""
+   }
+  ],
+  "cost_usd": 0.00074
+ },
+ "DEV-613": {
+  "claims": [
+   {
+    "index": 0,
+    "verdict": "supported",
+    "note": ""
+   }
+  ],
+  "facts": [
+   {
+    "index": 0,
+    "status": "missing",
+    "note": ""
+   }
+  ],
+  "cost_usd": 0.001297
+ },
+ "DEV-614": {
+  "claims": [
+   {
+    "index": 0,
+    "verdict": "supported",
+    "note": ""
+   }
+  ],
+  "facts": [
+   {
+    "index": 0,
+    "status": "missing",
+    "note": ""
+   }
+  ],
+  "cost_usd": 0.001201
+ },
+ "DEV-615": {
+  "claims": [
+   {
+    "index": 0,
+    "verdict": "supported",
+    "note": ""
+   }
+  ],
+  "facts": [
+   {
+    "index": 0,
+    "status": "covered",
+    "note": ""
+   }
+  ],
+  "cost_usd": 0.000871
+ },
+ "DEV-616": {
+  "claims": [
+   {
+    "index": 0,
+    "verdict": "supported",
+    "note": ""
+   },
+   {
+    "index": 1,
+    "verdict": "supported",
+    "note": ""
+   }
+  ],
+  "facts": [
+   {
+    "index": 0,
+    "status": "covered",
+    "note": ""
+   }
+  ],
+  "cost_usd": 0.001029
+ },
+ "DEV-617": {
+  "claims": [
+   {
+    "index": 0,
+    "verdict": "supported",
+    "note": ""
+   },
+   {
+    "index": 1,
+    "verdict": "supported",
+    "note": ""
+   }
+  ],
+  "facts": [
+   {
+    "index": 0,
+    "status": "covered",
+    "note": ""
+   }
+  ],
+  "cost_usd": 0.001493
+ },
+ "DEV-618": {
+  "claims": [
+   {
+    "index": 0,
+    "verdict": "supported",
+    "note": ""
+   },
+   {
+    "index": 1,
+    "verdict": "supported",
+    "note": ""
+   }
+  ],
+  "facts": [
+   {
+    "index": 0,
+    "status": "covered",
+    "note": ""
+   }
+  ],
+  "cost_usd": 0.001047
+ },
+ "DEV-619": {
+  "claims": [
+   {
+    "index": 0,
+    "verdict": "supported",
+    "note": ""
+   },
+   {
+    "index": 1,
+    "verdict": "supported",
+    "note": ""
+   }
+  ],
+  "facts": [
+   {
+    "index": 0,
+    "status": "covered",
+    "note": ""
+   }
+  ],
+  "cost_usd": 0.001888
+ },
+ "DEV-620": {
+  "claims": [
+   {
+    "index": 0,
+    "verdict": "supported",
+    "note": ""
+   },
+   {
+    "index": 1,
+    "verdict": "supported",
+    "note": ""
+   },
+   {
+    "index": 2,
+    "verdict": "supported",
+    "note": ""
+   },
+   {
+    "index": 3,
+    "verdict": "supported",
+    "note": ""
+   }
+  ],
+  "facts": [
+   {
+    "index": 0,
+    "status": "covered",
+    "note": ""
+   }
+  ],
+  "cost_usd": 0.001838
+ },
+ "DEV-621": {
+  "claims": [
+   {
+    "index": 0,
+    "verdict": "supported",
+    "note": ""
+   },
+   {
+    "index": 1,
+    "verdict": "supported",
+    "note": ""
+   },
+   {
+    "index": 2,
+    "verdict": "supported",
+    "note": ""
+   }
+  ],
+  "facts": [
+   {
+    "index": 0,
+    "status": "missing",
+    "note": ""
+   },
+   {
+    "index": 1,
+    "status": "missing",
+    "note": ""
+   },
+   {
+    "index": 2,
+    "status": "covered",
+    "note": ""
+   }
+  ],
+  "cost_usd": 0.002552
+ },
+ "DEV-622": null,
+ "DEV-623": {
+  "claims": [
+   {
+    "index": 0,
+    "verdict": "supported",
+    "note": ""
+   },
+   {
+    "index": 1,
+    "verdict": "supported",
+    "note": ""
+   },
+   {
+    "index": 2,
+    "verdict": "supported",
+    "note": ""
+   }
+  ],
+  "facts": [
+   {
+    "index": 0,
+    "status": "missing",
+    "note": ""
+   }
+  ],
+  "cost_usd": 0.001508
+ },
+ "DEV-624": {
+  "claims": [
+   {
+    "index": 0,
+    "verdict": "supported",
+    "note": ""
+   },
+   {
+    "index": 1,
+    "verdict": "supported",
+    "note": ""
+   }
+  ],
+  "facts": [
+   {
+    "index": 0,
+    "status": "covered",
+    "note": ""
+   }
+  ],
+  "cost_usd": 0.000855
+ },
+ "DEV-625": {
+  "claims": [
+   {
+    "index": 0,
+    "verdict": "supported",
+    "note": ""
+   }
+  ],
+  "facts": [
+   {
+    "index": 0,
+    "status": "covered",
+    "note": ""
+   }
+  ],
+  "cost_usd": 0.000855
+ },
+ "DEV-626": {
+  "claims": [
+   {
+    "index": 0,
+    "verdict": "supported",
+    "note": ""
+   }
+  ],
+  "facts": [
+   {
+    "index": 0,
+    "status": "covered",
+    "note": ""
+   }
+  ],
+  "cost_usd": 0.00084
+ },
+ "DEV-627": null,
+ "DEV-628": {
+  "claims": [
+   {
+    "index": 0,
+    "verdict": "supported",
+    "note": ""
+   },
+   {
+    "index": 1,
+    "verdict": "supported",
+    "note": ""
+   }
+  ],
+  "facts": [
+   {
+    "index": 0,
+    "status": "covered",
+    "note": ""
+   }
+  ],
+  "cost_usd": 0.001076
+ },
+ "DEV-631": null,
+ "DEV-632": null,
+ "DEV-633": null,
+ "DEV-634": null,
+ "DEV-635": null,
+ "DEV-101": {
+  "claims": [
+   {
+    "index": 0,
+    "verdict": "supported",
+    "note": ""
+   }
+  ],
+  "facts": [
+   {
+    "index": 0,
+    "status": "covered",
+    "note": ""
+   }
+  ],
+  "cost_usd": 0.000728
+ },
+ "DEV-102": {
+  "claims": [
+   {
+    "index": 0,
+    "verdict": "supported",
+    "note": ""
+   }
+  ],
+  "facts": [
+   {
+    "index": 0,
+    "status": "covered",
+    "note": ""
+   }
+  ],
+  "cost_usd": 0.000716
+ },
+ "DEV-103": {
+  "claims": [
+   {
+    "index": 0,
+    "verdict": "supported",
+    "note": ""
+   }
+  ],
+  "facts": [
+   {
+    "index": 0,
+    "status": "covered",
+    "note": ""
+   }
+  ],
+  "cost_usd": 0.000724
+ },
+ "DEV-104": {
+  "claims": [
+   {
+    "index": 0,
+    "verdict": "supported",
+    "note": ""
+   }
+  ],
+  "facts": [
+   {
+    "index": 0,
+    "status": "covered",
+    "note": ""
+   }
+  ],
+  "cost_usd": 0.00071
+ },
+ "DEV-105": {
+  "claims": [
+   {
+    "index": 0,
+    "verdict": "supported",
+    "note": ""
+   }
+  ],
+  "facts": [
+   {
+    "index": 0,
+    "status": "covered",
+    "note": ""
+   }
+  ],
+  "cost_usd": 0.000724
+ },
+ "DEV-106": {
+  "claims": [
+   {
+    "index": 0,
+    "verdict": "supported",
+    "note": ""
+   }
+  ],
+  "facts": [
+   {
+    "index": 0,
+    "status": "covered",
+    "note": ""
+   }
+  ],
+  "cost_usd": 0.000719
+ },
+ "DEV-107": {
+  "claims": [
+   {
+    "index": 0,
+    "verdict": "supported",
+    "note": ""
+   }
+  ],
+  "facts": [
+   {
+    "index": 0,
+    "status": "covered",
+    "note": ""
+   }
+  ],
+  "cost_usd": 0.000723
+ },
+ "DEV-108": {
+  "claims": [
+   {
+    "index": 0,
+    "verdict": "supported",
+    "note": ""
+   }
+  ],
+  "facts": [
+   {
+    "index": 0,
+    "status": "covered",
+    "note": ""
+   }
+  ],
+  "cost_usd": 0.000724
+ },
+ "DEV-109": {
+  "claims": [
+   {
+    "index": 0,
+    "verdict": "supported",
+    "note": ""
+   }
+  ],
+  "facts": [
+   {
+    "index": 0,
+    "status": "covered",
+    "note": ""
+   }
+  ],
+  "cost_usd": 0.000752
+ },
+ "DEV-110": {
+  "claims": [
+   {
+    "index": 0,
+    "verdict": "supported",
+    "note": ""
+   }
+  ],
+  "facts": [
+   {
+    "index": 0,
+    "status": "covered",
+    "note": ""
+   }
+  ],
+  "cost_usd": 0.000718
+ },
+ "DEV-111": {
+  "claims": [
+   {
+    "index": 0,
+    "verdict": "supported",
+    "note": ""
+   }
+  ],
+  "facts": [
+   {
+    "index": 0,
+    "status": "covered",
+    "note": ""
+   }
+  ],
+  "cost_usd": 0.000737
+ },
+ "DEV-112": {
+  "claims": [
+   {
+    "index": 0,
+    "verdict": "supported",
+    "note": ""
+   }
+  ],
+  "facts": [
+   {
+    "index": 0,
+    "status": "covered",
+    "note": ""
+   }
+  ],
+  "cost_usd": 0.00074
+ },
+ "DEV-113": null,
+ "DEV-114": {
+  "claims": [
+   {
+    "index": 0,
+    "verdict": "supported",
+    "note": ""
+   }
+  ],
+  "facts": [
+   {
+    "index": 0,
+    "status": "covered",
+    "note": ""
+   }
+  ],
+  "cost_usd": 0.000735
+ },
+ "DEV-115": {
+  "claims": [
+   {
+    "index": 0,
+    "verdict": "supported",
+    "note": ""
+   }
+  ],
+  "facts": [
+   {
+    "index": 0,
+    "status": "covered",
+    "note": ""
+   }
+  ],
+  "cost_usd": 0.000809
+ },
+ "DEV-116": {
+  "claims": [
+   {
+    "index": 0,
+    "verdict": "supported",
+    "note": ""
+   }
+  ],
+  "facts": [
+   {
+    "index": 0,
+    "status": "missing",
+    "note": ""
+   },
+   {
+    "index": 1,
+    "status": "missing",
+    "note": ""
+   },
+   {
+    "index": 2,
+    "status": "covered",
+    "note": ""
+   }
+  ],
+  "cost_usd": 0.001062
+ },
+ "DEV-117": {
+  "claims": [
+   {
+    "index": 0,
+    "verdict": "supported",
+    "note": ""
+   }
+  ],
+  "facts": [
+   {
+    "index": 0,
+    "status": "missing",
+    "note": ""
+   },
+   {
+    "index": 1,
+    "status": "missing",
+    "note": ""
+   },
+   {
+    "index": 2,
+    "status": "covered",
+    "note": ""
+   }
+  ],
+  "cost_usd": 0.001335
+ },
+ "DEV-118": {
+  "claims": [
+   {
+    "index": 0,
+    "verdict": "supported",
+    "note": ""
+   }
+  ],
+  "facts": [
+   {
+    "index": 0,
+    "status": "missing",
+    "note": ""
+   },
+   {
+    "index": 1,
+    "status": "missing",
+    "note": ""
+   },
+   {
+    "index": 2,
+    "status": "covered",
+    "note": ""
+   }
+  ],
+  "cost_usd": 0.001187
+ },
+ "DEV-119": null,
+ "DEV-120": {
+  "claims": [
+   {
+    "index": 0,
+    "verdict": "supported",
+    "note": ""
+   }
+  ],
+  "facts": [
+   {
+    "index": 0,
+    "status": "missing",
+    "note": ""
+   },
+   {
+    "index": 1,
+    "status": "missing",
+    "note": ""
+   },
+   {
+    "index": 2,
+    "status": "covered",
+    "note": ""
+   }
+  ],
+  "cost_usd": 0.001213
+ },
+ "DEV-121": {
+  "claims": [
+   {
+    "index": 0,
+    "verdict": "supported",
+    "note": ""
+   }
+  ],
+  "facts": [
+   {
+    "index": 0,
+    "status": "covered",
+    "note": ""
+   },
+   {
+    "index": 1,
+    "status": "covered",
+    "note": ""
+   },
+   {
+    "index": 2,
+    "status": "covered",
+    "note": ""
+   }
+  ],
+  "cost_usd": 0.001035
+ },
+ "DEV-122": {
+  "claims": [
+   {
+    "index": 0,
+    "verdict": "supported",
+    "note": ""
+   }
+  ],
+  "facts": [
+   {
+    "index": 0,
+    "status": "missing",
+    "note": ""
+   },
+   {
+    "index": 1,
+    "status": "missing",
+    "note": ""
+   },
+   {
+    "index": 2,
+    "status": "covered",
+    "note": ""
+   }
+  ],
+  "cost_usd": 0.001111
+ },
+ "DEV-123": {
+  "claims": [
+   {
+    "index": 0,
+    "verdict": "supported",
+    "note": ""
+   }
+  ],
+  "facts": [
+   {
+    "index": 0,
+    "status": "covered",
+    "note": ""
+   },
+   {
+    "index": 1,
+    "status": "covered",
+    "note": ""
+   },
+   {
+    "index": 2,
+    "status": "covered",
+    "note": ""
+   }
+  ],
+  "cost_usd": 0.001031
+ },
+ "DEV-124": {
+  "claims": [
+   {
+    "index": 0,
+    "verdict": "partial",
+    "note": "The evidence supports the change but does not specify that the rate is an average monthly rate."
+   }
+  ],
+  "facts": [
+   {
+    "index": 0,
+    "status": "missing",
+    "note": ""
+   },
+   {
+    "index": 1,
+    "status": "missing",
+    "note": ""
+   },
+   {
+    "index": 2,
+    "status": "covered",
+    "note": ""
+   }
+  ],
+  "cost_usd": 0.001425
+ },
+ "DEV-125": null,
+ "DEV-126": null,
+ "DEV-127": null,
+ "DEV-128": {
+  "claims": [
+   {
+    "index": 0,
+    "verdict": "supported",
+    "note": ""
+   }
+  ],
+  "facts": [
+   {
+    "index": 0,
+    "status": "missing",
+    "note": ""
+   },
+   {
+    "index": 1,
+    "status": "missing",
+    "note": ""
+   },
+   {
+    "index": 2,
+    "status": "covered",
+    "note": ""
+   }
+  ],
+  "cost_usd": 0.001133
+ },
+ "DEV-129": {
+  "claims": [
+   {
+    "index": 0,
+    "verdict": "supported",
+    "note": ""
+   }
+  ],
+  "facts": [
+   {
+    "index": 0,
+    "status": "missing",
+    "note": ""
+   },
+   {
+    "index": 1,
+    "status": "missing",
+    "note": ""
+   },
+   {
+    "index": 2,
+    "status": "covered",
+    "note": ""
+   }
+  ],
+  "cost_usd": 0.001093
+ },
+ "DEV-130": {
+  "claims": [
+   {
+    "index": 0,
+    "verdict": "supported",
+    "note": ""
+   }
+  ],
+  "facts": [
+   {
+    "index": 0,
+    "status": "missing",
+    "note": ""
+   },
+   {
+    "index": 1,
+    "status": "missing",
+    "note": ""
+   },
+   {
+    "index": 2,
+    "status": "covered",
+    "note": ""
+   }
+  ],
+  "cost_usd": 0.001232
+ },
+ "DEV-131": {
+  "claims": [
+   {
+    "index": 0,
+    "verdict": "supported",
+    "note": ""
+   }
+  ],
+  "facts": [
+   {
+    "index": 0,
+    "status": "missing",
+    "note": ""
+   },
+   {
+    "index": 1,
+    "status": "missing",
+    "note": ""
+   },
+   {
+    "index": 2,
+    "status": "covered",
+    "note": ""
+   }
+  ],
+  "cost_usd": 0.001392
+ },
+ "DEV-132": {
+  "claims": [
+   {
+    "index": 0,
+    "verdict": "partial",
+    "note": "The cited evidence gives the count but does not establish it is highest among the three groups."
+   }
+  ],
+  "facts": [
+   {
+    "index": 0,
+    "status": "missing",
+    "note": ""
+   },
+   {
+    "index": 1,
+    "status": "missing",
+    "note": ""
+   },
+   {
+    "index": 2,
+    "status": "covered",
+    "note": ""
+   },
+   {
+    "index": 3,
+    "status": "covered",
+    "note": ""
+   }
+  ],
+  "cost_usd": 0.001267
+ },
+ "DEV-133": {
+  "claims": [
+   {
+    "index": 0,
+    "verdict": "supported",
+    "note": ""
+   }
+  ],
+  "facts": [
+   {
+    "index": 0,
+    "status": "covered",
+    "note": ""
+   },
+   {
+    "index": 1,
+    "status": "covered",
+    "note": ""
+   },
+   {
+    "index": 2,
+    "status": "covered",
+    "note": ""
+   },
+   {
+    "index": 3,
+    "status": "covered",
+    "note": ""
+   },
+   {
+    "index": 4,
+    "status": "covered",
+    "note": ""
+   },
+   {
+    "index": 5,
+    "status": "covered",
+    "note": ""
+   }
+  ],
+  "cost_usd": 0.001434
+ },
+ "DEV-134": {
+  "claims": [
+   {
+    "index": 0,
+    "verdict": "supported",
+    "note": ""
+   }
+  ],
+  "facts": [
+   {
+    "index": 0,
+    "status": "missing",
+    "note": ""
+   },
+   {
+    "index": 1,
+    "status": "missing",
+    "note": ""
+   },
+   {
+    "index": 2,
+    "status": "covered",
+    "note": ""
+   },
+   {
+    "index": 3,
+    "status": "missing",
+    "note": ""
+   },
+   {
+    "index": 4,
+    "status": "covered",
+    "note": ""
+   }
+  ],
+  "cost_usd": 0.001297
+ },
+ "DEV-135": {
+  "claims": [
+   {
+    "index": 0,
+    "verdict": "supported",
+    "note": ""
+   }
+  ],
+  "facts": [
+   {
+    "index": 0,
+    "status": "covered",
+    "note": ""
+   },
+   {
+    "index": 1,
+    "status": "covered",
+    "note": ""
+   },
+   {
+    "index": 2,
+    "status": "covered",
+    "note": ""
+   }
+  ],
+  "cost_usd": 0.001115
+ },
+ "DEV-301": {
+  "claims": [
+   {
+    "index": 0,
+    "verdict": "supported",
+    "note": ""
+   },
+   {
+    "index": 1,
+    "verdict": "supported",
+    "note": ""
+   },
+   {
+    "index": 2,
+    "verdict": "supported",
+    "note": ""
+   }
+  ],
+  "facts": [
+   {
+    "index": 0,
+    "status": "covered",
+    "note": ""
+   },
+   {
+    "index": 1,
+    "status": "covered",
+    "note": ""
+   }
+  ],
+  "cost_usd": 0.001327
+ },
+ "DEV-302": {
+  "claims": [
+   {
+    "index": 0,
+    "verdict": "supported",
+    "note": ""
+   },
+   {
+    "index": 1,
+    "verdict": "supported",
+    "note": ""
+   }
+  ],
+  "facts": [
+   {
+    "index": 0,
+    "status": "covered",
+    "note": ""
+   },
+   {
+    "index": 1,
+    "status": "covered",
+    "note": ""
+   }
+  ],
+  "cost_usd": 0.001086
+ },
+ "DEV-303": {
+  "claims": [
+   {
+    "index": 0,
+    "verdict": "supported",
+    "note": ""
+   },
+   {
+    "index": 1,
+    "verdict": "supported",
+    "note": ""
+   },
+   {
+    "index": 2,
+    "verdict": "supported",
+    "note": ""
+   }
+  ],
+  "facts": [
+   {
+    "index": 0,
+    "status": "covered",
+    "note": ""
+   },
+   {
+    "index": 1,
+    "status": "covered",
+    "note": ""
+   }
+  ],
+  "cost_usd": 0.001421
+ },
+ "DEV-304": {
+  "claims": [
+   {
+    "index": 0,
+    "verdict": "supported",
+    "note": ""
+   },
+   {
+    "index": 1,
+    "verdict": "supported",
+    "note": ""
+   },
+   {
+    "index": 2,
+    "verdict": "supported",
+    "note": ""
+   },
+   {
+    "index": 3,
+    "verdict": "supported",
+    "note": ""
+   }
+  ],
+  "facts": [
+   {
+    "index": 0,
+    "status": "covered",
+    "note": ""
+   },
+   {
+    "index": 1,
+    "status": "missing",
+    "note": ""
+   }
+  ],
+  "cost_usd": 0.00212
+ },
+ "DEV-305": {
+  "claims": [
+   {
+    "index": 0,
+    "verdict": "supported",
+    "note": ""
+   },
+   {
+    "index": 1,
+    "verdict": "supported",
+    "note": ""
+   },
+   {
+    "index": 2,
+    "verdict": "supported",
+    "note": ""
+   }
+  ],
+  "facts": [
+   {
+    "index": 0,
+    "status": "covered",
+    "note": ""
+   },
+   {
+    "index": 1,
+    "status": "missing",
+    "note": ""
+   }
+  ],
+  "cost_usd": 0.00155
+ },
+ "DEV-306": {
+  "claims": [
+   {
+    "index": 0,
+    "verdict": "supported",
+    "note": ""
+   },
+   {
+    "index": 1,
+    "verdict": "supported",
+    "note": ""
+   },
+   {
+    "index": 2,
+    "verdict": "supported",
+    "note": ""
+   },
+   {
+    "index": 3,
+    "verdict": "supported",
+    "note": ""
+   }
+  ],
+  "facts": [
+   {
+    "index": 0,
+    "status": "covered",
+    "note": ""
+   },
+   {
+    "index": 1,
+    "status": "covered",
+    "note": ""
+   }
+  ],
+  "cost_usd": 0.002558
+ },
+ "DEV-307": {
+  "claims": [
+   {
+    "index": 0,
+    "verdict": "supported",
+    "note": ""
+   },
+   {
+    "index": 1,
+    "verdict": "supported",
+    "note": ""
+   }
+  ],
+  "facts": [
+   {
+    "index": 0,
+    "status": "missing",
+    "note": ""
+   },
+   {
+    "index": 1,
+    "status": "missing",
+    "note": ""
+   }
+  ],
+  "cost_usd": 0.00179
+ },
+ "DEV-308": {
+  "claims": [
+   {
+    "index": 0,
+    "verdict": "supported",
+    "note": ""
+   },
+   {
+    "index": 1,
+    "verdict": "partial",
+    "note": "The figures are supported, but the excerpt does not identify itself as MOM\u2019s final release."
+   },
+   {
+    "index": 2,
+    "verdict": "partial",
+    "note": "The excerpt supports the longer-term improvement, but does not explicitly frame it as a caution."
+   }
+  ],
+  "facts": [
+   {
+    "index": 0,
+    "status": "missing",
+    "note": ""
+   },
+   {
+    "index": 1,
+    "status": "missing",
+    "note": ""
+   }
+  ],
+  "cost_usd": 0.002754
+ },
+ "DEV-309": {
+  "claims": [
+   {
+    "index": 0,
+    "verdict": "supported",
+    "note": ""
+   },
+   {
+    "index": 1,
+    "verdict": "supported",
+    "note": ""
+   }
+  ],
+  "facts": [
+   {
+    "index": 0,
+    "status": "covered",
+    "note": ""
+   },
+   {
+    "index": 1,
+    "status": "covered",
+    "note": ""
+   }
+  ],
+  "cost_usd": 0.001155
+ },
+ "DEV-310": {
+  "claims": [
+   {
+    "index": 0,
+    "verdict": "supported",
+    "note": ""
+   },
+   {
+    "index": 1,
+    "verdict": "supported",
+    "note": ""
+   },
+   {
+    "index": 2,
+    "verdict": "supported",
+    "note": ""
+   }
+  ],
+  "facts": [
+   {
+    "index": 0,
+    "status": "covered",
+    "note": ""
+   },
+   {
+    "index": 1,
+    "status": "covered",
+    "note": ""
+   },
+   {
+    "index": 2,
+    "status": "missing",
+    "note": ""
+   }
+  ],
+  "cost_usd": 0.002393
+ },
+ "DEV-311": {
+  "claims": [
+   {
+    "index": 0,
+    "verdict": "supported",
+    "note": ""
+   },
+   {
+    "index": 1,
+    "verdict": "supported",
+    "note": ""
+   },
+   {
+    "index": 2,
+    "verdict": "supported",
+    "note": ""
+   }
+  ],
+  "facts": [
+   {
+    "index": 0,
+    "status": "covered",
+    "note": ""
+   },
+   {
+    "index": 1,
+    "status": "covered",
+    "note": ""
+   },
+   {
+    "index": 2,
+    "status": "covered",
+    "note": ""
+   }
+  ],
+  "cost_usd": 0.001665
+ },
+ "DEV-312": {
+  "claims": [
+   {
+    "index": 0,
+    "verdict": "supported",
+    "note": ""
+   },
+   {
+    "index": 1,
+    "verdict": "supported",
+    "note": ""
+   },
+   {
+    "index": 2,
+    "verdict": "supported",
+    "note": ""
+   },
+   {
+    "index": 3,
+    "verdict": "supported",
+    "note": ""
+   }
+  ],
+  "facts": [
+   {
+    "index": 0,
+    "status": "covered",
+    "note": ""
+   },
+   {
+    "index": 1,
+    "status": "covered",
+    "note": ""
+   }
+  ],
+  "cost_usd": 0.001725
+ },
+ "DEV-313": {
+  "claims": [
+   {
+    "index": 0,
+    "verdict": "supported",
+    "note": ""
+   },
+   {
+    "index": 1,
+    "verdict": "supported",
+    "note": ""
+   },
+   {
+    "index": 2,
+    "verdict": "supported",
+    "note": ""
+   },
+   {
+    "index": 3,
+    "verdict": "supported",
+    "note": ""
+   }
+  ],
+  "facts": [
+   {
+    "index": 0,
+    "status": "covered",
+    "note": ""
+   },
+   {
+    "index": 1,
+    "status": "covered",
+    "note": ""
+   }
+  ],
+  "cost_usd": 0.001693
+ },
+ "DEV-314": {
+  "claims": [
+   {
+    "index": 0,
+    "verdict": "supported",
+    "note": ""
+   },
+   {
+    "index": 1,
+    "verdict": "supported",
+    "note": ""
+   },
+   {
+    "index": 2,
+    "verdict": "supported",
+    "note": ""
+   }
+  ],
+  "facts": [
+   {
+    "index": 0,
+    "status": "covered",
+    "note": ""
+   },
+   {
+    "index": 1,
+    "status": "covered",
+    "note": ""
+   },
+   {
+    "index": 2,
+    "status": "covered",
+    "note": ""
+   }
+  ],
+  "cost_usd": 0.001787
+ },
+ "DEV-315": {
+  "claims": [
+   {
+    "index": 0,
+    "verdict": "supported",
+    "note": ""
+   },
+   {
+    "index": 1,
+    "verdict": "supported",
+    "note": ""
+   }
+  ],
+  "facts": [
+   {
+    "index": 0,
+    "status": "covered",
+    "note": ""
+   },
+   {
+    "index": 1,
+    "status": "covered",
+    "note": ""
+   }
+  ],
+  "cost_usd": 0.002453
+ },
+ "DEV-316": {
+  "claims": [
+   {
+    "index": 0,
+    "verdict": "supported",
+    "note": ""
+   },
+   {
+    "index": 1,
+    "verdict": "supported",
+    "note": ""
+   }
+  ],
+  "facts": [
+   {
+    "index": 0,
+    "status": "covered",
+    "note": ""
+   },
+   {
+    "index": 1,
+    "status": "covered",
+    "note": ""
+   }
+  ],
+  "cost_usd": 0.001469
+ },
+ "DEV-317": {
+  "claims": [
+   {
+    "index": 0,
+    "verdict": "supported",
+    "note": ""
+   },
+   {
+    "index": 1,
+    "verdict": "supported",
+    "note": ""
+   }
+  ],
+  "facts": [
+   {
+    "index": 0,
+    "status": "missing",
+    "note": ""
+   },
+   {
+    "index": 1,
+    "status": "covered",
+    "note": ""
+   }
+  ],
+  "cost_usd": 0.001419
+ },
+ "DEV-318": {
+  "claims": [
+   {
+    "index": 0,
+    "verdict": "supported",
+    "note": ""
+   },
+   {
+    "index": 1,
+    "verdict": "supported",
+    "note": ""
+   }
+  ],
+  "facts": [
+   {
+    "index": 0,
+    "status": "covered",
+    "note": ""
+   },
+   {
+    "index": 1,
+    "status": "missing",
+    "note": ""
+   }
+  ],
+  "cost_usd": 0.001438
+ },
+ "DEV-319": {
+  "claims": [
+   {
+    "index": 0,
+    "verdict": "supported",
+    "note": ""
+   },
+   {
+    "index": 1,
+    "verdict": "supported",
+    "note": ""
+   }
+  ],
+  "facts": [
+   {
+    "index": 0,
+    "status": "covered",
+    "note": ""
+   },
+   {
+    "index": 1,
+    "status": "covered",
+    "note": ""
+   }
+  ],
+  "cost_usd": 0.001104
+ },
+ "DEV-320": {
+  "claims": [
+   {
+    "index": 0,
+    "verdict": "supported",
+    "note": ""
+   },
+   {
+    "index": 1,
+    "verdict": "supported",
+    "note": ""
+   }
+  ],
+  "facts": [
+   {
+    "index": 0,
+    "status": "covered",
+    "note": ""
+   },
+   {
+    "index": 1,
+    "status": "missing",
+    "note": ""
+   }
+  ],
+  "cost_usd": 0.001612
+ },
+ "DEV-321": {
+  "claims": [
+   {
+    "index": 0,
+    "verdict": "partial",
+    "note": "The figures and preliminary status are stated, but the cited excerpts do not identify the release as advance."
+   },
+   {
+    "index": 1,
+    "verdict": "partial",
+    "note": "The excerpt reports 3,690, but does not identify the release as final or attribute it to MOM."
+   },
+   {
+    "index": 2,
+    "verdict": "supported",
+    "note": ""
+   }
+  ],
+  "facts": [
+   {
+    "index": 0,
+    "status": "covered",
+    "note": ""
+   },
+   {
+    "index": 1,
+    "status": "covered",
+    "note": ""
+   }
+  ],
+  "cost_usd": 0.003109
+ },
+ "DEV-322": {
+  "claims": [
+   {
+    "index": 0,
+    "verdict": "partial",
+    "note": "The count and preliminary status are stated, but the excerpts do not identify an advance release."
+   },
+   {
+    "index": 1,
+    "verdict": "partial",
+    "note": "The count is stated, but the excerpt does not identify the release as final or attribute it to MOM."
+   },
+   {
+    "index": 2,
+    "verdict": "supported",
+    "note": ""
+   },
+   {
+    "index": 3,
+    "verdict": "partial",
+    "note": "The counts match, but the cited excerpts do not establish the releases\u2019 final and preliminary statuses."
+   }
+  ],
+  "facts": [
+   {
+    "index": 0,
+    "status": "covered",
+    "note": ""
+   },
+   {
+    "index": 1,
+    "status": "covered",
+    "note": ""
+   }
+  ],
+  "cost_usd": 0.004486
+ },
+ "DEV-323": {
+  "claims": [
+   {
+    "index": 0,
+    "verdict": "partial",
+    "note": "The excerpts give both rates but do not identify their release stages."
+   },
+   {
+    "index": 1,
+    "verdict": "partial",
+    "note": "The cited final-rate excerpt does not identify itself as a final release."
+   }
+  ],
+  "facts": [
+   {
+    "index": 0,
+    "status": "covered",
+    "note": ""
+   },
+   {
+    "index": 1,
+    "status": "covered",
+    "note": ""
+   }
+  ],
+  "cost_usd": 0.002162
+ },
+ "DEV-324": {
+  "claims": [
+   {
+    "index": 0,
+    "verdict": "partial",
+    "note": "The cited text gives 2.1% but does not identify the release as advance."
+   },
+   {
+    "index": 1,
+    "verdict": "partial",
+    "note": "The cited texts give both rates but do not identify their release stages."
+   },
+   {
+    "index": 2,
+    "verdict": "partial",
+    "note": "The cited rates match, but the text does not identify the 2.0% release as final."
+   }
+  ],
+  "facts": [
+   {
+    "index": 0,
+    "status": "covered",
+    "note": ""
+   },
+   {
+    "index": 1,
+    "status": "covered",
+    "note": ""
+   }
+  ],
+  "cost_usd": 0.003016
+ },
+ "DEV-325": {
+  "claims": [
+   {
+    "index": 0,
+    "verdict": "supported",
+    "note": ""
+   },
+   {
+    "index": 1,
+    "verdict": "supported",
+    "note": ""
+   }
+  ],
+  "facts": [
+   {
+    "index": 0,
+    "status": "covered",
+    "note": ""
+   },
+   {
+    "index": 1,
+    "status": "covered",
+    "note": ""
+   },
+   {
+    "index": 2,
+    "status": "missing",
+    "note": ""
+   }
+  ],
+  "cost_usd": 0.001514
+ },
+ "DEV-326": {
+  "claims": [
+   {
+    "index": 0,
+    "verdict": "partial",
+    "note": "The rates are stated, but the cited report title does not explicitly identify it as the final release."
+   },
+   {
+    "index": 1,
+    "verdict": "supported",
+    "note": ""
+   },
+   {
+    "index": 2,
+    "verdict": "partial",
+    "note": "The figures and periods are stated; the caution against direct comparison is an interpretation."
+   }
+  ],
+  "facts": [
+   {
+    "index": 0,
+    "status": "covered",
+    "note": ""
+   },
+   {
+    "index": 1,
+    "status": "covered",
+    "note": ""
+   },
+   {
+    "index": 2,
+    "status": "covered",
+    "note": ""
+   }
+  ],
+  "cost_usd": 0.002942
+ },
+ "DEV-327": {
+  "claims": [
+   {
+    "index": 0,
+    "verdict": "supported",
+    "note": ""
+   },
+   {
+    "index": 1,
+    "verdict": "supported",
+    "note": ""
+   }
+  ],
+  "facts": [
+   {
+    "index": 0,
+    "status": "covered",
+    "note": ""
+   },
+   {
+    "index": 1,
+    "status": "missing",
+    "note": ""
+   }
+  ],
+  "cost_usd": 0.001853
+ },
+ "DEV-328": {
+  "claims": [
+   {
+    "index": 0,
+    "verdict": "supported",
+    "note": ""
+   },
+   {
+    "index": 1,
+    "verdict": "supported",
+    "note": ""
+   },
+   {
+    "index": 2,
+    "verdict": "supported",
+    "note": ""
+   }
+  ],
+  "facts": [
+   {
+    "index": 0,
+    "status": "covered",
+    "note": ""
+   },
+   {
+    "index": 1,
+    "status": "missing",
+    "note": ""
+   },
+   {
+    "index": 2,
+    "status": "covered",
+    "note": ""
+   }
+  ],
+  "cost_usd": 0.003249
+ },
+ "DEV-329": {
+  "claims": [
+   {
+    "index": 0,
+    "verdict": "partial",
+    "note": "The figures are supported, but the recommendation to use the later figure is not stated in the evidence."
+   }
+  ],
+  "facts": [
+   {
+    "index": 0,
+    "status": "covered",
+    "note": ""
+   },
+   {
+    "index": 1,
+    "status": "missing",
+    "note": ""
+   }
+  ],
+  "cost_usd": 0.001869
+ },
+ "DEV-330": {
+  "claims": [
+   {
+    "index": 0,
+    "verdict": "partial",
+    "note": "The passage gives 63,400 for September but does not identify the release, year, or final status."
+   },
+   {
+    "index": 1,
+    "verdict": "partial",
+    "note": "The passage gives 61,500 for September but does not identify the release, year, or final status."
+   },
+   {
+    "index": 2,
+    "verdict": "supported",
+    "note": ""
+   }
+  ],
+  "facts": [
+   {
+    "index": 0,
+    "status": "covered",
+    "note": ""
+   },
+   {
+    "index": 1,
+    "status": "missing",
+    "note": ""
+   },
+   {
+    "index": 2,
+    "status": "covered",
+    "note": ""
+   }
+  ],
+  "cost_usd": 0.003065
+ },
+ "DEV-331": {
+  "claims": [
+   {
+    "index": 0,
+    "verdict": "partial",
+    "note": "The figures are stated, but the cited excerpts do not identify the releases as final and advance."
+   },
+   {
+    "index": 1,
+    "verdict": "partial",
+    "note": "The Q1 figure is 2,400, but the later Q4 comparison gives 2,300; release status is unstated."
+   }
+  ],
+  "facts": [
+   {
+    "index": 0,
+    "status": "covered",
+    "note": ""
+   },
+   {
+    "index": 1,
+    "status": "covered",
+    "note": ""
+   },
+   {
+    "index": 2,
+    "status": "contradicted",
+    "note": "The answer identifies 2,400, rather than 2,300, as the later historical estimate."
+   }
+  ],
+  "cost_usd": 0.00359
+ },
+ "DEV-332": {
+  "claims": [
+   {
+    "index": 0,
+    "verdict": "partial",
+    "note": "The passage reports 1.64 for December, but does not identify the release as final or attribute it to MOM."
+   },
+   {
+    "index": 1,
+    "verdict": "supported",
+    "note": ""
+   },
+   {
+    "index": 2,
+    "verdict": "supported",
+    "note": ""
+   }
+  ],
+  "facts": [
+   {
+    "index": 0,
+    "status": "covered",
+    "note": ""
+   },
+   {
+    "index": 1,
+    "status": "missing",
+    "note": ""
+   }
+  ],
+  "cost_usd": 0.003035
+ },
+ "DEV-333": null,
+ "DEV-334": {
+  "claims": [
+   {
+    "index": 0,
+    "verdict": "supported",
+    "note": ""
+   },
+   {
+    "index": 1,
+    "verdict": "partial",
+    "note": "The figures and unverified basis are stated, but the replacement recommendation is an interpretation."
+   },
+   {
+    "index": 2,
+    "verdict": "supported",
+    "note": ""
+   }
+  ],
+  "facts": [
+   {
+    "index": 0,
+    "status": "covered",
+    "note": ""
+   },
+   {
+    "index": 1,
+    "status": "covered",
+    "note": ""
+   },
+   {
+    "index": 2,
+    "status": "missing",
+    "note": ""
+   }
+  ],
+  "cost_usd": 0.002416
+ },
+ "DEV-335": {
+  "claims": [
+   {
+    "index": 0,
+    "verdict": "supported",
+    "note": ""
+   },
+   {
+    "index": 1,
+    "verdict": "supported",
+    "note": ""
+   },
+   {
+    "index": 2,
+    "verdict": "supported",
+    "note": ""
+   }
+  ],
+  "facts": [
+   {
+    "index": 0,
+    "status": "covered",
+    "note": ""
+   },
+   {
+    "index": 1,
+    "status": "covered",
+    "note": ""
+   },
+   {
+    "index": 2,
+    "status": "missing",
+    "note": ""
+   }
+  ],
+  "cost_usd": 0.001765
+ },
+ "DEV-201": {
+  "claims": [
+   {
+    "index": 0,
+    "verdict": "supported",
+    "note": ""
+   }
+  ],
+  "facts": [
+   {
+    "index": 0,
+    "status": "covered",
+    "note": ""
+   }
+  ],
+  "cost_usd": 0.000682
+ },
+ "DEV-202": {
+  "claims": [
+   {
+    "index": 0,
+    "verdict": "supported",
+    "note": ""
+   }
+  ],
+  "facts": [
+   {
+    "index": 0,
+    "status": "covered",
+    "note": ""
+   }
+  ],
+  "cost_usd": 0.001012
+ },
+ "DEV-203": null,
+ "DEV-204": {
+  "claims": [
+   {
+    "index": 0,
+    "verdict": "supported",
+    "note": ""
+   }
+  ],
+  "facts": [
+   {
+    "index": 0,
+    "status": "missing",
+    "note": ""
+   }
+  ],
+  "cost_usd": 0.001379
+ },
+ "DEV-205": {
+  "claims": [
+   {
+    "index": 0,
+    "verdict": "supported",
+    "note": ""
+   },
+   {
+    "index": 1,
+    "verdict": "supported",
+    "note": ""
+   }
+  ],
+  "facts": [
+   {
+    "index": 0,
+    "status": "covered",
+    "note": ""
+   }
+  ],
+  "cost_usd": 0.001035
+ },
+ "DEV-206": {
+  "claims": [
+   {
+    "index": 0,
+    "verdict": "supported",
+    "note": ""
+   }
+  ],
+  "facts": [
+   {
+    "index": 0,
+    "status": "covered",
+    "note": ""
+   }
+  ],
+  "cost_usd": 0.000956
+ },
+ "DEV-207": {
+  "claims": [
+   {
+    "index": 0,
+    "verdict": "supported",
+    "note": ""
+   }
+  ],
+  "facts": [
+   {
+    "index": 0,
+    "status": "covered",
+    "note": ""
+   }
+  ],
+  "cost_usd": 0.000856
+ },
+ "DEV-208": {
+  "claims": [
+   {
+    "index": 0,
+    "verdict": "supported",
+    "note": ""
+   }
+  ],
+  "facts": [
+   {
+    "index": 0,
+    "status": "missing",
+    "note": ""
+   }
+  ],
+  "cost_usd": 0.001137
+ },
+ "DEV-209": {
+  "claims": [
+   {
+    "index": 0,
+    "verdict": "supported",
+    "note": ""
+   },
+   {
+    "index": 1,
+    "verdict": "supported",
+    "note": ""
+   }
+  ],
+  "facts": [
+   {
+    "index": 0,
+    "status": "covered",
+    "note": ""
+   }
+  ],
+  "cost_usd": 0.001024
+ },
+ "DEV-210": {
+  "claims": [
+   {
+    "index": 0,
+    "verdict": "partial",
+    "note": "The cited evidence gives 28.6% but does not identify the month as June."
+   },
+   {
+    "index": 1,
+    "verdict": "supported",
+    "note": ""
+   }
+  ],
+  "facts": [
+   {
+    "index": 0,
+    "status": "covered",
+    "note": ""
+   }
+  ],
+  "cost_usd": 0.001267
+ },
+ "DEV-211": {
+  "claims": [
+   {
+    "index": 0,
+    "verdict": "supported",
+    "note": ""
+   }
+  ],
+  "facts": [
+   {
+    "index": 0,
+    "status": "covered",
+    "note": ""
+   }
+  ],
+  "cost_usd": 0.00079
+ },
+ "DEV-212": {
+  "claims": [
+   {
+    "index": 0,
+    "verdict": "supported",
+    "note": ""
+   },
+   {
+    "index": 1,
+    "verdict": "supported",
+    "note": ""
+   }
+  ],
+  "facts": [
+   {
+    "index": 0,
+    "status": "missing",
+    "note": ""
+   }
+  ],
+  "cost_usd": 0.001308
+ },
+ "DEV-213": {
+  "claims": [
+   {
+    "index": 0,
+    "verdict": "supported",
+    "note": ""
+   }
+  ],
+  "facts": [
+   {
+    "index": 0,
+    "status": "covered",
+    "note": ""
+   }
+  ],
+  "cost_usd": 0.000778
+ },
+ "DEV-214": {
+  "claims": [
+   {
+    "index": 0,
+    "verdict": "supported",
+    "note": ""
+   },
+   {
+    "index": 1,
+    "verdict": "supported",
+    "note": ""
+   }
+  ],
+  "facts": [
+   {
+    "index": 0,
+    "status": "missing",
+    "note": ""
+   }
+  ],
+  "cost_usd": 0.001657
+ },
+ "DEV-215": {
+  "claims": [
+   {
+    "index": 0,
+    "verdict": "supported",
+    "note": ""
+   },
+   {
+    "index": 1,
+    "verdict": "supported",
+    "note": ""
+   }
+  ],
+  "facts": [
+   {
+    "index": 0,
+    "status": "covered",
+    "note": ""
+   }
+  ],
+  "cost_usd": 0.000936
+ },
+ "DEV-216": {
+  "claims": [
+   {
+    "index": 0,
+    "verdict": "supported",
+    "note": ""
+   }
+  ],
+  "facts": [
+   {
+    "index": 0,
+    "status": "covered",
+    "note": ""
+   }
+  ],
+  "cost_usd": 0.000812
+ },
+ "DEV-217": {
+  "claims": [
+   {
+    "index": 0,
+    "verdict": "supported",
+    "note": ""
+   }
+  ],
+  "facts": [
+   {
+    "index": 0,
+    "status": "covered",
+    "note": ""
+   }
+  ],
+  "cost_usd": 0.000809
+ },
+ "DEV-218": {
+  "claims": [
+   {
+    "index": 0,
+    "verdict": "supported",
+    "note": ""
+   }
+  ],
+  "facts": [
+   {
+    "index": 0,
+    "status": "covered",
+    "note": ""
+   }
+  ],
+  "cost_usd": 0.000788
+ },
+ "DEV-219": {
+  "claims": [
+   {
+    "index": 0,
+    "verdict": "supported",
+    "note": ""
+   }
+  ],
+  "facts": [
+   {
+    "index": 0,
+    "status": "covered",
+    "note": ""
+   }
+  ],
+  "cost_usd": 0.000799
+ },
+ "DEV-220": {
+  "claims": [
+   {
+    "index": 0,
+    "verdict": "supported",
+    "note": ""
+   }
+  ],
+  "facts": [
+   {
+    "index": 0,
+    "status": "covered",
+    "note": ""
+   }
+  ],
+  "cost_usd": 0.000701
+ },
+ "DEV-221": {
+  "claims": [
+   {
+    "index": 0,
+    "verdict": "supported",
+    "note": ""
+   },
+   {
+    "index": 1,
+    "verdict": "supported",
+    "note": ""
+   }
+  ],
+  "facts": [
+   {
+    "index": 0,
+    "status": "covered",
+    "note": ""
+   }
+  ],
+  "cost_usd": 0.001067
+ },
+ "DEV-222": {
+  "claims": [
+   {
+    "index": 0,
+    "verdict": "supported",
+    "note": ""
+   }
+  ],
+  "facts": [
+   {
+    "index": 0,
+    "status": "covered",
+    "note": ""
+   }
+  ],
+  "cost_usd": 0.000816
+ },
+ "DEV-223": {
+  "claims": [
+   {
+    "index": 0,
+    "verdict": "supported",
+    "note": ""
+   },
+   {
+    "index": 1,
+    "verdict": "supported",
+    "note": ""
+   },
+   {
+    "index": 2,
+    "verdict": "supported",
+    "note": ""
+   }
+  ],
+  "facts": [
+   {
+    "index": 0,
+    "status": "covered",
+    "note": ""
+   }
+  ],
+  "cost_usd": 0.001162
+ },
+ "DEV-224": {
+  "claims": [
+   {
+    "index": 0,
+    "verdict": "supported",
+    "note": ""
+   }
+  ],
+  "facts": [
+   {
+    "index": 0,
+    "status": "covered",
+    "note": ""
+   }
+  ],
+  "cost_usd": 0.00073
+ },
+ "DEV-225": {
+  "claims": [
+   {
+    "index": 0,
+    "verdict": "supported",
+    "note": ""
+   }
+  ],
+  "facts": [
+   {
+    "index": 0,
+    "status": "covered",
+    "note": ""
+   }
+  ],
+  "cost_usd": 0.000759
+ },
+ "DEV-226": {
+  "claims": [
+   {
+    "index": 0,
+    "verdict": "supported",
+    "note": ""
+   }
+  ],
+  "facts": [
+   {
+    "index": 0,
+    "status": "covered",
+    "note": ""
+   }
+  ],
+  "cost_usd": 0.001066
+ },
+ "DEV-227": {
+  "claims": [
+   {
+    "index": 0,
+    "verdict": "supported",
+    "note": ""
+   },
+   {
+    "index": 1,
+    "verdict": "supported",
+    "note": ""
+   }
+  ],
+  "facts": [
+   {
+    "index": 0,
+    "status": "covered",
+    "note": ""
+   }
+  ],
+  "cost_usd": 0.001125
+ },
+ "DEV-228": {
+  "claims": [
+   {
+    "index": 0,
+    "verdict": "supported",
+    "note": ""
+   }
+  ],
+  "facts": [
+   {
+    "index": 0,
+    "status": "covered",
+    "note": ""
+   }
+  ],
+  "cost_usd": 0.000892
+ },
+ "DEV-229": {
+  "claims": [
+   {
+    "index": 0,
+    "verdict": "supported",
+    "note": ""
+   }
+  ],
+  "facts": [
+   {
+    "index": 0,
+    "status": "covered",
+    "note": ""
+   }
+  ],
+  "cost_usd": 0.000702
+ },
+ "DEV-230": {
+  "claims": [
+   {
+    "index": 0,
+    "verdict": "supported",
+    "note": ""
+   }
+  ],
+  "facts": [
+   {
+    "index": 0,
+    "status": "covered",
+    "note": ""
+   }
+  ],
+  "cost_usd": 0.000832
+ },
+ "DEV-231": {
+  "claims": [
+   {
+    "index": 0,
+    "verdict": "supported",
+    "note": ""
+   }
+  ],
+  "facts": [
+   {
+    "index": 0,
+    "status": "covered",
+    "note": ""
+   }
+  ],
+  "cost_usd": 0.000858
+ },
+ "DEV-232": {
+  "claims": [
+   {
+    "index": 0,
+    "verdict": "supported",
+    "note": ""
+   }
+  ],
+  "facts": [
+   {
+    "index": 0,
+    "status": "covered",
+    "note": ""
+   }
+  ],
+  "cost_usd": 0.000792
+ },
+ "DEV-233": {
+  "claims": [
+   {
+    "index": 0,
+    "verdict": "supported",
+    "note": ""
+   }
+  ],
+  "facts": [
+   {
+    "index": 0,
+    "status": "covered",
+    "note": ""
+   }
+  ],
+  "cost_usd": 0.001218
+ },
+ "DEV-234": {
+  "claims": [
+   {
+    "index": 0,
+    "verdict": "supported",
+    "note": ""
+   },
+   {
+    "index": 1,
+    "verdict": "supported",
+    "note": ""
+   }
+  ],
+  "facts": [
+   {
+    "index": 0,
+    "status": "covered",
+    "note": ""
+   }
+  ],
+  "cost_usd": 0.000924
+ },
+ "DEV-235": {
+  "claims": [
+   {
+    "index": 0,
+    "verdict": "supported",
+    "note": ""
+   },
+   {
+    "index": 1,
+    "verdict": "supported",
+    "note": ""
+   }
+  ],
+  "facts": [
+   {
+    "index": 0,
+    "status": "covered",
+    "note": ""
+   }
+  ],
+  "cost_usd": 0.000989
+ }
+}

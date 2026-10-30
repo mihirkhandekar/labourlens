@@ -2,136 +2,160 @@
  "label": "gpt-4.1-mini",
  "judge": "gpt-6.1-terra",
  "metrics": {
-  "n_cases": 34,
+  "n_cases": 235,
   "behaviour_accuracy": {
-   "rate": 0.824,
+   "rate": 0.791,
    "ci95": [
-    0.706,
-    0.941
+    0.74,
+    0.843
    ],
-   "n": 34
+   "n": 235
   },
   "false_answer_rate": {
-   "rate": 0.067,
+   "rate": 0.04,
    "ci95": [
-    0.0,
-    0.167
+    0.015,
+    0.069
    ],
-   "n": 30
+   "n": 202
   },
   "over_abstention_rate": {
-   "rate": 0.118,
+   "rate": 0.14,
    "ci95": [
-    0.029,
-    0.235
+    0.098,
+    0.187
    ],
-   "n": 34
+   "n": 235
   },
   "key_number_recall": {
-   "rate": 0.659,
+   "rate": 0.698,
    "ci95": [
-    0.478,
-    0.826
+    0.637,
+    0.761
    ],
-   "n": 23
+   "n": 158
   },
   "calc_correct": {
-   "rate": 0.5,
+   "rate": 0.375,
    "ci95": [
     0.167,
-    0.833
+    0.583
    ],
-   "n": 6
+   "n": 24
   },
   "gold_cited_any": {
-   "rate": 0.516,
+   "rate": 0.622,
    "ci95": [
-    0.355,
-    0.677
+    0.556,
+    0.689
    ],
-   "n": 31
+   "n": 196
   },
   "answers_with_ungrounded_numbers": {
-   "rate": 0.088,
-   "ci95": [
-    0.0,
-    0.206
-   ],
-   "n": 34
-  },
-  "claims_judged": 48,
-  "claim_supported_rate": 0.771,
-  "claim_unsupported_rate": 0.042,
-  "answers_with_any_unsupported_claim": {
    "rate": 0.077,
    "ci95": [
-    0.0,
-    0.192
+    0.043,
+    0.115
    ],
-   "n": 26
+   "n": 235
   },
-  "fact_coverage": 0.537,
-  "answers_contradicting_a_reference_fact": {
-   "rate": 0.231,
+  "claims_judged": 299,
+  "claim_supported_rate": {
+   "rate": 0.886,
    "ci95": [
-    0.077,
-    0.385
+    0.839,
+    0.927
    ],
-   "n": 26
+   "n": 299,
+   "n_cases": 164
   },
-  "latency_p50_s": 5.7,
-  "latency_p95_s": 10.8,
-  "cost_per_case_usd": 0.00455,
-  "judge_cost_total_usd": 0.0405
+  "claim_unsupported_rate": {
+   "rate": 0.007,
+   "ci95": [
+    0.0,
+    0.017
+   ],
+   "n": 299,
+   "n_cases": 164
+  },
+  "answers_with_any_unsupported_claim": {
+   "rate": 0.012,
+   "ci95": [
+    0.0,
+    0.03
+   ],
+   "n": 164
+  },
+  "fact_coverage": {
+   "rate": 0.58,
+   "ci95": [
+    0.518,
+    0.644
+   ],
+   "n": 264,
+   "n_cases": 157
+  },
+  "answers_contradicting_a_reference_fact": {
+   "rate": 0.079,
+   "ci95": [
+    0.043,
+    0.122
+   ],
+   "n": 164
+  },
+  "latency_p50_s": 5.8,
+  "latency_p95_s": 10.7,
+  "cost_per_case_usd": 0.00466,
+  "judge_cost_total_usd": 0.2301
  },
  "by_family": {
   "adversarial": {
-   "n": 5,
-   "behaviour_accuracy": 1.0,
-   "false_answer": 0,
-   "over_abstain": 0,
-   "unsupported_claims": 0,
-   "contradicted_facts": 1
-  },
-  "ambiguity_insufficient_causal": {
-   "n": 4,
-   "behaviour_accuracy": 0.5,
-   "false_answer": 2,
-   "over_abstain": 0,
-   "unsupported_claims": 1,
-   "contradicted_facts": 1
-  },
-  "cross_source_synthesis": {
-   "n": 7,
+   "n": 35,
    "behaviour_accuracy": 0.857,
    "false_answer": 0,
-   "over_abstain": 1,
-   "unsupported_claims": 0,
-   "contradicted_facts": 1
-  },
-  "factual_lookup": {
-   "n": 8,
-   "behaviour_accuracy": 0.75,
-   "false_answer": 0,
-   "over_abstain": 2,
+   "over_abstain": 5,
    "unsupported_claims": 0,
    "contradicted_facts": 0
   },
-  "numerical_comparison": {
-   "n": 6,
-   "behaviour_accuracy": 0.833,
-   "false_answer": 0,
-   "over_abstain": 1,
-   "unsupported_claims": 1,
-   "contradicted_facts": 1
-  },
-  "revision_conflict": {
-   "n": 4,
-   "behaviour_accuracy": 1.0,
-   "false_answer": 0,
-   "over_abstain": 0,
+  "ambiguity_insufficient_causal": {
+   "n": 44,
+   "behaviour_accuracy": 0.591,
+   "false_answer": 8,
+   "over_abstain": 2,
    "unsupported_claims": 0,
    "contradicted_facts": 2
+  },
+  "cross_source_synthesis": {
+   "n": 35,
+   "behaviour_accuracy": 0.971,
+   "false_answer": 0,
+   "over_abstain": 1,
+   "unsupported_claims": 0,
+   "contradicted_facts": 4
+  },
+  "factual_lookup": {
+   "n": 70,
+   "behaviour_accuracy": 0.857,
+   "false_answer": 0,
+   "over_abstain": 10,
+   "unsupported_claims": 2,
+   "contradicted_facts": 1
+  },
+  "numerical_comparison": {
+   "n": 33,
+   "behaviour_accuracy": 0.576,
+   "false_answer": 0,
+   "over_abstain": 14,
+   "unsupported_claims": 0,
+   "contradicted_facts": 4
+  },
+  "revision_conflict": {
+   "n": 18,
+   "behaviour_accuracy": 0.944,
+   "false_answer": 0,
+   "over_abstain": 1,
+   "unsupported_claims": 0,
+   "contradicted_facts": 8
   }
  }
 }

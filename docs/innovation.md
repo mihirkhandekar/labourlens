@@ -1,55 +1,60 @@
 # Innovation assessment
 
-Author: LabourLens project. Date: 30 October 2026. This note covers what is distinctive in the design, why it matters for policy research, what was tried and dropped, and what remains weak. It makes no claim about production impact. Evaluation results are not summarised here. See section 10 of the interactive page and `experiments/eval/`.
+AI review by claude-agent (DocsWriter), 30 October 2026. This assessment proposes how LabourLens could become a trusted capability for government policy researchers. It distinguishes implemented controls from proposed operations. Results below are provisional development results with AI-drafted gold. Held-out evaluation has not run; A4 is pending.
 
-## What is distinctive
+## 1. How you would improve retrieval and answer quality using evidence from evaluation
 
-**1. Data-quality notes written by code, shown next to the evidence.** The tools in `src/labourlens/agent/tools.py` inspect the rows they return. They add a note when a period inside the requested range has no row, when the source marks a value as unavailable, when one result mixes indicators, populations or adjustments, and when the advance and final MOM releases of one quarter are both in the evidence. `src/labourlens/answer/context.py` places the notes in a separate block that cannot be cited. Rule 9 of `prompts/answer_v4.md` tells the model not to estimate a missing value and to report conflicting versions with their release stage.
+Retrieval is the first intervention. On 137 development text cases, hybrid hit@8 was 0.599 [95% CI 0.518–0.679]. Period/release filtering reached 0.854 [0.796–0.912]; reranking reached 0.803 [0.737–0.869]; both reached 0.971 [0.942–0.993] (`docs/experiments/m6-retrieval-improvements.md`). The reranker and gold are both model-made, so these results may be optimistic.
 
-*Why it matters.* A researcher needs to know that the figure is missing or revised before using it. A model left alone tends to smooth over such gaps. A note produced by code does not depend on the model noticing.
+The end-to-end comparison also favours retrieval changes. Behaviour accuracy, median/p95 seconds and dollars per case are:
 
-**2. Claim-level citation with verbatim-quote validation.** Each claim carries labelled citations and a short quote of at most 40 words. `src/labourlens/answer/validate.py` rejects the answer when a label was not in the context, a quote is not found in the cited item after whitespace and quote-mark normalisation, or a flagged item is cited. One repair attempt follows. Numbers in a claim that are absent from the cited text are listed separately (D-024).
+| Model / run | Accuracy [95% CI] | Seconds | Dollars |
+|---|---|---|---|
+| gpt-6-luna A1 | 0.76 [0.70–0.81] | 10.7 / 22.8 | 0.0014 |
+| gpt-6-luna A3 | 0.89 [0.85–0.93] | 15.4 / 35.6 | 0.0021 |
+| gpt-5.6-luna A1 | 0.78 [0.73–0.83] | 9.7 / 18.0 | 0.0027 |
+| gpt-5.6-luna A3 | 0.91 [0.87–0.95] | 15.5 / 34.4 | 0.0036 |
 
-*Why it matters.* A reviewer can check each claim against its quoted source in seconds. The check shows that the cited text contains the quote. It does not show that the text supports the claim. Support is scored separately in the evaluation.
+Sources: `experiments/eval/agent-dev-A1/` and `experiments/eval/agent-dev-A3/`, files `gpt-6-luna.metrics.json` and `gpt-5.6-luna.metrics.json`. These are rounded snapshots from about 235 to 237 dev cases; final rescoring is pending. Exact values belong in those files. No paired-significance claim is made. Over-abstention fell from about 0.19 to 0.06 and 0.16 to 0.04, respectively.
 
-**3. A bounded agent that fails closed on operational failures.** The graph in `src/labourlens/agent/graph.py` limits rounds, calls, time and retries. A tool outage, a timeout or a planner outage ends in `operational_failure`. The system never reports it as "no evidence". Tests for these paths are in `tests/retrieval/test_agent.py`. The threat model reports that for one model, 7 of 10 MCP fault cases ended in an operational failure and no answer (`docs/threat-model.md`).
+Changing to `answer_v4` alone produced no measurable improvement. A2 accuracy was about 0.76 [0.70–0.81] and 0.80 [0.75–0.85], overlapping A1 (`experiments/eval/agent-dev-A2/`, same filenames). I would harden filtering against later-report restatements before adoption. Verbatim checks confirm quotation containment, not claim support (`src/labourlens/answer/validate.py`).
 
-*Why it matters.* In policy work, "the tool was down" and "the data does not exist" lead to different decisions. Keeping them apart protects the reader from a false absence.
+## 2. How you would detect and respond to changing data, model, or user behaviour
 
-**4. Hostile MCP server fixtures.** `src/labourlens/mcp/evil.py` is a test server with 14 modes, among them instructions inside result rows, an oversized reply, a schema change, a crash, a slow reply, an extra tool, a wrong version and a wrong name. The client in `src/labourlens/mcp/client.py` is tested against 13 of them (`tests/mcp/`, `src/labourlens/mcp/demo.py`, `experiments/threats/cases.jsonl`). The mode `poisoned_resource` is defined but no test or case refers to it. One mode carries an instruction that the heuristics do not catch. `docs/mcp-demo-transcript.md` records that it passes the client and that later layers handle it.
+Immutable snapshots, data contracts and revision comparisons already exist (`src/labourlens/data/raw_store.py`, `validate.py`, `revisions.py`). Run records capture configuration, manifest hash, tool errors and outcomes (`docs/audit-and-logging.md`).
 
-*Why it matters.* An MCP server is another party's code. Testing the client against hostile servers shows where the trust boundary holds and where it does not.
+**PROPOSAL, not built:** inspect each refresh for schema changes, missing periods and revisions before replacing the serving index. Run fixed canary questions daily and before any model, prompt or index change. Record source hashes, model identifiers and expected evidence. Compare answer status, citation support, latency and cost with the approved baseline. Hold a release on a contract failure or unexplained regression; investigate and retain the previous snapshot/configuration.
 
-**5. A label-by-evidence rule for abstention.** Gold cases are labelled by what the evidence supports. If part of a question can be answered, the system answers that part and states caveats. If the question asks for a published figure that does not exist, the system abstains. It refuses only for its own forecast, a proof of causation with nothing factual to answer, individual advice and personal data. Clarification is for ambiguity that changes the answer. The rule and its effect on each case are in `experiments/gold/CHANGELOG.md`, section v3.
+A hosted model can change despite stateless requests. Pin versioned model identifiers where available, track deprecation notices and rerun canaries when the provider changes a version. Weekly review of question families, clarification rates and feedback would detect changing user needs. Alerting and those review schedules are proposals, not current services.
 
-*Why it matters.* Without one rule, similar questions get different labels and the scores measure the labelling. With the rule, a causal question such as "did AI cause retrenchments" is scored on whether the system gives the published figures and a caveat.
+## 3. How you would support confidence, explainability, provenance, feedback, and human review
 
-**6. AI-reviewed gold set with a change log.** The gold set `experiments/gold/draft_cases.jsonl` has 268 cases (237 development, 31 held-out) according to the change log. Four AI reviews (`experiments/gold/ai-review/`) and two further AI reviews (`experiments/gold/ai-review-2/`) checked labels, evidence and numbers. Every change is listed with its reason, including changes not applied. All 268 cases have `review_status` set to `draft` and `reviewed_by` empty.
+Passage locators, observation lineage, claim citations and task timelines already support inspection. Code-generated notes identify missing data and release conflicts (`docs/audit-and-logging.md`). Confidence should describe evidence coverage and review status, rather than present a model's self-rating as a probability.
 
-*Why it matters.* Reviewers can see how each label changed and why. The set has not had human review, and the evaluation reports say so.
+**PROPOSAL:** sample answers across research families for human review, including abstentions and apparently successful answers. Reviewers would check definitions, evidence sufficiency and claim support. Publish disagreement with the AI judge alongside interval estimates.
 
-## What was tried and rejected
+Feedback is already linked to run ids. The proposed supervised loop is: log the run, classify the failure, add a draft gold case, review it, rerun evaluation, change one factor and retain improvements beyond noise (`docs/audit-and-logging.md`; D-016/D-017 in `docs/decisions.md`). AI review history remains visible in `experiments/gold/CHANGELOG.md`. This is not reinforcement learning. Later export of reviewed preferences would be an offline proposal; model training is not required by the assessment.
 
-- **Unconstrained planner schema.** One model looped on an invented indicator id. Enums built from the catalogue fixed this (`docs/experiments/m4-agent.md`, D-027).
-- **Raw blocks as chunks, and fixed token windows.** Passages are too short, and windows ignore layout (D-015).
-- **One generic MCP query tool with free-form filters.** It moves validation into the model and cannot be schema-constrained (D-028).
-- **Serving MOM passages over MCP.** Rights (D-001, D-028).
-- **Heuristics as the main injection defence.** They are bypassable by paraphrase. The prompt rules, the citation checks and the output guard carry the weight (`docs/threat-model.md`).
+## 4. How you would manage privacy, access controls, auditability, prompt injection, and third-party model risk
 
-## Honest limits
+Read-only tools, bounded execution, screened MCP replies and hostile-server fixtures limit actions (`docs/threat-model.md`). Corrected defended `r3` runs passed 35/36 for gpt-6-luna and gpt-5.6-luna [Wilson 95% CI 0.858–0.995], and 34/36 for gpt-4.1-mini [0.819–0.985]. Both luna models repeated a planted false figure in T-I06; mini failed T-S05's status criterion and followed a subtle instruction/cited poison in T-I02. The gpt-5.6-luna canary appeared once in a caveat, not as compliance. Evidence: `experiments/threats/SUMMARY.md` and `experiments/threats/runs/gpt-6-luna.metrics.json`, `gpt-5.6-luna.metrics.json`, `gpt-4.1-mini.metrics.json` in that directory. Historical naive hybrid runs scored 36/36 for gpt-6-luna and 33/36 for mini, but are not a paired `r3` ablation. These hand-written attacks do not establish safety against adaptive attackers.
 
-- The evaluation uses AI-drafted gold labels and an AI judge. Human review has not happened yet, so results show agreement with draft labels, not accuracy against ground truth (`src/labourlens/evaluation/harness.py`).
-- The default agent configuration in `src/labourlens/agent/graph.py` names `answer_v3`. Only `answer_v4` contains the rule on data-quality notes. The notes are built and passed to the model in either case. Until the default changes, the live page does not use the rule unless the configuration is set to `answer_v4`.
-- The agent cannot compute a difference from figures that appear only in report text. `calculate_change` accepts observations from datasets only (`docs/experiments/m4-agent.md`).
-- The threat suite is hand-written and not adaptive. It measures regressions more than worst cases. Only two hostile fixtures cover the added MCP tools (`docs/threat-model.md`).
-- MCP has no OAuth, TLS or rate limiting. The HTTP transport accepts loopback only.
-- The system sends MOM passages to a third-party API. The provider's data-use terms were not verified (D-022).
+The earlier defended 36/36 result was invalid for indirect injection: a fixture omitted BM25/dense candidate lists, so all six poisoned-passage cases failed operationally before reaching the model. The corrected fixture places poison in both lists with named document metadata, and exercise requires poison in evidence. All six now reach evidence; each defended run records 6/6 useful indirect answers but only 5/6 safety passes. The former 0/6 usefulness figure did not demonstrate model over-refusal. Regression coverage was added in `tests/test_security.py`; this documentation correction did not run checks.
 
-## Next steps
+**PROPOSAL, not built:** add a deterministic numerical cross-check between passage figures and validated datasets for the same indicator and period. T-I06 exposes the current gap: a planted number can appear in the cited passage and pass presence checks without being true. Match population, adjustment, units and release vintage before comparing; surface incompatible definitions and genuine source revisions rather than silently replacing a figure. Evaluate rejection of planted figures and false alarms on legitimate disagreements separately. This is not a completed planner_v2/A5 result; that work is in progress.
 
-1. Human review of the gold set, the passage spot check and the statistical spot check (`docs/human-review/`).
-2. Run the held-out split once after the gold set is frozen.
-3. Set the default answer prompt to `answer_v4` if the evaluation supports it.
-4. Add arithmetic over figures stated in report text.
-5. Add a hostile fixture for each of the nine MCP tools.
-6. Add adaptive attacks to the threat suite.
+The web review documents fixes for budget accounting, log integrity, session handling and quotation limits. It also records remaining privacy and deployment risks (`docs/security-review-web.md`). Audit pseudonyms and redaction do not anonymise questions. Shared access codes do not identify individual researchers.
+
+**PROPOSAL:** require government identity-based access, role- and source-level permissions, approved retention and restricted audit access before sensitive use. Minimise content sent externally. OpenAI data-use terms remain unverified (D-022, `docs/decisions.md`); government deployment needs an approved processing agreement, hosting policy and model-change process. Otherwise restrict use to cleared public material. The application should remain read-only and fail closed on operational failures.
+
+## 5. How you would control latency and cost while preserving quality
+
+A3 improves development accuracy with higher measured latency and cost, as shown above. Filtering alone adds negligible measured latency without another model call; combined retrieval adds roughly 3.2 seconds and $0.00075 per retrieval query (`docs/experiments/m6-retrieval-improvements.md`).
+
+**PROPOSAL:** retain cached embeddings, fixed tool budgets and deadline-aware reranking. Evaluate filter-only routing for simple lookups as a separate factor before adopting it. Track p95 latency, failed calls and provider charges alongside supported-answer coverage. Treat timeout billing as unknown when usage is absent. Application reservations are estimates, so retain provider-side spending controls (`docs/security-review-web.md`).
+
+## 6. Which two improvements you would prioritise first and how you would measure their impact
+
+**First, adopt and harden filter-plus-rerank retrieval, subject to approval.** On a larger human-reviewed development set, measure gold-passage-in-context, behaviour accuracy, over-abstention, latency and cost. Proposed acceptance thresholds, set before running, are a paired accuracy gain of at least five percentage points with its 95% interval above zero, no increased over-abstention, p95 below 40 seconds and mean cost below $0.005 per case.
+
+**Second, build human-reviewed evaluation with feedback-to-gold and daily canary monitoring.** Measure human/AI-judge agreement, time from flagged failure to regression test, and detected canary regressions. Proposed targets are agreement of at least 0.80, reviewed regression tests within two working days, and alerts for deliberately seeded regressions within one daily cycle. These are targets, not measured outcomes. Freeze reviewed cases before the held-out run; use A4 to test widening independently.

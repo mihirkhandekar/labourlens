@@ -2,134 +2,158 @@
  "label": "gpt-6-luna",
  "judge": "gpt-6.1-terra",
  "metrics": {
-  "n_cases": 34,
+  "n_cases": 235,
   "behaviour_accuracy": {
-   "rate": 0.706,
+   "rate": 0.77,
    "ci95": [
-    0.559,
-    0.853
+    0.719,
+    0.826
    ],
-   "n": 34
+   "n": 235
   },
   "false_answer_rate": {
-   "rate": 0.036,
+   "rate": 0.01,
    "ci95": [
     0.0,
-    0.107
+    0.026
    ],
-   "n": 28
+   "n": 192
   },
   "over_abstention_rate": {
-   "rate": 0.176,
+   "rate": 0.183,
    "ci95": [
-    0.059,
-    0.324
+    0.132,
+    0.234
    ],
-   "n": 34
+   "n": 235
   },
   "key_number_recall": {
-   "rate": 0.754,
+   "rate": 0.691,
    "ci95": [
-    0.594,
-    0.891
+    0.626,
+    0.754
    ],
-   "n": 23
+   "n": 158
   },
   "calc_correct": {
-   "rate": 0.667,
+   "rate": 0.833,
    "ci95": [
-    0.333,
-    1.0
+    0.667,
+    0.958
    ],
-   "n": 6
+   "n": 24
   },
   "gold_cited_any": {
-   "rate": 0.645,
+   "rate": 0.658,
    "ci95": [
-    0.452,
-    0.806
+    0.592,
+    0.724
    ],
-   "n": 31
+   "n": 196
   },
   "answers_with_ungrounded_numbers": {
+   "rate": 0.055,
+   "ci95": [
+    0.03,
+    0.085
+   ],
+   "n": 235
+  },
+  "claims_judged": 243,
+  "claim_supported_rate": {
+   "rate": 0.872,
+   "ci95": [
+    0.811,
+    0.929
+   ],
+   "n": 243,
+   "n_cases": 148
+  },
+  "claim_unsupported_rate": {
    "rate": 0.0,
    "ci95": [
     0.0,
     0.0
    ],
-   "n": 34
+   "n": 243,
+   "n_cases": 148
   },
-  "claims_judged": 35,
-  "claim_supported_rate": 0.886,
-  "claim_unsupported_rate": 0.0,
   "answers_with_any_unsupported_claim": {
    "rate": 0.0,
    "ci95": [
     0.0,
     0.0
    ],
-   "n": 23
+   "n": 148
   },
-  "fact_coverage": 0.657,
+  "fact_coverage": {
+   "rate": 0.677,
+   "ci95": [
+    0.619,
+    0.735
+   ],
+   "n": 263,
+   "n_cases": 146
+  },
   "answers_contradicting_a_reference_fact": {
-   "rate": 0.043,
+   "rate": 0.007,
    "ci95": [
     0.0,
-    0.13
+    0.02
    ],
-   "n": 23
+   "n": 148
   },
-  "latency_p50_s": 13.0,
-  "latency_p95_s": 24.2,
-  "cost_per_case_usd": 0.00142,
-  "judge_cost_total_usd": 0.0335
+  "latency_p50_s": 10.7,
+  "latency_p95_s": 22.8,
+  "cost_per_case_usd": 0.00137,
+  "judge_cost_total_usd": 0.2041
  },
  "by_family": {
   "adversarial": {
-   "n": 5,
-   "behaviour_accuracy": 0.8,
-   "false_answer": 0,
-   "over_abstain": 0,
-   "unsupported_claims": 0,
-   "contradicted_facts": 0
-  },
-  "ambiguity_insufficient_causal": {
-   "n": 4,
-   "behaviour_accuracy": 0.25,
-   "false_answer": 1,
-   "over_abstain": 0,
-   "unsupported_claims": 0,
-   "contradicted_facts": 0
-  },
-  "cross_source_synthesis": {
-   "n": 7,
-   "behaviour_accuracy": 0.857,
-   "false_answer": 0,
-   "over_abstain": 1,
-   "unsupported_claims": 0,
-   "contradicted_facts": 2
-  },
-  "factual_lookup": {
-   "n": 8,
-   "behaviour_accuracy": 0.625,
+   "n": 35,
+   "behaviour_accuracy": 0.886,
    "false_answer": 0,
    "over_abstain": 3,
    "unsupported_claims": 0,
    "contradicted_facts": 0
   },
-  "numerical_comparison": {
-   "n": 6,
-   "behaviour_accuracy": 0.667,
+  "ambiguity_insufficient_causal": {
+   "n": 44,
+   "behaviour_accuracy": 0.773,
+   "false_answer": 2,
+   "over_abstain": 0,
+   "unsupported_claims": 0,
+   "contradicted_facts": 0
+  },
+  "cross_source_synthesis": {
+   "n": 35,
+   "behaviour_accuracy": 0.8,
    "false_answer": 0,
-   "over_abstain": 2,
+   "over_abstain": 7,
+   "unsupported_claims": 0,
+   "contradicted_facts": 1
+  },
+  "factual_lookup": {
+   "n": 70,
+   "behaviour_accuracy": 0.7,
+   "false_answer": 0,
+   "over_abstain": 21,
+   "unsupported_claims": 0,
+   "contradicted_facts": 0
+  },
+  "numerical_comparison": {
+   "n": 33,
+   "behaviour_accuracy": 0.818,
+   "false_answer": 0,
+   "over_abstain": 6,
    "unsupported_claims": 0,
    "contradicted_facts": 0
   },
   "revision_conflict": {
-   "n": 4,
-   "behaviour_accuracy": 1.0,
+   "n": 18,
+   "behaviour_accuracy": 0.667,
    "false_answer": 0,
-   "over_abstain": 0,
+   "over_abstain": 6,
    "unsupported_claims": 0,
    "contradicted_facts": 0
   }

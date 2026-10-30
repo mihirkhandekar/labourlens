@@ -34,6 +34,8 @@ def main(argv: list[str] | None = None) -> int:
     ag.add_argument("--pairs", nargs="*")
     ag.add_argument("--answer-prompt", default="answer_v3")
     ag.add_argument("--tag", default="A1")
+    ag.add_argument("--planner-prompt", default="planner_v1")
+    ag.add_argument("--retrieval", choices=["hybrid", "r3", "r3w"], default="hybrid")
     th = sub.add_parser("threat-test", help="run the adversarial threat suite through the agent (calls the OpenAI API)")
     th.add_argument("--models", nargs="*")
     th.add_argument("--ablation", choices=["naive"], help="run with every defence off, as a baseline")
@@ -50,6 +52,7 @@ def main(argv: list[str] | None = None) -> int:
     asw.add_argument("run_id")
     ap = sub.add_parser("audit-prune", help="delete audit run logs older than N days")
     ap.add_argument("--days", type=int, required=True)
+    sub.add_parser("scan-sources", help="scan stored passages and statistics text fields for instruction-like content (no build, no network)")
     sub.add_parser("gold-check", help="validate the gold set and regenerate the owner review sheet")
     sub.add_parser("export", help="export presentation-ready JSON for the interactive report page")
     sub.add_parser("build-report", help="assemble the rights-safe interactive presentation")
@@ -104,7 +107,7 @@ def main(argv: list[str] | None = None) -> int:
     if args.cmd == "agent-exp":
         from labourlens.agent import experiments as agx
 
-        agx.run(args.split, args.pairs, args.answer_prompt, args.tag)
+        agx.run(args.split, args.pairs, args.answer_prompt, args.tag, args.retrieval, args.planner_prompt)
         return 0
     if args.cmd == "threat-test":
         from labourlens.security import threat_suite
@@ -126,6 +129,19 @@ def main(argv: list[str] | None = None) -> int:
 
         print(al.report() if args.cmd == "audit-report" else al.show(args.run_id) if args.cmd == "audit-show" else al.prune(args.days))
         return 0
+    if args.cmd == "scan-sources":
+        import json as _j
+        from types import SimpleNamespace
+
+        import pandas as _pd
+
+        from labourlens import paths as _p
+        from labourlens.data import validate as _v
+
+        ps = [SimpleNamespace(**{"passage_id": d["passage_id"], "text": d["text"]}) for f in sorted(_p.PASSAGES.glob("*.jsonl")) for d in map(_j.loads, f.read_text().splitlines()) ]
+        r = _v.scan_injection(ps, _pd.read_parquet(_p.PROCESSED / "observations.parquet"))
+        print(_j.dumps({k: (v if k != "hits" else v[:20]) for k, v in r.items()}, indent=1), f"\nhits: {len(r['hits'])}")
+        return 1 if r["hits"] else 0
     if args.cmd == "gold-check":
         from labourlens import paths as _p
         from labourlens.retrieval import gold

@@ -1,0 +1,161 @@
+{
+ "label": "gpt-5.6-luna",
+ "judge": "gpt-6.1-terra",
+ "metrics": {
+  "n_cases": 237,
+  "behaviour_accuracy": {
+   "rate": 0.907,
+   "ci95": [
+    0.869,
+    0.945
+   ],
+   "n": 237
+  },
+  "false_answer_rate": {
+   "rate": 0.009,
+   "ci95": [
+    0.0,
+    0.022
+   ],
+   "n": 227
+  },
+  "over_abstention_rate": {
+   "rate": 0.042,
+   "ci95": [
+    0.017,
+    0.068
+   ],
+   "n": 237
+  },
+  "key_number_recall": {
+   "rate": 0.835,
+   "ci95": [
+    0.786,
+    0.88
+   ],
+   "n": 160
+  },
+  "calc_correct": {
+   "rate": 0.875,
+   "ci95": [
+    0.75,
+    1.0
+   ],
+   "n": 24
+  },
+  "gold_cited_any": {
+   "rate": 0.828,
+   "ci95": [
+    0.773,
+    0.884
+   ],
+   "n": 198
+  },
+  "answers_with_ungrounded_numbers": {
+   "rate": 0.051,
+   "ci95": [
+    0.025,
+    0.08
+   ],
+   "n": 237
+  },
+  "claims_judged": 364,
+  "claim_supported_rate": {
+   "rate": 0.874,
+   "ci95": [
+    0.833,
+    0.914
+   ],
+   "n": 364,
+   "n_cases": 183
+  },
+  "claim_unsupported_rate": {
+   "rate": 0.0,
+   "ci95": [
+    0.0,
+    0.0
+   ],
+   "n": 364,
+   "n_cases": 183
+  },
+  "answers_with_any_unsupported_claim": {
+   "rate": 0.0,
+   "ci95": [
+    0.0,
+    0.0
+   ],
+   "n": 183
+  },
+  "fact_coverage": {
+   "rate": 0.77,
+   "ci95": [
+    0.721,
+    0.817
+   ],
+   "n": 317,
+   "n_cases": 181
+  },
+  "answers_contradicting_a_reference_fact": {
+   "rate": 0.005,
+   "ci95": [
+    0.0,
+    0.016
+   ],
+   "n": 183
+  },
+  "latency_p50_s": 15.5,
+  "latency_p95_s": 34.4,
+  "cost_per_case_usd": 0.0036,
+  "judge_cost_total_usd": 0.2599
+ },
+ "by_family": {
+  "adversarial": {
+   "n": 35,
+   "behaviour_accuracy": 0.971,
+   "false_answer": 0,
+   "over_abstain": 0,
+   "unsupported_claims": 0,
+   "contradicted_facts": 0
+  },
+  "ambiguity_insufficient_causal": {
+   "n": 44,
+   "behaviour_accuracy": 0.75,
+   "false_answer": 2,
+   "over_abstain": 0,
+   "unsupported_claims": 0,
+   "contradicted_facts": 0
+  },
+  "cross_source_synthesis": {
+   "n": 35,
+   "behaviour_accuracy": 0.971,
+   "false_answer": 0,
+   "over_abstain": 1,
+   "unsupported_claims": 0,
+   "contradicted_facts": 0
+  },
+  "factual_lookup": {
+   "n": 70,
+   "behaviour_accuracy": 0.929,
+   "false_answer": 0,
+   "over_abstain": 5,
+   "unsupported_claims": 0,
+   "contradicted_facts": 0
+  },
+  "numerical_comparison": {
+   "n": 34,
+   "behaviour_accuracy": 0.882,
+   "false_answer": 0,
+   "over_abstain": 4,
+   "unsupported_claims": 0,
+   "contradicted_facts": 0
+  },
+  "revision_conflict": {
+   "n": 19,
+   "behaviour_accuracy": 1.0,
+   "false_answer": 0,
+   "over_abstain": 0,
+   "unsupported_claims": 0,
+   "contradicted_facts": 2
+  }
+ }
+}

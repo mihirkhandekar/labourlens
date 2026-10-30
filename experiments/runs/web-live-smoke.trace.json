@@ -1,0 +1,75 @@
+{
+  "run_id": "5f488ab0dc29",
+  "model": "gpt-6-luna",
+  "kind": "observed_statistics_only_http_smoke",
+  "usage": {
+    "cost_usd": 0.000935,
+    "seconds": 10.68
+  },
+  "events": [
+    {
+      "node": "validate_question",
+      "event": "accepted",
+      "detail": {}
+    },
+    {
+      "node": "plan_research",
+      "event": "gather",
+      "detail": {
+        "round": 1,
+        "n_calls": 1
+      }
+    },
+    {
+      "node": "execute_tool",
+      "event": "ok",
+      "detail": {
+        "tool": "get_series",
+        "args": {
+          "source_id": "retrenched_employees",
+          "period_from": "2026-Q1",
+          "period_to": "2026-Q2",
+          "adjustment": "not_applicable",
+          "indicator_id": "retrenched_employees"
+        },
+        "new_items": [
+          "O1",
+          "O2"
+        ],
+        "seconds": 0.008
+      }
+    },
+    {
+      "node": "plan_research",
+      "event": "finish",
+      "detail": {
+        "round": 2,
+        "n_calls": 0
+      }
+    },
+    {
+      "node": "assess_evidence",
+      "event": "evidence_ready",
+      "detail": {
+        "passages": 0,
+        "observations": 2,
+        "calculations": 0
+      }
+    },
+    {
+      "node": "generate_answer",
+      "event": "generated",
+      "detail": {}
+    },
+    {
+      "node": "validate_answer",
+      "event": "valid",
+      "detail": {}
+    },
+    {
+      "node": "finalize",
+      "event": "answered",
+      "detail": {}
+    }
+  ]
+}

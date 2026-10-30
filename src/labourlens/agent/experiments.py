@@ -71,14 +71,15 @@ COLS = ["valid_rate", "behavior_accuracy", "over_abstention_rate", "false_answer
         "gold_cited_any_rate", "tool_calls_mean", "tool_error_rate", "operational_failures", "latency_p50_s", "cost_per_case_usd"]
 
 
-def run(split: str = "dev", pairs: list[str] | None = None, answer_prompt: str = "answer_v3", tag: str = "A1") -> None:
+def run(split: str = "dev", pairs: list[str] | None = None, answer_prompt: str = "answer_v3", tag: str = "A1",
+        retrieval: str = "hybrid", planner_prompt: str = "planner_v1") -> None:
     cases = ev.load_cases(split)
     shared = Shared()
     exp = f"agent-{split}-{tag}"
     rows = {}
     for label in pairs or MODEL_PAIRS:
         pm, am = MODEL_PAIRS[label]
-        cfg = AgentConfig(planner_model=pm, answer_model=am, answer_prompt=answer_prompt)
+        cfg = AgentConfig(planner_model=pm, answer_model=am, answer_prompt=answer_prompt, retrieval=retrieval, planner_prompt=planner_prompt)
         print(f"[agent] {label} on {len(cases)} cases", flush=True)
         with ThreadPoolExecutor(WORKERS) as ex:
             results = list(ex.map(lambda c: (c, run_agent(c["question"], shared, cfg)), cases))

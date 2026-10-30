@@ -145,7 +145,7 @@ Commands: `uv run labourlens audit-report`, `audit-show <run_id>` and `audit-pru
 | Retrieval | `src/labourlens/retrieval/chunk.py`, `tokenize.py`, `bm25_index.py`, `dense.py`, `runtime.py` | Chunking, BM25, dense and hybrid search |
 | Retrieval evaluation | `src/labourlens/retrieval/gold.py`, `evaluate.py`, `experiments.py`, `experiments_dense.py` | Gold-set validator, retrieval metrics, experiment runners |
 | Answers | `src/labourlens/answer/schema.py`, `context.py`, `llm.py`, `pipeline.py`, `validate.py`, `experiments.py` | Answer schema, prompt context, model client, validator |
-| Agent | `src/labourlens/agent/graph.py`, `tools.py`, `experiments.py` | LangGraph graph, tools, agent experiment runner |
+| Agent | `src/labourlens/agent/graph.py`, `tools.py`, `experiments.py` | LangGraph graph, tools, experiment runner; `search_reports` defaults to `r3` (D-030): quarter and release filter on both candidate lists, then a top-30 LLM rerank; `hybrid` (earlier default) and `r3w` (widening when the filtered pool is small) remain selectable; search traces/audit and run usage include rerank metadata/cost |
 | MCP | `src/labourlens/mcp/server.py`, `analysis.py`, `models.py`, `client.py`, `http_server.py`, `redact.py`, `demo.py`, `evil.py` | Server, client, scripted demo, hostile fixture |
 | Security | `src/labourlens/security/guards.py`, `threat_suite.py` | Injection and output guards, adversarial suite |
 | Evaluation | `src/labourlens/evaluation/harness.py` | Metrics from saved raw runs |

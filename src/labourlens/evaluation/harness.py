@@ -160,8 +160,8 @@ def run(exp: str = "agent-dev-A1", split: str = "dev", labels: list[str] | None 
         judgements = json.loads(cache.read_text()) if cache.exists() else {}
         for rec in recs:
             case = cases.get(rec["case_id"])
-            if case is None:
-                continue
+            if case is None or rec.get("question") != case["question"]:
+                continue  # dropped from the gold set, or the question text changed after this run (the run answered a different question)
             if judge and rec["case_id"] not in judgements:
                 judgements[rec["case_id"]] = judge_one(case, rec)
             rows.append(case_metrics(case, rec, judgements.get(rec["case_id"])))

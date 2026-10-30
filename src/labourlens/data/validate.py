@@ -202,6 +202,45 @@ def check_passages(passages: list, pstats: list[dict]) -> list[dict]:
     return out
 
 
+ALLOW_FILE = paths.SPECS / "injection_scan_allow.txt"
+TEXT_COLUMNS = ["dimension", "title", "indicator_id", "missing_reason", "population", "adjustment"]
+
+
+def scan_injection(passages: list, obs: pd.DataFrame) -> dict:
+    """Ingestion-time scan: instruction-like text or hidden characters in report passages or in text fields of statistics rows.
+    Heuristic (labourlens.security.guards): it catches common phrasing and hidden characters, not paraphrase. A flagged item is
+    reviewed by a person; reviewed false positives are listed by id in specs/injection_scan_allow.txt (one id per line, '#' comments)."""
+    from labourlens.security.guards import injection_flags
+
+    allow = set()
+    if ALLOW_FILE.exists():
+        allow = {ln.split("#")[0].strip() for ln in ALLOW_FILE.read_text().splitlines() if ln.split("#")[0].strip()}
+    hits = []
+    for ps in passages:
+        flags = injection_flags(ps.text)
+        if flags and ps.passage_id not in allow:
+            hits.append({"kind": "passage", "id": ps.passage_id, "flags": flags})
+    if len(obs):
+        cols = [c for c in TEXT_COLUMNS if c in obs.columns]
+        seen: dict[str, list[str]] = {}
+        for c in cols:
+            for v in obs[c].dropna().astype(str).unique():
+                flags = injection_flags(v)
+                if flags:
+                    seen.setdefault(f"{c}:{v}", flags)
+        for k, flags in seen.items():
+            if f"obs:{k}" not in allow:
+                hits.append({"kind": "observation_field", "id": k, "flags": flags})
+    return {"passages_scanned": len(passages), "text_values_scanned": int(sum(obs[c].nunique() for c in TEXT_COLUMNS if c in obs.columns)) if len(obs) else 0, "hits": hits}
+
+
+def check_injection(passages: list, obs: pd.DataFrame) -> list[dict]:
+    r = scan_injection(passages, obs)
+    shown = [f"{h['kind']}:{h['id']}:{','.join(h['flags'])}" for h in r["hits"][:5]]
+    return [_check("security.no_instruction_like_text_in_sources", not r["hits"],
+                   f"scanned {r['passages_scanned']} passages and {r['text_values_scanned']} distinct text values; hits={len(r['hits'])} {shown}")]
+
+
 def _git(*args: str) -> str:
     return subprocess.run(["git", *args], cwd=paths.ROOT, capture_output=True, text=True, check=False).stdout
 
@@ -228,6 +267,7 @@ def run_all(obs, quarantine, passages, pstats, per_source, der, rec) -> dict:
     checks += check_hierarchies(obs)
     checks += check_derived(der)
     checks += check_passages(passages, pstats)
+    checks += check_injection(passages, obs)
     checks += check_packaging()
     # reconciliation presence for the documented revision example
     q2 = next((q for q in rec["quarters"] if q["period"] == "2026-Q2"), None)

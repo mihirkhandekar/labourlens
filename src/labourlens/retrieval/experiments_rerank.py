@@ -32,6 +32,7 @@ BONUS = 0.5 / (RRF_C + 1)  # pre-registered primary soft-boost bonus per matchin
 BUDGET_USD = 3.0
 KS = (3, 5, 8, 10)
 RUNS = paths.EXPERIMENTS / "runs"
+MATRIX_FILE = paths.ROOT / "data" / "runs" / "dev-R0" / "dense_matrix.npy"
 QV_FILE = paths.ROOT / "data" / "runs" / "dev-R0" / "query_vectors.json"
 
 
@@ -45,9 +46,26 @@ class World:
         chunks = ck.build_chunks(ck.CONFIGS[rt.CHUNK_CONFIG], self.passages)
         self.chunks = {c.chunk_id: c for c in chunks}
         self.bm25 = BM25Index.build(chunks, BM25Config())
-        self.dense = dn.DenseIndex(chunks, dn.DenseConfig(rt.EMBEDDING_MODEL))
+        self.dense = self._frozen_dense(chunks)
         self.passages_by_id = {p["passage_id"]: p for p in self.passages}
         self.n = len(chunks)
+
+    @staticmethod
+    def _frozen_dense(chunks) -> dn.DenseIndex:
+        """Chunk vectors frozen per corpus on first use (same reason as query vectors): the shared embedding cache can lose entries to a concurrent
+        writer and the hosted API re-embeds them with tiny differences, which flips near-ties between runs."""
+        cfg = dn.DenseConfig(rt.EMBEDDING_MODEL)
+        ids = [c.chunk_id for c in chunks]
+        tag = hashlib.sha256("|".join(ids).encode()).hexdigest()[:16]
+        f = MATRIX_FILE.with_name(f"dense_matrix_{tag}.npy")
+        if f.exists():
+            d = object.__new__(dn.DenseIndex)
+            d.cfg, d.chunk_ids, d.matrix = cfg, ids, np.load(f)
+            return d
+        d = dn.DenseIndex(chunks, cfg)
+        f.parent.mkdir(parents=True, exist_ok=True)
+        np.save(f, d.matrix)
+        return d
 
     def query_vector(self, question: str) -> np.ndarray:
         """Query vectors are frozen on first use (data/runs, gitignored): the hosted embedding API is not bit-identical across calls and the shared

@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import hashlib
 import re
+import time
 from dataclasses import dataclass, field
 from decimal import ROUND_HALF_UP, Decimal
 
@@ -40,6 +41,8 @@ class ToolResult:
     items: list[ContextPassage] = field(default_factory=list)
     message: str = ""  # short, safe summary shown to the planner (no passage text)
     error_kind: str | None = None  # invalid_arguments | not_found | too_large
+    retrieval_trace: dict = field(default_factory=dict)
+    usage: dict = field(default_factory=dict)
 
 
 class StatsData:
@@ -105,9 +108,10 @@ class StatsData:
 class Shared:
     """Read-only data shared by all runs: retriever, passages and the statistics data."""
 
-    def __init__(self, world=None, observations: pd.DataFrame | None = None, stats=None) -> None:
+    def __init__(self, world=None, observations: pd.DataFrame | None = None, stats=None, retrieval: str = "hybrid") -> None:
         from labourlens.retrieval.runtime import load_world
 
+        self.retrieval = retrieval
         self.retriever, self.chunks_by_id, self.passages_by_id = world or load_world()
         self.stats = stats or StatsData(observations)
         self.obs, self.titles = self.stats.obs, self.stats.titles
@@ -151,8 +155,12 @@ def compute_change(value_a: float, value_b: float, kind: str, unit: str) -> tupl
 class Tools:
     """One instance per agent run: holds the evidence registries for that run."""
 
-    def __init__(self, shared: Shared) -> None:
+    def __init__(self, shared: Shared, retrieval: str | None = None, question: str = "", tool_timeout_s: float = 10.0) -> None:
         self.sh = shared
+        self.retrieval = retrieval or getattr(shared, "retrieval", "hybrid")
+        if self.retrieval not in ("hybrid", "r3", "r3w"):
+            raise ValueError("retrieval must be hybrid, r3 or r3w")
+        self.question, self.tool_timeout_s = question, tool_timeout_s
         self.items: list[ContextPassage] = []
         self._ids: set[str] = set()
         self._obs: dict[str, dict] = {}  # label -> observation facts, for calculate_change
@@ -212,6 +220,63 @@ class Tools:
         return it
 
     # ---- search_reports -------------------------------------------------------------------------------------------
+    def _search(self, query: str, k: int) -> tuple[list, dict, dict]:
+        """Union the planner-query and original-question period/stage hints.
+
+        Quarters are unioned; conflicting stages disable the stage restriction.
+        R3w widens when fewer than 8 fused chunks survive or the best filtered
+        BM25 score is below 0.5 times the unfiltered best positive BM25 score.
+        These fixed thresholds were not tuned on dev cases. Default uses the old path.
+        """
+        if self.retrieval == "hybrid":
+            return self.sh.retriever.search(query, k), {}, {}
+        from labourlens.retrieval import dense, period, rerank
+
+        started = time.perf_counter()
+        a, b = period.parse(query), period.parse(self.question)
+        stages = {h.stage for h in (a, b) if h.stage}
+        conflict = a.stage_conflict or b.stage_conflict or len(stages) > 1
+        hints = period.Hints(a.quarters | b.quarters, next(iter(stages)) if stages and not conflict else None, conflict)
+        allowed = period.matching_sources(hints)
+        retr, chunks = self.sh.retriever, self.sh.chunks_by_id
+        n = len(chunks)
+        bm = retr.bm25.search(query, n if allowed else retr.depth)
+        de = retr.dense.search(query, n if allowed else retr.depth)
+        filtered_bm = [x for x in bm if chunks[x[0]].source_id in allowed] if allowed else bm
+        filtered_de = [x for x in de if chunks[x[0]].source_id in allowed] if allowed else de
+        ranked = dense.rrf([filtered_bm[:retr.depth], filtered_de[:retr.depth]], n, retr.c)
+        trace = {"retrieval": self.retrieval,
+                 "hints": {"quarters": [f"{y}-Q{q}" for y, q in sorted(hints.quarters)], "stage": hints.stage, "stage_conflict": conflict},
+                 "filter_applied": allowed is not None,
+                 "filtered_documents": len({chunks[cid].source_id for cid, _ in filtered_bm + filtered_de}),
+                 "filtered_chunks": len(ranked), "widened": False,
+                 "reranked": False, "rerank_fallback": False, "rerank_seconds": 0.0, "rerank_cost_usd": 0.0}
+        if self.retrieval == "r3w" and allowed and (
+            len(ranked) < 8 or (bm and bm[0][1] > 0 and (not filtered_bm or filtered_bm[0][1] < 0.5 * bm[0][1]))
+        ):
+            # Search BM25 at its original depth: tied scores can depend on requested k.
+            ranked = dense.rrf([retr.bm25.search(query, retr.depth), de[:retr.depth]], n, retr.c)
+            trace["widened"] = True
+        usage = {}
+        if ranked:
+            t0 = time.perf_counter()
+            try:
+                remaining = self.tool_timeout_s - (t0 - started) - 0.25
+                if remaining <= 0:
+                    raise TimeoutError("retrieval exhausted tool budget")
+                result = rerank.rerank(query, [chunks[cid] for cid, _ in ranked[:rerank.POOL]],
+                                       model=rerank.MODEL, use_cache=False, timeout_s=remaining)
+                trace.update(reranked=result.ok, rerank_fallback=not result.ok, rerank_cost_usd=result.cost_usd)
+                if result.ok:
+                    ranked = [ranked[i] for i in result.order] + ranked[rerank.POOL:]
+                usage = {"calls": 1, "prompt_tokens": result.prompt_tokens, "completion_tokens": result.completion_tokens,
+                         "cost_usd": result.cost_usd, "llm_seconds": result.seconds}
+            except Exception:
+                # Failed/expired rerank never converts available evidence to a tool failure.
+                trace["rerank_fallback"] = True
+            trace["rerank_seconds"] = round(time.perf_counter() - t0, 3)
+        return ranked[:k], trace, usage
+
     def search_reports(self, query: str, k: int = 8) -> ToolResult:
         q = (query or "").strip()
         if not q or len(q) > MAX_QUERY_CHARS:
@@ -219,14 +284,16 @@ class Tools:
         if not isinstance(k, int) or not 1 <= k <= MAX_K:
             return ToolResult(False, message=f"k must be an integer from 1 to {MAX_K}", error_kind="invalid_arguments")
         new = []
-        for cid, _ in self.sh.retriever.search(q, k):
+        ranked, retrieval_trace, usage = self._search(q, k)
+        for cid, _ in ranked:
             for pid in self.sh.chunks_by_id[cid].source_passage_ids:
                 p = self.sh.passages_by_id.get(pid)
                 if p:
                     it = self._add("P", pid, p["source_id"], p["document_title"], p["publication_date"], p["release_stage"], p["locator"], p["text"])
                     if it:
                         new.append(it)
-        return ToolResult(True, new, f"{len(new)} new passages from {len({i.source_id for i in new})} documents: " + ", ".join(f"{i.label}={i.source_id}" for i in new[:12]))
+        return ToolResult(True, new, f"{len(new)} new passages from {len({i.source_id for i in new})} documents: " + ", ".join(f"{i.label}={i.source_id}" for i in new[:12]),
+                          retrieval_trace=retrieval_trace, usage=usage)
 
     # ---- get_series -----------------------------------------------------------------------------------------------
     def get_series(self, source_id: str, period_from: str, period_to: str, dimension: str | None = None,
