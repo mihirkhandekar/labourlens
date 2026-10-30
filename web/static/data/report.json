@@ -7295,9 +7295,13 @@
         "metrics": {
           "n_cases": 36,
           "n_scored": 36,
-          "passed": 33,
-          "pass_rate": 0.917,
-          "canary_leaks": 1,
+          "passed": 32,
+          "pass_rate_ci95": [
+            0.747,
+            0.956
+          ],
+          "pass_rate": 0.889,
+          "canary_leaks": 2,
           "canary_caveat": 0,
           "by_category": {
             "direct_injection": {
@@ -7329,7 +7333,7 @@
             },
             "unsupported_claims": {
               "n": 4,
-              "passed": 3,
+              "passed": 4,
               "not_exercised": 0,
               "useful": [
                 0,
@@ -7338,7 +7342,7 @@
             },
             "indirect_injection_passage": {
               "n": 6,
-              "passed": 5,
+              "passed": 3,
               "not_exercised": 0,
               "useful": [
                 6,
@@ -7355,8 +7359,8 @@
               ]
             }
           },
-          "cost_usd": 0.1067,
-          "latency_p50_s": 4.5
+          "cost_usd": 0.1191,
+          "latency_p50_s": 6.2
         },
         "provenance": [
           "experiments/threats/runs/gpt-4.1-mini+naive.metrics.json"
@@ -7392,7 +7396,7 @@
           },
           "unsupported_claims": {
             "n": 4,
-            "passed": 3,
+            "passed": 4,
             "not_exercised": 0,
             "useful": [
               0,
@@ -7401,7 +7405,7 @@
           },
           "indirect_injection_passage": {
             "n": 6,
-            "passed": 5,
+            "passed": 3,
             "not_exercised": 0,
             "useful": [
               6,
@@ -7424,10 +7428,14 @@
         "metrics": {
           "n_cases": 36,
           "n_scored": 36,
-          "passed": 36,
-          "pass_rate": 1.0,
-          "canary_leaks": 0,
-          "canary_caveat": 1,
+          "passed": 34,
+          "pass_rate_ci95": [
+            0.819,
+            0.985
+          ],
+          "pass_rate": 0.944,
+          "canary_leaks": 1,
+          "canary_caveat": 2,
           "by_category": {
             "direct_injection": {
               "n": 6,
@@ -7467,7 +7475,7 @@
             },
             "indirect_injection_passage": {
               "n": 6,
-              "passed": 6,
+              "passed": 4,
               "not_exercised": 0,
               "useful": [
                 6,
@@ -7484,8 +7492,8 @@
               ]
             }
           },
-          "cost_usd": 0.1122,
-          "latency_p50_s": 4.6
+          "cost_usd": 0.1276,
+          "latency_p50_s": 4.9
         },
         "provenance": [
           "experiments/threats/runs/gpt-4.1-mini.metrics.json"
@@ -7530,7 +7538,7 @@
           },
           "indirect_injection_passage": {
             "n": 6,
-            "passed": 6,
+            "passed": 4,
             "not_exercised": 0,
             "useful": [
               6,
@@ -7553,10 +7561,14 @@
         "metrics": {
           "n_cases": 36,
           "n_scored": 36,
-          "passed": 36,
-          "pass_rate": 1.0,
+          "passed": 35,
+          "pass_rate_ci95": [
+            0.858,
+            0.995
+          ],
+          "pass_rate": 0.972,
           "canary_leaks": 0,
-          "canary_caveat": 1,
+          "canary_caveat": 2,
           "by_category": {
             "direct_injection": {
               "n": 6,
@@ -7596,10 +7608,10 @@
             },
             "indirect_injection_passage": {
               "n": 6,
-              "passed": 6,
+              "passed": 5,
               "not_exercised": 0,
               "useful": [
-                3,
+                6,
                 6
               ]
             },
@@ -7613,8 +7625,8 @@
               ]
             }
           },
-          "cost_usd": 0.0699,
-          "latency_p50_s": 6.0
+          "cost_usd": 0.0803,
+          "latency_p50_s": 7.2
         },
         "provenance": [
           "experiments/threats/runs/gpt-5.6-luna.metrics.json"
@@ -7659,10 +7671,10 @@
           },
           "indirect_injection_passage": {
             "n": 6,
-            "passed": 6,
+            "passed": 5,
             "not_exercised": 0,
             "useful": [
-              3,
+              6,
               6
             ]
           },
@@ -7682,8 +7694,12 @@
         "metrics": {
           "n_cases": 36,
           "n_scored": 36,
-          "passed": 36,
-          "pass_rate": 1.0,
+          "passed": 35,
+          "pass_rate_ci95": [
+            0.858,
+            0.995
+          ],
+          "pass_rate": 0.972,
           "canary_leaks": 0,
           "canary_caveat": 0,
           "by_category": {
@@ -7725,7 +7741,7 @@
             },
             "indirect_injection_passage": {
               "n": 6,
-              "passed": 6,
+              "passed": 5,
               "not_exercised": 0,
               "useful": [
                 6,
@@ -7737,12 +7753,12 @@
               "passed": 10,
               "not_exercised": 0,
               "useful": [
-                3,
+                2,
                 3
               ]
             }
           },
-          "cost_usd": 0.0288,
+          "cost_usd": 0.0354,
           "latency_p50_s": 7.6
         },
         "provenance": [
@@ -7788,7 +7804,7 @@
           },
           "indirect_injection_passage": {
             "n": 6,
-            "passed": 6,
+            "passed": 5,
             "not_exercised": 0,
             "useful": [
               6,
@@ -7800,7 +7816,7 @@
             "passed": 10,
             "not_exercised": 0,
             "useful": [
-              3,
+              2,
               3
             ]
           }
@@ -7811,8 +7827,12 @@
         "metrics": {
           "n_cases": 36,
           "n_scored": 36,
-          "passed": 36,
-          "pass_rate": 1.0,
+          "passed": 35,
+          "pass_rate_ci95": [
+            0.858,
+            0.995
+          ],
+          "pass_rate": 0.972,
           "canary_leaks": 0,
           "canary_caveat": 0,
           "by_category": {
@@ -7854,7 +7874,7 @@
             },
             "indirect_injection_passage": {
               "n": 6,
-              "passed": 6,
+              "passed": 5,
               "not_exercised": 0,
               "useful": [
                 6,
@@ -7871,8 +7891,8 @@
               ]
             }
           },
-          "cost_usd": 0.0337,
-          "latency_p50_s": 8.8
+          "cost_usd": 0.037,
+          "latency_p50_s": 8.0
         },
         "provenance": [
           "experiments/threats/runs/gpt-6-luna.metrics.json"
@@ -7917,7 +7937,7 @@
           },
           "indirect_injection_passage": {
             "n": 6,
-            "passed": 6,
+            "passed": 5,
             "not_exercised": 0,
             "useful": [
               6,
@@ -11331,27 +11351,32 @@
       {
         "path": "experiments/threats/runs/gpt-4.1-mini+naive.metrics.json",
         "status": "available",
-        "sha256": "573b1ac797b95f95b6e1ec3902c50e44361491454a4d2564f5dd40d74e6336f2"
+        "sha256": "ed0eb270869228fbe3eb26c54b4803370e3bedf9a91809084cfd07f15c37e08a",
+        "snapshot": "working-tree"
       },
       {
         "path": "experiments/threats/runs/gpt-4.1-mini.metrics.json",
         "status": "available",
-        "sha256": "beec5a2371e3be17dba9724924307cf9b657e258637b045839a6d1aae2d54247"
+        "sha256": "ff6f32d2913fb632e334f074c967facba19876ae9071197102d2b4fb1034b6a1",
+        "snapshot": "working-tree"
       },
       {
         "path": "experiments/threats/runs/gpt-5.6-luna.metrics.json",
         "status": "available",
-        "sha256": "e463ed0a3cda4128d4042925056bc8e265f9c9b6a813195000977cb0018f8764"
+        "sha256": "6e2be188f7f239a04976813b482d1e2c72fcdf276f0dc1360d95f6c52b23d3d3",
+        "snapshot": "working-tree"
       },
       {
         "path": "experiments/threats/runs/gpt-6-luna+naive.metrics.json",
         "status": "available",
-        "sha256": "4dee53c49253bb082c8707a26442eff8a04cfee20bed01c3cb90a4d21c63b6ec"
+        "sha256": "adf35459608615da50dea9804594835ee538dba9e92e3832c0c4688caa89579b",
+        "snapshot": "working-tree"
       },
       {
         "path": "experiments/threats/runs/gpt-6-luna.metrics.json",
         "status": "available",
-        "sha256": "a536348eaf1d7a6ea42621b35f8a3f5b91ab138ce3c3459302bc8ae2283cb1ca"
+        "sha256": "99da8436672b9adbc9acb89916086e1bdb51c2394115549b72a2849716d06fae",
+        "snapshot": "working-tree"
       },
       {
         "path": "experiments/eval/agent-dev-A1/gpt-4.1-mini.metrics.json",
@@ -11444,7 +11469,7 @@
         "sha256": "0fa6ee54b14c92bd71c5f9b34b62723df00608ca242517322dcc974e6c0b4b69"
       }
     ],
-    "policy": "Committed artifacts except evaluation metrics explicitly refreshed from SHA-256-identified working-tree snapshots; no model outputs or report passages.",
+    "policy": "Committed artifacts except evaluation and security metrics explicitly refreshed from SHA-256-identified working-tree snapshots; no model outputs or report passages.",
     "development_refresh": {
       "source": "Local development metric files; no build or model execution.",
       "paths": [
@@ -11473,5 +11498,16 @@
       ],
       "held_out_results": "Excluded; not read."
     }
+    },
+    "security_refresh": {
+      "source": "Final corrected paired r3 threat metric files; no build or model execution.",
+      "paths": [
+        "experiments/threats/runs/gpt-4.1-mini+naive.metrics.json",
+        "experiments/threats/runs/gpt-4.1-mini.metrics.json",
+        "experiments/threats/runs/gpt-5.6-luna.metrics.json",
+        "experiments/threats/runs/gpt-6-luna+naive.metrics.json",
+        "experiments/threats/runs/gpt-6-luna.metrics.json"
+      ],
+      "scope": "Security projection only; existing development and held-out evaluation projections preserved."
   }
 }

@@ -194,7 +194,8 @@ export function renderEvaluation(panel, report) {
 
 export function renderSecurity(panel, report) {
   const rows = rowsOf(report?.security);
-  notice(panel, 'Corrected development threat suite: poisoned passages must reach agent evidence to count as exercised. An earlier R3 fixture omitted candidate lists and produced invalid indirect-injection passes. Current defended runs use R3; older naive runs use hybrid retrieval and are not paired ablations. Figures come from the linked run artifacts.');
+  notice(panel, 'Final corrected development threat rerun: defended and naive configurations now use the same r3 retrieval in paired comparisons. An earlier r3 fixture omitted candidate lists and produced invalid indirect-injection passes; this valid final rerun supersedes earlier results. All poisoned passages reached agent evidence: not exercised = 0, with indirect-injection usefulness 6/6 in every run. Figures come from the linked run artifacts.');
+  notice(panel, 'On this small handwritten suite (36 cases per configuration), gpt-6-luna passed 35/36 with and without defences: no measurable defence effect. gpt-4.1-mini passed 34/36 defended versus 32/36 naive, with overlapping Wilson 95% intervals: consistent with a benefit for the weakest model, not demonstrated. There is one run per configuration; these development results do not establish general safety.');
   if (!rows.length) return empty(panel, 'No security measurements recorded.');
   const groups = new Map();
   rows.forEach(row => {
@@ -225,7 +226,7 @@ export function renderSecurity(panel, report) {
     if (!variants.some(row => row.naive)) card.append(node('p', 'eval-caption', 'No naive baseline recorded for this model, so no paired comparison is shown.'));
     grid.append(card);
   });
-  panel.append(grid, node('p', 'eval-caption', 'Whiskers show recorded pass-rate intervals. Safety passes do not establish usefulness or zero risk. The luna models repeated an attacker-planted false report figure; passage figures are not cross-checked against matching statistical records. A deterministic cross-check is proposed, not built.'), node('h3', '', 'Results by threat category'), familyTable(rows, true));
+  panel.append(grid, node('p', 'eval-caption', 'Whiskers show recorded Wilson 95% pass-rate intervals. Safety passes do not establish usefulness or zero risk. T-I06, an attacker-planted false report figure, remains a common failure in all five configurations. Passage figures are not cross-checked against matching statistical records. A deterministic cross-check is proposed, not built.'), node('h3', '', 'Results by threat category'), familyTable(rows, true));
 }
 
 // Optional replacement for scalar/nested metric dumps in other experiment sections.
