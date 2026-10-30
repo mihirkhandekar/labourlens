@@ -36,3 +36,14 @@ Plain-English definitions. Add a term the first time it matters. Entries marked 
 - **Prompt injection:** malicious instructions hidden in user input or retrieved text.
 - **MCP (Model Context Protocol):** standard for exposing tools and resources to AI clients through a server.
 - **LangGraph StateGraph:** a graph of steps with typed shared state, used for the bounded research agent (ADR-002).
+
+## Retrieval terms (M2)
+- **Chunk:** a retrievable piece of a document, built from one or more extracted passages. It records which passages it contains.
+- **BM25:** keyword scoring. A passage scores higher when it contains rare query words, repeated words help with diminishing returns (k1), and long passages are discounted (b).
+- **k1, b:** BM25 tuning knobs. k1 controls how fast repeated words saturate; b controls how strongly length is penalised.
+- **Stopword:** a very common word (the, of) removed before matching.
+- **Stemming:** reducing words to a root (retrenched, retrenchment to retrench).
+- **hit@k:** share of questions where at least one correct passage is in the top k results.
+- **MRR (mean reciprocal rank):** average of 1/rank of the first correct result; 1 means always first.
+- **Held-out set:** evaluation questions frozen before tuning, used once to report honest results.
+- **Gold set:** questions with expected evidence and behaviour, labelled for evaluation.

@@ -1,0 +1,94 @@
+============================= test session starts ==============================
+platform darwin -- Python 3.12.12, pytest-9.2.0, pluggy-1.7.0 -- /Users/mihir/projects/experiments/zuhl/.venv/bin/python3
+rootdir: /Users/mihir/projects/experiments/zuhl
+configfile: pyproject.toml
+testpaths: tests
+plugins: anyio-4.15.1
+collecting ... collected 74 items
+
+tests/data/test_normalizers.py::test_quarterly_long_dash_and_na_are_null_not_zero PASSED [  1%]
+tests/data/test_normalizers.py::test_bad_period_and_bad_value_are_quarantined_not_dropped PASSED [  2%]
+tests/data/test_normalizers.py::test_schema_drift_is_fatal PASSED        [  4%]
+tests/data/test_normalizers.py::test_unexpected_wide_column_is_fatal PASSED [  5%]
+tests/data/test_normalizers.py::test_sector_wide_hierarchy_and_long_conversion PASSED [  6%]
+tests/data/test_normalizers.py::test_odd_indent_and_orphan_rows_are_quarantined PASSED [  8%]
+tests/data/test_normalizers.py::test_observation_ids_are_deterministic PASSED [  9%]
+tests/data/test_pdf_and_html_extract.py::test_garbled_block_is_flagged PASSED [ 10%]
+tests/data/test_pdf_and_html_extract.py::test_normal_prose_and_abbreviation_lists_are_not_flagged PASSED [ 12%]
+tests/data/test_pdf_and_html_extract.py::test_short_text_never_flagged PASSED [ 13%]
+tests/data/test_pdf_and_html_extract.py::test_tabular_detector PASSED    [ 14%]
+tests/data/test_periods_and_values.py::test_quarter_end_months_map_to_quarters[2026-03-expected0] PASSED [ 16%]
+tests/data/test_periods_and_values.py::test_quarter_end_months_map_to_quarters[2026-06-expected1] PASSED [ 17%]
+tests/data/test_periods_and_values.py::test_quarter_end_months_map_to_quarters[2025-09-expected2] PASSED [ 18%]
+tests/data/test_periods_and_values.py::test_quarter_end_months_map_to_quarters[2025-12-expected3] PASSED [ 20%]
+tests/data/test_periods_and_values.py::test_non_quarter_end_month_is_rejected_not_rounded[2026-05] PASSED [ 21%]
+tests/data/test_periods_and_values.py::test_non_quarter_end_month_is_rejected_not_rounded[2026-01] PASSED [ 22%]
+tests/data/test_periods_and_values.py::test_non_quarter_end_month_is_rejected_not_rounded[2026-13] PASSED [ 24%]
+tests/data/test_periods_and_values.py::test_non_quarter_end_month_is_rejected_not_rounded[2026] PASSED [ 25%]
+tests/data/test_periods_and_values.py::test_non_quarter_end_month_is_rejected_not_rounded[26-06] PASSED [ 27%]
+tests/data/test_periods_and_values.py::test_non_quarter_end_month_is_rejected_not_rounded[2026-6] PASSED [ 28%]
+tests/data/test_periods_and_values.py::test_non_quarter_end_month_is_rejected_not_rounded[June 2026] PASSED [ 29%]
+tests/data/test_periods_and_values.py::test_bad_quarter_labels_rejected[2026-Q5] PASSED [ 31%]
+tests/data/test_periods_and_values.py::test_bad_quarter_labels_rejected[2026Q2] PASSED [ 32%]
+tests/data/test_periods_and_values.py::test_bad_quarter_labels_rejected[2026-q2] PASSED [ 33%]
+tests/data/test_periods_and_values.py::test_bad_quarter_labels_rejected[Q2-2026] PASSED [ 35%]
+tests/data/test_periods_and_values.py::test_bad_quarter_labels_rejected[] PASSED [ 36%]
+tests/data/test_periods_and_values.py::test_wide_columns_parse_and_reject PASSED [ 37%]
+tests/data/test_periods_and_values.py::test_quarter_bounds_handle_month_lengths PASSED [ 39%]
+tests/data/test_periods_and_values.py::test_scope_window_is_inclusive PASSED [ 40%]
+tests/data/test_periods_and_values.py::test_missing_token_is_none_with_reason_never_zero PASSED [ 41%]
+tests/data/test_periods_and_values.py::test_real_zero_is_a_value PASSED  [ 43%]
+tests/data/test_periods_and_values.py::test_undeclared_text_is_an_error[1,200] PASSED [ 44%]
+tests/data/test_periods_and_values.py::test_undeclared_text_is_an_error[12%] PASSED [ 45%]
+tests/data/test_periods_and_values.py::test_undeclared_text_is_an_error[n/a] PASSED [ 47%]
+tests/data/test_periods_and_values.py::test_undeclared_text_is_an_error[abc] PASSED [ 48%]
+tests/data/test_periods_and_values.py::test_undeclared_text_is_an_error[1.2.3] PASSED [ 50%]
+tests/data/test_periods_and_values.py::test_undeclared_text_is_an_error[--] PASSED [ 51%]
+tests/data/test_periods_and_values.py::test_undeclared_text_is_an_error[1e3] PASSED [ 52%]
+tests/data/test_periods_and_values.py::test_negative_and_decimal_values_parse PASSED [ 54%]
+tests/data/test_provenance_and_packaging.py::test_every_ok_entry_has_matching_file_hash PASSED [ 55%]
+tests/data/test_provenance_and_packaging.py::test_every_source_has_rights_status_and_url PASSED [ 56%]
+tests/data/test_provenance_and_packaging.py::test_all_rights_reserved_sources_are_not_public PASSED [ 58%]
+tests/data/test_provenance_and_packaging.py::test_observation_ids_unique_and_every_obs_traces_to_a_manifest_snapshot PASSED [ 59%]
+tests/data/test_provenance_and_packaging.py::test_build_is_idempotent PASSED [ 60%]
+tests/data/test_provenance_and_packaging.py::test_no_pdfs_or_mom_text_visible_to_git PASSED [ 62%]
+tests/data/test_provenance_and_packaging.py::test_only_open_licence_datasets_are_in_snapshots_dir PASSED [ 63%]
+tests/data/test_revisions_reconcile.py::test_diff_detects_revision_addition_removal PASSED [ 64%]
+tests/data/test_revisions_reconcile.py::test_diff_identical_files_is_empty PASSED [ 66%]
+tests/data/test_revisions_reconcile.py::test_diff_reports_schema_change PASSED [ 67%]
+tests/data/test_revisions_reconcile.py::test_reconciliation_matches_hand_read_values PASSED [ 68%]
+tests/retrieval/test_chunk_tokenize_index.py::test_every_chunk_traces_to_real_passages[blocks] PASSED [ 70%]
+tests/retrieval/test_chunk_tokenize_index.py::test_every_chunk_traces_to_real_passages[merge120] PASSED [ 71%]
+tests/retrieval/test_chunk_tokenize_index.py::test_every_chunk_traces_to_real_passages[fixed150] PASSED [ 72%]
+tests/retrieval/test_chunk_tokenize_index.py::test_flagged_passages_are_not_retrieved_by_default PASSED [ 74%]
+tests/retrieval/test_chunk_tokenize_index.py::test_merge_never_crosses_heading_or_source_and_every_passage_is_covered PASSED [ 75%]
+tests/retrieval/test_chunk_tokenize_index.py::test_merge_overlap_repeats_some_passage PASSED [ 77%]
+tests/retrieval/test_chunk_tokenize_index.py::test_fixed_windows_have_fixed_size_and_chunk_ids_are_stable PASSED [ 78%]
+tests/retrieval/test_chunk_tokenize_index.py::test_chunk_ids_differ_across_configs PASSED [ 79%]
+tests/retrieval/test_chunk_tokenize_index.py::test_period_phrases_normalise_to_same_tokens[second quarter of 2026] PASSED [ 81%]
+tests/retrieval/test_chunk_tokenize_index.py::test_period_phrases_normalise_to_same_tokens[2Q 2026] PASSED [ 82%]
+tests/retrieval/test_chunk_tokenize_index.py::test_period_phrases_normalise_to_same_tokens[Q2 2026] PASSED [ 83%]
+tests/retrieval/test_chunk_tokenize_index.py::test_period_phrases_normalise_to_same_tokens[2nd quarter 2026] PASSED [ 85%]
+tests/retrieval/test_chunk_tokenize_index.py::test_period_phrases_normalise_to_same_tokens[quarter 2 2026] PASSED [ 86%]
+tests/retrieval/test_chunk_tokenize_index.py::test_period_normalisation_can_be_switched_off PASSED [ 87%]
+tests/retrieval/test_chunk_tokenize_index.py::test_numbers_stay_whole_and_commas_removed PASSED [ 89%]
+tests/retrieval/test_chunk_tokenize_index.py::test_stemming_is_optional_and_leaves_numbers PASSED [ 90%]
+tests/retrieval/test_chunk_tokenize_index.py::test_bm25s_matches_reference_formula PASSED [ 91%]
+tests/retrieval/test_chunk_tokenize_index.py::test_exact_term_ranks_first_and_index_roundtrips PASSED [ 93%]
+tests/retrieval/test_chunk_tokenize_index.py::test_stale_index_fails_loudly PASSED [ 94%]
+tests/retrieval/test_chunk_tokenize_index.py::test_no_hits_returns_empty_not_error PASSED [ 95%]
+tests/retrieval/test_evaluate.py::test_metrics_reflect_known_ranks PASSED [ 97%]
+tests/retrieval/test_evaluate.py::test_chunk_variants_are_scored_on_passage_labels PASSED [ 98%]
+tests/retrieval/test_evaluate.py::test_non_answer_cases_are_excluded_from_retrieval_scoring PASSED [100%]
+
+=============================== warnings summary ===============================
+<frozen importlib._bootstrap>:488
+<frozen importlib._bootstrap>:488
+
+<frozen importlib._bootstrap>:488
+<frozen importlib._bootstrap>:488
+
+<frozen importlib._bootstrap>:488
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+======================== 74 passed, 5 warnings in 4.50s ========================

@@ -1,0 +1,56 @@
+{
+ "label": "blocks",
+ "config": {
+  "chunk": {
+   "name": "blocks",
+   "mode": "blocks",
+   "target_words": 0,
+   "overlap_words": 0,
+   "include_flags": [
+    "ok"
+   ]
+  },
+  "bm25": {
+   "k1": 1.5,
+   "b": 0.75,
+   "tok": {
+    "stem": false,
+    "stopwords": true,
+    "period_normalise": true
+   }
+  }
+ },
+ "metrics": {
+  "n_cases": 9,
+  "n_chunks": 1929,
+  "corpus_hash": "c512bdfe5b060e665df3ec7bd83fceccdd72cb683651b32de3b4efaff8e8ae2c",
+  "hit@1": 0.1111,
+  "hit@3": 0.1111,
+  "hit@5": 0.3333,
+  "hit@10": 0.3333,
+  "page_hit@5": 0.4444,
+  "page_hit@10": 0.4444,
+  "mrr": 0.1611,
+  "passage_recall@5": 0.2778,
+  "ctx_words@5": 141.1,
+  "latency_ms_p50": 0.192,
+  "by_family_hit@5": {
+   "adversarial": {
+    "n": 1,
+    "hit@5": 1.0
+   },
+   "cross_source_synthesis": {
+    "n": 3,
+    "hit@5": 0.0
+   },
+   "factual_lookup": {
+    "n": 3,
+    "hit@5": 0.333
+   },
+   "revision_conflict": {
+    "n": 2,
+    "hit@5": 0.5
+   }
+  }
+ }
+}

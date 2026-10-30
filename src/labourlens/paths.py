@@ -16,3 +16,6 @@ FIGURES = ROOT / "artifacts" / "figures"
 
 def rel(p: Path) -> str:
     return str(p.resolve().relative_to(ROOT))
+
+INDEX = DATA / "index"  # gitignored: chunks and indexes derived from MOM text
+EXPERIMENTS = ROOT / "experiments"

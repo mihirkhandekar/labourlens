@@ -1,0 +1,57 @@
+{
+ "label": "merge120+tables",
+ "config": {
+  "chunk": {
+   "name": "merge120t",
+   "mode": "merge",
+   "target_words": 120,
+   "overlap_words": 30,
+   "include_flags": [
+    "ok",
+    "table_unreliable"
+   ]
+  },
+  "bm25": {
+   "k1": 1.5,
+   "b": 0.75,
+   "tok": {
+    "stem": false,
+    "stopwords": true,
+    "period_normalise": true
+   }
+  }
+ },
+ "metrics": {
+  "n_cases": 9,
+  "n_chunks": 1022,
+  "corpus_hash": "caae68ca61fd8a8e81986ff0199ef4f2e10029689188a8369430aa56d3bbacad",
+  "hit@1": 0.3333,
+  "hit@3": 0.3333,
+  "hit@5": 0.3333,
+  "hit@10": 0.5556,
+  "page_hit@5": 0.5556,
+  "page_hit@10": 0.6667,
+  "mrr": 0.3583,
+  "passage_recall@5": 0.3333,
+  "ctx_words@5": 395,
+  "latency_ms_p50": 0.16,
+  "by_family_hit@5": {
+   "adversarial": {
+    "n": 1,
+    "hit@5": 1.0
+   },
+   "cross_source_synthesis": {
+    "n": 3,
+    "hit@5": 0.0
+   },
+   "factual_lookup": {
+    "n": 3,
+    "hit@5": 0.333
+   },
+   "revision_conflict": {
+    "n": 2,
+    "hit@5": 0.5
+   }
+  }
+ }
+}

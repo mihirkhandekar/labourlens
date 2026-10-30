@@ -1,0 +1,56 @@
+{
+ "label": "merge200+stopwords_off+b=0.4",
+ "config": {
+  "chunk": {
+   "name": "merge200",
+   "mode": "merge",
+   "target_words": 200,
+   "overlap_words": 40,
+   "include_flags": [
+    "ok"
+   ]
+  },
+  "bm25": {
+   "k1": 1.5,
+   "b": 0.4,
+   "tok": {
+    "stem": false,
+    "stopwords": false,
+    "period_normalise": true
+   }
+  }
+ },
+ "metrics": {
+  "n_cases": 9,
+  "n_chunks": 645,
+  "corpus_hash": "0e36212fb1a9903e41e998c132a2c38228d58ba5d7c952fcba843e8e013488a2",
+  "hit@1": 0.3333,
+  "hit@3": 0.5556,
+  "hit@5": 0.7778,
+  "hit@10": 0.7778,
+  "page_hit@5": 0.8889,
+  "page_hit@10": 0.8889,
+  "mrr": 0.4704,
+  "passage_recall@5": 0.7222,
+  "ctx_words@5": 900.1,
+  "latency_ms_p50": 0.151,
+  "by_family_hit@5": {
+   "adversarial": {
+    "n": 1,
+    "hit@5": 1.0
+   },
+   "cross_source_synthesis": {
+    "n": 3,
+    "hit@5": 0.667
+   },
+   "factual_lookup": {
+    "n": 3,
+    "hit@5": 0.667
+   },
+   "revision_conflict": {
+    "n": 2,
+    "hit@5": 1.0
+   }
+  }
+ }
+}

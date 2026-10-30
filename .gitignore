@@ -8,6 +8,7 @@ private/
 # Raw downloads; MOM report PDFs are all-rights-reserved (see docs/decisions.md D-001)
 data/raw/
 data/passages/
+data/index/
 
 # Secrets
 .env
