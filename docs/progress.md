@@ -2,13 +2,13 @@
 
 > **This is the first file any agent reads when resuming.** Update it at the end of every work session, every substep, and before any long-running command. Newest entry on top of the log. Never record a result that has no file or command behind it.
 
-**Last updated:** 2026-10-30 (M1 implemented; awaiting owner gate review) · **Deadline:** Wed 4 Nov 2026, morning SGT
+**Last updated:** 2026-10-30 (M5 implemented; M1/M2 owner reviews pending) · **Deadline:** Wed 4 Nov 2026, morning SGT
 
 ## Current state (one screen)
 
 | Item | Value |
 |---|---|
-| Active milestone | **M2 implemented, awaiting owner review (gold set) and M3 approval.** M1 awaiting spot-check. |
+| Active milestone | **M5 implemented (MCP and threat suite). Next: M6 evaluation harness, then M7 report page and deliverables.** Owner reviews of M1 sheets and gold still pending. |
 | Gate status | **M1 IMPLEMENTATION APPROVED 30 Oct 2026 (D-005).** Scope: ADR-001 + ADR-003 structured data, D-006 corpus, D-004 CSV snapshots committed to the private repo. M2+ is NOT approved. |
 | Code written | M1 complete: `src/labourlens/**`, 51 tests pass, 142 build checks 0 failed |
 | Data downloaded | See checklist; raw files under `data/raw/` (gitignored) |
@@ -114,3 +114,4 @@ Every row came from a live call; none is stored as a repo artifact yet. M1.1 mus
 - 2026-10-30 (M3 build, step 2): Answer layer built in `src/labourlens/answer/` (D-024): strict JSON schema, labelled passage context, deterministic validator (label exists, verbatim quote, status rules), one repair call, prompts in `prompts/`. Experiments G1 (6 models), G0 (oracle evidence), G3 (k=3/5/8) on 30 dev cases: `docs/experiments/m3-answer-generation.md`. Raw outputs local in `data/runs/` (gitignored, contain MOM quotes). Excluded gpt-6-astra per owner. NOT done: price table for cost, LLM judge and human review (M6), numerical cases (need M4 tool), prompt comparison, held-out. Next: owner picks the abstention policy / candidate default; then M4 (LangGraph agent with statistics tool).
 - 2026-10-30 (M3 step 3): Added `specs/prices.yaml` (official OpenAI pricing page, read 30 Oct) and `labourlens.prices`; cost per case added to all answer summaries; embedding costs corrected from unverified to verified. D-026 recorded (prefer declining). G4 run (k=8, two luna models). Candidate default: hybrid, k=8, gpt-6-luna (not frozen). Next: M4 LangGraph agent.
 - 2026-10-30 (M4): Built the bounded LangGraph agent (`src/labourlens/agent/`): three tools, seven nodes, bounds, trace, operational-failure separation. 98 tests pass (13 agent tests with fault injection). A1 on 34 dev cases: `docs/experiments/m4-agent.md`. Candidate default gpt-6-luna. NOT done: threat tests and MCP (M5), judge and human review (M6), held-out, text-number arithmetic improvement. Next: M5 design discussion (MCP server, threat tests).
+- 2026-10-30 (M5): MCP server and client (`src/labourlens/mcp/`), hostile fixture server, guards and redaction (`src/labourlens/security/`), agent wiring (flagged items cannot be cited, output guard, trace redaction), 36-case threat suite (`experiments/threats/`), scripted client demo and direct-vs-MCP comparison (`docs/mcp-demo-transcript.md`), `docs/threat-model.md`, D-028. Threat suite: defended 36/36 on gpt-6-luna, gpt-5.6-luna, gpt-4.1-mini; no-defence gpt-4.1-mini 33/36. Checker corrected after manual review of 2 flagged cases (disclosed). NOT done: adaptive attacks, over-refusal fix for override-plus-legitimate-question (T-D02), HTTP transport/auth, accuracy and hallucination metrics (M6). Next: M6.

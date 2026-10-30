@@ -4,8 +4,15 @@ verbatim-quote check. Their misses are measured in the threat suite (experiments
 
 from __future__ import annotations
 
+import os
 import re
 import unicodedata
+
+# Ablation switch for the threat-suite baseline ONLY: LABOURLENS_GUARDS=off disables the heuristic guards.
+
+
+def guards_on() -> bool:
+    return os.environ.get("LABOURLENS_GUARDS", "on") != "off"
 
 # Phrases that address the model rather than describe labour statistics. Case-insensitive.
 _INJECTION = [
@@ -35,6 +42,8 @@ def sanitize_text(text: str) -> str:
 
 
 def injection_flags(text: str) -> list[str]:
+    if not guards_on():
+        return []
     clean = sanitize_text(text)  # catches instructions split by zero-width characters
     flags = sorted({name for rx, name in INJECTION_RES if rx.search(clean)})
     if has_hidden_characters(text):
@@ -48,6 +57,8 @@ _SECRET_SHAPES = [re.compile(r"sk-[A-Za-z0-9_\-]{16,}"), re.compile(r"(?i)bearer
 
 def scan_output(text: str, secrets: list[str] | None = None) -> list[str]:
     """Findings in model output that must never reach a user: known secret values, secret-shaped strings, prompt text."""
+    if not guards_on():
+        return []
     hits = [f"secret_value:{i}" for i, s in enumerate(secrets or []) if s and s in text]
     hits += [f"secret_shape:{i}" for i, rx in enumerate(_SECRET_SHAPES) if rx.search(text)]
     if re.search(r"(?i)you are the (answer|planning) step of labourlens", text):

@@ -2,7 +2,7 @@
 
 **Singapore labour-market intelligence for policy researchers.** An evidence-grounded research assistant built on official MOM and SingStat data. Every number traces to a published source; every claim is meant to carry a citation or an honest "not enough evidence".
 
-> **Status (30 Oct 2026): Milestone 1 of 7 complete pending owner review: data ingestion and provenance.** Retrieval, the LLM, the LangGraph agent, MCP server and UI are not built yet. See `docs/progress.md` for exact state and `docs/04_ROADMAP.md` for the plan.
+> **Status (30 Oct 2026): Milestones 1 to 5 built** (data ingestion, BM25 and dense/hybrid retrieval, cited answers, bounded LangGraph agent, MCP server and client, threat suite). Not yet built: evaluation harness with held-out run (M6), report page and final deliverables (M7). Exact state: `docs/progress.md`. Gold labels are AI drafts pending owner review.
 
 ## What exists today
 | | |
@@ -45,3 +45,14 @@ Committed dataset snapshots in `data/snapshots/` let `build` run without `fetch`
 
 ## Rights and attribution
 Statistical datasets: contains information from data.gov.sg datasets published by MOM and SingStat, accessed 2026-10-30, under the [Singapore Open Data Licence v1.0](https://developers.data.gov.sg/open-data-licence). Not endorsed by any agency. MOM reports carry an all-rights-reserved notice; this repository does not contain them or extracted text from them, only ids, hashes, locators and links. Rights for the MOM press-release pages are unresolved and handled the same way.
+
+## Commands added in M4 and M5
+
+```
+uv run labourlens agent-exp                    # agent on the dev split (OpenAI API)
+uv run labourlens mcp-demo                     # scripted MCP client demo, writes docs/mcp-demo-transcript.md
+uv run labourlens threat-test [--ablation naive] [--models ...]   # adversarial suite (OpenAI API)
+uv run labourlens threat-test --rescore        # re-score saved raw runs, no API calls
+uv run python -m labourlens.mcp.server         # run the MCP server on stdio
+```
+Results: `docs/threat-model.md`, `experiments/threats/SUMMARY.md`, `docs/mcp-demo-transcript.md`.

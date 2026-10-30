@@ -227,19 +227,40 @@ class SyncStatsBackend:
     def _run(self, coro, timeout: float):
         return asyncio.run_coroutine_threadsafe(coro, self.loop).result(timeout)
 
+    async def _serve(self, ready: "asyncio.Future") -> None:
+        """Owns the MCP connection for its whole life in ONE task: anyio cancel scopes must be entered and exited by the same task."""
+        self._stop = asyncio.Event()
+        try:
+            async with McpStatsClient(self.server, self.call_timeout_s) as c:
+                self.client = c
+                ready.set_result(None)
+                await self._stop.wait()
+        except BaseException as e:  # noqa: BLE001
+            if not ready.done():
+                ready.set_exception(e)
+        finally:
+            self.client = None
+
     async def _connect(self) -> None:
-        c = McpStatsClient(self.server, self.call_timeout_s)
-        await c.__aenter__()
-        self.client = c
+        ready = self.loop.create_future()
+        self._task = self.loop.create_task(self._serve(ready))
+        await asyncio.wait_for(ready, CONNECT_TIMEOUT_S + 5)
 
     def close(self) -> None:
-        if self.client is not None:
+        task = getattr(self, "_task", None)
+        if task is not None:
             try:
-                self._run(self.client.__aexit__(None, None, None), 10)
+                self.loop.call_soon_threadsafe(self._stop.set)
+                self._run(asyncio.wait_for(asyncio.shield(task), 10), 12)
             except Exception:  # noqa: BLE001
                 pass
-            self.client = None
         self.loop.call_soon_threadsafe(self.loop.stop)
+
+    def _drop(self) -> None:
+        task = getattr(self, "_task", None)
+        if task is not None:
+            self.loop.call_soon_threadsafe(self._stop.set)
+        self.client = None
 
     def query(self, source_id, period_from, period_to, dimension=None, adjustment=None, indicator_id=None):
         args = dict(source_id=source_id, period_from=period_from, period_to=period_to, dimension=dimension, adjustment=adjustment, indicator_id=indicator_id)
@@ -256,7 +277,7 @@ class SyncStatsBackend:
                 if e.kind in ("invalid_arguments", "not_found", "too_large"):
                     return None, ToolResult(False, message=e.message or e.kind, error_kind=e.kind)
                 if e.kind == "unavailable" and attempt == 0:
-                    self.client = None  # lost connection: reconnect once
+                    self._drop()  # lost connection: reconnect once
                     continue
                 if e.kind == "timeout" and attempt == 0:
                     raise TransientToolError(e.kind) from e

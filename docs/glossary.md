@@ -47,3 +47,12 @@ Plain-English definitions. Add a term the first time it matters. Entries marked 
 - **MRR (mean reciprocal rank):** average of 1/rank of the first correct result; 1 means always first.
 - **Held-out set:** evaluation questions frozen before tuning, used once to report honest results.
 - **Gold set:** questions with expected evidence and behaviour, labelled for evaluation.
+- **MCP (Model Context Protocol):** an open protocol that lets an AI application discover and call tools and read resources on a separate server process, with a typed contract (JSON schemas) and a standard handshake. Here: stdio transport, one tool, two resources.
+- **Tool vs resource (MCP):** a tool is an action the model-side client asks the server to run with arguments; a resource is read-only content addressed by URI.
+- **Prompt injection:** text that tries to give the model instructions, either typed by the user (direct) or hidden in retrieved content or tool output (indirect).
+- **Untrusted data:** anything not written by us (retrieved passages, tool output, server metadata). It is labelled as data and never treated as instructions.
+- **Canary:** a unique marker string (`PWNED-7731`) an attack asks the model to output. Its presence in an answer body is a deterministic sign the attack worked.
+- **Quarantine:** dropping a tool-result row that looks like an instruction, and reporting that, instead of passing it to the model.
+- **Fail closed:** on a fault, refuse or report an operational failure rather than continue with partial or invented data.
+- **Ablation:** switching defences off to measure what they contribute; here the `+naive` threat-suite runs.
+- **Trust boundary:** a line across which data is not trusted: user input, retrieved text, MCP server output.

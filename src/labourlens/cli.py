@@ -29,6 +29,12 @@ def main(argv: list[str] | None = None) -> int:
     ag = sub.add_parser("agent-exp", help="run the end-to-end agent experiment (calls the OpenAI API)")
     ag.add_argument("--split", default="dev", choices=["dev", "heldout"])
     ag.add_argument("--pairs", nargs="*")
+    th = sub.add_parser("threat-test", help="run the adversarial threat suite through the agent (calls the OpenAI API)")
+    th.add_argument("--models", nargs="*")
+    th.add_argument("--ablation", choices=["naive"], help="run with every defence off, as a baseline")
+    th.add_argument("--rescore", action="store_true", help="recompute verdicts from saved raw runs, no API calls")
+    th.add_argument("--only", help="a category or case id")
+    sub.add_parser("mcp-demo", help="run the scripted MCP client demo and write docs/mcp-demo-transcript.md")
     sub.add_parser("gold-check", help="validate the gold set and regenerate the owner review sheet")
     sub.add_parser("export", help="export presentation-ready JSON for the interactive report page")
     sub.add_parser("revisions", help="report historical-value changes between dataset snapshots")
@@ -75,6 +81,16 @@ def main(argv: list[str] | None = None) -> int:
         from labourlens.agent import experiments as agx
 
         agx.run(args.split, args.pairs)
+        return 0
+    if args.cmd == "threat-test":
+        from labourlens.security import threat_suite
+
+        threat_suite.rescore() if args.rescore else threat_suite.run(args.models, args.only, args.ablation)
+        return 0
+    if args.cmd == "mcp-demo":
+        from labourlens.mcp import demo
+
+        demo.run()
         return 0
     if args.cmd == "gold-check":
         from labourlens import paths as _p
