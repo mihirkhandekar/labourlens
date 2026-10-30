@@ -27,3 +27,6 @@ Tech Challenge - GenAI Engineer v1.0.pdf
 reference/
 data/runs/
 data/feedback/
+
+# audit logs, feedback and the per-install audit salt: never commit
+data/audit/
