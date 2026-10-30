@@ -9,7 +9,7 @@ dimension_col: industry
 measures:
 - column: job_vacancy
   indicator_id: job_vacancies_by_industry
-  unit: persons
+  unit: vacancies
   population: establishments
   adjustment: unspecified
   definition: 'Number of Job Vacancy by Industry - Quarterly. Source: Labour Market Survey, Manpower Research & Statistics Department, MOM
