@@ -71,14 +71,14 @@ COLS = ["valid_rate", "behavior_accuracy", "over_abstention_rate", "false_answer
         "gold_cited_any_rate", "tool_calls_mean", "tool_error_rate", "operational_failures", "latency_p50_s", "cost_per_case_usd"]
 
 
-def run(split: str = "dev", pairs: list[str] | None = None) -> None:
+def run(split: str = "dev", pairs: list[str] | None = None, answer_prompt: str = "answer_v3", tag: str = "A1") -> None:
     cases = ev.load_cases(split)
     shared = Shared()
-    exp = f"agent-{split}-A1"
+    exp = f"agent-{split}-{tag}"
     rows = {}
     for label in pairs or MODEL_PAIRS:
         pm, am = MODEL_PAIRS[label]
-        cfg = AgentConfig(planner_model=pm, answer_model=am)
+        cfg = AgentConfig(planner_model=pm, answer_model=am, answer_prompt=answer_prompt)
         print(f"[agent] {label} on {len(cases)} cases", flush=True)
         with ThreadPoolExecutor(WORKERS) as ex:
             results = list(ex.map(lambda c: (c, run_agent(c["question"], shared, cfg)), cases))
@@ -91,7 +91,7 @@ def run(split: str = "dev", pairs: list[str] | None = None) -> None:
         (pub / f"{label}.scores.jsonl").write_text("\n".join(json.dumps(s) for s in scores) + "\n")
         rows[label] = aggregate(scores)
         (pub / f"{label}.metrics.json").write_text(json.dumps({"label": label, "config": cfg.key(), "metrics": rows[label]}, indent=1))
-    lines = [f"# Agent end-to-end, split `{split}`, A1 model pair (n={len(cases)} cases)", "",
+    lines = [f"# Agent end-to-end, split `{split}`, {tag} (n={len(cases)} cases, answer prompt {answer_prompt})", "",
              "Draft gold labels. Planner and answer step use the same model. Prompts planner_v1 and answer_v2. Rates are over cases.", "",
              "| config | " + " | ".join(COLS) + " |", "|---|" + "---|" * len(COLS)]
     lines += [f"| {k} | " + " | ".join(str(m[c]) for c in COLS) + " |" for k, m in rows.items()]

@@ -20,6 +20,8 @@ from labourlens.data import catalog
 from labourlens.security.guards import injection_flags, sanitize_text
 
 SCOPE_LO, SCOPE_HI = catalog.ANSWER_SCOPE_START, catalog.ANSWER_SCOPE_END
+MAX_NOTES = 8
+RELEASE_ID = re.compile(r"^mom-(\d{4})-q([1-4])-(advance|final.*)$")
 PERIOD = re.compile(r"^(\d{4})-Q([1-4])$")
 MAX_QUERY_CHARS = 300
 MAX_K = 10
@@ -136,6 +138,44 @@ class Tools:
         self._ids: set[str] = set()
         self._obs: dict[str, dict] = {}  # label -> observation facts, for calculate_change
         self._n = {"P": 0, "O": 0, "C": 0}
+        # Deterministic data-quality notes about missing data and conflicting versions. Written by code, not by a model,
+        # and shown to the answer step next to the evidence (never citeable themselves).
+        self.notes: list[str] = []
+
+    def _note(self, text: str) -> None:
+        if text not in self.notes and len(self.notes) < MAX_NOTES:
+            self.notes.append(text)
+
+    def _vintage_note(self, source_id: str) -> None:
+        """Advance and final releases of the same quarter in one evidence set: flag that the final supersedes."""
+        m = RELEASE_ID.match(source_id)
+        if not m:
+            return
+        year, q, kind = m.group(1), m.group(2), "advance" if m.group(3) == "advance" else "final"
+        other = "final" if kind == "advance" else "advance"
+        for it in self.items:
+            m2 = RELEASE_ID.match(it.source_id)
+            if m2 and m2.group(1) == year and m2.group(2) == q and ("advance" if m2.group(3) == "advance" else "final") == other:
+                self._note(f"Evidence contains both the advance and the final MOM release for {year}-Q{q}. Figures may differ; the final release supersedes the advance one. State which release each figure comes from and report any difference.")
+                return
+
+    def _coverage_notes(self, rows: list[dict], period_from: str, period_to: str) -> None:
+        expected = [f"{y}-Q{q}" for y in range(_q(period_from)[0], _q(period_to)[0] + 1) for q in range(1, 5) if _q(period_from) <= (y, q) <= _q(period_to)]
+        series: dict[tuple, dict[str, dict]] = {}
+        for r in rows:
+            series.setdefault((r["indicator_id"], r["population"], r["adjustment"], r["dimension"]), {})[r["period"]] = r
+        for (ind, pop, adj, dim), by_period in series.items():
+            label = f"{rows[0]['title']} ({ind}, {dim or 'all'}, {pop}, {adj})"
+            nulls = sorted(p for p, r in by_period.items() if r["value"] is None)
+            absent = [p for p in expected if p not in by_period]
+            if nulls:
+                self._note(f"{label}: no published number for {', '.join(nulls)} (the source marks it unavailable). Do not estimate it.")
+            if absent:
+                self._note(f"{label}: the dataset has no row for {', '.join(absent)}. Do not estimate it.")
+        if len({(r["indicator_id"], r["population"], r["adjustment"]) for r in rows}) > 1:
+            self._note("The statistics returned for one request contain more than one series (different indicator, population or adjustment). Never mix them; say which series each figure belongs to.")
+        if any("prelim" in (r["release_stage"] or "") or r["release_stage"] == "advance" for r in rows):
+            self._note("Some statistics are preliminary or advance figures and may be revised; say so.")
 
     def _label(self, kind: str) -> str:
         self._n[kind] += 1
@@ -148,6 +188,8 @@ class Tools:
         text = sanitize_text(text)
         it = ContextPassage(self._label(kind), item_id, source_id, title, published, stage, locator, text, tuple(injection_flags(text)))
         self.items.append(it)
+        if kind == "P":
+            self._vintage_note(source_id)
         return it
 
     # ---- search_reports -------------------------------------------------------------------------------------------
@@ -184,6 +226,7 @@ class Tools:
                                        "population": r["population"], "adjustment": r["adjustment"], "dimension": r["dimension"], "unit": r["unit"],
                                        "period": r["period"], "value": r["value"]}
                 new.append(it)
+        self._coverage_notes(rows, period_from, period_to)
         return ToolResult(True, new, f"{len(new)} new observations: " + ", ".join(f"{i.label}={self._obs[i.label]['period']}" for i in new[:20]))
 
     # ---- calculate_change -----------------------------------------------------------------------------------------

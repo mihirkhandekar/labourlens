@@ -29,6 +29,8 @@ def main(argv: list[str] | None = None) -> int:
     ag = sub.add_parser("agent-exp", help="run the end-to-end agent experiment (calls the OpenAI API)")
     ag.add_argument("--split", default="dev", choices=["dev", "heldout"])
     ag.add_argument("--pairs", nargs="*")
+    ag.add_argument("--answer-prompt", default="answer_v3")
+    ag.add_argument("--tag", default="A1")
     th = sub.add_parser("threat-test", help="run the adversarial threat suite through the agent (calls the OpenAI API)")
     th.add_argument("--models", nargs="*")
     th.add_argument("--ablation", choices=["naive"], help="run with every defence off, as a baseline")
@@ -40,8 +42,17 @@ def main(argv: list[str] | None = None) -> int:
     ev_.add_argument("--split", default="dev")
     ev_.add_argument("--labels", nargs="*")
     ev_.add_argument("--no-judge", action="store_true")
+    sub.add_parser("audit-report", help="summarise the audit and feedback logs (data/audit)")
+    asw = sub.add_parser("audit-show", help="print the timeline of one run")
+    asw.add_argument("run_id")
+    ap = sub.add_parser("audit-prune", help="delete audit run logs older than N days")
+    ap.add_argument("--days", type=int, required=True)
     sub.add_parser("gold-check", help="validate the gold set and regenerate the owner review sheet")
     sub.add_parser("export", help="export presentation-ready JSON for the interactive report page")
+    sub.add_parser("build-report", help="assemble the rights-safe interactive presentation")
+    serve = sub.add_parser("serve", help="serve the presentation and authenticated live demo")
+    serve.add_argument("--host", default="127.0.0.1")
+    serve.add_argument("--port", type=int, default=8000)
     sub.add_parser("revisions", help="report historical-value changes between dataset snapshots")
 
     t = sub.add_parser("trace", help="print provenance for an observation_id or passage_id")
@@ -85,7 +96,7 @@ def main(argv: list[str] | None = None) -> int:
     if args.cmd == "agent-exp":
         from labourlens.agent import experiments as agx
 
-        agx.run(args.split, args.pairs)
+        agx.run(args.split, args.pairs, args.answer_prompt, args.tag)
         return 0
     if args.cmd == "threat-test":
         from labourlens.security import threat_suite
@@ -102,6 +113,11 @@ def main(argv: list[str] | None = None) -> int:
 
         harness.run(args.exp, args.split, args.labels, not args.no_judge)
         return 0
+    if args.cmd in ("audit-report", "audit-show", "audit-prune"):
+        from labourlens.audit import log as al
+
+        print(al.report() if args.cmd == "audit-report" else al.show(args.run_id) if args.cmd == "audit-show" else al.prune(args.days))
+        return 0
     if args.cmd == "gold-check":
         from labourlens import paths as _p
         from labourlens.retrieval import gold
@@ -117,6 +133,16 @@ def main(argv: list[str] | None = None) -> int:
         from labourlens.data import export
 
         export.run()
+        return 0
+    if args.cmd == "build-report":
+        from labourlens.report import build as report_build
+
+        report_build.run()
+        return 0
+    if args.cmd == "serve":
+        from labourlens.report.serve import run
+
+        run(args.host, args.port)
         return 0
     if args.cmd == "revisions":
         from labourlens.data import revisions

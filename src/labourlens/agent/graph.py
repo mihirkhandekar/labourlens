@@ -210,7 +210,7 @@ def build_graph(shared: Shared, tools: Tools, cfg: AgentConfig):
             return {"outcome": "operational_failure", "errors": ["operational failure: evidence tools unavailable"],
                     "trace": _ev("assess_evidence", "operational_failure")}
         n = {k: sum(1 for i in tools.items if i.label[0] == k) for k in "POC"}
-        return {"trace": _ev("assess_evidence", "evidence_ready" if tools.items else "no_evidence", passages=n["P"], observations=n["O"], calculations=n["C"],
+        return {"trace": _ev("assess_evidence", "evidence_ready" if tools.items else "no_evidence", passages=n["P"], observations=n["O"], calculations=n["C"], data_quality_notes=list(tools.notes),
                              unresolved_tool_errors=len(s.get("tool_errors") or []))}
 
     def after_assess(s: State):
@@ -220,7 +220,7 @@ def build_graph(shared: Shared, tools: Tools, cfg: AgentConfig):
         msgs = s.get("messages")
         if not msgs:
             msgs = [{"role": "system", "content": answer_sys},
-                    {"role": "user", "content": answer_user.format(context=cx.render(tools.items) if tools.items else "(no evidence items were collected)", question=s["question"])}]
+                    {"role": "user", "content": answer_user.format(context=cx.render(tools.items, tools.notes) if tools.items else "(no evidence items were collected)", question=s["question"])}]
         try:
             r = llm.chat(cfg.answer_model, msgs, 6000)
         except llm.LLMError as e:
@@ -282,7 +282,8 @@ def build_graph(shared: Shared, tools: Tools, cfg: AgentConfig):
     return g.compile()
 
 
-def run_agent(question: str, shared: Shared, cfg: AgentConfig = AgentConfig(), save_trace: bool = True) -> dict:
+def run_agent(question: str, shared: Shared, cfg: AgentConfig = AgentConfig(), save_trace: bool = True, audit: dict | None = None) -> dict:
+    """`audit`, if given, is {channel, session, ip, extra}: the run is appended to the audit log (labourlens.audit)."""
     tools = Tools(shared)
     graph = build_graph(shared, tools, cfg)
     t0 = time.perf_counter()
@@ -299,4 +300,8 @@ def run_agent(question: str, shared: Shared, cfg: AgentConfig = AgentConfig(), s
         d = paths.DATA / "runs" / "agent"
         d.mkdir(parents=True, exist_ok=True)
         (d / f"{run_id}.json").write_text(redact(json.dumps(res, indent=1, default=str)))
+    if audit is not None:
+        from labourlens.audit.log import log_run
+
+        log_run(res, audit.get("channel", "api"), audit.get("session"), audit.get("ip"), audit.get("extra"))
     return res
