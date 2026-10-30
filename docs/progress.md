@@ -2,7 +2,7 @@
 
 > **This is the first file any agent reads when resuming.** Update it at the end of every work session, every substep, and before any long-running command. Newest entry on top of the log. Never record a result that has no file or command behind it.
 
-**Last updated:** 2026-10-31 (owner-approved gold v3.3 HO-029 post-run adjudication; current held-out rescoring lowers luna5.6 scores, paired gains still inconclusive; dev remains v3.2) · **Deadline:** Wed 4 Nov 2026, morning SGT
+**Last updated:** 2026-10-31 (owner-approved gold v3.4: three post-run adjudications; luna5.6 R3 falls to 80.6%, paired gains still inconclusive; dev remains v3.2) · **Deadline:** Wed 4 Nov 2026, morning SGT
 
 ## Current state (one screen)
 
@@ -58,9 +58,9 @@ Status values: `not started`, `in progress`, `done (evidence: path)`, `blocked (
 | M4 | Bounded research agent and deterministic tools | implemented; dev results recorded | `src/labourlens/agent/`, `docs/experiments/m4-agent.md` |
 | M5 | MCP and responsible-AI controls | implemented; final corrected-fixture paired `r3` threat runs recorded; planted-figure and subtle-instruction failures remain | `src/labourlens/mcp/`, `src/labourlens/security/`, `docs/threat-model.md`, `experiments/threats/SUMMARY.md`, `docs/mcp-demo-transcript.md` |
 | M6.1 | Evaluation harness and dev agent comparisons | A1–A5 re-judged with input-fingerprinted caches against v3.2; direction-aware calculation scoring supersedes old scores; A2/A4/A5 show no demonstrated aggregate benefit | `src/labourlens/evaluation/harness.py`, `experiments/eval/agent-dev-A{1..5}/{gpt-6-luna,gpt-5.6-luna}.metrics.json` |
-| M6.2 | Gold drafting and AI pre-review | gold v3.3 includes D-034's owner-approved HO-029 mixed-request correction after held-out execution; dev remains v3.2 with D-031 hard-period abstention; **not human-reviewed** | `experiments/gold/CHANGELOG.md`: 268 cases, 237 dev and 31 held-out |
+| M6.2 | Gold drafting and AI pre-review | gold v3.4 includes D-035's owner-approved HO-027 clarification and HO-023/HO-004 evidence corrections after held-out execution; D-034's HO-029 decision retained; dev remains v3.2; **not human-reviewed** | `experiments/gold/CHANGELOG.md`: 268 draft cases, 237 dev and 31 held-out |
 | M6.3 | Documented answer-review sample | selection and AI pre-review exist; **owner review pending** | `experiments/human-review-sample/selection.json`, `ai-review-summary.md` |
-| M6.4 | Freeze protocol and run held-out evaluation | registered comparison executed against original v3.2; current v3.3 scores disclose post-run HO-029 correction; paired gains inconclusive; human review incomplete | `experiments/heldout/FREEZE.md`, `paired-v3.2.txt`, `paired.txt`, `experiments/eval/agent-heldout-H-{r3,hybrid}/`, D-033/D-034 |
+| M6.4 | Freeze protocol and run held-out evaluation | original registered run used v3.2; current v3.4 is disclosed post-run sensitivity, not new generation; paired gains inconclusive; human review incomplete | `experiments/heldout/FREEZE.md`, `paired-v3.2.txt`, `paired-v3.3.txt`, `paired.txt`, `experiments/eval/agent-heldout-H-{r3,hybrid}/`, D-033–D-035 |
 | M7.1 | Report application, live research and audit/feedback | implementation exists; current checkout not reverified in this refresh | `src/labourlens/report/`, `web/`, `src/labourlens/audit/`, `docs/audit-and-logging.md` |
 | M7.2 | Deployment setup | files and instructions exist; deployment not established by these files | `deploy/`, `Dockerfile`, `docs/deploy.md` |
 | M7.3 | Written submission and demo materials | documentation refresh in progress; final completeness review pending | `docs/architecture.md`, `docs/system-card.md`, `docs/innovation.md`, `docs/demo-script.md`; evaluation report and end-to-end experiment write-up updated in this refresh |
@@ -96,6 +96,15 @@ Every row came from a live call; none is stored as a repo artifact yet. M1.1 mus
 | Human answer review | Review the prepared sample using the documented rubric | pending; AI pre-review is not human review |
 
 ## Log (newest first)
+
+### 2026-10-31 — Gold v3.4 three-case adjudication and sensitivity
+
+- **DECISION:** owner “Yes”, 31 Oct 2026 (D-035), approved three further changes after held-out execution. HO-027 changes `ignore_injection_and_answer` -> `clarify` because its unchanged question lacks a year; prior report evidence moves to context-only and reference facts are cleared. HO-023 adds nonprimary cohort-definition passage `mom-2026-q2-final:p053:b015:85d629c9`. HO-004's truncated PDF block becomes nonprimary; its release evidence remains primary. HO-029's earlier v3.3 adjudication is retained.
+- **VERIFIED FACT:** read-only JSON counting gives 268 draft cases, all null human reviewers: 237 dev unchanged (165 answer, 25 abstain, 19 refuse, 11 clarify, 17 ignore-injection-and-answer), 31 held-out (21/2/3/3/2 respectively). Current gold SHA-256 `050bb40b4863cf3a00682da0edc305dc4d9c7de1c35b3098989e8afdd50899b9` matches the four registered held-out metrics; these are scoring-time fingerprints, not automatic generation-time provenance.
+- **MEASURED RESULT:** current saved R3/hybrid behaviour is 0.839 [0.710, 0.968] / 0.677 [0.516, 0.839] for luna6 and 0.806 [0.677, 0.935] / 0.710 [0.548, 0.871] for luna5.6. Each of the three edits lowers or leaves registered scores; luna5.6 R3 behaviour falls from v3.3's 0.839. Current `paired.txt` differences are +0.161 [0.000, 0.323] and +0.097 [-0.032, 0.226], 10,000 case-bootstrap resamples, seed 20261030: still inconclusive.
+- **Sensitivity history:** original v3.2 luna5.6 R3/hybrid was 0.871 / 0.742; v3.3 was 0.839 / 0.710. Both earlier paired luna5.6 differences were +0.129 [0.000, 0.290]. Preserve `paired-v3.2.txt`, `paired-v3.3.txt`, original outputs and `FREEZE.md`; v3.2/v3.3 logs below are historical snapshots, not current scores. No generation rerun is implied. A separately authorized clean preregistered run on frozen, human-reviewed gold would be stronger evidence; current reviews are AI-only.
+- Updated assigned gold history, decisions, README, progress, requirements matrix and system card from saved evidence. Development/threat results unchanged. No tests, builds, evaluation commands, paid calls or report builder were run. Human review and final acceptance remain incomplete.
+
 
 ### 2026-10-31 — Second blind independent AI pass and extraction boundary
 

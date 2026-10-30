@@ -2,7 +2,7 @@
  "label": "gpt-4.1-mini",
  "judge": "gpt-6.1-terra",
  "provenance": {
-  "gold_sha256": "96ec51baf05d9fb998efd3ed37762cb8cedd27b2bf329996d7251adcb01b597e",
+  "gold_sha256": "050bb40b4863cf3a00682da0edc305dc4d9c7de1c35b3098989e8afdd50899b9",
   "prompt_sha256": {
    "planner": "df68ef8e5e287d1a0b1f71d938e85ec25b4f03eeec501bc439a3a77aec2482dc",
    "answer": "e854b64c72116c4c175082e70f39c312ed94b1f37778e7daf3f9a51de1bac350",
@@ -12,7 +12,7 @@
    "answer_user": "c4f4ef05d7d1b87fca94bee65cbf2a38999c181dc2e92bced9cdf8ef92b006e7"
   },
   "agent_config": "planner=gpt-4.1-mini|answer=gpt-4.1-mini|planner_v1|answer_v3",
-  "git_head": "65abbed7d3506a55d49cb9fe37628f7448438b54",
+  "git_head": "86feee4ace18ec3dd73012937c3b3e24f4c36f8b",
   "price_table_sha256": "634b32441c3495b4c3ec13efa3af1e9cc99e5c7523eac3a15a5c238c3acaeb5c",
   "eligible_n": 31,
   "available_n": 31,
@@ -33,28 +33,28 @@
    "n": 31
   },
   "false_answer_rate": {
-   "rate": 0.1,
+   "rate": 0.095,
    "ci95": [
     0.0,
-    0.25
+    0.238
    ],
-   "n": 20
+   "n": 21
   },
   "over_abstention_rate": {
-   "rate": 0.355,
+   "rate": 0.323,
    "ci95": [
-    0.194,
-    0.548
+    0.161,
+    0.516
    ],
    "n": 31
   },
   "key_number_recall": {
-   "rate": 0.416,
+   "rate": 0.439,
    "ci95": [
-    0.244,
-    0.6
+    0.254,
+    0.633
    ],
-   "n": 19
+   "n": 18
   },
   "calc_correct": {
    "rate": 0.4,
@@ -142,7 +142,7 @@
    "n": 5,
    "behaviour_accuracy": 0.4,
    "false_answer": 0,
-   "over_abstain": 3,
+   "over_abstain": 2,
    "unsupported_claims": 0,
    "contradicted_facts": 0
   },

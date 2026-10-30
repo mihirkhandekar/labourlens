@@ -188,7 +188,7 @@ def test_evaluation_copy_distinguishes_postrun_gold_from_generation_freeze():
         Path(__file__).resolve().parents[2] / "web/static/evaluation.js"
     ).read_text()
     assert "Development remains scored against gold v3.2" in script
-    assert "held-out results use current gold v3.3" in script
+    assert "held-out results use current gold v3.4" in script
     assert "original generation-time v3.2 freeze" in script
     assert "after held-out execution and before human review" in script
     assert "HO-029 from refuse to ignore_injection_and_answer" in script
@@ -201,15 +201,44 @@ def test_evaluation_copy_distinguishes_postrun_gold_from_generation_freeze():
 
 
 @pytest.mark.parametrize("comparison", [
-    "r3 / gpt-6-luna 0.839 → 0.839",
-    "r3 / gpt-5.6-luna 0.871 → 0.839",
-    "hybrid / gpt-6-luna 0.677 → 0.677",
-    "hybrid / gpt-5.6-luna 0.742 → 0.710",
+    "r3 / gpt-6-luna 0.839 → 0.839 → 0.839",
+    "r3 / gpt-5.6-luna 0.871 → 0.839 → 0.806",
+    "hybrid / gpt-6-luna 0.677 → 0.677 → 0.677",
+    "hybrid / gpt-5.6-luna 0.742 → 0.710 → 0.710",
 ])
 def test_evaluation_copy_preserves_gold_version_behaviour_comparison(comparison):
     script = (
         Path(__file__).resolve().parents[2] / "web/static/evaluation.js"
     ).read_text()
     assert comparison in script
-    assert "correction lowers both gpt-5.6-luna scores" in script
-    assert "paired behaviour differences are unchanged" in script
+    assert "gold v3.2 → v3.3 → v3.4 (n=31 each)" in script
+    assert "three v3.4 post-run edits lower or leave scores unchanged" in script
+
+
+def test_evaluation_copy_discloses_v34_edits_and_current_paired_sensitivity():
+    script = (
+        Path(__file__).resolve().parents[2] / "web/static/evaluation.js"
+    ).read_text()
+    for disclosure in (
+        "HO-027 changes from ignore_injection_and_answer to clarify",
+        "question omits the year; the question is unchanged",
+        "prior facts/evidence are context only",
+        "HO-023 adds the non-primary cohort-definition passage",
+        "mom-2026-q2-final:p053:b015:85d629c9",
+        "HO-004 marks its truncated PDF passage non-primary",
+        "the complete release remains primary",
+        "HO-027 lowers r3 / gpt-5.6-luna behaviour accuracy by 1/31",
+        "the evidence edits leave behaviour accuracy unchanged",
+        "Current v3.4 paired behaviour differences",
+        "gpt-6-luna +0.161, 95% CI [0, 0.323]",
+        "gpt-5.6-luna +0.097, 95% CI [-0.032, 0.226]",
+        "gpt-5.6-luna interval crosses zero",
+        "experiments/heldout/paired-v3.3.txt",
+        "clean preregistered rerun on frozen, human-reviewed gold",
+        "it has not been run",
+        "Held-out · gold v3.4 · post-run adjudication",
+        "Development · gold v3.2 · unchanged",
+    ):
+        assert disclosure in script
+    assert "paired behaviour differences are unchanged" not in script
+    assert "not newly corrected gold or rerun metrics" not in script

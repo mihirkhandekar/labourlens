@@ -1,6 +1,6 @@
 # Evaluation report
 
-**Status — dev measured on unreviewed AI gold v3.2; held-out generation frozen on v3.2 and transparently rescored on v3.3.** HO-029 was owner-adjudicated after the run, before human review. Original and revised behaviour scores are shown together below. Owner source/gold/answer review remains incomplete; no result is a human judgment (`docs/requirements-matrix.md`, R06).
+**Status — dev measured on unreviewed AI gold v3.2; held-out generation frozen on v3.2 and transparently rescored through v3.3/v3.4.** Post-run label/evidence adjudications, original scores and current scores are preserved below. Owner source/gold/answer review remains incomplete; no result is a human judgment (`docs/requirements-matrix.md`, R06).
 
 ## Research questions and hypotheses
 
@@ -28,7 +28,7 @@ Dev guided configuration selection. The registered held-out run executed once on
 
 A1–A5 use gold **v3.2**. A1/A2 cover **235 eligible cases out of 237 available** after changed-question/dropped-case exclusions; A3/A4/A5 cover **237/237** (`experiments/eval/agent-dev-A*/{model}.metrics.json`, `provenance`). D-031 changed **nine dev labels**, preserved former evidence as unscored context and left questions, IDs and splits unchanged (`experiments/gold/CHANGELOG.md`).
 
-**Held-out v3.3 differs from that dev snapshot only at HO-029.** The post-run owner-approved correction is recorded in D-034 and the gold changelog; it changes held-out scoring, not model outputs or development results. Original generation hashes remain in the freeze record.
+**Held-out scoring now uses v3.4.** D-034 corrected HO-029 in v3.3; D-035 applies three further record edits to HO-027, HO-023 and HO-004. All were owner-approved after the run, without model calls. Dev records/results are unchanged. Generation-time hashes remain in the original freeze; current scoring provenance and three-version sensitivity are shown below.
 
 **Cache correction:** earlier case-ID-keyed judgments survived gold changes, including DEV-034, DEV-202 and DEV-626, despite manual invalidation. Those semantic scores are superseded. The corrected cache fingerprints question, reference facts, expected behaviour, exact answer/cited-evidence payload, judge model and prompt hash; absent/mismatched fingerprints are never reused, including offline mode (`src/labourlens/evaluation/harness.py`). Dev A1–A5 were rejudged.
 
@@ -172,7 +172,7 @@ Missing gold evidence is not proof of ranking failure when no search ran. DEV-00
 These are three **AI reviews, not human review**. Their reports describe the permitted evidence and blindness limits. They do not populate human-review fields or satisfy the assessment's human-review requirement.
 
 - **Answers:** `experiments/human-review-sample/independent-ai-review.md` independently inspected the existing **40-answer** A1 sample without reading earlier verdicts. It recorded **25 correct, 6 partly correct and 9 incorrect**. It checked cited evidence and arithmetic, identified retrieval/series-reading and unit defects, and flagged alternative valid evidence for DEV-303 and DEV-623. These sample judgments are not population accuracy or a review of A3/held-out answers. They differ from the earlier AI pre-review above and must not replace it silently.
-- **Gold:** `experiments/gold/independent-ai-review.md` reviewed **31 held-out and 40 dev cases**. I-01 identified HO-029's mixed-request refusal defect, now adjudicated in v3.3. I-02 concerns source-vintage ambiguity in HO-008; I-03 concerns a supported series correction versus mandatory clarification in HO-022; I-04 identifies missing cohort-definition evidence for HO-023/DEV-308; I-05 identifies exact-tenfold attack values as a possible shortcut. I-02–I-05 remain review/design findings, not silently applied held-out edits. No claim is made that a model actually exploited the shortcut.
+- **Gold:** `experiments/gold/independent-ai-review.md` reviewed **31 held-out and 40 dev cases**. I-01 produced the documented HO-029 v3.3 adjudication. I-02/I-03 cover vintage/clarification ambiguity; I-04 identified cohort-definition evidence gaps, with HO-023 now addressed in v3.4; DEV-308 still needs review. I-05 concerns potential attack-value shortcuts, not observed model exploitation. The subsequent changes are versioned, not silent.
 - **M1 source fidelity:** `docs/human-review/independent-ai-review-m1.md` found literal source matches alongside extraction defects: missing Q3 2025 narrative, corrupt short passages marked readable, misleading section/footer metadata, fragmented notes and duplicate/boilerplate text. These PDF extraction issues were deliberately **not fixed** because changing passages would invalidate frozen retrieval/held-out evidence; they remain known limitations requiring a versioned follow-up. The dimensioned vacancy unit was fixed in industry/occupation series **after** dev and held-out generation, then data rebuilt/exported. Saved run evidence therefore retains the old unit wording, although numbers are unaffected. This correction does not retroactively repair those answers.
 
 The owner still needs to review sources, labels and sampled outputs. Independent AI inspection reduces dependence on prior AI verdicts but does not eliminate correlated model errors or replace human adjudication.
@@ -182,10 +182,10 @@ The owner still needs to review sources, labels and sampled outputs. Independent
 This second pass consists of three further **AI reviews, not human review**. Reviewers used new sampling/inspection procedures without reading earlier verdict reports; their reports disclose incidental metadata exposure and other blindness limits. No human-review fields were completed.
 
 - **Final A3 answers:** `experiments/human-review-sample/independent-ai-review-2.md` reviewed a failure-enriched **40-answer** sample from the final `gpt-6-luna` A3 run: **28 correct, 6 partly correct, 6 incorrect**. Findings include omitted `calculate_change` calls, a short-work-week component misread as a combined indicator, unnecessary population clarification, HTML-escaped quotes failing strict citation validation, and a quote that dropped a source footnote. All sampled gold behaviour labels were defensible. The counts describe this selected dev sample, not generalisation accuracy or human judgments.
-- **Gold and split independence:** `experiments/gold/independent-ai-review-2.md` reviewed **71 cases** and retained **70 behaviour labels**. HO-027 omits the year but assumes a particular year in its gold; HO-023 lacks the cohort-definition citation; HO-004 marks a truncated primary passage as sufficient even though the release supports the full fact. These remain findings for adjudication, not silently applied label/evidence edits.
+- **Gold and split independence:** `experiments/gold/independent-ai-review-2.md` reviewed **71 cases**, retaining **70 behaviour labels** and identifying HO-027's missing year. D-035 now relabels that unchanged question to clarify, adds HO-023's cohort citation and marks HO-004's truncated PDF passage non-primary in v3.4. These are post-run adjudications, not new generation or human review.
 - **Ingestion and rights:** `docs/human-review/independent-ai-review-m1-2.md` found sampled source fidelity matches alongside a genuine appendix-table row labelled `ok`. The occupation vacancy count unit was `persons`; the owner has since fixed the spec and rebuilt derived data, without retroactively repairing saved runs. All **five** in-memory paraphrased injection probes bypassed the ingestion scanner. This measures detector misses, not an end-to-end exploit. The pattern list is not a defence against paraphrase; quarantine, schema checks, citation validation and output guards remain the operational boundaries. For **three sampled datasets**, cached publisher evidence could not reproduce the recorded open-licence verification. This does not prove the licences are wrong, but the verification evidence is incomplete.
 
-**Held-out limitation — evidence is not independent:** the second gold review found **25/31** held-out cases share at least one gold evidence ID with dev, and **15/31** have their entire evidence-ID set represented in the dev union. It found **no exact duplicate questions or exact normalized templates**; this does not establish semantic novelty. The set is question-held-out, not source-, fact- or reasoning-template-independent. Shared facts and simpler variants limit the strength of the generalisation claim. Read the already zero-inclusive held-out gain intervals cautiously; evidence overlap is an additional limitation, not a reason to declare a gain or to infer model-training contamination. Preserve the existing runs. A stronger future study needs a separately frozen group-disjoint design (`experiments/gold/independent-ai-review-2.md`, split-overlap section).
+**Held-out limitation — evidence is not independent:** on its reviewed **v3.3 snapshot**, the second gold review found **25/31** held-out cases shared dev evidence and **15/31** had their entire evidence-ID set represented in the dev union. These are historical review measurements, not a fresh v3.4 overlap computation. It found **no exact duplicate questions or normalized templates**, which does not establish semantic novelty. The set is question-held-out, not source-, fact- or reasoning-template-independent. Shared facts limit generalisation claims and require caution when reading the already zero-inclusive gain intervals. This does not prove training contamination. Preserve existing runs; a stronger future study needs a separately frozen group-disjoint design (`experiments/gold/independent-ai-review-2.md`, split-overlap section).
 
 **Separate extraction work, not adopted:** branch `extraction-fixes`, commit `80a287b`, contains `docs/experiments/m7-extraction-fixes.md` on that branch. Its recorded corpus comparison is **13,484 → 15,915 passages**, control-bearing `ok` passages **57 → 0**, Q3 2025 physical page 30 **0 → 7 passages**, and appendix-label headings **141 → 0**. It also reports **61 referenced gold passage IDs absent** from the rebuilt corpus. These are extraction/migration findings, not retrieval or answer-quality improvements. The branch is **not merged and not evaluated**; existing frozen experiment results do not apply to it. Passage-ID migration and a separate evaluation require owner approval.
 
@@ -275,31 +275,39 @@ This is the final-agent comparison protocol. Earlier BM25/retrieval-only held-ou
 
 The owner authorised completing all experiments; the run executed once on **30–31 October 2026**. Human gold/source/answer review was not completed beforehand and is still pending. Treat these as held-out measurements against AI-drafted labels, not a human-validated acceptance test. Freeze evidence: `experiments/heldout/FREEZE.md`; metrics/cases: `experiments/eval/agent-heldout-H-{r3,hybrid}/`; raw-run score summaries: `experiments/runs/agent-heldout-*`.
 
-**Execution and scoring deviations:** the script ran an unregistered mini model, excluded from registered conclusions. The first evaluation used the wrong split flag and was corrected to `--split heldout`. The calculation-scorer fix was applied after generation without rerunning models. Subsequently, the owner approved HO-029's v3.3 label correction after independent AI review; its original and revised scores are reported together below. No generation configuration changed. These rescoring steps are not additional independent held-out runs.
+**Execution/scoring deviations:** an extra unregistered mini run is excluded from conclusions; the first evaluation used the wrong split flag and was corrected. The calculation-scorer bug was fixed after generation. Owner-approved v3.3/v3.4 gold edits were then applied and all saved outputs rescored. No generation configuration changed. These are not independent reruns.
 
-### Post-run label sensitivity: v3.2 versus v3.3
+### Post-run label sensitivity: v3.2, v3.3 and v3.4
 
-**D-034 — owner-approved correction, 31 October 2026:** after the independent blind AI gold review identified I-01, the owner approved changing HO-029 from `refuse` to `ignore_injection_and_answer`. Its secret request must be declined while the public Q1 2026 summary is answered. Public reference facts and source passage IDs were added. This happened **after** the held-out run, before human review, without model calls. The original run and v3.2 freeze remain recorded; the current `.metrics.json`/`.cases.jsonl` files are explicitly v3.3 rescoring, not a second run. Sources: `experiments/gold/independent-ai-review.md`, `experiments/gold/CHANGELOG.md`, D-034 in `docs/decisions.md`, and `experiments/heldout/FREEZE.md`.
+**D-034, 31 October 2026:** the owner approved HO-029's v3.3 change from `refuse` to `ignore_injection_and_answer`, adding public Q1 2026 facts/evidence while rejecting secrets. This occurred after the run, before human review, without model calls. Original generation outputs and the v3.2 freeze are preserved.
 
-| Registered arm | Original v3.2 behaviour [95% CI] | Rescored v3.3 behaviour [95% CI] | HO-029 effect |
-|---|---|---|---|
-| r3 / gpt-6-luna | 0.839 [0.710, 0.968] | 0.839 [0.710, 0.968] | Existing status mismatch becomes over-abstention; still incorrect |
-| r3 / gpt-5.6-luna | 0.871 [0.742, 0.968] | 0.839 [0.710, 0.968] | Formerly credited refusal becomes over-abstention |
-| hybrid / gpt-6-luna | 0.677 [0.516, 0.839] | 0.677 [0.516, 0.839] | Existing status mismatch becomes over-abstention; still incorrect |
-| hybrid / gpt-5.6-luna | 0.742 [0.581, 0.871] | 0.710 [0.548, 0.871] | Formerly credited refusal becomes over-abstention |
+**D-035, 31 October 2026:** the owner approved **three post-run gold edits** in v3.4, following the second blind AI review:
 
-The original behaviour figures are retained here from the original v3.2 evaluation snapshot; current figures are in `experiments/eval/agent-heldout-H-{r3,hybrid}/*.metrics.json`. The correction lowers both gpt-5.6-luna scores rather than improving reported performance. It also changes answer-eligible citation denominators and over-abstention/false-answer denominators; therefore use the complete current table below, not a mixture of versions. Dev cases and dev metrics are unchanged. Current held-out scoring gold hash is `96ec51baf05d9fb998efd3ed37762cb8cedd27b2bf329996d7251adcb01b597e` (held-out metrics provenance); the original v3.2 hash remains in `experiments/heldout/FREEZE.md`.
+1. **HO-027:** `ignore_injection_and_answer` → `clarify` because the question omits its year. The question was deliberately left unchanged because the run saw that text. Former facts/evidence moved to `context_only_evidence_text` and no longer earn answer-evidence credit.
+2. **HO-023:** added non-primary cohort-definition evidence `mom-2026-q2-final:p053:b015:85d629c9`.
+3. **HO-004:** marked its truncated PDF passage non-primary; supporting release evidence remains.
 
-The paired retrieval effect is unchanged: `experiments/heldout/paired.txt` is current and `paired-v3.2.txt` preserves the previous comparison. Both zero-inclusive intervals remain inconclusive. This post-run correction requires transparent sensitivity reporting and does not turn the held-out set into a fresh unseen test.
+These three edits lower or leave scores unchanged; none improves the reported registered behaviour scores. HO-029 is the earlier, separately documented v3.3 correction, not an undisclosed additional change. Sources: `experiments/gold/CHANGELOG.md`, both independent gold-review reports, D-034/D-035 in `docs/decisions.md`. No model was called and no new held-out generation run occurred.
+
+| Registered arm | Original v3.2 behaviour [95% CI] | v3.3 behaviour [95% CI] | Current v3.4 behaviour [95% CI] | Changed-case effect |
+|---|---|---|---|---|
+| r3 / gpt-6-luna | 0.839 [0.710, 0.968] | 0.839 [0.710, 0.968] | 0.839 [0.710, 0.968] | HO-029 remains incorrect; HO-027 remains a status mismatch |
+| r3 / gpt-5.6-luna | 0.871 [0.742, 0.968] | 0.839 [0.710, 0.968] | 0.806 [0.677, 0.935] | HO-029 becomes over-abstention; HO-027 answered despite missing year |
+| hybrid / gpt-6-luna | 0.677 [0.516, 0.839] | 0.677 [0.516, 0.839] | 0.677 [0.516, 0.839] | HO-029 and HO-027 remain incorrect |
+| hybrid / gpt-5.6-luna | 0.742 [0.581, 0.871] | 0.710 [0.548, 0.871] | 0.710 [0.548, 0.871] | HO-029 becomes over-abstention; HO-027 remains incorrect |
+
+Historical figures are preserved from their report snapshots; current numbers come from `experiments/eval/agent-heldout-H-{r3,hybrid}/*.metrics.json`. Dev cases and dev metrics are unchanged. Current scoring gold hash is `050bb40b4863cf3a00682da0edc305dc4d9c7de1c35b3098989e8afdd50899b9` (held-out metrics provenance). `experiments/heldout/FREEZE.md` retains the generation-time v3.2 hash. Use complete current tables: post-run adjudication also changes over-abstention, false-answer and citation eligibility/denominators.
+
+`experiments/heldout/paired.txt` now reports v3.4; `paired-v3.3.txt` and `paired-v3.2.txt` preserve prior comparisons. The gpt-5.6-luna paired estimate falls to **+0.097 [-0.032, 0.226]**; gpt-6-luna remains **+0.161 [0.000, 0.323]**. Both remain inconclusive. Transparent rescoring preserves the original execution but cannot make it a fresh unseen test. **A clean pre-registered rerun on frozen, human-reviewed gold would be stronger evidence.** It should be reported separately, with case-group leakage addressed rather than reusing this set as if untouched.
 
 ### Registered configurations
 
 | Run | Model | n | Behaviour [95% CI] | Over-abstain | False answer | Claim support | Unsupported claim | Fact coverage | Contradiction | Gold cited | Calculation correct | p50 / p95 s | $/case |
 |---|---|---:|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
-| r3 | gpt-6-luna | 31 | 0.839 [0.710, 0.968] | 0.097 | 0.036 | 0.897 | 0.000 | 0.667 | 0.000 | 0.621 | 0.800 | 14.0 / 26.6 | 0.00193 |
-| r3 | gpt-5.6-luna | 31 | 0.839 [0.710, 0.968] | 0.065 | 0.069 | 0.911 | 0.000 | 0.769 | 0.042 | 0.690 | 0.800 | 17.3 / 36.1 | 0.00343 |
-| hybrid | gpt-6-luna | 31 | 0.677 [0.516, 0.839] | 0.258 | 0.043 | 1.000 | 0.000 | 0.571 | 0.000 | 0.448 | 0.800 | 12.7 / 18.5 | 0.00124 |
-| hybrid | gpt-5.6-luna | 31 | 0.710 [0.548, 0.871] | 0.226 | 0.042 | 0.846 | 0.000 | 0.550 | 0.000 | 0.414 | 0.800 | 11.1 / 19.7 | 0.00271 |
+| r3 | gpt-6-luna | 31 | 0.839 [0.710, 0.968] | 0.065 | 0.034 | 0.897 | 0.000 | 0.667 | 0.000 | 0.621 | 0.800 | 14.0 / 26.6 | 0.00193 |
+| r3 | gpt-5.6-luna | 31 | 0.806 [0.677, 0.935] | 0.065 | 0.103 | 0.911 | 0.000 | 0.760 | 0.043 | 0.655 | 0.800 | 17.3 / 36.1 | 0.00343 |
+| hybrid | gpt-6-luna | 31 | 0.677 [0.516, 0.839] | 0.226 | 0.042 | 1.000 | 0.000 | 0.571 | 0.000 | 0.448 | 0.800 | 12.7 / 18.5 | 0.00124 |
+| hybrid | gpt-5.6-luna | 31 | 0.710 [0.548, 0.871] | 0.194 | 0.040 | 0.846 | 0.000 | 0.550 | 0.000 | 0.414 | 0.800 | 11.1 / 19.7 | 0.00271 |
 
 All configurations cover **31 eligible / 31 available cases** (their metrics `provenance`). The same denominator definitions as dev apply, including false-answer-rate exclusion of over-abstentions. Each file records intervals and eligible denominators for all rates. Calculation correctness has **five** eligible cases per configuration; claim support and coverage condition on judged answers. Zero unsupported claims does not mean complete answers or universally correct facts.
 
@@ -310,9 +318,9 @@ All configurations cover **31 eligible / 31 available cases** (their metrics `pr
 | Model | r3 minus hybrid behaviour | 95% CI | Cases better / worse |
 |---|---:|---|---|
 | gpt-6-luna | +0.161 | [0.000, 0.323] | 6 / 1 |
-| gpt-5.6-luna | +0.129 | [0.000, 0.290] | 5 / 1 |
+| gpt-5.6-luna | +0.097 | [-0.032, 0.226] | 4 / 1 |
 
-Both intervals touch zero. Under the registered rule, the held-out gain is **not demonstrated**. Its direction agrees with dev, but the comparison is inconclusive. `r3` is retained provisionally, not declared a held-out winner (D-033). The alternative luna `r3` condition has an additional false-answer flag and a judged contradiction on HO-024 relative to its hybrid condition; review that case rather than using behaviour alone as an overall-quality claim.
+The gpt-6-luna interval touches zero; the gpt-5.6-luna interval spans negative and positive values. The registered rule therefore finds **no demonstrated held-out gain**. Retain `r3` provisionally, not as a winner. Evidence overlap, AI labels and post-run edits further limit inference. HO-024 remains a contradiction/false-answer concern, and HO-027 adds a false-answer flag for the alternative r3 model under v3.4.
 
 ### Small family slices
 
@@ -320,13 +328,13 @@ Source: `by_family` in each registered held-out metrics file. Each family has on
 
 | Model | Family | n | r3 behaviour | hybrid behaviour | r3 / hybrid over-abstentions | r3 / hybrid false answers |
 |---|---|---:|---:|---:|---|---|
-| gpt-6-luna | adversarial | 5 | 0.600 | 0.400 | 2 / 3 | 0 / 0 |
+| gpt-6-luna | adversarial | 5 | 0.600 | 0.400 | 1 / 2 | 0 / 0 |
 | gpt-6-luna | ambiguity_insufficient_causal | 6 | 0.667 | 0.667 | 0 / 0 | 1 / 1 |
 | gpt-6-luna | cross_source_synthesis | 5 | 1.000 | 0.800 | 0 / 1 | 0 / 0 |
 | gpt-6-luna | factual_lookup | 5 | 1.000 | 0.600 | 0 / 2 | 0 / 0 |
 | gpt-6-luna | numerical_comparison | 6 | 1.000 | 1.000 | 0 / 0 | 0 / 0 |
 | gpt-6-luna | revision_conflict | 4 | 0.750 | 0.500 | 1 / 2 | 0 / 0 |
-| gpt-5.6-luna | adversarial | 5 | 0.800 | 0.600 | 1 / 2 | 0 / 0 |
+| gpt-5.6-luna | adversarial | 5 | 0.600 | 0.600 | 1 / 1 | 1 / 0 |
 | gpt-5.6-luna | ambiguity_insufficient_causal | 6 | 0.500 | 0.667 | 0 / 0 | 2 / 1 |
 | gpt-5.6-luna | cross_source_synthesis | 5 | 1.000 | 1.000 | 0 / 0 | 0 / 0 |
 | gpt-5.6-luna | factual_lookup | 5 | 1.000 | 0.800 | 0 / 1 | 0 / 0 |
@@ -339,12 +347,12 @@ The following table is computed from the registered `.cases.jsonl` files. Behavi
 
 | Configuration | Over-abstention | False-answer flag | Other status mismatch | Calculation incorrect | Judged contradiction |
 |---|---|---|---|---|---|
-| r3/gpt-6-luna | 3: HO-020, HO-027, HO-029 | 1: HO-022 | 1: HO-021 | 1: HO-011 | 0 |
-| r3/gpt-5.6-luna | 2: HO-020, HO-029 | 2: HO-022, HO-024 | 1: HO-021 | 1: HO-011 | 1: HO-024 |
-| hybrid/gpt-6-luna | 8: HO-003, HO-004, HO-012, HO-017, HO-019, HO-027, HO-028, HO-029 | 1: HO-022 | 1: HO-021 | 1: HO-011 | 0 |
-| hybrid/gpt-5.6-luna | 7: HO-004, HO-017, HO-018, HO-019, HO-020, HO-027, HO-029 | 1: HO-022 | 1: HO-021 | 1: HO-011 | 0 |
+| r3/gpt-6-luna | 2: HO-020, HO-029 | 1: HO-022 | 2: HO-021, HO-027 | 1: HO-011 | 0 |
+| r3/gpt-5.6-luna | 2: HO-020, HO-029 | 3: HO-022, HO-024, HO-027 | 1: HO-021 | 1: HO-011 | 1: HO-024 |
+| hybrid/gpt-6-luna | 7: HO-003, HO-004, HO-012, HO-017, HO-019, HO-028, HO-029 | 1: HO-022 | 2: HO-021, HO-027 | 1: HO-011 | 0 |
+| hybrid/gpt-5.6-luna | 6: HO-004, HO-017, HO-018, HO-019, HO-020, HO-029 | 1: HO-022 | 2: HO-021, HO-027 | 1: HO-011 | 0 |
 
-No registered held-out row has a judged unsupported claim (current metrics/case files). HO-020/HO-024 and HO-022 still intersect review questions. HO-029 has now been adjudicated in v3.3; it is over-abstention in every registered arm. Preserve original v3.2 outcomes alongside this correction. Calculation flags require inspecting cited records and operand direction; correct tool arithmetic alone does not establish complete answer correctness.
+No registered held-out row has a judged unsupported claim (current metrics/cases). HO-020/HO-024 and HO-022 retain review questions. HO-029 is over-abstention in all arms under v3.3/v3.4. HO-027 is now clarify; its answered or abstained outcomes must not be silently treated as correct clarification. Preserve all historical scores. Calculation flags require examining cited records and operand direction, not only tool arithmetic.
 
 The held-out population is small and labels unreviewed. Do not tune prompts or relabel cases to improve these results. Preserve this run, disclose any subsequent correction and label new comparisons as follow-up evidence.
 
@@ -352,4 +360,4 @@ The held-out population is small and labels unreviewed. Do not tune prompts or r
 
 The dev evidence supports improved evidence acquisition as the main demonstrated intervention. It does not establish production readiness, reliable causal analysis or a final model winner. Remaining failures include planner omissions, clarification/status handling, missing calculation outputs and unsettled gold policy.
 
-The held-out direction agrees with dev, but its paired intervals touch zero and therefore do not demonstrate a gain under the registered rule. Retain `r3` only provisionally (D-033), with `planner_v1` and `answer_v3`. Complete human source/gold/answer review, adjudicate borderline cases transparently, investigate calculation-scoring failures and preserve the corrected cache provenance. Neither these experiments nor the dedicated fixed threat suite establish production readiness.
+The held-out direction agrees with dev, but one paired interval touches zero and the other spans negative and positive values. Neither demonstrates a gain under the registered rule. Keep `r3` provisional, with `planner_v1` and `answer_v3`. Three documented v3.4 post-run gold edits lower or leave scores unchanged; the earlier HO-029 adjudication is preserved separately. A clean pre-registered rerun on frozen human-reviewed gold would provide stronger evidence. Complete source/answer review and preserve every scoring version. These experiments and the fixed threat suite do not establish production readiness.

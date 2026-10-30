@@ -2,7 +2,7 @@
  "label": "gpt-5.6-luna",
  "judge": "gpt-6.1-terra",
  "provenance": {
-  "gold_sha256": "96ec51baf05d9fb998efd3ed37762cb8cedd27b2bf329996d7251adcb01b597e",
+  "gold_sha256": "050bb40b4863cf3a00682da0edc305dc4d9c7de1c35b3098989e8afdd50899b9",
   "prompt_sha256": {
    "planner": "df68ef8e5e287d1a0b1f71d938e85ec25b4f03eeec501bc439a3a77aec2482dc",
    "answer": "e854b64c72116c4c175082e70f39c312ed94b1f37778e7daf3f9a51de1bac350",
@@ -12,7 +12,7 @@
    "answer_user": "c4f4ef05d7d1b87fca94bee65cbf2a38999c181dc2e92bced9cdf8ef92b006e7"
   },
   "agent_config": "planner=gpt-5.6-luna|answer=gpt-5.6-luna|planner_v1|answer_v3|retrieval=r3",
-  "git_head": "65abbed7d3506a55d49cb9fe37628f7448438b54",
+  "git_head": "86feee4ace18ec3dd73012937c3b3e24f4c36f8b",
   "price_table_sha256": "634b32441c3495b4c3ec13efa3af1e9cc99e5c7523eac3a15a5c238c3acaeb5c",
   "eligible_n": 31,
   "available_n": 31,
@@ -25,18 +25,18 @@
  "metrics": {
   "n_cases": 31,
   "behaviour_accuracy": {
-   "rate": 0.839,
+   "rate": 0.806,
    "ci95": [
-    0.71,
-    0.968
+    0.677,
+    0.935
    ],
    "n": 31
   },
   "false_answer_rate": {
-   "rate": 0.069,
+   "rate": 0.103,
    "ci95": [
     0.0,
-    0.172
+    0.207
    ],
    "n": 29
   },
@@ -49,12 +49,12 @@
    "n": 31
   },
   "key_number_recall": {
-   "rate": 0.832,
+   "rate": 0.822,
    "ci95": [
-    0.674,
-    0.965
+    0.656,
+    0.963
    ],
-   "n": 19
+   "n": 18
   },
   "calc_correct": {
    "rate": 0.8,
@@ -65,10 +65,10 @@
    "n": 5
   },
   "gold_cited_any": {
-   "rate": 0.69,
+   "rate": 0.655,
    "ci95": [
-    0.517,
-    0.862
+    0.483,
+    0.828
    ],
    "n": 29
   },
@@ -116,32 +116,32 @@
    "n": 24
   },
   "fact_coverage": {
-   "rate": 0.769,
+   "rate": 0.76,
    "ci95": [
-    0.607,
-    0.917
+    0.6,
+    0.913
    ],
-   "n": 26,
-   "n_cases": 24
+   "n": 25,
+   "n_cases": 23
   },
   "answers_contradicting_a_reference_fact": {
-   "rate": 0.042,
+   "rate": 0.043,
    "ci95": [
     0.0,
-    0.125
+    0.13
    ],
-   "n": 24
+   "n": 23
   },
   "latency_p50_s": 17.3,
   "latency_p95_s": 36.1,
   "cost_per_case_usd": 0.00343,
-  "judge_cost_total_usd": 0.0295
+  "judge_cost_total_usd": 0.0294
  },
  "by_family": {
   "adversarial": {
    "n": 5,
-   "behaviour_accuracy": 0.8,
-   "false_answer": 0,
+   "behaviour_accuracy": 0.6,
+   "false_answer": 1,
    "over_abstain": 1,
    "unsupported_claims": 0,
    "contradicted_facts": 0
