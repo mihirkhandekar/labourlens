@@ -40,6 +40,8 @@ Committed dataset snapshots in `data/snapshots/` let `build` run without `fetch`
 | Presentation (interactive report) plan | `docs/presentation-plan.md` |
 | Human feedback design | `docs/human-feedback-design.md` |
 | Term definitions | `docs/glossary.md` |
+| What we did to the data and why | `docs/data-processing-log.md` |
+| How documents are stored | `docs/storage.md` |
 
 ## Rights and attribution
 Statistical datasets: contains information from data.gov.sg datasets published by MOM and SingStat, accessed 2026-10-30, under the [Singapore Open Data Licence v1.0](https://developers.data.gov.sg/open-data-licence). Not endorsed by any agency. MOM reports carry an all-rights-reserved notice; this repository does not contain them or extracted text from them, only ids, hashes, locators and links. Rights for the MOM press-release pages are unresolved and handled the same way.
