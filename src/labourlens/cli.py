@@ -35,6 +35,11 @@ def main(argv: list[str] | None = None) -> int:
     th.add_argument("--rescore", action="store_true", help="recompute verdicts from saved raw runs, no API calls")
     th.add_argument("--only", help="a category or case id")
     sub.add_parser("mcp-demo", help="run the scripted MCP client demo and write docs/mcp-demo-transcript.md")
+    ev_ = sub.add_parser("eval", help="metrics from saved raw agent runs; judged measures call the OpenAI API")
+    ev_.add_argument("--exp", default="agent-dev-A1")
+    ev_.add_argument("--split", default="dev")
+    ev_.add_argument("--labels", nargs="*")
+    ev_.add_argument("--no-judge", action="store_true")
     sub.add_parser("gold-check", help="validate the gold set and regenerate the owner review sheet")
     sub.add_parser("export", help="export presentation-ready JSON for the interactive report page")
     sub.add_parser("revisions", help="report historical-value changes between dataset snapshots")
@@ -91,6 +96,11 @@ def main(argv: list[str] | None = None) -> int:
         from labourlens.mcp import demo
 
         demo.run()
+        return 0
+    if args.cmd == "eval":
+        from labourlens.evaluation import harness
+
+        harness.run(args.exp, args.split, args.labels, not args.no_judge)
         return 0
     if args.cmd == "gold-check":
         from labourlens import paths as _p
