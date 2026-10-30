@@ -17,6 +17,7 @@ import pandas as pd
 from labourlens import paths
 from labourlens.answer.context import ContextPassage
 from labourlens.data import catalog
+from labourlens.security.guards import injection_flags, sanitize_text
 
 SCOPE_LO, SCOPE_HI = catalog.ANSWER_SCOPE_START, catalog.ANSWER_SCOPE_END
 PERIOD = re.compile(r"^(\d{4})-Q([1-4])$")
@@ -39,13 +40,11 @@ class ToolResult:
     error_kind: str | None = None  # invalid_arguments | not_found | too_large
 
 
-class Shared:
-    """Read-only data shared by all runs: retriever, passages and the observations table."""
+class StatsData:
+    """Read-only statistics: the observations table and the series query. No retriever and no API key, so the MCP server
+    process can run with a minimal environment (least privilege)."""
 
-    def __init__(self, world=None, observations: pd.DataFrame | None = None) -> None:
-        from labourlens.retrieval.runtime import load_world
-
-        self.retriever, self.chunks_by_id, self.passages_by_id = world or load_world()
+    def __init__(self, observations: pd.DataFrame | None = None) -> None:
         o = observations if observations is not None else pd.read_parquet(paths.PROCESSED / "observations.parquet")
         self.obs = o[o.in_answer_scope].reset_index(drop=True)
         self.titles = {d["source_id"]: d["title"] for d in catalog.datasets()}
@@ -58,6 +57,63 @@ class Shared:
             m = "; ".join(f"{i} [{u}, {p}, {a}]" for i, u, p, a in meas)
             lines.append(f"- {sid}: {self.titles.get(sid, sid)}. Series: {m}." + (f" Has {dims} dimension values (industry, occupation or sector)." if dims else ""))
         return "\n".join(lines)
+
+    def query(self, source_id: str, period_from: str, period_to: str, dimension: str | None = None,
+              adjustment: str | None = None, indicator_id: str | None = None) -> tuple[list[dict] | None, ToolResult | None]:
+        """Validated lookup. Returns (rows, None) or (None, error ToolResult). Rows carry provenance and a display string."""
+        o = self.obs
+        if source_id not in set(o.source_id):
+            return None, ToolResult(False, message=f"unknown source_id {source_id!r}; valid: {sorted(set(o.source_id))}", error_kind="not_found")
+        for p in (period_from, period_to):
+            if not PERIOD.match(p or ""):
+                return None, ToolResult(False, message=f"period {p!r} must look like 2026-Q2", error_kind="invalid_arguments")
+        if _q(period_from) > _q(period_to):
+            return None, ToolResult(False, message="period_from is after period_to", error_kind="invalid_arguments")
+        if _q(period_from) < _q(SCOPE_LO) or _q(period_to) > _q(SCOPE_HI):
+            return None, ToolResult(False, message=f"supported periods are {SCOPE_LO} to {SCOPE_HI}", error_kind="invalid_arguments")
+        if adjustment is not None and adjustment not in ADJUSTMENTS:
+            return None, ToolResult(False, message=f"adjustment must be one of {ADJUSTMENTS} or null", error_kind="invalid_arguments")
+        g = o[(o.source_id == source_id)]
+        if indicator_id:
+            g = g[g.indicator_id == indicator_id]
+        if adjustment:
+            g = g[g.adjustment == adjustment]
+        if dimension:
+            names = sorted(set(g.dimension))
+            hit = [n for n in names if n.casefold() == dimension.casefold()]
+            if not hit:
+                return None, ToolResult(False, message=f"dimension {dimension!r} not found in {source_id}; available: {names[:40]}", error_kind="not_found")
+            g = g[g.dimension == hit[0]]
+        g = g[(g.period >= period_from) & (g.period <= period_to)]
+        if g.empty:
+            return None, ToolResult(False, message="no rows match these filters", error_kind="not_found")
+        if len(g) > MAX_ROWS:
+            dims = sorted(set(g.dimension))
+            return None, ToolResult(False, message=f"{len(g)} rows is more than {MAX_ROWS}; set `dimension` (available: {dims[:40]}) or narrow the periods", error_kind="too_large")
+        g = g.sort_values(["indicator_id", "population", "adjustment", "dimension", "period"])
+        rows = []
+        for r in g.itertuples():
+            disp = _fmt(r.value, r.unit) if pd.notna(r.value) else f"no published number ({r.missing_reason})"
+            rows.append({"observation_id": r.observation_id, "source_id": source_id, "title": self.titles[source_id], "indicator_id": r.indicator_id,
+                         "dimension": r.dimension, "period": r.period, "population": r.population, "adjustment": r.adjustment, "unit": r.unit,
+                         "value": None if pd.isna(r.value) else float(r.value), "display": disp, "release_stage": r.release_stage})
+        return rows, None
+
+
+class Shared:
+    """Read-only data shared by all runs: retriever, passages and the statistics data."""
+
+    def __init__(self, world=None, observations: pd.DataFrame | None = None, stats=None) -> None:
+        from labourlens.retrieval.runtime import load_world
+
+        self.retriever, self.chunks_by_id, self.passages_by_id = world or load_world()
+        self.stats = stats or StatsData(observations)
+        self.obs, self.titles = self.stats.obs, self.stats.titles
+        # Optional replacement for the direct statistics lookup, e.g. an MCP client. Same contract as StatsData.query.
+        self.stats_backend = None
+
+    def catalogue_text(self) -> str:
+        return self.stats.catalogue_text()
 
 
 def _fmt(value: float, unit: str) -> str:
@@ -89,7 +145,8 @@ class Tools:
         if item_id in self._ids:
             return None
         self._ids.add(item_id)
-        it = ContextPassage(self._label(kind), item_id, source_id, title, published, stage, locator, text)
+        text = sanitize_text(text)
+        it = ContextPassage(self._label(kind), item_id, source_id, title, published, stage, locator, text, tuple(injection_flags(text)))
         self.items.append(it)
         return it
 
@@ -113,46 +170,19 @@ class Tools:
     # ---- get_series -----------------------------------------------------------------------------------------------
     def get_series(self, source_id: str, period_from: str, period_to: str, dimension: str | None = None,
                    adjustment: str | None = None, indicator_id: str | None = None) -> ToolResult:
-        o = self.sh.obs
-        if source_id not in set(o.source_id):
-            return ToolResult(False, message=f"unknown source_id {source_id!r}; valid: {sorted(set(o.source_id))}", error_kind="not_found")
-        for p in (period_from, period_to):
-            if not PERIOD.match(p or ""):
-                return ToolResult(False, message=f"period {p!r} must look like 2026-Q2", error_kind="invalid_arguments")
-        if _q(period_from) > _q(period_to):
-            return ToolResult(False, message="period_from is after period_to", error_kind="invalid_arguments")
-        if _q(period_from) < _q(SCOPE_LO) or _q(period_to) > _q(SCOPE_HI):
-            return ToolResult(False, message=f"supported periods are {SCOPE_LO} to {SCOPE_HI}", error_kind="invalid_arguments")
-        if adjustment is not None and adjustment not in ADJUSTMENTS:
-            return ToolResult(False, message=f"adjustment must be one of {ADJUSTMENTS} or null", error_kind="invalid_arguments")
-        g = o[(o.source_id == source_id)]
-        if indicator_id:
-            g = g[g.indicator_id == indicator_id]
-        if adjustment:
-            g = g[g.adjustment == adjustment]
-        if dimension:
-            names = sorted(set(g.dimension))
-            hit = [n for n in names if n.casefold() == dimension.casefold()]
-            if not hit:
-                return ToolResult(False, message=f"dimension {dimension!r} not found in {source_id}; available: {names[:40]}", error_kind="not_found")
-            g = g[g.dimension == hit[0]]
-        g = g[(g.period >= period_from) & (g.period <= period_to)]
-        if g.empty:
-            return ToolResult(False, message="no rows match these filters", error_kind="not_found")
-        if len(g) > MAX_ROWS:
-            dims = sorted(set(g.dimension))
-            return ToolResult(False, message=f"{len(g)} rows is more than {MAX_ROWS}; set `dimension` (available: {dims[:40]}) or narrow the periods", error_kind="too_large")
-        g = g.sort_values(["indicator_id", "population", "adjustment", "dimension", "period"])
+        backend = self.sh.stats_backend or self.sh.stats
+        rows, err = backend.query(source_id, period_from, period_to, dimension, adjustment, indicator_id)
+        if err is not None:
+            return err
         new = []
-        for r in g.itertuples():
-            disp = _fmt(r.value, r.unit) if pd.notna(r.value) else f"no published number ({r.missing_reason})"
-            text = (f"{self.sh.titles[source_id]} | {r.indicator_id} | {r.dimension or 'all'} | {r.period} | "
-                    f"{r.population}, {r.adjustment} | {disp} | release stage: {r.release_stage}")
-            it = self._add("O", r.observation_id, source_id, self.sh.titles[source_id], None, r.release_stage, f"observation {r.observation_id}", text)
+        for r in rows:
+            text = (f"{r['title']} | {r['indicator_id']} | {r['dimension'] or 'all'} | {r['period']} | "
+                    f"{r['population']}, {r['adjustment']} | {r['display']} | release stage: {r['release_stage']}")
+            it = self._add("O", r["observation_id"], r["source_id"], r["title"], None, r["release_stage"], f"observation {r['observation_id']}", text)
             if it:
-                self._obs[it.label] = {"label": it.label, "id": r.observation_id, "source_id": source_id, "indicator_id": r.indicator_id,
-                                       "population": r.population, "adjustment": r.adjustment, "dimension": r.dimension, "unit": r.unit,
-                                       "period": r.period, "value": None if pd.isna(r.value) else float(r.value)}
+                self._obs[it.label] = {"label": it.label, "id": r["observation_id"], "source_id": r["source_id"], "indicator_id": r["indicator_id"],
+                                       "population": r["population"], "adjustment": r["adjustment"], "dimension": r["dimension"], "unit": r["unit"],
+                                       "period": r["period"], "value": r["value"]}
                 new.append(it)
         return ToolResult(True, new, f"{len(new)} new observations: " + ", ".join(f"{i.label}={self._obs[i.label]['period']}" for i in new[:20]))
 

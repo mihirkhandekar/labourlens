@@ -71,6 +71,8 @@ def check(answer: Answer, ctx: list[ContextPassage]) -> Report:
             if p is None:
                 rep.errors.append(f"claim {i + 1} cites {cit.label!r}, which was not in the context")
                 continue
+            if p.flags:
+                rep.errors.append(f"claim {i + 1} cites {cit.label}, which is flagged as containing instructions and cannot be used as evidence")
             if len(cit.quote.split()) > MAX_QUOTE_WORDS:
                 rep.errors.append(f"claim {i + 1} quote from {cit.label} is longer than {MAX_QUOTE_WORDS} words")
             if not cit.quote.strip() or norm(cit.quote) not in norm(p.text):

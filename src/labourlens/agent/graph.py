@@ -26,6 +26,8 @@ from labourlens.agent.tools import Shared, ToolResult, Tools, TransientToolError
 from labourlens.answer import context as cx
 from labourlens.answer import llm, validate
 from labourlens.answer.pipeline import PROMPTS, _parse, load_prompt
+from labourlens.mcp.redact import redact, secret_values
+from labourlens.security.guards import injection_flags, scan_output
 
 MAX_ROUNDS, MAX_CALLS, MAX_CALLS_PER_ROUND, TOOL_TIMEOUT_S, MAX_QUESTION_CHARS = 2, 6, 3, 10.0, 1000
 
@@ -35,7 +37,7 @@ class AgentConfig:
     planner_model: str = "gpt-6-luna"
     answer_model: str = "gpt-6-luna"
     planner_prompt: str = "planner_v1"
-    answer_prompt: str = "answer_v2"
+    answer_prompt: str = "answer_v3"
     tool_timeout_s: float = TOOL_TIMEOUT_S
 
     def key(self) -> str:
@@ -117,7 +119,7 @@ def build_graph(shared: Shared, tools: Tools, cfg: AgentConfig):
         if not q or len(q) > MAX_QUESTION_CHARS:
             return {"outcome": "rejected_input", "errors": [f"question must be 1 to {MAX_QUESTION_CHARS} characters"],
                     "trace": _ev("validate_question", "rejected", length=len(q))}
-        return {"question": q, "trace": _ev("validate_question", "accepted", length=len(q))}
+        return {"question": q, "trace": _ev("validate_question", "accepted", length=len(q), input_flags=injection_flags(q))}
 
     def after_validate(s: State):
         return "finalize" if s.get("outcome") == "rejected_input" else "plan_research"
@@ -249,13 +251,22 @@ def build_graph(shared: Shared, tools: Tools, cfg: AgentConfig):
         return "generate_answer" if s.get("errors") and s.get("attempts", 0) < 2 else "finalize"
 
     def finalize(s: State):
+        ev: list[dict] = []
+        update: dict = {}
         if s.get("outcome") in ("rejected_input", "operational_failure"):
             outcome = s["outcome"]
         elif s.get("errors") or not s.get("answer"):
             outcome = "invalid"
         else:
-            outcome = s["answer"]["status"]
-        return {"outcome": outcome, "trace": _ev("finalize", outcome)}
+            a = s["answer"]
+            text = " ".join([a["summary"], a["reason"], a["clarification_question"], *a["caveats"], *[c["text"] for c in a["claims"]]])
+            hits = scan_output(text, secret_values())
+            if hits:  # output guard: a secret or the system prompt must never reach a user
+                outcome, update["answer"] = "blocked_output", None
+                ev += _ev("finalize", "output_blocked", findings=hits)
+            else:
+                outcome = a["status"]
+        return {**update, "outcome": outcome, "trace": ev + _ev("finalize", outcome)}
 
     g = StateGraph(State)
     for fn in (validate_question, plan_research, execute_tool, assess_evidence, generate_answer, validate_answer, finalize):
@@ -287,5 +298,5 @@ def run_agent(question: str, shared: Shared, cfg: AgentConfig = AgentConfig(), s
     if save_trace:
         d = paths.DATA / "runs" / "agent"
         d.mkdir(parents=True, exist_ok=True)
-        (d / f"{run_id}.json").write_text(json.dumps(res, indent=1, default=str))
+        (d / f"{run_id}.json").write_text(redact(json.dumps(res, indent=1, default=str)))
     return res

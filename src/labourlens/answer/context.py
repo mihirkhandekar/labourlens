@@ -20,6 +20,7 @@ class ContextPassage:
     stage: str
     locator: str
     text: str
+    flags: tuple[str, ...] = ()  # injection heuristics that matched this item's text; flagged items must not be cited
 
 
 def build_context(chunks: list[Chunk], passages_by_id: dict[str, dict], first_ids: list[str] | None = None) -> list[ContextPassage]:
@@ -43,5 +44,7 @@ def render(ctx: list[ContextPassage]) -> str:
     for p in ctx:
         attrs = (f"label={quoteattr(p.label)} source={quoteattr(p.source_id)} title={quoteattr(p.title)} "
                  f"published={quoteattr(p.published or 'unknown')} stage={quoteattr(p.stage)} locator={quoteattr(p.locator)}")
+        if p.flags:
+            attrs += f" flagged={quoteattr(','.join(p.flags))}"
         blocks.append(f"<passage {attrs}>\n{escape(p.text)}\n</passage>")
     return "\n".join(blocks)
