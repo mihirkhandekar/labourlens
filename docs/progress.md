@@ -2,7 +2,7 @@
 
 > **This is the first file any agent reads when resuming.** Update it at the end of every work session, every substep, and before any long-running command. Newest entry on top of the log. Never record a result that has no file or command behind it.
 
-**Last updated:** 2026-10-31 (input-fingerprinted dev re-judging and direction-aware calculation correction; registered held-out executed, R3 gain inconclusive; default provisional) · **Deadline:** Wed 4 Nov 2026, morning SGT
+**Last updated:** 2026-10-31 (owner-approved gold v3.3 HO-029 post-run adjudication; current held-out rescoring lowers luna5.6 scores, paired gains still inconclusive; dev remains v3.2) · **Deadline:** Wed 4 Nov 2026, morning SGT
 
 ## Current state (one screen)
 
@@ -58,9 +58,9 @@ Status values: `not started`, `in progress`, `done (evidence: path)`, `blocked (
 | M4 | Bounded research agent and deterministic tools | implemented; dev results recorded | `src/labourlens/agent/`, `docs/experiments/m4-agent.md` |
 | M5 | MCP and responsible-AI controls | implemented; final corrected-fixture paired `r3` threat runs recorded; planted-figure and subtle-instruction failures remain | `src/labourlens/mcp/`, `src/labourlens/security/`, `docs/threat-model.md`, `experiments/threats/SUMMARY.md`, `docs/mcp-demo-transcript.md` |
 | M6.1 | Evaluation harness and dev agent comparisons | A1–A5 re-judged with input-fingerprinted caches against v3.2; direction-aware calculation scoring supersedes old scores; A2/A4/A5 show no demonstrated aggregate benefit | `src/labourlens/evaluation/harness.py`, `experiments/eval/agent-dev-A{1..5}/{gpt-6-luna,gpt-5.6-luna}.metrics.json` |
-| M6.2 | Gold drafting and AI pre-review | gold v3.2 includes D-031 hard-period abstention; three AI review passes; **not human-reviewed** | `experiments/gold/CHANGELOG.md`: 268 cases, 237 dev and 31 held-out |
+| M6.2 | Gold drafting and AI pre-review | gold v3.3 includes D-034's owner-approved HO-029 mixed-request correction after held-out execution; dev remains v3.2 with D-031 hard-period abstention; **not human-reviewed** | `experiments/gold/CHANGELOG.md`: 268 cases, 237 dev and 31 held-out |
 | M6.3 | Documented answer-review sample | selection and AI pre-review exist; **owner review pending** | `experiments/human-review-sample/selection.json`, `ai-review-summary.md` |
-| M6.4 | Freeze protocol and run held-out evaluation | registered four-config comparison executed under owner authorization against unreviewed gold; paired gains inconclusive; human review remains incomplete | `experiments/heldout/FREEZE.md`, `paired.txt`, `experiments/eval/agent-heldout-H-{r3,hybrid}/`, D-033 |
+| M6.4 | Freeze protocol and run held-out evaluation | registered comparison executed against original v3.2; current v3.3 scores disclose post-run HO-029 correction; paired gains inconclusive; human review incomplete | `experiments/heldout/FREEZE.md`, `paired-v3.2.txt`, `paired.txt`, `experiments/eval/agent-heldout-H-{r3,hybrid}/`, D-033/D-034 |
 | M7.1 | Report application, live research and audit/feedback | implementation exists; current checkout not reverified in this refresh | `src/labourlens/report/`, `web/`, `src/labourlens/audit/`, `docs/audit-and-logging.md` |
 | M7.2 | Deployment setup | files and instructions exist; deployment not established by these files | `deploy/`, `Dockerfile`, `docs/deploy.md` |
 | M7.3 | Written submission and demo materials | documentation refresh in progress; final completeness review pending | `docs/architecture.md`, `docs/system-card.md`, `docs/innovation.md`, `docs/demo-script.md`; evaluation report and end-to-end experiment write-up updated in this refresh |
@@ -96,6 +96,14 @@ Every row came from a live call; none is stored as a repo artifact yet. M1.1 mus
 | Human answer review | Review the prepared sample using the documented rubric | pending; AI pre-review is not human review |
 
 ## Log (newest first)
+
+### 2026-10-31 — Gold v3.3 HO-029 adjudication and versioned held-out refresh
+
+- **DECISION:** owner approval was “Okay” on 31 Oct 2026 for the recommended HO-029 correction after held-out execution and before human review (D-034). `refuse` becomes `ignore_injection_and_answer`: decline secrets, answer the public Q1 summary. Added evidence is `mom-2026-q1-final-release:s01:i001:059b7175` and `mom-2026-q1-final-release:s01:i002:f7f19d3b`, with two reference facts. Full fields/reversibility: `experiments/gold/CHANGELOG.md` v3.3 and D-034.
+- Read-only counting of `experiments/gold/draft_cases.jsonl` gives 268 cases, 237 dev/31 held-out. Dev stays 165 answer, 25 abstain, 19 refuse, 11 clarify, 17 ignore-injection-and-answer; held-out is 21/2/3/2/3 respectively. Development labels and all dev measurements remain the v3.2 snapshot.
+- **MEASURED RESULT:** current saved `experiments/eval/agent-heldout-H-{r3,hybrid}/{gpt-6-luna,gpt-5.6-luna}.metrics.json` use gold SHA-256 `96ec51baf05d9fb998efd3ed37762cb8cedd27b2bf329996d7251adcb01b597e`. R3/hybrid behaviour stays 0.839 [0.710, 0.968] / 0.677 [0.516, 0.839] for luna6. Luna5.6 drops from original v3.2 0.871 / 0.742 to 0.839 [0.710, 0.968] / 0.710 [0.548, 0.871]. This post-run label/evidence correction lowers scores, not merely presentation.
+- Current `experiments/heldout/paired.txt` identifies v3.3; differences remain +0.161 [0.000, 0.323] and +0.129 [0.000, 0.290], 10,000 case-bootstrap resamples, seed 20261030: inconclusive. `paired-v3.2.txt`, original generation outputs and `FREEZE.md` preserve original-run evidence. D-033 and the older scoring log below are historical v3.2 results; their “no post-result label change” wording predates D-034 and is not a claim about this correction.
+- Updated gold history, decisions, README, this log, requirements matrix and system card. No tests, builds, evaluation commands, model calls or builder were run by this worker. Threat-suite figures remain unchanged. **Human review is still incomplete**; approval of a correction is not human assessment. The parent handles report updates and final verification/build.
 
 ### 2026-10-31 — Final paired R3 threat results supersede earlier runs
 

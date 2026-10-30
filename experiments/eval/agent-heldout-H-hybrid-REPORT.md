@@ -7,12 +7,12 @@ Gold labels and the judge are AI-produced; nothing here is human-reviewed. Judge
 | measure | value |
 |---|---|
 | n_cases | 31 |
-| behaviour_accuracy | 0.581 [0.387, 0.742] (n=31) |
-| false_answer_rate | 0.095 [0.0, 0.238] (n=21) |
-| over_abstention_rate | 0.323 [0.161, 0.516] (n=31) |
-| key_number_recall | 0.439 [0.254, 0.633] (n=18) |
+| behaviour_accuracy | 0.548 [0.355, 0.71] (n=31) |
+| false_answer_rate | 0.1 [0.0, 0.25] (n=20) |
+| over_abstention_rate | 0.355 [0.194, 0.548] (n=31) |
+| key_number_recall | 0.416 [0.244, 0.6] (n=19) |
 | calc_correct | 0.4 [0.0, 0.8] (n=5) |
-| gold_cited_any | 0.357 [0.179, 0.536] (n=28) |
+| gold_cited_any | 0.345 [0.172, 0.517] (n=29) |
 | cases_with_ungrounded_numbers | 0.0 [0.0, 0.0] (n=31) |
 | answers_with_ungrounded_numbers | 0.0 [0.0, 0.0] (n=31) |
 | claims_judged | 28 |
@@ -28,7 +28,7 @@ Gold labels and the judge are AI-produced; nothing here is human-reviewed. Judge
 
 | family | n | behaviour acc | false answers | over-abstentions | unsupported claims | contradicted facts |
 |---|---|---|---|---|---|---|
-| adversarial | 5 | 0.6 | 0 | 2 | 0 | 0 |
+| adversarial | 5 | 0.4 | 0 | 3 | 0 | 0 |
 | ambiguity_insufficient_causal | 6 | 0.333 | 2 | 1 | 0 | 0 |
 | cross_source_synthesis | 5 | 0.6 | 0 | 2 | 0 | 0 |
 | factual_lookup | 5 | 0.8 | 0 | 1 | 0 | 0 |
@@ -40,12 +40,12 @@ Gold labels and the judge are AI-produced; nothing here is human-reviewed. Judge
 | measure | value |
 |---|---|
 | n_cases | 31 |
-| behaviour_accuracy | 0.742 [0.581, 0.871] (n=31) |
-| false_answer_rate | 0.04 [0.0, 0.12] (n=25) |
-| over_abstention_rate | 0.194 [0.065, 0.355] (n=31) |
-| key_number_recall | 0.626 [0.439, 0.811] (n=18) |
+| behaviour_accuracy | 0.71 [0.548, 0.871] (n=31) |
+| false_answer_rate | 0.042 [0.0, 0.125] (n=24) |
+| over_abstention_rate | 0.226 [0.097, 0.387] (n=31) |
+| key_number_recall | 0.593 [0.395, 0.784] (n=19) |
 | calc_correct | 0.8 [0.4, 1.0] (n=5) |
-| gold_cited_any | 0.429 [0.25, 0.607] (n=28) |
+| gold_cited_any | 0.414 [0.241, 0.586] (n=29) |
 | cases_with_ungrounded_numbers | 0.032 [0.0, 0.097] (n=31) |
 | answers_with_ungrounded_numbers | 0.032 [0.0, 0.097] (n=31) |
 | claims_judged | 39 |
@@ -61,7 +61,7 @@ Gold labels and the judge are AI-produced; nothing here is human-reviewed. Judge
 
 | family | n | behaviour acc | false answers | over-abstentions | unsupported claims | contradicted facts |
 |---|---|---|---|---|---|---|
-| adversarial | 5 | 0.8 | 0 | 1 | 0 | 0 |
+| adversarial | 5 | 0.6 | 0 | 2 | 0 | 0 |
 | ambiguity_insufficient_causal | 6 | 0.667 | 1 | 0 | 0 | 0 |
 | cross_source_synthesis | 5 | 1.0 | 0 | 0 | 0 | 0 |
 | factual_lookup | 5 | 0.8 | 0 | 1 | 0 | 0 |
@@ -74,11 +74,11 @@ Gold labels and the judge are AI-produced; nothing here is human-reviewed. Judge
 |---|---|
 | n_cases | 31 |
 | behaviour_accuracy | 0.677 [0.516, 0.839] (n=31) |
-| false_answer_rate | 0.042 [0.0, 0.125] (n=24) |
-| over_abstention_rate | 0.226 [0.097, 0.387] (n=31) |
-| key_number_recall | 0.626 [0.452, 0.8] (n=18) |
+| false_answer_rate | 0.043 [0.0, 0.13] (n=23) |
+| over_abstention_rate | 0.258 [0.129, 0.419] (n=31) |
+| key_number_recall | 0.593 [0.409, 0.763] (n=19) |
 | calc_correct | 0.8 [0.4, 1.0] (n=5) |
-| gold_cited_any | 0.464 [0.286, 0.643] (n=28) |
+| gold_cited_any | 0.448 [0.276, 0.621] (n=29) |
 | cases_with_ungrounded_numbers | 0.0 [0.0, 0.0] (n=31) |
 | answers_with_ungrounded_numbers | 0.0 [0.0, 0.0] (n=31) |
 | claims_judged | 33 |
@@ -94,7 +94,7 @@ Gold labels and the judge are AI-produced; nothing here is human-reviewed. Judge
 
 | family | n | behaviour acc | false answers | over-abstentions | unsupported claims | contradicted facts |
 |---|---|---|---|---|---|---|
-| adversarial | 5 | 0.4 | 0 | 2 | 0 | 0 |
+| adversarial | 5 | 0.4 | 0 | 3 | 0 | 0 |
 | ambiguity_insufficient_causal | 6 | 0.667 | 1 | 0 | 0 | 0 |
 | cross_source_synthesis | 5 | 0.8 | 0 | 1 | 0 | 0 |
 | factual_lookup | 5 | 0.6 | 0 | 2 | 0 | 0 |

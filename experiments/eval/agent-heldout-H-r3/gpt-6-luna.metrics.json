@@ -2,7 +2,7 @@
  "label": "gpt-6-luna",
  "judge": "gpt-6.1-terra",
  "provenance": {
-  "gold_sha256": "647b26a2f0faa86be30ad897840bc1887b54f55c27268d141565b94cb22998e8",
+  "gold_sha256": "96ec51baf05d9fb998efd3ed37762cb8cedd27b2bf329996d7251adcb01b597e",
   "prompt_sha256": {
    "planner": "df68ef8e5e287d1a0b1f71d938e85ec25b4f03eeec501bc439a3a77aec2482dc",
    "answer": "e854b64c72116c4c175082e70f39c312ed94b1f37778e7daf3f9a51de1bac350",
@@ -12,7 +12,7 @@
    "answer_user": "c4f4ef05d7d1b87fca94bee65cbf2a38999c181dc2e92bced9cdf8ef92b006e7"
   },
   "agent_config": "planner=gpt-6-luna|answer=gpt-6-luna|planner_v1|answer_v3|retrieval=r3",
-  "git_head": "617d168b8badd9db775acd1bfd12f4e26d736ddb",
+  "git_head": "65abbed7d3506a55d49cb9fe37628f7448438b54",
   "price_table_sha256": "634b32441c3495b4c3ec13efa3af1e9cc99e5c7523eac3a15a5c238c3acaeb5c",
   "eligible_n": 31,
   "available_n": 31,
@@ -33,28 +33,28 @@
    "n": 31
   },
   "false_answer_rate": {
-   "rate": 0.034,
+   "rate": 0.036,
    "ci95": [
     0.0,
-    0.103
+    0.107
    ],
-   "n": 29
+   "n": 28
   },
   "over_abstention_rate": {
-   "rate": 0.065,
+   "rate": 0.097,
    "ci95": [
     0.0,
-    0.161
+    0.226
    ],
    "n": 31
   },
   "key_number_recall": {
-   "rate": 0.756,
+   "rate": 0.716,
    "ci95": [
-    0.589,
-    0.896
+    0.546,
+    0.872
    ],
-   "n": 18
+   "n": 19
   },
   "calc_correct": {
    "rate": 0.8,
@@ -65,12 +65,12 @@
    "n": 5
   },
   "gold_cited_any": {
-   "rate": 0.643,
+   "rate": 0.621,
    "ci95": [
-    0.464,
-    0.821
+    0.448,
+    0.793
    ],
-   "n": 28
+   "n": 29
   },
   "cases_with_ungrounded_numbers": {
    "rate": 0.065,
@@ -142,7 +142,7 @@
    "n": 5,
    "behaviour_accuracy": 0.6,
    "false_answer": 0,
-   "over_abstain": 1,
+   "over_abstain": 2,
    "unsupported_claims": 0,
    "contradicted_facts": 0
   },

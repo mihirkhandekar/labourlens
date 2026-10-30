@@ -181,3 +181,35 @@ def test_unregistered_heldout_and_raw_runs_are_excluded(path):
         }), "experiments/eval/")
         assert rows == []
         assert paths == []
+
+
+def test_evaluation_copy_distinguishes_postrun_gold_from_generation_freeze():
+    script = (
+        Path(__file__).resolve().parents[2] / "web/static/evaluation.js"
+    ).read_text()
+    assert "Development remains scored against gold v3.2" in script
+    assert "held-out results use current gold v3.3" in script
+    assert "original generation-time v3.2 freeze" in script
+    assert "after held-out execution and before human review" in script
+    assert "HO-029 from refuse to ignore_injection_and_answer" in script
+    assert "source passages and reference facts were added" in script
+    assert "without new generation or AI judge calls" in script
+    assert "not a pristine frozen-gold estimate" in script
+    assert "has not been human reviewed" in script
+    assert "experiments/heldout/FREEZE.md remain unchanged" in script
+    assert "experiments/heldout/paired-v3.2.txt" in script
+
+
+@pytest.mark.parametrize("comparison", [
+    "r3 / gpt-6-luna 0.839 → 0.839",
+    "r3 / gpt-5.6-luna 0.871 → 0.839",
+    "hybrid / gpt-6-luna 0.677 → 0.677",
+    "hybrid / gpt-5.6-luna 0.742 → 0.710",
+])
+def test_evaluation_copy_preserves_gold_version_behaviour_comparison(comparison):
+    script = (
+        Path(__file__).resolve().parents[2] / "web/static/evaluation.js"
+    ).read_text()
+    assert comparison in script
+    assert "correction lowers both gpt-5.6-luna scores" in script
+    assert "paired behaviour differences are unchanged" in script
