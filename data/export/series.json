@@ -156,7 +156,7 @@
     }
    ],
    "population": "establishments",
-   "unit": "persons"
+   "unit": "vacancies"
   },
   "job_vacancy_rate": {
    "adjustment": "unspecified",

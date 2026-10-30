@@ -20,7 +20,7 @@ The live agent currently defaults to **A3-style R3 retrieval, `planner_v1`, `ans
 | Document sources | 46 documents: 24 PDFs and 22 HTML releases in the [source manifest](data/manifests/manifest.json) |
 | Extracted passages | 13,484 in the [quality report](artifacts/data-quality/quality-report.md) |
 | Structured observations | 43,662 total; 3,790 in scope ([corpus expansion log](docs/progress.md), [runtime data inventory](docs/deploy.md#6-runtime-data)) |
-| Data-quality checks | 247 passes and 7 warnings in the saved [quality report](artifacts/data-quality/quality-report.md); these are build checks, not a current test-suite result |
+| Data-quality checks | 248 passes and 7 warnings in the saved [quality report](artifacts/data-quality/quality-report.md); these are build checks, not a current test-suite result |
 | EDA | Findings and figures in [EDA findings](artifacts/data-quality/eda-findings.md) |
 | Human checks | Owner sign-off is pending in [review sheets](docs/human-review/) |
 

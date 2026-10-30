@@ -79,14 +79,14 @@ On the expanded corpus and the earlier **24 text-case dev set**, BM25 merge120 r
 
 ### Expanded retrieval study
 
-**Historical MEASURED study, gold v3.1:** the retrieval-only comparison used **137 dev text-evidence cases**. These are its recorded results, not a v3.2 rerun; D-031 later changes which cases are eligible for retrieval scoring. Sources: `docs/experiments/m6-retrieval-improvements.md`, `experiments/runs/dev-R-summary.json`, `experiments/runs/dev-R*/metrics.json`.
+**MEASURED, gold v3.2 (current):** the retrieval-only comparison uses **128 dev text-evidence cases** (D-031 removed nine pre-2024 cases). Sources: `docs/experiments/m6-retrieval-improvements.md`, `experiments/runs/dev-R-summary.json`, `experiments/runs/dev-R*/metrics.json`. The earlier gold v3.1 study (137 cases: hybrid 0.599, filter 0.854, rerank 0.803, filter then rerank 0.971) is kept as superseded history in the experiment report.
 
 | Configuration | hit@8 [95% CI] | MRR@10 |
 |---|---|---:|
-| R0 hybrid | 0.599 [0.518, 0.679] | 0.3374 |
-| R1a period/release filter | 0.854 [0.796, 0.912] | 0.5402 |
-| R2 LLM rerank | 0.803 [0.737, 0.869] | 0.7762 |
-| R3 filter then rerank | 0.971 [0.942, 0.993] | 0.9142 |
+| R0 hybrid | 0.570 [0.492, 0.656] | 0.324 |
+| R1a period/release filter | 0.844 [0.781, 0.906] | 0.542 |
+| R2 LLM rerank | 0.789 [0.726, 0.859] | 0.764 |
+| R3 filter then rerank | 0.969 [0.938, 0.992] | 0.912 |
 
 Filtering improves candidate generation; reranking improves ordering within a candidate pool. This is relevance measured against AI-drafted labels, potentially optimistic because an LLM also performs the reranking. A later publication can restate an earlier quarter, so a hard period filter can exclude the right document. The retrieval report records that blind spot and the study deviations.
 
