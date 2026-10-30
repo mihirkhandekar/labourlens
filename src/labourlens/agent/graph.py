@@ -1,0 +1,291 @@
+"""Bounded LangGraph research agent (ADR-002): validate_question -> plan_research -> execute_tool -> assess_evidence ->
+generate_answer -> validate_answer -> finalize.
+
+Bounds (initial defaults, measured later): at most 2 evidence-gathering rounds, 6 tool calls (3 per round), one retry for a
+transient tool failure, one repair of an invalid answer, 10 s per tool call. The planner sees evidence labels and sources,
+never passage text (least exposure to injected text). Evidence content lives in the per-run Tools registry; graph state
+holds counters, decisions and the activity trace, not documents (ADR-002 item 3). No hidden reasoning is stored: `note`
+fields are short statements written for the activity log.
+"""
+
+from __future__ import annotations
+
+import json
+import operator
+import time
+import uuid
+from concurrent.futures import ThreadPoolExecutor
+from concurrent.futures import TimeoutError as FutureTimeout
+from dataclasses import dataclass
+from typing import Annotated, TypedDict
+
+from langgraph.graph import END, START, StateGraph
+
+from labourlens import paths, prices
+from labourlens.agent.tools import Shared, ToolResult, Tools, TransientToolError
+from labourlens.answer import context as cx
+from labourlens.answer import llm, validate
+from labourlens.answer.pipeline import PROMPTS, _parse, load_prompt
+
+MAX_ROUNDS, MAX_CALLS, MAX_CALLS_PER_ROUND, TOOL_TIMEOUT_S, MAX_QUESTION_CHARS = 2, 6, 3, 10.0, 1000
+
+
+@dataclass(frozen=True)
+class AgentConfig:
+    planner_model: str = "gpt-6-luna"
+    answer_model: str = "gpt-6-luna"
+    planner_prompt: str = "planner_v1"
+    answer_prompt: str = "answer_v2"
+    tool_timeout_s: float = TOOL_TIMEOUT_S
+
+    def key(self) -> str:
+        return f"planner={self.planner_model}|answer={self.answer_model}|{self.planner_prompt}|{self.answer_prompt}"
+
+
+def _nullable(t: str) -> dict:
+    return {"type": [t, "null"]}
+
+
+def plan_schema(shared: Shared) -> dict:
+    """Planner output schema. source_id, indicator_id, adjustment and kind are enums built from the catalogue, so the model
+    cannot invent them (it did, and one model looped on a long made-up indicator_id until truncated). The tools still
+    validate every argument; the enum is a convenience for the model, not the safety boundary."""
+    def enum(vals):
+        return {"type": ["string", "null"], "enum": sorted(vals) + [None]}
+
+    from labourlens.agent.tools import ADJUSTMENTS, CHANGE_KINDS
+
+    return {
+        "type": "object", "additionalProperties": False, "required": ["decision", "note", "calls"],
+        "properties": {
+            "decision": {"type": "string", "enum": ["gather", "finish"]},
+            "note": {"type": "string"},
+            "calls": {"type": "array", "items": {
+                "type": "object", "additionalProperties": False,
+                "required": ["tool", "query", "k", "source_id", "period_from", "period_to", "dimension", "adjustment", "indicator_id", "obs_a", "obs_b", "kind"],
+                "properties": {"tool": {"type": "string", "enum": ["search_reports", "get_series", "calculate_change"]},
+                               "query": _nullable("string"), "k": _nullable("integer"), "source_id": enum(set(shared.obs.source_id)),
+                               "period_from": _nullable("string"), "period_to": _nullable("string"), "dimension": _nullable("string"),
+                               "adjustment": enum(ADJUSTMENTS), "indicator_id": enum(set(shared.obs.indicator_id)), "obs_a": _nullable("string"),
+                               "obs_b": _nullable("string"), "kind": enum(CHANGE_KINDS)}}}}}
+
+
+ARGS = {"search_reports": ("query", "k"), "get_series": ("source_id", "period_from", "period_to", "dimension", "adjustment", "indicator_id"),
+        "calculate_change": ("obs_a", "obs_b", "kind")}
+REQUIRED = {"search_reports": ("query",), "get_series": ("source_id", "period_from", "period_to"), "calculate_change": ("obs_a", "obs_b")}
+
+
+class State(TypedDict, total=False):
+    question: str
+    round: int
+    calls_used: int
+    planned: list[dict]
+    tool_errors: list[str]
+    tool_ops_failures: int
+    messages: list[dict]
+    attempts: int
+    answer: dict | None
+    errors: list[str]
+    outcome: str
+    usage: dict
+    trace: Annotated[list[dict], operator.add]
+
+
+def _ev(node: str, event: str, **detail) -> list[dict]:
+    return [{"t": round(time.time(), 3), "node": node, "event": event, "detail": detail}]
+
+
+def _usage(state: State, model: str, r: llm.LLMResult) -> dict:
+    u = dict(state.get("usage") or {"calls": 0, "prompt_tokens": 0, "completion_tokens": 0, "cost_usd": 0.0, "llm_seconds": 0.0})
+    u["calls"] += 1
+    u["prompt_tokens"] += r.prompt_tokens
+    u["completion_tokens"] += r.completion_tokens
+    u["cost_usd"] = round(u["cost_usd"] + prices.chat_cost(model, r.prompt_tokens, r.completion_tokens), 6)
+    u["llm_seconds"] = round(u["llm_seconds"] + r.seconds, 2)
+    return u
+
+
+def build_graph(shared: Shared, tools: Tools, cfg: AgentConfig):
+    planner_sys, planner_user, _ = load_prompt(cfg.planner_prompt)
+    planner_sys = planner_sys.format(catalogue=shared.catalogue_text())
+    answer_sys, answer_user, _ = load_prompt(cfg.answer_prompt)
+    pool = ThreadPoolExecutor(max_workers=2)
+    schema = plan_schema(shared)
+
+    def validate_question(s: State):
+        q = (s.get("question") or "").strip()
+        if not q or len(q) > MAX_QUESTION_CHARS:
+            return {"outcome": "rejected_input", "errors": [f"question must be 1 to {MAX_QUESTION_CHARS} characters"],
+                    "trace": _ev("validate_question", "rejected", length=len(q))}
+        return {"question": q, "trace": _ev("validate_question", "accepted", length=len(q))}
+
+    def after_validate(s: State):
+        return "finalize" if s.get("outcome") == "rejected_input" else "plan_research"
+
+    def evidence_summary() -> str:
+        if not tools.items:
+            return "(none yet)"
+        lines = []
+        for it in tools.items:
+            # passages: label and source only (no text); statistics and calculations are our own computed lines
+            lines.append(f"{it.label}: {it.text}" if it.label[0] in "OC" else f"{it.label}: passage from {it.source_id} ({it.stage}), {it.locator}")
+        return "\n".join(lines)
+
+    def plan_research(s: State):
+        rnd, used = s.get("round", 0), s.get("calls_used", 0)
+        if rnd >= MAX_ROUNDS or used >= MAX_CALLS:
+            return {"planned": [], "trace": _ev("plan_research", "budget_exhausted", round=rnd, calls_used=used)}
+        user = planner_user.format(question=s["question"], round=rnd + 1, calls_used=used, evidence=evidence_summary(),
+                                   errors="\n".join(s.get("tool_errors") or []) or "(none)")
+        plan, r, last = None, None, ""
+        for attempt in range(2):  # one retry for malformed planner output (ADR-002 item 6)
+            try:
+                r = llm.chat(cfg.planner_model, [{"role": "system", "content": planner_sys}, {"role": "user", "content": user}],
+                             max_completion_tokens=1500, schema=schema, schema_name="plan")
+                plan = json.loads(r.content)
+                break
+            except json.JSONDecodeError:
+                last = "JSONDecodeError"
+            except llm.LLMError as e:
+                last = type(e).__name__
+                break
+        if plan is None:
+            return {"planned": [], "outcome": "operational_failure", "errors": [f"operational failure: planner: {last}"],
+                    "trace": _ev("plan_research", "operational_failure", error=last)}
+        calls = plan["calls"][: min(MAX_CALLS_PER_ROUND, MAX_CALLS - used)] if plan["decision"] == "gather" else []
+        return {"planned": calls, "usage": _usage(s, cfg.planner_model, r), "tool_errors": [],
+                "trace": _ev("plan_research", plan["decision"], round=rnd + 1, note=plan["note"][:200], n_calls=len(calls),
+                             dropped=max(0, len(plan["calls"]) - len(calls)) if plan["decision"] == "gather" else 0)}
+
+    def after_plan(s: State):
+        if s.get("outcome") == "operational_failure":
+            return "finalize"
+        return "execute_tool" if s.get("planned") else "assess_evidence"
+
+    def _run_one(call: dict) -> tuple[ToolResult | None, str | None]:
+        name = call["tool"]
+        missing = [a for a in REQUIRED[name] if call.get(a) in (None, "")]
+        if missing:
+            return ToolResult(False, message=f"missing required argument(s): {missing}", error_kind="invalid_arguments"), None
+        kwargs = {a: call[a] for a in ARGS[name] if call.get(a) is not None}
+        fn = getattr(tools, name)
+        for attempt in range(2):  # first try plus one retry for transient failures
+            fut = pool.submit(fn, **kwargs)
+            try:
+                return fut.result(timeout=cfg.tool_timeout_s), None
+            except (FutureTimeout, TransientToolError) as e:
+                err = f"{type(e).__name__}: tool {name} did not complete"
+                if attempt == 1:
+                    return None, err
+            except Exception as e:  # tool bug or unexpected failure: operational, never reported as missing evidence
+                return None, f"{type(e).__name__}: tool {name} failed"
+        return None, "unreachable"
+
+    def execute_tool(s: State):
+        events, errors, ops = [], [], s.get("tool_ops_failures", 0)
+        for call in s["planned"]:
+            t0 = time.perf_counter()
+            res, ops_err = _run_one(call)
+            dt = round(time.perf_counter() - t0, 3)
+            args = {k: v for k, v in call.items() if k != "tool" and v is not None}
+            if ops_err:
+                ops += 1
+                errors.append(f"{call['tool']}: operational failure, tool unavailable")
+                events += _ev("execute_tool", "operational_failure", tool=call["tool"], args=args, error=ops_err, seconds=dt)
+            elif res.ok:
+                events += _ev("execute_tool", "ok", tool=call["tool"], args=args, result=res.message[:300], new_items=[i.label for i in res.items], seconds=dt)
+            else:
+                errors.append(f"{call['tool']}({args}): {res.error_kind}: {res.message}")
+                events += _ev("execute_tool", "error", tool=call["tool"], args=args, error_kind=res.error_kind, message=res.message[:300], seconds=dt)
+        return {"round": s.get("round", 0) + 1, "calls_used": s.get("calls_used", 0) + len(s["planned"]), "tool_errors": errors,
+                "tool_ops_failures": ops, "trace": events}
+
+    def after_execute(s: State):
+        return "plan_research" if s["round"] < MAX_ROUNDS and s["calls_used"] < MAX_CALLS else "assess_evidence"
+
+    def assess_evidence(s: State):
+        if not tools.items and s.get("tool_ops_failures", 0) > 0:
+            return {"outcome": "operational_failure", "errors": ["operational failure: evidence tools unavailable"],
+                    "trace": _ev("assess_evidence", "operational_failure")}
+        n = {k: sum(1 for i in tools.items if i.label[0] == k) for k in "POC"}
+        return {"trace": _ev("assess_evidence", "evidence_ready" if tools.items else "no_evidence", passages=n["P"], observations=n["O"], calculations=n["C"],
+                             unresolved_tool_errors=len(s.get("tool_errors") or []))}
+
+    def after_assess(s: State):
+        return "finalize" if s.get("outcome") == "operational_failure" else "generate_answer"
+
+    def generate_answer(s: State):
+        msgs = s.get("messages")
+        if not msgs:
+            msgs = [{"role": "system", "content": answer_sys},
+                    {"role": "user", "content": answer_user.format(context=cx.render(tools.items) if tools.items else "(no evidence items were collected)", question=s["question"])}]
+        try:
+            r = llm.chat(cfg.answer_model, msgs, 6000)
+        except llm.LLMError as e:
+            return {"outcome": "operational_failure", "errors": [f"operational failure: {e}"], "trace": _ev("generate_answer", "operational_failure")}
+        ans, perr = _parse(r.content)
+        return {"messages": msgs + [{"role": "assistant", "content": r.content or "{}"}], "attempts": s.get("attempts", 0) + 1,
+                "answer": ans.model_dump() if ans else None, "errors": [r.refusal or perr or "empty output"] if ans is None else [],
+                "usage": _usage(s, cfg.answer_model, r), "trace": _ev("generate_answer", "generated", attempt=s.get("attempts", 0) + 1, parsed=ans is not None)}
+
+    def after_generate(s: State):
+        return "finalize" if s.get("outcome") == "operational_failure" else "validate_answer"
+
+    def validate_answer(s: State):
+        errs = list(s.get("errors") or [])
+        extra: dict = {}
+        if s.get("answer"):
+            from labourlens.answer.schema import Answer
+
+            rep = validate.check(Answer.model_validate(s["answer"]), tools.items)
+            errs = rep.errors
+            extra = {"cited_ids": rep.cited_passage_ids, "ungrounded_numbers": rep.ungrounded_numbers}
+        update = {"errors": errs, "trace": _ev("validate_answer", "valid" if not errs else "invalid", attempt=s.get("attempts"), n_errors=len(errs), **extra)}
+        if errs and s.get("attempts", 0) < 2:
+            update["messages"] = s["messages"] + [{"role": "user", "content": (PROMPTS / "repair_v1.md").read_text().format(errors="\n".join(f"- {e}" for e in errs))}]
+        return update
+
+    def after_validate_answer(s: State):
+        return "generate_answer" if s.get("errors") and s.get("attempts", 0) < 2 else "finalize"
+
+    def finalize(s: State):
+        if s.get("outcome") in ("rejected_input", "operational_failure"):
+            outcome = s["outcome"]
+        elif s.get("errors") or not s.get("answer"):
+            outcome = "invalid"
+        else:
+            outcome = s["answer"]["status"]
+        return {"outcome": outcome, "trace": _ev("finalize", outcome)}
+
+    g = StateGraph(State)
+    for fn in (validate_question, plan_research, execute_tool, assess_evidence, generate_answer, validate_answer, finalize):
+        g.add_node(fn.__name__, fn)
+    g.add_edge(START, "validate_question")
+    g.add_conditional_edges("validate_question", after_validate, ["plan_research", "finalize"])
+    g.add_conditional_edges("plan_research", after_plan, ["execute_tool", "assess_evidence", "finalize"])
+    g.add_conditional_edges("execute_tool", after_execute, ["plan_research", "assess_evidence"])
+    g.add_conditional_edges("assess_evidence", after_assess, ["generate_answer", "finalize"])
+    g.add_conditional_edges("generate_answer", after_generate, ["validate_answer", "finalize"])
+    g.add_conditional_edges("validate_answer", after_validate_answer, ["generate_answer", "finalize"])
+    g.add_edge("finalize", END)
+    return g.compile()
+
+
+def run_agent(question: str, shared: Shared, cfg: AgentConfig = AgentConfig(), save_trace: bool = True) -> dict:
+    tools = Tools(shared)
+    graph = build_graph(shared, tools, cfg)
+    t0 = time.perf_counter()
+    final = graph.invoke({"question": question, "round": 0, "calls_used": 0, "attempts": 0, "trace": []}, {"recursion_limit": 40})
+    run_id = uuid.uuid4().hex[:12]
+    u = final.get("usage") or {"calls": 0, "prompt_tokens": 0, "completion_tokens": 0, "cost_usd": 0.0, "llm_seconds": 0.0}
+    cited = next((e["detail"].get("cited_ids", []) for e in reversed(final["trace"]) if e["node"] == "validate_answer"), [])
+    res = {"run_id": run_id, "question": question, "config": cfg.key(), "outcome": final["outcome"], "answer": final.get("answer"),
+           "errors": final.get("errors") or [], "rounds": final.get("round", 0), "tool_calls": final.get("calls_used", 0),
+           "evidence": [{"label": i.label, "id": i.passage_id, "source_id": i.source_id} for i in tools.items],
+           "evidence_text": {i.label: i.text for i in tools.items}, "cited_ids": cited, "usage": u,
+           "seconds": round(time.perf_counter() - t0, 2), "trace": final["trace"]}
+    if save_trace:
+        d = paths.DATA / "runs" / "agent"
+        d.mkdir(parents=True, exist_ok=True)
+        (d / f"{run_id}.json").write_text(json.dumps(res, indent=1, default=str))
+    return res

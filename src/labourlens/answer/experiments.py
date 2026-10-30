@@ -16,10 +16,8 @@ from concurrent.futures import ThreadPoolExecutor
 from labourlens import paths, prices
 from labourlens.answer import pipeline as pl
 from labourlens.answer import validate as vd
-from labourlens.retrieval import chunk as ck
-from labourlens.retrieval import dense as dn
+from labourlens.retrieval.runtime import load_world
 from labourlens.retrieval import evaluate as ev
-from labourlens.retrieval.bm25_index import BM25Config, BM25Index
 
 EXPECTED_STATUS = {"answer": "answered", "ignore_injection_and_answer": "answered", "abstain": "abstained", "clarify": "clarify", "refuse": "refused"}
 MODELS = ("gpt-6-luna", "gpt-6-sol", "gpt-6.1-terra", "gpt-5.6-luna", "gpt-5.4-mini", "gpt-4.1-mini")
@@ -32,16 +30,15 @@ def in_scope(case: dict) -> bool:
 
 
 def retriever_and_corpus():
-    passages = ck.load_passages()
-    chunks = ck.build_chunks(ck.CONFIGS["merge200"], passages)
-    hybrid = dn.HybridIndex(BM25Index.build(chunks, BM25Config()), dn.DenseIndex(chunks, dn.DenseConfig("text-embedding-3-large")))
-    return hybrid, {c.chunk_id: c for c in chunks}, {p["passage_id"]: p for p in passages}
+    return load_world()
 
 
-def score(case: dict, rec: dict) -> dict:
+def score(case: dict, rec: dict, include_data_gold: bool = False) -> dict:
     expected = EXPECTED_STATUS[case["expected_behavior"]]
     a = rec["answer"]
     gold = ev.gold_passages(case) if case["evidence_text"] else set()
+    if include_data_gold:  # agent runs: statistics evidence ids count as gold too
+        gold |= {o for e in case["evidence_data"] for o in e["observation_ids"]}
     s = {"case_id": case["case_id"], "family": case["family"], "expected": expected, "status": a["status"] if a else None,
          "valid": rec["valid"], "operational_failure": rec["operational_failure"], "attempts": rec["attempts"],
          "behavior_ok": bool(a) and a["status"] == expected, "errors": rec["errors"], "n_ungrounded_numbers": len(rec["ungrounded_numbers"]),

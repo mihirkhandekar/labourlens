@@ -16,6 +16,7 @@ dependencies = [
   "matplotlib>=3.9",
   "bm25s>=0.3.16",
   "pystemmer>=3.1.0",
+  "langgraph>=1.2.18",
 ]
 
 [dependency-groups]

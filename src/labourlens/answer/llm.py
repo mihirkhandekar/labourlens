@@ -31,12 +31,13 @@ class LLMResult:
     refusal: str | None = None
 
 
-def chat(model: str, messages: list[dict], max_completion_tokens: int = 6000, extra: dict | None = None) -> LLMResult:
+def chat(model: str, messages: list[dict], max_completion_tokens: int = 6000, extra: dict | None = None,
+         schema: dict | None = None, schema_name: str = "answer") -> LLMResult:
     key = os.environ.get("OPENAI_API_KEY")
     if not key:
         raise LLMError("OPENAI_API_KEY is not set")
     body = {"model": model, "messages": messages, "max_completion_tokens": max_completion_tokens,
-            "response_format": {"type": "json_schema", "json_schema": {"name": "answer", "strict": True, "schema": json_schema()}},
+            "response_format": {"type": "json_schema", "json_schema": {"name": schema_name, "strict": True, "schema": schema or json_schema()}},
             **(extra or {})}
     last = ""
     for attempt in range(MAX_RETRIES):
