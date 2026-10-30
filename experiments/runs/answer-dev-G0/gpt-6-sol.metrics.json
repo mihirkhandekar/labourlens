@@ -1,0 +1,29 @@
+{
+ "label": "gpt-6-sol",
+ "config": "gpt-6-sol|answer_v1|k5|oracle",
+ "prompt_hash": "8b55497aa7e5",
+ "metrics": {
+  "n": 30,
+  "n_answer_cases": 24,
+  "n_nonanswer_cases": 6,
+  "valid_rate": 0.967,
+  "repair_rate": 0.2,
+  "operational_failures": 0,
+  "behavior_accuracy": 0.833,
+  "answer_case_behavior": 0.875,
+  "nonanswer_case_behavior": 0.667,
+  "over_abstention_rate": 0.125,
+  "false_answer_rate": 0.167,
+  "numbers_complete_rate": 0.833,
+  "gold_in_context_rate": 1.0,
+  "gold_cited_rate": 0.833,
+  "gold_cited_given_in_context": 0.833,
+  "key_number_recall": 0.877,
+  "answers_with_ungrounded_numbers": 0.125,
+  "latency_p50_s": 5.33,
+  "latency_max_s": 16.11,
+  "prompt_tokens_mean": 2790,
+  "completion_tokens_mean": 582,
+  "total_tokens": 101150
+ }
+}

@@ -1,0 +1,29 @@
+{
+ "label": "gpt-4.1-mini",
+ "config": "gpt-4.1-mini|answer_v1|k5|oracle",
+ "prompt_hash": "8b55497aa7e5",
+ "metrics": {
+  "n": 30,
+  "n_answer_cases": 24,
+  "n_nonanswer_cases": 6,
+  "valid_rate": 0.9,
+  "repair_rate": 0.233,
+  "operational_failures": 0,
+  "behavior_accuracy": 0.933,
+  "answer_case_behavior": 1.0,
+  "nonanswer_case_behavior": 0.667,
+  "over_abstention_rate": 0.0,
+  "false_answer_rate": 0.333,
+  "numbers_complete_rate": 0.917,
+  "gold_in_context_rate": 1.0,
+  "gold_cited_rate": 1.0,
+  "gold_cited_given_in_context": 1.0,
+  "key_number_recall": 0.965,
+  "answers_with_ungrounded_numbers": 0.083,
+  "latency_p50_s": 2.38,
+  "latency_max_s": 8.44,
+  "prompt_tokens_mean": 2923,
+  "completion_tokens_mean": 292,
+  "total_tokens": 96447
+ }
+}

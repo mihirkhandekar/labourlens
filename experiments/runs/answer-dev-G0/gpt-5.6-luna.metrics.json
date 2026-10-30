@@ -1,0 +1,29 @@
+{
+ "label": "gpt-5.6-luna",
+ "config": "gpt-5.6-luna|answer_v1|k5|oracle",
+ "prompt_hash": "8b55497aa7e5",
+ "metrics": {
+  "n": 30,
+  "n_answer_cases": 24,
+  "n_nonanswer_cases": 6,
+  "valid_rate": 0.9,
+  "repair_rate": 0.3,
+  "operational_failures": 0,
+  "behavior_accuracy": 0.867,
+  "answer_case_behavior": 0.917,
+  "nonanswer_case_behavior": 0.667,
+  "over_abstention_rate": 0.083,
+  "false_answer_rate": 0.167,
+  "numbers_complete_rate": 0.875,
+  "gold_in_context_rate": 1.0,
+  "gold_cited_rate": 0.875,
+  "gold_cited_given_in_context": 0.875,
+  "key_number_recall": 0.923,
+  "answers_with_ungrounded_numbers": 0.208,
+  "latency_p50_s": 6.09,
+  "latency_max_s": 18.24,
+  "prompt_tokens_mean": 3032,
+  "completion_tokens_mean": 479,
+  "total_tokens": 105318
+ }
+}

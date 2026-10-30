@@ -22,6 +22,10 @@ def main(argv: list[str] | None = None) -> int:
     rx.add_argument("--split", default="dev", choices=["dev", "heldout"])
     dx = sub.add_parser("dense-exp", help="run dense/hybrid embedding experiments (calls the OpenAI embeddings API; needs OPENAI_API_KEY)")
     dx.add_argument("--split", default="dev", choices=["dev", "heldout"])
+    ax = sub.add_parser("answer-exp", help="run answer-generation model comparison (calls the OpenAI API)")
+    ax.add_argument("--split", default="dev", choices=["dev", "heldout"])
+    ax.add_argument("--exp", default="G1", choices=["G1", "G0", "G3"])
+    ax.add_argument("--models", nargs="*", help="restrict to these models")
     sub.add_parser("gold-check", help="validate the gold set and regenerate the owner review sheet")
     sub.add_parser("export", help="export presentation-ready JSON for the interactive report page")
     sub.add_parser("revisions", help="report historical-value changes between dataset snapshots")
@@ -58,6 +62,11 @@ def main(argv: list[str] | None = None) -> int:
         from labourlens.retrieval import experiments_dense
 
         experiments_dense.run(args.split)
+        return 0
+    if args.cmd == "answer-exp":
+        from labourlens.answer import experiments as ae
+
+        ae.run(args.split, args.models, args.exp)
         return 0
     if args.cmd == "gold-check":
         from labourlens import paths as _p

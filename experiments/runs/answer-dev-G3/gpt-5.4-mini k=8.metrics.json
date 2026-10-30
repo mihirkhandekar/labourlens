@@ -1,0 +1,29 @@
+{
+ "label": "gpt-5.4-mini k=8",
+ "config": "gpt-5.4-mini|answer_v1|k8",
+ "prompt_hash": "8b55497aa7e5",
+ "metrics": {
+  "n": 30,
+  "n_answer_cases": 24,
+  "n_nonanswer_cases": 6,
+  "valid_rate": 0.9,
+  "repair_rate": 0.333,
+  "operational_failures": 0,
+  "behavior_accuracy": 0.8,
+  "answer_case_behavior": 0.917,
+  "nonanswer_case_behavior": 0.333,
+  "over_abstention_rate": 0.083,
+  "false_answer_rate": 0.167,
+  "numbers_complete_rate": 0.667,
+  "gold_in_context_rate": 0.692,
+  "gold_cited_rate": 0.625,
+  "gold_cited_given_in_context": 0.833,
+  "key_number_recall": 0.702,
+  "answers_with_ungrounded_numbers": 0.125,
+  "latency_p50_s": 2.66,
+  "latency_max_s": 5.41,
+  "prompt_tokens_mean": 4174,
+  "completion_tokens_mean": 317,
+  "total_tokens": 134744
+ }
+}

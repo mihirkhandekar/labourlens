@@ -25,3 +25,4 @@ __pycache__/
 # Assessment brief: do not commit without recruiter permission
 Tech Challenge - GenAI Engineer v1.0.pdf
 reference/
+data/runs/

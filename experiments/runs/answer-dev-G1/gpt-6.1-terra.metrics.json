@@ -1,0 +1,29 @@
+{
+ "label": "gpt-6.1-terra",
+ "config": "gpt-6.1-terra|answer_v1|k5",
+ "prompt_hash": "8b55497aa7e5",
+ "metrics": {
+  "n": 30,
+  "n_answer_cases": 24,
+  "n_nonanswer_cases": 6,
+  "valid_rate": 1.0,
+  "repair_rate": 0.1,
+  "operational_failures": 0,
+  "behavior_accuracy": 0.567,
+  "answer_case_behavior": 0.583,
+  "nonanswer_case_behavior": 0.5,
+  "over_abstention_rate": 0.417,
+  "false_answer_rate": 0.0,
+  "numbers_complete_rate": 0.417,
+  "gold_in_context_rate": 0.577,
+  "gold_cited_rate": 0.417,
+  "gold_cited_given_in_context": 0.667,
+  "key_number_recall": 0.465,
+  "answers_with_ungrounded_numbers": 0.0,
+  "latency_p50_s": 6.34,
+  "latency_max_s": 13.78,
+  "prompt_tokens_mean": 2235,
+  "completion_tokens_mean": 417,
+  "total_tokens": 79550
+ }
+}
