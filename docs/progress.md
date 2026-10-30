@@ -97,6 +97,13 @@ Every row came from a live call; none is stored as a repo artifact yet. M1.1 mus
 
 ## Log (newest first)
 
+### 2026-10-31 — Second blind independent AI pass and extraction boundary
+
+- **MEASURED RESULT / AI-only:** [A3 answer review](../experiments/human-review-sample/independent-ai-review-2.md): 28 correct / 6 partly correct / 6 incorrect in a failure-enriched 40-case development sample, not a population estimate or human score. [Gold review](../experiments/gold/independent-ai-review-2.md): 70/71 behaviour labels retained; HO-027 lacks a year, HO-023 lacks cohort-definition evidence and HO-004's primary PDF passage is truncated. No labels or frozen scores were changed by these reviews.
+- **Evaluation limitation:** 25/31 held-out cases share evidence IDs with development; 15/31 have their entire evidence set represented in development. No exact question/normalized-template duplicates were found, but held-out is not evidence-independent.
+- **Source-review limits:** [second source review](human-review/independent-ai-review-m1-2.md) confirms sampled raw fidelity, not table completeness. All five malicious paraphrases bypassed the ingestion scanner; this is not an end-to-end exploit. Three sampled dataset licence-verification claims are not reproducible from cached evidence. Quarantine, schema/citation/output guards and rights review remain necessary.
+- **Not adopted:** extraction corrections are isolated on unmerged `extraction-fixes`, commit `80a287b`; its `docs/experiments/m7-extraction-fixes.md` records 13,484 → 15,915 passages and 61 absent gold passage IDs. Existing frozen main results are unchanged; corpus/gold migration and separate retrieval/answer evaluation require owner approval. Human review remains incomplete. No tests, builds, model calls or evaluation commands were run for this documentation update.
+
 ### 2026-10-31 — Gold v3.3 HO-029 adjudication and versioned held-out refresh
 
 - **DECISION:** owner approval was “Okay” on 31 Oct 2026 for the recommended HO-029 correction after held-out execution and before human review (D-034). `refuse` becomes `ignore_injection_and_answer`: decline secrets, answer the public Q1 summary. Added evidence is `mom-2026-q1-final-release:s01:i001:059b7175` and `mom-2026-q1-final-release:s01:i002:f7f19d3b`, with two reference facts. Full fields/reversibility: `experiments/gold/CHANGELOG.md` v3.3 and D-034.

@@ -177,6 +177,18 @@ These are three **AI reviews, not human review**. Their reports describe the per
 
 The owner still needs to review sources, labels and sampled outputs. Independent AI inspection reduces dependence on prior AI verdicts but does not eliminate correlated model errors or replace human adjudication.
 
+### Second independent blind AI pass
+
+This second pass consists of three further **AI reviews, not human review**. Reviewers used new sampling/inspection procedures without reading earlier verdict reports; their reports disclose incidental metadata exposure and other blindness limits. No human-review fields were completed.
+
+- **Final A3 answers:** `experiments/human-review-sample/independent-ai-review-2.md` reviewed a failure-enriched **40-answer** sample from the final `gpt-6-luna` A3 run: **28 correct, 6 partly correct, 6 incorrect**. Findings include omitted `calculate_change` calls, a short-work-week component misread as a combined indicator, unnecessary population clarification, HTML-escaped quotes failing strict citation validation, and a quote that dropped a source footnote. All sampled gold behaviour labels were defensible. The counts describe this selected dev sample, not generalisation accuracy or human judgments.
+- **Gold and split independence:** `experiments/gold/independent-ai-review-2.md` reviewed **71 cases** and retained **70 behaviour labels**. HO-027 omits the year but assumes a particular year in its gold; HO-023 lacks the cohort-definition citation; HO-004 marks a truncated primary passage as sufficient even though the release supports the full fact. These remain findings for adjudication, not silently applied label/evidence edits.
+- **Ingestion and rights:** `docs/human-review/independent-ai-review-m1-2.md` found sampled source fidelity matches alongside a genuine appendix-table row labelled `ok`. The occupation vacancy count unit was `persons`; the owner has since fixed the spec and rebuilt derived data, without retroactively repairing saved runs. All **five** in-memory paraphrased injection probes bypassed the ingestion scanner. This measures detector misses, not an end-to-end exploit. The pattern list is not a defence against paraphrase; quarantine, schema checks, citation validation and output guards remain the operational boundaries. For **three sampled datasets**, cached publisher evidence could not reproduce the recorded open-licence verification. This does not prove the licences are wrong, but the verification evidence is incomplete.
+
+**Held-out limitation — evidence is not independent:** the second gold review found **25/31** held-out cases share at least one gold evidence ID with dev, and **15/31** have their entire evidence-ID set represented in the dev union. It found **no exact duplicate questions or exact normalized templates**; this does not establish semantic novelty. The set is question-held-out, not source-, fact- or reasoning-template-independent. Shared facts and simpler variants limit the strength of the generalisation claim. Read the already zero-inclusive held-out gain intervals cautiously; evidence overlap is an additional limitation, not a reason to declare a gain or to infer model-training contamination. Preserve the existing runs. A stronger future study needs a separately frozen group-disjoint design (`experiments/gold/independent-ai-review-2.md`, split-overlap section).
+
+**Separate extraction work, not adopted:** branch `extraction-fixes`, commit `80a287b`, contains `docs/experiments/m7-extraction-fixes.md` on that branch. Its recorded corpus comparison is **13,484 → 15,915 passages**, control-bearing `ok` passages **57 → 0**, Q3 2025 physical page 30 **0 → 7 passages**, and appendix-label headings **141 → 0**. It also reports **61 referenced gold passage IDs absent** from the rebuilt corpus. These are extraction/migration findings, not retrieval or answer-quality improvements. The branch is **not merged and not evaluated**; existing frozen experiment results do not apply to it. Passage-ID migration and a separate evaluation require owner approval.
+
 ## Human review status and AI pre-review
 
 **Human review has not happened.** The owner must review the gold and the sampled answers before sign-off. Public review scaffolds are in `docs/human-review/`; the owner's answer-review sheet is private. Its existence is not evidence of a completed review.
@@ -228,6 +240,7 @@ Safety and usefulness remain separate. Final defended `gpt-6-luna` usefulness is
 ## Threats to validity
 
 - AI authored gold and performed all completed content reviews. Owner source verification and label adjudication are missing.
+- The second blind gold review found **25/31** held-out cases share dev evidence and **15/31** reuse their entire evidence-ID set. The split is not evidence-independent, despite no exact question/template duplicates. It cannot establish unseen-fact or out-of-distribution generalisation (`experiments/gold/independent-ai-review-2.md`).
 - The semantic judge, reranker and generators share a provider/family. Correlated errors and relevance/phrasing bias can inflate scores.
 - Dev-tuned period rules benefit from authored questions that often specify a release and quarter. Real user ambiguity may be more common.
 - Family and calculation strata are small. Rounded rates and bootstrap intervals cannot support precise model rankings.
