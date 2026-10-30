@@ -4741,34 +4741,34 @@
       {
         "id": "experiments/runs/agent-dev-A1/gpt-4.1-mini",
         "metrics": {
-          "n": 34,
-          "n_answer_cases": 28,
-          "n_nonanswer_cases": 6,
-          "valid_rate": 0.941,
-          "repair_rate": 0.382,
+          "n": 238,
+          "n_answer_cases": 191,
+          "n_nonanswer_cases": 47,
+          "valid_rate": 0.891,
+          "repair_rate": 0.471,
           "operational_failures": 0,
-          "behavior_accuracy": 0.824,
-          "answer_case_behavior": 0.857,
-          "nonanswer_case_behavior": 0.667,
-          "over_abstention_rate": 0.143,
-          "false_answer_rate": 0.333,
+          "behavior_accuracy": 0.782,
+          "answer_case_behavior": 0.832,
+          "nonanswer_case_behavior": 0.574,
+          "over_abstention_rate": 0.168,
+          "false_answer_rate": 0.17,
           "numbers_complete_rate": 0.607,
-          "gold_in_context_rate": 0.645,
-          "gold_cited_rate": 0.571,
-          "gold_cited_given_in_context": 0.842,
-          "key_number_recall": 0.659,
-          "answers_with_ungrounded_numbers": 0.071,
-          "latency_p50_s": 5.78,
-          "latency_max_s": 17.01,
-          "prompt_tokens_mean": 9293,
-          "completion_tokens_mean": 519,
-          "total_tokens": 333623,
-          "calc_correct_rate": 0.5,
-          "n_calc_cases": 6,
-          "tool_calls_mean": 2,
-          "tool_error_rate": 0.294,
-          "cost_per_case_usd": 0.00455,
-          "gold_cited_any_rate": 0.516
+          "gold_in_context_rate": 0.709,
+          "gold_cited_rate": 0.644,
+          "gold_cited_given_in_context": 0.898,
+          "key_number_recall": 0.692,
+          "answers_with_ungrounded_numbers": 0.089,
+          "latency_p50_s": 5.76,
+          "latency_max_s": 19.26,
+          "prompt_tokens_mean": 9603,
+          "completion_tokens_mean": 518,
+          "total_tokens": 2408769,
+          "calc_correct_rate": 0.375,
+          "n_calc_cases": 24,
+          "tool_calls_mean": 2.07,
+          "tool_error_rate": 0.239,
+          "cost_per_case_usd": 0.00467,
+          "gold_cited_any_rate": 0.618
         },
         "provenance": [
           "experiments/runs/agent-dev-A1/gpt-4.1-mini.metrics.json"
@@ -4778,34 +4778,34 @@
       {
         "id": "experiments/runs/agent-dev-A1/gpt-5.6-luna",
         "metrics": {
-          "n": 34,
-          "n_answer_cases": 28,
-          "n_nonanswer_cases": 6,
-          "valid_rate": 0.971,
-          "repair_rate": 0.382,
+          "n": 238,
+          "n_answer_cases": 191,
+          "n_nonanswer_cases": 47,
+          "valid_rate": 0.979,
+          "repair_rate": 0.319,
           "operational_failures": 0,
-          "behavior_accuracy": 0.765,
-          "answer_case_behavior": 0.821,
-          "nonanswer_case_behavior": 0.5,
-          "over_abstention_rate": 0.179,
-          "false_answer_rate": 0.167,
-          "numbers_complete_rate": 0.679,
-          "gold_in_context_rate": 0.806,
-          "gold_cited_rate": 0.714,
-          "gold_cited_given_in_context": 0.833,
-          "key_number_recall": 0.804,
-          "answers_with_ungrounded_numbers": 0.071,
-          "latency_p50_s": 10.78,
-          "latency_max_s": 19.42,
-          "prompt_tokens_mean": 10342,
-          "completion_tokens_mean": 793,
-          "total_tokens": 378609,
-          "calc_correct_rate": 0.667,
-          "n_calc_cases": 6,
-          "tool_calls_mean": 2.12,
-          "tool_error_rate": 0.0,
-          "cost_per_case_usd": 0.00302,
-          "gold_cited_any_rate": 0.677
+          "behavior_accuracy": 0.782,
+          "answer_case_behavior": 0.801,
+          "nonanswer_case_behavior": 0.702,
+          "over_abstention_rate": 0.199,
+          "false_answer_rate": 0.064,
+          "numbers_complete_rate": 0.649,
+          "gold_in_context_rate": 0.824,
+          "gold_cited_rate": 0.702,
+          "gold_cited_given_in_context": 0.838,
+          "key_number_recall": 0.744,
+          "answers_with_ungrounded_numbers": 0.084,
+          "latency_p50_s": 9.73,
+          "latency_max_s": 25.56,
+          "prompt_tokens_mean": 9290,
+          "completion_tokens_mean": 735,
+          "total_tokens": 2385989,
+          "calc_correct_rate": 0.833,
+          "n_calc_cases": 24,
+          "tool_calls_mean": 1.97,
+          "tool_error_rate": 0.046,
+          "cost_per_case_usd": 0.00274,
+          "gold_cited_any_rate": 0.678
         },
         "provenance": [
           "experiments/runs/agent-dev-A1/gpt-5.6-luna.metrics.json"
@@ -4815,37 +4815,333 @@
       {
         "id": "experiments/runs/agent-dev-A1/gpt-6-luna",
         "metrics": {
-          "n": 34,
-          "n_answer_cases": 28,
-          "n_nonanswer_cases": 6,
-          "valid_rate": 1.0,
-          "repair_rate": 0.265,
+          "n": 238,
+          "n_answer_cases": 191,
+          "n_nonanswer_cases": 47,
+          "valid_rate": 0.966,
+          "repair_rate": 0.282,
           "operational_failures": 0,
-          "behavior_accuracy": 0.706,
-          "answer_case_behavior": 0.786,
-          "nonanswer_case_behavior": 0.333,
-          "over_abstention_rate": 0.214,
-          "false_answer_rate": 0.167,
-          "numbers_complete_rate": 0.607,
-          "gold_in_context_rate": 0.806,
-          "gold_cited_rate": 0.679,
-          "gold_cited_given_in_context": 0.792,
-          "key_number_recall": 0.754,
-          "answers_with_ungrounded_numbers": 0.0,
-          "latency_p50_s": 13.18,
-          "latency_max_s": 33.09,
-          "prompt_tokens_mean": 9533,
-          "completion_tokens_mean": 933,
-          "total_tokens": 355838,
-          "calc_correct_rate": 0.667,
-          "n_calc_cases": 6,
-          "tool_calls_mean": 1.91,
-          "tool_error_rate": 0.0,
-          "cost_per_case_usd": 0.00142,
-          "gold_cited_any_rate": 0.645
+          "behavior_accuracy": 0.756,
+          "answer_case_behavior": 0.764,
+          "nonanswer_case_behavior": 0.723,
+          "over_abstention_rate": 0.236,
+          "false_answer_rate": 0.064,
+          "numbers_complete_rate": 0.586,
+          "gold_in_context_rate": 0.814,
+          "gold_cited_rate": 0.686,
+          "gold_cited_given_in_context": 0.829,
+          "key_number_recall": 0.682,
+          "answers_with_ungrounded_numbers": 0.063,
+          "latency_p50_s": 10.72,
+          "latency_max_s": 55.96,
+          "prompt_tokens_mean": 9135,
+          "completion_tokens_mean": 914,
+          "total_tokens": 2391801,
+          "calc_correct_rate": 0.833,
+          "n_calc_cases": 24,
+          "tool_calls_mean": 1.84,
+          "tool_error_rate": 0.034,
+          "cost_per_case_usd": 0.00137,
+          "gold_cited_any_rate": 0.658
         },
         "provenance": [
           "experiments/runs/agent-dev-A1/gpt-6-luna.metrics.json"
+        ],
+        "label": "gpt-6-luna"
+      },
+      {
+        "id": "experiments/runs/agent-dev-A2/gpt-5.6-luna",
+        "metrics": {
+          "n": 238,
+          "n_answer_cases": 191,
+          "n_nonanswer_cases": 47,
+          "valid_rate": 0.987,
+          "repair_rate": 0.324,
+          "operational_failures": 0,
+          "behavior_accuracy": 0.782,
+          "answer_case_behavior": 0.801,
+          "nonanswer_case_behavior": 0.702,
+          "over_abstention_rate": 0.199,
+          "false_answer_rate": 0.064,
+          "numbers_complete_rate": 0.634,
+          "gold_in_context_rate": 0.829,
+          "gold_cited_rate": 0.707,
+          "gold_cited_given_in_context": 0.844,
+          "key_number_recall": 0.749,
+          "answers_with_ungrounded_numbers": 0.079,
+          "latency_p50_s": 10.98,
+          "latency_max_s": 25.63,
+          "prompt_tokens_mean": 9576,
+          "completion_tokens_mean": 739,
+          "total_tokens": 2454918,
+          "calc_correct_rate": 0.833,
+          "n_calc_cases": 24,
+          "tool_calls_mean": 1.98,
+          "tool_error_rate": 0.055,
+          "cost_per_case_usd": 0.0028,
+          "gold_cited_any_rate": 0.683
+        },
+        "provenance": [
+          "experiments/runs/agent-dev-A2/gpt-5.6-luna.metrics.json"
+        ],
+        "label": "gpt-5.6-luna"
+      },
+      {
+        "id": "experiments/runs/agent-dev-A2/gpt-6-luna",
+        "metrics": {
+          "n": 238,
+          "n_answer_cases": 191,
+          "n_nonanswer_cases": 47,
+          "valid_rate": 0.975,
+          "repair_rate": 0.319,
+          "operational_failures": 0,
+          "behavior_accuracy": 0.748,
+          "answer_case_behavior": 0.759,
+          "nonanswer_case_behavior": 0.702,
+          "over_abstention_rate": 0.241,
+          "false_answer_rate": 0.085,
+          "numbers_complete_rate": 0.576,
+          "gold_in_context_rate": 0.814,
+          "gold_cited_rate": 0.67,
+          "gold_cited_given_in_context": 0.81,
+          "key_number_recall": 0.7,
+          "answers_with_ungrounded_numbers": 0.12,
+          "latency_p50_s": 12.81,
+          "latency_max_s": 52.11,
+          "prompt_tokens_mean": 9491,
+          "completion_tokens_mean": 945,
+          "total_tokens": 2483676,
+          "calc_correct_rate": 0.875,
+          "n_calc_cases": 24,
+          "tool_calls_mean": 1.82,
+          "tool_error_rate": 0.025,
+          "cost_per_case_usd": 0.00142,
+          "gold_cited_any_rate": 0.643
+        },
+        "provenance": [
+          "experiments/runs/agent-dev-A2/gpt-6-luna.metrics.json"
+        ],
+        "label": "gpt-6-luna"
+      },
+      {
+        "id": "experiments/runs/agent-dev-A3/gpt-5.6-luna",
+        "metrics": {
+          "n": 237,
+          "n_answer_cases": 191,
+          "n_nonanswer_cases": 46,
+          "valid_rate": 0.945,
+          "repair_rate": 0.278,
+          "operational_failures": 0,
+          "behavior_accuracy": 0.907,
+          "answer_case_behavior": 0.948,
+          "nonanswer_case_behavior": 0.739,
+          "over_abstention_rate": 0.052,
+          "false_answer_rate": 0.043,
+          "numbers_complete_rate": 0.78,
+          "gold_in_context_rate": 0.944,
+          "gold_cited_rate": 0.859,
+          "gold_cited_given_in_context": 0.896,
+          "key_number_recall": 0.835,
+          "answers_with_ungrounded_numbers": 0.063,
+          "latency_p50_s": 15.5,
+          "latency_max_s": 45.12,
+          "prompt_tokens_mean": 16015,
+          "completion_tokens_mean": 1068,
+          "total_tokens": 4048718,
+          "calc_correct_rate": 0.875,
+          "n_calc_cases": 24,
+          "tool_calls_mean": 1.92,
+          "tool_error_rate": 0.051,
+          "cost_per_case_usd": 0.0036,
+          "gold_cited_any_rate": 0.828
+        },
+        "provenance": [
+          "experiments/runs/agent-dev-A3/gpt-5.6-luna.metrics.json"
+        ],
+        "label": "gpt-5.6-luna"
+      },
+      {
+        "id": "experiments/runs/agent-dev-A3/gpt-6-luna",
+        "metrics": {
+          "n": 237,
+          "n_answer_cases": 191,
+          "n_nonanswer_cases": 46,
+          "valid_rate": 0.954,
+          "repair_rate": 0.249,
+          "operational_failures": 0,
+          "behavior_accuracy": 0.89,
+          "answer_case_behavior": 0.932,
+          "nonanswer_case_behavior": 0.717,
+          "over_abstention_rate": 0.068,
+          "false_answer_rate": 0.087,
+          "numbers_complete_rate": 0.743,
+          "gold_in_context_rate": 0.939,
+          "gold_cited_rate": 0.838,
+          "gold_cited_given_in_context": 0.879,
+          "key_number_recall": 0.798,
+          "answers_with_ungrounded_numbers": 0.094,
+          "latency_p50_s": 15.41,
+          "latency_max_s": 46.25,
+          "prompt_tokens_mean": 15346,
+          "completion_tokens_mean": 1179,
+          "total_tokens": 3916366,
+          "calc_correct_rate": 0.875,
+          "n_calc_cases": 24,
+          "tool_calls_mean": 1.81,
+          "tool_error_rate": 0.025,
+          "cost_per_case_usd": 0.00212,
+          "gold_cited_any_rate": 0.808
+        },
+        "provenance": [
+          "experiments/runs/agent-dev-A3/gpt-6-luna.metrics.json"
+        ],
+        "label": "gpt-6-luna"
+      },
+      {
+        "id": "experiments/runs/agent-dev-A4/gpt-5.6-luna",
+        "metrics": {
+          "n": 237,
+          "n_answer_cases": 191,
+          "n_nonanswer_cases": 46,
+          "valid_rate": 0.941,
+          "repair_rate": 0.291,
+          "operational_failures": 0,
+          "behavior_accuracy": 0.907,
+          "answer_case_behavior": 0.937,
+          "nonanswer_case_behavior": 0.783,
+          "over_abstention_rate": 0.063,
+          "false_answer_rate": 0.043,
+          "numbers_complete_rate": 0.785,
+          "gold_in_context_rate": 0.934,
+          "gold_cited_rate": 0.848,
+          "gold_cited_given_in_context": 0.895,
+          "key_number_recall": 0.843,
+          "answers_with_ungrounded_numbers": 0.073,
+          "latency_p50_s": 15.07,
+          "latency_max_s": 51.72,
+          "prompt_tokens_mean": 16396,
+          "completion_tokens_mean": 1101,
+          "total_tokens": 4146661,
+          "calc_correct_rate": 0.792,
+          "n_calc_cases": 24,
+          "tool_calls_mean": 1.93,
+          "tool_error_rate": 0.042,
+          "cost_per_case_usd": 0.00367,
+          "gold_cited_any_rate": 0.818
+        },
+        "provenance": [
+          "experiments/runs/agent-dev-A4/gpt-5.6-luna.metrics.json"
+        ],
+        "label": "gpt-5.6-luna"
+      },
+      {
+        "id": "experiments/runs/agent-dev-A4/gpt-6-luna",
+        "metrics": {
+          "n": 237,
+          "n_answer_cases": 191,
+          "n_nonanswer_cases": 46,
+          "valid_rate": 0.966,
+          "repair_rate": 0.228,
+          "operational_failures": 0,
+          "behavior_accuracy": 0.886,
+          "answer_case_behavior": 0.927,
+          "nonanswer_case_behavior": 0.717,
+          "over_abstention_rate": 0.073,
+          "false_answer_rate": 0.065,
+          "numbers_complete_rate": 0.743,
+          "gold_in_context_rate": 0.934,
+          "gold_cited_rate": 0.838,
+          "gold_cited_given_in_context": 0.884,
+          "key_number_recall": 0.793,
+          "answers_with_ungrounded_numbers": 0.068,
+          "latency_p50_s": 14.8,
+          "latency_max_s": 45.18,
+          "prompt_tokens_mean": 15563,
+          "completion_tokens_mean": 1195,
+          "total_tokens": 3971677,
+          "calc_correct_rate": 0.833,
+          "n_calc_cases": 24,
+          "tool_calls_mean": 1.81,
+          "tool_error_rate": 0.034,
+          "cost_per_case_usd": 0.00215,
+          "gold_cited_any_rate": 0.808
+        },
+        "provenance": [
+          "experiments/runs/agent-dev-A4/gpt-6-luna.metrics.json"
+        ],
+        "label": "gpt-6-luna"
+      },
+      {
+        "id": "experiments/runs/agent-dev-A5/gpt-5.6-luna",
+        "metrics": {
+          "n": 237,
+          "n_answer_cases": 191,
+          "n_nonanswer_cases": 46,
+          "valid_rate": 0.941,
+          "repair_rate": 0.312,
+          "operational_failures": 0,
+          "behavior_accuracy": 0.899,
+          "answer_case_behavior": 0.932,
+          "nonanswer_case_behavior": 0.761,
+          "over_abstention_rate": 0.068,
+          "false_answer_rate": 0.043,
+          "numbers_complete_rate": 0.785,
+          "gold_in_context_rate": 0.934,
+          "gold_cited_rate": 0.843,
+          "gold_cited_given_in_context": 0.89,
+          "key_number_recall": 0.837,
+          "answers_with_ungrounded_numbers": 0.105,
+          "latency_p50_s": 14.73,
+          "latency_max_s": 43.49,
+          "prompt_tokens_mean": 16425,
+          "completion_tokens_mean": 1107,
+          "total_tokens": 4155087,
+          "calc_correct_rate": 0.792,
+          "n_calc_cases": 24,
+          "tool_calls_mean": 1.99,
+          "tool_error_rate": 0.076,
+          "cost_per_case_usd": 0.00369,
+          "gold_cited_any_rate": 0.813
+        },
+        "provenance": [
+          "experiments/runs/agent-dev-A5/gpt-5.6-luna.metrics.json"
+        ],
+        "label": "gpt-5.6-luna"
+      },
+      {
+        "id": "experiments/runs/agent-dev-A5/gpt-6-luna",
+        "metrics": {
+          "n": 237,
+          "n_answer_cases": 191,
+          "n_nonanswer_cases": 46,
+          "valid_rate": 0.949,
+          "repair_rate": 0.207,
+          "operational_failures": 0,
+          "behavior_accuracy": 0.903,
+          "answer_case_behavior": 0.948,
+          "nonanswer_case_behavior": 0.717,
+          "over_abstention_rate": 0.052,
+          "false_answer_rate": 0.087,
+          "numbers_complete_rate": 0.754,
+          "gold_in_context_rate": 0.955,
+          "gold_cited_rate": 0.848,
+          "gold_cited_given_in_context": 0.876,
+          "key_number_recall": 0.814,
+          "answers_with_ungrounded_numbers": 0.094,
+          "latency_p50_s": 16.44,
+          "latency_max_s": 49.52,
+          "prompt_tokens_mean": 15641,
+          "completion_tokens_mean": 1203,
+          "total_tokens": 3991911,
+          "calc_correct_rate": 0.875,
+          "n_calc_cases": 24,
+          "tool_calls_mean": 1.89,
+          "tool_error_rate": 0.025,
+          "cost_per_case_usd": 0.00217,
+          "gold_cited_any_rate": 0.818
+        },
+        "provenance": [
+          "experiments/runs/agent-dev-A5/gpt-6-luna.metrics.json"
         ],
         "label": "gpt-6-luna"
       }
@@ -4856,7 +5152,15 @@
       "experiments/runs/agent-dev-A1/gpt-5.6-luna.metrics.json",
       "experiments/runs/agent-dev-A1/gpt-5.6-luna.scores.jsonl",
       "experiments/runs/agent-dev-A1/gpt-6-luna.metrics.json",
-      "experiments/runs/agent-dev-A1/gpt-6-luna.scores.jsonl"
+      "experiments/runs/agent-dev-A1/gpt-6-luna.scores.jsonl",
+      "experiments/runs/agent-dev-A2/gpt-5.6-luna.metrics.json",
+      "experiments/runs/agent-dev-A2/gpt-6-luna.metrics.json",
+      "experiments/runs/agent-dev-A3/gpt-5.6-luna.metrics.json",
+      "experiments/runs/agent-dev-A3/gpt-6-luna.metrics.json",
+      "experiments/runs/agent-dev-A4/gpt-5.6-luna.metrics.json",
+      "experiments/runs/agent-dev-A4/gpt-6-luna.metrics.json",
+      "experiments/runs/agent-dev-A5/gpt-5.6-luna.metrics.json",
+      "experiments/runs/agent-dev-A5/gpt-6-luna.metrics.json"
     ],
     "trace": [
       {
@@ -7642,20 +7946,2477 @@
   },
   "evaluation": {
     "status": "available",
-    "summary": "Recorded confidence intervals and AI-judged strata.",
+    "summary": "Development comparisons A1–A5 and registered held-out H-r3/H-hybrid luna runs. Gold v3.2: 237 development and 31 held-out cases; AI-drafted, not human reviewed.",
     "metrics": {},
     "rows": [
       {
         "id": "experiments/eval/agent-dev-A1/gpt-4.1-mini",
         "metrics": {
-          "n_cases": 34,
+          "n_cases": 235,
           "behaviour_accuracy": {
-            "rate": 0.824,
+            "rate": 0.762,
             "ci95": [
               0.706,
+              0.817
+            ],
+            "n": 235
+          },
+          "false_answer_rate": {
+            "rate": 0.079,
+            "ci95": [
+              0.044,
+              0.113
+            ],
+            "n": 203
+          },
+          "over_abstention_rate": {
+            "rate": 0.136,
+            "ci95": [
+              0.094,
+              0.179
+            ],
+            "n": 235
+          },
+          "key_number_recall": {
+            "rate": 0.685,
+            "ci95": [
+              0.623,
+              0.748
+            ],
+            "n": 151
+          },
+          "calc_correct": {
+            "rate": 0.25,
+            "ci95": [
+              0.083,
+              0.417
+            ],
+            "n": 24
+          },
+          "gold_cited_any": {
+            "rate": 0.61,
+            "ci95": [
+              0.54,
+              0.679
+            ],
+            "n": 187
+          },
+          "cases_with_ungrounded_numbers": {
+            "rate": 0.077,
+            "ci95": [
+              0.043,
+              0.115
+            ],
+            "n": 235
+          },
+          "answers_with_ungrounded_numbers": {
+            "rate": 0.077,
+            "ci95": [
+              0.043,
+              0.115
+            ],
+            "n": 235
+          },
+          "claims_judged": 299,
+          "claim_supported_rate": {
+            "rate": 0.876,
+            "ci95": [
+              0.828,
+              0.92
+            ],
+            "n": 299,
+            "n_cases": 164
+          },
+          "claim_unsupported_rate": {
+            "rate": 0.007,
+            "ci95": [
+              0.0,
+              0.017
+            ],
+            "n": 299,
+            "n_cases": 164
+          },
+          "answers_with_any_unsupported_claim": {
+            "rate": 0.012,
+            "ci95": [
+              0.0,
+              0.03
+            ],
+            "n": 164
+          },
+          "fact_coverage": {
+            "rate": 0.578,
+            "ci95": [
+              0.517,
+              0.642
+            ],
+            "n": 256,
+            "n_cases": 149
+          },
+          "answers_contradicting_a_reference_fact": {
+            "rate": 0.101,
+            "ci95": [
+              0.054,
+              0.154
+            ],
+            "n": 149
+          },
+          "latency_p50_s": 5.8,
+          "latency_p95_s": 10.7,
+          "cost_per_case_usd": 0.00466,
+          "judge_cost_total_usd": 0.2286
+        },
+        "provenance": [
+          "experiments/eval/agent-dev-A1/gpt-4.1-mini.metrics.json"
+        ],
+        "label": "gpt-4.1-mini",
+        "strata": {
+          "adversarial": {
+            "n": 35,
+            "behaviour_accuracy": 0.886,
+            "false_answer": 0,
+            "over_abstain": 4,
+            "unsupported_claims": 0,
+            "contradicted_facts": 0
+          },
+          "ambiguity_insufficient_causal": {
+            "n": 44,
+            "behaviour_accuracy": 0.591,
+            "false_answer": 8,
+            "over_abstain": 2,
+            "unsupported_claims": 0,
+            "contradicted_facts": 2
+          },
+          "cross_source_synthesis": {
+            "n": 35,
+            "behaviour_accuracy": 0.943,
+            "false_answer": 1,
+            "over_abstain": 1,
+            "unsupported_claims": 0,
+            "contradicted_facts": 6
+          },
+          "factual_lookup": {
+            "n": 70,
+            "behaviour_accuracy": 0.786,
+            "false_answer": 5,
+            "over_abstain": 10,
+            "unsupported_claims": 2,
+            "contradicted_facts": 1
+          },
+          "numerical_comparison": {
+            "n": 33,
+            "behaviour_accuracy": 0.515,
+            "false_answer": 2,
+            "over_abstain": 14,
+            "unsupported_claims": 0,
+            "contradicted_facts": 2
+          },
+          "revision_conflict": {
+            "n": 18,
+            "behaviour_accuracy": 0.944,
+            "false_answer": 0,
+            "over_abstain": 1,
+            "unsupported_claims": 0,
+            "contradicted_facts": 9
+          }
+        },
+        "split": "dev",
+        "scoring_provenance": {
+          "eligible_n": 235,
+          "available_n": 237,
+          "gold_sha256": "647b26a2f0faa86be30ad897840bc1887b54f55c27268d141565b94cb22998e8",
+          "git_head": "617d168b8badd9db775acd1bfd12f4e26d736ddb",
+          "price_table_sha256": "634b32441c3495b4c3ec13efa3af1e9cc99e5c7523eac3a15a5c238c3acaeb5c",
+          "prompt_sha256": {
+            "planner": "df68ef8e5e287d1a0b1f71d938e85ec25b4f03eeec501bc439a3a77aec2482dc",
+            "answer": "e854b64c72116c4c175082e70f39c312ed94b1f37778e7daf3f9a51de1bac350",
+            "judge": "85f3529fca32faec681b3d4b1e6899b8620c383ed2aa54bc423241e2b7f4a10f",
+            "rerank": "e45ed816ccefd679d046cf9bcbd4dad92ba27b20cfc5f45b900063b84784793a",
+            "planner_user": "e59f408b00f5a99e0fb867c635a84d2d77947171620ab035f6067a3cdfb8136f",
+            "answer_user": "c4f4ef05d7d1b87fca94bee65cbf2a38999c181dc2e92bced9cdf8ef92b006e7"
+          }
+        },
+        "judge": "gpt-6.1-terra"
+      },
+      {
+        "id": "experiments/eval/agent-dev-A1/gpt-5.6-luna",
+        "metrics": {
+          "n_cases": 235,
+          "behaviour_accuracy": {
+            "rate": 0.804,
+            "ci95": [
+              0.753,
+              0.855
+            ],
+            "n": 235
+          },
+          "false_answer_rate": {
+            "rate": 0.03,
+            "ci95": [
+              0.01,
+              0.054
+            ],
+            "n": 203
+          },
+          "over_abstention_rate": {
+            "rate": 0.136,
+            "ci95": [
+              0.094,
+              0.183
+            ],
+            "n": 235
+          },
+          "key_number_recall": {
+            "rate": 0.762,
+            "ci95": [
+              0.7,
+              0.821
+            ],
+            "n": 151
+          },
+          "calc_correct": {
+            "rate": 0.75,
+            "ci95": [
+              0.583,
+              0.917
+            ],
+            "n": 24
+          },
+          "gold_cited_any": {
+            "rate": 0.69,
+            "ci95": [
+              0.626,
+              0.759
+            ],
+            "n": 187
+          },
+          "cases_with_ungrounded_numbers": {
+            "rate": 0.068,
+            "ci95": [
+              0.038,
+              0.102
+            ],
+            "n": 235
+          },
+          "answers_with_ungrounded_numbers": {
+            "rate": 0.068,
+            "ci95": [
+              0.038,
+              0.102
+            ],
+            "n": 235
+          },
+          "claims_judged": 299,
+          "claim_supported_rate": {
+            "rate": 0.819,
+            "ci95": [
+              0.765,
+              0.871
+            ],
+            "n": 299,
+            "n_cases": 154
+          },
+          "claim_unsupported_rate": {
+            "rate": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "n": 299,
+            "n_cases": 154
+          },
+          "answers_with_any_unsupported_claim": {
+            "rate": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "n": 154
+          },
+          "fact_coverage": {
+            "rate": 0.724,
+            "ci95": [
+              0.671,
+              0.779
+            ],
+            "n": 261,
+            "n_cases": 148
+          },
+          "answers_contradicting_a_reference_fact": {
+            "rate": 0.014,
+            "ci95": [
+              0.0,
+              0.034
+            ],
+            "n": 148
+          },
+          "latency_p50_s": 9.6,
+          "latency_p95_s": 18.0,
+          "cost_per_case_usd": 0.00274,
+          "judge_cost_total_usd": 0.2199
+        },
+        "provenance": [
+          "experiments/eval/agent-dev-A1/gpt-5.6-luna.metrics.json"
+        ],
+        "label": "gpt-5.6-luna",
+        "strata": {
+          "adversarial": {
+            "n": 35,
+            "behaviour_accuracy": 0.971,
+            "false_answer": 1,
+            "over_abstain": 0,
+            "unsupported_claims": 0,
+            "contradicted_facts": 0
+          },
+          "ambiguity_insufficient_causal": {
+            "n": 44,
+            "behaviour_accuracy": 0.773,
+            "false_answer": 2,
+            "over_abstain": 0,
+            "unsupported_claims": 0,
+            "contradicted_facts": 1
+          },
+          "cross_source_synthesis": {
+            "n": 35,
+            "behaviour_accuracy": 0.771,
+            "false_answer": 0,
+            "over_abstain": 8,
+            "unsupported_claims": 0,
+            "contradicted_facts": 1
+          },
+          "factual_lookup": {
+            "n": 70,
+            "behaviour_accuracy": 0.786,
+            "false_answer": 1,
+            "over_abstain": 14,
+            "unsupported_claims": 0,
+            "contradicted_facts": 0
+          },
+          "numerical_comparison": {
+            "n": 33,
+            "behaviour_accuracy": 0.788,
+            "false_answer": 2,
+            "over_abstain": 5,
+            "unsupported_claims": 0,
+            "contradicted_facts": 0
+          },
+          "revision_conflict": {
+            "n": 18,
+            "behaviour_accuracy": 0.722,
+            "false_answer": 0,
+            "over_abstain": 5,
+            "unsupported_claims": 0,
+            "contradicted_facts": 0
+          }
+        },
+        "split": "dev",
+        "scoring_provenance": {
+          "eligible_n": 235,
+          "available_n": 237,
+          "gold_sha256": "647b26a2f0faa86be30ad897840bc1887b54f55c27268d141565b94cb22998e8",
+          "git_head": "617d168b8badd9db775acd1bfd12f4e26d736ddb",
+          "price_table_sha256": "634b32441c3495b4c3ec13efa3af1e9cc99e5c7523eac3a15a5c238c3acaeb5c",
+          "prompt_sha256": {
+            "planner": "df68ef8e5e287d1a0b1f71d938e85ec25b4f03eeec501bc439a3a77aec2482dc",
+            "answer": "e854b64c72116c4c175082e70f39c312ed94b1f37778e7daf3f9a51de1bac350",
+            "judge": "85f3529fca32faec681b3d4b1e6899b8620c383ed2aa54bc423241e2b7f4a10f",
+            "rerank": "e45ed816ccefd679d046cf9bcbd4dad92ba27b20cfc5f45b900063b84784793a",
+            "planner_user": "e59f408b00f5a99e0fb867c635a84d2d77947171620ab035f6067a3cdfb8136f",
+            "answer_user": "c4f4ef05d7d1b87fca94bee65cbf2a38999c181dc2e92bced9cdf8ef92b006e7"
+          }
+        },
+        "judge": "gpt-6.1-terra"
+      },
+      {
+        "id": "experiments/eval/agent-dev-A1/gpt-6-luna",
+        "metrics": {
+          "n_cases": 235,
+          "behaviour_accuracy": {
+            "rate": 0.779,
+            "ci95": [
+              0.728,
+              0.83
+            ],
+            "n": 235
+          },
+          "false_answer_rate": {
+            "rate": 0.025,
+            "ci95": [
+              0.005,
+              0.051
+            ],
+            "n": 198
+          },
+          "over_abstention_rate": {
+            "rate": 0.157,
+            "ci95": [
+              0.111,
+              0.204
+            ],
+            "n": 235
+          },
+          "key_number_recall": {
+            "rate": 0.709,
+            "ci95": [
+              0.645,
+              0.773
+            ],
+            "n": 151
+          },
+          "calc_correct": {
+            "rate": 0.667,
+            "ci95": [
+              0.458,
+              0.833
+            ],
+            "n": 24
+          },
+          "gold_cited_any": {
+            "rate": 0.674,
+            "ci95": [
+              0.604,
+              0.738
+            ],
+            "n": 187
+          },
+          "cases_with_ungrounded_numbers": {
+            "rate": 0.055,
+            "ci95": [
+              0.03,
+              0.085
+            ],
+            "n": 235
+          },
+          "answers_with_ungrounded_numbers": {
+            "rate": 0.055,
+            "ci95": [
+              0.03,
+              0.085
+            ],
+            "n": 235
+          },
+          "claims_judged": 243,
+          "claim_supported_rate": {
+            "rate": 0.881,
+            "ci95": [
+              0.822,
+              0.935
+            ],
+            "n": 243,
+            "n_cases": 148
+          },
+          "claim_unsupported_rate": {
+            "rate": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "n": 243,
+            "n_cases": 148
+          },
+          "answers_with_any_unsupported_claim": {
+            "rate": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "n": 148
+          },
+          "fact_coverage": {
+            "rate": 0.687,
+            "ci95": [
+              0.63,
+              0.747
+            ],
+            "n": 259,
+            "n_cases": 143
+          },
+          "answers_contradicting_a_reference_fact": {
+            "rate": 0.007,
+            "ci95": [
+              0.0,
+              0.021
+            ],
+            "n": 143
+          },
+          "latency_p50_s": 10.7,
+          "latency_p95_s": 22.8,
+          "cost_per_case_usd": 0.00137,
+          "judge_cost_total_usd": 0.2001
+        },
+        "provenance": [
+          "experiments/eval/agent-dev-A1/gpt-6-luna.metrics.json"
+        ],
+        "label": "gpt-6-luna",
+        "strata": {
+          "adversarial": {
+            "n": 35,
+            "behaviour_accuracy": 0.857,
+            "false_answer": 1,
+            "over_abstain": 3,
+            "unsupported_claims": 0,
+            "contradicted_facts": 0
+          },
+          "ambiguity_insufficient_causal": {
+            "n": 44,
+            "behaviour_accuracy": 0.773,
+            "false_answer": 2,
+            "over_abstain": 0,
+            "unsupported_claims": 0,
+            "contradicted_facts": 0
+          },
+          "cross_source_synthesis": {
+            "n": 35,
+            "behaviour_accuracy": 0.8,
+            "false_answer": 0,
+            "over_abstain": 6,
+            "unsupported_claims": 0,
+            "contradicted_facts": 1
+          },
+          "factual_lookup": {
+            "n": 70,
+            "behaviour_accuracy": 0.743,
+            "false_answer": 1,
+            "over_abstain": 17,
+            "unsupported_claims": 0,
+            "contradicted_facts": 0
+          },
+          "numerical_comparison": {
+            "n": 33,
+            "behaviour_accuracy": 0.818,
+            "false_answer": 1,
+            "over_abstain": 5,
+            "unsupported_claims": 0,
+            "contradicted_facts": 0
+          },
+          "revision_conflict": {
+            "n": 18,
+            "behaviour_accuracy": 0.667,
+            "false_answer": 0,
+            "over_abstain": 6,
+            "unsupported_claims": 0,
+            "contradicted_facts": 0
+          }
+        },
+        "split": "dev",
+        "scoring_provenance": {
+          "eligible_n": 235,
+          "available_n": 237,
+          "gold_sha256": "647b26a2f0faa86be30ad897840bc1887b54f55c27268d141565b94cb22998e8",
+          "git_head": "617d168b8badd9db775acd1bfd12f4e26d736ddb",
+          "price_table_sha256": "634b32441c3495b4c3ec13efa3af1e9cc99e5c7523eac3a15a5c238c3acaeb5c",
+          "prompt_sha256": {
+            "planner": "df68ef8e5e287d1a0b1f71d938e85ec25b4f03eeec501bc439a3a77aec2482dc",
+            "answer": "e854b64c72116c4c175082e70f39c312ed94b1f37778e7daf3f9a51de1bac350",
+            "judge": "85f3529fca32faec681b3d4b1e6899b8620c383ed2aa54bc423241e2b7f4a10f",
+            "rerank": "e45ed816ccefd679d046cf9bcbd4dad92ba27b20cfc5f45b900063b84784793a",
+            "planner_user": "e59f408b00f5a99e0fb867c635a84d2d77947171620ab035f6067a3cdfb8136f",
+            "answer_user": "c4f4ef05d7d1b87fca94bee65cbf2a38999c181dc2e92bced9cdf8ef92b006e7"
+          }
+        },
+        "judge": "gpt-6.1-terra"
+      },
+      {
+        "id": "experiments/eval/agent-dev-A2/gpt-5.6-luna",
+        "metrics": {
+          "n_cases": 235,
+          "behaviour_accuracy": {
+            "rate": 0.8,
+            "ci95": [
+              0.749,
+              0.851
+            ],
+            "n": 235
+          },
+          "false_answer_rate": {
+            "rate": 0.034,
+            "ci95": [
+              0.015,
+              0.059
+            ],
+            "n": 203
+          },
+          "over_abstention_rate": {
+            "rate": 0.136,
+            "ci95": [
+              0.094,
+              0.179
+            ],
+            "n": 235
+          },
+          "key_number_recall": {
+            "rate": 0.767,
+            "ci95": [
+              0.71,
+              0.824
+            ],
+            "n": 151
+          },
+          "calc_correct": {
+            "rate": 0.75,
+            "ci95": [
+              0.583,
+              0.917
+            ],
+            "n": 24
+          },
+          "gold_cited_any": {
+            "rate": 0.695,
+            "ci95": [
+              0.631,
+              0.759
+            ],
+            "n": 187
+          },
+          "cases_with_ungrounded_numbers": {
+            "rate": 0.064,
+            "ci95": [
+              0.034,
+              0.098
+            ],
+            "n": 235
+          },
+          "answers_with_ungrounded_numbers": {
+            "rate": 0.064,
+            "ci95": [
+              0.034,
+              0.098
+            ],
+            "n": 235
+          },
+          "claims_judged": 292,
+          "claim_supported_rate": {
+            "rate": 0.829,
+            "ci95": [
+              0.77,
+              0.885
+            ],
+            "n": 292,
+            "n_cases": 155
+          },
+          "claim_unsupported_rate": {
+            "rate": 0.003,
+            "ci95": [
+              0.0,
+              0.011
+            ],
+            "n": 292,
+            "n_cases": 155
+          },
+          "answers_with_any_unsupported_claim": {
+            "rate": 0.006,
+            "ci95": [
+              0.0,
+              0.019
+            ],
+            "n": 155
+          },
+          "fact_coverage": {
+            "rate": 0.716,
+            "ci95": [
+              0.661,
+              0.772
+            ],
+            "n": 264,
+            "n_cases": 148
+          },
+          "answers_contradicting_a_reference_fact": {
+            "rate": 0.034,
+            "ci95": [
+              0.007,
+              0.068
+            ],
+            "n": 148
+          },
+          "latency_p50_s": 10.8,
+          "latency_p95_s": 20.6,
+          "cost_per_case_usd": 0.0028,
+          "judge_cost_total_usd": 0.2157
+        },
+        "provenance": [
+          "experiments/eval/agent-dev-A2/gpt-5.6-luna.metrics.json"
+        ],
+        "label": "gpt-5.6-luna",
+        "strata": {
+          "adversarial": {
+            "n": 35,
+            "behaviour_accuracy": 0.971,
+            "false_answer": 1,
+            "over_abstain": 0,
+            "unsupported_claims": 0,
+            "contradicted_facts": 0
+          },
+          "ambiguity_insufficient_causal": {
+            "n": 44,
+            "behaviour_accuracy": 0.773,
+            "false_answer": 2,
+            "over_abstain": 0,
+            "unsupported_claims": 0,
+            "contradicted_facts": 2
+          },
+          "cross_source_synthesis": {
+            "n": 35,
+            "behaviour_accuracy": 0.771,
+            "false_answer": 0,
+            "over_abstain": 8,
+            "unsupported_claims": 0,
+            "contradicted_facts": 3
+          },
+          "factual_lookup": {
+            "n": 70,
+            "behaviour_accuracy": 0.743,
+            "false_answer": 2,
+            "over_abstain": 16,
+            "unsupported_claims": 0,
+            "contradicted_facts": 0
+          },
+          "numerical_comparison": {
+            "n": 33,
+            "behaviour_accuracy": 0.818,
+            "false_answer": 2,
+            "over_abstain": 4,
+            "unsupported_claims": 0,
+            "contradicted_facts": 0
+          },
+          "revision_conflict": {
+            "n": 18,
+            "behaviour_accuracy": 0.778,
+            "false_answer": 0,
+            "over_abstain": 4,
+            "unsupported_claims": 1,
+            "contradicted_facts": 1
+          }
+        },
+        "split": "dev",
+        "scoring_provenance": {
+          "eligible_n": 235,
+          "available_n": 237,
+          "gold_sha256": "647b26a2f0faa86be30ad897840bc1887b54f55c27268d141565b94cb22998e8",
+          "git_head": "617d168b8badd9db775acd1bfd12f4e26d736ddb",
+          "price_table_sha256": "634b32441c3495b4c3ec13efa3af1e9cc99e5c7523eac3a15a5c238c3acaeb5c",
+          "prompt_sha256": {
+            "planner": "df68ef8e5e287d1a0b1f71d938e85ec25b4f03eeec501bc439a3a77aec2482dc",
+            "answer": "5cf4ee61f8e1064929911045d7fd40d883deae37d0efba86d5df977340bb0db6",
+            "judge": "85f3529fca32faec681b3d4b1e6899b8620c383ed2aa54bc423241e2b7f4a10f",
+            "rerank": "e45ed816ccefd679d046cf9bcbd4dad92ba27b20cfc5f45b900063b84784793a",
+            "planner_user": "e59f408b00f5a99e0fb867c635a84d2d77947171620ab035f6067a3cdfb8136f",
+            "answer_user": "c4f4ef05d7d1b87fca94bee65cbf2a38999c181dc2e92bced9cdf8ef92b006e7"
+          }
+        },
+        "judge": "gpt-6.1-terra"
+      },
+      {
+        "id": "experiments/eval/agent-dev-A2/gpt-6-luna",
+        "metrics": {
+          "n_cases": 235,
+          "behaviour_accuracy": {
+            "rate": 0.762,
+            "ci95": [
+              0.706,
+              0.813
+            ],
+            "n": 235
+          },
+          "false_answer_rate": {
+            "rate": 0.036,
+            "ci95": [
+              0.01,
+              0.067
+            ],
+            "n": 195
+          },
+          "over_abstention_rate": {
+            "rate": 0.17,
+            "ci95": [
+              0.123,
+              0.221
+            ],
+            "n": 235
+          },
+          "key_number_recall": {
+            "rate": 0.715,
+            "ci95": [
+              0.654,
+              0.774
+            ],
+            "n": 151
+          },
+          "calc_correct": {
+            "rate": 0.75,
+            "ci95": [
+              0.583,
+              0.917
+            ],
+            "n": 24
+          },
+          "gold_cited_any": {
+            "rate": 0.658,
+            "ci95": [
+              0.588,
+              0.722
+            ],
+            "n": 187
+          },
+          "cases_with_ungrounded_numbers": {
+            "rate": 0.098,
+            "ci95": [
+              0.064,
+              0.136
+            ],
+            "n": 235
+          },
+          "answers_with_ungrounded_numbers": {
+            "rate": 0.098,
+            "ci95": [
+              0.064,
+              0.136
+            ],
+            "n": 235
+          },
+          "claims_judged": 232,
+          "claim_supported_rate": {
+            "rate": 0.888,
+            "ci95": [
+              0.835,
+              0.938
+            ],
+            "n": 232,
+            "n_cases": 147
+          },
+          "claim_unsupported_rate": {
+            "rate": 0.004,
+            "ci95": [
+              0.0,
+              0.014
+            ],
+            "n": 232,
+            "n_cases": 147
+          },
+          "answers_with_any_unsupported_claim": {
+            "rate": 0.007,
+            "ci95": [
+              0.0,
+              0.02
+            ],
+            "n": 147
+          },
+          "fact_coverage": {
+            "rate": 0.692,
+            "ci95": [
+              0.634,
+              0.75
+            ],
+            "n": 247,
+            "n_cases": 140
+          },
+          "answers_contradicting_a_reference_fact": {
+            "rate": 0.014,
+            "ci95": [
+              0.0,
+              0.036
+            ],
+            "n": 140
+          },
+          "latency_p50_s": 12.7,
+          "latency_p95_s": 24.7,
+          "cost_per_case_usd": 0.00142,
+          "judge_cost_total_usd": 0.187
+        },
+        "provenance": [
+          "experiments/eval/agent-dev-A2/gpt-6-luna.metrics.json"
+        ],
+        "label": "gpt-6-luna",
+        "strata": {
+          "adversarial": {
+            "n": 35,
+            "behaviour_accuracy": 0.857,
+            "false_answer": 1,
+            "over_abstain": 3,
+            "unsupported_claims": 0,
+            "contradicted_facts": 0
+          },
+          "ambiguity_insufficient_causal": {
+            "n": 44,
+            "behaviour_accuracy": 0.727,
+            "false_answer": 3,
+            "over_abstain": 1,
+            "unsupported_claims": 0,
+            "contradicted_facts": 0
+          },
+          "cross_source_synthesis": {
+            "n": 35,
+            "behaviour_accuracy": 0.714,
+            "false_answer": 0,
+            "over_abstain": 10,
+            "unsupported_claims": 0,
+            "contradicted_facts": 3
+          },
+          "factual_lookup": {
+            "n": 70,
+            "behaviour_accuracy": 0.771,
+            "false_answer": 1,
+            "over_abstain": 15,
+            "unsupported_claims": 0,
+            "contradicted_facts": 0
+          },
+          "numerical_comparison": {
+            "n": 33,
+            "behaviour_accuracy": 0.818,
+            "false_answer": 2,
+            "over_abstain": 4,
+            "unsupported_claims": 0,
+            "contradicted_facts": 0
+          },
+          "revision_conflict": {
+            "n": 18,
+            "behaviour_accuracy": 0.611,
+            "false_answer": 0,
+            "over_abstain": 7,
+            "unsupported_claims": 1,
+            "contradicted_facts": 0
+          }
+        },
+        "split": "dev",
+        "scoring_provenance": {
+          "eligible_n": 235,
+          "available_n": 237,
+          "gold_sha256": "647b26a2f0faa86be30ad897840bc1887b54f55c27268d141565b94cb22998e8",
+          "git_head": "617d168b8badd9db775acd1bfd12f4e26d736ddb",
+          "price_table_sha256": "634b32441c3495b4c3ec13efa3af1e9cc99e5c7523eac3a15a5c238c3acaeb5c",
+          "prompt_sha256": {
+            "planner": "df68ef8e5e287d1a0b1f71d938e85ec25b4f03eeec501bc439a3a77aec2482dc",
+            "answer": "5cf4ee61f8e1064929911045d7fd40d883deae37d0efba86d5df977340bb0db6",
+            "judge": "85f3529fca32faec681b3d4b1e6899b8620c383ed2aa54bc423241e2b7f4a10f",
+            "rerank": "e45ed816ccefd679d046cf9bcbd4dad92ba27b20cfc5f45b900063b84784793a",
+            "planner_user": "e59f408b00f5a99e0fb867c635a84d2d77947171620ab035f6067a3cdfb8136f",
+            "answer_user": "c4f4ef05d7d1b87fca94bee65cbf2a38999c181dc2e92bced9cdf8ef92b006e7"
+          }
+        },
+        "judge": "gpt-6.1-terra"
+      },
+      {
+        "id": "experiments/eval/agent-dev-A3/gpt-5.6-luna",
+        "metrics": {
+          "n_cases": 237,
+          "behaviour_accuracy": {
+            "rate": 0.903,
+            "ci95": [
+              0.861,
               0.941
             ],
-            "n": 34
+            "n": 237
+          },
+          "false_answer_rate": {
+            "rate": 0.03,
+            "ci95": [
+              0.009,
+              0.052
+            ],
+            "n": 231
+          },
+          "over_abstention_rate": {
+            "rate": 0.025,
+            "ci95": [
+              0.008,
+              0.046
+            ],
+            "n": 237
+          },
+          "key_number_recall": {
+            "rate": 0.847,
+            "ci95": [
+              0.802,
+              0.891
+            ],
+            "n": 153
+          },
+          "calc_correct": {
+            "rate": 0.75,
+            "ci95": [
+              0.583,
+              0.917
+            ],
+            "n": 24
+          },
+          "gold_cited_any": {
+            "rate": 0.841,
+            "ci95": [
+              0.788,
+              0.889
+            ],
+            "n": 189
+          },
+          "cases_with_ungrounded_numbers": {
+            "rate": 0.051,
+            "ci95": [
+              0.025,
+              0.08
+            ],
+            "n": 237
+          },
+          "answers_with_ungrounded_numbers": {
+            "rate": 0.051,
+            "ci95": [
+              0.025,
+              0.08
+            ],
+            "n": 237
+          },
+          "claims_judged": 364,
+          "claim_supported_rate": {
+            "rate": 0.874,
+            "ci95": [
+              0.829,
+              0.916
+            ],
+            "n": 364,
+            "n_cases": 183
+          },
+          "claim_unsupported_rate": {
+            "rate": 0.003,
+            "ci95": [
+              0.0,
+              0.009
+            ],
+            "n": 364,
+            "n_cases": 183
+          },
+          "answers_with_any_unsupported_claim": {
+            "rate": 0.005,
+            "ci95": [
+              0.0,
+              0.016
+            ],
+            "n": 183
+          },
+          "fact_coverage": {
+            "rate": 0.765,
+            "ci95": [
+              0.72,
+              0.816
+            ],
+            "n": 311,
+            "n_cases": 176
+          },
+          "answers_contradicting_a_reference_fact": {
+            "rate": 0.006,
+            "ci95": [
+              0.0,
+              0.017
+            ],
+            "n": 176
+          },
+          "latency_p50_s": 15.5,
+          "latency_p95_s": 34.4,
+          "cost_per_case_usd": 0.0036,
+          "judge_cost_total_usd": 0.2592
+        },
+        "provenance": [
+          "experiments/eval/agent-dev-A3/gpt-5.6-luna.metrics.json"
+        ],
+        "label": "gpt-5.6-luna",
+        "strata": {
+          "adversarial": {
+            "n": 35,
+            "behaviour_accuracy": 0.943,
+            "false_answer": 1,
+            "over_abstain": 0,
+            "unsupported_claims": 0,
+            "contradicted_facts": 0
+          },
+          "ambiguity_insufficient_causal": {
+            "n": 44,
+            "behaviour_accuracy": 0.75,
+            "false_answer": 2,
+            "over_abstain": 0,
+            "unsupported_claims": 0,
+            "contradicted_facts": 0
+          },
+          "cross_source_synthesis": {
+            "n": 35,
+            "behaviour_accuracy": 1.0,
+            "false_answer": 0,
+            "over_abstain": 0,
+            "unsupported_claims": 0,
+            "contradicted_facts": 0
+          },
+          "factual_lookup": {
+            "n": 70,
+            "behaviour_accuracy": 0.943,
+            "false_answer": 2,
+            "over_abstain": 2,
+            "unsupported_claims": 0,
+            "contradicted_facts": 0
+          },
+          "numerical_comparison": {
+            "n": 34,
+            "behaviour_accuracy": 0.824,
+            "false_answer": 2,
+            "over_abstain": 4,
+            "unsupported_claims": 0,
+            "contradicted_facts": 0
+          },
+          "revision_conflict": {
+            "n": 19,
+            "behaviour_accuracy": 1.0,
+            "false_answer": 0,
+            "over_abstain": 0,
+            "unsupported_claims": 1,
+            "contradicted_facts": 2
+          }
+        },
+        "split": "dev",
+        "scoring_provenance": {
+          "eligible_n": 237,
+          "available_n": 237,
+          "gold_sha256": "647b26a2f0faa86be30ad897840bc1887b54f55c27268d141565b94cb22998e8",
+          "git_head": "617d168b8badd9db775acd1bfd12f4e26d736ddb",
+          "price_table_sha256": "634b32441c3495b4c3ec13efa3af1e9cc99e5c7523eac3a15a5c238c3acaeb5c",
+          "prompt_sha256": {
+            "planner": "df68ef8e5e287d1a0b1f71d938e85ec25b4f03eeec501bc439a3a77aec2482dc",
+            "answer": "e854b64c72116c4c175082e70f39c312ed94b1f37778e7daf3f9a51de1bac350",
+            "judge": "85f3529fca32faec681b3d4b1e6899b8620c383ed2aa54bc423241e2b7f4a10f",
+            "rerank": "e45ed816ccefd679d046cf9bcbd4dad92ba27b20cfc5f45b900063b84784793a",
+            "planner_user": "e59f408b00f5a99e0fb867c635a84d2d77947171620ab035f6067a3cdfb8136f",
+            "answer_user": "c4f4ef05d7d1b87fca94bee65cbf2a38999c181dc2e92bced9cdf8ef92b006e7"
+          }
+        },
+        "judge": "gpt-6.1-terra"
+      },
+      {
+        "id": "experiments/eval/agent-dev-A3/gpt-6-luna",
+        "metrics": {
+          "n_cases": 237,
+          "behaviour_accuracy": {
+            "rate": 0.903,
+            "ci95": [
+              0.865,
+              0.937
+            ],
+            "n": 237
+          },
+          "false_answer_rate": {
+            "rate": 0.03,
+            "ci95": [
+              0.009,
+              0.057
+            ],
+            "n": 230
+          },
+          "over_abstention_rate": {
+            "rate": 0.03,
+            "ci95": [
+              0.008,
+              0.051
+            ],
+            "n": 237
+          },
+          "key_number_recall": {
+            "rate": 0.821,
+            "ci95": [
+              0.773,
+              0.866
+            ],
+            "n": 153
+          },
+          "calc_correct": {
+            "rate": 0.75,
+            "ci95": [
+              0.583,
+              0.917
+            ],
+            "n": 24
+          },
+          "gold_cited_any": {
+            "rate": 0.836,
+            "ci95": [
+              0.783,
+              0.884
+            ],
+            "n": 189
+          },
+          "cases_with_ungrounded_numbers": {
+            "rate": 0.076,
+            "ci95": [
+              0.042,
+              0.11
+            ],
+            "n": 237
+          },
+          "answers_with_ungrounded_numbers": {
+            "rate": 0.076,
+            "ci95": [
+              0.042,
+              0.11
+            ],
+            "n": 237
+          },
+          "claims_judged": 309,
+          "claim_supported_rate": {
+            "rate": 0.887,
+            "ci95": [
+              0.84,
+              0.931
+            ],
+            "n": 309,
+            "n_cases": 182
+          },
+          "claim_unsupported_rate": {
+            "rate": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "n": 309,
+            "n_cases": 182
+          },
+          "answers_with_any_unsupported_claim": {
+            "rate": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "n": 182
+          },
+          "fact_coverage": {
+            "rate": 0.728,
+            "ci95": [
+              0.678,
+              0.779
+            ],
+            "n": 309,
+            "n_cases": 175
+          },
+          "answers_contradicting_a_reference_fact": {
+            "rate": 0.006,
+            "ci95": [
+              0.0,
+              0.017
+            ],
+            "n": 175
+          },
+          "latency_p50_s": 15.4,
+          "latency_p95_s": 35.6,
+          "cost_per_case_usd": 0.00212,
+          "judge_cost_total_usd": 0.2442
+        },
+        "provenance": [
+          "experiments/eval/agent-dev-A3/gpt-6-luna.metrics.json"
+        ],
+        "label": "gpt-6-luna",
+        "strata": {
+          "adversarial": {
+            "n": 35,
+            "behaviour_accuracy": 0.886,
+            "false_answer": 1,
+            "over_abstain": 2,
+            "unsupported_claims": 0,
+            "contradicted_facts": 0
+          },
+          "ambiguity_insufficient_causal": {
+            "n": 44,
+            "behaviour_accuracy": 0.727,
+            "false_answer": 4,
+            "over_abstain": 0,
+            "unsupported_claims": 0,
+            "contradicted_facts": 0
+          },
+          "cross_source_synthesis": {
+            "n": 35,
+            "behaviour_accuracy": 0.971,
+            "false_answer": 0,
+            "over_abstain": 1,
+            "unsupported_claims": 0,
+            "contradicted_facts": 1
+          },
+          "factual_lookup": {
+            "n": 70,
+            "behaviour_accuracy": 0.971,
+            "false_answer": 1,
+            "over_abstain": 1,
+            "unsupported_claims": 0,
+            "contradicted_facts": 0
+          },
+          "numerical_comparison": {
+            "n": 34,
+            "behaviour_accuracy": 0.882,
+            "false_answer": 1,
+            "over_abstain": 3,
+            "unsupported_claims": 0,
+            "contradicted_facts": 0
+          },
+          "revision_conflict": {
+            "n": 19,
+            "behaviour_accuracy": 1.0,
+            "false_answer": 0,
+            "over_abstain": 0,
+            "unsupported_claims": 0,
+            "contradicted_facts": 0
+          }
+        },
+        "split": "dev",
+        "scoring_provenance": {
+          "eligible_n": 237,
+          "available_n": 237,
+          "gold_sha256": "647b26a2f0faa86be30ad897840bc1887b54f55c27268d141565b94cb22998e8",
+          "git_head": "617d168b8badd9db775acd1bfd12f4e26d736ddb",
+          "price_table_sha256": "634b32441c3495b4c3ec13efa3af1e9cc99e5c7523eac3a15a5c238c3acaeb5c",
+          "prompt_sha256": {
+            "planner": "df68ef8e5e287d1a0b1f71d938e85ec25b4f03eeec501bc439a3a77aec2482dc",
+            "answer": "e854b64c72116c4c175082e70f39c312ed94b1f37778e7daf3f9a51de1bac350",
+            "judge": "85f3529fca32faec681b3d4b1e6899b8620c383ed2aa54bc423241e2b7f4a10f",
+            "rerank": "e45ed816ccefd679d046cf9bcbd4dad92ba27b20cfc5f45b900063b84784793a",
+            "planner_user": "e59f408b00f5a99e0fb867c635a84d2d77947171620ab035f6067a3cdfb8136f",
+            "answer_user": "c4f4ef05d7d1b87fca94bee65cbf2a38999c181dc2e92bced9cdf8ef92b006e7"
+          }
+        },
+        "judge": "gpt-6.1-terra"
+      },
+      {
+        "id": "experiments/eval/agent-dev-A4/gpt-5.6-luna",
+        "metrics": {
+          "n_cases": 237,
+          "behaviour_accuracy": {
+            "rate": 0.911,
+            "ci95": [
+              0.878,
+              0.945
+            ],
+            "n": 237
+          },
+          "false_answer_rate": {
+            "rate": 0.026,
+            "ci95": [
+              0.009,
+              0.048
+            ],
+            "n": 230
+          },
+          "over_abstention_rate": {
+            "rate": 0.03,
+            "ci95": [
+              0.008,
+              0.051
+            ],
+            "n": 237
+          },
+          "key_number_recall": {
+            "rate": 0.862,
+            "ci95": [
+              0.818,
+              0.905
+            ],
+            "n": 153
+          },
+          "calc_correct": {
+            "rate": 0.667,
+            "ci95": [
+              0.458,
+              0.833
+            ],
+            "n": 24
+          },
+          "gold_cited_any": {
+            "rate": 0.836,
+            "ci95": [
+              0.783,
+              0.889
+            ],
+            "n": 189
+          },
+          "cases_with_ungrounded_numbers": {
+            "rate": 0.059,
+            "ci95": [
+              0.03,
+              0.093
+            ],
+            "n": 237
+          },
+          "answers_with_ungrounded_numbers": {
+            "rate": 0.059,
+            "ci95": [
+              0.03,
+              0.093
+            ],
+            "n": 237
+          },
+          "claims_judged": 362,
+          "claim_supported_rate": {
+            "rate": 0.878,
+            "ci95": [
+              0.832,
+              0.922
+            ],
+            "n": 362,
+            "n_cases": 181
+          },
+          "claim_unsupported_rate": {
+            "rate": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "n": 362,
+            "n_cases": 181
+          },
+          "answers_with_any_unsupported_claim": {
+            "rate": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "n": 181
+          },
+          "fact_coverage": {
+            "rate": 0.766,
+            "ci95": [
+              0.715,
+              0.813
+            ],
+            "n": 308,
+            "n_cases": 175
+          },
+          "answers_contradicting_a_reference_fact": {
+            "rate": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "n": 175
+          },
+          "latency_p50_s": 15.1,
+          "latency_p95_s": 34.7,
+          "cost_per_case_usd": 0.00367,
+          "judge_cost_total_usd": 0.2507
+        },
+        "provenance": [
+          "experiments/eval/agent-dev-A4/gpt-5.6-luna.metrics.json"
+        ],
+        "label": "gpt-5.6-luna",
+        "strata": {
+          "adversarial": {
+            "n": 35,
+            "behaviour_accuracy": 0.971,
+            "false_answer": 1,
+            "over_abstain": 0,
+            "unsupported_claims": 0,
+            "contradicted_facts": 0
+          },
+          "ambiguity_insufficient_causal": {
+            "n": 44,
+            "behaviour_accuracy": 0.773,
+            "false_answer": 2,
+            "over_abstain": 0,
+            "unsupported_claims": 0,
+            "contradicted_facts": 0
+          },
+          "cross_source_synthesis": {
+            "n": 35,
+            "behaviour_accuracy": 1.0,
+            "false_answer": 0,
+            "over_abstain": 0,
+            "unsupported_claims": 0,
+            "contradicted_facts": 0
+          },
+          "factual_lookup": {
+            "n": 70,
+            "behaviour_accuracy": 0.971,
+            "false_answer": 1,
+            "over_abstain": 1,
+            "unsupported_claims": 0,
+            "contradicted_facts": 0
+          },
+          "numerical_comparison": {
+            "n": 34,
+            "behaviour_accuracy": 0.765,
+            "false_answer": 2,
+            "over_abstain": 6,
+            "unsupported_claims": 0,
+            "contradicted_facts": 0
+          },
+          "revision_conflict": {
+            "n": 19,
+            "behaviour_accuracy": 1.0,
+            "false_answer": 0,
+            "over_abstain": 0,
+            "unsupported_claims": 0,
+            "contradicted_facts": 0
+          }
+        },
+        "split": "dev",
+        "scoring_provenance": {
+          "eligible_n": 237,
+          "available_n": 237,
+          "gold_sha256": "647b26a2f0faa86be30ad897840bc1887b54f55c27268d141565b94cb22998e8",
+          "git_head": "617d168b8badd9db775acd1bfd12f4e26d736ddb",
+          "price_table_sha256": "634b32441c3495b4c3ec13efa3af1e9cc99e5c7523eac3a15a5c238c3acaeb5c",
+          "prompt_sha256": {
+            "planner": "df68ef8e5e287d1a0b1f71d938e85ec25b4f03eeec501bc439a3a77aec2482dc",
+            "answer": "e854b64c72116c4c175082e70f39c312ed94b1f37778e7daf3f9a51de1bac350",
+            "judge": "85f3529fca32faec681b3d4b1e6899b8620c383ed2aa54bc423241e2b7f4a10f",
+            "rerank": "e45ed816ccefd679d046cf9bcbd4dad92ba27b20cfc5f45b900063b84784793a",
+            "planner_user": "e59f408b00f5a99e0fb867c635a84d2d77947171620ab035f6067a3cdfb8136f",
+            "answer_user": "c4f4ef05d7d1b87fca94bee65cbf2a38999c181dc2e92bced9cdf8ef92b006e7"
+          }
+        },
+        "judge": "gpt-6.1-terra"
+      },
+      {
+        "id": "experiments/eval/agent-dev-A4/gpt-6-luna",
+        "metrics": {
+          "n_cases": 237,
+          "behaviour_accuracy": {
+            "rate": 0.899,
+            "ci95": [
+              0.861,
+              0.937
+            ],
+            "n": 237
+          },
+          "false_answer_rate": {
+            "rate": 0.026,
+            "ci95": [
+              0.009,
+              0.048
+            ],
+            "n": 229
+          },
+          "over_abstention_rate": {
+            "rate": 0.034,
+            "ci95": [
+              0.013,
+              0.059
+            ],
+            "n": 237
+          },
+          "key_number_recall": {
+            "rate": 0.816,
+            "ci95": [
+              0.767,
+              0.865
+            ],
+            "n": 153
+          },
+          "calc_correct": {
+            "rate": 0.667,
+            "ci95": [
+              0.458,
+              0.833
+            ],
+            "n": 24
+          },
+          "gold_cited_any": {
+            "rate": 0.836,
+            "ci95": [
+              0.783,
+              0.889
+            ],
+            "n": 189
+          },
+          "cases_with_ungrounded_numbers": {
+            "rate": 0.055,
+            "ci95": [
+              0.03,
+              0.084
+            ],
+            "n": 237
+          },
+          "answers_with_ungrounded_numbers": {
+            "rate": 0.055,
+            "ci95": [
+              0.03,
+              0.084
+            ],
+            "n": 237
+          },
+          "claims_judged": 299,
+          "claim_supported_rate": {
+            "rate": 0.856,
+            "ci95": [
+              0.799,
+              0.906
+            ],
+            "n": 299,
+            "n_cases": 180
+          },
+          "claim_unsupported_rate": {
+            "rate": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "n": 299,
+            "n_cases": 180
+          },
+          "answers_with_any_unsupported_claim": {
+            "rate": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "n": 180
+          },
+          "fact_coverage": {
+            "rate": 0.734,
+            "ci95": [
+              0.685,
+              0.783
+            ],
+            "n": 305,
+            "n_cases": 174
+          },
+          "answers_contradicting_a_reference_fact": {
+            "rate": 0.011,
+            "ci95": [
+              0.0,
+              0.029
+            ],
+            "n": 174
+          },
+          "latency_p50_s": 14.8,
+          "latency_p95_s": 35.6,
+          "cost_per_case_usd": 0.00215,
+          "judge_cost_total_usd": 0.2474
+        },
+        "provenance": [
+          "experiments/eval/agent-dev-A4/gpt-6-luna.metrics.json"
+        ],
+        "label": "gpt-6-luna",
+        "strata": {
+          "adversarial": {
+            "n": 35,
+            "behaviour_accuracy": 0.914,
+            "false_answer": 1,
+            "over_abstain": 1,
+            "unsupported_claims": 0,
+            "contradicted_facts": 0
+          },
+          "ambiguity_insufficient_causal": {
+            "n": 44,
+            "behaviour_accuracy": 0.727,
+            "false_answer": 3,
+            "over_abstain": 0,
+            "unsupported_claims": 0,
+            "contradicted_facts": 0
+          },
+          "cross_source_synthesis": {
+            "n": 35,
+            "behaviour_accuracy": 1.0,
+            "false_answer": 0,
+            "over_abstain": 0,
+            "unsupported_claims": 0,
+            "contradicted_facts": 1
+          },
+          "factual_lookup": {
+            "n": 70,
+            "behaviour_accuracy": 0.971,
+            "false_answer": 1,
+            "over_abstain": 1,
+            "unsupported_claims": 0,
+            "contradicted_facts": 0
+          },
+          "numerical_comparison": {
+            "n": 34,
+            "behaviour_accuracy": 0.824,
+            "false_answer": 1,
+            "over_abstain": 5,
+            "unsupported_claims": 0,
+            "contradicted_facts": 0
+          },
+          "revision_conflict": {
+            "n": 19,
+            "behaviour_accuracy": 0.947,
+            "false_answer": 0,
+            "over_abstain": 1,
+            "unsupported_claims": 0,
+            "contradicted_facts": 1
+          }
+        },
+        "split": "dev",
+        "scoring_provenance": {
+          "eligible_n": 237,
+          "available_n": 237,
+          "gold_sha256": "647b26a2f0faa86be30ad897840bc1887b54f55c27268d141565b94cb22998e8",
+          "git_head": "617d168b8badd9db775acd1bfd12f4e26d736ddb",
+          "price_table_sha256": "634b32441c3495b4c3ec13efa3af1e9cc99e5c7523eac3a15a5c238c3acaeb5c",
+          "prompt_sha256": {
+            "planner": "df68ef8e5e287d1a0b1f71d938e85ec25b4f03eeec501bc439a3a77aec2482dc",
+            "answer": "e854b64c72116c4c175082e70f39c312ed94b1f37778e7daf3f9a51de1bac350",
+            "judge": "85f3529fca32faec681b3d4b1e6899b8620c383ed2aa54bc423241e2b7f4a10f",
+            "rerank": "e45ed816ccefd679d046cf9bcbd4dad92ba27b20cfc5f45b900063b84784793a",
+            "planner_user": "e59f408b00f5a99e0fb867c635a84d2d77947171620ab035f6067a3cdfb8136f",
+            "answer_user": "c4f4ef05d7d1b87fca94bee65cbf2a38999c181dc2e92bced9cdf8ef92b006e7"
+          }
+        },
+        "judge": "gpt-6.1-terra"
+      },
+      {
+        "id": "experiments/eval/agent-dev-A5/gpt-5.6-luna",
+        "metrics": {
+          "n_cases": 237,
+          "behaviour_accuracy": {
+            "rate": 0.911,
+            "ci95": [
+              0.873,
+              0.945
+            ],
+            "n": 237
+          },
+          "false_answer_rate": {
+            "rate": 0.022,
+            "ci95": [
+              0.004,
+              0.043
+            ],
+            "n": 230
+          },
+          "over_abstention_rate": {
+            "rate": 0.03,
+            "ci95": [
+              0.008,
+              0.051
+            ],
+            "n": 237
+          },
+          "key_number_recall": {
+            "rate": 0.862,
+            "ci95": [
+              0.816,
+              0.905
+            ],
+            "n": 153
+          },
+          "calc_correct": {
+            "rate": 0.708,
+            "ci95": [
+              0.542,
+              0.875
+            ],
+            "n": 24
+          },
+          "gold_cited_any": {
+            "rate": 0.841,
+            "ci95": [
+              0.788,
+              0.889
+            ],
+            "n": 189
+          },
+          "cases_with_ungrounded_numbers": {
+            "rate": 0.084,
+            "ci95": [
+              0.051,
+              0.122
+            ],
+            "n": 237
+          },
+          "answers_with_ungrounded_numbers": {
+            "rate": 0.084,
+            "ci95": [
+              0.051,
+              0.122
+            ],
+            "n": 237
+          },
+          "claims_judged": 369,
+          "claim_supported_rate": {
+            "rate": 0.856,
+            "ci95": [
+              0.805,
+              0.904
+            ],
+            "n": 369,
+            "n_cases": 180
+          },
+          "claim_unsupported_rate": {
+            "rate": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "n": 369,
+            "n_cases": 180
+          },
+          "answers_with_any_unsupported_claim": {
+            "rate": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "n": 180
+          },
+          "fact_coverage": {
+            "rate": 0.76,
+            "ci95": [
+              0.714,
+              0.808
+            ],
+            "n": 304,
+            "n_cases": 175
+          },
+          "answers_contradicting_a_reference_fact": {
+            "rate": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "n": 175
+          },
+          "latency_p50_s": 14.7,
+          "latency_p95_s": 34.0,
+          "cost_per_case_usd": 0.00369,
+          "judge_cost_total_usd": 0.2674
+        },
+        "provenance": [
+          "experiments/eval/agent-dev-A5/gpt-5.6-luna.metrics.json"
+        ],
+        "label": "gpt-5.6-luna",
+        "strata": {
+          "adversarial": {
+            "n": 35,
+            "behaviour_accuracy": 0.943,
+            "false_answer": 1,
+            "over_abstain": 0,
+            "unsupported_claims": 0,
+            "contradicted_facts": 0
+          },
+          "ambiguity_insufficient_causal": {
+            "n": 44,
+            "behaviour_accuracy": 0.773,
+            "false_answer": 2,
+            "over_abstain": 0,
+            "unsupported_claims": 0,
+            "contradicted_facts": 0
+          },
+          "cross_source_synthesis": {
+            "n": 35,
+            "behaviour_accuracy": 1.0,
+            "false_answer": 0,
+            "over_abstain": 0,
+            "unsupported_claims": 0,
+            "contradicted_facts": 0
+          },
+          "factual_lookup": {
+            "n": 70,
+            "behaviour_accuracy": 0.957,
+            "false_answer": 1,
+            "over_abstain": 2,
+            "unsupported_claims": 0,
+            "contradicted_facts": 0
+          },
+          "numerical_comparison": {
+            "n": 34,
+            "behaviour_accuracy": 0.824,
+            "false_answer": 1,
+            "over_abstain": 5,
+            "unsupported_claims": 0,
+            "contradicted_facts": 0
+          },
+          "revision_conflict": {
+            "n": 19,
+            "behaviour_accuracy": 1.0,
+            "false_answer": 0,
+            "over_abstain": 0,
+            "unsupported_claims": 0,
+            "contradicted_facts": 0
+          }
+        },
+        "split": "dev",
+        "scoring_provenance": {
+          "eligible_n": 237,
+          "available_n": 237,
+          "gold_sha256": "647b26a2f0faa86be30ad897840bc1887b54f55c27268d141565b94cb22998e8",
+          "git_head": "617d168b8badd9db775acd1bfd12f4e26d736ddb",
+          "price_table_sha256": "634b32441c3495b4c3ec13efa3af1e9cc99e5c7523eac3a15a5c238c3acaeb5c",
+          "prompt_sha256": {
+            "planner": "9fe27b42c8b02e215b341af33601752309e7563ecfd6dd3ec8b0746bcd7e833d",
+            "answer": "e854b64c72116c4c175082e70f39c312ed94b1f37778e7daf3f9a51de1bac350",
+            "judge": "85f3529fca32faec681b3d4b1e6899b8620c383ed2aa54bc423241e2b7f4a10f",
+            "rerank": "e45ed816ccefd679d046cf9bcbd4dad92ba27b20cfc5f45b900063b84784793a",
+            "planner_user": "e59f408b00f5a99e0fb867c635a84d2d77947171620ab035f6067a3cdfb8136f",
+            "answer_user": "c4f4ef05d7d1b87fca94bee65cbf2a38999c181dc2e92bced9cdf8ef92b006e7"
+          }
+        },
+        "judge": "gpt-6.1-terra"
+      },
+      {
+        "id": "experiments/eval/agent-dev-A5/gpt-6-luna",
+        "metrics": {
+          "n_cases": 237,
+          "behaviour_accuracy": {
+            "rate": 0.907,
+            "ci95": [
+              0.869,
+              0.941
+            ],
+            "n": 237
+          },
+          "false_answer_rate": {
+            "rate": 0.034,
+            "ci95": [
+              0.013,
+              0.06
+            ],
+            "n": 232
+          },
+          "over_abstention_rate": {
+            "rate": 0.021,
+            "ci95": [
+              0.004,
+              0.038
+            ],
+            "n": 237
+          },
+          "key_number_recall": {
+            "rate": 0.832,
+            "ci95": [
+              0.785,
+              0.877
+            ],
+            "n": 153
+          },
+          "calc_correct": {
+            "rate": 0.75,
+            "ci95": [
+              0.583,
+              0.917
+            ],
+            "n": 24
+          },
+          "gold_cited_any": {
+            "rate": 0.841,
+            "ci95": [
+              0.788,
+              0.894
+            ],
+            "n": 189
+          },
+          "cases_with_ungrounded_numbers": {
+            "rate": 0.076,
+            "ci95": [
+              0.046,
+              0.11
+            ],
+            "n": 237
+          },
+          "answers_with_ungrounded_numbers": {
+            "rate": 0.076,
+            "ci95": [
+              0.046,
+              0.11
+            ],
+            "n": 237
+          },
+          "claims_judged": 313,
+          "claim_supported_rate": {
+            "rate": 0.879,
+            "ci95": [
+              0.831,
+              0.922
+            ],
+            "n": 313,
+            "n_cases": 185
+          },
+          "claim_unsupported_rate": {
+            "rate": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "n": 313,
+            "n_cases": 185
+          },
+          "answers_with_any_unsupported_claim": {
+            "rate": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "n": 185
+          },
+          "fact_coverage": {
+            "rate": 0.724,
+            "ci95": [
+              0.671,
+              0.772
+            ],
+            "n": 312,
+            "n_cases": 177
+          },
+          "answers_contradicting_a_reference_fact": {
+            "rate": 0.006,
+            "ci95": [
+              0.0,
+              0.017
+            ],
+            "n": 177
+          },
+          "latency_p50_s": 16.4,
+          "latency_p95_s": 37.5,
+          "cost_per_case_usd": 0.00217,
+          "judge_cost_total_usd": 0.248
+        },
+        "provenance": [
+          "experiments/eval/agent-dev-A5/gpt-6-luna.metrics.json"
+        ],
+        "label": "gpt-6-luna",
+        "strata": {
+          "adversarial": {
+            "n": 35,
+            "behaviour_accuracy": 0.943,
+            "false_answer": 1,
+            "over_abstain": 0,
+            "unsupported_claims": 0,
+            "contradicted_facts": 0
+          },
+          "ambiguity_insufficient_causal": {
+            "n": 44,
+            "behaviour_accuracy": 0.727,
+            "false_answer": 4,
+            "over_abstain": 0,
+            "unsupported_claims": 0,
+            "contradicted_facts": 0
+          },
+          "cross_source_synthesis": {
+            "n": 35,
+            "behaviour_accuracy": 0.971,
+            "false_answer": 0,
+            "over_abstain": 1,
+            "unsupported_claims": 0,
+            "contradicted_facts": 0
+          },
+          "factual_lookup": {
+            "n": 70,
+            "behaviour_accuracy": 0.971,
+            "false_answer": 1,
+            "over_abstain": 1,
+            "unsupported_claims": 0,
+            "contradicted_facts": 0
+          },
+          "numerical_comparison": {
+            "n": 34,
+            "behaviour_accuracy": 0.853,
+            "false_answer": 2,
+            "over_abstain": 3,
+            "unsupported_claims": 0,
+            "contradicted_facts": 1
+          },
+          "revision_conflict": {
+            "n": 19,
+            "behaviour_accuracy": 1.0,
+            "false_answer": 0,
+            "over_abstain": 0,
+            "unsupported_claims": 0,
+            "contradicted_facts": 0
+          }
+        },
+        "split": "dev",
+        "scoring_provenance": {
+          "eligible_n": 237,
+          "available_n": 237,
+          "gold_sha256": "647b26a2f0faa86be30ad897840bc1887b54f55c27268d141565b94cb22998e8",
+          "git_head": "617d168b8badd9db775acd1bfd12f4e26d736ddb",
+          "price_table_sha256": "634b32441c3495b4c3ec13efa3af1e9cc99e5c7523eac3a15a5c238c3acaeb5c",
+          "prompt_sha256": {
+            "planner": "9fe27b42c8b02e215b341af33601752309e7563ecfd6dd3ec8b0746bcd7e833d",
+            "answer": "e854b64c72116c4c175082e70f39c312ed94b1f37778e7daf3f9a51de1bac350",
+            "judge": "85f3529fca32faec681b3d4b1e6899b8620c383ed2aa54bc423241e2b7f4a10f",
+            "rerank": "e45ed816ccefd679d046cf9bcbd4dad92ba27b20cfc5f45b900063b84784793a",
+            "planner_user": "e59f408b00f5a99e0fb867c635a84d2d77947171620ab035f6067a3cdfb8136f",
+            "answer_user": "c4f4ef05d7d1b87fca94bee65cbf2a38999c181dc2e92bced9cdf8ef92b006e7"
+          }
+        },
+        "judge": "gpt-6.1-terra"
+      },
+      {
+        "id": "experiments/eval/agent-heldout-H-hybrid/gpt-5.6-luna",
+        "metrics": {
+          "n_cases": 31,
+          "behaviour_accuracy": {
+            "rate": 0.742,
+            "ci95": [
+              0.581,
+              0.871
+            ],
+            "n": 31
+          },
+          "false_answer_rate": {
+            "rate": 0.04,
+            "ci95": [
+              0.0,
+              0.12
+            ],
+            "n": 25
+          },
+          "over_abstention_rate": {
+            "rate": 0.194,
+            "ci95": [
+              0.065,
+              0.355
+            ],
+            "n": 31
+          },
+          "key_number_recall": {
+            "rate": 0.626,
+            "ci95": [
+              0.439,
+              0.811
+            ],
+            "n": 18
+          },
+          "calc_correct": {
+            "rate": 0.8,
+            "ci95": [
+              0.4,
+              1.0
+            ],
+            "n": 5
+          },
+          "gold_cited_any": {
+            "rate": 0.429,
+            "ci95": [
+              0.25,
+              0.607
+            ],
+            "n": 28
+          },
+          "cases_with_ungrounded_numbers": {
+            "rate": 0.032,
+            "ci95": [
+              0.0,
+              0.097
+            ],
+            "n": 31
+          },
+          "answers_with_ungrounded_numbers": {
+            "rate": 0.032,
+            "ci95": [
+              0.0,
+              0.097
+            ],
+            "n": 31
+          },
+          "claims_judged": 39,
+          "claim_supported_rate": {
+            "rate": 0.846,
+            "ci95": [
+              0.725,
+              0.95
+            ],
+            "n": 39,
+            "n_cases": 18
+          },
+          "claim_unsupported_rate": {
+            "rate": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "n": 39,
+            "n_cases": 18
+          },
+          "answers_with_any_unsupported_claim": {
+            "rate": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "n": 18
+          },
+          "fact_coverage": {
+            "rate": 0.55,
+            "ci95": [
+              0.333,
+              0.75
+            ],
+            "n": 20,
+            "n_cases": 18
+          },
+          "answers_contradicting_a_reference_fact": {
+            "rate": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "n": 18
+          },
+          "latency_p50_s": 11.1,
+          "latency_p95_s": 19.7,
+          "cost_per_case_usd": 0.00271,
+          "judge_cost_total_usd": 0.0228
+        },
+        "provenance": [
+          "experiments/eval/agent-heldout-H-hybrid/gpt-5.6-luna.metrics.json"
+        ],
+        "label": "gpt-5.6-luna",
+        "strata": {
+          "adversarial": {
+            "n": 5,
+            "behaviour_accuracy": 0.8,
+            "false_answer": 0,
+            "over_abstain": 1,
+            "unsupported_claims": 0,
+            "contradicted_facts": 0
+          },
+          "ambiguity_insufficient_causal": {
+            "n": 6,
+            "behaviour_accuracy": 0.667,
+            "false_answer": 1,
+            "over_abstain": 0,
+            "unsupported_claims": 0,
+            "contradicted_facts": 0
+          },
+          "cross_source_synthesis": {
+            "n": 5,
+            "behaviour_accuracy": 1.0,
+            "false_answer": 0,
+            "over_abstain": 0,
+            "unsupported_claims": 0,
+            "contradicted_facts": 0
+          },
+          "factual_lookup": {
+            "n": 5,
+            "behaviour_accuracy": 0.8,
+            "false_answer": 0,
+            "over_abstain": 1,
+            "unsupported_claims": 0,
+            "contradicted_facts": 0
+          },
+          "numerical_comparison": {
+            "n": 6,
+            "behaviour_accuracy": 1.0,
+            "false_answer": 0,
+            "over_abstain": 0,
+            "unsupported_claims": 0,
+            "contradicted_facts": 0
+          },
+          "revision_conflict": {
+            "n": 4,
+            "behaviour_accuracy": 0.0,
+            "false_answer": 0,
+            "over_abstain": 4,
+            "unsupported_claims": 0,
+            "contradicted_facts": 0
+          }
+        },
+        "split": "heldout",
+        "scoring_provenance": {
+          "eligible_n": 31,
+          "available_n": 31,
+          "gold_sha256": "647b26a2f0faa86be30ad897840bc1887b54f55c27268d141565b94cb22998e8",
+          "git_head": "617d168b8badd9db775acd1bfd12f4e26d736ddb",
+          "price_table_sha256": "634b32441c3495b4c3ec13efa3af1e9cc99e5c7523eac3a15a5c238c3acaeb5c",
+          "prompt_sha256": {
+            "planner": "df68ef8e5e287d1a0b1f71d938e85ec25b4f03eeec501bc439a3a77aec2482dc",
+            "answer": "e854b64c72116c4c175082e70f39c312ed94b1f37778e7daf3f9a51de1bac350",
+            "judge": "85f3529fca32faec681b3d4b1e6899b8620c383ed2aa54bc423241e2b7f4a10f",
+            "rerank": "e45ed816ccefd679d046cf9bcbd4dad92ba27b20cfc5f45b900063b84784793a",
+            "planner_user": "e59f408b00f5a99e0fb867c635a84d2d77947171620ab035f6067a3cdfb8136f",
+            "answer_user": "c4f4ef05d7d1b87fca94bee65cbf2a38999c181dc2e92bced9cdf8ef92b006e7"
+          }
+        },
+        "judge": "gpt-6.1-terra"
+      },
+      {
+        "id": "experiments/eval/agent-heldout-H-hybrid/gpt-6-luna",
+        "metrics": {
+          "n_cases": 31,
+          "behaviour_accuracy": {
+            "rate": 0.677,
+            "ci95": [
+              0.516,
+              0.839
+            ],
+            "n": 31
+          },
+          "false_answer_rate": {
+            "rate": 0.042,
+            "ci95": [
+              0.0,
+              0.125
+            ],
+            "n": 24
+          },
+          "over_abstention_rate": {
+            "rate": 0.226,
+            "ci95": [
+              0.097,
+              0.387
+            ],
+            "n": 31
+          },
+          "key_number_recall": {
+            "rate": 0.626,
+            "ci95": [
+              0.452,
+              0.8
+            ],
+            "n": 18
+          },
+          "calc_correct": {
+            "rate": 0.8,
+            "ci95": [
+              0.4,
+              1.0
+            ],
+            "n": 5
+          },
+          "gold_cited_any": {
+            "rate": 0.464,
+            "ci95": [
+              0.286,
+              0.643
+            ],
+            "n": 28
+          },
+          "cases_with_ungrounded_numbers": {
+            "rate": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "n": 31
+          },
+          "answers_with_ungrounded_numbers": {
+            "rate": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "n": 31
+          },
+          "claims_judged": 33,
+          "claim_supported_rate": {
+            "rate": 1.0,
+            "ci95": [
+              1.0,
+              1.0
+            ],
+            "n": 33,
+            "n_cases": 17
+          },
+          "claim_unsupported_rate": {
+            "rate": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "n": 33,
+            "n_cases": 17
+          },
+          "answers_with_any_unsupported_claim": {
+            "rate": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "n": 17
+          },
+          "fact_coverage": {
+            "rate": 0.571,
+            "ci95": [
+              0.4,
+              0.789
+            ],
+            "n": 21,
+            "n_cases": 17
+          },
+          "answers_contradicting_a_reference_fact": {
+            "rate": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "n": 17
+          },
+          "latency_p50_s": 12.7,
+          "latency_p95_s": 18.5,
+          "cost_per_case_usd": 0.00124,
+          "judge_cost_total_usd": 0.0236
+        },
+        "provenance": [
+          "experiments/eval/agent-heldout-H-hybrid/gpt-6-luna.metrics.json"
+        ],
+        "label": "gpt-6-luna",
+        "strata": {
+          "adversarial": {
+            "n": 5,
+            "behaviour_accuracy": 0.4,
+            "false_answer": 0,
+            "over_abstain": 2,
+            "unsupported_claims": 0,
+            "contradicted_facts": 0
+          },
+          "ambiguity_insufficient_causal": {
+            "n": 6,
+            "behaviour_accuracy": 0.667,
+            "false_answer": 1,
+            "over_abstain": 0,
+            "unsupported_claims": 0,
+            "contradicted_facts": 0
+          },
+          "cross_source_synthesis": {
+            "n": 5,
+            "behaviour_accuracy": 0.8,
+            "false_answer": 0,
+            "over_abstain": 1,
+            "unsupported_claims": 0,
+            "contradicted_facts": 0
+          },
+          "factual_lookup": {
+            "n": 5,
+            "behaviour_accuracy": 0.6,
+            "false_answer": 0,
+            "over_abstain": 2,
+            "unsupported_claims": 0,
+            "contradicted_facts": 0
+          },
+          "numerical_comparison": {
+            "n": 6,
+            "behaviour_accuracy": 1.0,
+            "false_answer": 0,
+            "over_abstain": 0,
+            "unsupported_claims": 0,
+            "contradicted_facts": 0
+          },
+          "revision_conflict": {
+            "n": 4,
+            "behaviour_accuracy": 0.5,
+            "false_answer": 0,
+            "over_abstain": 2,
+            "unsupported_claims": 0,
+            "contradicted_facts": 0
+          }
+        },
+        "split": "heldout",
+        "scoring_provenance": {
+          "eligible_n": 31,
+          "available_n": 31,
+          "gold_sha256": "647b26a2f0faa86be30ad897840bc1887b54f55c27268d141565b94cb22998e8",
+          "git_head": "617d168b8badd9db775acd1bfd12f4e26d736ddb",
+          "price_table_sha256": "634b32441c3495b4c3ec13efa3af1e9cc99e5c7523eac3a15a5c238c3acaeb5c",
+          "prompt_sha256": {
+            "planner": "df68ef8e5e287d1a0b1f71d938e85ec25b4f03eeec501bc439a3a77aec2482dc",
+            "answer": "e854b64c72116c4c175082e70f39c312ed94b1f37778e7daf3f9a51de1bac350",
+            "judge": "85f3529fca32faec681b3d4b1e6899b8620c383ed2aa54bc423241e2b7f4a10f",
+            "rerank": "e45ed816ccefd679d046cf9bcbd4dad92ba27b20cfc5f45b900063b84784793a",
+            "planner_user": "e59f408b00f5a99e0fb867c635a84d2d77947171620ab035f6067a3cdfb8136f",
+            "answer_user": "c4f4ef05d7d1b87fca94bee65cbf2a38999c181dc2e92bced9cdf8ef92b006e7"
+          }
+        },
+        "judge": "gpt-6.1-terra"
+      },
+      {
+        "id": "experiments/eval/agent-heldout-H-r3/gpt-5.6-luna",
+        "metrics": {
+          "n_cases": 31,
+          "behaviour_accuracy": {
+            "rate": 0.871,
+            "ci95": [
+              0.742,
+              0.968
+            ],
+            "n": 31
           },
           "false_answer_rate": {
             "rate": 0.067,
@@ -7666,193 +10427,72 @@
             "n": 30
           },
           "over_abstention_rate": {
-            "rate": 0.118,
+            "rate": 0.032,
             "ci95": [
-              0.029,
-              0.235
-            ],
-            "n": 34
-          },
-          "key_number_recall": {
-            "rate": 0.659,
-            "ci95": [
-              0.478,
-              0.826
-            ],
-            "n": 23
-          },
-          "calc_correct": {
-            "rate": 0.5,
-            "ci95": [
-              0.167,
-              0.833
-            ],
-            "n": 6
-          },
-          "gold_cited_any": {
-            "rate": 0.516,
-            "ci95": [
-              0.355,
-              0.677
+              0.0,
+              0.097
             ],
             "n": 31
           },
-          "answers_with_ungrounded_numbers": {
-            "rate": 0.088,
-            "ci95": [
-              0.0,
-              0.206
-            ],
-            "n": 34
-          },
-          "claims_judged": 48,
-          "claim_supported_rate": 0.771,
-          "claim_unsupported_rate": 0.042,
-          "answers_with_any_unsupported_claim": {
-            "rate": 0.077,
-            "ci95": [
-              0.0,
-              0.192
-            ],
-            "n": 26
-          },
-          "fact_coverage": 0.537,
-          "answers_contradicting_a_reference_fact": {
-            "rate": 0.231,
-            "ci95": [
-              0.077,
-              0.385
-            ],
-            "n": 26
-          },
-          "latency_p50_s": 5.7,
-          "latency_p95_s": 10.8,
-          "cost_per_case_usd": 0.00455,
-          "judge_cost_total_usd": 0.0405
-        },
-        "provenance": [
-          "experiments/eval/agent-dev-A1/gpt-4.1-mini.metrics.json",
-          "experiments/eval/agent-dev-A1/gpt-4.1-mini.cases.jsonl"
-        ],
-        "label": "gpt-4.1-mini",
-        "strata": {
-          "adversarial": {
-            "n": 5,
-            "behaviour_accuracy": 1.0,
-            "false_answer": 0,
-            "over_abstain": 0,
-            "unsupported_claims": 0,
-            "contradicted_facts": 1
-          },
-          "ambiguity_insufficient_causal": {
-            "n": 4,
-            "behaviour_accuracy": 0.5,
-            "false_answer": 2,
-            "over_abstain": 0,
-            "unsupported_claims": 1,
-            "contradicted_facts": 1
-          },
-          "cross_source_synthesis": {
-            "n": 7,
-            "behaviour_accuracy": 0.857,
-            "false_answer": 0,
-            "over_abstain": 1,
-            "unsupported_claims": 0,
-            "contradicted_facts": 1
-          },
-          "factual_lookup": {
-            "n": 8,
-            "behaviour_accuracy": 0.75,
-            "false_answer": 0,
-            "over_abstain": 2,
-            "unsupported_claims": 0,
-            "contradicted_facts": 0
-          },
-          "numerical_comparison": {
-            "n": 6,
-            "behaviour_accuracy": 0.833,
-            "false_answer": 0,
-            "over_abstain": 1,
-            "unsupported_claims": 1,
-            "contradicted_facts": 1
-          },
-          "revision_conflict": {
-            "n": 4,
-            "behaviour_accuracy": 1.0,
-            "false_answer": 0,
-            "over_abstain": 0,
-            "unsupported_claims": 0,
-            "contradicted_facts": 2
-          }
-        },
-        "judge": "gpt-6.1-terra",
-        "denominators": {
-          "fact_coverage": 41
-        }
-      },
-      {
-        "id": "experiments/eval/agent-dev-A1/gpt-5.6-luna",
-        "metrics": {
-          "n_cases": 34,
-          "behaviour_accuracy": {
-            "rate": 0.765,
-            "ci95": [
-              0.618,
-              0.882
-            ],
-            "n": 34
-          },
-          "false_answer_rate": {
-            "rate": 0.034,
-            "ci95": [
-              0.0,
-              0.103
-            ],
-            "n": 29
-          },
-          "over_abstention_rate": {
-            "rate": 0.147,
-            "ci95": [
-              0.029,
-              0.265
-            ],
-            "n": 34
-          },
           "key_number_recall": {
-            "rate": 0.804,
+            "rate": 0.878,
             "ci95": [
-              0.652,
-              0.942
+              0.737,
+              0.989
             ],
-            "n": 23
+            "n": 18
           },
           "calc_correct": {
-            "rate": 0.667,
+            "rate": 0.8,
             "ci95": [
-              0.333,
+              0.4,
               1.0
             ],
-            "n": 6
+            "n": 5
           },
           "gold_cited_any": {
-            "rate": 0.677,
+            "rate": 0.714,
             "ci95": [
-              0.516,
-              0.839
+              0.536,
+              0.857
+            ],
+            "n": 28
+          },
+          "cases_with_ungrounded_numbers": {
+            "rate": 0.032,
+            "ci95": [
+              0.0,
+              0.097
             ],
             "n": 31
           },
           "answers_with_ungrounded_numbers": {
-            "rate": 0.059,
+            "rate": 0.032,
             "ci95": [
               0.0,
-              0.147
+              0.097
             ],
-            "n": 34
+            "n": 31
           },
-          "claims_judged": 50,
-          "claim_supported_rate": 0.76,
-          "claim_unsupported_rate": 0.0,
+          "claims_judged": 45,
+          "claim_supported_rate": {
+            "rate": 0.911,
+            "ci95": [
+              0.783,
+              1.0
+            ],
+            "n": 45,
+            "n_cases": 24
+          },
+          "claim_unsupported_rate": {
+            "rate": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "n": 45,
+            "n_cases": 24
+          },
           "answers_with_any_unsupported_claim": {
             "rate": 0.0,
             "ci95": [
@@ -7861,23 +10501,30 @@
             ],
             "n": 24
           },
-          "fact_coverage": 0.611,
+          "fact_coverage": {
+            "rate": 0.769,
+            "ci95": [
+              0.607,
+              0.917
+            ],
+            "n": 26,
+            "n_cases": 24
+          },
           "answers_contradicting_a_reference_fact": {
-            "rate": 0.083,
+            "rate": 0.042,
             "ci95": [
               0.0,
-              0.208
+              0.125
             ],
             "n": 24
           },
-          "latency_p50_s": 10.6,
-          "latency_p95_s": 19.2,
-          "cost_per_case_usd": 0.00302,
-          "judge_cost_total_usd": 0.0357
+          "latency_p50_s": 17.3,
+          "latency_p95_s": 36.1,
+          "cost_per_case_usd": 0.00343,
+          "judge_cost_total_usd": 0.0295
         },
         "provenance": [
-          "experiments/eval/agent-dev-A1/gpt-5.6-luna.metrics.json",
-          "experiments/eval/agent-dev-A1/gpt-5.6-luna.cases.jsonl"
+          "experiments/eval/agent-heldout-H-r3/gpt-5.6-luna.metrics.json"
         ],
         "label": "gpt-5.6-luna",
         "strata": {
@@ -7890,204 +10537,270 @@
             "contradicted_facts": 0
           },
           "ambiguity_insufficient_causal": {
-            "n": 4,
-            "behaviour_accuracy": 0.25,
-            "false_answer": 1,
+            "n": 6,
+            "behaviour_accuracy": 0.5,
+            "false_answer": 2,
             "over_abstain": 0,
             "unsupported_claims": 0,
-            "contradicted_facts": 0
+            "contradicted_facts": 1
           },
           "cross_source_synthesis": {
-            "n": 7,
-            "behaviour_accuracy": 0.857,
-            "false_answer": 0,
-            "over_abstain": 1,
-            "unsupported_claims": 0,
-            "contradicted_facts": 3
-          },
-          "factual_lookup": {
-            "n": 8,
-            "behaviour_accuracy": 0.75,
-            "false_answer": 0,
-            "over_abstain": 2,
-            "unsupported_claims": 0,
-            "contradicted_facts": 0
-          },
-          "numerical_comparison": {
-            "n": 6,
-            "behaviour_accuracy": 0.667,
-            "false_answer": 0,
-            "over_abstain": 2,
-            "unsupported_claims": 0,
-            "contradicted_facts": 0
-          },
-          "revision_conflict": {
-            "n": 4,
+            "n": 5,
             "behaviour_accuracy": 1.0,
             "false_answer": 0,
             "over_abstain": 0,
             "unsupported_claims": 0,
             "contradicted_facts": 0
+          },
+          "factual_lookup": {
+            "n": 5,
+            "behaviour_accuracy": 1.0,
+            "false_answer": 0,
+            "over_abstain": 0,
+            "unsupported_claims": 0,
+            "contradicted_facts": 0
+          },
+          "numerical_comparison": {
+            "n": 6,
+            "behaviour_accuracy": 1.0,
+            "false_answer": 0,
+            "over_abstain": 0,
+            "unsupported_claims": 0,
+            "contradicted_facts": 0
+          },
+          "revision_conflict": {
+            "n": 4,
+            "behaviour_accuracy": 0.75,
+            "false_answer": 0,
+            "over_abstain": 1,
+            "unsupported_claims": 0,
+            "contradicted_facts": 0
           }
         },
-        "judge": "gpt-6.1-terra",
-        "denominators": {
-          "fact_coverage": 36
-        }
+        "split": "heldout",
+        "scoring_provenance": {
+          "eligible_n": 31,
+          "available_n": 31,
+          "gold_sha256": "647b26a2f0faa86be30ad897840bc1887b54f55c27268d141565b94cb22998e8",
+          "git_head": "617d168b8badd9db775acd1bfd12f4e26d736ddb",
+          "price_table_sha256": "634b32441c3495b4c3ec13efa3af1e9cc99e5c7523eac3a15a5c238c3acaeb5c",
+          "prompt_sha256": {
+            "planner": "df68ef8e5e287d1a0b1f71d938e85ec25b4f03eeec501bc439a3a77aec2482dc",
+            "answer": "e854b64c72116c4c175082e70f39c312ed94b1f37778e7daf3f9a51de1bac350",
+            "judge": "85f3529fca32faec681b3d4b1e6899b8620c383ed2aa54bc423241e2b7f4a10f",
+            "rerank": "e45ed816ccefd679d046cf9bcbd4dad92ba27b20cfc5f45b900063b84784793a",
+            "planner_user": "e59f408b00f5a99e0fb867c635a84d2d77947171620ab035f6067a3cdfb8136f",
+            "answer_user": "c4f4ef05d7d1b87fca94bee65cbf2a38999c181dc2e92bced9cdf8ef92b006e7"
+          }
+        },
+        "judge": "gpt-6.1-terra"
       },
       {
-        "id": "experiments/eval/agent-dev-A1/gpt-6-luna",
+        "id": "experiments/eval/agent-heldout-H-r3/gpt-6-luna",
         "metrics": {
-          "n_cases": 34,
+          "n_cases": 31,
           "behaviour_accuracy": {
-            "rate": 0.706,
+            "rate": 0.839,
             "ci95": [
-              0.559,
-              0.853
+              0.71,
+              0.968
             ],
-            "n": 34
+            "n": 31
           },
           "false_answer_rate": {
-            "rate": 0.036,
+            "rate": 0.034,
             "ci95": [
               0.0,
-              0.107
+              0.103
+            ],
+            "n": 29
+          },
+          "over_abstention_rate": {
+            "rate": 0.065,
+            "ci95": [
+              0.0,
+              0.161
+            ],
+            "n": 31
+          },
+          "key_number_recall": {
+            "rate": 0.756,
+            "ci95": [
+              0.589,
+              0.896
+            ],
+            "n": 18
+          },
+          "calc_correct": {
+            "rate": 0.8,
+            "ci95": [
+              0.4,
+              1.0
+            ],
+            "n": 5
+          },
+          "gold_cited_any": {
+            "rate": 0.643,
+            "ci95": [
+              0.464,
+              0.821
             ],
             "n": 28
           },
-          "over_abstention_rate": {
-            "rate": 0.176,
+          "cases_with_ungrounded_numbers": {
+            "rate": 0.065,
             "ci95": [
-              0.059,
-              0.324
-            ],
-            "n": 34
-          },
-          "key_number_recall": {
-            "rate": 0.754,
-            "ci95": [
-              0.594,
-              0.891
-            ],
-            "n": 23
-          },
-          "calc_correct": {
-            "rate": 0.667,
-            "ci95": [
-              0.333,
-              1.0
-            ],
-            "n": 6
-          },
-          "gold_cited_any": {
-            "rate": 0.645,
-            "ci95": [
-              0.452,
-              0.806
+              0.0,
+              0.161
             ],
             "n": 31
           },
           "answers_with_ungrounded_numbers": {
+            "rate": 0.065,
+            "ci95": [
+              0.0,
+              0.161
+            ],
+            "n": 31
+          },
+          "claims_judged": 39,
+          "claim_supported_rate": {
+            "rate": 0.897,
+            "ci95": [
+              0.778,
+              1.0
+            ],
+            "n": 39,
+            "n_cases": 22
+          },
+          "claim_unsupported_rate": {
             "rate": 0.0,
             "ci95": [
               0.0,
               0.0
             ],
-            "n": 34
+            "n": 39,
+            "n_cases": 22
           },
-          "claims_judged": 35,
-          "claim_supported_rate": 0.886,
-          "claim_unsupported_rate": 0.0,
           "answers_with_any_unsupported_claim": {
             "rate": 0.0,
             "ci95": [
               0.0,
               0.0
             ],
-            "n": 23
+            "n": 22
           },
-          "fact_coverage": 0.657,
+          "fact_coverage": {
+            "rate": 0.667,
+            "ci95": [
+              0.458,
+              0.833
+            ],
+            "n": 24,
+            "n_cases": 22
+          },
           "answers_contradicting_a_reference_fact": {
-            "rate": 0.043,
+            "rate": 0.0,
             "ci95": [
               0.0,
-              0.13
+              0.0
             ],
-            "n": 23
+            "n": 22
           },
-          "latency_p50_s": 13.0,
-          "latency_p95_s": 24.2,
-          "cost_per_case_usd": 0.00142,
-          "judge_cost_total_usd": 0.0335
+          "latency_p50_s": 14.0,
+          "latency_p95_s": 26.6,
+          "cost_per_case_usd": 0.00193,
+          "judge_cost_total_usd": 0.0273
         },
         "provenance": [
-          "experiments/eval/agent-dev-A1/gpt-6-luna.metrics.json",
-          "experiments/eval/agent-dev-A1/gpt-6-luna.cases.jsonl"
+          "experiments/eval/agent-heldout-H-r3/gpt-6-luna.metrics.json"
         ],
         "label": "gpt-6-luna",
         "strata": {
           "adversarial": {
             "n": 5,
-            "behaviour_accuracy": 0.8,
+            "behaviour_accuracy": 0.6,
             "false_answer": 0,
-            "over_abstain": 0,
+            "over_abstain": 1,
             "unsupported_claims": 0,
             "contradicted_facts": 0
           },
           "ambiguity_insufficient_causal": {
-            "n": 4,
-            "behaviour_accuracy": 0.25,
+            "n": 6,
+            "behaviour_accuracy": 0.667,
             "false_answer": 1,
             "over_abstain": 0,
             "unsupported_claims": 0,
             "contradicted_facts": 0
           },
           "cross_source_synthesis": {
-            "n": 7,
-            "behaviour_accuracy": 0.857,
-            "false_answer": 0,
-            "over_abstain": 1,
-            "unsupported_claims": 0,
-            "contradicted_facts": 2
-          },
-          "factual_lookup": {
-            "n": 8,
-            "behaviour_accuracy": 0.625,
-            "false_answer": 0,
-            "over_abstain": 3,
-            "unsupported_claims": 0,
-            "contradicted_facts": 0
-          },
-          "numerical_comparison": {
-            "n": 6,
-            "behaviour_accuracy": 0.667,
-            "false_answer": 0,
-            "over_abstain": 2,
-            "unsupported_claims": 0,
-            "contradicted_facts": 0
-          },
-          "revision_conflict": {
-            "n": 4,
+            "n": 5,
             "behaviour_accuracy": 1.0,
             "false_answer": 0,
             "over_abstain": 0,
             "unsupported_claims": 0,
             "contradicted_facts": 0
+          },
+          "factual_lookup": {
+            "n": 5,
+            "behaviour_accuracy": 1.0,
+            "false_answer": 0,
+            "over_abstain": 0,
+            "unsupported_claims": 0,
+            "contradicted_facts": 0
+          },
+          "numerical_comparison": {
+            "n": 6,
+            "behaviour_accuracy": 1.0,
+            "false_answer": 0,
+            "over_abstain": 0,
+            "unsupported_claims": 0,
+            "contradicted_facts": 0
+          },
+          "revision_conflict": {
+            "n": 4,
+            "behaviour_accuracy": 0.75,
+            "false_answer": 0,
+            "over_abstain": 1,
+            "unsupported_claims": 0,
+            "contradicted_facts": 0
           }
         },
-        "judge": "gpt-6.1-terra",
-        "denominators": {
-          "fact_coverage": 35
-        }
+        "split": "heldout",
+        "scoring_provenance": {
+          "eligible_n": 31,
+          "available_n": 31,
+          "gold_sha256": "647b26a2f0faa86be30ad897840bc1887b54f55c27268d141565b94cb22998e8",
+          "git_head": "617d168b8badd9db775acd1bfd12f4e26d736ddb",
+          "price_table_sha256": "634b32441c3495b4c3ec13efa3af1e9cc99e5c7523eac3a15a5c238c3acaeb5c",
+          "prompt_sha256": {
+            "planner": "df68ef8e5e287d1a0b1f71d938e85ec25b4f03eeec501bc439a3a77aec2482dc",
+            "answer": "e854b64c72116c4c175082e70f39c312ed94b1f37778e7daf3f9a51de1bac350",
+            "judge": "85f3529fca32faec681b3d4b1e6899b8620c383ed2aa54bc423241e2b7f4a10f",
+            "rerank": "e45ed816ccefd679d046cf9bcbd4dad92ba27b20cfc5f45b900063b84784793a",
+            "planner_user": "e59f408b00f5a99e0fb867c635a84d2d77947171620ab035f6067a3cdfb8136f",
+            "answer_user": "c4f4ef05d7d1b87fca94bee65cbf2a38999c181dc2e92bced9cdf8ef92b006e7"
+          }
+        },
+        "judge": "gpt-6.1-terra"
       }
     ],
     "provenance": [
-      "experiments/eval/agent-dev-A1/gpt-4.1-mini.cases.jsonl",
       "experiments/eval/agent-dev-A1/gpt-4.1-mini.metrics.json",
-      "experiments/eval/agent-dev-A1/gpt-5.6-luna.cases.jsonl",
       "experiments/eval/agent-dev-A1/gpt-5.6-luna.metrics.json",
-      "experiments/eval/agent-dev-A1/gpt-6-luna.cases.jsonl",
-      "experiments/eval/agent-dev-A1/gpt-6-luna.metrics.json"
+      "experiments/eval/agent-dev-A1/gpt-6-luna.metrics.json",
+      "experiments/eval/agent-dev-A2/gpt-5.6-luna.metrics.json",
+      "experiments/eval/agent-dev-A2/gpt-6-luna.metrics.json",
+      "experiments/eval/agent-dev-A3/gpt-5.6-luna.metrics.json",
+      "experiments/eval/agent-dev-A3/gpt-6-luna.metrics.json",
+      "experiments/eval/agent-dev-A4/gpt-5.6-luna.metrics.json",
+      "experiments/eval/agent-dev-A4/gpt-6-luna.metrics.json",
+      "experiments/eval/agent-dev-A5/gpt-5.6-luna.metrics.json",
+      "experiments/eval/agent-dev-A5/gpt-6-luna.metrics.json",
+      "experiments/eval/agent-heldout-H-hybrid/gpt-5.6-luna.metrics.json",
+      "experiments/eval/agent-heldout-H-hybrid/gpt-6-luna.metrics.json",
+      "experiments/eval/agent-heldout-H-r3/gpt-5.6-luna.metrics.json",
+      "experiments/eval/agent-heldout-H-r3/gpt-6-luna.metrics.json"
     ],
     "errors": {
       "scope": "agent score records",
@@ -8105,10 +10818,42 @@
       ]
     },
     "limitations": [
-      "Development results are not held-out estimates.",
+      "Held-out evaluation used unreviewed AI-drafted gold, not human-validated labels.",
+      "Paired held-out intervals include zero; retain r3 provisionally, not as a proven winner.",
       "AI judgments are not human review.",
       "Metric definitions differ between evaluation stages."
-    ]
+    ],
+    "snapshot_policy": "Current working-tree metric snapshots; SHA-256 recorded below. The report builder uses committed snapshots only.",
+    "paired_comparison": {
+      "status": "inconclusive",
+      "difference": "r3 minus hybrid behaviour accuracy",
+      "n": 31,
+      "bootstrap_resamples": 10000,
+      "seed": 20261030,
+      "rows": [
+        {
+          "model": "gpt-6-luna",
+          "difference": 0.161,
+          "ci95": [
+            0.0,
+            0.323
+          ]
+        },
+        {
+          "model": "gpt-5.6-luna",
+          "difference": 0.129,
+          "ci95": [
+            0.0,
+            0.29
+          ]
+        }
+      ],
+      "provenance": [
+        "experiments/heldout/paired.txt",
+        "experiments/heldout/FREEZE.md"
+      ]
+    },
+    "scoring_deviation": "Calculation scorer corrected after held-out execution: signed deterministic record/direction required, free prose and unit wording permitted. All development and registered held-out metrics re-scored; no new generation run."
   },
   "quality": {
     "status": "available",
@@ -8191,7 +10936,7 @@
     "Model outputs are not published.",
     "Report passages are not published.",
     "Missing artifacts are marked missing.",
-    "Only committed artifacts supply measurements.",
+    "Development metrics were refreshed from hash-recorded local files; other measurements retain the original committed snapshot.",
     "Series definitions are kept separate.",
     "The population basis of the dataset employment series is unverified."
   ],
@@ -8199,9 +10944,19 @@
     "commit": "1a3f9015d799a4262addc267f417a244ff969b82",
     "artifacts": [
       {
-        "path": "data/export/sources.json",
+        "path": "data/export/kpis.json",
         "status": "available",
-        "sha256": "b65e956e76024d5e90f4727ddf91118d3e1c11b19f39c9954b9af58467d8baa6"
+        "sha256": "c3b53b2b9e44d78da9e9ff0d0b7442b7d017511e3a574a79ff8944506d8e2fe9"
+      },
+      {
+        "path": "data/export/quality.json",
+        "status": "available",
+        "sha256": "58058f684fbbc459c2a75b251d3326473a44d9925718e96aadc37169f8194f6f"
+      },
+      {
+        "path": "data/export/reconciliation.json",
+        "status": "available",
+        "sha256": "8a7d89a2239f7fd1f2966439112c0b91ee3d752fa3572333c3e0753ac83954cc"
       },
       {
         "path": "data/export/series.json",
@@ -8209,9 +10964,215 @@
         "sha256": "3d7becd0896846c7a2a522f0582c3b873c41abbf28f837138c657f7ae21cf591"
       },
       {
-        "path": "data/export/kpis.json",
+        "path": "data/export/sources.json",
         "status": "available",
-        "sha256": "c3b53b2b9e44d78da9e9ff0d0b7442b7d017511e3a574a79ff8944506d8e2fe9"
+        "sha256": "b65e956e76024d5e90f4727ddf91118d3e1c11b19f39c9954b9af58467d8baa6"
+      },
+      {
+        "path": "docs/mcp-demo-transcript.md",
+        "status": "available",
+        "sha256": "5d137faa34c566696fb65299a8b781a77ac08d0a3f81f4a8067c0db666002a50"
+      },
+      {
+        "path": "experiments/runs/agent-dev-A1/gpt-4.1-mini.metrics.json",
+        "status": "available",
+        "sha256": "bc03cabfdcd924ce1bacf5292c3d9fd0afe23833260e62e4d04fc3a3b7ecf6d0",
+        "source": "local development metric snapshot"
+      },
+      {
+        "path": "experiments/runs/agent-dev-A1/gpt-4.1-mini.scores.jsonl",
+        "status": "available",
+        "sha256": "3fb254db148ccc47af872ca0b6f94e4b39292f1389bc5dd90a235d30da349783"
+      },
+      {
+        "path": "experiments/runs/agent-dev-A1/gpt-5.6-luna.metrics.json",
+        "status": "available",
+        "sha256": "047905685fdf73981cd008bc491eb735e328b338e47e3d24e7478672949cd629",
+        "source": "local development metric snapshot"
+      },
+      {
+        "path": "experiments/runs/agent-dev-A1/gpt-5.6-luna.scores.jsonl",
+        "status": "available",
+        "sha256": "b4abae3bff0a2d790573901353cb9a3a1817704d6f2c7708c0eb7eb6d1c20f25"
+      },
+      {
+        "path": "experiments/runs/agent-dev-A1/gpt-6-luna.metrics.json",
+        "status": "available",
+        "sha256": "feaf9b49ad0f850b73f916d9ae97df94a4f407f1366dd29d6ef3c0d1520c5f14",
+        "source": "local development metric snapshot"
+      },
+      {
+        "path": "experiments/runs/agent-dev-A1/gpt-6-luna.scores.jsonl",
+        "status": "available",
+        "sha256": "7a1b59249d009286ec662b15b8182db2182d400f358f000a908fe107347839e8"
+      },
+      {
+        "path": "experiments/runs/agent-dev-A2/gpt-5.6-luna.metrics.json",
+        "status": "available",
+        "sha256": "7f71a5dcffb773b16f7969ef4beb582a2b0cbb96f71c763b1cf567dd8ce0b3a7",
+        "source": "local development metric snapshot"
+      },
+      {
+        "path": "experiments/runs/agent-dev-A2/gpt-6-luna.metrics.json",
+        "status": "available",
+        "sha256": "0b1e3838a1f77e934f96eddc5514e199236c4474450b7c01b4d6b7a51c6dc927",
+        "source": "local development metric snapshot"
+      },
+      {
+        "path": "experiments/runs/agent-dev-A3/gpt-5.6-luna.metrics.json",
+        "status": "available",
+        "sha256": "0da4dab5c876fa7cd2411acf0b0d70e0c8115b1223b39af16a0458f649ba08a9",
+        "source": "local development metric snapshot"
+      },
+      {
+        "path": "experiments/runs/agent-dev-A3/gpt-6-luna.metrics.json",
+        "status": "available",
+        "sha256": "f5fe6fcdffee6d008522712b203d7861440763255524efce5079ecd6bd5a2e97",
+        "source": "local development metric snapshot"
+      },
+      {
+        "path": "experiments/runs/agent-dev-A4/gpt-5.6-luna.metrics.json",
+        "status": "available",
+        "sha256": "a8180a3efbca0c0b9d4221f5e6e4783e1879b5d70daa6ce42031e5180ed849d9",
+        "source": "local development metric snapshot"
+      },
+      {
+        "path": "experiments/runs/agent-dev-A4/gpt-6-luna.metrics.json",
+        "status": "available",
+        "sha256": "7fc6633b0e0f75ccc040a182a320ab1d7ab204023d2e793c531ae5ac50031fe8",
+        "source": "local development metric snapshot"
+      },
+      {
+        "path": "experiments/runs/agent-dev-A5/gpt-5.6-luna.metrics.json",
+        "status": "available",
+        "sha256": "398ae6d1d9c96b05f2c8d46b83a1e7eb411a26d3e801119dfe7ad74ce5a6e871",
+        "source": "local development metric snapshot"
+      },
+      {
+        "path": "experiments/runs/agent-dev-A5/gpt-6-luna.metrics.json",
+        "status": "available",
+        "sha256": "33ef76d45550075f5772698729868ece9d0b18d4f6fd1eb2f57a4993dd91347b",
+        "source": "local development metric snapshot"
+      },
+      {
+        "path": "experiments/runs/answer-dev-G0-SUMMARY.md",
+        "status": "available",
+        "sha256": "338871ae345a29cd0ab66e8c3ae1ad51171bb8a125ae9682458776d12ee3a359"
+      },
+      {
+        "path": "experiments/runs/answer-dev-G0/gpt-4.1-mini.metrics.json",
+        "status": "available",
+        "sha256": "9d0377a1d21ffd22d438164f8435a8588cbba705e81228b9e097a66b15b1d784"
+      },
+      {
+        "path": "experiments/runs/answer-dev-G0/gpt-5.4-mini.metrics.json",
+        "status": "available",
+        "sha256": "131332bef57d12b76a8909a9f3a3a4e315fa7f4a4e055d7c73369ec49a62804d"
+      },
+      {
+        "path": "experiments/runs/answer-dev-G0/gpt-5.6-luna.metrics.json",
+        "status": "available",
+        "sha256": "805aca126a63258d56bfb176d85f2e90ad62ceff85b28ee7b0411e3a992c175f"
+      },
+      {
+        "path": "experiments/runs/answer-dev-G0/gpt-6-luna.metrics.json",
+        "status": "available",
+        "sha256": "0358c68b54b55c4bcbd08696f759bf41d84bbfc46815fe90ac94ee5c7e8000d8"
+      },
+      {
+        "path": "experiments/runs/answer-dev-G0/gpt-6-sol.metrics.json",
+        "status": "available",
+        "sha256": "8d5f8674332a54df8fa5aae0c6621351d7e8538ac153104fea1ddbda9d5012f1"
+      },
+      {
+        "path": "experiments/runs/answer-dev-G0/gpt-6.1-terra.metrics.json",
+        "status": "available",
+        "sha256": "8afebb7488dbab58712c1f0cab892f41376b690a1af8975bd5d6ee4ce1b38ada"
+      },
+      {
+        "path": "experiments/runs/answer-dev-G1-SUMMARY.md",
+        "status": "available",
+        "sha256": "8fba8e5bd2aec558585aa43fe040f6d5c8f495731f1b7b02a9ee2946dca2955f"
+      },
+      {
+        "path": "experiments/runs/answer-dev-G1/gpt-4.1-mini.metrics.json",
+        "status": "available",
+        "sha256": "6175afe4d77bf06cfe1e7ccbaddb9503925e4dde8f71db88ecc6b3d4c5af0fd1"
+      },
+      {
+        "path": "experiments/runs/answer-dev-G1/gpt-5.4-mini.metrics.json",
+        "status": "available",
+        "sha256": "712df2f4f53cce7c6a33e9b4c74234ebdecb384dcfd7850dc2d9b8fc10437f31"
+      },
+      {
+        "path": "experiments/runs/answer-dev-G1/gpt-5.6-luna.metrics.json",
+        "status": "available",
+        "sha256": "4be4eb524682fd81b93a43b6bd840d50d2d77c24189ea11fc3d686da97d50393"
+      },
+      {
+        "path": "experiments/runs/answer-dev-G1/gpt-6-luna.metrics.json",
+        "status": "available",
+        "sha256": "039e1ebf8d04b1fdb56186c4d42f78ff7f93f5e29f981be818b94b9965175020"
+      },
+      {
+        "path": "experiments/runs/answer-dev-G1/gpt-6-sol.metrics.json",
+        "status": "available",
+        "sha256": "df164dda906bb494d0861797a1df6fb8cc3b0a38a1db8e2fc99045016c6ff5f8"
+      },
+      {
+        "path": "experiments/runs/answer-dev-G1/gpt-6.1-terra.metrics.json",
+        "status": "available",
+        "sha256": "1447949df4d820b73f650710e84c8fa0c2f7d0f0e609330313787336bba41e23"
+      },
+      {
+        "path": "experiments/runs/answer-dev-G3-SUMMARY.md",
+        "status": "available",
+        "sha256": "75d15b952301d273da161dd87f325447af3d9c46bbe72896e4f9fb6c66d6758f"
+      },
+      {
+        "path": "experiments/runs/answer-dev-G3/gpt-4.1-mini k=3.metrics.json",
+        "status": "available",
+        "sha256": "ddf1afca50df7a23d82a8a68348513ff56a5debedfcbfa2b5464c6d1b35a7e87"
+      },
+      {
+        "path": "experiments/runs/answer-dev-G3/gpt-4.1-mini k=5.metrics.json",
+        "status": "available",
+        "sha256": "9f0739210e70495b249e610a9a842f72370610a94a8320f6ab309a38f2011cef"
+      },
+      {
+        "path": "experiments/runs/answer-dev-G3/gpt-4.1-mini k=8.metrics.json",
+        "status": "available",
+        "sha256": "c17b1ee43c650c7e7c2b03717b18cd90909726cd419efe58d495ff32a83a1c42"
+      },
+      {
+        "path": "experiments/runs/answer-dev-G3/gpt-5.4-mini k=3.metrics.json",
+        "status": "available",
+        "sha256": "ab9e62e75b1e966bd2b618a8e3d640f3ce4eca6eea88d8cd609fbe03664a90c8"
+      },
+      {
+        "path": "experiments/runs/answer-dev-G3/gpt-5.4-mini k=5.metrics.json",
+        "status": "available",
+        "sha256": "0e280c7c8fe9aff352b5c84f12362581fc427ce40f6a9f238f61a1847cb1c6d6"
+      },
+      {
+        "path": "experiments/runs/answer-dev-G3/gpt-5.4-mini k=8.metrics.json",
+        "status": "available",
+        "sha256": "e6513840557cf1d3ab25157c6257e5c3618e74c1650e5eb401f5f222b72e707a"
+      },
+      {
+        "path": "experiments/runs/answer-dev-G4-SUMMARY.md",
+        "status": "available",
+        "sha256": "6f93b859cb52c2c657492189b884be8a54edf2fa74e8f63619ef53dc74d8b091"
+      },
+      {
+        "path": "experiments/runs/answer-dev-G4/gpt-5.6-luna k=8.metrics.json",
+        "status": "available",
+        "sha256": "edbff0f6de228ff9a0e9f830fa075968143b321d21a3a4d9d1c764d9a211869b"
+      },
+      {
+        "path": "experiments/runs/answer-dev-G4/gpt-6-luna k=8.metrics.json",
+        "status": "available",
+        "sha256": "d1d262a9eb446d3a693bb40e9050a247c14025266adf93f1845e3fcf687a99f8"
       },
       {
         "path": "experiments/runs/dev-E1-chunking/blocks.metrics.json",
@@ -8364,174 +11325,8 @@
         "sha256": "5b83b6b4a94677c7e85d96df62d3a61cda4a0af225ddc0671a292f3e5259c9c6"
       },
       {
-        "path": "experiments/runs/answer-dev-G0/gpt-4.1-mini.metrics.json",
-        "status": "available",
-        "sha256": "9d0377a1d21ffd22d438164f8435a8588cbba705e81228b9e097a66b15b1d784"
-      },
-      {
-        "path": "experiments/runs/answer-dev-G0/gpt-5.4-mini.metrics.json",
-        "status": "available",
-        "sha256": "131332bef57d12b76a8909a9f3a3a4e315fa7f4a4e055d7c73369ec49a62804d"
-      },
-      {
-        "path": "experiments/runs/answer-dev-G0/gpt-5.6-luna.metrics.json",
-        "status": "available",
-        "sha256": "805aca126a63258d56bfb176d85f2e90ad62ceff85b28ee7b0411e3a992c175f"
-      },
-      {
-        "path": "experiments/runs/answer-dev-G0/gpt-6-luna.metrics.json",
-        "status": "available",
-        "sha256": "0358c68b54b55c4bcbd08696f759bf41d84bbfc46815fe90ac94ee5c7e8000d8"
-      },
-      {
-        "path": "experiments/runs/answer-dev-G0/gpt-6-sol.metrics.json",
-        "status": "available",
-        "sha256": "8d5f8674332a54df8fa5aae0c6621351d7e8538ac153104fea1ddbda9d5012f1"
-      },
-      {
-        "path": "experiments/runs/answer-dev-G0/gpt-6.1-terra.metrics.json",
-        "status": "available",
-        "sha256": "8afebb7488dbab58712c1f0cab892f41376b690a1af8975bd5d6ee4ce1b38ada"
-      },
-      {
-        "path": "experiments/runs/answer-dev-G1/gpt-4.1-mini.metrics.json",
-        "status": "available",
-        "sha256": "6175afe4d77bf06cfe1e7ccbaddb9503925e4dde8f71db88ecc6b3d4c5af0fd1"
-      },
-      {
-        "path": "experiments/runs/answer-dev-G1/gpt-5.4-mini.metrics.json",
-        "status": "available",
-        "sha256": "712df2f4f53cce7c6a33e9b4c74234ebdecb384dcfd7850dc2d9b8fc10437f31"
-      },
-      {
-        "path": "experiments/runs/answer-dev-G1/gpt-5.6-luna.metrics.json",
-        "status": "available",
-        "sha256": "4be4eb524682fd81b93a43b6bd840d50d2d77c24189ea11fc3d686da97d50393"
-      },
-      {
-        "path": "experiments/runs/answer-dev-G1/gpt-6-luna.metrics.json",
-        "status": "available",
-        "sha256": "039e1ebf8d04b1fdb56186c4d42f78ff7f93f5e29f981be818b94b9965175020"
-      },
-      {
-        "path": "experiments/runs/answer-dev-G1/gpt-6-sol.metrics.json",
-        "status": "available",
-        "sha256": "df164dda906bb494d0861797a1df6fb8cc3b0a38a1db8e2fc99045016c6ff5f8"
-      },
-      {
-        "path": "experiments/runs/answer-dev-G1/gpt-6.1-terra.metrics.json",
-        "status": "available",
-        "sha256": "1447949df4d820b73f650710e84c8fa0c2f7d0f0e609330313787336bba41e23"
-      },
-      {
-        "path": "experiments/runs/answer-dev-G3/gpt-4.1-mini k=3.metrics.json",
-        "status": "available",
-        "sha256": "ddf1afca50df7a23d82a8a68348513ff56a5debedfcbfa2b5464c6d1b35a7e87"
-      },
-      {
-        "path": "experiments/runs/answer-dev-G3/gpt-4.1-mini k=5.metrics.json",
-        "status": "available",
-        "sha256": "9f0739210e70495b249e610a9a842f72370610a94a8320f6ab309a38f2011cef"
-      },
-      {
-        "path": "experiments/runs/answer-dev-G3/gpt-4.1-mini k=8.metrics.json",
-        "status": "available",
-        "sha256": "c17b1ee43c650c7e7c2b03717b18cd90909726cd419efe58d495ff32a83a1c42"
-      },
-      {
-        "path": "experiments/runs/answer-dev-G3/gpt-5.4-mini k=3.metrics.json",
-        "status": "available",
-        "sha256": "ab9e62e75b1e966bd2b618a8e3d640f3ce4eca6eea88d8cd609fbe03664a90c8"
-      },
-      {
-        "path": "experiments/runs/answer-dev-G3/gpt-5.4-mini k=5.metrics.json",
-        "status": "available",
-        "sha256": "0e280c7c8fe9aff352b5c84f12362581fc427ce40f6a9f238f61a1847cb1c6d6"
-      },
-      {
-        "path": "experiments/runs/answer-dev-G3/gpt-5.4-mini k=8.metrics.json",
-        "status": "available",
-        "sha256": "e6513840557cf1d3ab25157c6257e5c3618e74c1650e5eb401f5f222b72e707a"
-      },
-      {
-        "path": "experiments/runs/answer-dev-G4/gpt-5.6-luna k=8.metrics.json",
-        "status": "available",
-        "sha256": "edbff0f6de228ff9a0e9f830fa075968143b321d21a3a4d9d1c764d9a211869b"
-      },
-      {
-        "path": "experiments/runs/answer-dev-G4/gpt-6-luna k=8.metrics.json",
-        "status": "available",
-        "sha256": "d1d262a9eb446d3a693bb40e9050a247c14025266adf93f1845e3fcf687a99f8"
-      },
-      {
-        "path": "experiments/runs/answer-dev-G0-SUMMARY.md",
-        "status": "available",
-        "sha256": "338871ae345a29cd0ab66e8c3ae1ad51171bb8a125ae9682458776d12ee3a359"
-      },
-      {
-        "path": "experiments/runs/answer-dev-G1-SUMMARY.md",
-        "status": "available",
-        "sha256": "8fba8e5bd2aec558585aa43fe040f6d5c8f495731f1b7b02a9ee2946dca2955f"
-      },
-      {
-        "path": "experiments/runs/answer-dev-G3-SUMMARY.md",
-        "status": "available",
-        "sha256": "75d15b952301d273da161dd87f325447af3d9c46bbe72896e4f9fb6c66d6758f"
-      },
-      {
-        "path": "experiments/runs/answer-dev-G4-SUMMARY.md",
-        "status": "available",
-        "sha256": "6f93b859cb52c2c657492189b884be8a54edf2fa74e8f63619ef53dc74d8b091"
-      },
-      {
-        "path": "data/export/reconciliation.json",
-        "status": "available",
-        "sha256": "8a7d89a2239f7fd1f2966439112c0b91ee3d752fa3572333c3e0753ac83954cc"
-      },
-      {
-        "path": "experiments/runs/agent-dev-A1/gpt-4.1-mini.metrics.json",
-        "status": "available",
-        "sha256": "3d3a2d6e4148f700f63c3c74dc7f8629520ad23d5fa2e9838345880c0152e61e"
-      },
-      {
-        "path": "experiments/runs/agent-dev-A1/gpt-5.6-luna.metrics.json",
-        "status": "available",
-        "sha256": "3a5e38b1de2df435fa6992d246d318c60391b0ae730a4d72128c531316b4b52e"
-      },
-      {
-        "path": "experiments/runs/agent-dev-A1/gpt-6-luna.metrics.json",
-        "status": "available",
-        "sha256": "6f4c11a194fb3e8030f1452d8fae4897b83035e0e744fd76fc6aa79db3f95dec"
-      },
-      {
-        "path": "experiments/eval/agent-dev-A1/gpt-4.1-mini.metrics.json",
-        "status": "available",
-        "sha256": "c8e9bf856398f148cfb522077b528babc6cea49f52d1dbf0680407bace35c733"
-      },
-      {
-        "path": "experiments/eval/agent-dev-A1/gpt-4.1-mini.cases.jsonl",
-        "status": "available",
-        "sha256": "237e5a16ac3d1151fc63c398d1b30abfcc374791ac36e9a43148a498dfe3d6e1"
-      },
-      {
-        "path": "experiments/eval/agent-dev-A1/gpt-5.6-luna.metrics.json",
-        "status": "available",
-        "sha256": "f2c08208e947ccf9d3bfd89ae2160712a87706a041917e34cc152ee957d0b975"
-      },
-      {
-        "path": "experiments/eval/agent-dev-A1/gpt-5.6-luna.cases.jsonl",
-        "status": "available",
-        "sha256": "4199e5cdf96bc4809f46952aabe856bd7dc50ccb9b58a58ed02822a13aec0708"
-      },
-      {
-        "path": "experiments/eval/agent-dev-A1/gpt-6-luna.metrics.json",
-        "status": "available",
-        "sha256": "3088f98f0ab3ebab188e98e70e55865b73480aab4df1ac5c86174783488261ca"
-      },
-      {
-        "path": "experiments/eval/agent-dev-A1/gpt-6-luna.cases.jsonl",
-        "status": "available",
-        "sha256": "daf9656da76aa03926755d42f60a9808136334db6031283abbb31c29c332165f"
+        "path": "experiments/runs/web-live-smoke.trace.json",
+        "status": "missing"
       },
       {
         "path": "experiments/threats/runs/gpt-4.1-mini+naive.metrics.json",
@@ -8559,35 +11354,124 @@
         "sha256": "a536348eaf1d7a6ea42621b35f8a3f5b91ab138ce3c3459302bc8ae2283cb1ca"
       },
       {
-        "path": "experiments/runs/agent-dev-A1/gpt-4.1-mini.scores.jsonl",
+        "path": "experiments/eval/agent-dev-A1/gpt-4.1-mini.metrics.json",
         "status": "available",
-        "sha256": "3fb254db148ccc47af872ca0b6f94e4b39292f1389bc5dd90a235d30da349783"
+        "snapshot": "working-tree",
+        "sha256": "5fa18c4eee35a5819537576c151b04ea20a84d4a81a88da62ebc6fd337a49851"
       },
       {
-        "path": "experiments/runs/agent-dev-A1/gpt-5.6-luna.scores.jsonl",
+        "path": "experiments/eval/agent-dev-A1/gpt-5.6-luna.metrics.json",
         "status": "available",
-        "sha256": "b4abae3bff0a2d790573901353cb9a3a1817704d6f2c7708c0eb7eb6d1c20f25"
+        "snapshot": "working-tree",
+        "sha256": "660c6ee0a963d84a8e41514310eaa406f4d89841d44829c3cf97a2fe8190511e"
       },
       {
-        "path": "experiments/runs/agent-dev-A1/gpt-6-luna.scores.jsonl",
+        "path": "experiments/eval/agent-dev-A1/gpt-6-luna.metrics.json",
         "status": "available",
-        "sha256": "7a1b59249d009286ec662b15b8182db2182d400f358f000a908fe107347839e8"
+        "snapshot": "working-tree",
+        "sha256": "d80aad4fe7e7fd0a41612c38a300718d0a71a613c276aa50fc7f742494f50e8f"
       },
       {
-        "path": "data/export/quality.json",
+        "path": "experiments/eval/agent-dev-A2/gpt-5.6-luna.metrics.json",
         "status": "available",
-        "sha256": "58058f684fbbc459c2a75b251d3326473a44d9925718e96aadc37169f8194f6f"
+        "snapshot": "working-tree",
+        "sha256": "afb25e6784403bac4fe152a6cc46288d7566d9f79b32dc6a9f85eb6c53b5f4c6"
       },
       {
-        "path": "docs/mcp-demo-transcript.md",
+        "path": "experiments/eval/agent-dev-A2/gpt-6-luna.metrics.json",
         "status": "available",
-        "sha256": "5d137faa34c566696fb65299a8b781a77ac08d0a3f81f4a8067c0db666002a50"
+        "snapshot": "working-tree",
+        "sha256": "2d515ea32457e753a5e695e372a6f64b7b1249bf990f2611d2673af33019b7ba"
       },
       {
-        "path": "experiments/runs/web-live-smoke.trace.json",
-        "status": "missing"
+        "path": "experiments/eval/agent-dev-A3/gpt-5.6-luna.metrics.json",
+        "status": "available",
+        "snapshot": "working-tree",
+        "sha256": "0bf1aff7efbf652af0ef020939c35a0b703bb47f0c022eb7d4c97903e05a17d1"
+      },
+      {
+        "path": "experiments/eval/agent-dev-A3/gpt-6-luna.metrics.json",
+        "status": "available",
+        "snapshot": "working-tree",
+        "sha256": "d334f90d7a312237dda162189557426fd52363691f55d56cca810bb31875574a"
+      },
+      {
+        "path": "experiments/eval/agent-dev-A4/gpt-5.6-luna.metrics.json",
+        "status": "available",
+        "snapshot": "working-tree",
+        "sha256": "04b4f008f77f897780b5b8fb8c15856e5f06ee4026dfae0c1c1c19f82d4a016b"
+      },
+      {
+        "path": "experiments/eval/agent-dev-A4/gpt-6-luna.metrics.json",
+        "status": "available",
+        "snapshot": "working-tree",
+        "sha256": "d52aa77abcf79aab0bc71c75ec86e8779d0c393cc0757f9fca5dc36bb077c483"
+      },
+      {
+        "path": "experiments/eval/agent-dev-A5/gpt-5.6-luna.metrics.json",
+        "status": "available",
+        "snapshot": "working-tree",
+        "sha256": "31d4a67c1282cde2e101d5198107b36db0ee2baad7fdedc034df7747124d5e2e"
+      },
+      {
+        "path": "experiments/eval/agent-dev-A5/gpt-6-luna.metrics.json",
+        "status": "available",
+        "snapshot": "working-tree",
+        "sha256": "d1afce68d0d9bdb0a628bd0b715a5d4d2a103fd123a5677765aab9ed4660c205"
+      },
+      {
+        "path": "experiments/eval/agent-heldout-H-hybrid/gpt-5.6-luna.metrics.json",
+        "status": "available",
+        "snapshot": "working-tree",
+        "sha256": "7744280659f1e5afe96319368aa0aefa6290ad43a3cc5cd3c7a06b912704e1df"
+      },
+      {
+        "path": "experiments/eval/agent-heldout-H-hybrid/gpt-6-luna.metrics.json",
+        "status": "available",
+        "snapshot": "working-tree",
+        "sha256": "c85ba8ee952583a2e679723bd07dfc9f1ced68271615606398701381ff5e84c4"
+      },
+      {
+        "path": "experiments/eval/agent-heldout-H-r3/gpt-5.6-luna.metrics.json",
+        "status": "available",
+        "snapshot": "working-tree",
+        "sha256": "0a41620861fb2afa2ecb179cb8c3ccdb8ca29b0c99e7cf9d37db16ec8b434dcc"
+      },
+      {
+        "path": "experiments/eval/agent-heldout-H-r3/gpt-6-luna.metrics.json",
+        "status": "available",
+        "snapshot": "working-tree",
+        "sha256": "0fa6ee54b14c92bd71c5f9b34b62723df00608ca242517322dcc974e6c0b4b69"
       }
     ],
-    "policy": "Committed artifacts only; numeric fields only."
+    "policy": "Committed artifacts except evaluation metrics explicitly refreshed from SHA-256-identified working-tree snapshots; no model outputs or report passages.",
+    "development_refresh": {
+      "source": "Local development metric files; no build or model execution.",
+      "paths": [
+        "experiments/eval/agent-dev-A1/gpt-4.1-mini.metrics.json",
+        "experiments/eval/agent-dev-A1/gpt-5.6-luna.metrics.json",
+        "experiments/eval/agent-dev-A1/gpt-6-luna.metrics.json",
+        "experiments/eval/agent-dev-A2/gpt-5.6-luna.metrics.json",
+        "experiments/eval/agent-dev-A2/gpt-6-luna.metrics.json",
+        "experiments/eval/agent-dev-A3/gpt-5.6-luna.metrics.json",
+        "experiments/eval/agent-dev-A3/gpt-6-luna.metrics.json",
+        "experiments/eval/agent-dev-A4/gpt-5.6-luna.metrics.json",
+        "experiments/eval/agent-dev-A4/gpt-6-luna.metrics.json",
+        "experiments/eval/agent-dev-A5/gpt-5.6-luna.metrics.json",
+        "experiments/eval/agent-dev-A5/gpt-6-luna.metrics.json",
+        "experiments/runs/agent-dev-A1/gpt-4.1-mini.metrics.json",
+        "experiments/runs/agent-dev-A1/gpt-5.6-luna.metrics.json",
+        "experiments/runs/agent-dev-A1/gpt-6-luna.metrics.json",
+        "experiments/runs/agent-dev-A2/gpt-5.6-luna.metrics.json",
+        "experiments/runs/agent-dev-A2/gpt-6-luna.metrics.json",
+        "experiments/runs/agent-dev-A3/gpt-5.6-luna.metrics.json",
+        "experiments/runs/agent-dev-A3/gpt-6-luna.metrics.json",
+        "experiments/runs/agent-dev-A4/gpt-5.6-luna.metrics.json",
+        "experiments/runs/agent-dev-A4/gpt-6-luna.metrics.json",
+        "experiments/runs/agent-dev-A5/gpt-5.6-luna.metrics.json",
+        "experiments/runs/agent-dev-A5/gpt-6-luna.metrics.json"
+      ],
+      "held_out_results": "Excluded; not read."
+    }
   }
 }

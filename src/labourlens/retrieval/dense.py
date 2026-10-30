@@ -8,6 +8,10 @@ OPENAI_API_KEY environment variable only and is never written to disk or logs.
 
 from __future__ import annotations
 
+import fcntl
+import tempfile
+from contextlib import contextmanager
+from contextvars import ContextVar
 import hashlib
 import json
 import os
@@ -25,6 +29,25 @@ API = "https://api.openai.com/v1/embeddings"
 BATCH = 128
 MAX_RETRIES = 5
 TIMEOUT_S = 60.0
+
+_deadline: ContextVar[float | None] = ContextVar("embedding_deadline", default=None)
+
+
+@contextmanager
+def embedding_deadline(seconds: float):
+    token = _deadline.set(time.monotonic() + seconds)
+    try:
+        yield
+    finally:
+        _deadline.reset(token)
+
+
+def _remaining() -> float:
+    deadline = _deadline.get()
+    remaining = TIMEOUT_S if deadline is None else min(TIMEOUT_S, deadline - time.monotonic())
+    if remaining <= 0:
+        raise EmbeddingError("embedding deadline exceeded")
+    return remaining
 
 
 class EmbeddingError(RuntimeError):
@@ -51,32 +74,55 @@ def _h(model: str, text: str) -> str:
 
 
 class VectorCache:
-    """Append-only cache: one .npy shard per write plus a key list. Small corpus, so simple beats clever."""
+    """Locked, atomically published vector/key snapshots; legacy pairs are read-only."""
 
     def __init__(self, model: str) -> None:
         self.dir = paths.INDEX / "embeddings" / model
         self.dir.mkdir(parents=True, exist_ok=True)
         self.keys: dict[str, int] = {}
         self.vecs: list[np.ndarray] = []
-        kf, vf = self.dir / "keys.json", self.dir / "vectors.npy"
-        if kf.exists() and vf.exists():
-            ks = json.loads(kf.read_text())
-            m = np.load(vf)
-            if len(ks) == len(m):
-                self.keys = {k: i for i, k in enumerate(ks)}
-                self.vecs = list(m)
+        self._load()
+
+    def _load(self) -> None:
+        snapshot = self.dir / "cache.npz"
+        if snapshot.exists():
+            with np.load(snapshot, allow_pickle=False) as data:
+                ks, m = data["keys"].tolist(), data["vectors"]
+        else:
+            kf, vf = self.dir / "keys.json", self.dir / "vectors.npy"
+            if not (kf.exists() and vf.exists()):
+                return
+            ks, m = json.loads(kf.read_text()), np.load(vf, allow_pickle=False)
+        if len(ks) != len(m):
+            raise EmbeddingError("embedding cache keys/vectors disagree")
+        self.keys = {k: i for i, k in enumerate(ks)}
+        self.vecs = list(m)
 
     def get(self, key: str) -> np.ndarray | None:
         i = self.keys.get(key)
         return None if i is None else self.vecs[i]
 
     def put_many(self, items: list[tuple[str, np.ndarray]]) -> None:
-        for k, v in items:
-            if k not in self.keys:
-                self.keys[k] = len(self.vecs)
-                self.vecs.append(v)
-        np.save(self.dir / "vectors.npy", np.vstack(self.vecs).astype(np.float32))
-        (self.dir / "keys.json").write_text(json.dumps(list(self.keys)))
+        if not items:
+            return
+        with (self.dir / ".write.lock").open("a") as lock:
+            fcntl.flock(lock, fcntl.LOCK_EX)
+            self._load()  # merge updates from writers instantiated before us
+            for k, v in items:
+                if k not in self.keys:
+                    self.keys[k] = len(self.vecs)
+                    self.vecs.append(v)
+            temporary = None
+            try:
+                with tempfile.NamedTemporaryFile(dir=self.dir, suffix=".npz", delete=False) as f:
+                    temporary = Path(f.name)
+                    np.savez(f, keys=np.asarray(list(self.keys)), vectors=np.vstack(self.vecs).astype(np.float32))
+                    f.flush()
+                    os.fsync(f.fileno())
+                os.replace(temporary, self.dir / "cache.npz")
+            finally:
+                if temporary is not None:
+                    temporary.unlink(missing_ok=True)
 
     def log_usage(self, n_inputs: int, tokens: int, seconds: float, purpose: str) -> None:
         with (self.dir / "usage.jsonl").open("a") as f:
@@ -87,7 +133,10 @@ class VectorCache:
 def _call(client: httpx.Client, model: str, inputs: list[str], key: str) -> tuple[list[list[float]], int]:
     for attempt in range(MAX_RETRIES):
         try:
-            r = client.post(API, json={"model": model, "input": inputs}, headers={"Authorization": f"Bearer {key}"})
+            remaining = _remaining()
+            # Split the remaining wall budget between connect/write/read/pool phases.
+            r = client.post(API, json={"model": model, "input": inputs}, headers={"Authorization": f"Bearer {key}"},
+                            timeout=remaining / 4)
         except httpx.TransportError:
             r = None
         if r is not None and r.status_code == 200:
@@ -96,7 +145,11 @@ def _call(client: httpx.Client, model: str, inputs: list[str], key: str) -> tupl
             return [x["embedding"] for x in data], int(d["usage"]["total_tokens"])
         if r is not None and r.status_code not in (429, 500, 502, 503, 504):
             raise EmbeddingError(f"embeddings API returned {r.status_code}: {r.text[:200]}")
-        time.sleep(2 ** attempt)
+        if attempt + 1 < MAX_RETRIES:
+            delay = 2 ** attempt
+            if delay >= _remaining():
+                raise EmbeddingError("embedding deadline exhausted before retry")
+            time.sleep(delay)
     raise EmbeddingError(f"embeddings API failed after {MAX_RETRIES} attempts")
 
 

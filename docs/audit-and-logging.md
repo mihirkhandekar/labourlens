@@ -9,20 +9,20 @@ Purpose: debugging a single bad answer, finding systematic failures, improving t
 | `runs-YYYY-MM-DD.jsonl` | agent run | run_id, timestamp, channel (web, cli), salted session and client hashes, question (redacted, clipped) and its hash, config (models and prompt versions), code version (git commit) and data manifest hash, outcome and answer status, tool calls (tool, arguments, outcome, error kind, seconds), operational failures and correctable errors, guard events (input flagged, output blocked), data-quality notes, evidence ids and cited ids, claim count, caveats, answer summary, token usage, cost, latency |
 | `feedback.jsonl` | user feedback | run_id, thumbs up or down, tags (wrong_number, wrong_source, missing_info, other), comment (clipped, redacted), session hash |
 | `events-YYYY-MM-DD.jsonl` | rejected or administrative request | kind (rate limited, budget exhausted, unauthenticated, kill switch, oversized, bad input), hashed identifiers, route, status, generic reason |
-| `data/runs/agent/<run_id>.json` | full trace of a run | every node event with details, redacted; the audit record points to it by run_id |
+| `data/runs/agent/<run_id>.json` | node activity trace | redacted events and answer (including its citation quotes), evidence ids and SHA-256 hashes; no full evidence text by default |
 
-Never recorded: API keys or secrets (values and key-shaped strings are redacted before every write), raw IP addresses or session ids (HMAC pseudonyms only), or whole MOM passages (evidence is stored as ids). Questions, feedback, summaries and caveats can still contain personal data or short quotations: redaction is not anonymization.
+Never intentionally recorded: API keys or secrets (known values and key-shaped strings are redacted), raw IP addresses or session ids (HMAC pseudonyms only). By default full evidence text is omitted from saved traces, including web runs; the in-memory result still carries it for answer validation and the rights-limited web projection. `LABOURLENS_DEBUG_EVIDENCE=true` explicitly opts into full evidence text in private local traces; never enable it on a public deployment or commit those files. Questions, feedback, answers and caveats can still contain personal data or source quotations: redaction is not anonymization or a guarantee against model reproduction.
 
 `LABOURLENS_AUDIT_SALT` supplies the HMAC key when set. When unset, the application generates 32 random bytes, atomically persists them in `data/audit/salt` with mode `0600`, and reuses them after restart; there is no public development fallback. Protect and back up that file with the audit directory. Keep the key stable to preserve pseudonym joins; changing or losing it breaks links between old and new identifiers. HMAC pseudonyms are not anonymous if the key or underlying identifiers are disclosed. Regression coverage: `tests/test_audit_security_fixes.py` (not run for this documentation update).
 
-Web runs use `save_trace=True`: `data/runs/agent/<run_id>.json` contains a redacted trace for `audit-show`, not hidden chain-of-thought. Treat traces as private operational records and apply retention and access controls to `data/runs/agent/` as well as `data/audit/`. A run failing before a complete result may not produce a full trace.
+Web runs use `save_trace=True` with the default evidence-minimizing policy above, not hidden chain-of-thought. Keep `data/runs/agent/` private. `audit-prune --days N` deletes both old daily run logs and per-run trace JSON files by modification time, including debug traces. It does not delete feedback, security-event logs or the installation salt. A run failing before a complete result may not produce a trace.
 
 ## Using it
 
 ```
 uv run labourlens audit-report          # outcomes, failure kinds, guard events, latency, cost, negative feedback to review
 uv run labourlens audit-show <run_id>   # timeline of one run from its saved trace
-uv run labourlens audit-prune --days 30 # delete old run logs
+uv run labourlens audit-prune --days 30 # delete old run logs AND agent trace files
 ```
 Feedback joins to runs on `run_id`, so a thumbs-down opens the exact trace, config and code version that produced the answer. Improvement loop (D-011, a proposal rather than RLHF): review negative feedback weekly, add reproducible failures as new gold cases (marked draft until a human reviews them), re-run the evaluation, then change prompts or retrieval.
 

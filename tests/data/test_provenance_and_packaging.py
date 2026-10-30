@@ -9,7 +9,7 @@ from labourlens import paths
 from labourlens.data import build, raw_store
 
 manifest = raw_store.load_manifest()
-pytestmark = pytest.mark.skipif(not manifest, reason="run `labourlens fetch` first")
+pytestmark = [pytest.mark.corpus, pytest.mark.skipif(not manifest, reason="run `labourlens fetch` first")]
 
 
 def test_every_ok_entry_has_matching_file_hash():

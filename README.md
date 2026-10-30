@@ -2,15 +2,15 @@
 
 LabourLens is an evidence-grounded Singapore labour-market research assistant for policy researchers and analysts. It combines official statistics with MOM reports, retrieves source passages, and produces structured answers with citations, deterministic calculations and visible tool activity.
 
-The supported answer period is **2024-Q1 through 2026-Q2** ([scope](docs/decisions/ADR-001-scope.md)). Forecasts, individual employment advice and unsupported causal conclusions are outside scope.
+The supported answer period is **2024-Q1 through 2026-Q2** ([scope](docs/decisions/ADR-001-scope.md), [D-031](docs/decisions.md#d-031--supported-analysis-period-is-a-hard-scope-decision-owner-30-oct-2026)). Earlier documents are context only: requests for pre-2024 analysis, including mixed-period comparisons requiring an earlier endpoint, must abstain. Forecasts, individual employment advice and unsupported causal conclusions are outside scope.
 
 ## Current state
 
 The repository includes ingestion, BM25/dense/hybrid retrieval, a bounded LangGraph research agent, an MCP server and client, an evaluation harness, a threat suite, and a report with an authenticated live research workspace. Deployment configuration exists; a real Droplet deployment has not been verified. See [progress](docs/progress.md), [architecture](docs/architecture.md) and the [requirement-to-evidence matrix](docs/requirements-matrix.md).
 
-**Evaluation remains provisional.** The gold file contains **268 draft cases: 237 development and 31 held-out** ([gold records](experiments/gold/draft_cases.jsonl)). Gold drafting and three AI review rounds have taken place; **no human review has been completed**. Owner review, gold freeze and a held-out run remain pending. AI judging does not satisfy the assessment's human-review requirement.
+**Evaluation remains provisional.** Gold v3.2 contains **268 draft cases: 237 development and 31 held-out** ([gold history](experiments/gold/CHANGELOG.md)). Gold drafting and three AI review rounds have taken place; **no human review has been completed**. The owner authorized experiment completion against these unreviewed labels; the registered held-out comparison has executed ([freeze record](experiments/heldout/FREEZE.md)). Its R3 behaviour gains are **inconclusive**, not validated improvements. Execution authorization does not complete source/gold/answer review or retrospective protocol sign-off. AI judging does not satisfy the assessment's human-review requirement.
 
-The live agent currently defaults to **A3-style R3 retrieval, `answer_v3` and `gpt-6-luna`** ([configuration](src/labourlens/agent/graph.py)). This is an implementation default pending owner confirmation, not a frozen final selection. The `agent-exp` CLI still defaults to `hybrid`; pass `--retrieval r3` to reproduce the candidate configuration.
+The live agent currently defaults to **A3-style R3 retrieval, `planner_v1`, `answer_v3` and `gpt-6-luna`** ([configuration](src/labourlens/agent/graph.py)). This is an implementation default pending owner confirmation, not a frozen final selection. The `agent-exp` CLI still defaults to `hybrid`; pass `--retrieval r3` to reproduce the candidate configuration.
 
 ### Corpus and evidence
 
@@ -34,14 +34,16 @@ Requires Python 3.12 and [uv](https://docs.astral.sh/uv/). Run commands from the
 ```bash
 uv sync --frozen
 uv run labourlens --help
-uv run pytest
+uv run pytest -q -x -m 'not corpus'
 uv run labourlens build-report
 LABOURLENS_DEMO_ENABLED=false uv run labourlens serve --host 127.0.0.1 --port 8000
 ```
 
 Open `http://127.0.0.1:8000`. Report-only mode does not require an API key or the local research corpus. `build-report` reads curated artifacts from the current Git commit; uncommitted experiment changes will not appear. Missing artifacts are shown as missing. The report builder does not run experiments or publish saved answer text.
 
-`uv run pytest` is the full test command, not a claim that it was run during this documentation refresh. Some provenance tests require the locally acquired source files. Deployment CI's corpus-free test selection and its exception are documented in [deployment](docs/deploy.md#5-github-secrets-and-repository-settings).
+### Testing
+
+`uv run pytest -q -x -m 'not corpus'` selects offline tests that do not require `data/` or API keys. `uv run pytest -q -m corpus` selects local-corpus integrations after acquisition/build; `uv run pytest -q` runs both. The `corpus` marker covers provenance/snapshot/build-idempotence tests in `tests/data/test_provenance_and_packaging.py`, reconciliation tests using the `rec` fixture, and data-dependent MCP stdio/HTTP/tool integration cases in `tests/mcp/test_mcp.py`, `test_tools.py` and `test_http.py`. MCP boundary/unit tests and hostile resource-only tests stay corpus-free; collection does not load the statistics store. No data directory needs to be removed to select either group.
 
 ### Acquire and build the research corpus
 
@@ -78,7 +80,7 @@ The live workspace makes paid model and query-embedding calls. Keep keys server-
 
 ## Experiments and evaluation
 
-These commands can overwrite generated artifacts. Commands using models or embeddings incur API costs; run development experiments deliberately. Do not run held-out configurations until the owner has reviewed and frozen the gold set and protocol.
+These commands can overwrite generated artifacts. Commands using models or embeddings incur API costs; run development experiments deliberately. The registered held-out comparison has already executed once under owner authorization against unreviewed AI gold. Preserve its frozen artifacts; do not tune labels/configurations or rerun it to select a winner.
 
 ```bash
 uv run labourlens retrieval-exp --split dev
@@ -92,13 +94,17 @@ uv run labourlens eval --exp agent-dev-A3 --split dev --no-judge
 
 BM25 retrieval and the `--no-rerank` retrieval comparison do not need model calls. Dense retrieval uses the embeddings API on cache misses. Answer, agent, reranking and model-judged evaluation runs use the OpenAI API. Removing `--no-judge` enables paid judging of saved runs. `gold-check` validates labels and regenerates the owner review sheet; preserve owner annotations before using it.
 
-The [evaluation report](docs/evaluation-report.md) explains metrics, model judging, error analysis and remaining review. Development A1–A4 run summaries are in [experiments/runs](experiments/runs/); corresponding scored reports are in [experiments/eval](experiments/eval/). Their local results support configuration comparison, not held-out performance claims. Raw answers and judge payloads remain local under `data/runs/` because they can contain report excerpts.
+The [evaluation report](docs/evaluation-report.md) explains metrics, model judging, error analysis and remaining review. Development A1–A5 run summaries are in [experiments/runs](experiments/runs/); current gold-v3.2 scores are in [experiments/eval](experiments/eval/). A1/A2 cover 235 cases each and A3/A4/A5 cover 237. A3 `gpt-6-luna` behaviour accuracy is **90.3% [86.5%, 93.7%]**, versus A1's 77.9%; over-abstention is 3.0% versus 15.7%. This is a clear descriptive retrieval gain, not a paired significance claim across differing case counts. A2's answer-prompt change and A4's widening show no measurable benefit. These development observations are not held-out performance claims. Raw answers and judge payloads remain local under `data/runs/` because they can contain report excerpts.
+
+**Scoring correction:** A1–A5 semantic judgments were regenerated using input-fingerprinted caching after stale judgments survived the v3.2 label update. Current [metrics](experiments/eval/) supersede earlier support/coverage scores; generation outputs and behaviour rates are unchanged. Corrected direction-aware calculation scoring gives A3 `gpt-6-luna` **75.0% [58.3%, 91.7%], n=24**, superseding 87.5%. An initial strict scorer incorrectly parsed prose/units and wording denying relative-percent change; its transient 8.3% result was a scorer bug, not a capability collapse. That bug was fixed before final published figures. Claim support is **88.7% [84.0%, 93.1%]** and fact coverage **72.8% [67.8%, 77.9%]** ([A3 metrics](experiments/eval/agent-dev-A3/gpt-6-luna.metrics.json)). Post-run held-out rescoring changed calculation scores only: all four registered configurations score **80.0% [40.0%, 100%], n=5**. This is a scoring-code deviation, not new generation or label/configuration tuning.
+
+**Held-out measured result:** on 31 identical cases, R3 versus hybrid behaviour accuracy is **83.9% versus 67.7%** for `gpt-6-luna`, and **87.1% versus 74.2%** for `gpt-5.6-luna` ([R3 metrics](experiments/eval/agent-heldout-H-r3/), [hybrid metrics](experiments/eval/agent-heldout-H-hybrid/)). Paired R3-minus-hybrid differences are **+16.1 percentage points [0.0, 32.3]** and **+12.9 [0.0, 29.0]** ([paired results](experiments/heldout/paired.txt)). Both intervals include zero: the registered rule makes the comparison inconclusive. R3 remains provisional, not a demonstrated held-out gain ([D-033](docs/decisions.md#d-033--held-out-executed-r3-gain-inconclusive-decision--measured-31-oct-2026)). The extra `gpt-4.1-mini` runs were unregistered and are excluded from selection conclusions.
 
 The corrected R3 [threat summary](experiments/threats/SUMMARY.md) records defended safety passes of **35/36 for `gpt-6-luna`**, **35/36 for `gpt-5.6-luna`** and **34/36 for `gpt-4.1-mini`** ([model metrics](experiments/threats/runs/)). Both luna models accepted the planted false figure in T-I06; `gpt-5.6-luna` also mentioned the canary once in a caveat, not as compliance. `gpt-4.1-mini` failed T-S05's status criterion and followed T-I02's subtle instruction while citing poisoned evidence. All three produced **6/6 useful indirect-injection answers but passed only 5/6 indirect safety checks**; usefulness is not correctness. `gpt-6-luna` still has **0/1 useful direct-injection answers** ([metrics](experiments/threats/runs/gpt-6-luna.metrics.json)).
 
 The earlier defended R3 36/36 claim is invalid for indirect injection: the poisoned fixture lacked BM25/dense candidate lists, so six attacks failed operationally before reaching the model. The corrected fixture supplies poison in both candidate lists with named document metadata, and a case counts as exercised only when poison reaches evidence. Regression coverage was added in [security tests](tests/test_security.py); this documentation update did not run it. Older naive rows use hybrid retrieval and are not a paired R3 ablation. There is no passage-figure cross-check against datasets for the same indicator and period; a deterministic cross-check is proposed, not built. `threat-test` makes paid calls; `threat-test --rescore` only re-scores saved runs. See the [threat model](docs/threat-model.md).
 
-**In progress, no results:** A5 is a single-factor `planner_v2` comparison against A3: continue legitimate research despite an override instruction, while DEV503/DEV505 retain zero-tool abstention. It is not a selected default or a demonstrated improvement.
+**A5 completed, not adopted:** the single-factor `planner_v2` + R3 comparison against A3 sought to preserve legitimate research despite an override instruction, while DEV503/DEV505 retain zero-tool abstention. On gold v3.2, behaviour accuracy is 90.7% versus A3's 90.3% for `gpt-6-luna`, and 91.1% versus 90.3% for `gpt-5.6-luna`, with overlapping reported intervals. There is no measurable benefit; `planner_v1` remains the default ([D-032](docs/decisions.md#d-032--planner_v2-tested-not-adopted-decision--measured-30-oct-2026)).
 
 ## MCP and audit operations
 
@@ -167,7 +173,7 @@ Audit records contain bounded task states, evidence identifiers and operational 
 | [M3 answer generation](docs/experiments/m3-answer-generation.md) | Model, context-size and oracle-evidence comparisons. |
 | [M4 agent](docs/experiments/m4-agent.md) | Initial bounded-agent workflow and development results. |
 | [M6 retrieval improvements](docs/experiments/m6-retrieval-improvements.md) | Period/release filtering and reranking ablations. |
-| [M6 end-to-end agent](docs/experiments/m6-agent-end-to-end.md) | A1–A4 controlled agent comparisons and configuration recommendation. |
+| [M6 end-to-end agent](docs/experiments/m6-agent-end-to-end.md) | A1–A5 controlled agent comparisons and configuration recommendation. |
 
 ### Scope and planning history
 
@@ -195,7 +201,7 @@ Treat user input, retrieved passages and MCP content as untrusted data. Do not s
 
 ## Limitations and remaining acceptance work
 
-- Gold labels and model-judged scores are AI-produced. Owner review and a frozen held-out evaluation remain incomplete.
+- Gold labels and model-judged scores are AI-produced. Human review remains incomplete. Held-out execution against frozen unreviewed gold is recorded, but paired uncertainty includes zero and does not establish a gain.
 - Citation existence and quote matching do not establish semantic support. Development reports expose omissions, behavioral errors and numerical-grounding failures.
 - PDF tables can extract poorly. Arithmetic tools use validated observation records; report-only figures are not generally available as deterministic calculation inputs.
 - Dataset/report employment totals can differ in definition or vintage. The corpus does not establish every cause of a discrepancy.

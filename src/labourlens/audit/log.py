@@ -205,7 +205,8 @@ def failures() -> int:
 def prune(days: int) -> list[str]:
     cutoff = time.time() - days * 86400
     gone = []
-    for f in AUDIT_DIR.glob("runs-*.jsonl"):
+    files = list(AUDIT_DIR.glob("runs-*.jsonl")) + list((paths.DATA / "runs" / "agent").glob("*.json"))
+    for f in files:
         if f.stat().st_mtime < cutoff:
             f.unlink()
             gone.append(f.name)

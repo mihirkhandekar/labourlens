@@ -1,0 +1,10 @@
+# Held-out freeze record (30 Oct 2026)
+Owner instruction in chat: complete all experiments end to end. Gold labels are AI-drafted and AI-reviewed, not human-reviewed.
+git HEAD: 617d168b8badd9db775acd1bfd12f4e26d736ddb
+sha256 experiments/gold/draft_cases.jsonl 647b26a2f0faa86be30ad897840bc1887b54f55c27268d141565b94cb22998e8
+sha256 specs/prices.yaml 634b32441c3495b4c3ec13efa3af1e9cc99e5c7523eac3a15a5c238c3acaeb5c
+sha256 prompts/planner_v1.md df68ef8e5e287d1a0b1f71d938e85ec25b4f03eeec501bc439a3a77aec2482dc
+sha256 prompts/planner_v1_user.md e59f408b00f5a99e0fb867c635a84d2d77947171620ab035f6067a3cdfb8136f
+sha256 prompts/answer_v3.md e854b64c72116c4c175082e70f39c312ed94b1f37778e7daf3f9a51de1bac350
+sha256 prompts/judge_v1.md 85f3529fca32faec681b3d4b1e6899b8620c383ed2aa54bc423241e2b7f4a10f
+rerank_v1.md

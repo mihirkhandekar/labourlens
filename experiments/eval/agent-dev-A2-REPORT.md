@@ -7,62 +7,64 @@ Gold labels and the judge are AI-produced; nothing here is human-reviewed. Judge
 | measure | value |
 |---|---|
 | n_cases | 235 |
-| behaviour_accuracy | 0.804 [0.753, 0.855] (n=235) |
-| false_answer_rate | 0.01 [0.0, 0.025] (n=199) |
-| over_abstention_rate | 0.153 [0.106, 0.2] (n=235) |
-| key_number_recall | 0.758 [0.697, 0.815] (n=158) |
-| calc_correct | 0.833 [0.667, 0.958] (n=24) |
-| gold_cited_any | 0.689 [0.622, 0.755] (n=196) |
+| behaviour_accuracy | 0.8 [0.749, 0.851] (n=235) |
+| false_answer_rate | 0.034 [0.015, 0.059] (n=203) |
+| over_abstention_rate | 0.136 [0.094, 0.179] (n=235) |
+| key_number_recall | 0.767 [0.71, 0.824] (n=151) |
+| calc_correct | 0.75 [0.583, 0.917] (n=24) |
+| gold_cited_any | 0.695 [0.631, 0.759] (n=187) |
+| cases_with_ungrounded_numbers | 0.064 [0.034, 0.098] (n=235) |
 | answers_with_ungrounded_numbers | 0.064 [0.034, 0.098] (n=235) |
 | claims_judged | 292 |
-| claim_supported_rate | 0.815 [0.756, 0.87] (n=292) |
+| claim_supported_rate | 0.829 [0.77, 0.885] (n=292) |
 | claim_unsupported_rate | 0.003 [0.0, 0.011] (n=292) |
 | answers_with_any_unsupported_claim | 0.006 [0.0, 0.019] (n=155) |
-| fact_coverage | 0.719 [0.664, 0.771] (n=270) |
-| answers_contradicting_a_reference_fact | 0.019 [0.0, 0.045] (n=155) |
+| fact_coverage | 0.716 [0.661, 0.772] (n=264) |
+| answers_contradicting_a_reference_fact | 0.034 [0.007, 0.068] (n=148) |
 | latency_p50_s | 10.8 |
 | latency_p95_s | 20.6 |
 | cost_per_case_usd | 0.0028 |
-| judge_cost_total_usd | 0.2187 |
+| judge_cost_total_usd | 0.2157 |
 
 | family | n | behaviour acc | false answers | over-abstentions | unsupported claims | contradicted facts |
 |---|---|---|---|---|---|---|
-| adversarial | 35 | 1.0 | 0 | 0 | 0 | 0 |
-| ambiguity_insufficient_causal | 44 | 0.773 | 2 | 0 | 0 | 1 |
-| cross_source_synthesis | 35 | 0.743 | 0 | 9 | 0 | 3 |
-| factual_lookup | 70 | 0.729 | 0 | 19 | 0 | 0 |
-| numerical_comparison | 33 | 0.879 | 0 | 4 | 0 | 0 |
-| revision_conflict | 18 | 0.778 | 0 | 4 | 1 | 0 |
+| adversarial | 35 | 0.971 | 1 | 0 | 0 | 0 |
+| ambiguity_insufficient_causal | 44 | 0.773 | 2 | 0 | 0 | 2 |
+| cross_source_synthesis | 35 | 0.771 | 0 | 8 | 0 | 3 |
+| factual_lookup | 70 | 0.743 | 2 | 16 | 0 | 0 |
+| numerical_comparison | 33 | 0.818 | 2 | 4 | 0 | 0 |
+| revision_conflict | 18 | 0.778 | 0 | 4 | 1 | 1 |
 
 ## gpt-6-luna
 
 | measure | value |
 |---|---|
 | n_cases | 235 |
-| behaviour_accuracy | 0.757 [0.702, 0.813] (n=235) |
-| false_answer_rate | 0.016 [0.0, 0.037] (n=190) |
-| over_abstention_rate | 0.191 [0.14, 0.243] (n=235) |
-| key_number_recall | 0.702 [0.64, 0.762] (n=158) |
-| calc_correct | 0.875 [0.75, 1.0] (n=24) |
-| gold_cited_any | 0.643 [0.571, 0.709] (n=196) |
+| behaviour_accuracy | 0.762 [0.706, 0.813] (n=235) |
+| false_answer_rate | 0.036 [0.01, 0.067] (n=195) |
+| over_abstention_rate | 0.17 [0.123, 0.221] (n=235) |
+| key_number_recall | 0.715 [0.654, 0.774] (n=151) |
+| calc_correct | 0.75 [0.583, 0.917] (n=24) |
+| gold_cited_any | 0.658 [0.588, 0.722] (n=187) |
+| cases_with_ungrounded_numbers | 0.098 [0.064, 0.136] (n=235) |
 | answers_with_ungrounded_numbers | 0.098 [0.064, 0.136] (n=235) |
 | claims_judged | 232 |
-| claim_supported_rate | 0.884 [0.831, 0.932] (n=232) |
+| claim_supported_rate | 0.888 [0.835, 0.938] (n=232) |
 | claim_unsupported_rate | 0.004 [0.0, 0.014] (n=232) |
 | answers_with_any_unsupported_claim | 0.007 [0.0, 0.02] (n=147) |
-| fact_coverage | 0.694 [0.637, 0.755] (n=252) |
-| answers_contradicting_a_reference_fact | 0.014 [0.0, 0.034] (n=147) |
+| fact_coverage | 0.692 [0.634, 0.75] (n=247) |
+| answers_contradicting_a_reference_fact | 0.014 [0.0, 0.036] (n=140) |
 | latency_p50_s | 12.7 |
 | latency_p95_s | 24.7 |
 | cost_per_case_usd | 0.00142 |
-| judge_cost_total_usd | 0.1896 |
+| judge_cost_total_usd | 0.187 |
 
 | family | n | behaviour acc | false answers | over-abstentions | unsupported claims | contradicted facts |
 |---|---|---|---|---|---|---|
-| adversarial | 35 | 0.886 | 0 | 3 | 0 | 0 |
+| adversarial | 35 | 0.857 | 1 | 3 | 0 | 0 |
 | ambiguity_insufficient_causal | 44 | 0.727 | 3 | 1 | 0 | 0 |
-| cross_source_synthesis | 35 | 0.686 | 0 | 11 | 0 | 3 |
-| factual_lookup | 70 | 0.729 | 0 | 19 | 0 | 0 |
-| numerical_comparison | 33 | 0.879 | 0 | 4 | 0 | 0 |
+| cross_source_synthesis | 35 | 0.714 | 0 | 10 | 0 | 3 |
+| factual_lookup | 70 | 0.771 | 1 | 15 | 0 | 0 |
+| numerical_comparison | 33 | 0.818 | 2 | 4 | 0 | 0 |
 | revision_conflict | 18 | 0.611 | 0 | 7 | 1 | 0 |
 

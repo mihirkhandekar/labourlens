@@ -79,6 +79,19 @@ class _Artifacts:
         p = Path(path)
         if ".." in p.parts:
             return False
+        # Development comparisons plus only the registered held-out models.
+        # Raw held-out runs and extra/unregistered models stay private.
+        if path.startswith("experiments/eval/"):
+            development = re.fullmatch(r"experiments/eval/agent-dev-A[1-5]/[^/]+", path)
+            heldout = re.fullmatch(
+                r"experiments/eval/agent-heldout-H-(?:r3|hybrid)/gpt-(?:6|5\.6)-luna\.(?:metrics\.json|cases\.jsonl)",
+                path,
+            )
+            if not (development or heldout):
+                return False
+        if path.startswith("experiments/runs/agent-"):
+            if not re.fullmatch(r"experiments/runs/agent-dev-A[1-5]/[^/]+", path):
+                return False
         return (
             (p.parent.as_posix() == "data/export" and p.suffix == ".json")
             or (path.startswith("experiments/") and p.suffix in {".json", ".jsonl", ".md"})
@@ -142,6 +155,28 @@ def _experiments(artifacts: _Artifacts, prefix: str) -> tuple[list, list]:
             if strata:
                 row["strata"] = strata
             if prefix == "experiments/eval/":
+                if "/agent-heldout-" in path and not _Artifacts._allowed(path):
+                    continue
+                row["split"] = "heldout" if "/agent-heldout-" in path else "dev"
+                source = data.get("provenance", {})
+                if isinstance(source, dict):
+                    fingerprint = _selected(source, ("eligible_n", "available_n"))
+                    for key in ("gold_sha256", "git_head", "price_table_sha256"):
+                        value = source.get(key)
+                        if isinstance(value, str) and re.fullmatch(r"[0-9a-f]{40}|[0-9a-f]{64}", value):
+                            fingerprint[key] = value
+                    prompts = source.get("prompt_sha256", {})
+                    if isinstance(prompts, dict):
+                        fingerprint["prompt_sha256"] = {
+                            key: value for key, value in prompts.items()
+                            if _label(key) and isinstance(value, str)
+                            and re.fullmatch(r"[0-9a-f]{64}", value)
+                        }
+                    if fingerprint:
+                        row["scoring_provenance"] = fingerprint
+                # The legacy "answers" name uses all scored cases, not answers.
+                if "cases_with_ungrounded_numbers" not in metrics and "answers_with_ungrounded_numbers" in metrics:
+                    metrics["cases_with_ungrounded_numbers"] = metrics["answers_with_ungrounded_numbers"]
                 judge = _label(data.get("judge"))
                 if judge:
                     row["judge"] = judge
@@ -442,9 +477,9 @@ def build_report(root: Path) -> dict:
         "mcp": mcp,
         "reconciliation": reconciliation,
         "security": _section("Threat-suite measurements. They do not guarantee security.", security_rows, security_paths),
-        "evaluation": _section("Recorded confidence intervals and AI-judged strata.", eval_rows, eval_paths,
+        "evaluation": _section("Development comparisons A1–A5 and registered held-out H-r3/H-hybrid luna runs. Gold v3.2: 237 development and 31 held-out cases; AI-drafted, not human reviewed.", eval_rows, eval_paths,
                                errors={"scope": "agent score records", "counts": errors, "provenance": trace_paths},
-                               limitations=["Development results are not held-out estimates.", "AI judgments are not human review.", "Metric definitions differ between evaluation stages."]),
+                               limitations=["Held-out evaluation used unreviewed AI-drafted gold, not human-validated labels.", "Paired held-out intervals include zero; retain r3 provisionally, not as a proven winner.", "AI judgments are not human review.", "Metric definitions differ between evaluation stages."]),
         "quality": _section("Validation outcomes, including warnings.", quality_rows, [quality_path], metrics=_numeric(quality_data.get("summary", {}))),
         "limitations": ["Model outputs are not published.", "Report passages are not published.", "Missing artifacts are marked missing.", "Only committed artifacts supply measurements.", "Series definitions are kept separate.", "The population basis of the dataset employment series is unverified."],
         "provenance": {"commit": artifacts.commit, "artifacts": list(artifacts.provenance.values()),

@@ -47,7 +47,7 @@ Plain-English definitions. Add a term the first time it matters. Entries marked 
 - **MRR (mean reciprocal rank):** average of 1/rank of the first correct result; 1 means always first.
 - **Held-out set:** evaluation questions frozen before tuning, used once to report honest results.
 - **Gold set:** questions with expected evidence and behaviour, labelled for evaluation.
-- **MCP (Model Context Protocol):** an open protocol that lets an AI application discover and call tools and read resources on a separate server process, with a typed contract (JSON schemas) and a standard handshake. Here: stdio transport, one tool, two resources.
+- **MCP (Model Context Protocol):** an open protocol for an AI application's client to discover server capabilities, invoke schema-defined tools and read URI-addressed resources after initialization. Here: stdio by default, optional authenticated loopback HTTP, nine read-only tools, two resources (one URI template) and one prompt. Direct statistics calls remain the agent default; MCP is an optional route.
 - **Tool vs resource (MCP):** a tool is an action the model-side client asks the server to run with arguments; a resource is read-only content addressed by URI.
 - **Prompt injection:** text that tries to give the model instructions, either typed by the user (direct) or hidden in retrieved content or tool output (indirect).
 - **Untrusted data:** anything not written by us (retrieved passages, tool output, server metadata). It is labelled as data and never treated as instructions.

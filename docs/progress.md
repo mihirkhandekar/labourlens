@@ -2,18 +2,18 @@
 
 > **This is the first file any agent reads when resuming.** Update it at the end of every work session, every substep, and before any long-running command. Newest entry on top of the log. Never record a result that has no file or command behind it.
 
-**Last updated:** 2026-10-30 (M6 dev evidence and M7 implementation documented; human review and held-out run pending) · **Deadline:** Wed 4 Nov 2026, morning SGT
+**Last updated:** 2026-10-31 (input-fingerprinted dev re-judging and direction-aware calculation correction; registered held-out executed, R3 gain inconclusive; default provisional) · **Deadline:** Wed 4 Nov 2026, morning SGT
 
 ## Current state (one screen)
 
 | Item | Value |
 |---|---|
-| Active milestone | **M6 evaluation and M7 deliverables in progress.** Evaluation harness, dev runs, report application and audit/feedback code exist. Human review and held-out evidence are incomplete. |
+| Active milestone | **M6 evaluation and M7 deliverables in progress.** Dev and registered held-out measurements exist; human review and final acceptance remain incomplete. |
 | Gate status | M1–M5 implementation history is recorded below. D-030 records the assistant's current default change; **owner confirmation or rollback is pending**. Historical planning gates below are not current status. |
 | Code written | Ingestion, retrieval, answer, agent, MCP, security, evaluation and report modules exist under `src/labourlens/`. Existing checks are historical artifacts, not a new verification of current code. |
 | Data downloaded | Source inventory and hashes: `data/manifests/manifest.json`; local raw files and passages remain gitignored. |
-| Next decision for owner | Confirm or revert D-030, review source/gold/answer samples and resolve `experiments/gold/CHANGELOG.md` label questions before freezing the held-out protocol. |
-| Blockers | Required human review has not happened. Gold freeze and held-out execution remain pending. Corrected threat runs expose planted-figure acceptance and subtle instruction-following; direct over-refusal remains. A5 / `planner_v2` is in progress with no results. |
+| Next decision for owner | Confirm provisional R3 or prefer cheaper hybrid under D-033; review source/gold/answer samples and remaining protocol sign-off. Registered held-out execution is complete against frozen unreviewed AI gold, not human validation. |
+| Blockers | Required human review has not happened. Paired held-out R3 gain intervals include zero; retain default only provisionally. Corrected threat runs expose planted-figure acceptance and subtle instruction-following; direct over-refusal remains. A5 is complete and not adopted (D-032). Calculation evidence uses corrected scoring; small strata limit conclusions. |
 | Evidence to resume from | `experiments/eval/agent-dev-A*-REPORT.md`, `experiments/gold/CHANGELOG.md`, `docs/threat-model.md`, `src/labourlens/report/`, `docs/deploy.md` |
 
 ## Document map (public vs private)
@@ -53,18 +53,18 @@ Status values: `not started`, `in progress`, `done (evidence: path)`, `blocked (
 | M1.4 | PDF and HTML passage extraction with quality flags | done | evidence: `artifacts/data-quality/extraction_stats.json` |
 | M1.5 | Quality report, advance/final/dataset reconciliation | done | evidence: `artifacts/data-quality/quality-report.md`, `reconciliation.json` |
 | M1.6 | Clean-room run, data sheet, study note, commit proposal | done except human review | evidence: `artifacts/tests/pytest-m1.txt`, `docs/data-sheet.md`, clean-room run below |
-| M2 | BM25 baseline and draft gold | implemented; owner review and freeze pending | `src/labourlens/retrieval/`, `docs/experiments/m2-bm25-baseline.md` |
+| M2 | BM25 baseline and draft gold | implemented; owner label review pending; final-agent held-out freeze/execution recorded separately | `src/labourlens/retrieval/`, `docs/experiments/m2-bm25-baseline.md`, `experiments/heldout/FREEZE.md` |
 | M3 | Dense/hybrid retrieval and cited generation | implemented; dev comparisons recorded | `docs/experiments/m3-dense-hybrid.md`, `docs/experiments/m3-answer-generation.md` |
 | M4 | Bounded research agent and deterministic tools | implemented; dev results recorded | `src/labourlens/agent/`, `docs/experiments/m4-agent.md` |
 | M5 | MCP and responsible-AI controls | implemented; corrected `r3` threat runs recorded; planted-figure and subtle-instruction failures remain | `src/labourlens/mcp/`, `src/labourlens/security/`, `docs/threat-model.md`, `experiments/threats/SUMMARY.md`, `docs/mcp-demo-transcript.md` |
-| M6.1 | Evaluation harness and dev agent comparisons | implemented; A1–A4 metrics available; single-factor A5 / `planner_v2` comparison in progress, no results | `src/labourlens/evaluation/harness.py`, `experiments/eval/agent-dev-A1-REPORT.md` through `agent-dev-A4-REPORT.md` |
-| M6.2 | Gold drafting and AI pre-review | AI drafting and three AI review passes; **not human-reviewed** | `experiments/gold/CHANGELOG.md`: 268 cases, 237 dev and 31 held-out |
+| M6.1 | Evaluation harness and dev agent comparisons | A1–A5 re-judged with input-fingerprinted caches against v3.2; direction-aware calculation scoring supersedes old scores; A2/A4/A5 show no demonstrated aggregate benefit | `src/labourlens/evaluation/harness.py`, `experiments/eval/agent-dev-A{1..5}/{gpt-6-luna,gpt-5.6-luna}.metrics.json` |
+| M6.2 | Gold drafting and AI pre-review | gold v3.2 includes D-031 hard-period abstention; three AI review passes; **not human-reviewed** | `experiments/gold/CHANGELOG.md`: 268 cases, 237 dev and 31 held-out |
 | M6.3 | Documented answer-review sample | selection and AI pre-review exist; **owner review pending** | `experiments/human-review-sample/selection.json`, `ai-review-summary.md` |
-| M6.4 | Freeze protocol and run held-out evaluation | pending owner review and label decisions | `docs/human-review/gold-review.md`, `experiments/gold/CHANGELOG.md` |
+| M6.4 | Freeze protocol and run held-out evaluation | registered four-config comparison executed under owner authorization against unreviewed gold; paired gains inconclusive; human review remains incomplete | `experiments/heldout/FREEZE.md`, `paired.txt`, `experiments/eval/agent-heldout-H-{r3,hybrid}/`, D-033 |
 | M7.1 | Report application, live research and audit/feedback | implementation exists; current checkout not reverified in this refresh | `src/labourlens/report/`, `web/`, `src/labourlens/audit/`, `docs/audit-and-logging.md` |
 | M7.2 | Deployment setup | files and instructions exist; deployment not established by these files | `deploy/`, `Dockerfile`, `docs/deploy.md` |
 | M7.3 | Written submission and demo materials | documentation refresh in progress; final completeness review pending | `docs/architecture.md`, `docs/system-card.md`, `docs/innovation.md`, `docs/demo-script.md`; evaluation report and end-to-end experiment write-up updated in this refresh |
-| Final | Owner reviews, held-out report and submission rehearsal | pending | `docs/human-review/`, `docs/demo-script.md` |
+| Final | Owner reviews, final acceptance and submission rehearsal | pending; held-out experiment is recorded, not a remaining execution task | `docs/human-review/`, `docs/demo-script.md`, `experiments/heldout/` |
 
 Existing verification artifacts include `artifacts/tests/pytest-m1.txt` through `pytest-m5.txt` and `artifacts/tests/web-live-smoke.json`. They describe earlier executions only. No tests, builds, fetches, evaluations or verification commands were run for this documentation refresh.
 
@@ -90,14 +90,35 @@ Every row came from a live call; none is stored as a repo artifact yet. M1.1 mus
 |---|---|---|
 | D-003 / D-006 / D-019 / D-020 | Source scope and expansion cap | settled in `docs/decisions.md`; do not reopen without an incompatible requirement |
 | D-004 / D-005 | M1 implementation and private-repo dataset snapshots | approved in D-005; source spot-checks still await the owner |
-| D-030 | Current `r3` / `gpt-6-luna` / `answer_v3` agent default | assistant changed default on measured dev evidence; owner to confirm or revert |
+| D-030 / D-033 | Current R3 / `gpt-6-luna` / `answer_v3` agent default | provisional after inconclusive held-out comparison; owner to confirm or prefer cheaper hybrid |
 | Gold review | Resolve remaining behaviour/definition questions and review evidence | owner pending; see `experiments/gold/CHANGELOG.md` |
-| Held-out protocol | Freeze cases and configurations before running held-out evaluation | pending owner review; no held-out result claimed |
+| Held-out protocol | Review executed evidence and record remaining label/protocol sign-off | execution authorized and complete; human gold review still incomplete; preserve frozen outputs |
 | Human answer review | Review the prepared sample using the documented rubric | pending; AI pre-review is not human review |
 
 ## Log (newest first)
 
+### 2026-10-31 — Scoring-cache correction and executed held-out comparison
+
+- Current sources: all ten `experiments/eval/agent-dev-A{1..5}/{gpt-6-luna,gpt-5.6-luna}.metrics.json`, four registered `experiments/eval/agent-heldout-H-{r3,hybrid}/{gpt-6-luna,gpt-5.6-luna}.metrics.json`, `experiments/heldout/FREEZE.md` and `paired.txt`. A1/A2 n=235; A3/A4/A5 n=237; held-out n=31 per configuration. Labels remain AI drafts, not human-reviewed.
+- Stale semantic judgments survived v3.2 and were regenerated using input-fingerprinted caches. Earlier support/coverage scores are superseded; generation outputs and behaviour rates are unchanged. In A1→A5 order, `gpt-6-luna` support is 0.881/0.888/0.887/0.856/0.879, coverage 0.687/0.692/0.728/0.734/0.724; `gpt-5.6-luna` support is 0.819/0.829/0.874/0.878/0.856, coverage 0.724/0.716/0.765/0.766/0.760. Source: the ten current dev metrics above; denominators and CIs are recorded there.
+- Corrected direction-aware calculation correctness, n=24 each, is 0.667/0.750/0.750/0.667/0.750 for `gpt-6-luna` and 0.750/0.750/0.750/0.667/0.708 for `gpt-5.6-luna`. A3's former 0.875 is superseded by 0.750 [0.583, 0.917]. The first strict scorer had prose/unit and negated-relative-percent parsing bugs; transient low rates such as A3's 0.083 were scorer errors, not loss of capability. Bugs were fixed before final publication. Held-out calculation scores were rescored to 0.800 [0.400, 1.000], n=5, for all four registered configurations. This is a post-run scoring-code deviation affecting `calc_correct` only, with no new generation or label/configuration change. Local read-only comparison confirmed behaviour/support/coverage rates unchanged across all fourteen metric files; no full prior file snapshots were retained to compare every field.
+- Owner-authorized registered held-out execution used `planner_v1` / `answer_v3` with each luna model and R3/hybrid. Behaviour is 0.839 versus 0.677 and 0.871 versus 0.742, respectively. Paired R3 gains are +0.161 [0.000, 0.323] and +0.129 [0.000, 0.290], 10,000 bootstrap resamples, seed 20261030 (`paired.txt`). Both include zero: D-033 records **inconclusive**, retaining R3 provisionally, not declaring a winner.
+- Extra mini configurations were unregistered and excluded from conclusions. Initial wrong-split scoring was corrected using `--split heldout`; no labels/configurations changed after results. Execution does not complete human review or remaining protocol sign-off. Older held-out-pending/in-progress entries below are superseded historical records.
+- Updated README, progress, D-030/D-032/D-033, requirements matrix and system card. Threat-suite figures were left unchanged. This documentation worker ran no tests, builds, formatters, paid calls or evaluation commands.
+
+
+### 2026-10-30 — Gold-v3.2 dev refresh and A5 negative result
+
+- Read D-031, the gold changelog and all ten current metric files under `experiments/eval/agent-dev-A{1..5}/{gpt-6-luna,gpt-5.6-luna}.metrics.json`. Gold remains 268 draft cases: 237 dev and 31 held-out. Earlier-period documents are context only; nine dev cases now require scope abstention.
+- A1/A2 score 235 cases each; A3/A4/A5 score 237. Behaviour accuracy for `gpt-6-luna` is 0.779 / 0.762 / 0.903 / 0.899 / 0.907; for `gpt-5.6-luna`, 0.804 / 0.800 / 0.903 / 0.911 / 0.911. A3's R3 gain is descriptive, not a paired significance claim across differing case counts.
+- A2's `answer_v4`, A4's widening and A5's single-factor `planner_v2` change show no measurable benefit. D-030 numbers are refreshed and D-032 records A5 as tested, not adopted. The default remains `planner_v1`, `answer_v3`, R3 and `gpt-6-luna`, pending owner confirmation of D-030.
+- **Superseded by 31 Oct entry:** held-out execution was in progress at this earlier refresh. Registered results are now recorded above; human source/gold/answer review remains incomplete.
+- Updated only README, progress, decisions, requirements matrix and system card in this assigned slice. Corrected threat fixture/results and numerical-integrity gap remain unchanged. No tests, builds, lint, formatting, paid calls or evaluation commands were run.
+
+
 ### 2026-10-30 — M6/M7 evidence and submission-documentation refresh
+
+This earlier refresh is retained as history. Its A5-in-progress, held-out-pending and superseded semantic/calculation scores are not current evidence; use the 31 Oct entry and current metric files above.
 
 - Read the assessment text, approved scope/graph ADRs and existing implementation/results. Updated current state and checklist to reflect the evaluation harness and report/audit implementation already present.
 - Added `docs/system-card.md` with intended use, models/prices, A3 dev results, rights, risks, monitoring and oversight. Appended D-030 to `docs/decisions.md`; `src/labourlens/agent/graph.py` currently defaults to `r3`, `gpt-6-luna` and unchanged `answer_v3`.
@@ -151,5 +172,5 @@ Entries below are historical session records. Their “next” gates, proposal s
 
 ## Pause handoff (30 Oct 2026)
 - State: gold v3.2 (D-031, hard period scope), retrieval experiments rerun on it, threat suite corrected and re-run. All committed and pushed.
-- In flight: A5 (`planner_v2`, r3, `answer_v3`) was running from the shell; `gpt-6-luna` finished 237 cases, `gpt-5.6-luna` and its scoring pass (`eval --exp agent-dev-A5`) may be incomplete. Outputs in `data/runs/agent-dev-A5/` and `experiments/runs/agent-dev-A5/` (not committed).
-- On resume: (1) check A5 finished, else rerun `agent-exp --tag A5 --retrieval r3 --planner-prompt planner_v2`; (2) re-run `eval --exp agent-dev-A{1..5}` on gold v3.2; (3) refresh numbers in the evaluation report, system card, README and page; (4) `build-report`, `tests/web`, full tests, clean checkout; (5) owner reviews gold, answer sheet and M1 sheets, freezes gold; (6) held-out run once; (7) Droplet setup (`docs/deploy.md`).
+- Superseded by the current refresh above: A5 and all ten gold-v3.2 dev scoring files are complete; `planner_v2` is not adopted. Held-out execution is now in progress, without results reported here.
+- Remaining handoff: owner reviews gold, answer sheet and M1 sheets, records protocol approval, confirms or reverts D-030, and completes final build/test/clean-checkout, rehearsal and deployment checks. Historical commands above are not a claim that these checks ran.

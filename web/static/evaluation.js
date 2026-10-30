@@ -69,6 +69,14 @@ function provenance(parent, row) {
   const list = node('ul', 'detail-list');
   paths.forEach(path => list.append(node('li', '', path)));
   details.append(list);
+  const fingerprint = row.scoring_provenance || {};
+  ['gold_sha256', 'git_head', 'eligible_n', 'available_n', 'price_table_sha256'].forEach(key => {
+    if (fingerprint[key] !== undefined) details.append(node('p', 'eval-caption', `${key}: ${fingerprint[key]}`));
+  });
+  Object.entries(fingerprint.prompt_sha256 || {}).forEach(([key, value]) => {
+    details.append(node('p', 'eval-caption', `Prompt ${key} SHA-256: ${value}`));
+  });
+  if (Object.keys(fingerprint).length) details.append(node('p', 'eval-caption', 'Hashes identify files at scoring time; they do not establish generation-time provenance unless saved in the raw run.'));
   parent.append(details);
 }
 function operational(row) {
@@ -98,7 +106,9 @@ function familyTable(rows, security = false) {
   corner.scope = 'col';
   heading.append(corner);
   rows.forEach(row => {
-    const cell = node('th', '', row.label || row.id || 'Configuration');
+    const experiment = !security ? row.id?.match(/agent-(dev-A[1-5]|heldout-H-(?:r3|hybrid))\//)?.[1] : null;
+    const label = row.label || row.id || 'Configuration';
+    const cell = node('th', '', experiment ? `${experiment} · ${label}` : label);
     cell.scope = 'col';
     heading.append(cell);
   });
@@ -136,20 +146,26 @@ export function renderEvaluation(panel, report) {
   const section = report?.evaluation || {};
   const rows = rowsOf(section);
   const judges = [...new Set(rows.map(row => row.judge).filter(Boolean))];
-  notice(panel, `Development results. AI-drafted gold. AI judge${judges.length ? ': ' + judges.join(', ') : ''}. Not human reviewed.`);
+  notice(panel, `Development and executed held-out results. Gold v3.2 contains 268 cases: 237 development and 31 held-out. A1/A2 used 235 development cases; A3/A4/A5 used 237. Held-out H-r3/H-hybrid includes only the registered gpt-6-luna and gpt-5.6-luna runs with planner_v1 and answer_v3. Gold is AI-drafted and has not been human reviewed. AI judge${judges.length ? ': ' + judges.join(', ') : ''}.`);
+  notice(panel, 'D-031 checks the pre-2024 boundary: earlier reports may supply context, but a request for an answer outside the supported analysis period must abstain.');
+  notice(panel, 'A5 changes only the planner relative to A3 (planner_v2 with r3); it showed no measurable behaviour benefit and was not adopted. A2 answer_v4 and A4 retrieval widening also showed no measurable behaviour benefit. Held-out paired behaviour differences (r3 minus hybrid, n=31): gpt-6-luna +0.161, 95% CI [0, 0.323]; gpt-5.6-luna +0.129, 95% CI [0, 0.290]. Both lower bounds are zero: inconclusive under the registered rule. Retain r3 provisionally with gpt-6-luna, planner_v1 and answer_v3, not as a proven winner. Sources: experiments/heldout/paired.txt and experiments/heldout/FREEZE.md. Extra gpt-4.1-mini held-out runs are unregistered and excluded.');
   if (!rows.length) return empty(panel, 'No evaluation metrics recorded. A missing result is not a zero score.');
   const grid = node('div', 'eval-model-grid');
   rows.forEach(row => {
     const metrics = row.metrics || {};
     const card = node('article', 'card eval-model-card');
-    card.append(node('h3', 'eval-card-heading', row.label || row.id || 'Recorded configuration'));
-    card.append(node('p', 'eval-caption', `${number(metrics.n_cases)} evaluation cases`));
+    const experiment = row.id?.match(/agent-(dev-A[1-5]|heldout-H-(?:r3|hybrid))\//)?.[1];
+    const configuration = row.label || row.id || 'Recorded configuration';
+    card.append(node('h3', 'eval-card-heading', experiment ? `${experiment} · ${configuration}` : configuration));
+    card.append(node('p', 'eval-caption', `${row.split === 'heldout' ? 'Held-out · unreviewed AI gold' : 'Development'} · ${number(metrics.n_cases)} evaluation cases`));
     const measurements = [
       ['Behaviour accuracy', metric(metrics.behaviour_accuracy, metrics.n_cases), false, 'cases'],
       ['False-answer rate', metric(metrics.false_answer_rate), true, 'eligible cases'],
       ['Claim support', metric(metrics.claim_supported_rate, metrics.claims_judged), false, 'claims'],
       ['Reference contradiction', metric(metrics.answers_contradicting_a_reference_fact), true, 'judged answers'],
-      ['Reference fact coverage', metric(metrics.fact_coverage, row.denominators?.fact_coverage ?? metrics.facts_total ?? metrics.facts_judged), false, 'reference facts']
+      ['Reference fact coverage', metric(metrics.fact_coverage, row.denominators?.fact_coverage ?? metrics.facts_total ?? metrics.facts_judged), false, 'reference facts'],
+      ['Calculation correctness', metric(metrics.calc_correct), false, 'eligible calculation cases'],
+      ['Cases with ungrounded numbers', metric(metrics.cases_with_ungrounded_numbers ?? metrics.answers_with_ungrounded_numbers, metrics.n_cases), true, 'all scored cases']
     ];
     measurements.forEach(([label, value, adverse, unit]) => card.append(rateBar(label, value, adverse, unit)));
     card.append(operational(row));
@@ -166,6 +182,8 @@ export function renderEvaluation(panel, report) {
     'Claim support: share of judged claims fully supported by the evidence. Partially supported claims do not count.',
     'Reference contradiction: share of judged answers that contradict at least one reference fact. It is counted per answer, not per claim.',
     'Reference fact coverage: share of expected facts covered across judged answers, measured against the AI-drafted reference.',
+    'Calculation correctness requires a matching signed deterministic calculation record and the requested direction, while allowing free prose and unit wording. The scorer was corrected and development/held-out metrics were re-scored after the held-out run; this is a disclosed scoring-code deviation, not a new generation run.',
+    'Cases with ungrounded numbers: fraction of all scored cases with an ungrounded numeric warning. answers_with_ungrounded_numbers is a legacy alias with the same all-scored-case denominator, not an answered-case rate.',
     'Intervals are recorded case-bootstrap 95% intervals. Small strata and overlapping intervals do not support a claim that one configuration is better.',
     'Generation cost per case and judge cost per run are recorded separately. Missing costs and latency percentiles are left blank.',
     'Bars use a 0–100% scale. Dots mark rates and whiskers mark 95% intervals. Denominators differ by metric (cases, claims, reference facts). Scalar metrics have no interval.'

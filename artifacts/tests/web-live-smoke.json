@@ -1,0 +1,154 @@
+{
+  "http_status": 200,
+  "result": {
+    "run_id": "5f488ab0dc29",
+    "answer": {
+      "status": "answered",
+      "summary": "The dataset snapshot reports 3,830 retrenched employees in 2026-Q1 and 4,620 in 2026-Q2.",
+      "claims": [
+        {
+          "text": "In 2026-Q1, 3,830 employees were retrenched.",
+          "citations": [
+            {
+              "label": "O1",
+              "quote": "2026-Q1 | establishments, not_applicable | 3,830 persons"
+            }
+          ]
+        },
+        {
+          "text": "In 2026-Q2, 4,620 employees were retrenched.",
+          "citations": [
+            {
+              "label": "O2",
+              "quote": "2026-Q2 | establishments, not_applicable | 4,620 persons"
+            }
+          ]
+        }
+      ],
+      "caveats": [
+        "These figures are from a dataset snapshot."
+      ],
+      "clarification_question": "",
+      "reason": ""
+    },
+    "evidence": [
+      {
+        "label": "O1",
+        "kind": "statistic",
+        "source_title": "Number of Retrenched Employees - Quarterly",
+        "publisher": "Ministry of Manpower",
+        "date": "",
+        "release_stage": "dataset_snapshot",
+        "locator": "2026-Q1",
+        "url": "https://data.gov.sg/datasets/d_000d49cda016c13522d7d5be6a050f59/view",
+        "quotes": [
+          "2026-Q1 | establishments, not_applicable | 3,830 persons"
+        ]
+      },
+      {
+        "label": "O2",
+        "kind": "statistic",
+        "source_title": "Number of Retrenched Employees - Quarterly",
+        "publisher": "Ministry of Manpower",
+        "date": "",
+        "release_stage": "dataset_snapshot",
+        "locator": "2026-Q2",
+        "url": "https://data.gov.sg/datasets/d_000d49cda016c13522d7d5be6a050f59/view",
+        "quotes": [
+          "2026-Q2 | establishments, not_applicable | 4,620 persons"
+        ]
+      }
+    ],
+    "chart": {
+      "series": [
+        {
+          "source_id": "retrenched_employees",
+          "label": "retrenched_employees / establishments / not_applicable",
+          "unit": "persons",
+          "points": [
+            {
+              "period": "2026-Q1",
+              "value": 3830.0,
+              "observation_id": "af35147df5007250"
+            },
+            {
+              "period": "2026-Q2",
+              "value": 4620.0,
+              "observation_id": "60eb7f4b1780e77e"
+            }
+          ]
+        }
+      ]
+    },
+    "trace": [
+      {
+        "node": "validate_question",
+        "event": "accepted",
+        "detail": {}
+      },
+      {
+        "node": "plan_research",
+        "event": "gather",
+        "detail": {
+          "round": 1,
+          "n_calls": 1
+        }
+      },
+      {
+        "node": "execute_tool",
+        "event": "ok",
+        "detail": {
+          "tool": "get_series",
+          "args": {
+            "source_id": "retrenched_employees",
+            "period_from": "2026-Q1",
+            "period_to": "2026-Q2",
+            "adjustment": "not_applicable",
+            "indicator_id": "retrenched_employees"
+          },
+          "new_items": [
+            "O1",
+            "O2"
+          ],
+          "seconds": 0.008
+        }
+      },
+      {
+        "node": "plan_research",
+        "event": "finish",
+        "detail": {
+          "round": 2,
+          "n_calls": 0
+        }
+      },
+      {
+        "node": "assess_evidence",
+        "event": "evidence_ready",
+        "detail": {
+          "passages": 0,
+          "observations": 2,
+          "calculations": 0
+        }
+      },
+      {
+        "node": "generate_answer",
+        "event": "generated",
+        "detail": {}
+      },
+      {
+        "node": "validate_answer",
+        "event": "valid",
+        "detail": {}
+      },
+      {
+        "node": "finalize",
+        "event": "answered",
+        "detail": {}
+      }
+    ],
+    "usage": {
+      "cost_usd": 0.000935,
+      "seconds": 10.68
+    }
+  }
+}

@@ -47,6 +47,8 @@ def main(argv: list[str] | None = None) -> int:
     ev_.add_argument("--split", default="dev")
     ev_.add_argument("--labels", nargs="*")
     ev_.add_argument("--no-judge", action="store_true")
+    ev_.add_argument("--rejudge-stale", action=argparse.BooleanOptionalAction, default=True,
+                     help="re-judge cached judgments whose input fingerprint changed (default); --no-rejudge-stale raises instead")
     sub.add_parser("audit-report", help="summarise the audit and feedback logs (data/audit)")
     asw = sub.add_parser("audit-show", help="print the timeline of one run")
     asw.add_argument("run_id")
@@ -122,7 +124,7 @@ def main(argv: list[str] | None = None) -> int:
     if args.cmd == "eval":
         from labourlens.evaluation import harness
 
-        harness.run(args.exp, args.split, args.labels, not args.no_judge)
+        harness.run(args.exp, args.split, args.labels, not args.no_judge, rejudge_stale=args.rejudge_stale)
         return 0
     if args.cmd in ("audit-report", "audit-show", "audit-prune"):
         from labourlens.audit import log as al

@@ -54,7 +54,7 @@ def data() -> StatsData:
     return _data
 
 
-SOURCE_IDS = tuple(sorted(set(data().obs.source_id)))
+SOURCE_IDS = tuple(sorted(e["source_id"] for e in catalog.datasets()))
 SourceId = Literal[SOURCE_IDS]  # type: ignore[valid-type]
 Period = Annotated[str, Field(pattern=r"^\d{4}-Q[1-4]$", description=f"Quarter like 2026-Q2; supported {SCOPE_LO} to {SCOPE_HI}")]
 Dimension = Annotated[str | None, Field(max_length=120, description="Industry, occupation or sector name for datasets that have one (see get_dimension_values)")]

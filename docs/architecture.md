@@ -19,53 +19,49 @@ The README (`README.md`) lists the current data counts. The data sheet (`docs/da
 
 ```mermaid
 flowchart TB
-  subgraph Sources
-    DG[data.gov.sg datasets]
-    MOM[MOM reports and releases]
+  subgraph Data["Acquisition and evidence stores"]
+    SOURCE[Official CSV / PDF / HTML] --> SNAP[Immutable hashed snapshots]
+    SNAP --> PARSE[Normalize observations / extract passages]
+    PARSE --> SCAN[Ingestion injection scan<br/>heuristics + review allow-list]
+    PARSE --> STORE[(Validated observations + passages)]
+    STORE --> INDEX[(BM25 + dense index)]
+    SCAN -. quality report / review .-> STORE
   end
-  subgraph Ingestion["Ingestion (labourlens fetch, build)"]
-    FETCH[fetch + raw_store<br/>hashed snapshots]
-    NORM[normalize + validate<br/>data contracts]
-    EXTRACT[pdf_extract + html_extract<br/>passages with locators]
+  subgraph Runtime["Bounded research workflow"]
+    USER[Research question] --> ADMIT[Authentication + budget / rate limit]
+    ADMIT --> INPUT[Input guard<br/>length checks + injection flags]
+    INPUT --> PLAN[Plan research]
+    PLAN --> TOOLS[Typed read-only tools<br/>search / series / deterministic change]
+    TOOLS --> ASSESS[Assess evidence]
+    ASSESS -->|bounded next round| PLAN
+    ASSESS --> ANSWER[Generate structured answer]
+    ANSWER --> VALID[Quote / citation / status validator]
+    VALID -->|one repair| ANSWER
+    VALID --> REDACT[Output blocking + redaction]
+    REDACT --> OUT[Cited answer + activity timeline]
   end
-  subgraph Stores["Local stores"]
-    OBS[(observations.parquet)]
-    PAS[(passages JSONL<br/>gitignored)]
-    IDX[(BM25 + embeddings<br/>data/index, gitignored)]
+  subgraph MCP["Optional statistics transport"]
+    CLIENT[MCP client<br/>schema checks + quarantine]
+    SERVER[MCP server<br/>9 tools / 2 resources / 1 prompt]
+    CLIENT --> SERVER
   end
-  subgraph Agent["Bounded LangGraph agent"]
-    VQ[validate_question] --> PR[plan_research]
-    PR --> EX[execute_tool]
-    EX --> PR
-    EX --> AE[assess_evidence]
-    PR --> AE
-    AE --> GA[generate_answer]
-    GA --> VA[validate_answer]
-    VA --> GA
-    VA --> FIN[finalize]
+  subgraph Evaluation["Offline evaluation - separate from serving"]
+    GOLD[Versioned gold<br/>development / held-out split] --> HARNESS[Evaluation harness]
+    RUNS[Saved answers + traces] --> HARNESS
+    HARNESS --> DETER[Deterministic metrics]
+    HARNESS --> JUDGE[LLM judge<br/>support + fact coverage]
+    HARNESS --> HUMAN[Human review sheets<br/>review pending]
+    DETER --> REPORT[Versioned metrics + error analysis]
+    JUDGE --> REPORT
+    HUMAN -. completed human judgments required .-> REPORT
   end
-  subgraph Tools["Read-only tools"]
-    SR[search_reports]
-    GS[get_series]
-    CC[calculate_change]
-  end
-  subgraph MCP["MCP trust boundary (optional route)"]
-    CLIENT[MCP client<br/>screens every reply]
-    SERVER[MCP server<br/>9 read-only tools]
-  end
-  DG --> FETCH --> NORM --> OBS
-  MOM --> FETCH
-  FETCH --> EXTRACT --> PAS --> IDX
-  PR -. proposes calls .-> Tools
-  EX --> Tools
-  SR --> IDX
-  GS --> OBS
-  GS -. stats_backend .-> CLIENT --> SERVER --> OBS
-  CC --> OBS
-  FIN --> OUT[Cited answer + tool timeline]
-  OUT --> WEB[Interactive page<br/>FastAPI + web/]
-  Agent --> AUD[(Audit log<br/>data/audit)]
-  WEB --> AUD
+  INDEX --> TOOLS
+  STORE --> TOOLS
+  TOOLS -. optional route .-> CLIENT
+  SERVER --> STORE
+  OUT --> RUNS
+  OUT --> WEB[Research workspace]
+  OUT --> AUDIT[(Redacted audit + local traces)]
 ```
 
 ## 3. Data flow from ingestion to cited answer
@@ -116,7 +112,7 @@ Outcomes are `answered`, `abstained`, `clarify`, `refused`, `invalid`, `rejected
 
 The server is `src/labourlens/mcp/server.py`, built on the official `mcp` SDK. It offers nine read-only tools, two resources (`labourlens://sources` and `labourlens://source/{id}`) and one prompt. It serves statistics and catalogue metadata. It never serves MOM text (D-028). The default transport is stdio. An optional loopback HTTP transport with a bearer token is in `mcp/http_server.py`.
 
-The client is `src/labourlens/mcp/client.py`. It sits between the agent and the server and treats the server as untrusted. It starts only servers on its allow-list, gives the subprocess a minimal environment, checks server name and version, ignores tools that are not on the allow-list, validates arguments against the tool schema, applies timeouts and a size cap, validates results against the tool's model and screens every string for instruction-like text. `mcp/redact.py` removes secrets from logs. The full list of controls is in `docs/threat-model.md`.
+The client is `src/labourlens/mcp/client.py`. It treats the server as untrusted: allow-listed launch, minimal subprocess environment, name/version checks, tool allow-list, input schemas, deadlines, response-size caps, typed tool-result validation and instruction-like-content quarantine. `mcp/redact.py` redacts secrets. The diagram names controls, not proof that every hostile paraphrase is detected; the saved transcript includes a heuristic miss. Resource handling must be assessed separately from tool-result screening. See `docs/threat-model.md`.
 
 The agent calls statistics directly by default. Setting `Shared.stats_backend` routes `get_series` through the MCP client. `docs/mcp-demo-transcript.md` records the scripted client run and a direct-versus-MCP comparison in section 17.
 
@@ -124,11 +120,13 @@ The agent calls statistics directly by default. Setting `Shared.stats_backend` r
 
 ## 6. Audit log
 
-`src/labourlens/audit/log.py` appends one JSON line per agent run to `data/audit/runs-YYYY-MM-DD.jsonl`. Feedback goes to `data/audit/feedback.jsonl`. Rejected or administrative requests go to `data/audit/events-YYYY-MM-DD.jsonl`. When trace saving is on, the full trace of a run is written to `data/runs/agent/<run_id>.json`. The web server runs the agent with trace saving off (`src/labourlens/report/app.py`), so web runs have the audit record only.
+`src/labourlens/audit/log.py` appends run records to `data/audit/runs-YYYY-MM-DD.jsonl`, feedback to `feedback.jsonl`, and administrative/rejection events to `events-YYYY-MM-DD.jsonl`. With trace saving enabled, `data/runs/agent/<run_id>.json` also contains the detailed run and retrieved evidence text. The web runner currently enables trace saving (`src/labourlens/report/app.py`). Those local files are not safe public presentation artifacts; redaction does not confer MOM redistribution rights or anonymise user questions.
 
 A record holds the run id, channel, salted hashes of session and client, the redacted question, model and prompt versions, git commit, data manifest hash, outcome, tool calls with outcomes, guard events, data-quality notes, evidence and cited ids, token usage, cost and latency. Secrets are redacted before every write. Raw IP addresses are not stored. A write failure never breaks a request.
 
 Commands: `uv run labourlens audit-report`, `audit-show <run_id>` and `audit-prune --days N`. Field-level detail is in `docs/audit-and-logging.md`. The `data/audit/` directory is local and not published.
+
+The evaluation branch consumes saved runs rather than changing live answers. Development cases support configuration selection; held-out cases must not tune prompts or labels. Deterministic scoring checks behavior, evidence IDs and numbers; the LLM judge estimates semantic support and reference-fact coverage. Neither substitutes for the prepared human review sheets. No completed human review or held-out outcome is asserted by this diagram.
 
 ## 7. Module map
 

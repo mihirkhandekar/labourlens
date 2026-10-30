@@ -39,3 +39,4 @@ packages = ["src/labourlens"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+markers = ["corpus: requires locally acquired source corpus or built data artifacts"]

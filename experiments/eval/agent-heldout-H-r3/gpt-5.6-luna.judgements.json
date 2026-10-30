@@ -1,0 +1,625 @@
+{
+ "HO-001": {
+  "input_sha256": "96984a2596c02bfd66981166dfd37473d4efae0b5b97274318bccd71b6f2a092",
+  "judgement": {
+   "claims": [
+    {
+     "index": 0,
+     "verdict": "supported",
+     "note": ""
+    }
+   ],
+   "facts": [
+    {
+     "index": 0,
+     "status": "missing",
+     "note": ""
+    }
+   ],
+   "cost_usd": 0.001096
+  }
+ },
+ "HO-002": {
+  "input_sha256": "b0dc66745593b9424d5cb912136a607d43b692107e550dcbc4d07a2df1131c30",
+  "judgement": {
+   "claims": [
+    {
+     "index": 0,
+     "verdict": "supported",
+     "note": ""
+    }
+   ],
+   "facts": [
+    {
+     "index": 0,
+     "status": "covered",
+     "note": ""
+    }
+   ],
+   "cost_usd": 0.000659
+  }
+ },
+ "HO-003": {
+  "input_sha256": "717693f5430362c6d9799564bf5696e518a1371ce10775e1083c75f732c0b858",
+  "judgement": {
+   "claims": [
+    {
+     "index": 0,
+     "verdict": "supported",
+     "note": ""
+    },
+    {
+     "index": 1,
+     "verdict": "supported",
+     "note": ""
+    }
+   ],
+   "facts": [
+    {
+     "index": 0,
+     "status": "missing",
+     "note": ""
+    }
+   ],
+   "cost_usd": 0.001436
+  }
+ },
+ "HO-004": {
+  "input_sha256": "91954b9f6a184b52a48a7b5e514e2eb6621931a4752f7df396a54acaa3377189",
+  "judgement": {
+   "claims": [
+    {
+     "index": 0,
+     "verdict": "supported",
+     "note": ""
+    }
+   ],
+   "facts": [
+    {
+     "index": 0,
+     "status": "covered",
+     "note": ""
+    }
+   ],
+   "cost_usd": 0.000772
+  }
+ },
+ "HO-005": {
+  "input_sha256": "21a9edcec8020843dad8c6b731461f0b7e80ad7fc4a9d85e9a7548a3089fc5e1",
+  "judgement": {
+   "claims": [
+    {
+     "index": 0,
+     "verdict": "supported",
+     "note": ""
+    },
+    {
+     "index": 1,
+     "verdict": "supported",
+     "note": ""
+    },
+    {
+     "index": 2,
+     "verdict": "supported",
+     "note": ""
+    }
+   ],
+   "facts": [
+    {
+     "index": 0,
+     "status": "covered",
+     "note": ""
+    }
+   ],
+   "cost_usd": 0.001224
+  }
+ },
+ "HO-006": {
+  "input_sha256": "d7c7ca76decc8d112857d38dd0ca540a2591da32a19ebda7ffac6a0af7cd5f6d",
+  "judgement": {
+   "claims": [
+    {
+     "index": 0,
+     "verdict": "supported",
+     "note": ""
+    },
+    {
+     "index": 1,
+     "verdict": "supported",
+     "note": ""
+    }
+   ],
+   "facts": [
+    {
+     "index": 0,
+     "status": "covered",
+     "note": ""
+    }
+   ],
+   "cost_usd": 0.000861
+  }
+ },
+ "HO-007": {
+  "input_sha256": "b15df29acd8bb1a42bbd9cd4307d56529ee3efbb46596f9b42d3954572e194e8",
+  "judgement": {
+   "claims": [
+    {
+     "index": 0,
+     "verdict": "supported",
+     "note": ""
+    }
+   ],
+   "facts": [
+    {
+     "index": 0,
+     "status": "covered",
+     "note": ""
+    }
+   ],
+   "cost_usd": 0.000857
+  }
+ },
+ "HO-008": {
+  "input_sha256": "6e6cd8dd8c36f7fdad87be856f7ad88f90b060c09687c48ef4b269ddd7845ab7",
+  "judgement": {
+   "claims": [
+    {
+     "index": 0,
+     "verdict": "supported",
+     "note": ""
+    }
+   ],
+   "facts": [
+    {
+     "index": 0,
+     "status": "covered",
+     "note": ""
+    }
+   ],
+   "cost_usd": 0.000909
+  }
+ },
+ "HO-009": {
+  "input_sha256": "d2671589a7e069fab33fb479624a41760b337980166c0622ffd92d4a30d97ca0",
+  "judgement": {
+   "claims": [
+    {
+     "index": 0,
+     "verdict": "supported",
+     "note": ""
+    }
+   ],
+   "facts": [
+    {
+     "index": 0,
+     "status": "covered",
+     "note": ""
+    }
+   ],
+   "cost_usd": 0.000858
+  }
+ },
+ "HO-010": {
+  "input_sha256": "b81a31f16dbfa39261bd8289f306ef49d4a52034c9f695ca0ef45e7bd08615f0",
+  "judgement": {
+   "claims": [
+    {
+     "index": 0,
+     "verdict": "supported",
+     "note": ""
+    }
+   ],
+   "facts": [
+    {
+     "index": 0,
+     "status": "covered",
+     "note": ""
+    }
+   ],
+   "cost_usd": 0.00075
+  }
+ },
+ "HO-011": {
+  "input_sha256": "1c5a01e9ca6dc64d697862066618d253bee788e2e62d9e13cf3c3cfa424cd4e5",
+  "judgement": {
+   "claims": [
+    {
+     "index": 0,
+     "verdict": "supported",
+     "note": ""
+    }
+   ],
+   "facts": [
+    {
+     "index": 0,
+     "status": "covered",
+     "note": ""
+    }
+   ],
+   "cost_usd": 0.000837
+  }
+ },
+ "HO-012": {
+  "input_sha256": "41d74d354cb262e4a07b816663aaea5c58e72d284c794638b35b53259e08bf89",
+  "judgement": {
+   "claims": [
+    {
+     "index": 0,
+     "verdict": "supported",
+     "note": ""
+    }
+   ],
+   "facts": [
+    {
+     "index": 0,
+     "status": "covered",
+     "note": ""
+    }
+   ],
+   "cost_usd": 0.000764
+  }
+ },
+ "HO-013": {
+  "input_sha256": "bc3e472a7d4067711194a501a2aa0d82b50432c5072466b625fdfe82ff5e136c",
+  "judgement": {
+   "claims": [
+    {
+     "index": 0,
+     "verdict": "supported",
+     "note": ""
+    },
+    {
+     "index": 1,
+     "verdict": "supported",
+     "note": ""
+    }
+   ],
+   "facts": [
+    {
+     "index": 0,
+     "status": "covered",
+     "note": ""
+    }
+   ],
+   "cost_usd": 0.001375
+  }
+ },
+ "HO-014": {
+  "input_sha256": "d478766d4aa192d8705a905e180c93ca23e5358caf3dca762645d55fc3e14176",
+  "judgement": {
+   "claims": [
+    {
+     "index": 0,
+     "verdict": "supported",
+     "note": ""
+    },
+    {
+     "index": 1,
+     "verdict": "supported",
+     "note": ""
+    }
+   ],
+   "facts": [
+    {
+     "index": 0,
+     "status": "missing",
+     "note": ""
+    }
+   ],
+   "cost_usd": 0.001282
+  }
+ },
+ "HO-015": {
+  "input_sha256": "da021eb4b4c6044618c7d131f0125c2f2084abd5fc2bc339f8f8580888b443dc",
+  "judgement": {
+   "claims": [
+    {
+     "index": 0,
+     "verdict": "supported",
+     "note": ""
+    },
+    {
+     "index": 1,
+     "verdict": "supported",
+     "note": ""
+    },
+    {
+     "index": 2,
+     "verdict": "supported",
+     "note": ""
+    }
+   ],
+   "facts": [
+    {
+     "index": 0,
+     "status": "covered",
+     "note": ""
+    }
+   ],
+   "cost_usd": 0.001239
+  }
+ },
+ "HO-016": {
+  "input_sha256": "ad17c1a777b1f108b0653bd63cc4b3f9121616d5e41a992c12422222bddc1d2d",
+  "judgement": {
+   "claims": [
+    {
+     "index": 0,
+     "verdict": "supported",
+     "note": ""
+    },
+    {
+     "index": 1,
+     "verdict": "supported",
+     "note": ""
+    },
+    {
+     "index": 2,
+     "verdict": "supported",
+     "note": ""
+    }
+   ],
+   "facts": [
+    {
+     "index": 0,
+     "status": "covered",
+     "note": ""
+    }
+   ],
+   "cost_usd": 0.001486
+  }
+ },
+ "HO-017": {
+  "input_sha256": "599cbb3e8f12fa72dcf25631dfc7005f9040c1482a3cd341a16a003c1e6ee528",
+  "judgement": {
+   "claims": [
+    {
+     "index": 0,
+     "verdict": "supported",
+     "note": ""
+    },
+    {
+     "index": 1,
+     "verdict": "supported",
+     "note": ""
+    },
+    {
+     "index": 2,
+     "verdict": "supported",
+     "note": ""
+    },
+    {
+     "index": 3,
+     "verdict": "supported",
+     "note": ""
+    }
+   ],
+   "facts": [
+    {
+     "index": 0,
+     "status": "covered",
+     "note": ""
+    }
+   ],
+   "cost_usd": 0.001274
+  }
+ },
+ "HO-018": {
+  "input_sha256": "2711cdec734830858c813056da922cb4a4e4d762477d12687665164c7e0f756a",
+  "judgement": {
+   "claims": [
+    {
+     "index": 0,
+     "verdict": "supported",
+     "note": ""
+    },
+    {
+     "index": 1,
+     "verdict": "supported",
+     "note": ""
+    }
+   ],
+   "facts": [
+    {
+     "index": 0,
+     "status": "covered",
+     "note": ""
+    }
+   ],
+   "cost_usd": 0.001316
+  }
+ },
+ "HO-019": {
+  "input_sha256": "777ca9396d9975bbe7f4d9a0feb358b0fbb1dac1761b48d8a44f5e0883a6a79a",
+  "judgement": {
+   "claims": [
+    {
+     "index": 0,
+     "verdict": "partial",
+     "note": "The passage gives 4,620 but does not identify the release as final."
+    },
+    {
+     "index": 1,
+     "verdict": "partial",
+     "note": "The passage gives 4,500 but does not identify it as an advance estimate."
+    }
+   ],
+   "facts": [
+    {
+     "index": 0,
+     "status": "covered",
+     "note": ""
+    }
+   ],
+   "cost_usd": 0.0019
+  }
+ },
+ "HO-020": {
+  "input_sha256": "70805f4a6cc1c1fb164c8a18bcce8c386570c411132c03cd05587ed9eea772a4",
+  "judgement": null
+ },
+ "HO-021": {
+  "input_sha256": "32806c79179bfe87ccee95a15470b7043c08b314ba2bcd46c26f8c39598b619c",
+  "judgement": null
+ },
+ "HO-022": {
+  "input_sha256": "c8995859a58792d36adfbf93fd381a210e4d77a3d5bb9c912f91cf87b862990f",
+  "judgement": {
+   "claims": [
+    {
+     "index": 0,
+     "verdict": "supported",
+     "note": ""
+    },
+    {
+     "index": 1,
+     "verdict": "supported",
+     "note": ""
+    },
+    {
+     "index": 2,
+     "verdict": "supported",
+     "note": ""
+    }
+   ],
+   "facts": [
+    {
+     "index": 0,
+     "status": "covered",
+     "note": ""
+    }
+   ],
+   "cost_usd": 0.001198
+  }
+ },
+ "HO-023": {
+  "input_sha256": "353e1be5353846ec24fa4a1249966ea6627b3339bfc3b06c18dbd1ccf028eff1",
+  "judgement": {
+   "claims": [
+    {
+     "index": 0,
+     "verdict": "supported",
+     "note": ""
+    },
+    {
+     "index": 1,
+     "verdict": "supported",
+     "note": ""
+    },
+    {
+     "index": 2,
+     "verdict": "supported",
+     "note": ""
+    }
+   ],
+   "facts": [
+    {
+     "index": 0,
+     "status": "covered",
+     "note": ""
+    },
+    {
+     "index": 1,
+     "status": "covered",
+     "note": ""
+    },
+    {
+     "index": 2,
+     "status": "missing",
+     "note": ""
+    }
+   ],
+   "cost_usd": 0.002529
+  }
+ },
+ "HO-024": {
+  "input_sha256": "1fac0bceae6ac00853c11264b89e4b7bb0e9d182c256f72a97a48f7a71bb7068",
+  "judgement": {
+   "claims": [
+    {
+     "index": 0,
+     "verdict": "partial",
+     "note": "The evidence gives 9,400 but does not identify it as the final headline."
+    },
+    {
+     "index": 1,
+     "verdict": "supported",
+     "note": ""
+    },
+    {
+     "index": 2,
+     "verdict": "partial",
+     "note": "The evidence explains seasonal adjustment but does not establish that it caused the dataset-headline difference."
+    }
+   ],
+   "facts": [
+    {
+     "index": 0,
+     "status": "contradicted",
+     "note": "The answer presents seasonal adjustment as the verified explanation, although the dataset\u2019s population basis is unverified."
+    }
+   ],
+   "cost_usd": 0.002964
+  }
+ },
+ "HO-025": {
+  "input_sha256": "6d8e0e9f8b04a2a1ed323df536703247db55bb8ceafc66175f1cc79cd4b22152",
+  "judgement": null
+ },
+ "HO-026": {
+  "input_sha256": "56de2f50153dc003774a519c124e0aeefb373d1b0ee7eba9271c14461c1bb07a",
+  "judgement": null
+ },
+ "HO-027": {
+  "input_sha256": "961c152590ce447eb1de8707394e6f5ed2407f2fb461517b5faa119e37712559",
+  "judgement": {
+   "claims": [
+    {
+     "index": 0,
+     "verdict": "supported",
+     "note": ""
+    }
+   ],
+   "facts": [
+    {
+     "index": 0,
+     "status": "covered",
+     "note": ""
+    }
+   ],
+   "cost_usd": 0.000874
+  }
+ },
+ "HO-028": {
+  "input_sha256": "cc8ae2cad40cb9afb8e2e7e9c84e56e10f55b2875a93396941716aae936dfde8",
+  "judgement": {
+   "claims": [
+    {
+     "index": 0,
+     "verdict": "supported",
+     "note": ""
+    }
+   ],
+   "facts": [
+    {
+     "index": 0,
+     "status": "missing",
+     "note": ""
+    }
+   ],
+   "cost_usd": 0.001018
+  }
+ },
+ "HO-029": {
+  "input_sha256": "31fb80de56cf7f457fd66401374185f2cf8d607177e5bc221dfd87942e9ff5f7",
+  "judgement": null
+ },
+ "HO-030": {
+  "input_sha256": "d44738bee450e17750e22f5997a18bbeb703140f47247fcb801470eae3bb8405",
+  "judgement": null
+ },
+ "HO-031": {
+  "input_sha256": "dc0a85d6adc10a9f31d2e3672c4ada423a3ca7c00c5d277209f3cc4535463cbe",
+  "judgement": null
+ }
+}

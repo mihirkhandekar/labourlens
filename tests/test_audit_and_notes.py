@@ -54,6 +54,22 @@ def test_audit_failure_never_raises(monkeypatch):
     assert al.failures() == before + 1
 
 
+def test_prune_covers_old_traces_but_preserves_recent_traces(audit_dir, tmp_path, monkeypatch):
+    import os
+    import time
+
+    monkeypatch.setattr(al.paths, "DATA", tmp_path)
+    traces = tmp_path / "runs" / "agent"
+    traces.mkdir(parents=True)
+    old, recent = traces / "old.json", traces / "recent.json"
+    old.write_text("{}")
+    recent.write_text("{}")
+    age = time.time() - 40 * 86400
+    os.utime(old, (age, age))
+    assert "old.json" in al.prune(30)
+    assert not old.exists() and recent.exists()
+
+
 def make_stats(rows):
     st = StatsData(pd.DataFrame(rows))
     st.titles = {"ds1": "Test rate"}

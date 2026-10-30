@@ -1,55 +1,84 @@
 {
  "label": "gpt-6-luna",
  "judge": "gpt-6.1-terra",
+ "provenance": {
+  "gold_sha256": "647b26a2f0faa86be30ad897840bc1887b54f55c27268d141565b94cb22998e8",
+  "prompt_sha256": {
+   "planner": "df68ef8e5e287d1a0b1f71d938e85ec25b4f03eeec501bc439a3a77aec2482dc",
+   "answer": "5cf4ee61f8e1064929911045d7fd40d883deae37d0efba86d5df977340bb0db6",
+   "judge": "85f3529fca32faec681b3d4b1e6899b8620c383ed2aa54bc423241e2b7f4a10f",
+   "rerank": "e45ed816ccefd679d046cf9bcbd4dad92ba27b20cfc5f45b900063b84784793a",
+   "planner_user": "e59f408b00f5a99e0fb867c635a84d2d77947171620ab035f6067a3cdfb8136f",
+   "answer_user": "c4f4ef05d7d1b87fca94bee65cbf2a38999c181dc2e92bced9cdf8ef92b006e7"
+  },
+  "agent_config": "planner=gpt-6-luna|answer=gpt-6-luna|planner_v1|answer_v4",
+  "git_head": "617d168b8badd9db775acd1bfd12f4e26d736ddb",
+  "price_table_sha256": "634b32441c3495b4c3ec13efa3af1e9cc99e5c7523eac3a15a5c238c3acaeb5c",
+  "eligible_n": 235,
+  "available_n": 237,
+  "fingerprint_scope": "files at scoring time; generation-time provenance only when saved in raw run"
+ },
+ "metric_definitions": {
+  "cases_with_ungrounded_numbers": "fraction of all scored cases with an ungrounded numeric warning",
+  "answers_with_ungrounded_numbers": "legacy alias of cases_with_ungrounded_numbers; denominator is all scored cases"
+ },
  "metrics": {
   "n_cases": 235,
   "behaviour_accuracy": {
-   "rate": 0.757,
+   "rate": 0.762,
    "ci95": [
-    0.702,
+    0.706,
     0.813
    ],
    "n": 235
   },
   "false_answer_rate": {
-   "rate": 0.016,
+   "rate": 0.036,
    "ci95": [
-    0.0,
-    0.037
+    0.01,
+    0.067
    ],
-   "n": 190
+   "n": 195
   },
   "over_abstention_rate": {
-   "rate": 0.191,
+   "rate": 0.17,
    "ci95": [
-    0.14,
-    0.243
+    0.123,
+    0.221
    ],
    "n": 235
   },
   "key_number_recall": {
-   "rate": 0.702,
+   "rate": 0.715,
    "ci95": [
-    0.64,
-    0.762
+    0.654,
+    0.774
    ],
-   "n": 158
+   "n": 151
   },
   "calc_correct": {
-   "rate": 0.875,
+   "rate": 0.75,
    "ci95": [
-    0.75,
-    1.0
+    0.583,
+    0.917
    ],
    "n": 24
   },
   "gold_cited_any": {
-   "rate": 0.643,
+   "rate": 0.658,
    "ci95": [
-    0.571,
-    0.709
+    0.588,
+    0.722
    ],
-   "n": 196
+   "n": 187
+  },
+  "cases_with_ungrounded_numbers": {
+   "rate": 0.098,
+   "ci95": [
+    0.064,
+    0.136
+   ],
+   "n": 235
   },
   "answers_with_ungrounded_numbers": {
    "rate": 0.098,
@@ -61,10 +90,10 @@
   },
   "claims_judged": 232,
   "claim_supported_rate": {
-   "rate": 0.884,
+   "rate": 0.888,
    "ci95": [
-    0.831,
-    0.932
+    0.835,
+    0.938
    ],
    "n": 232,
    "n_cases": 147
@@ -87,32 +116,32 @@
    "n": 147
   },
   "fact_coverage": {
-   "rate": 0.694,
+   "rate": 0.692,
    "ci95": [
-    0.637,
-    0.755
+    0.634,
+    0.75
    ],
-   "n": 252,
-   "n_cases": 144
+   "n": 247,
+   "n_cases": 140
   },
   "answers_contradicting_a_reference_fact": {
    "rate": 0.014,
    "ci95": [
     0.0,
-    0.034
+    0.036
    ],
-   "n": 147
+   "n": 140
   },
   "latency_p50_s": 12.7,
   "latency_p95_s": 24.7,
   "cost_per_case_usd": 0.00142,
-  "judge_cost_total_usd": 0.1896
+  "judge_cost_total_usd": 0.187
  },
  "by_family": {
   "adversarial": {
    "n": 35,
-   "behaviour_accuracy": 0.886,
-   "false_answer": 0,
+   "behaviour_accuracy": 0.857,
+   "false_answer": 1,
    "over_abstain": 3,
    "unsupported_claims": 0,
    "contradicted_facts": 0
@@ -127,24 +156,24 @@
   },
   "cross_source_synthesis": {
    "n": 35,
-   "behaviour_accuracy": 0.686,
+   "behaviour_accuracy": 0.714,
    "false_answer": 0,
-   "over_abstain": 11,
+   "over_abstain": 10,
    "unsupported_claims": 0,
    "contradicted_facts": 3
   },
   "factual_lookup": {
    "n": 70,
-   "behaviour_accuracy": 0.729,
-   "false_answer": 0,
-   "over_abstain": 19,
+   "behaviour_accuracy": 0.771,
+   "false_answer": 1,
+   "over_abstain": 15,
    "unsupported_claims": 0,
    "contradicted_facts": 0
   },
   "numerical_comparison": {
    "n": 33,
-   "behaviour_accuracy": 0.879,
-   "false_answer": 0,
+   "behaviour_accuracy": 0.818,
+   "false_answer": 2,
    "over_abstain": 4,
    "unsupported_claims": 0,
    "contradicted_facts": 0

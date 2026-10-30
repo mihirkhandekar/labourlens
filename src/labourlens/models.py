@@ -28,7 +28,7 @@ RightsStatus = Literal[
     "unresolved",
 ]
 RetrievalStatus = Literal["ok", "failed", "skipped", "manual"]
-Unit = Literal["percent", "ratio", "persons", "percentage_points", "per_thousand"]
+Unit = Literal["percent", "ratio", "persons", "vacancies", "percentage_points", "per_thousand"]
 Population = Literal[
     "resident", "citizen", "overall", "employees", "establishments", "not_applicable", "unverified_basis"
 ]

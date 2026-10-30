@@ -144,6 +144,47 @@ def test_tool_timeout_is_operational_failure(shared, monkeypatch):
     assert r["outcome"] == "operational_failure"
 
 
+def test_late_tool_cannot_mutate_registry(shared, monkeypatch):
+    import threading
+
+    finish, completed = threading.Event(), threading.Event()
+    original = tl.Tools.get_series
+    registry = tl.Tools(shared)
+    before = (list(registry.items), set(registry._ids), dict(registry._obs), dict(registry._n), list(registry.notes))
+    calls = []
+
+    def slow(self, **kwargs):
+        calls.append(self)
+        finish.wait(2)
+        result = original(self, **kwargs)
+        completed.set()
+        return result
+
+    monkeypatch.setattr(tl.Tools, "get_series", slow)
+    _script(monkeypatch, [_plan(calls=[_call()]), _plan("finish")], [])
+    graph = g.build_graph(shared, registry, g.AgentConfig(tool_timeout_s=0.02))
+    try:
+        result = graph.invoke({"question": "q", "trace": []})
+        assert result["outcome"] == "operational_failure" and len(calls) == 1
+    finally:
+        finish.set()
+    assert completed.wait(2)
+    assert calls[0].items  # the worker really did finish and mutate its local registry
+    assert (registry.items, registry._ids, registry._obs, registry._n, registry.notes) == before
+
+
+@pytest.mark.parametrize("debug", [False, True])
+def test_saved_trace_omits_evidence_unless_debug(shared, monkeypatch, tmp_path, debug):
+    monkeypatch.setattr(g.paths, "DATA", tmp_path)
+    monkeypatch.setenv("LABOURLENS_DEBUG_EVIDENCE", str(debug).lower())
+    _script(monkeypatch, [_plan(calls=[_call()]), _plan("finish")], [_answer("abstained", reason="x")])
+    result = g.run_agent("q", shared)
+    saved = json.loads((tmp_path / "runs" / "agent" / f"{result['run_id']}.json").read_text())
+    assert ("evidence_text" in saved) is debug
+    assert all(len(item["sha256"]) == 64 for item in saved["evidence"])
+    assert result["evidence_text"]  # private in-memory validation still has the evidence
+
+
 def test_planner_outage_is_operational_failure(shared, monkeypatch):
     def chat(*a, **k):
         raise llm.LLMError("down")

@@ -1,20 +1,22 @@
 # LabourLens data sheet
 
-Snapshot date: **2026-10-30**. Analysis window: **2024-Q1 to 2026-Q2** (answer scope). Earlier history is kept for context charts only. Machine-readable twin: `data/manifests/manifest.json`; quality detail: `artifacts/data-quality/quality-report.md`.
+Snapshot date: **2026-10-30**; manifest generated **2026-10-30T02:44:54+00:00**. Analysis window: **2024-Q1 to 2026-Q2** (answer scope). Earlier history is context only, not an answerable earlier subject period (D-031). Inventory below is read from `data/manifests/manifest.json`, `data/processed/observations.parquet` and saved `artifacts/data-quality/` artifacts; it is not a fresh ingestion or test run.
 
 **Attribution.** Contains information from data.gov.sg datasets published by the Ministry of Manpower and the Singapore Department of Statistics, accessed 2026-10-30 and made available under the [Singapore Open Data Licence v1.0](https://developers.data.gov.sg/open-data-licence). Not endorsed by any agency. MOM reports and releases are cited and linked, not redistributed.
 
 ## At a glance
 | | |
 |---|---|
-| Statistical datasets | 33 (4 core, 29 supporting; 16 added under D-019), 43,662 normalised observations, 3,790 in answer scope |
-| Documents | 16 (4 MOM quarterly reports, 8 advance/final press releases, 4 Labour Force 2025 PDFs) |
-| Quality checks | 254 run, 0 failed, 7 warnings (the 3 below plus per-dataset dash-marker warnings for the D-019 industry and occupation tables) |
+| Sources | 79: 33 statistical datasets and 46 documents |
+| Statistical datasets | 33 (4 core, 29 supporting), 43,662 normalised observations, 3,790 in answer scope |
+| Documents | 46: 24 PDFs and 22 HTML releases; 13,484 extracted passages |
+| Rights | 33 verified open-licensed datasets; 24 all-rights-reserved PDFs; 22 rights-unresolved HTML releases |
+| Quality checks | Current saved build: 255 checks, **248 pass, 7 warnings, 0 failures** |
 | Spot-check by a human | **Not yet done.** Sheets in `docs/human-review/` |
-| Tests | 51 pass (`artifacts/tests/pytest-m1.txt`) |
+| Historical M1 tests | 51 passed in `artifacts/tests/pytest-m1.txt`; not a current-suite result |
 
 ## 1. Statistical datasets (data.gov.sg, Open Data Licence)
-Core datasets (ADR-001) are first four rows; the rest are supporting (ADR-003).
+Core datasets (ADR-001) are the first four rows. The table is a selected inventory, not all 33 datasets; all source IDs, URLs, hashes and rights records are in the manifest and `data/export/sources.json`. Supporting industry, occupation and workforce-adjustment tables are included under ADR-003 and D-019.
 
 | Source id | Title | Observations | Coverage | SHA-256 (first 10) |
 |---|---|---|---|---|
@@ -35,11 +37,13 @@ Full URLs, snapshot ids and licences: `data/export/sources.json`. Raw CSVs: `dat
 ## 2. Documents (MOM)
 | Group | Items | Rights status (in manifest) | Committed? |
 |---|---|---|---|
-| Quarterly labour market reports 3Q25, 4Q25, 1Q26, 2Q26 | 4 PDFs, 59 to 64 pages each | All rights reserved (notice read in the PDFs) | No |
-| Labour Force in Singapore 2025 | 4 PDFs | All rights reserved (notice read in the PDFs) | No |
-| Advance and final press releases for the same four quarters | 8 HTML pages | **Unresolved**: MOM terms-of-use page could not be read by an automated fetch | No |
+| Quarterly labour-market reports, 2023-Q1 through 2026-Q2 | 14 PDFs | Verified all rights reserved | No |
+| Labour-force publications for 2024 and 2025 | 8 PDFs, four per year | Verified all rights reserved | No |
+| Job-vacancy 2025 and wage-practices 2024 reports | 2 PDFs | Verified all rights reserved | No |
+| Advance and final quarterly releases, 2024-Q1 through 2026-Q2 | 20 HTML pages | **Unresolved**, not permission to redistribute | No |
+| Job-vacancy 2025 and wage-practices 2024 releases | 2 HTML pages | **Unresolved**, not permission to redistribute | No |
 
-Documents are fetched by script into `data/raw/` (gitignored). Extracted text lives in `data/passages/` (gitignored). The repository carries ids, hashes, locators and links only.
+Documents are fetched into `data/raw/` (gitignored); extracted text stays in `data/passages/` (gitignored). The repository carries identifiers, hashes, locators and links, not full MOM documents or extensive extracted text. Public accessibility does not grant redistribution permission. All 22 unresolved-rights sources stay local-only pending individual rights clearance.
 
 ## 3. Provenance
 Every source has a manifest entry: original URL, publisher, title, publication and retrieval dates, release stage (advance, final, annual), snapshot id, SHA-256, rights status and note, transformation version. Every observation and passage carries `source_id`, `snapshot_id` and a locator (CSV row and column, or PDF page and block). `uv run labourlens trace <observation_id|passage_id>` prints the full chain. Snapshots are immutable and hash-addressed; re-fetching never overwrites, and `data/manifests/manifest_history.jsonl` is append-only.
@@ -62,15 +66,17 @@ Every source has a manifest entry: original URL, publisher, title, publication a
 
 **Not computed.** Retrenchments per 1,000 employees: no verified denominator dataset.
 
-**Garbled PDF text.** The last page of each of three reports (reader feedback form) uses an unmapped font. 5 blocks per report are detected as garbled and flagged; they are excluded from retrieval later. Table-like blocks (about 55 to 60% of passages) are flagged `table_unreliable`: do not quote numbers from them without checking the dataset.
+**PDF extraction flags.** Across the saved extraction records, 7,055 PDF blocks are `table_unreliable`, 5,833 are `ok`, and 69 are `garbled`. HTML passages do not use that PDF flag count. Flagged tables are not a reliable numerical answer source; use compatible validated dataset records. Garbled blocks are excluded from retrieval.
 
-**Low-yield PDF.** The Labour Force 2025 survey-findings PDF yields 198 passages over 80 pages, probably image-heavy; flagged by a warning check.
+**Low-yield PDF.** The Labour Force 2025 survey-findings PDF yields 198 passages over 80 pages in the saved extraction statistics. Image-heavy content is a possible explanation, not a verified diagnosis or a current quality-report warning.
 
 ## 6. Quality checks and known warnings
-142 checks (manifest integrity, schema, period coverage, duplicates, ranges, hierarchy sums, extraction, page dates, reconciliation, packaging). Warnings: (1) 8 HTML releases have unresolved rights; (2) 47 in-scope industry cells are '-'; (3) the recomputed vacancy ratio differs from the published one.
+The current saved `artifacts/data-quality/validation.json` and `quality-report.md` agree: **255 checks = 248 passes + 7 warnings + 0 failures**. The earlier 254-check total omitted `security.no_instruction_like_text_in_sources`, now emitted by `check_injection` in `src/labourlens/data/validate.py` and included by `run_all`. Its saved result scanned 13,484 passages and 147 distinct statistical text values, with zero heuristic hits. This is an added ingestion check, not an extra source or evidence of complete injection resistance; the heuristic can miss paraphrases. The previous committed report had 247 passes and the same seven warnings.
+
+Checks cover manifest integrity, schemas, periods, duplicates, ranges, hierarchy sums, extraction, dates, instruction-like source content, reconciliation and packaging. Warnings are unresolved rights for 22 HTML sources; undefined dash markers in five tables (47 retrenchment-industry, 50 permanent-industry, 288 term-contract-industry, 3 term-contract-occupation and 28 short-workweek/temporary-layoff-industry in-scope cells); and the recomputed vacancy ratio discrepancy. These are saved build observations, not a fresh build, test run or evidence of human verification.
 
 ## 7. Limits
 - Extraction quality for tables is not reliable; numbers come from datasets, text supplies explanation.
-- Page dates for 8 releases match the catalogue; MOM reports' internal dates were not independently audited beyond that.
+- Saved page-date checks cover releases; internal PDF dates and representative extraction fidelity still need human inspection.
 - No human has yet verified values; sheets are prepared (`docs/human-review/`).
 - Coverage is one snapshot per source, so revision tracking is baseline-only until a second fetch is made.

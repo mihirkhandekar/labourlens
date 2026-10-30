@@ -103,7 +103,7 @@ def test_security_keeps_pass_intervals_and_category_counts():
 
 
 def test_artifact_reader_uses_commit_snapshot_not_working_tree(monkeypatch, tmp_path):
-    path = "experiments/eval/synthetic/model.metrics.json"
+    path = "experiments/eval/agent-dev-A3/model.metrics.json"
     working = tmp_path / path
     working.parent.mkdir(parents=True)
     working.write_text('{"metrics": {"n_cases": 999}}')
@@ -129,3 +129,55 @@ def test_artifact_reader_uses_commit_snapshot_not_working_tree(monkeypatch, tmp_
     assert second.mapping(path)["metrics"]["n_cases"] == 17
     assert ("show", "first:" + path) in calls
     assert ("show", "second:" + path) in calls
+
+
+@pytest.mark.parametrize("retriever", ["r3", "hybrid"])
+@pytest.mark.parametrize("model", ["gpt-6-luna", "gpt-5.6-luna"])
+def test_registered_heldout_projection_includes_safe_fingerprints(retriever, model):
+    path = f"experiments/eval/agent-heldout-H-{retriever}/{model}.metrics.json"
+    source = {
+        "gold_sha256": "a" * 64,
+        "prompt_sha256": {"planner": "b" * 64, "answer": "c" * 64,
+                          "raw_prompt": "PRIVATE_PROMPT"},
+        "git_head": "d" * 40,
+        "price_table_sha256": "e" * 64,
+        "eligible_n": 31,
+        "available_n": 30,
+        "raw_answer": "PRIVATE_ANSWER",
+    }
+    rows, _ = _experiments(SyntheticArtifacts({path: {
+        "label": model, "provenance": source,
+        "metrics": {"n_cases": 30, "answers_with_ungrounded_numbers": {
+            "rate": 0.1, "n": 30, "ci95": [0, 0.2],
+        }},
+    }}), "experiments/eval/")
+    assert _Artifacts._allowed(path)
+    assert _Artifacts._allowed(path.replace(".metrics.json", ".cases.jsonl"))
+    assert rows[0]["split"] == "heldout"
+    fingerprint = rows[0]["scoring_provenance"]
+    assert fingerprint["gold_sha256"] == source["gold_sha256"]
+    assert fingerprint["git_head"] == source["git_head"]
+    assert fingerprint["eligible_n"] == 31
+    assert fingerprint["available_n"] == 30
+    assert fingerprint["prompt_sha256"] == {"planner": "b" * 64, "answer": "c" * 64}
+    metrics = rows[0]["metrics"]
+    assert metrics["cases_with_ungrounded_numbers"] == metrics["answers_with_ungrounded_numbers"]
+    assert metrics["cases_with_ungrounded_numbers"]["n"] == metrics["n_cases"]
+    assert "PRIVATE_" not in json.dumps(rows)
+
+
+@pytest.mark.parametrize("path", [
+    "experiments/eval/agent-heldout-H-r3/gpt-4.1-mini.metrics.json",
+    "experiments/eval/agent-heldout-H-hybrid/gpt-4.1-mini.cases.jsonl",
+    "experiments/eval/agent-heldout-H-other/gpt-6-luna.metrics.json",
+    "experiments/eval/agent-heldout-H-r3/gpt-6-luna.raw.json",
+    "experiments/runs/agent-heldout-H-r3/gpt-6-luna.scores.jsonl",
+])
+def test_unregistered_heldout_and_raw_runs_are_excluded(path):
+    assert not _Artifacts._allowed(path)
+    if path.endswith(".metrics.json"):
+        rows, paths = _experiments(SyntheticArtifacts({
+            path: {"metrics": {"n_cases": 31}},
+        }), "experiments/eval/")
+        assert rows == []
+        assert paths == []

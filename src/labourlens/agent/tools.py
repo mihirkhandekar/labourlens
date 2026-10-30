@@ -169,6 +169,22 @@ class Tools:
         # and shown to the answer step next to the evidence (never citeable themselves).
         self.notes: list[str] = []
 
+    def fork(self) -> Tools:
+        """Isolate a tool invocation; only an on-time completion may be committed."""
+        import copy
+
+        child = copy.copy(self)
+        child.items = list(self.items)
+        child._ids = set(self._ids)
+        child._obs = {k: dict(v) for k, v in self._obs.items()}
+        child._n = dict(self._n)
+        child.notes = list(self.notes)
+        return child
+
+    def commit(self, child: Tools) -> None:
+        self.items, self._ids, self._obs = child.items, child._ids, child._obs
+        self._n, self.notes = child._n, child.notes
+
     def _note(self, text: str) -> None:
         if text not in self.notes and len(self.notes) < MAX_NOTES:
             self.notes.append(text)

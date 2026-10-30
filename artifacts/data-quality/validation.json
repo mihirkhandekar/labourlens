@@ -1251,6 +1251,11 @@
       "status": "pass"
     },
     {
+      "detail": "scanned 13484 passages and 147 distinct text values; hits=0 []",
+      "name": "security.no_instruction_like_text_in_sources",
+      "status": "pass"
+    },
+    {
       "detail": "visible PDFs: []",
       "name": "packaging.no_pdf_visible_to_git",
       "status": "pass"
@@ -1272,7 +1277,7 @@
     }
   ],
   "summary": {
-    "pass": 247,
+    "pass": 248,
     "warn": 7
   }
 }

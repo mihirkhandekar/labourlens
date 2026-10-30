@@ -14,7 +14,14 @@ from labourlens.mcp import analysis
 from labourlens.mcp.client import McpClientError, McpStatsClient, register_test_server, screen_result
 from labourlens.mcp.models import MAX_DIMENSION_VALUES, DimensionValuesResult, ListDatasetsResult
 
-STATS = StatsData()
+STATS = None
+
+
+@pytest.fixture(autouse=True)
+def _load_stats(request):
+    global STATS
+    if request.node.get_closest_marker("corpus") and STATS is None:
+        STATS = StatsData()
 RET = dict(source_id="retrenched_employees")
 
 

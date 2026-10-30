@@ -10,6 +10,8 @@ fields are short statements written for the activity log.
 
 from __future__ import annotations
 
+import hashlib
+import os
 import json
 import operator
 import time
@@ -178,15 +180,25 @@ def build_graph(shared: Shared, tools: Tools, cfg: AgentConfig):
         if missing:
             return ToolResult(False, message=f"missing required argument(s): {missing}", error_kind="invalid_arguments"), None
         kwargs = {a: call[a] for a in ARGS[name] if call.get(a) is not None}
-        fn = getattr(tools, name)
-        for attempt in range(2):  # first try plus one retry for transient failures
-            fut = pool.submit(fn, **kwargs)
+        from labourlens.retrieval.dense import embedding_deadline
+
+        def invoke(child):
+            with embedding_deadline(cfg.tool_timeout_s):
+                result = getattr(child, name)(**kwargs)
+            return result, child
+
+        for attempt in range(2):  # retry only failures whose worker has finished
+            fut = pool.submit(invoke, tools.fork())
             try:
-                return fut.result(timeout=cfg.tool_timeout_s), None
-            except (FutureTimeout, TransientToolError) as e:
-                err = f"{type(e).__name__}: tool {name} did not complete"
+                result, child = fut.result(timeout=cfg.tool_timeout_s)
+                tools.commit(child)
+                return result, None
+            except FutureTimeout as e:
+                fut.cancel()
+                return None, f"{type(e).__name__}: tool {name} did not complete"
+            except TransientToolError as e:
                 if attempt == 1:
-                    return None, err
+                    return None, f"{type(e).__name__}: tool {name} did not complete"
             except Exception as e:  # tool bug or unexpected failure: operational, never reported as missing evidence
                 return None, f"{type(e).__name__}: tool {name} failed"
         return None, "unreachable"
@@ -265,6 +277,7 @@ def build_graph(shared: Shared, tools: Tools, cfg: AgentConfig):
         return "generate_answer" if s.get("errors") and s.get("attempts", 0) < 2 else "finalize"
 
     def finalize(s: State):
+        pool.shutdown(wait=False, cancel_futures=True)
         ev: list[dict] = []
         update: dict = {}
         if s.get("outcome") in ("rejected_input", "operational_failure"):
@@ -313,7 +326,12 @@ def run_agent(question: str, shared: Shared, cfg: AgentConfig = AgentConfig(), s
     if save_trace:
         d = paths.DATA / "runs" / "agent"
         d.mkdir(parents=True, exist_ok=True)
-        (d / f"{run_id}.json").write_text(redact(json.dumps(res, indent=1, default=str)))
+        saved = dict(res)
+        saved["evidence"] = [{**item, "sha256": hashlib.sha256(res["evidence_text"][item["label"]].encode()).hexdigest()}
+                             for item in res["evidence"]]
+        if os.environ.get("LABOURLENS_DEBUG_EVIDENCE", "").lower() != "true":
+            saved.pop("evidence_text", None)
+        (d / f"{run_id}.json").write_text(redact(json.dumps(saved, indent=1, default=str)))
     if audit is not None:
         from labourlens.audit.log import log_run
 

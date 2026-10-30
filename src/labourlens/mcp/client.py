@@ -135,6 +135,30 @@ def screen_result(model: BaseModel) -> tuple[dict, int]:
     return d, quarantined
 
 
+def _resource_schema(uri: str) -> dict:
+    def entry(fields, extra):
+        props = {k: {"type": "string"} for k in fields}
+        props.update({k: {"type": ["string", "null"]} for k in ("publisher", "canonical_url")})
+        props.update(extra)
+        return {"type": "object", "properties": props, "required": list(props), "additionalProperties": False}
+
+    dataset = entry(("source_id", "title", "licence"), {
+        "periods_in_scope": {"type": "array", "items": {"type": "string"}, "minItems": 2, "maxItems": 2},
+        "series": {"type": "array", "items": {"type": "string"}}})
+    document = entry(("source_id", "title"), {
+        **{k: {"type": ["string", "null"]} for k in ("publication_date", "release_stage", "rights_status")},
+        "text_served_by_this_server": {"const": False}})
+    props = {"trust": {"const": "untrusted_data"}}
+    if uri == "labourlens://sources":
+        props.update(note={"type": "string"}, datasets={"type": "array", "items": dataset},
+                     documents={"type": "array", "items": document})
+    elif uri.startswith("labourlens://source/") and uri.removeprefix("labourlens://source/"):
+        props["entry"] = {"oneOf": [dataset, document]}
+    else:
+        raise McpClientError("not_allowed", "unknown resource URI")
+    return {"type": "object", "properties": props, "required": list(props), "additionalProperties": False}
+
+
 def _check_http_url(url: str) -> None:
     u = urlparse(url)
     if u.scheme not in ("http", "https") or not u.hostname or u.username or u.password:
@@ -228,6 +252,9 @@ class McpStatsClient:
         return [r.uri for r in res.resources]
 
     async def read_resource(self, uri: str) -> dict:
+        schema = _resource_schema(uri)
+        if self.session is None:
+            raise McpClientError("unavailable", "not connected")
         t0 = time.perf_counter()
         try:
             with anyio.fail_after(self.call_timeout_s):
@@ -236,6 +263,12 @@ class McpStatsClient:
             raise McpClientError("timeout", f"reading {uri}") from e
         except MCPError as e:
             raise McpClientError("not_found" if e.code == -32602 else "unavailable", f"resource {uri}: code {e.code}") from e
+        except Exception as e:
+            raise McpClientError("unavailable", f"reading resource: {type(e).__name__}") from e
+        if len(json.dumps(out.model_dump(), default=str).encode()) > MAX_RESPONSE_BYTES:
+            raise McpClientError("oversized", "resource response exceeds size cap")
+        if not out.contents or any(not hasattr(c, "text") for c in out.contents):
+            raise McpClientError("malformed", "resource must contain JSON text")
         text = "".join(c.text for c in out.contents if hasattr(c, "text"))
         if len(text.encode()) > MAX_RESPONSE_BYTES:
             raise McpClientError("oversized", f"resource {uri} is {len(text)} characters")
@@ -243,8 +276,21 @@ class McpStatsClient:
             doc = json.loads(text)
         except json.JSONDecodeError as e:
             raise McpClientError("malformed", f"resource {uri} is not JSON") from e
-        self.transcript.append({"step": "resources/read", "uri": uri, "bytes": len(text), "seconds": round(time.perf_counter() - t0, 3)})
-        return doc
+        try:
+            jsonschema.validate(doc, schema)
+        except jsonschema.ValidationError as e:
+            raise McpClientError("malformed", "resource shape does not match its schema") from e
+        clean = _sanitize(doc)
+        quarantined = 0
+        for field, value in list(clean.items()):
+            if isinstance(value, list):
+                clean[field] = [item for item in value if not _flagged(item)]
+                quarantined += len(value) - len(clean[field])
+        if _flagged(clean):
+            raise McpClientError("quarantined", "resource contains instruction-like text outside a list")
+        self.transcript.append({"step": "resources/read", "uri": uri, "bytes": len(text.encode()),
+                                "seconds": round(time.perf_counter() - t0, 3), "quarantined": quarantined})
+        return clean
 
     async def call(self, tool: str, **args) -> ToolReply:
         """Call one allow-listed tool and return its validated, sanitised result model."""

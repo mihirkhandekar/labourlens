@@ -7,29 +7,96 @@ Raw runs (they contain MOM quotes) go to data/runs/; committed files hold metric
 from __future__ import annotations
 
 import json
+import hashlib
+import re
+from decimal import Decimal
 import statistics
 from concurrent.futures import ThreadPoolExecutor
 
 from labourlens import paths
 from labourlens.agent.graph import AgentConfig, run_agent
-from labourlens.agent.tools import Shared
+from labourlens.agent.tools import Shared, compute_change
 from labourlens.answer import experiments as ae
-from labourlens.answer import validate as vd
 from labourlens.retrieval import evaluate as ev
+from labourlens.evaluation.provenance import snapshot
 
 WORKERS = 3
 MODEL_PAIRS = {"gpt-6-luna": ("gpt-6-luna", "gpt-6-luna"), "gpt-5.6-luna": ("gpt-5.6-luna", "gpt-5.6-luna"), "gpt-4.1-mini": ("gpt-4.1-mini", "gpt-4.1-mini")}
 
 
 def _calc_correct(case: dict, res: dict) -> bool | None:
+    """Require a cited deterministic record, correct operands/order, operation, unit and signed result.
+
+    A matching incidental number or unsigned magnitude in prose is not calculation evidence.
+    """
     calc = case.get("calculation")
     if not calc or not res["answer"]:
         return None if not calc else False
-    a = res["answer"]
-    text = " ".join([a["summary"]] + [c["text"] for c in a["claims"]])
-    want = float(calc["expected_value"])
-    got = {float(n) for n in vd.numbers(text)}
-    return any(abs(g - want) < 0.005 or abs(g - abs(want)) < 0.005 for g in got)
+    periods = {oid: e["period"] for e in case.get("evidence_data", []) for oid in e.get("observation_ids", [])}
+    inputs = calc["inputs"]
+    if len(inputs) != 2 or any(i not in periods for i in inputs):
+        return False
+    ia, ib = sorted(inputs, key=lambda i: periods[i])
+    kind = "percent_change" if "relative percent change" in calc["formula"].replace("not relative percent change", "") else "difference"
+    cid = "calc:" + hashlib.sha256(f"{ia}|{ib}|{kind}".encode()).hexdigest()[:12]
+    items = {e["label"]: e for e in res.get("evidence", [])}
+    texts = res.get("evidence_text", {})
+    cited = {c["label"] for claim in res["answer"]["claims"] for c in claim["citations"]}
+    number = r"-?\d+(?:\.\d+)?"
+    for label in cited:
+        if items.get(label, {}).get("id") != cid:
+            continue
+        text = texts.get(label, "")
+        if not text.startswith(f"Calculated {kind.replace('_', ' ')} of "):
+            continue
+        match = re.search(r"from (\d{4}-Q[1-4]) to (\d{4}-Q[1-4]): (.*?) = (" + number + r") (.*?)\. Inputs (\w+) \((.*?)\) and (\w+) \((.*?)\)\.", text)
+        if not match:
+            continue
+        pa, pb, formula, value, unit, la, ipa, lb, ipb = match.groups()
+        if (pa, pb, ipa, ipb) != (periods[ia], periods[ib], periods[ia], periods[ib]):
+            continue
+        if items.get(la, {}).get("id") != ia or items.get(lb, {}).get("id") != ib:
+            continue
+        values = []
+        for lab in (la, lb):
+            parts = texts.get(lab, "").split(" | ")
+            if len(parts) < 3:
+                break
+            m = re.fullmatch(r"(-?[\d,]+(?:\.\d+)?)(%| persons| vacancies| \(ratio\))", parts[-2])
+            if not m:
+                break
+            values.append((m[1].replace(",", ""), {"%": "percent", " (ratio)": "ratio"}.get(m[2], m[2].strip())))
+        if len(values) != 2 or values[0][1] != values[1][1]:
+            continue
+        expected, _, expected_unit, expected_formula = compute_change(values[0][0], values[1][0], kind, values[0][1])
+        if formula != expected_formula or unit != expected_unit or Decimal(value) != expected or abs(expected - Decimal(str(calc["expected_value"]))) >= Decimal("0.005"):
+            continue
+        # Legacy gold has descriptive aliases for ratio units; do not conflate counts or percent.
+        aliases = {"ratio": "vacancies per unemployed person"}
+        if aliases.get(unit, unit) != aliases.get(calc["unit"], calc["unit"]):
+            continue
+        claims = [c["text"] for c in res["answer"]["claims"] if any(x["label"] == label for x in c["citations"])]
+        down = r"(?:decreas\w*|declin\w*|fell|fall\w*|drop\w*|lower|fewer|reduc\w*|down)"
+        up = r"(?:increas\w*|rose|ris\w*|grew|growth|higher|more|up)"
+        for prose in claims:
+            prose = re.sub(r"(?<=\d),(?=\d)", "", prose)
+            magnitude = abs(expected)
+            tokens = [(m.start(), Decimal(m.group())) for m in re.finditer(r"\d+(?:\.\d+)?", prose)]
+            hits = [pos for pos, v in tokens if abs(v - magnitude) < Decimal("0.005")]
+            if not hits:
+                continue
+            # Unit wording is free (people/persons, % / percent); the cited record carries the unit.
+            # Direction must agree with the sign of the deterministic result.
+            signed_down = bool(re.search(r"(?:change\w*|difference|delta)[^.;]{0,80}?[-\u2212]\s*$", prose[:max(hits)], re.I))
+            has_down = bool(re.search(down, prose, re.I)) or signed_down
+            has_up = bool(re.search(up, prose, re.I))
+            if expected < 0 and has_down and not has_up:
+                return True
+            if expected > 0 and not has_down:
+                return True
+            if expected == 0:
+                return True
+    return False
 
 
 def to_record(res: dict) -> dict:
@@ -80,20 +147,22 @@ def run(split: str = "dev", pairs: list[str] | None = None, answer_prompt: str =
     for label in pairs or MODEL_PAIRS:
         pm, am = MODEL_PAIRS[label]
         cfg = AgentConfig(planner_model=pm, answer_model=am, answer_prompt=answer_prompt, retrieval=retrieval, planner_prompt=planner_prompt)
+        provenance = snapshot(cfg.key(), len(cases), len(cases))
         print(f"[agent] {label} on {len(cases)} cases", flush=True)
         with ThreadPoolExecutor(WORKERS) as ex:
             results = list(ex.map(lambda c: (c, run_agent(c["question"], shared, cfg)), cases))
         raw = paths.DATA / "runs" / exp
         raw.mkdir(parents=True, exist_ok=True)
-        (raw / f"{label}.jsonl").write_text("\n".join(json.dumps({"case_id": c["case_id"], **r}, default=str) for c, r in results) + "\n")
-        scores = [score_run(c, r) for c, r in results]
+        (raw / f"{label}.jsonl").write_text("\n".join(json.dumps({"case_id": c["case_id"], **r, "generation_provenance": provenance}, default=str) for c, r in results) + "\n")
+        scores = [{**score_run(c, r), "provenance": provenance} for c, r in results]
         pub = paths.EXPERIMENTS / "runs" / exp
         pub.mkdir(parents=True, exist_ok=True)
         (pub / f"{label}.scores.jsonl").write_text("\n".join(json.dumps(s) for s in scores) + "\n")
         rows[label] = aggregate(scores)
-        (pub / f"{label}.metrics.json").write_text(json.dumps({"label": label, "config": cfg.key(), "metrics": rows[label]}, indent=1))
-    lines = [f"# Agent end-to-end, split `{split}`, {tag} (n={len(cases)} cases, answer prompt {answer_prompt})", "",
-             "Draft gold labels. Planner and answer step use the same model. Prompts planner_v1 and answer_v2. Rates are over cases.", "",
+        (pub / f"{label}.metrics.json").write_text(json.dumps({"label": label, "config": cfg.key(), "provenance": provenance, "metrics": rows[label]}, indent=1))
+    lines = [f"# Agent end-to-end, split `{split}`, {tag} (available n={len(cases)})", "",
+             f"Draft gold labels. Planner and answer step use the same model. Prompts `{planner_prompt}` and `{answer_prompt}`; retrieval `{retrieval}`. Rates are over scored cases.", "",
+             "Scored n by configuration: " + ", ".join(f"{label}={m['n']}" for label, m in rows.items()) + ".", "",
              "| config | " + " | ".join(COLS) + " |", "|---|" + "---|" * len(COLS)]
     lines += [f"| {k} | " + " | ".join(str(m[c]) for c in COLS) + " |" for k, m in rows.items()]
     text = "\n".join(lines) + "\n"

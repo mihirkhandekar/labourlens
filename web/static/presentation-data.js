@@ -143,7 +143,7 @@ const captions = {
   agent: 'Bounded-workflow experiment results, not a live run. Tool errors, unsupported numbers and operational failures are listed under additional measurements.',
   mcp: 'Warm-session MCP latency against direct calls. The initial connection is reported separately. Matching refusals are not data returns.',
   quality: 'Summary counts cover all checks; the table lists notable checks only. Warnings on coverage, rights and definitions remain open when checks pass.',
-  reconciliation: 'Advance-to-final differences are release revisions. Dataset-to-final differences come from population basis and are unresolved. The series are not interchangeable.',
+  reconciliation: 'Advance-to-final differences are release revisions. Dataset-to-final differences remain an unresolved definition or vintage discrepancy; their cause is not established. The series are not interchangeable.',
   eda: 'Change between first and last observation per series, in its own unit and population. No causal claim or forecast.',
 };
 function experimentGroup(row) {

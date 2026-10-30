@@ -85,3 +85,15 @@ def test_observation_ids_are_deterministic():
     n._long(copy.deepcopy(spec), "snap-test", spec["expected_columns"], rows, a)
     n._long(copy.deepcopy(spec), "snap-test", spec["expected_columns"], rows, b)
     assert a.observations[0].observation_id == b.observations[0].observation_id
+
+
+def test_job_vacancy_unit_is_a_count_of_vacancies():
+    from labourlens.agent.tools import _fmt, compute_change
+
+    spec = catalog.adapter_spec("job_vacancy_count")
+    res = _res(spec["source_id"])
+    n._long(spec, "snap-test", spec["expected_columns"], [["2026-Q2", "10000"]], res)
+    assert len(res.observations) == 1
+    assert res.observations[0].unit == "vacancies"
+    assert _fmt(10000, "vacancies") == "10,000 vacancies"
+    assert compute_change(10000, 11000, "difference", "vacancies")[2] == "vacancies"
