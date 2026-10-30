@@ -5,43 +5,43 @@
   "embedding": "text-embedding-3-large",
   "depth": 50,
   "rrf_c": 60,
-  "gold_file_sha256": "5d74402e107dae03316e7635a04d1ebc6caf9d4de9fb151174acb6391bfa589b",
+  "gold_file_sha256": "647b26a2f0faa86be30ad897840bc1887b54f55c27268d141565b94cb22998e8",
   "soft_bonus": 0.00819672131147541,
   "rerank_model": "gpt-6-luna",
   "rerank_prompt_hash": "72d28ca899a0",
   "pool": 30
  },
  "metrics": {
-  "n_cases": 137,
-  "hit@3": 0.9635,
-  "hit@5": 0.9708,
-  "hit@8": 0.9708,
-  "hit@10": 0.9708,
-  "mrr@10": 0.9142,
-  "gold_passage_coverage@8": 0.92,
-  "pool_recall@30": 0.9708,
-  "pool_recall@50": 0.9854,
+  "n_cases": 128,
+  "hit@3": 0.9609,
+  "hit@5": 0.9688,
+  "hit@8": 0.9688,
+  "hit@10": 0.9688,
+  "mrr@10": 0.9121,
+  "gold_passage_coverage@8": 0.9182,
+  "pool_recall@30": 0.9688,
+  "pool_recall@50": 0.9844,
   "hit@8_ci95": [
-   0.9416,
-   0.9927
+   0.9375,
+   0.9922
   ],
-  "hit@8_diff_vs_R0": 0.3723,
+  "hit@8_diff_vs_R0": 0.3984,
   "hit@8_diff_ci95": [
-   0.2847,
-   0.4526
+   0.3125,
+   0.4844
   ],
   "paired_hit@8_better_worse": [
    52,
    1
   ],
   "paired_rank_better_worse_same": [
-   101,
+   96,
    1,
-   35
+   31
   ],
   "by_family_hit@8": {
    "adversarial": {
-    "n": 14,
+    "n": 13,
     "hit@8": 1.0
    },
    "ambiguity_insufficient_causal": {
@@ -49,16 +49,16 @@
     "hit@8": 1.0
    },
    "cross_source_synthesis": {
-    "n": 35,
-    "hit@8": 0.914
+    "n": 34,
+    "hit@8": 0.912
    },
    "factual_lookup": {
-    "n": 55,
+    "n": 50,
     "hit@8": 1.0
    },
    "numerical_comparison": {
-    "n": 12,
-    "hit@8": 0.917
+    "n": 10,
+    "hit@8": 0.9
    },
    "revision_conflict": {
     "n": 19,
@@ -67,29 +67,29 @@
   },
   "by_hint_hit@8": {
    "has_hint": {
-    "n": 102,
-    "hit@8": 0.971
+    "n": 96,
+    "hit@8": 0.969
    },
    "no_hint": {
-    "n": 35,
-    "hit@8": 0.971
+    "n": 32,
+    "hit@8": 0.969
    }
   },
-  "added_latency_ms_p50": 3177.75,
-  "added_latency_ms_p95": 5943.28,
-  "retrieval_fuse_ms_p50": 0.052,
+  "added_latency_ms_p50": 3193.23,
+  "added_latency_ms_p95": 5957.51,
+  "retrieval_fuse_ms_p50": 0.068,
   "cost_usd_per_query_mean": 0.00075,
-  "cost_usd_total": 0.10281,
+  "cost_usd_total": 0.09598,
   "rerank_failures": 0,
   "rerank_latency_s_p50_p95": [
-   3.18,
-   5.94
+   3.19,
+   5.96
   ],
   "r1_component": "R1a",
-  "hit@8_diff_vs_R2": 0.1679,
+  "hit@8_diff_vs_R2": 0.1797,
   "hit@8_diff_vs_R2_ci95": [
-   0.1095,
-   0.2336
+   0.1094,
+   0.25
   ],
   "paired_hit@8_vs_R2_better_worse": [
    24,

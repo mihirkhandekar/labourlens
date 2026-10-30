@@ -31,6 +31,70 @@ R3 runs only if both R1 (the better of R1a/R1b) and R2 improve hit@8 over R0 by 
 ### Metrics and decision rules
 hit@k for k in 3, 5, 8, 10 (any gold passage inside the passages of the top-k chunks, which is exactly "gold passage in the top k"); MRR over the top 10; share of gold passages covered at 8; pool recall at 30 and 50 (the ceiling for R2); per-family hit@8; bootstrap 95% CI (2000 resamples over cases, seed 0) for hit@8 and for its paired difference to R0; added latency and cost per query. The best retrieval configuration (highest hit@8, ties broken by MRR, excluding R0) then gets one end-to-end check: whether the gold passage is among the context passages the answer step would build from the first 8 chunks, compared with R0. A change is called real only if the paired-difference interval for hit@8 excludes zero; otherwise it is labelled not separable from noise.
 
+## Current results — gold v3.2 scope correction (MEASURED, dev n=128)
+
+**This section supersedes the v3.1 retrieval numbers retained below.** Owner decision D-031 made nine pre-2024-Q1 subject-period dev questions abstain; they are no longer answerable text cases. GoldFixer reports `gold.validate == []` and the v3.2 changelog is present. No question, retriever, prompt, chunk, vector or experiment rule was changed for this rerun. Only the answerable-case subset changed. The held-out split was not scored.
+
+Command: `PYTHONHASHSEED=0 uv run labourlens retrieval-exp2`. Gold SHA-256: `647b26a2f0faa86be30ad897840bc1887b54f55c27268d141565b94cb22998e8`. All rerank responses were reused from cache; new spend **$0.00**, cumulative previously recorded rerank spend **$0.54**, below the $3 cap. Latency and per-query cost below describe the original cached API calls, not the six-second cached rerun. Generated metrics and per-case scores under `experiments/runs/dev-R*/` now refer to this hash.
+
+| config | hit@3 | hit@5 | hit@8 [95% CI] | hit@10 | MRR@10 | gold-passage coverage@8 | pool recall@30 / @50 | hit@8 diff vs R0 [95% CI] | paired hit@8 better/worse | added latency p50 ms | cost $/query |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| R0 | 0.3984 | 0.4922 | 0.570 [0.492, 0.656] | 0.5859 | 0.3244 | 0.485 | 0.7891 / 0.8594 | - | - | 0.0 | 0 |
+| R1a | 0.6406 | 0.75 | 0.844 [0.781, 0.906] | 0.8828 | 0.5421 | 0.7539 | 0.9688 / 0.9844 | +0.273 [+0.195, +0.359] | 37 / 2 | 0.67 | 0 |
+| R1b | 0.5156 | 0.5859 | 0.719 [0.648, 0.797] | 0.75 | 0.4567 | 0.6302 | 0.8828 / 0.9219 | +0.148 [+0.086, +0.211] | 19 / 0 | 0.2 | 0 |
+| R2 | 0.7891 | 0.7891 | 0.789 [0.726, 0.859] | 0.7891 | 0.7643 | 0.7333 | 0.7891 / 0.8594 | +0.219 [+0.148, +0.289] | 28 / 0 | 3826.28 | 0.000876 |
+| R3 | 0.9609 | 0.9688 | 0.969 [0.938, 0.992] | 0.9688 | 0.9121 | 0.9182 | 0.9688 / 0.9844 | +0.398 [+0.312, +0.484] | 52 / 1 | 3193.23 | 0.00075 |
+| R1b_x0.5 | 0.5 | 0.5469 | 0.656 [0.578, 0.734] | 0.6953 | 0.4162 | 0.5677 | 0.875 / 0.9141 | +0.086 [+0.039, +0.133] | 11 / 0 | 0.21 | 0 |
+| R1b_x2 | 0.5781 | 0.6953 | 0.797 [0.734, 0.867] | 0.8125 | 0.4983 | 0.707 | 0.8906 / 0.9219 | +0.227 [+0.148, +0.305] | 30 / 1 | 0.22 | 0 |
+
+### hit@8 by family
+
+| config | adversarial | ambiguity_insufficient_causal | cross_source_synthesis | factual_lookup | numerical_comparison | revision_conflict |
+|---|---|---|---|---|---|---|
+| R0 | 0.462 (n=13) | 0.0 (n=2) | 0.5 (n=34) | 0.72 (n=50) | 0.8 (n=10) | 0.316 (n=19) |
+| R1a | 0.923 (n=13) | 1.0 (n=2) | 0.824 (n=34) | 0.9 (n=50) | 0.8 (n=10) | 0.684 (n=19) |
+| R1b | 0.692 (n=13) | 0.0 (n=2) | 0.706 (n=34) | 0.84 (n=50) | 0.9 (n=10) | 0.421 (n=19) |
+| R2 | 0.692 (n=13) | 1.0 (n=2) | 0.676 (n=34) | 0.92 (n=50) | 0.9 (n=10) | 0.632 (n=19) |
+| R3 | 1.0 (n=13) | 1.0 (n=2) | 0.912 (n=34) | 1.0 (n=50) | 0.9 (n=10) | 1.0 (n=19) |
+| R1b_x0.5 | 0.538 (n=13) | 0.0 (n=2) | 0.618 (n=34) | 0.78 (n=50) | 0.9 (n=10) | 0.421 (n=19) |
+| R1b_x2 | 0.769 (n=13) | 0.5 (n=2) | 0.765 (n=34) | 0.92 (n=50) | 0.8 (n=10) | 0.579 (n=19) |
+
+### hit@8 by whether the question carries a period/stage hint
+
+| config | has_hint | no_hint |
+|---|---|---|
+| R0 | 0.458 (n=96) | 0.906 (n=32) |
+| R1a | 0.823 (n=96) | 0.906 (n=32) |
+| R1b | 0.656 (n=96) | 0.906 (n=32) |
+| R2 | 0.729 (n=96) | 0.969 (n=32) |
+| R3 | 0.969 (n=96) | 0.969 (n=32) |
+| R1b_x0.5 | 0.573 (n=96) | 0.906 (n=32) |
+| R1b_x2 | 0.76 (n=96) | 0.906 (n=32) |
+
+Hint coverage: {"any_hint": 96, "period_hint": 91, "stage_hint": 68, "stage_conflict": 9, "filter_active_R1a": 96, "period_hint_but_no_document_in_period": 0, "hint_but_no_filter": 0}
+
+### End-to-end context coverage (retrieval only; best config = R3)
+
+| config | gold passage in the context built from the top-8 chunks | gold passage in the first 8 context passages |
+|---|---|---|
+| R0 | 0.5703 | 0.4062 |
+| R3 | 0.9688 | 0.9375 |
+
+Rerank spend on new API calls this run: $0.0000. Wall time 6s.
+
+
+### Interpretation and recommendation after the correction
+
+**The conclusion is unchanged:** R1a, R1b and R2 each improve hit@8 over R0 with paired bootstrap intervals excluding zero; R3 remains strongest. R3 versus R2 is +0.1797, 95% CI [+0.1094, +0.2500], with 24 better and one worse. The baseline falls from 0.5985 to 0.5703 as nine previously answerable, mostly easier historical questions leave the set; R3 changes only from 0.9708 to 0.9688. These are different evaluation subsets, not an improvement or regression caused by a retrieval change.
+
+R3 gold-in-context from the first eight chunks is 0.9688 versus R0 0.5703; among the first eight distinct context passages it is 0.9375 versus 0.4062. These are retrieval coverage measures, not answer-quality or scope-policy compliance tests. The four R3 misses remain DEV-006, DEV-010, DEV-026 and DEV-310. The hard-filter blind spot and AI-drafted-gold/LLM-reranker bias remain. Ninety-six of 128 cases carry hints; the smallest strata remain too small for strong claims (ambiguity n=2, numerical n=10, adversarial n=13).
+
+**PROPOSAL:** the evidence still favors R3 for the next retrieval comparison, or R1a if added model latency/dependence is unacceptable. This rerun itself makes no default or architectural decision; later integration/default history is recorded in D-030 and the integration section below. No agent, prompt or integration code was touched or run for this scope-correction rerun.
+
+## Superseded v3.1 results, interpretation and original recommendation
+
+**Historical block only:** everything from the next results heading through the original Recommendation section was measured against gold v3.1 SHA-256 `5d74402e107dae03316e7635a04d1ebc6caf9d4de9fb151174acb6391bfa589b`, n=137. Those numbers and recommendations are preserved verbatim for auditability, not current results. The hypotheses above and deviations below remain part of the experiment record. Current numbers are in the v3.2 section above.
+
 ## Results (MEASURED, dev, n=137 answerable text-evidence cases, gold v3.1)
 All numbers below are copied from `experiments/runs/dev-R-SUMMARY.md` / `dev-R-summary.json` / `dev-R*/metrics.json`, produced by `PYTHONHASHSEED=0 uv run labourlens retrieval-exp2`. Gold file sha256 `5d74402e...bfa589b`; corpus 2,106 merge200 chunks. Per-case scores: `experiments/runs/dev-R*/scores.jsonl` (chunk ids, ranks, flags; no MOM text). `hit@k` equals "gold passage is among the passages of the top-k chunks". `R1b` is the pre-registered 0.5x bonus; `R1b_x0.5` and `R1b_x2` are the exploratory 0.25x and 1.0x bonuses (1/61 = 1.0x).
 

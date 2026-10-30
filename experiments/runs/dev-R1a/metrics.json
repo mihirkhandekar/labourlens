@@ -5,60 +5,60 @@
   "embedding": "text-embedding-3-large",
   "depth": 50,
   "rrf_c": 60,
-  "gold_file_sha256": "5d74402e107dae03316e7635a04d1ebc6caf9d4de9fb151174acb6391bfa589b",
+  "gold_file_sha256": "647b26a2f0faa86be30ad897840bc1887b54f55c27268d141565b94cb22998e8",
   "soft_bonus": null,
   "rerank_model": null,
   "rerank_prompt_hash": null,
   "pool": null
  },
  "metrics": {
-  "n_cases": 137,
-  "hit@3": 0.6496,
-  "hit@5": 0.7664,
-  "hit@8": 0.854,
-  "hit@10": 0.8905,
-  "mrr@10": 0.5402,
-  "gold_passage_coverage@8": 0.7664,
-  "pool_recall@30": 0.9708,
-  "pool_recall@50": 0.9854,
+  "n_cases": 128,
+  "hit@3": 0.6406,
+  "hit@5": 0.75,
+  "hit@8": 0.8438,
+  "hit@10": 0.8828,
+  "mrr@10": 0.5421,
+  "gold_passage_coverage@8": 0.7539,
+  "pool_recall@30": 0.9688,
+  "pool_recall@50": 0.9844,
   "hit@8_ci95": [
-   0.7956,
-   0.9124
+   0.7812,
+   0.9062
   ],
-  "hit@8_diff_vs_R0": 0.2555,
+  "hit@8_diff_vs_R0": 0.2734,
   "hit@8_diff_ci95": [
-   0.1752,
-   0.3358
+   0.1953,
+   0.3594
   ],
   "paired_hit@8_better_worse": [
    37,
    2
   ],
   "paired_rank_better_worse_same": [
-   69,
-   6,
-   62
+   67,
+   5,
+   56
   ],
   "by_family_hit@8": {
    "adversarial": {
-    "n": 14,
-    "hit@8": 0.929
+    "n": 13,
+    "hit@8": 0.923
    },
    "ambiguity_insufficient_causal": {
     "n": 2,
     "hit@8": 1.0
    },
    "cross_source_synthesis": {
-    "n": 35,
-    "hit@8": 0.829
+    "n": 34,
+    "hit@8": 0.824
    },
    "factual_lookup": {
-    "n": 55,
-    "hit@8": 0.909
+    "n": 50,
+    "hit@8": 0.9
    },
    "numerical_comparison": {
-    "n": 12,
-    "hit@8": 0.833
+    "n": 10,
+    "hit@8": 0.8
    },
    "revision_conflict": {
     "n": 19,
@@ -67,16 +67,16 @@
   },
   "by_hint_hit@8": {
    "has_hint": {
-    "n": 102,
-    "hit@8": 0.833
+    "n": 96,
+    "hit@8": 0.823
    },
    "no_hint": {
-    "n": 35,
-    "hit@8": 0.914
+    "n": 32,
+    "hit@8": 0.906
    }
   },
-  "added_latency_ms_p50": 0.58,
-  "added_latency_ms_p95": 1.09,
-  "retrieval_fuse_ms_p50": 0.632
+  "added_latency_ms_p50": 0.67,
+  "added_latency_ms_p95": 1.13,
+  "retrieval_fuse_ms_p50": 0.741
  }
 }
