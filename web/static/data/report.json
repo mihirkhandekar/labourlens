@@ -1,6 +1,6 @@
 {
   "schema_version": "report-1.0",
-  "generated_at": "2026-10-30T16:53:02.482694+00:00",
+  "generated_at": "2026-10-30T22:18:51.182067+00:00",
   "summary": {
     "title": "LabourLens research workbench",
     "scope": [
@@ -57627,36 +57627,36 @@
         "metrics": {
           "n_cases": 31,
           "behaviour_accuracy": {
-            "rate": 0.742,
+            "rate": 0.71,
             "ci95": [
-              0.581,
+              0.548,
               0.871
             ],
             "n": 31
           },
           "false_answer_rate": {
-            "rate": 0.04,
+            "rate": 0.042,
             "ci95": [
               0.0,
-              0.12
+              0.125
             ],
-            "n": 25
+            "n": 24
           },
           "over_abstention_rate": {
-            "rate": 0.194,
+            "rate": 0.226,
             "ci95": [
-              0.065,
-              0.355
+              0.097,
+              0.387
             ],
             "n": 31
           },
           "key_number_recall": {
-            "rate": 0.626,
+            "rate": 0.593,
             "ci95": [
-              0.439,
-              0.811
+              0.395,
+              0.784
             ],
-            "n": 18
+            "n": 19
           },
           "calc_correct": {
             "rate": 0.8,
@@ -57667,12 +57667,12 @@
             "n": 5
           },
           "gold_cited_any": {
-            "rate": 0.429,
+            "rate": 0.414,
             "ci95": [
-              0.25,
-              0.607
+              0.241,
+              0.586
             ],
-            "n": 28
+            "n": 29
           },
           "cases_with_ungrounded_numbers": {
             "rate": 0.032,
@@ -57747,9 +57747,9 @@
         "strata": {
           "adversarial": {
             "n": 5,
-            "behaviour_accuracy": 0.8,
+            "behaviour_accuracy": 0.6,
             "false_answer": 0,
-            "over_abstain": 1,
+            "over_abstain": 2,
             "unsupported_claims": 0,
             "contradicted_facts": 0
           },
@@ -57798,8 +57798,8 @@
         "scoring_provenance": {
           "eligible_n": 31,
           "available_n": 31,
-          "gold_sha256": "647b26a2f0faa86be30ad897840bc1887b54f55c27268d141565b94cb22998e8",
-          "git_head": "617d168b8badd9db775acd1bfd12f4e26d736ddb",
+          "gold_sha256": "96ec51baf05d9fb998efd3ed37762cb8cedd27b2bf329996d7251adcb01b597e",
+          "git_head": "65abbed7d3506a55d49cb9fe37628f7448438b54",
           "price_table_sha256": "634b32441c3495b4c3ec13efa3af1e9cc99e5c7523eac3a15a5c238c3acaeb5c",
           "prompt_sha256": {
             "planner": "df68ef8e5e287d1a0b1f71d938e85ec25b4f03eeec501bc439a3a77aec2482dc",
@@ -57828,28 +57828,28 @@
             "n": 31
           },
           "false_answer_rate": {
-            "rate": 0.042,
+            "rate": 0.043,
             "ci95": [
               0.0,
-              0.125
+              0.13
             ],
-            "n": 24
+            "n": 23
           },
           "over_abstention_rate": {
-            "rate": 0.226,
+            "rate": 0.258,
             "ci95": [
-              0.097,
-              0.387
+              0.129,
+              0.419
             ],
             "n": 31
           },
           "key_number_recall": {
-            "rate": 0.626,
+            "rate": 0.593,
             "ci95": [
-              0.452,
-              0.8
+              0.409,
+              0.763
             ],
-            "n": 18
+            "n": 19
           },
           "calc_correct": {
             "rate": 0.8,
@@ -57860,12 +57860,12 @@
             "n": 5
           },
           "gold_cited_any": {
-            "rate": 0.464,
+            "rate": 0.448,
             "ci95": [
-              0.286,
-              0.643
+              0.276,
+              0.621
             ],
-            "n": 28
+            "n": 29
           },
           "cases_with_ungrounded_numbers": {
             "rate": 0.0,
@@ -57942,7 +57942,7 @@
             "n": 5,
             "behaviour_accuracy": 0.4,
             "false_answer": 0,
-            "over_abstain": 2,
+            "over_abstain": 3,
             "unsupported_claims": 0,
             "contradicted_facts": 0
           },
@@ -57991,8 +57991,8 @@
         "scoring_provenance": {
           "eligible_n": 31,
           "available_n": 31,
-          "gold_sha256": "647b26a2f0faa86be30ad897840bc1887b54f55c27268d141565b94cb22998e8",
-          "git_head": "617d168b8badd9db775acd1bfd12f4e26d736ddb",
+          "gold_sha256": "96ec51baf05d9fb998efd3ed37762cb8cedd27b2bf329996d7251adcb01b597e",
+          "git_head": "65abbed7d3506a55d49cb9fe37628f7448438b54",
           "price_table_sha256": "634b32441c3495b4c3ec13efa3af1e9cc99e5c7523eac3a15a5c238c3acaeb5c",
           "prompt_sha256": {
             "planner": "df68ef8e5e287d1a0b1f71d938e85ec25b4f03eeec501bc439a3a77aec2482dc",
@@ -58013,36 +58013,36 @@
         "metrics": {
           "n_cases": 31,
           "behaviour_accuracy": {
-            "rate": 0.871,
+            "rate": 0.839,
             "ci95": [
-              0.742,
+              0.71,
               0.968
             ],
             "n": 31
           },
           "false_answer_rate": {
-            "rate": 0.067,
+            "rate": 0.069,
             "ci95": [
               0.0,
-              0.167
+              0.172
             ],
-            "n": 30
+            "n": 29
           },
           "over_abstention_rate": {
-            "rate": 0.032,
+            "rate": 0.065,
             "ci95": [
               0.0,
-              0.097
+              0.161
             ],
             "n": 31
           },
           "key_number_recall": {
-            "rate": 0.878,
+            "rate": 0.832,
             "ci95": [
-              0.737,
-              0.989
+              0.674,
+              0.965
             ],
-            "n": 18
+            "n": 19
           },
           "calc_correct": {
             "rate": 0.8,
@@ -58053,12 +58053,12 @@
             "n": 5
           },
           "gold_cited_any": {
-            "rate": 0.714,
+            "rate": 0.69,
             "ci95": [
-              0.536,
-              0.857
+              0.517,
+              0.862
             ],
-            "n": 28
+            "n": 29
           },
           "cases_with_ungrounded_numbers": {
             "rate": 0.032,
@@ -58133,9 +58133,9 @@
         "strata": {
           "adversarial": {
             "n": 5,
-            "behaviour_accuracy": 1.0,
+            "behaviour_accuracy": 0.8,
             "false_answer": 0,
-            "over_abstain": 0,
+            "over_abstain": 1,
             "unsupported_claims": 0,
             "contradicted_facts": 0
           },
@@ -58184,8 +58184,8 @@
         "scoring_provenance": {
           "eligible_n": 31,
           "available_n": 31,
-          "gold_sha256": "647b26a2f0faa86be30ad897840bc1887b54f55c27268d141565b94cb22998e8",
-          "git_head": "617d168b8badd9db775acd1bfd12f4e26d736ddb",
+          "gold_sha256": "96ec51baf05d9fb998efd3ed37762cb8cedd27b2bf329996d7251adcb01b597e",
+          "git_head": "65abbed7d3506a55d49cb9fe37628f7448438b54",
           "price_table_sha256": "634b32441c3495b4c3ec13efa3af1e9cc99e5c7523eac3a15a5c238c3acaeb5c",
           "prompt_sha256": {
             "planner": "df68ef8e5e287d1a0b1f71d938e85ec25b4f03eeec501bc439a3a77aec2482dc",
@@ -58214,28 +58214,28 @@
             "n": 31
           },
           "false_answer_rate": {
-            "rate": 0.034,
+            "rate": 0.036,
             "ci95": [
               0.0,
-              0.103
+              0.107
             ],
-            "n": 29
+            "n": 28
           },
           "over_abstention_rate": {
-            "rate": 0.065,
+            "rate": 0.097,
             "ci95": [
               0.0,
-              0.161
+              0.226
             ],
             "n": 31
           },
           "key_number_recall": {
-            "rate": 0.756,
+            "rate": 0.716,
             "ci95": [
-              0.589,
-              0.896
+              0.546,
+              0.872
             ],
-            "n": 18
+            "n": 19
           },
           "calc_correct": {
             "rate": 0.8,
@@ -58246,12 +58246,12 @@
             "n": 5
           },
           "gold_cited_any": {
-            "rate": 0.643,
+            "rate": 0.621,
             "ci95": [
-              0.464,
-              0.821
+              0.448,
+              0.793
             ],
-            "n": 28
+            "n": 29
           },
           "cases_with_ungrounded_numbers": {
             "rate": 0.065,
@@ -58328,7 +58328,7 @@
             "n": 5,
             "behaviour_accuracy": 0.6,
             "false_answer": 0,
-            "over_abstain": 1,
+            "over_abstain": 2,
             "unsupported_claims": 0,
             "contradicted_facts": 0
           },
@@ -58377,8 +58377,8 @@
         "scoring_provenance": {
           "eligible_n": 31,
           "available_n": 31,
-          "gold_sha256": "647b26a2f0faa86be30ad897840bc1887b54f55c27268d141565b94cb22998e8",
-          "git_head": "617d168b8badd9db775acd1bfd12f4e26d736ddb",
+          "gold_sha256": "96ec51baf05d9fb998efd3ed37762cb8cedd27b2bf329996d7251adcb01b597e",
+          "git_head": "65abbed7d3506a55d49cb9fe37628f7448438b54",
           "price_table_sha256": "634b32441c3495b4c3ec13efa3af1e9cc99e5c7523eac3a15a5c238c3acaeb5c",
           "prompt_sha256": {
             "planner": "df68ef8e5e287d1a0b1f71d938e85ec25b4f03eeec501bc439a3a77aec2482dc",
@@ -58543,7 +58543,7 @@
     "The population basis of the dataset employment series is unverified."
   ],
   "provenance": {
-    "commit": "9480aaac7117dd2c409195892682715ac7417212",
+    "commit": "cf6a4fe30633a266565e9c9f9c43b3096b179ae6",
     "artifacts": [
       {
         "path": "data/export/sources.json",
@@ -59003,42 +59003,42 @@
       {
         "path": "experiments/eval/agent-heldout-H-hybrid/gpt-5.6-luna.metrics.json",
         "status": "available",
-        "sha256": "7744280659f1e5afe96319368aa0aefa6290ad43a3cc5cd3c7a06b912704e1df"
+        "sha256": "7df76bf43885b05c4674d7f6fb0910c430056e98a8ff759ccadd5284605a38be"
       },
       {
         "path": "experiments/eval/agent-heldout-H-hybrid/gpt-5.6-luna.cases.jsonl",
         "status": "available",
-        "sha256": "05188092d7b4729bcfd23e834ae4cd29278110ad8bd3797b06c2b62b51ada1d0"
+        "sha256": "cadcc7f9c7a7d3803b4737f25d6ceb7544e63e89c35d66284e3d7190a1e4e39d"
       },
       {
         "path": "experiments/eval/agent-heldout-H-hybrid/gpt-6-luna.metrics.json",
         "status": "available",
-        "sha256": "c85ba8ee952583a2e679723bd07dfc9f1ced68271615606398701381ff5e84c4"
+        "sha256": "57b660546078d1d2152d2f0328813f418c6fe636beaf2304c22136f744221d18"
       },
       {
         "path": "experiments/eval/agent-heldout-H-hybrid/gpt-6-luna.cases.jsonl",
         "status": "available",
-        "sha256": "6be6772eed72c171c99faff1f455ed949d9e474c642eb72ce07d03c8aa50cbee"
+        "sha256": "2ccae9f12afd3a11510ca3d1e61b2ba3d65cfcee105cfeed735e2e647956813b"
       },
       {
         "path": "experiments/eval/agent-heldout-H-r3/gpt-5.6-luna.metrics.json",
         "status": "available",
-        "sha256": "0a41620861fb2afa2ecb179cb8c3ccdb8ca29b0c99e7cf9d37db16ec8b434dcc"
+        "sha256": "7d2b047312d339e04a2336cea6584eb5de6b3a25b7fffd33118372d62c00003f"
       },
       {
         "path": "experiments/eval/agent-heldout-H-r3/gpt-5.6-luna.cases.jsonl",
         "status": "available",
-        "sha256": "2c63f825c908cfa534cfa6bfcdf6b872eec2b8feb037f8d4d9f0e8ee05b8727a"
+        "sha256": "d3cb0f72b2886dd2c66a939b88814a11555795b1b403d3af4b174b3942df075c"
       },
       {
         "path": "experiments/eval/agent-heldout-H-r3/gpt-6-luna.metrics.json",
         "status": "available",
-        "sha256": "0fa6ee54b14c92bd71c5f9b34b62723df00608ca242517322dcc974e6c0b4b69"
+        "sha256": "e01216a619a96790281ed9a6941513ec47287a9da200a2f871713fe01e440d8c"
       },
       {
         "path": "experiments/eval/agent-heldout-H-r3/gpt-6-luna.cases.jsonl",
         "status": "available",
-        "sha256": "c703a9016d8b8b40f5e10d0ed91416a4af05e263070ab115a68e6bfc29f88c70"
+        "sha256": "a5d7cc711bcad09b474d7165f01c6919171a0fe88f209377d4816ef64aa35785"
       },
       {
         "path": "experiments/threats/runs/gpt-4.1-mini+naive.metrics.json",
