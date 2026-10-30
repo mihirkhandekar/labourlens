@@ -21,35 +21,39 @@
   }
  },
  "metrics": {
-  "n_cases": 9,
+  "n_cases": 24,
   "n_chunks": 488,
   "corpus_hash": "0169954ccabc773cac6fb8c1f746ac0d43e69bd2b6e43e149a78f559cf18fd8a",
-  "hit@1": 0.1111,
-  "hit@3": 0.4444,
-  "hit@5": 0.5556,
+  "hit@1": 0.25,
+  "hit@3": 0.5417,
+  "hit@5": 0.5833,
   "hit@10": 0.6667,
-  "page_hit@5": 0.5556,
+  "page_hit@5": 0.5833,
   "page_hit@10": 0.6667,
-  "mrr": 0.3194,
-  "passage_recall@5": 0.3889,
-  "ctx_words@5": 729.9,
-  "latency_ms_p50": 0.141,
+  "mrr": 0.4087,
+  "passage_recall@5": 0.375,
+  "ctx_words@5": 737.7,
+  "latency_ms_p50": 0.147,
   "by_family_hit@5": {
    "adversarial": {
-    "n": 1,
-    "hit@5": 0.0
-   },
-   "cross_source_synthesis": {
     "n": 3,
     "hit@5": 0.333
    },
-   "factual_lookup": {
-    "n": 3,
-    "hit@5": 0.667
+   "cross_source_synthesis": {
+    "n": 7,
+    "hit@5": 0.429
    },
-   "revision_conflict": {
+   "factual_lookup": {
+    "n": 8,
+    "hit@5": 0.75
+   },
+   "numerical_comparison": {
     "n": 2,
     "hit@5": 1.0
+   },
+   "revision_conflict": {
+    "n": 4,
+    "hit@5": 0.5
    }
   }
  }

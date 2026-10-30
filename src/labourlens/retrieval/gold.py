@@ -25,10 +25,12 @@ def validate(path=None) -> list[str]:
     cases = [json.loads(line) for line in f.read_text().splitlines() if line.strip()]
     errs: list[str] = []
     pids: dict[str, str] = {}
+    texts: dict[str, str] = {}
     for p in paths.PASSAGES.glob("*.jsonl"):
         for line in p.read_text().splitlines():
             d = json.loads(line)
             pids[d["passage_id"]] = d["source_id"]
+            texts[d["passage_id"]] = d["text"]
     obs = pd.read_parquet(paths.PROCESSED / "observations.parquet").set_index("observation_id")
     seen = set()
     for c in cases:
@@ -60,9 +62,15 @@ def validate(path=None) -> list[str]:
                     errs.append(f"{cid}: observation {oid} does not match {e['source_id']} {e['period']}")
         calc = c["calculation"]
         if calc:
-            for oid in calc["inputs"]:
-                if oid not in obs.index:
-                    errs.append(f"{cid}: calculation input {oid} unknown")
+            if isinstance(calc["inputs"], dict):  # literal values quoted from text evidence: each must appear in a cited passage
+                text = " ".join(texts.get(pid, "") for e in c["evidence_text"] for pid in e["passage_ids"])
+                for name, v in calc["inputs"].items():
+                    if f"{v:g}" not in text and str(v) not in text:
+                        errs.append(f"{cid}: calculation input {name}={v} not found in cited passages")
+            else:
+                for oid in calc["inputs"]:
+                    if oid not in obs.index:
+                        errs.append(f"{cid}: calculation input {oid} unknown")
         if c["expected_behavior"] == "answer" and not (c["evidence_text"] or c["evidence_data"]):
             errs.append(f"{cid}: answerable case with no evidence")
         if c["expected_behavior"] in ("abstain", "clarify") and not c["abstain_reason"]:
