@@ -8,7 +8,7 @@
 
 | Item | Value |
 |---|---|
-| Active milestone | **M1 — Government data ingestion and provenance** |
+| Active milestone | **M2 implemented, awaiting owner review (gold set) and M3 approval.** M1 awaiting spot-check. |
 | Gate status | **M1 IMPLEMENTATION APPROVED 30 Oct 2026 (D-005).** Scope: ADR-001 + ADR-003 structured data, D-006 corpus, D-004 CSV snapshots committed to the private repo. M2+ is NOT approved. |
 | Code written | M1 complete: `src/labourlens/**`, 51 tests pass, 142 build checks 0 failed |
 | Data downloaded | See checklist; raw files under `data/raw/` (gitignored) |
@@ -105,3 +105,5 @@ Every row came from a live call; none is stored as a repo artifact yet. M1.1 mus
 - 2026-10-30 (M1 close): Added tests (51 pass, `artifacts/tests/pytest-m1.txt`), review sheets (`labourlens review-sheets`; UNREVIEWED), data sheet, README, `.env.example`, requirements matrix, study note (private), D-011 human-feedback design. Re-fetched the 4 LF2025 PDFs to sync catalog rights (now 8 unresolved, all HTML releases). Clean-room run in /tmp copy of tracked files: `uv sync`, `fetch --kind documents`, `build` (142 checks, 0 failed), `pytest` (51 passed). NOT re-run in clean room: dataset `fetch` (throttled, about 4 min; datasets came from committed snapshots). Committed `7c23b3a` and pushed to the private GitHub repo. Next: owner review of `docs/human-review/`, then M2 approval. Claim released.
 
 - 2026-10-30: Owner approved starting M2 (BM25 baseline). Decisions recorded since M1 close: D-012 persisted BM25 index, D-013 managed Postgres direction, D-014 DigitalOcean. M2 design discussion in progress (chunking, BM25 library, gold labelling); no M2 code written yet.
+
+- 2026-10-30 (M2): D-015 chunking, D-016 experiment policy, D-017 gold authoring, D-018 protocol. Built `src/labourlens/retrieval/` (chunk, tokenize, bm25_index, evaluate, experiments, gold), CLI `retrieval-exp`, `gold-check`. 50 draft gold cases (19 dev, 31 held-out) by a subagent, validated mechanically; I spot-checked 4 against passage text and scanned for copied MOM text (none). Dev experiments E1 to E4 on 9 text cases: see `docs/experiments/m2-bm25-baseline.md`. 74 tests pass (`artifacts/tests/pytest-m2.txt`). NOT done: owner review of `docs/human-review/gold-review.md`; gold freeze; held-out run (pre-registered, 3 configs); more dev cases. Next: owner reviews gold, then M3 (dense retrieval, LLM) needs approval and a design discussion.
