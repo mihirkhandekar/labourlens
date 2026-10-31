@@ -22,6 +22,15 @@ def main(argv: list[str] | None = None) -> int:
     rp = sub.add_parser("review-pack", help="build the private offline owner review pack (no network)")
     rp.add_argument("--tiebreak-dir", help="directory with cards.jsonl and verdicts-*.jsonl (default: private/human-review/tiebreak when present)")
     rp.add_argument("--no-tiebreak", action="store_true", help="ignore any tie-break verdicts")
+    rp.add_argument("--heldout-v2-only", action="store_true", help="build only the small held-out v2 review page (same as v2-review-pack)")
+    sub.add_parser("v2-review-pack", help="build the small private held-out v2 review page (no network, no model calls)")
+    sub.add_parser("v2-ai-summary", help="write the commit-safe summary of the three AI reviews of the held-out v2 draft (no network)")
+    va = sub.add_parser("v2-approve", help="validate the owner's held-out v2 review export; dry run unless --write")
+    va.add_argument("--review-export", type=Path, required=True)
+    va.add_argument("--write", action="store_true", help="write experiments/gold/heldout_v2_v1.jsonl and the signed block in FREEZE.md")
+    vr = sub.add_parser("v2-run", help="print (and with --yes run) the registered held-out v2 commands for a signed gold file; spends money with --yes")
+    vr.add_argument("--gold", type=Path, required=True)
+    vr.add_argument("--yes", action="store_true", help="actually run the paid commands")
     ri = sub.add_parser("review-ingest", help="validate owner export; write summary and proposed gold changes only")
     ri.add_argument("results")
     rx = sub.add_parser("retrieval-exp", help="run BM25 experiments on a gold split")
@@ -88,6 +97,30 @@ def main(argv: list[str] | None = None) -> int:
     t.add_argument("id")
 
     args = p.parse_args(argv)
+    if args.cmd in ("v2-approve", "v2-run"):
+        from labourlens.review import heldout_v2 as hv2
+
+        code, message = hv2.v2_approve(args.review_export, args.write) if args.cmd == "v2-approve" else hv2.v2_run(args.gold, args.yes)
+        print(message, file=sys.stderr if code else sys.stdout)
+        return code
+    if args.cmd == "v2-ai-summary":
+        from labourlens.review import heldout_v2 as hv2
+
+        try:
+            print(hv2.write_ai_summary())
+        except ValueError as exc:
+            print(f"Summary error: {exc}", file=sys.stderr)
+            return 2
+        return 0
+    if args.cmd == "v2-review-pack" or (args.cmd == "review-pack" and args.heldout_v2_only):
+        from labourlens.review import heldout_v2 as hv2
+
+        try:
+            print(hv2.build_v2_page())
+        except ValueError as exc:
+            print(f"Review error: {exc}", file=sys.stderr)
+            return 2
+        return 0
     if args.cmd in ("review-pack", "review-ingest"):
         from labourlens.review.pack import build_pack, ingest_review
 

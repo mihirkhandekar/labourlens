@@ -412,10 +412,11 @@ def link(url: str, label: str) -> str:
 
 
 class Evidence:
-    def __init__(self, root: Path, base: Path | None = None, label: str = 'corpus v3', like: 'Evidence | None' = None):
+    def __init__(self, root: Path, base: Path | None = None, label: str = 'corpus v3', like: 'Evidence | None' = None, dpi: int = 110, quality: int = 70, compact: bool = False):
         """One corpus: passages, observations and manifest from `base` (default: the live data/ directory)."""
         self.root = root
         self.label = label
+        self.dpi, self.quality, self.compact = dpi, quality, compact
         base = Path(base) if base else root / 'data'
         entries = json.loads((base / 'manifests/manifest.json').read_text())['entries']
         self.manifest = {(e['source_id'], e['snapshot_id']): e for e in entries}
@@ -436,8 +437,8 @@ class Evidence:
         if key not in self.images:
             with pymupdf.open(raw) as doc:
                 sheet = doc[page - 1]
-                pix = sheet.get_pixmap(dpi=110, alpha=False)
-                self.images[key] = base64.b64encode(pix.tobytes('jpeg', jpg_quality=70)).decode()
+                pix = sheet.get_pixmap(dpi=self.dpi, alpha=False)
+                self.images[key] = base64.b64encode(pix.tobytes('jpeg', jpg_quality=self.quality)).decode()
                 self.page_sizes[key] = (sheet.rect.width, sheet.rect.height)
         return key, *self.page_sizes[key]
 
@@ -512,7 +513,7 @@ class Evidence:
             metadata_path = (self.root / path).with_suffix('.metadata.json')
             metadata = json.loads(metadata_path.read_text()) if metadata_path.exists() else {}
             # Publisher metadata is preserved in full, rather than guessing which nested description field is authoritative.
-            meta = '<details><summary>Complete publisher metadata and normalization spec</summary><pre>' + esc(json.dumps({'publisher_metadata': metadata, 'normalization_spec': spec}, indent=2, ensure_ascii=False)) + '</pre></details>'
+            meta = '' if self.compact else '<details><summary>Complete publisher metadata and normalization spec</summary><pre>' + esc(json.dumps({'publisher_metadata': metadata, 'normalization_spec': spec}, indent=2, ensure_ascii=False)) + '</pre></details>'
             siblings = self.siblings[(o['source_id'], o['snapshot_id'], o['period'])]
             sibling_table = '<details><summary>All sibling series in this dataset for ' + esc(o['period']) + '</summary><div class="table-scroll"><table><tr><th>Series / dimension</th><th>Population</th><th>Adjustment</th><th>Value</th><th>Unit</th></tr>'
             for row in siblings:
