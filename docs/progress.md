@@ -115,7 +115,7 @@ Every row came from a live call; none is stored as a repo artifact yet. M1.1 mus
 
 ### 2026-10-31 — Held-out v2 design and blind draft (HeldoutDesign)
 
-- Overlap quantified (25/31 any, 14/31 entire). Design, 60 draft structured-only cases, schema, evidence audit and preregistration gate written; see D-039. Gold validator returns no errors on the draft. No system or paid calls. Blocker: no verified untouched substantive documents, so the draft cannot support an unseen-document R3 claim. Checks not run by this worker: the pytest suite.
+- Overlap quantified (25/31 any, 14/31 entire). On corpus v3 (D-040) wrote **65 blind-authored draft cases** from the six new sources only (`experiments/gold/heldout_v2_draft.jsonl`, SHA-256 `698940357c09…fb70`), independence audit, schema, evidence components, `FREEZE.md` (pre-run draft with acceptance rule and commands), design doc, `src/labourlens/evaluation/paired.py` plus `labourlens paired`, calc-scorer unit widening, and a review-pack "Held-out v2" tab (real pack not rebuilt). Earlier 60 structured-only cases kept as an unregistered diagnostic. Families thin: revision (3, abstentions only), synthesis (8). Owner review and freeze sign-off outstanding. No system or paid calls, no build/fetch/index. Tests run by this worker: `tests/evaluation`, `tests/test_review_pack.py`, `tests/test_review_pack_v2.py` (84 passed); the full non-corpus suite is for the parent.
 
 
 ### 2026-10-31 — Owner review complete; gold v3.5 development and held-out rescored

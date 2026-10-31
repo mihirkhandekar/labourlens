@@ -448,7 +448,7 @@ def test_reason_chips_stay_reachable_on_small_windows(fixture_root):
     assert 'bottom:var(--nav-height' in page
     assert "setProperty('--nav-height'" in page
     assert "window.addEventListener('resize', update)" in page
-    assert "card.dataset.tab === 'gold' && card.dataset.pickReason === 'true'" in page  # number keys 1-5 pick the behaviour
+    assert "goldLike(card) && card.dataset.pickReason === 'true'" in page  # number keys 1-5 pick the behaviour (gold and held-out v2 tabs)
     # Chips and the label button exist on a card whose AI passes all said 'label is wrong' (no Agree offered).
     assert soup.select_one('#gold-HO-022 [data-act=wrong]')
     assert not soup.select_one('#gold-HO-022 .agree-ai')

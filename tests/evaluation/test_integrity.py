@@ -151,3 +151,20 @@ def test_cli_routes_separate_gold(command, tmp_path, monkeypatch):
     monkeypatch.setattr(target, "run", lambda *args, **kwargs: received.update(kwargs))
     assert cli.main([command, "--gold", str(gold), "--split", "heldout"]) == 0
     assert received["gold_path"] == gold
+
+
+@pytest.mark.parametrize("unit,first,second", [("hours_per_week", "43.3", "43.0"), ("index_2015_100", "93.9", "90.3")])
+def test_calculation_scorer_accepts_non_legacy_units(unit, first, second):
+    from labourlens.agent.tools import compute_change
+
+    result, shown, label, formula = compute_change(first, second, "difference", unit)
+    cid = "calc:" + hashlib.sha256(b"a|b|difference").hexdigest()[:12]
+    case = {"calculation": {"inputs": ["a", "b"], "formula": "difference", "expected_value": float(result), "unit": unit},
+            "evidence_data": [{"period": "2025-Q1", "observation_ids": ["a"]}, {"period": "2026-Q2", "observation_ids": ["b"]}]}
+    rec = {"answer": {"summary": "", "claims": [{"text": f"It fell by {abs(result)} in the period", "citations": [{"label": "C1"}]}]},
+           "evidence": [{"label": "C1", "id": cid}, {"label": "D1", "id": "a"}, {"label": "D2", "id": "b"}],
+           "evidence_text": {"D1": f"series | {first} {unit} | release stage: dataset_snapshot", "D2": f"series | {second} {unit} | release stage: dataset_snapshot",
+                             "C1": f"Calculated difference of x (all; employees, unspecified) from 2025-Q1 to 2026-Q2: {formula} = {shown} {label}. Inputs D1 (2025-Q1) and D2 (2026-Q2)."}}
+    assert _calc_correct(case, rec) is True
+    rec["evidence_text"]["D2"] = f"series | {second} wrong_unit | release stage: dataset_snapshot"
+    assert _calc_correct(case, rec) is False

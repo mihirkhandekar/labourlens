@@ -58,6 +58,14 @@ def main(argv: list[str] | None = None) -> int:
     ev_.add_argument("--no-judge", action="store_true")
     ev_.add_argument("--rejudge-stale", action=argparse.BooleanOptionalAction, default=True,
                      help="re-judge cached judgments whose input fingerprint changed (default); --no-rejudge-stale raises instead")
+    pr = sub.add_parser("paired", help="preregistered paired comparison of two scored experiments (no model calls)")
+    pr.add_argument("--gold", type=Path, required=True)
+    pr.add_argument("--candidate", required=True, help="scored experiment id, e.g. agent-heldout-V2-r3")
+    pr.add_argument("--baseline", required=True, help="scored experiment id, e.g. agent-heldout-V2-hybrid")
+    pr.add_argument("--models", nargs="+", required=True)
+    pr.add_argument("--out", type=Path)
+    pr.add_argument("--n-boot", type=int, default=20000)
+    pr.add_argument("--seed", type=int, default=20261031)
     sub.add_parser("audit-report", help="summarise the audit and feedback logs (data/audit)")
     asw = sub.add_parser("audit-show", help="print the timeline of one run")
     asw.add_argument("run_id")
@@ -147,6 +155,14 @@ def main(argv: list[str] | None = None) -> int:
         from labourlens.evaluation import harness
 
         harness.run(args.exp, args.split, args.labels, not args.no_judge, rejudge_stale=args.rejudge_stale, gold_path=args.gold)
+        return 0
+    if args.cmd == "paired":
+        import json as _json
+
+        from labourlens.evaluation import paired
+
+        result = paired.run(args.gold, args.candidate, args.baseline, args.models, args.out, args.n_boot, args.seed)
+        print(_json.dumps(result, indent=1))
         return 0
     if args.cmd in ("audit-report", "audit-show", "audit-prune"):
         from labourlens.audit import log as al

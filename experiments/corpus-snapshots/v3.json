@@ -1,0 +1,207 @@
+{
+  "label": "v3",
+  "gold_sha256": "6169a9deca78cb5908c584bdf7d17b1c8dd9a15ff7840b3752f3bbb4febb2f9b",
+  "document_files": 49,
+  "passages": 16419,
+  "passage_file_sha256": {
+    "mom-2023-q1-final.jsonl": "ff4eb66927c21a1987273d4da99a7ac24aca497205694822f311052a6b0bc2fb",
+    "mom-2023-q2-final.jsonl": "768b55749e75a8c946ab200a1b94f2ee64e86e1f76eeed23ad32fb7f27c67fa2",
+    "mom-2023-q3-final.jsonl": "b7820d29095ba69265c6258516f9bcc479161ff59057b29ca56bc9b397a9d29d",
+    "mom-2023-q4-final.jsonl": "636486344c828b26f1235724d0a2eecb0fdc596ec5402a32d64004ce208de127",
+    "mom-2024-q1-advance.jsonl": "b39d6f4de6aee3abdb6ee393e6956d66531c61cea2711c4d8bfbd2590beb7b90",
+    "mom-2024-q1-final-release.jsonl": "8a6ab1b1ef08278e42332f865c566290b6af788b50a3d8ef1e47f2d82a811722",
+    "mom-2024-q1-final.jsonl": "cff516254c9e450e53d959e7029fffff61a1d698e711107001f4a8954f3efd18",
+    "mom-2024-q2-advance.jsonl": "41dbddaead86855873890f5aea4e6ad185e64826dba8d76efa5858f1514d7dbb",
+    "mom-2024-q2-final-release.jsonl": "43ecea499b694886c908fd5157620a07a25c4bb89be38fbdf03f0546bf5e3117",
+    "mom-2024-q2-final.jsonl": "c9dde6cca5445683d65e91564234a9ca867b0f3d81133466b7d0a7310961043e",
+    "mom-2024-q3-advance.jsonl": "a876a28406bec68327ae1c9d5770d5173555352bb2613df00cd431c13f27af45",
+    "mom-2024-q3-final-release.jsonl": "129e551c390cb5396e7eb3d5f17da8a134b17ea536dafcbd29f7b1dce8da4162",
+    "mom-2024-q3-final.jsonl": "8d2f7bd732a0c7520bd48e59dadd846a860e1849555939d37c59a7aaa72daff1",
+    "mom-2024-q4-advance.jsonl": "cda621176dd04536fda8327f70f64992676c7e63d1f0d79ac6a066f53d3dadba",
+    "mom-2024-q4-final-release.jsonl": "bde3beddca4602a6ce9e70efc9e6d689c7a344622bc9c0a19053bdd3e61d429c",
+    "mom-2024-q4-final.jsonl": "f21a678f1956db1b583e9d83acfdc8a481ab30112bd57da204a410353227fb4e",
+    "mom-2025-q1-advance.jsonl": "5af7793673dece682f0bb1613f8a9ee37dbd691536e53e220ccfcb3ea01215a7",
+    "mom-2025-q1-final-release.jsonl": "f1f55b364094fa3766137b0ffb3db7aae1ceb8b6fe501bd54d6b154c68666710",
+    "mom-2025-q1-final.jsonl": "777b0efddbb354e947742272b54ac171a39ffb084d3e9a2bb6bc4b0e9d330025",
+    "mom-2025-q2-advance.jsonl": "1118f933699fe9813c7f9b4482f3252b3297060bbc1869beb6347ce2c1d72412",
+    "mom-2025-q2-final-release.jsonl": "5a8a6a63a5d7d680ca8a25151ade915bd5e0bc3c3682093fd78220920f295508",
+    "mom-2025-q2-final.jsonl": "24fd8d4d4ace758be2183a40d777e52ca3170c3ec3167ca83f645320255c1627",
+    "mom-2025-q3-advance.jsonl": "02d34542180855ace9888de10fc92429bac20331a6ded63c423508d8f635d15a",
+    "mom-2025-q3-final-release.jsonl": "533e8ec83fa12434890670a5f3273f6007d838e989d3de25115185c7f91df476",
+    "mom-2025-q3-final.jsonl": "2964481c800edff94b3fc5dfd7972012edacf4a1c77a534634b784600335557d",
+    "mom-2025-q4-advance.jsonl": "01d4a9260afa6c534ad455706ee19356571bc98e805ff627554e3cca86be5742",
+    "mom-2025-q4-final-release.jsonl": "16ebc4f3e28974a31f8a37f9e0a53c1f0788d5889546b19dce96f98ae472cc14",
+    "mom-2025-q4-final.jsonl": "9bddb4f6c25378132e915ebce25d1e68b39c1dac2917f664d0e2be5440130330",
+    "mom-2026-q1-advance.jsonl": "58e9095d635b5cc43b7d829bab9e3c73dff852f6d87810184ebd46a069045e80",
+    "mom-2026-q1-final-release.jsonl": "ebf7690879946b8a9ef26c2f7788d4acdce61e129a071a6cb1b2e68e62bf9131",
+    "mom-2026-q1-final.jsonl": "18af1c336204c8e21555369f862c6dda809ba1df075d2b86c015e1462a0c74ee",
+    "mom-2026-q2-advance.jsonl": "87552a55518ded93a0521da4ba04aa6f24294bc58f6b8e2716448a48b8e47fa4",
+    "mom-2026-q2-final-release.jsonl": "40acfdba3ff6d15d46d0a82ab596ba2a548cc86a5ebba87fd247282beabf43df",
+    "mom-2026-q2-final.jsonl": "9505051da3955238a331030bb8f19808f604a1ad79e1f5a001294ceef9cf9b95",
+    "mom-jv2025-release.jsonl": "3e003828aa2d6f6d8193ad0e4d098dff4a4648be69770b0b6b56ff7980c3483a",
+    "mom-jv2025.jsonl": "b27880c87c532629553245c42aeff5e4fb914e047e724791339d6fb12b33226f",
+    "mom-lf2024-copyright.jsonl": "18b24e60db0ea49a0c6155d5d8eaaba0f0f7461c3a351943ffc66cdea1597d7f",
+    "mom-lf2024-coverage-methodology.jsonl": "cc1a3a0614655a386a9e5c469ea71e131db44962e19d34aa66363722a95b866f",
+    "mom-lf2024-survey-findings.jsonl": "44177ddf94764f3918ecab7be8765aa688def36b63f6fdcfde8c9227a75f0c6e",
+    "mom-lf2024-survey-highlights.jsonl": "18b21dd8e76a36feec0e4f834690f67b4c2a963e3ce90eedd8fb89fa468d5774",
+    "mom-lf2025-copyright.jsonl": "a778982f961d5c12ea145ab3fa0789eb1c5ca9ae6dc7cbcc9a642b0828c8191d",
+    "mom-lf2025-coverage-methodology.jsonl": "d779fe03eb57528a0b1ec3dc3151f19d497ff5f0974d38327533fe543c026b46",
+    "mom-lf2025-survey-findings.jsonl": "858eac043b37e254d2450f34ae33b9f8499990288ae76fe5e73245c5507a52e1",
+    "mom-lf2025-survey-highlights.jsonl": "3d0fc9d0436998bfd65e53aaaa35a3776d4923ea5af8e5df43000f78638b0123",
+    "mom-nwc-lower-wage2025.jsonl": "12b093e1d73f64488bcf4b0abb3ebad9137d97ba6ca2577a9c7f500feafe30f0",
+    "mom-wage-practices2024-release.jsonl": "0739e86bcbd1345791d995136f2ae865d6462fc03940fdbfcc8462843a8654f5",
+    "mom-wage-practices2024.jsonl": "8b532eba5f61741abf46fa2c5453977aab1a78746670b53b947c1acae694db88",
+    "mom-wage-practices2025.jsonl": "4c81c5c94dd8e38576d4670e572560a2401e2c6dc97bfd467f73756accd8b1c9",
+    "mti-2026-q2-feature-ai-employment.jsonl": "6d75e181d7e6d94bf62368b968ffad17364d0c23f7fec4663904affea70a328f"
+  },
+  "manifest_sha256": "5bb67d4e36572d1573eb3cc6834d449fc44e053215f98e4a4895b17607e1449b",
+  "observations": {
+    "avg_weekly_paid_hours_quarterly": {
+      "rows": 114,
+      "sha256": "b2454b4e999296ae1317ae5b2e67f3fbe53a2f97885760445bf06a66edc5af1d"
+    },
+    "citizen_unemployment_rate": {
+      "rows": 276,
+      "sha256": "03ad82b63f79bf5c3fb4c144a8010e96888321f6ee6779d20db8d90a2fcfc61b"
+    },
+    "employment_change_by_sector": {
+      "rows": 3692,
+      "sha256": "242baf9a14a670dc570276ca304deb182e388ac32fd1a427dcb0481e6d73f44e"
+    },
+    "job_vacancies_by_industry": {
+      "rows": 4700,
+      "sha256": "e30cfb6d1d56050bc54642218a9e7788ddd3b67ca05094f7c01eb5be75e7c435"
+    },
+    "job_vacancies_by_occupation": {
+      "rows": 450,
+      "sha256": "b8ec9bb9eb167b892c37e10b9fd604778c3ff87ec5139dfa8b131fba7d34c163"
+    },
+    "job_vacancy_count": {
+      "rows": 114,
+      "sha256": "c3d54ca895e0b631b2986c99d18166c7abe0cc8ca2653c78d387e280adda11d8"
+    },
+    "job_vacancy_rate": {
+      "rows": 114,
+      "sha256": "bfd72815edfc339e9f0b75b97e129efb129b1ba2693efc101aba6fdb446278f5"
+    },
+    "job_vacancy_rate_by_industry": {
+      "rows": 4700,
+      "sha256": "016b57790d8759c2fa01152f3b9d81ebb752e4b63bced05328d89c45246c1d50"
+    },
+    "job_vacancy_rate_by_occupation": {
+      "rows": 450,
+      "sha256": "6cb8641eab9a23a1569204d1377cf0616e3ed97ed6834a2d36e88cc66e57cfa9"
+    },
+    "overall_unemployment_rate": {
+      "rows": 276,
+      "sha256": "cbdde3d503adf80dd8e1851b72daa3c1174fcc0bad47385a569ab308bbeb2ca7"
+    },
+    "recruitment_rate": {
+      "rows": 114,
+      "sha256": "f4f7fcf7269ddc394c33ced72b43fafb08693ec440d472f486e85032df06b43a"
+    },
+    "recruitment_rate_by_industry": {
+      "rows": 4700,
+      "sha256": "244ec1698f0c61c09c04182b3813938ea5d19a5ec75fde76fcc09c03e08ab6bd"
+    },
+    "recruitment_rate_by_occupation": {
+      "rows": 342,
+      "sha256": "1f8e161a812896d276ad8ee7032c120253f16a593a7592a0eca5ab07d1b7c14d"
+    },
+    "reentry_12m": {
+      "rows": 106,
+      "sha256": "9b5f74d7cf7f5ce173ff8e251bafce012858910bb3964d137a9ce3fef5b9ae46"
+    },
+    "reentry_6m": {
+      "rows": 106,
+      "sha256": "70b005a02dcee25ce0b80376bc5cdece32eee45f5acf4deff320d91f4836b7b0"
+    },
+    "resident_unemployment_rate": {
+      "rows": 276,
+      "sha256": "a753b7c5ea628b0f8f88c3562be663a9424e8a692bdd652345d9675838a6e24d"
+    },
+    "resignation_rate": {
+      "rows": 114,
+      "sha256": "bd726811a0d2df332c9036dc68a54939325ec9f977964f2426dcb9e52a8637f6"
+    },
+    "resignation_rate_by_industry": {
+      "rows": 4700,
+      "sha256": "062fc907f7a3ba7c90bbaf68a2c85f6ce7ae8be4b6ffa21f99522a614f663886"
+    },
+    "resignation_rate_by_occupation": {
+      "rows": 342,
+      "sha256": "343e6d5a75903064ff80e89e2febfa55b54306cd5f9e5375bfadb3e741e6a3d1"
+    },
+    "retrenched_by_industry": {
+      "rows": 4700,
+      "sha256": "501e75431d8d8a6a3993d56c3c23cb95a7a3408d75f3bdfae6f40fd407ad1e79"
+    },
+    "retrenched_by_occupation": {
+      "rows": 342,
+      "sha256": "e439d81c97137bcf1d2eac751edce57f757e8289ae492516c86dea4ba25b16c0"
+    },
+    "retrenched_employees": {
+      "rows": 114,
+      "sha256": "bdafc296f31a3552b3b5768c67c00e6f6092a7b15fcd14587d592918e654662c"
+    },
+    "retrenched_permanent": {
+      "rows": 114,
+      "sha256": "1c7726e73fd1d3e327a281a7b451511d6e3d5e813dab5d67b73be582a235e93a"
+    },
+    "retrenched_permanent_by_industry": {
+      "rows": 4700,
+      "sha256": "25e15f9baa6b27e3065dee561933871c8f3a5a40757e58af12d6e168efacf366"
+    },
+    "retrenched_permanent_by_occupation": {
+      "rows": 342,
+      "sha256": "5b21eb1b885ef4dabd70f3236746bb2d1a7ae42d4f3944d027701f397b5f035c"
+    },
+    "retrenched_term_contract": {
+      "rows": 114,
+      "sha256": "78b63eec4adcf90b6e0bfbb81ed7dec6136d80ab5f2334d1e09d69aab850945f"
+    },
+    "retrenched_term_contract_by_industry": {
+      "rows": 4700,
+      "sha256": "059e6b6510f573543c90623b52ef1bd720b053fed5b421c1acfd3c67606f0da9"
+    },
+    "retrenched_term_contract_by_occupation": {
+      "rows": 342,
+      "sha256": "87bca66c80c24852103f0fed8cc0fdfdcb9a36df3c7760b7bc5550d368eb7f89"
+    },
+    "short_workweek_temporary_layoff": {
+      "rows": 336,
+      "sha256": "d78cb914b8ad1ef1dcd544f252bf500ca88e19cdf6ca57ff4d1897eb370145ac"
+    },
+    "short_workweek_temporary_layoff_by_industry": {
+      "rows": 1344,
+      "sha256": "fbe7186140cfeac1975c7cd278bee25d3839b931be3e5ad6540c9aa237900cfc"
+    },
+    "unemployed_citizens": {
+      "rows": 276,
+      "sha256": "01bf39d21697b8c47e2f81464190d24c95d420d2f857ddd8f40ec3049dd143ef"
+    },
+    "unemployed_overall": {
+      "rows": 276,
+      "sha256": "ebb43ea387a800e208609b79a58d58d1a5d2a896444e7b27c195dcd97212a882"
+    },
+    "unemployed_residents": {
+      "rows": 276,
+      "sha256": "51d9a83d4c97e53ca1f373f5bbb3510e14e2cfb54814b6ab307648b6cc922e87"
+    },
+    "unit_labour_cost_index_quarterly": {
+      "rows": 4836,
+      "sha256": "975de3a44259d8b56d74a53aaf3213292804d89f8d10d598e18cccbf457526ed"
+    },
+    "vacancy_to_unemployed_ratio": {
+      "rows": 114,
+      "sha256": "f7e40b50113038a7f5d63f72ee6b60f52eedc6d6b0a413153c896bb9fd95b39c"
+    },
+    "value_added_per_worker_quarterly": {
+      "rows": 3408,
+      "sha256": "85f26ecb51ba88fb3b174b05497cb09fc8095a98322696b44dd244464b80f79f"
+    }
+  },
+  "chunk_config": "merge200",
+  "chunks": 1847,
+  "chunk_corpus_sha256": "d684aa76e93a8c4a3821bc39891d8c5bd21a36f871819e24e9b95d6d752c305e"
+}

@@ -1,14 +1,42 @@
 {
-  "cases": 60,
-  "all_draft": true,
-  "all_ids_exist": true,
-  "old_gold_id_overlap": [],
-  "old_gold_or_observed_dev_dataset_period_overlap": [],
-  "all_subject_evidence_in_scope": true,
-  "gold_sha256": "7a8aee1f145f8c7490dccee2f0b75a8395cf373cbff7eaaa97aa94aede1cd427",
-  "system_calls": 0,
-  "source": "data/processed/observations.parquet",
-  "observations_sha256": "69ae768749cef6f2705dafbcf5ad9470b27e83eb7352a07a65afaed7d8c929dc",
-  "new_passage_count": 15915,
-  "extraction_agent_confirmation": "ExtractionMerge confirmed offline rebuild and ID migration complete before passages were read. No new document sources."
+ "gold_file": "experiments/gold/heldout_v2_draft.jsonl",
+ "gold_sha256": "698940357c090c4beed4ba6532f66967dc7175297a3d1ffcd5fd6325e128fb70",
+ "cases": 65,
+ "family_counts": {
+  "factual_lookup": 22,
+  "numerical_comparison": 14,
+  "cross_source_synthesis": 8,
+  "revision_conflict": 3,
+  "ambiguity_insufficient_causal": 10,
+  "adversarial": 8
+ },
+ "behaviour_counts": {
+  "answer": 44,
+  "abstain": 8,
+  "clarify": 4,
+  "refuse": 5,
+  "ignore_injection_and_answer": 4
+ },
+ "source_group_counts": {
+  "dataset_paid_hours": 7,
+  "dataset_ulc": 9,
+  "dataset_vapw": 6,
+  "wage_practices_2025": 14,
+  "nwc_lower_wage_2025": 11,
+  "mti_ai_feature": 5,
+  "wage_reports_pair": 5,
+  "wage_vs_dataset": 3,
+  "ai_vs_dataset": 1,
+  "generic_boundary": 4
+ },
+ "all_draft_no_reviewer": true,
+ "validator": "labourlens.retrieval.gold.validate returned [] (observation ids exist and match source/period; passage ids exist and belong to their source)",
+ "numeric_checks": "every dataset value, difference and percent change recomputed from data/processed/observations.parquet with labourlens.agent.tools.compute_change; every text figure asserted present in the cited passage text; text differences recomputed with Decimal",
+ "quote_check": "no seven-word sequence of any case question, reference fact or reason appears in any corpus passage",
+ "system_calls": 0,
+ "observed_system_outputs_for_these_cases": 0,
+ "corpus_snapshot_sha256": "6caba3d61a3addbef4b182ec3455e99fa8e509ff056e5ecdf82fe4da33377bc6",
+ "observations_sha256": "bb5d14d8df1c5eaaa8e18a8979dab4b6eb40eaf4059002f4884b04975165b7d3",
+ "passage_fingerprint_sha256": "c7ec1f684e7edfe34e36e21865e88b6b88e42bea674b4a6c3e4a243fa11e99f4",
+ "passages": 16419
 }

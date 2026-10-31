@@ -1,626 +1,408 @@
 [
-  {
-    "component": 1,
-    "case_ids": [
-      "HO-V2-001",
-      "HO-V2-021"
-    ],
-    "evidence_groups": [
-      [
-        "dataset",
-        "citizen_unemployment_rate",
-        "2024-Q1"
-      ],
-      [
-        "dataset",
-        "citizen_unemployment_rate",
-        "2024-Q3"
-      ]
-    ],
-    "empty_evidence_boundary_case": false
-  },
-  {
-    "component": 2,
-    "case_ids": [
-      "HO-V2-002",
-      "HO-V2-022"
-    ],
-    "evidence_groups": [
-      [
-        "dataset",
-        "citizen_unemployment_rate",
-        "2025-Q2"
-      ],
-      [
-        "dataset",
-        "citizen_unemployment_rate",
-        "2025-Q4"
-      ]
-    ],
-    "empty_evidence_boundary_case": false
-  },
-  {
-    "component": 3,
-    "case_ids": [
-      "HO-V2-003",
-      "HO-V2-009",
-      "HO-V2-023",
-      "HO-V2-028",
-      "HO-V2-037",
-      "HO-V2-043",
-      "HO-V2-052"
-    ],
-    "evidence_groups": [
-      [
-        "dataset",
-        "job_vacancy_count",
-        "2024-Q1"
-      ],
-      [
-        "dataset",
-        "job_vacancy_rate",
-        "2024-Q1"
-      ],
-      [
-        "dataset",
-        "job_vacancy_rate",
-        "2024-Q4"
-      ],
-      [
-        "dataset",
-        "resignation_rate",
-        "2024-Q1"
-      ],
-      [
-        "dataset",
-        "resignation_rate",
-        "2025-Q1"
-      ]
-    ],
-    "empty_evidence_boundary_case": false
-  },
-  {
-    "component": 4,
-    "case_ids": [
-      "HO-V2-004"
-    ],
-    "evidence_groups": [
-      [
-        "dataset",
-        "job_vacancy_rate",
-        "2024-Q2"
-      ]
-    ],
-    "empty_evidence_boundary_case": false
-  },
-  {
-    "component": 5,
-    "case_ids": [
-      "HO-V2-005",
-      "HO-V2-025",
-      "HO-V2-029",
-      "HO-V2-041"
-    ],
-    "evidence_groups": [
-      [
-        "dataset",
-        "job_vacancies_by_occupation",
-        "2024-Q2"
-      ],
-      [
-        "dataset",
-        "job_vacancies_by_occupation",
-        "2026-Q1"
-      ],
-      [
-        "dataset",
-        "resignation_rate_by_occupation",
-        "2024-Q2"
-      ],
-      [
-        "dataset",
-        "resignation_rate_by_occupation",
-        "2025-Q2"
-      ]
-    ],
-    "empty_evidence_boundary_case": false
-  },
-  {
-    "component": 6,
-    "case_ids": [
-      "HO-V2-006",
-      "HO-V2-026"
-    ],
-    "evidence_groups": [
-      [
-        "dataset",
-        "job_vacancy_rate_by_occupation",
-        "2024-Q1"
-      ],
-      [
-        "dataset",
-        "job_vacancy_rate_by_occupation",
-        "2026-Q2"
-      ]
-    ],
-    "empty_evidence_boundary_case": false
-  },
-  {
-    "component": 7,
-    "case_ids": [
-      "HO-V2-007",
-      "HO-V2-027",
-      "HO-V2-042"
-    ],
-    "evidence_groups": [
-      [
-        "dataset",
-        "recruitment_rate_by_occupation",
-        "2025-Q3"
-      ],
-      [
-        "dataset",
-        "recruitment_rate_by_occupation",
-        "2026-Q2"
-      ],
-      [
-        "dataset",
-        "resignation_rate_by_occupation",
-        "2025-Q3"
-      ]
-    ],
-    "empty_evidence_boundary_case": false
-  },
-  {
-    "component": 8,
-    "case_ids": [
-      "HO-V2-008"
-    ],
-    "evidence_groups": [
-      [
-        "dataset",
-        "reentry_12m",
-        "2024-Q1"
-      ]
-    ],
-    "empty_evidence_boundary_case": false
-  },
-  {
-    "component": 9,
-    "case_ids": [
-      "HO-V2-010",
-      "HO-V2-039"
-    ],
-    "evidence_groups": [
-      [
-        "dataset",
-        "resignation_rate_by_occupation",
-        "2024-Q3"
-      ],
-      [
-        "dataset",
-        "retrenched_by_occupation",
-        "2024-Q3"
-      ]
-    ],
-    "empty_evidence_boundary_case": false
-  },
-  {
-    "component": 10,
-    "case_ids": [
-      "HO-V2-011"
-    ],
-    "evidence_groups": [
-      [
-        "dataset",
-        "retrenched_by_occupation",
-        "2024-Q4"
-      ]
-    ],
-    "empty_evidence_boundary_case": false
-  },
-  {
-    "component": 11,
-    "case_ids": [
-      "HO-V2-012",
-      "HO-V2-031",
-      "HO-V2-032",
-      "HO-V2-044"
-    ],
-    "evidence_groups": [
-      [
-        "dataset",
-        "retrenched_permanent",
-        "2025-Q3"
-      ],
-      [
-        "dataset",
-        "retrenched_permanent",
-        "2025-Q4"
-      ],
-      [
-        "dataset",
-        "retrenched_term_contract",
-        "2024-Q4"
-      ],
-      [
-        "dataset",
-        "retrenched_term_contract",
-        "2025-Q4"
-      ]
-    ],
-    "empty_evidence_boundary_case": false
-  },
-  {
-    "component": 12,
-    "case_ids": [
-      "HO-V2-013"
-    ],
-    "evidence_groups": [
-      [
-        "dataset",
-        "retrenched_term_contract",
-        "2025-Q2"
-      ]
-    ],
-    "empty_evidence_boundary_case": false
-  },
-  {
-    "component": 13,
-    "case_ids": [
-      "HO-V2-014",
-      "HO-V2-033"
-    ],
-    "evidence_groups": [
-      [
-        "dataset",
-        "retrenched_permanent_by_occupation",
-        "2024-Q1"
-      ],
-      [
-        "dataset",
-        "retrenched_permanent_by_occupation",
-        "2026-Q2"
-      ]
-    ],
-    "empty_evidence_boundary_case": false
-  },
-  {
-    "component": 14,
-    "case_ids": [
-      "HO-V2-015"
-    ],
-    "evidence_groups": [
-      [
-        "dataset",
-        "retrenched_term_contract_by_occupation",
-        "2024-Q4"
-      ]
-    ],
-    "empty_evidence_boundary_case": false
-  },
-  {
-    "component": 15,
-    "case_ids": [
-      "HO-V2-016",
-      "HO-V2-035",
-      "HO-V2-038"
-    ],
-    "evidence_groups": [
-      [
-        "dataset",
-        "unemployed_citizens",
-        "2024-Q1"
-      ],
-      [
-        "dataset",
-        "unemployed_citizens",
-        "2025-Q4"
-      ],
-      [
-        "dataset",
-        "unemployed_overall",
-        "2024-Q1"
-      ]
-    ],
-    "empty_evidence_boundary_case": false
-  },
-  {
-    "component": 16,
-    "case_ids": [
-      "HO-V2-017"
-    ],
-    "evidence_groups": [
-      [
-        "dataset",
-        "unemployed_overall",
-        "2024-Q4"
-      ]
-    ],
-    "empty_evidence_boundary_case": false
-  },
-  {
-    "component": 17,
-    "case_ids": [
-      "HO-V2-018"
-    ],
-    "evidence_groups": [
-      [
-        "dataset",
-        "unemployed_residents",
-        "2026-Q2"
-      ]
-    ],
-    "empty_evidence_boundary_case": false
-  },
-  {
-    "component": 18,
-    "case_ids": [
-      "HO-V2-019"
-    ],
-    "evidence_groups": [
-      [
-        "dataset",
-        "job_vacancies_by_industry",
-        "2024-Q3"
-      ]
-    ],
-    "empty_evidence_boundary_case": false
-  },
-  {
-    "component": 19,
-    "case_ids": [
-      "HO-V2-020"
-    ],
-    "evidence_groups": [
-      [
-        "dataset",
-        "recruitment_rate_by_industry",
-        "2026-Q1"
-      ]
-    ],
-    "empty_evidence_boundary_case": false
-  },
-  {
-    "component": 20,
-    "case_ids": [
-      "HO-V2-024",
-      "HO-V2-047"
-    ],
-    "evidence_groups": [
-      [
-        "dataset",
-        "job_vacancies_by_occupation",
-        "2024-Q1"
-      ],
-      [
-        "dataset",
-        "job_vacancies_by_occupation",
-        "2024-Q4"
-      ]
-    ],
-    "empty_evidence_boundary_case": false
-  },
-  {
-    "component": 21,
-    "case_ids": [
-      "HO-V2-030"
-    ],
-    "evidence_groups": [
-      [
-        "dataset",
-        "retrenched_by_occupation",
-        "2024-Q1"
-      ],
-      [
-        "dataset",
-        "retrenched_by_occupation",
-        "2025-Q4"
-      ]
-    ],
-    "empty_evidence_boundary_case": false
-  },
-  {
-    "component": 22,
-    "case_ids": [
-      "HO-V2-034"
-    ],
-    "evidence_groups": [
-      [
-        "dataset",
-        "retrenched_term_contract_by_occupation",
-        "2024-Q2"
-      ],
-      [
-        "dataset",
-        "retrenched_term_contract_by_occupation",
-        "2026-Q2"
-      ]
-    ],
-    "empty_evidence_boundary_case": false
-  },
-  {
-    "component": 23,
-    "case_ids": [
-      "HO-V2-036",
-      "HO-V2-054"
-    ],
-    "evidence_groups": [
-      [
-        "dataset",
-        "reentry_12m",
-        "2025-Q3"
-      ],
-      [
-        "dataset",
-        "reentry_12m",
-        "2025-Q4"
-      ]
-    ],
-    "empty_evidence_boundary_case": false
-  },
-  {
-    "component": 24,
-    "case_ids": [
-      "HO-V2-040"
-    ],
-    "evidence_groups": [
-      [
-        "dataset",
-        "retrenched_permanent",
-        "2024-Q1"
-      ],
-      [
-        "dataset",
-        "retrenched_term_contract",
-        "2024-Q1"
-      ]
-    ],
-    "empty_evidence_boundary_case": false
-  },
-  {
-    "component": 25,
-    "case_ids": [
-      "HO-V2-045"
-    ],
-    "evidence_groups": [
-      [
-        "dataset",
-        "job_vacancy_rate",
-        "2024-Q3"
-      ]
-    ],
-    "empty_evidence_boundary_case": false
-  },
-  {
-    "component": 26,
-    "case_ids": [
-      "HO-V2-046"
-    ],
-    "evidence_groups": [
-      [
-        "dataset",
-        "retrenched_term_contract",
-        "2025-Q1"
-      ]
-    ],
-    "empty_evidence_boundary_case": false
-  },
-  {
-    "component": 27,
-    "case_ids": [
-      "HO-V2-048",
-      "HO-V2-053"
-    ],
-    "evidence_groups": [
-      [
-        "dataset",
-        "resignation_rate",
-        "2024-Q4"
-      ]
-    ],
-    "empty_evidence_boundary_case": false
-  },
-  {
-    "component": 28,
-    "case_ids": [
-      "HO-V2-049"
-    ],
-    "evidence_groups": [
-      [
-        "dataset",
-        "citizen_unemployment_rate",
-        "2024-Q2"
-      ]
-    ],
-    "empty_evidence_boundary_case": false
-  },
-  {
-    "component": 29,
-    "case_ids": [
-      "HO-V2-050"
-    ],
-    "evidence_groups": [],
-    "empty_evidence_boundary_case": true
-  },
-  {
-    "component": 30,
-    "case_ids": [
-      "HO-V2-051"
-    ],
-    "evidence_groups": [],
-    "empty_evidence_boundary_case": true
-  },
-  {
-    "component": 31,
-    "case_ids": [
-      "HO-V2-055"
-    ],
-    "evidence_groups": [
-      [
-        "dataset",
-        "job_vacancy_rate",
-        "2025-Q2"
-      ]
-    ],
-    "empty_evidence_boundary_case": false
-  },
-  {
-    "component": 32,
-    "case_ids": [
-      "HO-V2-056"
-    ],
-    "evidence_groups": [
-      [
-        "dataset",
-        "retrenched_term_contract",
-        "2024-Q3"
-      ]
-    ],
-    "empty_evidence_boundary_case": false
-  },
-  {
-    "component": 33,
-    "case_ids": [
-      "HO-V2-057"
-    ],
-    "evidence_groups": [
-      [
-        "dataset",
-        "unemployed_residents",
-        "2024-Q3"
-      ]
-    ],
-    "empty_evidence_boundary_case": false
-  },
-  {
-    "component": 34,
-    "case_ids": [
-      "HO-V2-058"
-    ],
-    "evidence_groups": [
-      [
-        "dataset",
-        "resignation_rate_by_occupation",
-        "2026-Q2"
-      ]
-    ],
-    "empty_evidence_boundary_case": false
-  },
-  {
-    "component": 35,
-    "case_ids": [
-      "HO-V2-059"
-    ],
-    "evidence_groups": [],
-    "empty_evidence_boundary_case": true
-  },
-  {
-    "component": 36,
-    "case_ids": [
-      "HO-V2-060"
-    ],
-    "evidence_groups": [],
-    "empty_evidence_boundary_case": true
-  }
+ {
+  "component": "component-001",
+  "case_ids": [
+   "HO-V2-001"
+  ],
+  "evidence_ids": [
+   "6a0127f63aa34654"
+  ],
+  "carries_evidence": true
+ },
+ {
+  "component": "component-002",
+  "case_ids": [
+   "HO-V2-003"
+  ],
+  "evidence_ids": [
+   "66e7fc35ae5345e8"
+  ],
+  "carries_evidence": true
+ },
+ {
+  "component": "component-003",
+  "case_ids": [
+   "HO-V2-005"
+  ],
+  "evidence_ids": [
+   "d1e11fe9d239ad77"
+  ],
+  "carries_evidence": true
+ },
+ {
+  "component": "component-004",
+  "case_ids": [
+   "HO-V2-006"
+  ],
+  "evidence_ids": [
+   "56d7d49a49f8a7c3"
+  ],
+  "carries_evidence": true
+ },
+ {
+  "component": "component-005",
+  "case_ids": [
+   "HO-V2-009",
+   "HO-V2-031",
+   "HO-V2-061"
+  ],
+  "evidence_ids": [
+   "mom-wage-practices2025:p015:b000:d8758789"
+  ],
+  "carries_evidence": true
+ },
+ {
+  "component": "component-006",
+  "case_ids": [
+   "HO-V2-010",
+   "HO-V2-039"
+  ],
+  "evidence_ids": [
+   "mom-nwc-lower-wage2025:p012:b000:97d5a03a",
+   "mom-wage-practices2025:p005:b000:2b0cdc27"
+  ],
+  "carries_evidence": true
+ },
+ {
+  "component": "component-007",
+  "case_ids": [
+   "HO-V2-011"
+  ],
+  "evidence_ids": [
+   "mom-wage-practices2025:p026:b007:b1966150"
+  ],
+  "carries_evidence": true
+ },
+ {
+  "component": "component-008",
+  "case_ids": [
+   "HO-V2-012"
+  ],
+  "evidence_ids": [
+   "mom-wage-practices2025:p005:b001:e8741c79",
+   "mom-wage-practices2025:p011:b000:65270f0a"
+  ],
+  "carries_evidence": true
+ },
+ {
+  "component": "component-009",
+  "case_ids": [
+   "HO-V2-013",
+   "HO-V2-015",
+   "HO-V2-035",
+   "HO-V2-044",
+   "HO-V2-058"
+  ],
+  "evidence_ids": [
+   "mom-nwc-lower-wage2025:p005:b002:86518aaf",
+   "mom-nwc-lower-wage2025:p008:b000:eb46daf7",
+   "mom-wage-practices2025:p006:b000:8b7c1b47",
+   "mom-wage-practices2025:p014:b002:51132aaa"
+  ],
+  "carries_evidence": true
+ },
+ {
+  "component": "component-010",
+  "case_ids": [
+   "HO-V2-016",
+   "HO-V2-034"
+  ],
+  "evidence_ids": [
+   "mom-nwc-lower-wage2025:p005:b003:0aa4a022",
+   "mom-nwc-lower-wage2025:p010:b000:c4176300"
+  ],
+  "carries_evidence": true
+ },
+ {
+  "component": "component-011",
+  "case_ids": [
+   "HO-V2-018"
+  ],
+  "evidence_ids": [
+   "mom-nwc-lower-wage2025:p006:b013:5ea84ec2",
+   "mom-nwc-lower-wage2025:p007:b009:6252a83b",
+   "mom-nwc-lower-wage2025:p009:b007:df6975a4"
+  ],
+  "carries_evidence": true
+ },
+ {
+  "component": "component-012",
+  "case_ids": [
+   "HO-V2-019"
+  ],
+  "evidence_ids": [
+   "mom-nwc-lower-wage2025:p011:b000:26294863"
+  ],
+  "carries_evidence": true
+ },
+ {
+  "component": "component-013",
+  "case_ids": [
+   "HO-V2-020"
+  ],
+  "evidence_ids": [
+   "mti-2026-q2-feature-ai-employment:p007:b024:4fa95318"
+  ],
+  "carries_evidence": true
+ },
+ {
+  "component": "component-014",
+  "case_ids": [
+   "HO-V2-021"
+  ],
+  "evidence_ids": [
+   "mti-2026-q2-feature-ai-employment:p006:b011:ea490892"
+  ],
+  "carries_evidence": true
+ },
+ {
+  "component": "component-015",
+  "case_ids": [
+   "HO-V2-023",
+   "HO-V2-060"
+  ],
+  "evidence_ids": [
+   "028d08471ab98b57",
+   "669b76aa732e9576"
+  ],
+  "carries_evidence": true
+ },
+ {
+  "component": "component-016",
+  "case_ids": [
+   "HO-V2-008",
+   "HO-V2-014",
+   "HO-V2-017",
+   "HO-V2-024",
+   "HO-V2-030",
+   "HO-V2-032",
+   "HO-V2-033",
+   "HO-V2-036",
+   "HO-V2-037",
+   "HO-V2-038",
+   "HO-V2-042"
+  ],
+  "evidence_ids": [
+   "2a9408043b070eb0",
+   "64d846abd5ed1d25",
+   "mom-nwc-lower-wage2025:p005:b001:5c0d79fd",
+   "mom-nwc-lower-wage2025:p006:b001:15acbf6a",
+   "mom-nwc-lower-wage2025:p007:b000:9676a044",
+   "mom-wage-practices2025:p009:b011:125744ba",
+   "mom-wage-practices2025:p010:b009:16f3508c"
+  ],
+  "carries_evidence": true
+ },
+ {
+  "component": "component-017",
+  "case_ids": [
+   "HO-V2-025"
+  ],
+  "evidence_ids": [
+   "31e55c7d34ccd855",
+   "69e7eae0fb92ef8e"
+  ],
+  "carries_evidence": true
+ },
+ {
+  "component": "component-018",
+  "case_ids": [
+   "HO-V2-026"
+  ],
+  "evidence_ids": [
+   "d9255f0ffa0d0020",
+   "dca71ec79c9dae61"
+  ],
+  "carries_evidence": true
+ },
+ {
+  "component": "component-019",
+  "case_ids": [
+   "HO-V2-002",
+   "HO-V2-007",
+   "HO-V2-027",
+   "HO-V2-040",
+   "HO-V2-041"
+  ],
+  "evidence_ids": [
+   "437047d92e96e5da",
+   "59116de3380b5ac9",
+   "dea636742d7e0b41",
+   "mom-wage-practices2025:p009:b000:c7ccd79e"
+  ],
+  "carries_evidence": true
+ },
+ {
+  "component": "component-020",
+  "case_ids": [
+   "HO-V2-004",
+   "HO-V2-022",
+   "HO-V2-028",
+   "HO-V2-043"
+  ],
+  "evidence_ids": [
+   "370b987aa3d10ecd",
+   "5e0a16cc9f253d9f",
+   "7c6488a49202814f",
+   "mti-2026-q2-feature-ai-employment:p002:b007:5d3f863d",
+   "mti-2026-q2-feature-ai-employment:p009:b015:e7800ade"
+  ],
+  "carries_evidence": true
+ },
+ {
+  "component": "component-021",
+  "case_ids": [
+   "HO-V2-029"
+  ],
+  "evidence_ids": [
+   "mom-wage-practices2025:p015:b001:413c93b1"
+  ],
+  "carries_evidence": true
+ },
+ {
+  "component": "component-022",
+  "case_ids": [
+   "HO-V2-045"
+  ],
+  "evidence_ids": [],
+  "carries_evidence": false
+ },
+ {
+  "component": "component-023",
+  "case_ids": [
+   "HO-V2-046"
+  ],
+  "evidence_ids": [],
+  "carries_evidence": false
+ },
+ {
+  "component": "component-024",
+  "case_ids": [
+   "HO-V2-047"
+  ],
+  "evidence_ids": [],
+  "carries_evidence": false
+ },
+ {
+  "component": "component-025",
+  "case_ids": [
+   "HO-V2-048"
+  ],
+  "evidence_ids": [],
+  "carries_evidence": false
+ },
+ {
+  "component": "component-026",
+  "case_ids": [
+   "HO-V2-049"
+  ],
+  "evidence_ids": [],
+  "carries_evidence": false
+ },
+ {
+  "component": "component-027",
+  "case_ids": [
+   "HO-V2-050"
+  ],
+  "evidence_ids": [],
+  "carries_evidence": false
+ },
+ {
+  "component": "component-028",
+  "case_ids": [
+   "HO-V2-051"
+  ],
+  "evidence_ids": [],
+  "carries_evidence": false
+ },
+ {
+  "component": "component-029",
+  "case_ids": [
+   "HO-V2-052"
+  ],
+  "evidence_ids": [],
+  "carries_evidence": false
+ },
+ {
+  "component": "component-030",
+  "case_ids": [
+   "HO-V2-053"
+  ],
+  "evidence_ids": [],
+  "carries_evidence": false
+ },
+ {
+  "component": "component-031",
+  "case_ids": [
+   "HO-V2-054"
+  ],
+  "evidence_ids": [],
+  "carries_evidence": false
+ },
+ {
+  "component": "component-032",
+  "case_ids": [
+   "HO-V2-055"
+  ],
+  "evidence_ids": [],
+  "carries_evidence": false
+ },
+ {
+  "component": "component-033",
+  "case_ids": [
+   "HO-V2-056"
+  ],
+  "evidence_ids": [],
+  "carries_evidence": false
+ },
+ {
+  "component": "component-034",
+  "case_ids": [
+   "HO-V2-057"
+  ],
+  "evidence_ids": [],
+  "carries_evidence": false
+ },
+ {
+  "component": "component-035",
+  "case_ids": [
+   "HO-V2-059"
+  ],
+  "evidence_ids": [
+   "19ba20ec63b596f7"
+  ],
+  "carries_evidence": true
+ },
+ {
+  "component": "component-036",
+  "case_ids": [
+   "HO-V2-062"
+  ],
+  "evidence_ids": [],
+  "carries_evidence": false
+ },
+ {
+  "component": "component-037",
+  "case_ids": [
+   "HO-V2-063"
+  ],
+  "evidence_ids": [],
+  "carries_evidence": false
+ },
+ {
+  "component": "component-038",
+  "case_ids": [
+   "HO-V2-064"
+  ],
+  "evidence_ids": [],
+  "carries_evidence": false
+ },
+ {
+  "component": "component-039",
+  "case_ids": [
+   "HO-V2-065"
+  ],
+  "evidence_ids": [],
+  "carries_evidence": false
+ }
 ]

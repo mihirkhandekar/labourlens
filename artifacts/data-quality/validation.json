@@ -1,7 +1,7 @@
 {
   "checks": [
     {
-      "detail": "79 catalogued, missing=[]",
+      "detail": "85 catalogued, missing=[]",
       "name": "manifest.all_sources_present",
       "status": "pass"
     },
@@ -26,7 +26,7 @@
       "status": "pass"
     },
     {
-      "detail": "22 sources still have unresolved rights (kept local-only): ['mom-2026-q2-advance', 'mom-2026-q2-final-release', 'mom-2025-q3-advance', 'mom-2025-q3-final-release', 'mom-2025-q4-advance', 'mom-2025-q4-final-release', 'mom-2026-q1-advance', 'mom-2026-q1-final-release', 'mom-2024-q1-advance', 'mom-2024-q1-final-release', 'mom-2024-q2-advance', 'mom-2024-q2-final-release', 'mom-2024-q3-advance', 'mom-2024-q3-final-release', 'mom-2024-q4-advance', 'mom-2024-q4-final-release', 'mom-2025-q1-advance', 'mom-2025-q1-final-release', 'mom-2025-q2-advance', 'mom-2025-q2-final-release', 'mom-jv2025-release', 'mom-wage-practices2024-release']",
+      "detail": "23 sources still have unresolved rights (kept local-only): ['mom-2026-q2-advance', 'mom-2026-q2-final-release', 'mom-2025-q3-advance', 'mom-2025-q3-final-release', 'mom-2025-q4-advance', 'mom-2025-q4-final-release', 'mom-2026-q1-advance', 'mom-2026-q1-final-release', 'mom-2024-q1-advance', 'mom-2024-q1-final-release', 'mom-2024-q2-advance', 'mom-2024-q2-final-release', 'mom-2024-q3-advance', 'mom-2024-q3-final-release', 'mom-2024-q4-advance', 'mom-2024-q4-final-release', 'mom-2025-q1-advance', 'mom-2025-q1-final-release', 'mom-2025-q2-advance', 'mom-2025-q2-final-release', 'mom-jv2025-release', 'mom-wage-practices2024-release', 'mti-2026-q2-feature-ai-employment']",
       "name": "rights.unresolved_sources_listed",
       "status": "warn"
     },
@@ -1186,6 +1186,111 @@
       "status": "warn"
     },
     {
+      "detail": "quarantined=0",
+      "name": "dataset.unit_labour_cost_index_quarterly.no_quarantined_rows",
+      "status": "pass"
+    },
+    {
+      "detail": "first=1980-Q1 expected=1980-Q1; last=2026-Q2 expected=2026-Q2",
+      "name": "dataset.unit_labour_cost_index_quarterly.first_last_period",
+      "status": "pass"
+    },
+    {
+      "detail": "duplicates=0",
+      "name": "dataset.unit_labour_cost_index_quarterly.no_duplicate_keys",
+      "status": "pass"
+    },
+    {
+      "detail": "",
+      "name": "dataset.unit_labour_cost_index_quarterly.observation_ids_unique",
+      "status": "pass"
+    },
+    {
+      "detail": "outside=0",
+      "name": "dataset.unit_labour_cost_index_quarterly.values_in_plausible_range",
+      "status": "pass"
+    },
+    {
+      "detail": "quarters expected 2024-Q1 to 2026-Q2; series with gaps=0",
+      "name": "dataset.unit_labour_cost_index_quarterly.in_scope_rows_cover_declared_quarters",
+      "status": "pass"
+    },
+    {
+      "detail": "0 of 260 in-scope cells have no published number (reasons: {})",
+      "name": "dataset.unit_labour_cost_index_quarterly.in_scope_values_present",
+      "status": "pass"
+    },
+    {
+      "detail": "quarantined=0",
+      "name": "dataset.value_added_per_worker_quarterly.no_quarantined_rows",
+      "status": "pass"
+    },
+    {
+      "detail": "first=1991-Q1 expected=1991-Q1; last=2026-Q2 expected=2026-Q2",
+      "name": "dataset.value_added_per_worker_quarterly.first_last_period",
+      "status": "pass"
+    },
+    {
+      "detail": "duplicates=0",
+      "name": "dataset.value_added_per_worker_quarterly.no_duplicate_keys",
+      "status": "pass"
+    },
+    {
+      "detail": "",
+      "name": "dataset.value_added_per_worker_quarterly.observation_ids_unique",
+      "status": "pass"
+    },
+    {
+      "detail": "outside=0",
+      "name": "dataset.value_added_per_worker_quarterly.values_in_plausible_range",
+      "status": "pass"
+    },
+    {
+      "detail": "quarters expected 2024-Q1 to 2026-Q2; series with gaps=0",
+      "name": "dataset.value_added_per_worker_quarterly.in_scope_rows_cover_declared_quarters",
+      "status": "pass"
+    },
+    {
+      "detail": "0 of 240 in-scope cells have no published number (reasons: {})",
+      "name": "dataset.value_added_per_worker_quarterly.in_scope_values_present",
+      "status": "pass"
+    },
+    {
+      "detail": "quarantined=0",
+      "name": "dataset.avg_weekly_paid_hours_quarterly.no_quarantined_rows",
+      "status": "pass"
+    },
+    {
+      "detail": "first=1998-Q1 expected=1998-Q1; last=2026-Q2 expected=2026-Q2",
+      "name": "dataset.avg_weekly_paid_hours_quarterly.first_last_period",
+      "status": "pass"
+    },
+    {
+      "detail": "duplicates=0",
+      "name": "dataset.avg_weekly_paid_hours_quarterly.no_duplicate_keys",
+      "status": "pass"
+    },
+    {
+      "detail": "",
+      "name": "dataset.avg_weekly_paid_hours_quarterly.observation_ids_unique",
+      "status": "pass"
+    },
+    {
+      "detail": "outside=0",
+      "name": "dataset.avg_weekly_paid_hours_quarterly.values_in_plausible_range",
+      "status": "pass"
+    },
+    {
+      "detail": "quarters expected 2024-Q1 to 2026-Q2; series with gaps=0",
+      "name": "dataset.avg_weekly_paid_hours_quarterly.in_scope_rows_cover_declared_quarters",
+      "status": "pass"
+    },
+    {
+      "detail": "0 of 10 in-scope cells have no published number (reasons: {})",
+      "name": "dataset.avg_weekly_paid_hours_quarterly.in_scope_values_present",
+      "status": "pass"
+    },
+    {
       "detail": "checked=80 parent/period pairs, max_abs_diff=200 persons, tolerance=100/child, exceeded=[]",
       "name": "sector.children_sum_to_parent_within_rounding",
       "status": "pass"
@@ -1211,7 +1316,7 @@
       "status": "warn"
     },
     {
-      "detail": "15915 passages",
+      "detail": "16419 passages",
       "name": "passages.ids_unique",
       "status": "pass"
     },
@@ -1241,7 +1346,7 @@
       "status": "pass"
     },
     {
-      "detail": "{'ok': 8614, 'table_unreliable': 7055, 'garbled': 246}",
+      "detail": "{'ok': 9040, 'table_unreliable': 7093, 'garbled': 286}",
       "name": "passages.quality_flag_distribution",
       "status": "pass"
     },
@@ -1251,7 +1356,7 @@
       "status": "pass"
     },
     {
-      "detail": "scanned 15915 passages and 147 distinct text values; hits=0 []",
+      "detail": "scanned 16419 passages and 180 distinct text values; hits=0 []",
       "name": "security.no_instruction_like_text_in_sources",
       "status": "pass"
     },
@@ -1277,7 +1382,7 @@
     }
   ],
   "summary": {
-    "pass": 248,
+    "pass": 269,
     "warn": 7
   }
 }

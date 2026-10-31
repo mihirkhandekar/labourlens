@@ -1,0 +1,924 @@
+{
+ "purpose": "Independence audit for heldout_v2_draft.jsonl on corpus v3 (supersedes the earlier structured-only inventory in evidence-audit.json for the confirmatory set).",
+ "corpus_snapshot": "experiments/corpus-snapshots/v3.json",
+ "corpus_snapshot_sha256": "6caba3d61a3addbef4b182ec3455e99fa8e509ff056e5ecdf82fe4da33377bc6",
+ "gold_sha256": "698940357c090c4beed4ba6532f66967dc7175297a3d1ffcd5fd6325e128fb70",
+ "checks": {
+  "new_sources": [
+   "avg_weekly_paid_hours_quarterly",
+   "mom-nwc-lower-wage2025",
+   "mom-wage-practices2025",
+   "mti-2026-q2-feature-ai-employment",
+   "unit_labour_cost_index_quarterly",
+   "value_added_per_worker_quarterly"
+  ],
+  "gold_files_checked": [
+   "experiments/gold/draft_cases.jsonl (268 cases incl. partial/context-only evidence)"
+  ],
+  "acceptable_or_context_evidence_id_overlap_with_existing_gold": [],
+  "saved_run_files_scanned": 48,
+  "saved_run_evidence_source_ids_in_new_sources": [],
+  "repo_files_mentioning_new_sources": [
+   "data/manifests/*",
+   "data/passages/<new>.jsonl",
+   "data/processed/observations.parquet",
+   "data/snapshots/<new datasets>/",
+   "artifacts/data-quality/*",
+   "docs/data-sheet.md",
+   "docs/experiments/m7-*.md",
+   "experiments/corpus-snapshots/v3.json",
+   "specs/*",
+   "tests/data/test_corpus_v3_additive.py"
+  ],
+  "repo_locations_without_mentions": [
+   "experiments/gold",
+   "experiments/runs",
+   "experiments/eval",
+   "experiments/threats",
+   "data/runs",
+   "prompts",
+   "src",
+   "experiments/retrieval-tuning artefacts"
+  ],
+  "subject_periods_in_scope": true,
+  "cited_passages_all_quality_ok": true,
+  "gold_evidence_ids_compared": 325
+ },
+ "sources": [
+  {
+   "source_id": "mom-wage-practices2025",
+   "kind": "document",
+   "title": "Report on Wage Practices 2025",
+   "publication_date": "2026-05-28",
+   "rights_status": "verified_all_rights_reserved",
+   "passages": 174,
+   "quality_flags": {
+    "ok": 151,
+    "table_unreliable": 23
+   },
+   "cited_passages_all_ok": true,
+   "cited_passage_count": 11,
+   "cases": [
+    "HO-V2-007",
+    "HO-V2-008",
+    "HO-V2-009",
+    "HO-V2-010",
+    "HO-V2-011",
+    "HO-V2-012",
+    "HO-V2-013",
+    "HO-V2-029",
+    "HO-V2-030",
+    "HO-V2-031",
+    "HO-V2-032",
+    "HO-V2-037",
+    "HO-V2-038",
+    "HO-V2-039",
+    "HO-V2-040",
+    "HO-V2-041",
+    "HO-V2-044",
+    "HO-V2-056",
+    "HO-V2-061"
+   ]
+  },
+  {
+   "source_id": "mom-nwc-lower-wage2025",
+   "kind": "document",
+   "title": "Wage Adjustments and Adoption of NWC Guidelines for Lower-Wage Employees 2025",
+   "publication_date": "2026-10-23",
+   "rights_status": "verified_all_rights_reserved",
+   "passages": 112,
+   "quality_flags": {
+    "ok": 112
+   },
+   "cited_passages_all_ok": true,
+   "cited_passage_count": 12,
+   "cases": [
+    "HO-V2-010",
+    "HO-V2-014",
+    "HO-V2-015",
+    "HO-V2-016",
+    "HO-V2-017",
+    "HO-V2-018",
+    "HO-V2-019",
+    "HO-V2-033",
+    "HO-V2-034",
+    "HO-V2-035",
+    "HO-V2-036",
+    "HO-V2-037",
+    "HO-V2-038",
+    "HO-V2-039",
+    "HO-V2-042",
+    "HO-V2-044",
+    "HO-V2-058"
+   ]
+  },
+  {
+   "source_id": "mti-2026-q2-feature-ai-employment",
+   "kind": "document",
+   "title": "Measuring Firm-Level Artificial Intelligence Use and its Effects on Firm Performance and Employment in Singapore",
+   "publication_date": "2026-08-11",
+   "rights_status": "unresolved",
+   "passages": 218,
+   "quality_flags": {
+    "ok": 163,
+    "garbled": 40,
+    "table_unreliable": 15
+   },
+   "cited_passages_all_ok": true,
+   "cited_passage_count": 6,
+   "cases": [
+    "HO-V2-020",
+    "HO-V2-021",
+    "HO-V2-022",
+    "HO-V2-043",
+    "HO-V2-052",
+    "HO-V2-053"
+   ]
+  },
+  {
+   "source_id": "unit_labour_cost_index_quarterly",
+   "kind": "dataset",
+   "rows": 4836,
+   "in_scope_rows": 260,
+   "cases": [
+    "HO-V2-002",
+    "HO-V2-005",
+    "HO-V2-006",
+    "HO-V2-025",
+    "HO-V2-026",
+    "HO-V2-041",
+    "HO-V2-045",
+    "HO-V2-059"
+   ]
+  },
+  {
+   "source_id": "value_added_per_worker_quarterly",
+   "kind": "dataset",
+   "rows": 3408,
+   "in_scope_rows": 240,
+   "cases": [
+    "HO-V2-003",
+    "HO-V2-004",
+    "HO-V2-027",
+    "HO-V2-028",
+    "HO-V2-040",
+    "HO-V2-043",
+    "HO-V2-046"
+   ]
+  },
+  {
+   "source_id": "avg_weekly_paid_hours_quarterly",
+   "kind": "dataset",
+   "rows": 114,
+   "in_scope_rows": 10,
+   "cases": [
+    "HO-V2-001",
+    "HO-V2-023",
+    "HO-V2-024",
+    "HO-V2-042",
+    "HO-V2-047",
+    "HO-V2-054",
+    "HO-V2-060"
+   ]
+  }
+ ],
+ "components": {
+  "n_components": 39,
+  "n_components_with_evidence_ids": 22,
+  "definition": "cases are linked when they share an acceptable passage or observation id; cases with none are singleton components"
+ },
+ "cases": [
+  {
+   "case_id": "HO-V2-001",
+   "family": "factual_lookup",
+   "expected_behavior": "answer",
+   "source_group": "dataset_paid_hours",
+   "passage_ids": [],
+   "observation_ids": [
+    "6a0127f63aa34654"
+   ],
+   "component": "component-001"
+  },
+  {
+   "case_id": "HO-V2-002",
+   "family": "factual_lookup",
+   "expected_behavior": "answer",
+   "source_group": "dataset_ulc",
+   "passage_ids": [],
+   "observation_ids": [
+    "437047d92e96e5da"
+   ],
+   "component": "component-019"
+  },
+  {
+   "case_id": "HO-V2-003",
+   "family": "factual_lookup",
+   "expected_behavior": "answer",
+   "source_group": "dataset_vapw",
+   "passage_ids": [],
+   "observation_ids": [
+    "66e7fc35ae5345e8"
+   ],
+   "component": "component-002"
+  },
+  {
+   "case_id": "HO-V2-004",
+   "family": "factual_lookup",
+   "expected_behavior": "answer",
+   "source_group": "dataset_vapw",
+   "passage_ids": [],
+   "observation_ids": [
+    "5e0a16cc9f253d9f"
+   ],
+   "component": "component-020"
+  },
+  {
+   "case_id": "HO-V2-005",
+   "family": "factual_lookup",
+   "expected_behavior": "answer",
+   "source_group": "dataset_ulc",
+   "passage_ids": [],
+   "observation_ids": [
+    "d1e11fe9d239ad77"
+   ],
+   "component": "component-003"
+  },
+  {
+   "case_id": "HO-V2-006",
+   "family": "factual_lookup",
+   "expected_behavior": "answer",
+   "source_group": "dataset_ulc",
+   "passage_ids": [],
+   "observation_ids": [
+    "56d7d49a49f8a7c3"
+   ],
+   "component": "component-004"
+  },
+  {
+   "case_id": "HO-V2-007",
+   "family": "factual_lookup",
+   "expected_behavior": "answer",
+   "source_group": "wage_practices_2025",
+   "passage_ids": [
+    "mom-wage-practices2025:p009:b000:c7ccd79e"
+   ],
+   "observation_ids": [],
+   "component": "component-019"
+  },
+  {
+   "case_id": "HO-V2-008",
+   "family": "factual_lookup",
+   "expected_behavior": "answer",
+   "source_group": "wage_practices_2025",
+   "passage_ids": [
+    "mom-wage-practices2025:p009:b011:125744ba"
+   ],
+   "observation_ids": [],
+   "component": "component-016"
+  },
+  {
+   "case_id": "HO-V2-009",
+   "family": "factual_lookup",
+   "expected_behavior": "answer",
+   "source_group": "wage_practices_2025",
+   "passage_ids": [
+    "mom-wage-practices2025:p015:b000:d8758789"
+   ],
+   "observation_ids": [],
+   "component": "component-005"
+  },
+  {
+   "case_id": "HO-V2-010",
+   "family": "factual_lookup",
+   "expected_behavior": "answer",
+   "source_group": "wage_practices_2025",
+   "passage_ids": [
+    "mom-nwc-lower-wage2025:p012:b000:97d5a03a",
+    "mom-wage-practices2025:p005:b000:2b0cdc27"
+   ],
+   "observation_ids": [],
+   "component": "component-006"
+  },
+  {
+   "case_id": "HO-V2-011",
+   "family": "factual_lookup",
+   "expected_behavior": "answer",
+   "source_group": "wage_practices_2025",
+   "passage_ids": [
+    "mom-wage-practices2025:p026:b007:b1966150"
+   ],
+   "observation_ids": [],
+   "component": "component-007"
+  },
+  {
+   "case_id": "HO-V2-012",
+   "family": "factual_lookup",
+   "expected_behavior": "answer",
+   "source_group": "wage_practices_2025",
+   "passage_ids": [
+    "mom-wage-practices2025:p005:b001:e8741c79",
+    "mom-wage-practices2025:p011:b000:65270f0a"
+   ],
+   "observation_ids": [],
+   "component": "component-008"
+  },
+  {
+   "case_id": "HO-V2-013",
+   "family": "factual_lookup",
+   "expected_behavior": "answer",
+   "source_group": "wage_practices_2025",
+   "passage_ids": [
+    "mom-wage-practices2025:p006:b000:8b7c1b47",
+    "mom-wage-practices2025:p014:b002:51132aaa"
+   ],
+   "observation_ids": [],
+   "component": "component-009"
+  },
+  {
+   "case_id": "HO-V2-014",
+   "family": "factual_lookup",
+   "expected_behavior": "answer",
+   "source_group": "nwc_lower_wage_2025",
+   "passage_ids": [
+    "mom-nwc-lower-wage2025:p005:b001:5c0d79fd",
+    "mom-nwc-lower-wage2025:p006:b001:15acbf6a"
+   ],
+   "observation_ids": [],
+   "component": "component-016"
+  },
+  {
+   "case_id": "HO-V2-015",
+   "family": "factual_lookup",
+   "expected_behavior": "answer",
+   "source_group": "nwc_lower_wage_2025",
+   "passage_ids": [
+    "mom-nwc-lower-wage2025:p005:b002:86518aaf",
+    "mom-nwc-lower-wage2025:p008:b000:eb46daf7"
+   ],
+   "observation_ids": [],
+   "component": "component-009"
+  },
+  {
+   "case_id": "HO-V2-016",
+   "family": "factual_lookup",
+   "expected_behavior": "answer",
+   "source_group": "nwc_lower_wage_2025",
+   "passage_ids": [
+    "mom-nwc-lower-wage2025:p005:b003:0aa4a022",
+    "mom-nwc-lower-wage2025:p010:b000:c4176300"
+   ],
+   "observation_ids": [],
+   "component": "component-010"
+  },
+  {
+   "case_id": "HO-V2-017",
+   "family": "factual_lookup",
+   "expected_behavior": "answer",
+   "source_group": "nwc_lower_wage_2025",
+   "passage_ids": [
+    "mom-nwc-lower-wage2025:p006:b001:15acbf6a"
+   ],
+   "observation_ids": [],
+   "component": "component-016"
+  },
+  {
+   "case_id": "HO-V2-018",
+   "family": "factual_lookup",
+   "expected_behavior": "answer",
+   "source_group": "nwc_lower_wage_2025",
+   "passage_ids": [
+    "mom-nwc-lower-wage2025:p006:b013:5ea84ec2",
+    "mom-nwc-lower-wage2025:p007:b009:6252a83b",
+    "mom-nwc-lower-wage2025:p009:b007:df6975a4"
+   ],
+   "observation_ids": [],
+   "component": "component-011"
+  },
+  {
+   "case_id": "HO-V2-019",
+   "family": "factual_lookup",
+   "expected_behavior": "answer",
+   "source_group": "nwc_lower_wage_2025",
+   "passage_ids": [
+    "mom-nwc-lower-wage2025:p011:b000:26294863"
+   ],
+   "observation_ids": [],
+   "component": "component-012"
+  },
+  {
+   "case_id": "HO-V2-020",
+   "family": "factual_lookup",
+   "expected_behavior": "answer",
+   "source_group": "mti_ai_feature",
+   "passage_ids": [
+    "mti-2026-q2-feature-ai-employment:p007:b024:4fa95318"
+   ],
+   "observation_ids": [],
+   "component": "component-013"
+  },
+  {
+   "case_id": "HO-V2-021",
+   "family": "factual_lookup",
+   "expected_behavior": "answer",
+   "source_group": "mti_ai_feature",
+   "passage_ids": [
+    "mti-2026-q2-feature-ai-employment:p006:b011:ea490892"
+   ],
+   "observation_ids": [],
+   "component": "component-014"
+  },
+  {
+   "case_id": "HO-V2-022",
+   "family": "factual_lookup",
+   "expected_behavior": "answer",
+   "source_group": "mti_ai_feature",
+   "passage_ids": [
+    "mti-2026-q2-feature-ai-employment:p002:b007:5d3f863d",
+    "mti-2026-q2-feature-ai-employment:p009:b015:e7800ade"
+   ],
+   "observation_ids": [],
+   "component": "component-020"
+  },
+  {
+   "case_id": "HO-V2-023",
+   "family": "numerical_comparison",
+   "expected_behavior": "answer",
+   "source_group": "dataset_paid_hours",
+   "passage_ids": [],
+   "observation_ids": [
+    "028d08471ab98b57",
+    "669b76aa732e9576"
+   ],
+   "component": "component-015"
+  },
+  {
+   "case_id": "HO-V2-024",
+   "family": "numerical_comparison",
+   "expected_behavior": "answer",
+   "source_group": "dataset_paid_hours",
+   "passage_ids": [],
+   "observation_ids": [
+    "2a9408043b070eb0",
+    "64d846abd5ed1d25"
+   ],
+   "component": "component-016"
+  },
+  {
+   "case_id": "HO-V2-025",
+   "family": "numerical_comparison",
+   "expected_behavior": "answer",
+   "source_group": "dataset_ulc",
+   "passage_ids": [],
+   "observation_ids": [
+    "31e55c7d34ccd855",
+    "69e7eae0fb92ef8e"
+   ],
+   "component": "component-017"
+  },
+  {
+   "case_id": "HO-V2-026",
+   "family": "numerical_comparison",
+   "expected_behavior": "answer",
+   "source_group": "dataset_ulc",
+   "passage_ids": [],
+   "observation_ids": [
+    "d9255f0ffa0d0020",
+    "dca71ec79c9dae61"
+   ],
+   "component": "component-018"
+  },
+  {
+   "case_id": "HO-V2-027",
+   "family": "numerical_comparison",
+   "expected_behavior": "answer",
+   "source_group": "dataset_vapw",
+   "passage_ids": [],
+   "observation_ids": [
+    "59116de3380b5ac9",
+    "dea636742d7e0b41"
+   ],
+   "component": "component-019"
+  },
+  {
+   "case_id": "HO-V2-028",
+   "family": "numerical_comparison",
+   "expected_behavior": "answer",
+   "source_group": "dataset_vapw",
+   "passage_ids": [],
+   "observation_ids": [
+    "370b987aa3d10ecd",
+    "7c6488a49202814f"
+   ],
+   "component": "component-020"
+  },
+  {
+   "case_id": "HO-V2-029",
+   "family": "numerical_comparison",
+   "expected_behavior": "answer",
+   "source_group": "wage_practices_2025",
+   "passage_ids": [
+    "mom-wage-practices2025:p015:b001:413c93b1"
+   ],
+   "observation_ids": [],
+   "component": "component-021"
+  },
+  {
+   "case_id": "HO-V2-030",
+   "family": "numerical_comparison",
+   "expected_behavior": "answer",
+   "source_group": "wage_practices_2025",
+   "passage_ids": [
+    "mom-wage-practices2025:p010:b009:16f3508c"
+   ],
+   "observation_ids": [],
+   "component": "component-016"
+  },
+  {
+   "case_id": "HO-V2-031",
+   "family": "numerical_comparison",
+   "expected_behavior": "answer",
+   "source_group": "wage_practices_2025",
+   "passage_ids": [
+    "mom-wage-practices2025:p015:b000:d8758789"
+   ],
+   "observation_ids": [],
+   "component": "component-005"
+  },
+  {
+   "case_id": "HO-V2-032",
+   "family": "numerical_comparison",
+   "expected_behavior": "answer",
+   "source_group": "wage_practices_2025",
+   "passage_ids": [
+    "mom-wage-practices2025:p009:b011:125744ba"
+   ],
+   "observation_ids": [],
+   "component": "component-016"
+  },
+  {
+   "case_id": "HO-V2-033",
+   "family": "numerical_comparison",
+   "expected_behavior": "answer",
+   "source_group": "nwc_lower_wage_2025",
+   "passage_ids": [
+    "mom-nwc-lower-wage2025:p005:b001:5c0d79fd",
+    "mom-nwc-lower-wage2025:p006:b001:15acbf6a"
+   ],
+   "observation_ids": [],
+   "component": "component-016"
+  },
+  {
+   "case_id": "HO-V2-034",
+   "family": "numerical_comparison",
+   "expected_behavior": "answer",
+   "source_group": "nwc_lower_wage_2025",
+   "passage_ids": [
+    "mom-nwc-lower-wage2025:p005:b003:0aa4a022",
+    "mom-nwc-lower-wage2025:p010:b000:c4176300"
+   ],
+   "observation_ids": [],
+   "component": "component-010"
+  },
+  {
+   "case_id": "HO-V2-035",
+   "family": "numerical_comparison",
+   "expected_behavior": "answer",
+   "source_group": "nwc_lower_wage_2025",
+   "passage_ids": [
+    "mom-nwc-lower-wage2025:p005:b002:86518aaf",
+    "mom-nwc-lower-wage2025:p008:b000:eb46daf7"
+   ],
+   "observation_ids": [],
+   "component": "component-009"
+  },
+  {
+   "case_id": "HO-V2-036",
+   "family": "numerical_comparison",
+   "expected_behavior": "answer",
+   "source_group": "nwc_lower_wage_2025",
+   "passage_ids": [
+    "mom-nwc-lower-wage2025:p005:b001:5c0d79fd",
+    "mom-nwc-lower-wage2025:p007:b000:9676a044"
+   ],
+   "observation_ids": [],
+   "component": "component-016"
+  },
+  {
+   "case_id": "HO-V2-037",
+   "family": "cross_source_synthesis",
+   "expected_behavior": "answer",
+   "source_group": "wage_reports_pair",
+   "passage_ids": [
+    "mom-nwc-lower-wage2025:p006:b001:15acbf6a",
+    "mom-wage-practices2025:p009:b011:125744ba"
+   ],
+   "observation_ids": [],
+   "component": "component-016"
+  },
+  {
+   "case_id": "HO-V2-038",
+   "family": "cross_source_synthesis",
+   "expected_behavior": "answer",
+   "source_group": "wage_reports_pair",
+   "passage_ids": [
+    "mom-nwc-lower-wage2025:p007:b000:9676a044",
+    "mom-wage-practices2025:p010:b009:16f3508c"
+   ],
+   "observation_ids": [],
+   "component": "component-016"
+  },
+  {
+   "case_id": "HO-V2-039",
+   "family": "cross_source_synthesis",
+   "expected_behavior": "answer",
+   "source_group": "wage_reports_pair",
+   "passage_ids": [
+    "mom-nwc-lower-wage2025:p012:b000:97d5a03a",
+    "mom-wage-practices2025:p005:b000:2b0cdc27"
+   ],
+   "observation_ids": [],
+   "component": "component-006"
+  },
+  {
+   "case_id": "HO-V2-040",
+   "family": "cross_source_synthesis",
+   "expected_behavior": "answer",
+   "source_group": "wage_vs_dataset",
+   "passage_ids": [
+    "mom-wage-practices2025:p009:b000:c7ccd79e"
+   ],
+   "observation_ids": [
+    "dea636742d7e0b41"
+   ],
+   "component": "component-019"
+  },
+  {
+   "case_id": "HO-V2-041",
+   "family": "cross_source_synthesis",
+   "expected_behavior": "answer",
+   "source_group": "wage_vs_dataset",
+   "passage_ids": [
+    "mom-wage-practices2025:p009:b000:c7ccd79e"
+   ],
+   "observation_ids": [
+    "437047d92e96e5da"
+   ],
+   "component": "component-019"
+  },
+  {
+   "case_id": "HO-V2-042",
+   "family": "cross_source_synthesis",
+   "expected_behavior": "answer",
+   "source_group": "wage_vs_dataset",
+   "passage_ids": [
+    "mom-nwc-lower-wage2025:p006:b001:15acbf6a"
+   ],
+   "observation_ids": [
+    "64d846abd5ed1d25"
+   ],
+   "component": "component-016"
+  },
+  {
+   "case_id": "HO-V2-043",
+   "family": "cross_source_synthesis",
+   "expected_behavior": "answer",
+   "source_group": "ai_vs_dataset",
+   "passage_ids": [
+    "mti-2026-q2-feature-ai-employment:p009:b015:e7800ade"
+   ],
+   "observation_ids": [
+    "370b987aa3d10ecd",
+    "5e0a16cc9f253d9f"
+   ],
+   "component": "component-020"
+  },
+  {
+   "case_id": "HO-V2-044",
+   "family": "cross_source_synthesis",
+   "expected_behavior": "answer",
+   "source_group": "wage_reports_pair",
+   "passage_ids": [
+    "mom-nwc-lower-wage2025:p005:b002:86518aaf",
+    "mom-wage-practices2025:p014:b002:51132aaa"
+   ],
+   "observation_ids": [],
+   "component": "component-009"
+  },
+  {
+   "case_id": "HO-V2-045",
+   "family": "revision_conflict",
+   "expected_behavior": "abstain",
+   "source_group": "dataset_ulc",
+   "passage_ids": [],
+   "observation_ids": [
+    "69e7eae0fb92ef8e"
+   ],
+   "component": "component-022"
+  },
+  {
+   "case_id": "HO-V2-046",
+   "family": "revision_conflict",
+   "expected_behavior": "abstain",
+   "source_group": "dataset_vapw",
+   "passage_ids": [],
+   "observation_ids": [
+    "448db0b6b155fcc7"
+   ],
+   "component": "component-023"
+  },
+  {
+   "case_id": "HO-V2-047",
+   "family": "revision_conflict",
+   "expected_behavior": "abstain",
+   "source_group": "dataset_paid_hours",
+   "passage_ids": [],
+   "observation_ids": [
+    "e8056c8bc6ef15ac"
+   ],
+   "component": "component-024"
+  },
+  {
+   "case_id": "HO-V2-048",
+   "family": "ambiguity_insufficient_causal",
+   "expected_behavior": "clarify",
+   "source_group": "wage_reports_pair",
+   "passage_ids": [],
+   "observation_ids": [],
+   "component": "component-025"
+  },
+  {
+   "case_id": "HO-V2-049",
+   "family": "ambiguity_insufficient_causal",
+   "expected_behavior": "clarify",
+   "source_group": "dataset_ulc",
+   "passage_ids": [],
+   "observation_ids": [],
+   "component": "component-026"
+  },
+  {
+   "case_id": "HO-V2-050",
+   "family": "ambiguity_insufficient_causal",
+   "expected_behavior": "clarify",
+   "source_group": "dataset_paid_hours",
+   "passage_ids": [],
+   "observation_ids": [],
+   "component": "component-027"
+  },
+  {
+   "case_id": "HO-V2-051",
+   "family": "ambiguity_insufficient_causal",
+   "expected_behavior": "clarify",
+   "source_group": "dataset_vapw",
+   "passage_ids": [],
+   "observation_ids": [],
+   "component": "component-028"
+  },
+  {
+   "case_id": "HO-V2-052",
+   "family": "ambiguity_insufficient_causal",
+   "expected_behavior": "abstain",
+   "source_group": "mti_ai_feature",
+   "passage_ids": [
+    "mti-2026-q2-feature-ai-employment:p002:b009:1d560883"
+   ],
+   "observation_ids": [],
+   "component": "component-029"
+  },
+  {
+   "case_id": "HO-V2-053",
+   "family": "ambiguity_insufficient_causal",
+   "expected_behavior": "abstain",
+   "source_group": "mti_ai_feature",
+   "passage_ids": [
+    "mti-2026-q2-feature-ai-employment:p009:b014:26ec5441"
+   ],
+   "observation_ids": [],
+   "component": "component-030"
+  },
+  {
+   "case_id": "HO-V2-054",
+   "family": "ambiguity_insufficient_causal",
+   "expected_behavior": "abstain",
+   "source_group": "dataset_paid_hours",
+   "passage_ids": [],
+   "observation_ids": [
+    "64d846abd5ed1d25"
+   ],
+   "component": "component-031"
+  },
+  {
+   "case_id": "HO-V2-055",
+   "family": "ambiguity_insufficient_causal",
+   "expected_behavior": "abstain",
+   "source_group": "dataset_ulc",
+   "passage_ids": [],
+   "observation_ids": [],
+   "component": "component-032"
+  },
+  {
+   "case_id": "HO-V2-056",
+   "family": "ambiguity_insufficient_causal",
+   "expected_behavior": "abstain",
+   "source_group": "wage_practices_2025",
+   "passage_ids": [
+    "mom-wage-practices2025:p026:b007:b1966150"
+   ],
+   "observation_ids": [],
+   "component": "component-033"
+  },
+  {
+   "case_id": "HO-V2-057",
+   "family": "ambiguity_insufficient_causal",
+   "expected_behavior": "refuse",
+   "source_group": "wage_practices_2025",
+   "passage_ids": [],
+   "observation_ids": [],
+   "component": "component-034"
+  },
+  {
+   "case_id": "HO-V2-058",
+   "family": "adversarial",
+   "expected_behavior": "ignore_injection_and_answer",
+   "source_group": "nwc_lower_wage_2025",
+   "passage_ids": [
+    "mom-nwc-lower-wage2025:p005:b002:86518aaf"
+   ],
+   "observation_ids": [],
+   "component": "component-009"
+  },
+  {
+   "case_id": "HO-V2-059",
+   "family": "adversarial",
+   "expected_behavior": "ignore_injection_and_answer",
+   "source_group": "dataset_ulc",
+   "passage_ids": [],
+   "observation_ids": [
+    "19ba20ec63b596f7"
+   ],
+   "component": "component-035"
+  },
+  {
+   "case_id": "HO-V2-060",
+   "family": "adversarial",
+   "expected_behavior": "ignore_injection_and_answer",
+   "source_group": "dataset_paid_hours",
+   "passage_ids": [],
+   "observation_ids": [
+    "669b76aa732e9576"
+   ],
+   "component": "component-015"
+  },
+  {
+   "case_id": "HO-V2-061",
+   "family": "adversarial",
+   "expected_behavior": "ignore_injection_and_answer",
+   "source_group": "wage_practices_2025",
+   "passage_ids": [
+    "mom-wage-practices2025:p015:b000:d8758789"
+   ],
+   "observation_ids": [],
+   "component": "component-005"
+  },
+  {
+   "case_id": "HO-V2-062",
+   "family": "adversarial",
+   "expected_behavior": "refuse",
+   "source_group": "generic_boundary",
+   "passage_ids": [],
+   "observation_ids": [],
+   "component": "component-036"
+  },
+  {
+   "case_id": "HO-V2-063",
+   "family": "adversarial",
+   "expected_behavior": "refuse",
+   "source_group": "generic_boundary",
+   "passage_ids": [],
+   "observation_ids": [],
+   "component": "component-037"
+  },
+  {
+   "case_id": "HO-V2-064",
+   "family": "adversarial",
+   "expected_behavior": "refuse",
+   "source_group": "generic_boundary",
+   "passage_ids": [],
+   "observation_ids": [],
+   "component": "component-038"
+  },
+  {
+   "case_id": "HO-V2-065",
+   "family": "adversarial",
+   "expected_behavior": "refuse",
+   "source_group": "generic_boundary",
+   "passage_ids": [],
+   "observation_ids": [],
+   "component": "component-039"
+  }
+ ],
+ "limitations": [
+  "Same publishers, survey vintage family, prompts, tools, reranker, embeddings model and agent code as dev. The wage-practices 2025 report is the sibling edition of a 2024 report used in dev; MTI AI feature article analyses firm AI use through 2024; both are scope-sensitive.",
+  "Unlogged candidate pools cannot be audited for these new sources because they did not exist in the corpus during any tuning step.",
+  "No labour-only revision pair exists among the new sources: the revision family has only original-vintage-unavailable abstentions."
+ ]
+}

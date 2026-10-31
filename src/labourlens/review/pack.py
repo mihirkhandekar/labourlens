@@ -356,6 +356,9 @@ def what_to_do(tab: str, detail: str = '') -> str:
             'clarify': 'The system asked a question back. Was something really missing from the question?',
         }.get(detail, 'Read the answer. Is it right, using the page or table on the right?')
         keys = 'If yes press R (right). If partly, press P. If wrong, press W. Not sure? Press S. Press A only to agree with the AI.'
+    elif tab == 'heldout2':
+        lines = 'These are NEW cases an AI drafted without seeing any system output. Is the question realistic, in scope and clear, and is the draft answer type (answer, no data, refuse, or ask back) right?'
+        keys = 'If it is fine press R. If it is wrong press W and then pick the right way. Not sure? Press S. No AI has reviewed these cases, so there is nothing to agree with.'
     elif tab == 'gold':
         lines = 'Read the question. Then look at the answer type the draft chose (answer, no data, refuse, or ask back). Is that the right way to handle this question?'
         keys = 'If it is fine press R. If it is wrong press W and then pick the right way. Not sure? Press S. A agrees with the AI.'
@@ -369,6 +372,7 @@ def fast_actions(tab: str, kind: str, info: dict) -> str:
     names = {
         'answers': ('Right', 'Partly right', 'Wrong'),
         'gold': ('Label is fine', None, 'Label is wrong'),
+        'heldout2': ('Label is fine', None, 'Label is wrong'),
         'sources': (('Text matches page' if kind == 'passage' else 'Value matches the row'), 'Small difference', 'Does not match'),
     }[tab]
     keys = ('R', 'P', 'W')
@@ -384,7 +388,7 @@ def fast_actions(tab: str, kind: str, info: dict) -> str:
         s += '<span class="no-agree">' + ('AI passes disagree: decide yourself' if info['status'] == 'disagree' else 'No AI suggestion: decide yourself') + '</span>'
     if tab == 'answers':
         s += '<div class="reason-chips"><span>Why? (optional)</span>' + ''.join(f'<button type="button" data-chip="failure_type" data-value="{esc(v)}">{esc(l)}</button>' for v, l in CHIP_LABELS.items()) + '</div>'
-    elif tab == 'gold':
+    elif tab in ('gold', 'heldout2'):
         s += '<div class="reason-chips"><span>What should it be?</span>' + ''.join(f'<button type="button" data-chip="proposed_behavior" data-value="{esc(v)}">{esc(l)} <kbd>{n}</kbd></button>' for n, (v, l) in enumerate(BEHAVIOUR_CHIPS.items(), 1)) + '</div>'
     return s + '</section>'
 
@@ -531,7 +535,7 @@ def text(name: str, label: str) -> str:
 def controls(tab: str, key: str) -> str:
     if tab == 'answers':
         s = radio('verdict', ('correct', 'partly correct', 'incorrect'), key) + select('failure_type', FAILURES)
-    elif tab == 'gold':
+    elif tab in ('gold', 'heldout2'):
         s = radio('label', ('OK', 'disagree'), key) + select('proposed_behavior', BEHAVIOURS)
         s += radio('evidence', ('OK', 'issue'), key) + radio('facts', ('OK', 'issue'), key)
     else:
@@ -546,7 +550,7 @@ def gold_panel(c: dict, evidence: Evidence) -> str:
     if c.get('calculation'):
         s += '<pre>' + esc(json.dumps(c['calculation'], indent=2, ensure_ascii=False)) + '</pre>'
     s += '</section><section class="evidence-pane">'
-    for field in ('evidence_text', 'partial_evidence_text', 'context_only_evidence_text', 'evidence_data'):
+    for field in ('evidence_text', 'partial_evidence_text', 'context_only_evidence_text', 'evidence_data', 'context_only_evidence_data'):
         for e in c.get(field, []):
             s += para(field.replace('_', ' '))
             s += ''.join(evidence.render(i) for i in e.get('passage_ids', e.get('observation_ids', [])))
@@ -714,6 +718,19 @@ def build_pack(root: Path = ROOT, tiebreak_dir: Path | None = None, use_tiebreak
         s += text('expected_evidence', 'Before revealing: what evidence would you expect?')
         s += '<details class="gold"><summary role="button">Reveal draft — pass 2</summary>' + gold_panel(c, ev) + '</details>' + ai_box(info) + controls('gold', cid)
         content.append(s + '</article>')
+    v2_path = root / 'experiments/gold/heldout_v2_draft.jsonl'
+    v2_cases = rows(v2_path) if v2_path.exists() else []
+    v2_info = _ai('none', 'No AI has reviewed these new held-out v2 cases. They were drafted by AI without seeing any system output: decide yourself.')
+    for c in v2_cases:
+        cid = c['case_id']
+        s = card_start('heldout2', cid, c['family'], False, False, 'Pass 1: is the question realistic, in scope and unambiguous? Pass 2: compare the proposed label, facts and evidence with the inline source.', v2_info,
+                       what_to_do('heldout2'), fast_actions('heldout2', '', v2_info)) + para('Held-out v2 case · source group: ' + str(c.get('source_group', 'unspecified')) + ' · draft, not human reviewed')
+        s += '<h3>Pass 1 — question only</h3>' + para(c['question'])
+        for name in ('realistic', 'in_scope', 'unambiguous'):
+            s += select(name, ('yes', 'no', 'unsure'))
+        s += text('expected_evidence', 'Before revealing: what evidence would you expect?')
+        s += '<details class="gold"><summary role="button">Reveal draft — pass 2</summary>' + gold_panel(c, ev) + '</details>' + ai_box(v2_info) + controls('heldout2', cid)
+        content.append(s + '</article>')
     for kind, filename, column in [('passage', 'passage-spot-check.md', 4), ('statistical', 'statistical-spot-check.md', 7)]:
         for n, identifier in enumerate(source_rows(root / 'docs/human-review' / filename, column), 1):
             cid = f'{kind}-{n:02}'
@@ -734,7 +751,11 @@ def build_pack(root: Path = ROOT, tiebreak_dir: Path | None = None, use_tiebreak
     checklist += para('Publisher-side authenticity, current licence applicability and unresolved employment-population basis cannot be established from offline snapshots alone. Record an unresolved issue unless independently verified; do not treat this pack as proof of current publisher terms.') + '</section></details>'
     digest = hashlib.sha256(json.dumps({'sample': sample, 'gold_ids': sorted(gold)}, sort_keys=True).encode()).hexdigest()[:16]
     assets = json.dumps(ev.images).replace('<', '\\u003c')
-    page = HEADER + ''.join(content) + checklist + '<script>const PACK_ID=' + json.dumps(digest) + '; const INDEPENDENT_FIELDS=' + json.dumps(INDEPENDENT_FIELDS) + '; const DECISION_FIELDS=' + json.dumps(DECISION_FIELDS) + '; const PAGE_IMAGES=' + assets + ';</script><script>' + SCRIPT + '</script></main></body></html>'
+    page = HEADER
+    if v2_cases:
+        page = page.replace('<button role="tab" data-open="sources" aria-selected="false">Source checks</button>', f'<button role="tab" data-open="heldout2" aria-selected="false">Held-out v2 ({len(v2_cases)})</button><button role="tab" data-open="sources" aria-selected="false">Source checks</button>')
+        page = page.replace('<option value="sources">Source checks</option>', '<option value="heldout2">Held-out v2</option><option value="sources">Source checks</option>')
+    page += ''.join(content) + checklist + '<script>const PACK_ID=' + json.dumps(digest) + '; const INDEPENDENT_FIELDS=' + json.dumps(INDEPENDENT_FIELDS) + '; const DECISION_FIELDS=' + json.dumps(DECISION_FIELDS) + '; const PAGE_IMAGES=' + assets + ';</script><script>' + SCRIPT + '</script></main></body></html>'
     destination.parent.mkdir(parents=True, exist_ok=True)
     destination.write_text(page)
     return destination
@@ -778,7 +799,7 @@ class ReviewResult(BaseModel):
 
     @model_validator(mode='after')
     def valid_record(self):
-        valid = re.fullmatch(r'DEV-\d{3}', self.case_id) if self.tab == 'answers' else re.fullmatch(r'(?:HO|DEV)-\d{3}', self.case_id) if self.tab == 'gold' else re.fullmatch(r'(?:passage|statistical)-\d{2}', self.case_id) if self.tab == 'sources' else re.fullmatch(r'J(?:[1-9]|10)', self.case_id) if self.tab == 'decisions' else None
+        valid = re.fullmatch(r'DEV-\d{3}', self.case_id) if self.tab == 'answers' else re.fullmatch(r'(?:HO|DEV)-\d{3}', self.case_id) if self.tab == 'gold' else re.fullmatch(r'HO-V2-\d{3}', self.case_id) if self.tab == 'heldout2' else re.fullmatch(r'(?:passage|statistical)-\d{2}', self.case_id) if self.tab == 'sources' else re.fullmatch(r'J(?:[1-9]|10)', self.case_id) if self.tab == 'decisions' else None
         if not valid:
             raise ValueError('Invalid tab/case id')
         parse_timestamp(self.timestamp)
@@ -791,6 +812,8 @@ class ReviewResult(BaseModel):
         if self.endorsement:
             if self.tab == 'decisions':
                 raise ValueError('J1–J10 decisions cannot be endorsed')
+            if self.tab == 'heldout2':
+                raise ValueError('Held-out v2 cards have no AI review and cannot be endorsed')
             if any(getattr(self.fields, field) for field in INDEPENDENT_FIELDS):
                 raise ValueError('Endorsement cannot be combined with independent review choices')
         if self.decision_source not in DECISION_SOURCES:
@@ -802,6 +825,8 @@ class ReviewResult(BaseModel):
                 raise ValueError('decision_source requires an independent decision')
             if self.decision_source == 'agreed_with_ai_suggestion' and self.fields.label == 'disagree':
                 raise ValueError('An AI suggestion never proposes a gold label change')
+            if self.decision_source == 'agreed_with_ai_suggestion' and self.tab == 'heldout2':
+                raise ValueError('Held-out v2 cards have no AI suggestion to agree with')
         if self.ai_basis not in AI_BASES:
             raise ValueError('Invalid ai_basis')
         if self.ai_basis and self.decision_source != 'agreed_with_ai_suggestion':
@@ -880,11 +905,13 @@ def ingest_review(path: Path, root: Path = ROOT) -> tuple[Path, Path]:
     if not export.reviewer_name.strip():
         raise ValueError('Reviewer name is required; no files written')
     gold = {c['case_id']: c for c in rows(root / 'experiments/gold/draft_cases.jsonl')}
+    v2_path = root / 'experiments/gold/heldout_v2_draft.jsonl'
+    v2_gold = {c['case_id']: c for c in rows(v2_path)} if v2_path.exists() else {}
     selection = set(json.loads((root / 'experiments/human-review-sample/selection.json').read_text())['ids'])
     for r in export.results:
-        if r.tab == 'gold' and r.fields.label == 'disagree' and not r.fields.proposed_behavior:
+        if r.tab in ('gold', 'heldout2') and r.fields.label == 'disagree' and not r.fields.proposed_behavior:
             raise ValueError(f'{r.case_id}: complete the proposed behaviour before ingestion; no files written')
-        if r.tab == 'answers' and r.case_id not in selection or r.tab == 'gold' and r.case_id not in gold:
+        if r.tab == 'answers' and r.case_id not in selection or r.tab == 'gold' and r.case_id not in gold or r.tab == 'heldout2' and r.case_id not in v2_gold:
             raise ValueError(f'Case not in review pack: {r.case_id}')
         if r.tab == 'sources' and int(r.case_id.split('-')[1]) not in range(1, 17 if r.case_id.startswith('passage') else 15):
             raise ValueError('Source row not in review pack')
@@ -931,6 +958,18 @@ def ingest_review(path: Path, root: Path = ROOT) -> tuple[Path, Path]:
     for tab, field in [('sources', 'match'), ('gold', 'label'), ('gold', 'evidence'), ('gold', 'facts')]:
         count = Counter(getattr(r.fields, field) for r in independent if r.tab == tab and getattr(r.fields, field))
         summary += f'- {tab} / {field}: {dict(count)}\n'
+    v2_results = [r for r in independent if r.tab == 'heldout2']
+    summary += '\n### Held-out v2 (new blind-authored draft cases; AI-drafted, not previously reviewed)\n\n'
+    for field in ('label', 'evidence', 'facts'):
+        count = Counter(getattr(r.fields, field) for r in v2_results if getattr(r.fields, field))
+        summary += f'- heldout2 / {field}: {dict(count)}\n'
+    summary += '\n| Case | Existing behaviour | Proposed behaviour |\n|---|---|---|\n'
+    v2_proposals = []
+    for r in v2_results:
+        if r.fields.label == 'disagree':
+            summary += f'| {r.case_id} | {v2_gold[r.case_id]["expected_behavior"]} | {r.fields.proposed_behavior} |\n'
+            v2_proposals.append({'case_id': r.case_id, 'current_behavior': v2_gold[r.case_id]['expected_behavior'], 'proposed_behavior': r.fields.proposed_behavior, 'reviewer_name': export.reviewer_name, 'timestamp': r.timestamp, 'status': 'proposed_not_applied'})
+    summary += '\nHeld-out v2 decisions are separate from the registered original held-out set; a proposal never edits `heldout_v2_draft.jsonl`.\n'
     summary += '\n## Owner-endorsed AI review (no independent per-item review)\n\n'
     active_counts = Counter(r.tab for r in endorsed)
     summary += f'Active endorsed cards: {len(endorsed)}. These are not counted as human-reviewed items, do not enter agreement statistics, and never produce proposed gold changes.\n\n'
@@ -950,6 +989,8 @@ def ingest_review(path: Path, root: Path = ROOT) -> tuple[Path, Path]:
             summary += f'| {r.tab} | {r.case_id} | {md_cell(r.fields.comment)} |\n'
     out = root / 'docs/human-review/owner-review-summary.md'
     proposed = root / 'experiments/gold/proposed_label_changes.jsonl'
+    if v2_proposals:  # separate file: never mixes with the registered original held-out proposals
+        (root / 'experiments/gold/proposed_label_changes_heldout_v2.jsonl').write_text(''.join(json.dumps(p, ensure_ascii=False) + '\n' for p in v2_proposals))
     out.parent.mkdir(parents=True, exist_ok=True)
     proposed.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(summary)
@@ -1015,6 +1056,7 @@ function fields(card) {
   return result;
 }
 function key(card) { return card.dataset.tab + ':' + card.dataset.case; }
+function goldLike(card) { return card.dataset.tab === 'gold' || card.dataset.tab === 'heldout2'; }
 function endorsed(card) { return endorsements.get(key(card)) === 'owner_endorsed_ai'; }
 function hasIndependentInput(card) {
   const value = fields(card);
@@ -1050,7 +1092,7 @@ function decided(card) {
   const f = fields(card);
   if (card.dataset.tab === 'decisions') return !!f.decision;
   if (card.dataset.tab === 'answers') return !!f.verdict;
-  if (card.dataset.tab === 'gold') return !!f.label && (f.label !== 'disagree' || !!f.proposed_behavior);
+  if (goldLike(card)) return !!f.label && (f.label !== 'disagree' || !!f.proposed_behavior);
   return !!f.match;
 }
 function download(name, text, type) {
@@ -1092,7 +1134,7 @@ cards.forEach(card => {
       else el.value = value || '';
     });
   }
-  if (saved?.endorsement === 'owner_endorsed_ai' && card.dataset.tab !== 'decisions' && !hasIndependentInput(card)) endorsements.set(key(card), 'owner_endorsed_ai');
+  if (saved?.endorsement === 'owner_endorsed_ai' && card.dataset.tab !== 'decisions' && card.dataset.tab !== 'heldout2' && !hasIndependentInput(card)) endorsements.set(key(card), 'owner_endorsed_ai');
   const badge = document.createElement('div');
   badge.className = 'endorsement-bar'; badge.hidden = true;
   const label = document.createElement('strong');
@@ -1128,7 +1170,7 @@ document.querySelector('#endorse-all').addEventListener('click', () => {
     return;
   }
   // A partial independent judgement is protected too, even if its card is not complete.
-  const targets = cards.filter(card => card.dataset.tab !== 'decisions' && !hasIndependentInput(card));
+  const targets = cards.filter(card => card.dataset.tab !== 'decisions' && card.dataset.tab !== 'heldout2' && !hasIndependentInput(card));
   if (!targets.length) {
     document.querySelector('#notice').textContent = 'No eligible cards remain. Independent choices are never replaced; J1–J10 require your own answers.';
     return;
@@ -1201,7 +1243,7 @@ function update() {
   cards.forEach(card => {
     const f = fields(card);
     card.dataset.unsure = String(unsureCards.has(key(card)) && !decided(card));
-    card.dataset.pickReason = String((card.dataset.tab === 'answers' && ['partly correct', 'incorrect'].includes(f.verdict)) || (card.dataset.tab === 'gold' && f.label === 'disagree'));
+    card.dataset.pickReason = String((card.dataset.tab === 'answers' && ['partly correct', 'incorrect'].includes(f.verdict)) || (goldLike(card) && f.label === 'disagree'));
   });
   document.body.classList.toggle('focus-mode', focus);
   cards.forEach(card => card.hidden = !queue.includes(card) || (focus && key(card) !== activeKey));
@@ -1339,7 +1381,7 @@ function goOrStay(next) {
 function actValues(card, act) {
   const tabName = card.dataset.tab;
   if (tabName === 'answers') return {verdict:{right:'correct', partly:'partly correct', wrong:'incorrect'}[act]};
-  if (tabName === 'gold') return act === 'right' ? {label:'OK', evidence:'OK', facts:'OK'} : act === 'wrong' ? {label:'disagree'} : null;
+  if (tabName === 'gold' || tabName === 'heldout2') return act === 'right' ? {label:'OK', evidence:'OK', facts:'OK'} : act === 'wrong' ? {label:'disagree'} : null;
   if (tabName === 'sources') return {match:{right:'matches', partly:'minor', wrong:'major'}[act]};
   return null;
 }
@@ -1389,7 +1431,7 @@ function applyMode() {
   const fast = fastOn();
   document.body.classList.toggle('fast-mode', fast);
   document.querySelectorAll('.manual-controls').forEach(el => el.open = !fast);
-  cards.filter(card => card.dataset.tab === 'gold').forEach(card => { const panel = card.querySelector(':scope > details.gold'); if (panel) panel.open = fast; });
+  cards.filter(goldLike).forEach(card => { const panel = card.querySelector(':scope > details.gold'); if (panel) panel.open = fast; });
 }
 document.addEventListener('click', event => {
   const button = event.target.closest('[data-act],[data-chip]');
@@ -1418,7 +1460,7 @@ document.addEventListener('keydown', event => {
     const k = event.key.length === 1 ? event.key.toLowerCase() : event.key;
     if (k === 'a') { event.preventDefault(); performAgree(card); return; }
     if (['r', 'p', 'w', 's'].includes(k)) { event.preventDefault(); performAct(card, {r:'right', p:'partly', w:'wrong', s:'unsure'}[k]); return; }
-    if (card.dataset.tab === 'gold' && card.dataset.pickReason === 'true' && /^[1-5]$/.test(event.key)) {
+    if (goldLike(card) && card.dataset.pickReason === 'true' && /^[1-5]$/.test(event.key)) {
       const chip = card.querySelectorAll('[data-chip]')[Number(event.key) - 1];
       if (chip) { event.preventDefault(); chip.click(); return; }
     }
@@ -1429,8 +1471,8 @@ document.addEventListener('keydown', event => {
   if (event.key === '?') { event.preventDefault(); help.showModal(); }
   else if (event.key === 'j') { event.preventDefault(); move(1); }
   else if (event.key === 'k') { event.preventDefault(); move(-1); }
-  else if (event.key === 'N' || (event.key === 'n' && card.dataset.tab !== 'gold')) { event.preventDefault(); move(1, true); }
-  else if ((event.key === 'y' || event.key === 'n') && card.dataset.tab === 'gold') { event.preventDefault(); choose(card, 'label', event.key === 'y' ? 'OK' : 'disagree'); }
+  else if (event.key === 'N' || (event.key === 'n' && !goldLike(card))) { event.preventDefault(); move(1, true); }
+  else if ((event.key === 'y' || event.key === 'n') && goldLike(card)) { event.preventDefault(); choose(card, 'label', event.key === 'y' ? 'OK' : 'disagree'); }
   else if (['1','2','3'].includes(event.key)) {
     const index = Number(event.key) - 1;
     if (card.dataset.tab === 'answers') { event.preventDefault(); choose(card, 'verdict', ['correct','partly correct','incorrect'][index]); }

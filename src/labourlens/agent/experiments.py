@@ -62,7 +62,7 @@ def _calc_correct(case: dict, res: dict) -> bool | None:
             parts = texts.get(lab, "").split(" | ")
             if len(parts) < 3:
                 break
-            m = re.fullmatch(r"(-?[\d,]+(?:\.\d+)?)(%| persons| vacancies| \(ratio\))", parts[-2])
+            m = re.fullmatch(r"(-?[\d,]+(?:\.\d+)?)(%| persons| vacancies| \(ratio\)| [a-z][a-z0-9_]*)", parts[-2])
             if not m:
                 break
             values.append((m[1].replace(",", ""), {"%": "percent", " (ratio)": "ratio"}.get(m[2], m[2].strip())))

@@ -556,5 +556,50 @@
     "passages": 11,
     "source_id": "mom-lf2024-copyright",
     "status": "ok"
+  },
+  {
+    "body_font_size_median": 10.08,
+    "dropped_short_blocks": 250,
+    "flags": {
+      "empty": 0,
+      "garbled": 0,
+      "multicolumn_uncertain": 0,
+      "ok": 151,
+      "table_unreliable": 23
+    },
+    "pages": 32,
+    "passages": 174,
+    "source_id": "mom-wage-practices2025",
+    "status": "ok"
+  },
+  {
+    "body_font_size_median": 10.02,
+    "dropped_short_blocks": 127,
+    "flags": {
+      "empty": 0,
+      "garbled": 0,
+      "multicolumn_uncertain": 0,
+      "ok": 112,
+      "table_unreliable": 0
+    },
+    "pages": 18,
+    "passages": 112,
+    "source_id": "mom-nwc-lower-wage2025",
+    "status": "ok"
+  },
+  {
+    "body_font_size_median": 9.0,
+    "dropped_short_blocks": 263,
+    "flags": {
+      "empty": 0,
+      "garbled": 40,
+      "multicolumn_uncertain": 0,
+      "ok": 163,
+      "table_unreliable": 15
+    },
+    "pages": 23,
+    "passages": 218,
+    "source_id": "mti-2026-q2-feature-ai-employment",
+    "status": "ok"
   }
 ]
