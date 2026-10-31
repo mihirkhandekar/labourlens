@@ -40,12 +40,15 @@ done < "$files"
 [ "$missing" -eq 0 ] || { echo "refusing to upload: the runtime data set is incomplete on this machine" >&2; exit 1; }
 
 echo "== $(wc -l < "$files" | tr -d ' ') files from deploy/runtime-data.txt -> $target:$remote_dir ${mode:+(DRY RUN, add --go to transfer)}"
-# --relative keeps the directory layout; --chmod makes files owner-writable only and readable by the app user's group/world.
-rsync -avh --relative --chmod=D755,F644 $mode -e "ssh ${ssh_opts[*]}" --files-from="$files" "$repo/data/" "$target:$remote_dir/"
+# --relative keeps the directory layout. No --chmod (macOS rsync lacks it); permissions are normalised on the server afterwards.
+rsync -rltvh --relative $mode -e "ssh ${ssh_opts[*]}" --files-from="$files" "$repo/data/" "$target:$remote_dir/"
 
 if [ "$snapshots" -eq 1 ]; then
   echo "== optional: data/snapshots (*.csv, *.metadata.json) for the MCP sidecar"
-  rsync -avh --chmod=D755,F644 $mode -e "ssh ${ssh_opts[*]}" --include='*/' --include='*.csv' --include='*.metadata.json' --exclude='*' "$repo/data/snapshots/" "$target:$remote_dir/snapshots/"
+  rsync -rltvh $mode -e "ssh ${ssh_opts[*]}" --include='*/' --include='*.csv' --include='*.metadata.json' --exclude='*' "$repo/data/snapshots/" "$target:$remote_dir/snapshots/"
 fi
 # The app (uid 10001) must be able to write data/audit and the embedding cache; bootstrap sets that ownership once.
+if [ -z "$mode" ]; then
+  ssh "${ssh_opts[@]}" "$target" "find '$remote_dir' -type d -exec chmod 755 {} + && find '$remote_dir' -type f -exec chmod 644 {} +"
+fi
 [ -z "$mode" ] && echo "done. Restart the app so it reloads the data: ssh $target 'cd /srv/labourlens/deploy && ./deploy.sh restart'" || true
