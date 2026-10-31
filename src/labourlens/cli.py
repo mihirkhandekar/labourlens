@@ -18,7 +18,9 @@ def main(argv: list[str] | None = None) -> int:
 
     sub.add_parser("eda", help="generate EDA figures and findings from the validated store")
     sub.add_parser("review-sheets", help="generate unreviewed human spot-check sheets")
-    sub.add_parser("review-pack", help="build the private offline owner review pack (no network)")
+    rp = sub.add_parser("review-pack", help="build the private offline owner review pack (no network)")
+    rp.add_argument("--tiebreak-dir", help="directory with cards.jsonl and verdicts-*.jsonl (default: private/human-review/tiebreak when present)")
+    rp.add_argument("--no-tiebreak", action="store_true", help="ignore any tie-break verdicts")
     ri = sub.add_parser("review-ingest", help="validate owner export; write summary and proposed gold changes only")
     ri.add_argument("results")
     rx = sub.add_parser("retrieval-exp", help="run BM25 experiments on a gold split")
@@ -76,7 +78,7 @@ def main(argv: list[str] | None = None) -> int:
 
         try:
             if args.cmd == "review-pack":
-                print(build_pack())
+                print(build_pack(tiebreak_dir=Path(args.tiebreak_dir) if args.tiebreak_dir else None, use_tiebreak=not args.no_tiebreak))
             else:
                 for output in ingest_review(Path(args.results)):
                     print(output)

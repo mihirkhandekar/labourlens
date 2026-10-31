@@ -200,8 +200,150 @@ def ai_suggestions(root: Path, gold: dict, sample: list[str], source_counts: dic
     return out
 
 
+TB_REQUIRED = ('case_id', 'tab', 'reviewer_id', 'verdict', 'confidence', 'reason', 'evidence_checked')
+TB_OPTIONAL = ('proposed_behavior', 'evidence', 'facts', 'failure_type', 'needs_human')
+TB_VERDICTS = {'answers': ('correct', 'partly correct', 'incorrect'), 'gold': ('label_ok', 'label_wrong'), 'sources': ('matches', 'minor', 'major')}
+TB_COPY_WORDS = 6
+AI_BASES = ('', 'earlier_passes', 'tiebreak')
+
+
+def _norm_words(value: str) -> list[str]:
+    return re.findall(r'[a-z0-9]+', value.lower())
+
+
+def _card_passage_ids(value) -> set[str]:
+    found: set[str] = set()
+    if isinstance(value, dict):
+        if value.get('kind') == 'passage' and value.get('id'):
+            found.add(value['id'])
+        for item in value.values():
+            found |= _card_passage_ids(item)
+    elif isinstance(value, list):
+        for item in value:
+            found |= _card_passage_ids(item)
+    return found
+
+
+def load_tiebreak(root: Path, directory: Path | None = None) -> dict[tuple[str, str], list[dict]]:
+    """Strictly validate blind tie-break verdict files. Returns {} when none exist (the pack is optional-tie-break)."""
+    directory = Path(directory) if directory else root / 'private/human-review/tiebreak'
+    files = sorted(directory.glob('verdicts-*.jsonl')) if directory.exists() else []
+    if not files:
+        return {}
+    if not (directory / 'cards.jsonl').exists():
+        raise ValueError('Tie-break verdicts need the cards.jsonl they were written for')
+    cards = {(c['tab'], c['case_id']): c for c in rows(directory / 'cards.jsonl')}
+    texts: dict[str, str] = {}
+    for path in sorted((root / 'data/passages').glob('*.jsonl')):
+        for passage in rows(path):
+            texts[passage['passage_id']] = passage['text']
+    result: dict[tuple[str, str], list[dict]] = {key: [] for key in cards}
+    for path in files:
+        reviewer = path.stem[len('verdicts-'):]
+        seen: set[tuple[str, str]] = set()
+        for number, line in enumerate(path.read_text().splitlines(), 1):
+            if not line.strip():
+                continue
+            where = f'{path.name}:{number}'
+            try:
+                record = json.loads(line)
+            except json.JSONDecodeError as exc:
+                raise ValueError(f'{where}: invalid JSON') from exc
+            if not isinstance(record, dict):
+                raise ValueError(f'{where}: not an object')
+            unknown = set(record) - set(TB_REQUIRED) - set(TB_OPTIONAL)
+            if unknown:
+                raise ValueError(f'{where}: unknown fields {sorted(unknown)}')
+            missing = [f for f in TB_REQUIRED if f not in record]
+            if missing:
+                raise ValueError(f'{where}: missing fields {missing}')
+            tab, cid = record['tab'], record['case_id']
+            if tab not in TB_VERDICTS or (tab, cid) not in cards:
+                raise ValueError(f'{where}: not a tie-break card: {tab}/{cid}')
+            if (tab, cid) in seen:
+                raise ValueError(f'{where}: duplicate card {tab}/{cid}')
+            seen.add((tab, cid))
+            if record['reviewer_id'] != reviewer:
+                raise ValueError(f'{where}: reviewer_id {record["reviewer_id"]!r} does not match file name {reviewer!r}')
+            if record['verdict'] not in TB_VERDICTS[tab]:
+                raise ValueError(f'{where}: invalid verdict {record["verdict"]!r} for {tab}')
+            if record['confidence'] not in ('high', 'medium', 'low'):
+                raise ValueError(f'{where}: invalid confidence')
+            reason = record['reason']
+            if not isinstance(reason, str) or not reason.strip() or len(reason.split()) > 40:
+                raise ValueError(f'{where}: reason must be one sentence of at most 40 words')
+            checked = record['evidence_checked']
+            if not isinstance(checked, list) or not checked or not all(isinstance(i, str) and i.strip() for i in checked):
+                raise ValueError(f'{where}: evidence_checked must be a non-empty list of ids')
+            if 'needs_human' in record and not isinstance(record['needs_human'], bool):
+                raise ValueError(f'{where}: needs_human must be boolean')
+            behaviour = record.get('proposed_behavior', '')
+            if tab == 'gold':
+                if record['verdict'] == 'label_wrong' and behaviour not in BEHAVIOURS:
+                    raise ValueError(f'{where}: label_wrong needs a valid proposed_behavior')
+                if record['verdict'] == 'label_ok' and behaviour:
+                    raise ValueError(f'{where}: label_ok must not propose a behavior')
+                for field in ('evidence', 'facts'):
+                    if record.get(field) not in ('ok', 'issue'):
+                        raise ValueError(f'{where}: gold needs {field} ok|issue')
+            elif any(f in record for f in ('proposed_behavior', 'evidence', 'facts')):
+                raise ValueError(f'{where}: proposed_behavior/evidence/facts apply to gold only')
+            if 'failure_type' in record:
+                if tab != 'answers' or record['verdict'] == 'correct' or record['failure_type'] not in FAILURES:
+                    raise ValueError(f'{where}: failure_type only for non-correct answers, from the pack list')
+            # A reason may paraphrase but not copy source prose: no run of more than 6 words from a card's stored passages.
+            ids = _card_passage_ids(cards[(tab, cid)]) | {i for i in checked if i in texts}
+            grams = [' '.join(w[i:i + TB_COPY_WORDS + 1]) for w in [_norm_words(reason)] for i in range(max(0, len(w) - TB_COPY_WORDS))]
+            for passage_id in ids:
+                haystack = ' ' + ' '.join(_norm_words(texts.get(passage_id, ''))) + ' '
+                if any(f' {gram} ' in haystack for gram in grams):
+                    raise ValueError(f'{where}: reason copies more than {TB_COPY_WORDS} consecutive words from {passage_id}')
+            result[(tab, cid)].append(record)
+        missing_cards = sorted(set(cards) - seen)
+        if missing_cards:
+            raise ValueError(f'{path.name}: missing cards {missing_cards}')
+    return result
+
+
+def _tb_label(tab: str, record: dict) -> str:
+    if tab == 'gold':
+        text = 'the label is fine' if record['verdict'] == 'label_ok' else f'the label is wrong (should be {record["proposed_behavior"]})'
+        return f'{text}; evidence {record["evidence"]}, facts {record["facts"]}'
+    return record['verdict']
+
+
+def apply_tiebreak(suggestions: dict, tiebreak: dict) -> dict:
+    """Offer Agree only on unanimous, no-needs_human tie-break consensus. Never edits unrelated cards."""
+    for (tab, cid), records in tiebreak.items():
+        info = suggestions.get((tab, cid))
+        if info is None or info['status'] != 'disagree' or not records:
+            continue
+        earlier = info['text']
+        info['opinions'] = [{'reviewer': r['reviewer_id'], 'confidence': r['confidence'], 'verdict': _tb_label(tab, r), 'reason': r['reason'], 'needs_human': bool(r.get('needs_human'))} for r in records]
+        signatures = {tuple(r.get(f) for f in ('verdict', 'proposed_behavior', 'evidence', 'facts')) for r in records}
+        unanimous = len(signatures) == 1 and not any(r.get('needs_human') for r in records)
+        count = len(records)
+        if unanimous and count >= 3 and records[0]['verdict'] != 'label_wrong':
+            first = records[0]
+            suggest = {'verdict': first['verdict']} if tab == 'answers' else {'match': first['verdict']} if tab == 'sources' else {
+                'label': 'OK', 'evidence': 'OK' if first['evidence'] == 'ok' else 'issue', 'facts': 'OK' if first['facts'] == 'ok' else 'issue'}
+            info.update(status='agree', suggest=suggest, basis='tiebreak',
+                        text=f'AI tie-break ({count} independent passes) agree: {_tb_label(tab, first)}. Earlier passes: {earlier}')
+        elif unanimous and count >= 3:
+            info['text'] = f'AI tie-break ({count} independent passes) agree {_tb_label(tab, records[0])}. A label change can only come from your own click: decide yourself. Earlier passes: {earlier}'
+        else:
+            reason = 'at least one tie-break pass says it needs a human judgement' if any(r.get('needs_human') for r in records) else 'the tie-break passes disagree'
+            info['text'] = f'AI passes disagree: decide yourself ({reason}). Earlier passes: {earlier}'
+    return suggestions
+
+
 def ai_box(info: dict) -> str:
-    return f'<div class="ai-box" data-status="{esc(info["status"])}"><strong>AI reviewers said:</strong> {esc(info["text"])}</div>'
+    opinions = info.get('opinions') or []
+    listing = ''
+    if opinions:
+        listing = ('<details class="tiebreak" open><summary>AI tie-break opinions (blind AI passes, not human review)</summary><ul>'
+                   + ''.join(f'<li><strong>{esc(o["reviewer"])}</strong> ({esc(o["confidence"])} confidence{"; needs a human" if o["needs_human"] else ""}): {esc(o["verdict"])} — {esc(o["reason"])}</li>' for o in opinions) + '</ul></details>')
+    return f'<div class="ai-box" data-status="{esc(info["status"])}"><strong>AI reviewers said:</strong> {esc(info["text"])}{listing}</div>'
 
 
 def what_to_do(tab: str, detail: str = '') -> str:
@@ -435,7 +577,7 @@ def hint(c: dict) -> str:
 def card_start(tab: str, cid: str, family: str, priority: bool = False, quick: bool = False, check: str = '', ai: dict | None = None, todo: str = '', actions: str = '') -> str:
     attrs = ''
     if ai is not None:
-        attrs = f' data-ai-status="{esc(ai["status"])}" data-ai-suggest="{esc(json.dumps(ai["suggest"]))}"'
+        attrs = f' data-ai-status="{esc(ai["status"])}" data-ai-suggest="{esc(json.dumps(ai["suggest"]))}" data-ai-basis="{esc(ai.get("basis", "earlier_passes"))}"'
     return (f'<article id="{tab}-{esc(cid)}" class="card" data-tab="{tab}" data-case="{esc(cid)}" data-family="{esc(family)}" data-priority="{str(priority).lower()}" data-quick="{str(quick).lower()}"{attrs}>'
             f'<h2>{esc(cid)}{" · priority" if priority else ""}</h2><p class="check-hint"><strong>What to check: {esc(check or "Compare the requested fact with its inline source, then record your own judgement.")}</strong></p>'
             + todo + actions + para(family.replace('_', ' ')))
@@ -487,7 +629,7 @@ def adjudication_banner(root: Path) -> tuple[str, set[str]]:
     return '<aside class="decisions"><h2>Needs the owner’s eyes — optional adjudication priorities</h2><p>This list identifies open decisions, not verdicts. Decide before revealing AI opinions.</p><pre>' + esc('\n'.join(selected)) + '</pre>' + links + '</aside>', ids
 
 
-def build_pack(root: Path = ROOT) -> Path:
+def build_pack(root: Path = ROOT, tiebreak_dir: Path | None = None, use_tiebreak: bool = True) -> Path:
     root = root.resolve()
     destination = root / 'private/human-review/review-pack/index.html'
     ignored = subprocess.run(['git', 'check-ignore', '--quiet', str(destination)], cwd=root, check=False)
@@ -503,6 +645,8 @@ def build_pack(root: Path = ROOT) -> Path:
     flagged_answers = quick_answers(root)
     source_counts = {'passage': len(source_rows(root / 'docs/human-review/passage-spot-check.md', 4)), 'statistical': len(source_rows(root / 'docs/human-review/statistical-spot-check.md', 7))}
     suggestions = ai_suggestions(root, gold, sample, source_counts)
+    if use_tiebreak:
+        suggestions = apply_tiebreak(suggestions, load_tiebreak(root, tiebreak_dir))
     for cid, title, question, options in OWNER_DECISIONS:
         s = card_start('decisions', cid, 'owner_decision', True, True, 'Choose the rule or verification status you can personally stand behind; note unresolved evidence.')
         s += '<h3>' + esc(title) + '</h3>' + para(question)
@@ -630,6 +774,7 @@ class ReviewResult(BaseModel):
     endorsement: str = ''
     decision_source: str = ''
     unsure: bool = False
+    ai_basis: str = ''
 
     @model_validator(mode='after')
     def valid_record(self):
@@ -657,6 +802,10 @@ class ReviewResult(BaseModel):
                 raise ValueError('decision_source requires an independent decision')
             if self.decision_source == 'agreed_with_ai_suggestion' and self.fields.label == 'disagree':
                 raise ValueError('An AI suggestion never proposes a gold label change')
+        if self.ai_basis not in AI_BASES:
+            raise ValueError('Invalid ai_basis')
+        if self.ai_basis and self.decision_source != 'agreed_with_ai_suggestion':
+            raise ValueError('ai_basis only applies to agreed_with_ai_suggestion')
         return self
 
 
@@ -757,6 +906,8 @@ def ingest_review(path: Path, root: Path = ROOT) -> tuple[Path, Path]:
     summary += f'Reviewer: {md_cell(export.reviewer_name)}\n\nExport date: {md_cell(export.exported_at)}\n\n'
     summary += '## Independent human review\n\nOnly independent owner-entered choices are counted here. An endorsement is not independent per-item review. Partial fields do not by themselves establish a completed review.\n\n'
     summary += '### Decision provenance\n\n' + f'- owner_manual: {provenance["owner_manual"]}\n- agreed_with_ai_suggestion: {provenance["agreed_with_ai_suggestion"]}\n\n'
+    basis_counts = Counter(r.ai_basis or 'earlier_passes' for r in decided_items if source_of(r) == 'agreed_with_ai_suggestion')
+    summary += f'- of which agreed with earlier AI passes: {basis_counts["earlier_passes"]}; agreed with the 3-pass AI tie-break: {basis_counts["tiebreak"]}\n\n'
     summary += 'Each decision is a per-card owner action. `agreed_with_ai_suggestion` means the owner pressed Agree for that one card; it is counted as an owner decision but excluded from agreement statistics because it is circular. Older exports without provenance are treated as manual.\n\n'
     summary += '### Answer verdict counts\n\n' + ''.join(f'- {k}: {v}\n' for k, v in sorted(counts.items()))
     summary += '\n### Failure-type counts\n\n' + ''.join(f'- {k}: {v}\n' for k, v in sorted(failures.items()))
@@ -869,10 +1020,10 @@ function hasIndependentInput(card) {
   return INDEPENDENT_FIELDS.some(field => !!value[field]);
 }
 function resolved(card) { return decided(card) || endorsed(card); }
-const sources = new Map(), unsureCards = new Set();
-let pendingSource = '', lastShownKey = '', shownAt = 0;
+const sources = new Map(), bases = new Map(), unsureCards = new Set();
+let pendingSource = '', pendingBasis = '', lastShownKey = '', shownAt = 0;
 function persistCard(card) {
-  save(key(card), {fields:fields(card), timestamp:times[key(card)], endorsement:endorsements.get(key(card)) || '', decision_source:sources.get(key(card)) || '', unsure:unsureCards.has(key(card))});
+  save(key(card), {fields:fields(card), timestamp:times[key(card)], endorsement:endorsements.get(key(card)) || '', decision_source:sources.get(key(card)) || '', ai_basis:bases.get(key(card)) || '', unsure:unsureCards.has(key(card))});
 }
 function clearAttestationIfEmpty() {
   if (!endorsements.size) { attestation = null; save('owner-attestation', null); }
@@ -913,7 +1064,9 @@ function exportData() {
   const data = {schema_version:1, pack_id:PACK_ID, reviewer_name:document.querySelector('#reviewer').value.trim(),
     exported_at:now, results:cards.map(card => ({case_id:card.dataset.case, tab:card.dataset.tab,
       fields:fields(card), timestamp:times[key(card)] || now, endorsement:endorsements.get(key(card)) || '',
-      decision_source:(!endorsed(card) && decided(card)) ? (sources.get(key(card)) || 'owner_manual') : '', unsure:unsureCards.has(key(card)) && !decided(card)})), checklist:{}, attestation};
+      decision_source:(!endorsed(card) && decided(card)) ? (sources.get(key(card)) || 'owner_manual') : '',
+      ai_basis:(!endorsed(card) && decided(card) && sources.get(key(card)) === 'agreed_with_ai_suggestion') ? (bases.get(key(card)) || 'earlier_passes') : '',
+      unsure:unsureCards.has(key(card)) && !decided(card)})), checklist:{}, attestation};
   document.querySelectorAll('[data-check]').forEach(el => data.checklist[el.dataset.check] = el.checked);
   return data;
 }
@@ -929,6 +1082,7 @@ cards.forEach(card => {
   if (saved && saved.fields && typeof saved.fields === 'object') {
     times[key(card)] = saved.timestamp;
     if (saved.decision_source) sources.set(key(card), saved.decision_source);
+    if (saved.ai_basis) bases.set(key(card), saved.ai_basis);
     if (saved.unsure) unsureCards.add(key(card));
     card.querySelectorAll('[data-field]').forEach(el => {
       const value = saved.fields[el.dataset.field];
@@ -953,8 +1107,8 @@ cards.forEach(card => {
   card.addEventListener('input', event => {
     times[key(card)] = new Date().toISOString();
     const field = event.target?.dataset?.field;
-    if (pendingSource) sources.set(key(card), pendingSource);
-    else if (sources.get(key(card)) !== 'agreed_with_ai_suggestion' || !field || DECISION_FIELDS.includes(field)) sources.set(key(card), 'owner_manual');
+    if (pendingSource) { sources.set(key(card), pendingSource); bases.set(key(card), pendingBasis); }
+    else if (sources.get(key(card)) !== 'agreed_with_ai_suggestion' || !field || DECISION_FIELDS.includes(field)) { sources.set(key(card), 'owner_manual'); bases.delete(key(card)); }
     if (endorsed(card) && hasIndependentInput(card)) { endorsements.delete(key(card)); clearAttestationIfEmpty(); }
     if (decided(card)) unsureCards.delete(key(card));
     persistCard(card);
@@ -1142,14 +1296,14 @@ function setField(card, field, value) {
   if (el.tagName === 'SELECT') { el.value = value; el.dispatchEvent(new Event('input', {bubbles:true})); }
   else choose(card, field, value);
 }
-function applyFields(card, values, source) {
-  pendingSource = source;
+function applyFields(card, values, source, basis = '') {
+  pendingSource = source; pendingBasis = basis;
   try { Object.entries(values).forEach(([field, value]) => setField(card, field, value)); }
-  finally { pendingSource = ''; }
+  finally { pendingSource = ''; pendingBasis = ''; }
 }
 const undoStack = [];
 function snapshot(card) {
-  return {key:key(card), fields:fields(card), source:sources.get(key(card)) || '', endorsement:endorsements.get(key(card)) || '',
+  return {key:key(card), fields:fields(card), source:sources.get(key(card)) || '', basis:bases.get(key(card)) || '', endorsement:endorsements.get(key(card)) || '',
     unsure:unsureCards.has(key(card)), time:times[key(card)], attestation:attestation ? JSON.parse(JSON.stringify(attestation)) : null};
 }
 function pushUndo(card) { undoStack.push(snapshot(card)); if (undoStack.length > 100) undoStack.shift(); }
@@ -1161,6 +1315,7 @@ function restore(card, snap) {
     else el.value = value || '';
   });
   if (snap.source) sources.set(snap.key, snap.source); else sources.delete(snap.key);
+  if (snap.basis) bases.set(snap.key, snap.basis); else bases.delete(snap.key);
   if (snap.endorsement) { endorsements.set(snap.key, snap.endorsement); if (!attestation && snap.attestation) { attestation = snap.attestation; save('owner-attestation', attestation); } }
   else endorsements.delete(snap.key);
   if (snap.unsure) unsureCards.add(snap.key); else unsureCards.delete(snap.key);
@@ -1211,7 +1366,7 @@ function performAgree(card) {
   if (!Object.keys(suggestion).length) return;
   const next = nextAfter(card);
   pushUndo(card);
-  applyFields(card, suggestion, 'agreed_with_ai_suggestion');
+  applyFields(card, suggestion, 'agreed_with_ai_suggestion', card.dataset.aiBasis || 'earlier_passes');
   goOrStay(next);
 }
 function undoLast() {

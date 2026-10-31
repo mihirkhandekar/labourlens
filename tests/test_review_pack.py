@@ -10,7 +10,7 @@ import re
 from bs4 import BeautifulSoup
 from pydantic import ValidationError
 
-from labourlens.review.pack import EXTRA, ROOT, ReviewExport, build_pack, endorsement_statement, ingest_review
+from labourlens.review.pack import EXTRA, ROOT, ReviewExport, build_pack, endorsement_statement, ingest_review, load_tiebreak
 
 
 def put(root, name, value):
@@ -319,6 +319,121 @@ def test_older_exports_without_provenance_remain_valid_and_count_as_manual(fixtu
     assert ReviewExport.model_validate_json(path.read_text()).results[0].decision_source == ''
     summary, _ = ingest_review(path, fixture_root)
     assert '- owner_manual: 1' in summary.read_text()
+
+
+def tiebreak_fixture(root, mutate=None):
+    """Three blind reviewers over five synthetic disagree cards."""
+    put(root, 'experiments/human-review-sample/independent-ai-review.md', '| DEV-001 | answered | incorrect | retrieval miss |\n| DEV-004 | answered | correct | — | Agree | fine |\n')
+    put(root, 'experiments/human-review-sample/ai-review-summary.md', '## Failure types\n| other | DEV-004 |\n## Next\n')
+    cards = [('answers', 'DEV-004'), ('gold', 'HO-008'), ('gold', 'HO-020'), ('sources', 'passage-03'), ('sources', 'passage-06')]
+    folder = root / 'private/human-review/tiebreak'
+    put(root, 'private/human-review/tiebreak/cards.jsonl', '\n'.join(json.dumps({'case_id': c, 'tab': t, 'where': {'gold_evidence': [{'kind': 'passage', 'id': 'report:p001:test'}]}}) for t, c in cards))
+    def verdict(tab, case, reviewer):
+        base = dict(case_id=case, tab=tab, reviewer_id=reviewer, confidence='high', reason='Checked the stored row and the saved answer.', evidence_checked=['obs1'])
+        if tab == 'answers':
+            return dict(base, verdict='correct')
+        if tab == 'gold':
+            return dict(base, verdict='label_ok', evidence='ok', facts='ok')
+        return dict(base, verdict='matches' if case == 'passage-03' or reviewer != 'tb-c' else 'major')
+    for reviewer in ('tb-a', 'tb-b', 'tb-c'):
+        records = [verdict(t, c, reviewer) for t, c in cards]
+        if mutate:
+            records = mutate(reviewer, records)
+        put(root, f'private/human-review/tiebreak/verdicts-{reviewer}.jsonl', '\n'.join(json.dumps(r) for r in records))
+    return folder
+
+
+def test_tiebreak_offers_agree_only_on_unanimous_verdicts(fixture_root):
+    def mutate(reviewer, records):
+        for r in records:
+            if r['case_id'] == 'HO-020' and reviewer == 'tb-b':
+                r['needs_human'] = True
+        return records
+    tiebreak_fixture(fixture_root, mutate)
+    soup = BeautifulSoup(build_pack(fixture_root).read_text(), 'html.parser')
+    agreed = soup.select_one('#answers-DEV-004')
+    assert agreed['data-ai-status'] == 'agree' and agreed['data-ai-basis'] == 'tiebreak'
+    assert json.loads(agreed['data-ai-suggest']) == {'verdict': 'correct'}
+    assert 'AI tie-break (3 independent passes) agree: correct' in agreed.select_one('.ai-box').get_text()
+    assert agreed.select_one('.agree-ai')
+    gold = soup.select_one('#gold-HO-008')
+    assert gold['data-ai-status'] == 'agree' and json.loads(gold['data-ai-suggest']) == {'label': 'OK', 'evidence': 'OK', 'facts': 'OK'}
+    assert soup.select_one('#sources-passage-03')['data-ai-status'] == 'agree'
+    for blocked in ('#gold-HO-020', '#sources-passage-06'):  # needs_human / split verdicts stay decide-yourself
+        card = soup.select_one(blocked)
+        assert card['data-ai-status'] == 'disagree' and not card.select_one('.agree-ai')
+        assert card.select('.tiebreak li')
+        assert 'decide yourself' in card.select_one('.no-agree').get_text()
+    assert 'needs a human' in soup.select_one('#gold-HO-020 .ai-box').get_text()
+
+
+def test_pack_builds_without_tiebreak_and_can_ignore_it(fixture_root):
+    assert not BeautifulSoup(build_pack(fixture_root).read_text(), 'html.parser').select('.tiebreak')
+    tiebreak_fixture(fixture_root)
+    soup = BeautifulSoup(build_pack(fixture_root, use_tiebreak=False).read_text(), 'html.parser')
+    assert not soup.select('.tiebreak')
+    assert soup.select_one('#answers-DEV-004')['data-ai-status'] == 'disagree'
+
+
+@pytest.mark.parametrize('change,message', [
+    (lambda r: r.update(surprise='x'), 'unknown fields'),
+    (lambda r: r.update(verdict='amended'), 'invalid verdict'),
+    (lambda r: r.update(reviewer_id='tb-z'), 'does not match file name'),
+    (lambda r: r.update(confidence='certain'), 'invalid confidence'),
+    (lambda r: r.update(reason=' '.join(['word'] * 41)), 'at most 40 words'),
+    (lambda r: r.update(evidence_checked=[]), 'evidence_checked'),
+    (lambda r: r.update(verdict='correct', failure_type='other'), 'failure_type'),
+])
+def test_tiebreak_validation_rejects_bad_records(fixture_root, change, message):
+    def mutate(reviewer, records):
+        if reviewer == 'tb-a':
+            change(records[0])
+        return records
+    tiebreak_fixture(fixture_root, mutate)
+    with pytest.raises(ValueError, match=message):
+        load_tiebreak(fixture_root)
+
+
+def test_tiebreak_rejects_missing_duplicate_gold_shape_and_copied_prose(fixture_root):
+    tiebreak_fixture(fixture_root, lambda reviewer, records: records[:-1] if reviewer == 'tb-b' else records)
+    with pytest.raises(ValueError, match='missing cards'):
+        load_tiebreak(fixture_root)
+    tiebreak_fixture(fixture_root, lambda reviewer, records: records + [records[0]] if reviewer == 'tb-a' else records)
+    with pytest.raises(ValueError, match='duplicate card'):
+        load_tiebreak(fixture_root)
+    tiebreak_fixture(fixture_root, lambda reviewer, records: [dict(r, verdict='label_wrong') if r['tab'] == 'gold' and reviewer == 'tb-a' else r for r in records])
+    with pytest.raises(ValueError, match='proposed_behavior'):
+        load_tiebreak(fixture_root)
+    put(fixture_root, 'data/passages/long.jsonl', json.dumps(dict(passage_id='report:p002:long', source_id='report', snapshot_id='s1', document_title='t', page_number=1, original_url='https://www.mom.gov.sg/x', text='alpha beta gamma delta epsilon zeta eta theta iota', release_stage='final')))
+    def copy(reviewer, records):
+        if reviewer == 'tb-c':
+            records[0] = dict(records[0], reason='It says alpha beta gamma delta epsilon zeta eta here.', evidence_checked=['report:p002:long'])
+        return records
+    tiebreak_fixture(fixture_root, copy)
+    with pytest.raises(ValueError, match='copies more than 6 consecutive words'):
+        load_tiebreak(fixture_root)
+    tiebreak_fixture(fixture_root, lambda reviewer, records: [dict(r, reason='A paraphrase using alpha beta gamma only.', evidence_checked=['report:p002:long']) if r is records[0] else r for r in records])
+    assert load_tiebreak(fixture_root)  # six-word overlap is allowed
+
+
+def test_ai_basis_is_validated_and_summarised(fixture_root):
+    data = export_data()
+    data['reviewer_name'] = 'Synthetic human'
+    stamp = '2026-10-31T00:00:00Z'
+    data['results'] = [
+        dict(case_id='DEV-001', tab='answers', fields={'verdict': 'incorrect'}, timestamp=stamp, decision_source='agreed_with_ai_suggestion', ai_basis='tiebreak'),
+        dict(case_id='DEV-002', tab='answers', fields={'verdict': 'correct'}, timestamp=stamp, decision_source='agreed_with_ai_suggestion', ai_basis='earlier_passes'),
+    ]
+    path = put(fixture_root, 'private/basis.json', json.dumps(data))
+    summary, _ = ingest_review(path, fixture_root)
+    assert 'agreed with earlier AI passes: 1; agreed with the 3-pass AI tie-break: 1' in summary.read_text()
+    bad = json.loads(path.read_text())
+    bad['results'][0]['decision_source'] = 'owner_manual'
+    with pytest.raises(ValidationError, match='ai_basis only applies'):
+        ReviewExport.model_validate(bad)
+    bad['results'][0].update(decision_source='agreed_with_ai_suggestion', ai_basis='amended')
+    with pytest.raises(ValidationError, match='Invalid ai_basis'):
+        ReviewExport.model_validate(bad)
 
 
 @pytest.mark.corpus

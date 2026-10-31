@@ -57,6 +57,8 @@ circular); proposed gold changes come only from your own “Label is wrong” cl
 An endorsed card stays endorsed until you decide it, which removes the endorsement.
 Exports from before decision provenance existed count as manual.
 
+**AI tie-break.** If `private/human-review/tiebreak/` holds `cards.jsonl` and `verdicts-*.jsonl` (three blind AI reviewers), `review-pack` validates them strictly and offers Agree on a card that earlier passes disputed only when all three tie-break reviewers give the same verdict and none says it needs a human. Otherwise the three opinions are listed and the card stays “decide yourself”. A unanimous “label is wrong” is shown but never copied: a label change can only come from your own click. Agreed cards record `ai_basis` (`earlier_passes` or `tiebreak`). Options: `--tiebreak-dir PATH`, `--no-tiebreak`. The pack builds without tie-break files.
+
 **Owner endorsement (not independent review).** If you decide not to review every
 item, type your name and use **Endorse AI review for all undecided cards**. The
 confirmation shows exact counts and says: “I have read the AI reviews and the
