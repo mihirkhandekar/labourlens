@@ -41,6 +41,7 @@ def main(argv: list[str] | None = None) -> int:
     ag.add_argument("--pairs", nargs="*")
     ag.add_argument("--answer-prompt", default="answer_v3")
     ag.add_argument("--tag", default="A1")
+    ag.add_argument("--force", action="store_true", help="overwrite existing raw runs and scores for this experiment id (destroys frozen evidence)")
     ag.add_argument("--planner-prompt", default="planner_v1")
     ag.add_argument("--retrieval", choices=["hybrid", "r3", "r3w"], default="hybrid")
     th = sub.add_parser("threat-test", help="run the adversarial threat suite through the agent (calls the OpenAI API)")
@@ -55,6 +56,7 @@ def main(argv: list[str] | None = None) -> int:
     ev_.add_argument("--split", default="dev")
     ev_.add_argument("--gold", type=Path, help="same gold JSONL used for generation")
     ev_.add_argument("--labels", nargs="*")
+    ev_.add_argument("--allow-gold-mismatch", action="store_true", help="rescore a run under a gold file different from the one recorded for it (loud warning)")
     ev_.add_argument("--no-judge", action="store_true")
     ev_.add_argument("--rejudge-stale", action=argparse.BooleanOptionalAction, default=True,
                      help="re-judge cached judgments whose input fingerprint changed (default); --no-rejudge-stale raises instead")
@@ -63,6 +65,7 @@ def main(argv: list[str] | None = None) -> int:
     pr.add_argument("--candidate", required=True, help="scored experiment id, e.g. agent-heldout-V2-r3")
     pr.add_argument("--baseline", required=True, help="scored experiment id, e.g. agent-heldout-V2-hybrid")
     pr.add_argument("--models", nargs="+", required=True)
+    pr.add_argument("--allow-gold-mismatch", action="store_true", help="accept arms scored under a different gold file (loud warning)")
     pr.add_argument("--out", type=Path)
     pr.add_argument("--n-boot", type=int, default=20000)
     pr.add_argument("--seed", type=int, default=20261031)
@@ -78,6 +81,7 @@ def main(argv: list[str] | None = None) -> int:
     serve = sub.add_parser("serve", help="serve the presentation and authenticated live demo")
     serve.add_argument("--host", default="127.0.0.1")
     serve.add_argument("--port", type=int, default=8000)
+    sub.add_parser("rights-scan", help="fail if tracked files quote more than six consecutive words of any local MOM/MTI passage")
     sub.add_parser("revisions", help="report historical-value changes between dataset snapshots")
 
     t = sub.add_parser("trace", help="print provenance for an observation_id or passage_id")
@@ -139,7 +143,7 @@ def main(argv: list[str] | None = None) -> int:
     if args.cmd == "agent-exp":
         from labourlens.agent import experiments as agx
 
-        agx.run(args.split, args.pairs, args.answer_prompt, args.tag, args.retrieval, args.planner_prompt, gold_path=args.gold)
+        agx.run(args.split, args.pairs, args.answer_prompt, args.tag, args.retrieval, args.planner_prompt, gold_path=args.gold, force=args.force)
         return 0
     if args.cmd == "threat-test":
         from labourlens.security import threat_suite
@@ -154,14 +158,15 @@ def main(argv: list[str] | None = None) -> int:
     if args.cmd == "eval":
         from labourlens.evaluation import harness
 
-        harness.run(args.exp, args.split, args.labels, not args.no_judge, rejudge_stale=args.rejudge_stale, gold_path=args.gold)
+        harness.run(args.exp, args.split, args.labels, not args.no_judge, rejudge_stale=args.rejudge_stale, gold_path=args.gold,
+                    allow_gold_mismatch=args.allow_gold_mismatch)
         return 0
     if args.cmd == "paired":
         import json as _json
 
         from labourlens.evaluation import paired
 
-        result = paired.run(args.gold, args.candidate, args.baseline, args.models, args.out, args.n_boot, args.seed)
+        result = paired.run(args.gold, args.candidate, args.baseline, args.models, args.out, args.n_boot, args.seed, args.allow_gold_mismatch)
         print(_json.dumps(result, indent=1))
         return 0
     if args.cmd in ("audit-report", "audit-show", "audit-prune"):
@@ -208,6 +213,10 @@ def main(argv: list[str] | None = None) -> int:
 
         run(args.host, args.port)
         return 0
+    if args.cmd == "rights-scan":
+        from labourlens.data import rights_scan
+
+        return rights_scan.run()
     if args.cmd == "revisions":
         from labourlens.data import revisions
 

@@ -1,20 +1,26 @@
 """Paired R3-versus-hybrid comparison with the acceptance rule fixed before the held-out v2 run.
 
 Input is the per-case scored rows written by `labourlens eval` (`experiments/eval/<exp>/<model>.cases.jsonl`).
-Nothing here calls a model. The rule is deliberately strict because n is small and cases share evidence:
+Nothing here calls a model. Rule (revised before any v2 run after the power simulation in
+`experiments/heldout-v2/power.py`; see FREEZE.md and decision D-042):
 
+* the PRIMARY model (`gpt-6-luna`, the model the project ships) decides the headline; every other model is a
+  pre-specified replication that is reported and never gates the verdict (so there is no multiplicity to correct);
 * both arms must score exactly the same cases for each model (a missing case is an incomplete run, not a pass);
-* the paired difference (candidate minus baseline) in behaviour accuracy needs a two-sided interval whose lower bound is
-  above zero under BOTH a case bootstrap and a bootstrap that resamples evidence components (cases sharing any acceptable
-  passage or observation id move together; cases without evidence ids are their own components);
+* the paired difference (candidate minus baseline) in behaviour accuracy needs a lower bound above zero at one-sided 95%
+  (the lower end of a two-sided 90% interval) under BOTH a case bootstrap and a bootstrap that resamples evidence
+  components (cases sharing any acceptable passage or observation id move together; cases without evidence ids are
+  their own components);
 * at least `min_components` components that carry evidence, so the component interval is not a single draw;
-* the candidate may not add false answers or answers contradicting a reference fact for any model.
+* the candidate may not add false answers for the primary model. Answers contradicting a reference fact are reported,
+  not a veto (an AI judge decides them and the simulation did not price that veto).
 
 Source-group clustering is reported as a descriptive, conservative sensitivity only (few groups).
 """
 
 from __future__ import annotations
 
+import hashlib
 import json
 from collections import defaultdict
 from math import comb
@@ -26,7 +32,8 @@ from labourlens import paths
 
 SEED = 20261031
 N_BOOT = 20000
-LEVEL = 0.975  # two-sided coverage per model; 0.025 total error per model (Bonferroni over two models)
+LEVEL = 0.90  # two-sided coverage; the lower end is the one-sided 95% bound used by the rule
+PRIMARY_MODEL = "gpt-6-luna"
 MIN_COMPONENTS = 20
 BEHAVIOUR = "behavior_ok"
 
@@ -150,22 +157,47 @@ def compare(candidate: dict[str, dict], baseline: dict[str, dict], cases: list[d
         "component_bootstrap_lower_above_zero": out["component_bootstrap_interval"][0] > 0,
         "enough_evidence_components": len(evidence_components) >= min_components,
         "no_added_false_answers": false_c <= false_b,
-        "no_added_contradicted_answers": contra_c <= contra_b,
     }
     out["demonstrated_gain"] = all(out["conditions"].values())
     return out
 
 
-def decide(per_model: dict[str, dict]) -> dict:
-    """A gain is demonstrated only if every model clears every condition. Review/reservation gates are checked by a human first."""
-    ok = bool(per_model) and all(r["demonstrated_gain"] for r in per_model.values())
-    return {"demonstrated_gain_all_models": ok, "models": sorted(per_model),
-            "statement": ("R3 gain demonstrated under the preregistered rule for every model." if ok
-                          else "R3 gain NOT demonstrated under the preregistered rule; report descriptively.")}
+def decide(per_model: dict[str, dict], primary: str = PRIMARY_MODEL) -> dict:
+    """The primary model decides; other models are reported as replications. Review/reservation gates are checked by a human first."""
+    ok = primary in per_model and bool(per_model[primary]["demonstrated_gain"])
+    replication = {m: bool(r["demonstrated_gain"]) for m, r in sorted(per_model.items()) if m != primary}
+    if primary not in per_model:
+        statement = f"Primary model {primary} was not compared; R3 gain NOT demonstrated."
+    elif ok:
+        statement = f"R3 gain demonstrated for the primary model {primary} under the preregistered rule."
+    else:
+        statement = f"R3 gain NOT demonstrated for the primary model {primary} under the preregistered rule; report descriptively."
+    return {"demonstrated_gain_primary": ok, "primary_model": primary, "replication_models": replication, "models": sorted(per_model),
+            "statement": statement}
+
+
+class GoldMismatch(RuntimeError):
+    pass
+
+
+def check_gold(gold: Path, arms: dict[str, Path], allow_mismatch: bool = False) -> None:
+    """Every arm must have been scored (`labourlens eval --gold`) under exactly this gold file."""
+    expected = hashlib.sha256(Path(gold).read_bytes()).hexdigest()
+    problems = []
+    for name, metrics_path in arms.items():
+        recorded = json.loads(metrics_path.read_text()).get("provenance", {}).get("gold_sha256") if metrics_path.exists() else None
+        if recorded != expected:
+            problems.append(f"{name}: scored under {str(recorded)[:12]}, gold file is {expected[:12]}")
+    if problems and not allow_mismatch:
+        raise GoldMismatch("Paired comparison refused; rescore the arm with `labourlens eval --gold <gold>` or pass --allow-gold-mismatch: " + "; ".join(problems))
+    for problem in problems:
+        print(f"WARNING (--allow-gold-mismatch): {problem}", flush=True)
 
 
 def run(gold: Path, candidate_exp: str, baseline_exp: str, models: list[str], out: Path | None = None,
-        n_boot: int = N_BOOT, seed: int = SEED) -> dict:
+        n_boot: int = N_BOOT, seed: int = SEED, allow_gold_mismatch: bool = False) -> dict:
+    eval_dir = paths.EXPERIMENTS / "eval"
+    check_gold(gold, {f"{exp}/{m}": eval_dir / exp / f"{m}.metrics.json" for exp in (candidate_exp, baseline_exp) for m in models}, allow_gold_mismatch)
     cases = [json.loads(line) for line in Path(gold).read_text().splitlines() if line.strip()]
     groups = {c["case_id"]: c.get("source_group", "ungrouped") for c in cases}
     exclusions = {"without_mti_ai_feature_group": {c["case_id"] for c in cases if c.get("source_group") == "mti_ai_feature"},

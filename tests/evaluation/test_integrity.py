@@ -1,4 +1,5 @@
 import hashlib
+import json
 
 import pytest
 
@@ -45,11 +46,17 @@ def test_review_metadata_does_not_change_judge_inputs(pair, source):
 
 def test_evaluation_report_records_owner_assisted_count(monkeypatch, tmp_path, capsys):
     monkeypatch.setattr(h.ev, "load_cases", lambda split, path=None: [
-        {"case_id": "DEV-001", "review_status": "owner_reviewed"},
-        {"case_id": "DEV-002", "review_status": "draft"},
+        {"case_id": "DEV-001", "question": "q", "review_status": "owner_reviewed"},
+        {"case_id": "DEV-002", "question": "q2", "review_status": "draft"},
     ])
     monkeypatch.setattr(h.paths, "DATA", tmp_path / "data")
     monkeypatch.setattr(h.paths, "EXPERIMENTS", tmp_path / "experiments")
+    (tmp_path / "data" / "runs" / "empty").mkdir(parents=True)
+    (tmp_path / "data" / "runs" / "empty" / "m.jsonl").write_text(json.dumps({"case_id": "DEV-001", "question": "q", "config": "c"}) + "\n")
+    monkeypatch.setattr(h, "aggregate", lambda rows: {"n_cases": len(rows)})
+    monkeypatch.setattr(h, "case_metrics", lambda case, rec, judged: {"seconds": 1.0, "cost_usd": 0.0, "family": None, "behavior_ok": True})
+    monkeypatch.setattr(h, "by_family", lambda rows: {})
+    monkeypatch.setattr(h, "cached_judgement", lambda *a, **k: None)
     h.run("empty", judge=False)
     report = capsys.readouterr().out
     assert "1/2 cases record per-card owner review" in report

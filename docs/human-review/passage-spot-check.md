@@ -16,7 +16,7 @@
 | 10 | `mom-2026-q2-final` | p.48 | ok | `mom-2026-q2-final:p048:b049:a897f425` | [link](https://stats.mom.gov.sg/Pages/Labour-Market-Report-2Q-2026.aspx) |
 | 11 | `mom-2026-q2-final` | p.22 (printed 16) | ok | `mom-2026-q2-final:p022:b020:7059aed2` | [link](https://stats.mom.gov.sg/Pages/Labour-Market-Report-2Q-2026.aspx) |
 | 12 | `mom-2026-q2-final` | p.46 | table_unreliable | `mom-2026-q2-final:p046:b031:7d6f5b76` | [link](https://stats.mom.gov.sg/Pages/Labour-Market-Report-2Q-2026.aspx) |
-| 13 | `mom-2026-q2-advance` | section: Labour Market Advance Release – Second Quarter 2026, item 8 | ok | `mom-2026-q2-advance:s01:i008:86484167` | [link](https://www.mom.gov.sg/newsroom/press-releases/2026/0731-labour-market-advance-release-2q-2026) |
+| 13 | `mom-2026-q2-advance` | section: Labour Market Advance Release – Second Quarter [...], item 8 | ok | `mom-2026-q2-advance:s01:i008:86484167` | [link](https://www.mom.gov.sg/newsroom/press-releases/2026/0731-labour-market-advance-release-2q-2026) |
 | 14 | `mom-2026-q2-final-release` | section: Labour Market Report - Second Quarter 2026, item 7 | ok | `mom-2026-q2-final-release:s01:i007:f07b514a` | [link](https://www.mom.gov.sg/newsroom/press-releases/2026/0921-labour-market-report---second-quarter-2026) |
 | 15 | `mom-2025-q3-advance` | section: Main Findings 3, item 4 | ok | `mom-2025-q3-advance:s02:i004:bfea3fb7` | [link](https://www.mom.gov.sg/newsroom/press-releases/2025/3010-labour-market-advance-release-3q-2025) |
 | 16 | `mom-2025-q3-final-release` | section: Labour Market Report 3Q 2025, item 12 | ok | `mom-2025-q3-final-release:s01:i012:472fa426` | [link](https://www.mom.gov.sg/newsroom/press-releases/2025/1211-labour-market-report-3q-2025) |

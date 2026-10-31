@@ -22,7 +22,7 @@ Gold was AI-drafted; 14/237 cases record per-card owner review, which may agree 
 | fact_coverage | 0.716 [0.661, 0.772] (n=264) |
 | answers_contradicting_a_reference_fact | 0.034 [0.007, 0.068] (n=148) |
 | latency_p50_s | 10.8 |
-| latency_p95_s | 20.6 |
+| latency_p95_s | 21.2 |
 | cost_per_case_usd | 0.0028 |
 | judge_cost_total_usd | 0.2157 |
 
@@ -55,7 +55,7 @@ Gold was AI-drafted; 14/237 cases record per-card owner review, which may agree 
 | fact_coverage | 0.692 [0.634, 0.75] (n=247) |
 | answers_contradicting_a_reference_fact | 0.014 [0.0, 0.036] (n=140) |
 | latency_p50_s | 12.7 |
-| latency_p95_s | 24.7 |
+| latency_p95_s | 25.9 |
 | cost_per_case_usd | 0.00142 |
 | judge_cost_total_usd | 0.187 |
 

@@ -1,6 +1,6 @@
 # Held-out v2 preregistration and run gate (design A, corpus v3)
 
-**Status: PRE-RUN DRAFT, written 31 Oct 2026 before any generation, retrieval, scoring or output inspection for these cases.** It becomes a freeze only when the owner signs off the preconditions below and the final hashes are re-verified. Supersedes the earlier structured-only draft of this file. Design, leakage argument and limits: `docs/experiments/m7-heldout-v2-design.md`.
+**Status: PRE-RUN DRAFT, written 31 Oct 2026 before any generation, retrieval, scoring or output inspection for these cases. Acceptance rule revised the same day (revision 2) before any run.** It becomes a freeze only when the owner signs off the preconditions below and the final hashes are re-verified. Supersedes the earlier structured-only draft of this file. Design, leakage argument and limits: `docs/experiments/m7-heldout-v2-design.md`.
 
 ## What is being frozen
 - **Gold:** `experiments/gold/heldout_v2_draft.jsonl`, 65 cases, SHA-256
@@ -47,21 +47,34 @@ uv run labourlens eval --exp agent-heldout-V2-r3 --split heldout --gold experime
 uv run labourlens eval --exp agent-heldout-V2-hybrid --split heldout --gold experiments/gold/heldout_v2_draft.jsonl
 uv run labourlens paired --gold experiments/gold/heldout_v2_draft.jsonl --candidate agent-heldout-V2-r3 --baseline agent-heldout-V2-hybrid --models gpt-6-luna gpt-5.6-luna --out experiments/heldout-v2/paired.json
 ```
-Raw runs go to gitignored `data/runs/agent-heldout-V2-*`. Scores and `paired.json` are committed; they never overwrite `experiments/heldout/*` or any registered run. `labourlens paired` makes no model calls and implements the rule below in `src/labourlens/evaluation/paired.py` (seed 20261031, 20,000 resamples).
+Raw runs go to gitignored `data/runs/agent-heldout-V2-*`. Scores and `paired.json` are committed; they never overwrite `experiments/heldout/*` or any registered run. `labourlens paired` makes no model calls and implements the rule below in `src/labourlens/evaluation/paired.py` (seed 20261031, 20,000 resamples). It refuses to run unless every scored arm's `metrics.json` records this gold file's SHA-256 (`labourlens eval --gold` writes it); `labourlens agent-exp` refuses to overwrite an existing experiment id without `--force`.
 
-## Acceptance rule decided in advance
-**R3 gain demonstrated** only if, for **each** model, all hold:
+## Acceptance rule decided in advance (revision 2, 31 Oct 2026, still before any generation, scoring or output inspection)
+Revision 1 (both models, 97.5% two-sided intervals, plus a veto on added false or contradicted answers) is **withdrawn**. The simulation below shows it would almost never pass at the effect sizes already seen. Decision record: D-042.
+
+**R3 gain demonstrated** only if, for the **primary model `gpt-6-luna`** (the model the system ships), all hold:
 1. Both arms scored exactly the same 65 cases (no missing or extra case).
-2. Paired behaviour-accuracy difference (R3 minus hybrid) has a **97.5% two-sided case-bootstrap interval with lower bound above zero** (97.5% per model, a Bonferroni-style allowance for two models).
-3. The same holds when resampling **evidence components** (cases sharing any acceptable passage or observation id move together).
+2. Paired behaviour-accuracy difference (R3 minus hybrid) has a **one-sided 95% lower bound above zero** under the case bootstrap (implemented as the lower end of the two-sided 90% percentile interval, 20,000 resamples, seed 20261031).
+3. The same lower bound is above zero when resampling **evidence components** (cases sharing any acceptable passage or observation id move together).
 4. At least **20 evidence-carrying components** (the draft has 22).
-5. R3 adds no false-answer case and no answer contradicting a reference fact, relative to hybrid.
+5. R3 adds no false-answer case relative to hybrid (a veto for the primary model).
 6. The owner-review and reservation preconditions were met without a protocol deviation affecting only one arm.
 
-Otherwise the statement is: **gain not demonstrated**, reported descriptively. Also reported, not gating (`sensitivity_descriptive` in `paired.json`): exact McNemar p-value on discordant pairs, per-family counts, a conservative source-group cluster interval (10 groups), the result without the five `mti_ai_feature` cases, and the result restricted to the cases that have report-text gold evidence (excludes dataset-only cases and all non-answer cases). A pass supports "R3 improved behaviour on these new sources under this system"; it does not establish unseen-domain generalisation.
+`gpt-5.6-luna` is a **pre-specified replication**: its result is reported in full with the same conditions, never gates the verdict, and is not combined with the primary into a conjunction or a disjunction. Answers contradicting a reference fact are **reported, not a veto** (an AI judge decides them and the simulation did not price a veto on them). Otherwise the statement is: **gain not demonstrated**, reported descriptively. Also reported, not gating (`sensitivity_descriptive` in `paired.json`): exact McNemar p-value on discordant pairs, per-family counts, a conservative source-group cluster interval (10 groups), the result without the five `mti_ai_feature` cases, and the result restricted to the cases that have report-text gold evidence. A pass supports "R3 improved behaviour on these new sources under this system"; it does not establish unseen-domain generalisation.
 
-## Power, honestly
-At n=65, the normal-approximation 95% half-width for one arm's accuracy is about 12 points at p=.5 and 7 points at p=.9. Roughly 80% power for a paired gain needs a true gain near 17 points when 20% of cases flip between arms, and near 27 points when 50% flip, at this stricter interval and before any clustering loss. The original held-out gains were +10 and +16 points with intervals touching zero. So **a true gain of that size would be demonstrated less than half the time** [INFERENCE from the arithmetic, not a simulation]. Failing the rule is not evidence of no gain. With 21 non-answer or injection cases, zero failures bounds the true failure rate only below about 13% (one-sided 95%); within a family of 8, below about 31%.
+## Power and false-positive rate (MEASURED RESULT of a simulation, no model output used)
+`experiments/heldout-v2/power.py` (seed 20261101, 2,000 simulations per cell, 1,000 bootstrap resamples; output `power.txt`) simulates paired per-case outcomes on the real structure: 65 cases, 39 components (22 carry evidence), 34 report-text answerable cases, 17 non-answer cases. Assumptions are listed in the script header: R3 worse on 4% of cases, better on (effect + 4)%; either all cases can move or only the 34 report-text cases can; components optionally move together (clustering 0 or 0.5); the two models are independent replicates (real ones are correlated). Monte Carlo error is about 1 point.
+
+Probability that the rule passes, by true paired effect (ranges are over the four assumption sets):
+
+| rule | effect 0 (false-positive rate) | +5 | +10 | +16 |
+|---|---:|---:|---:|---:|
+| Revision 1: both models, 97.5% two-sided, guard veto | 0.0-0.1% | 1.5-2.6% | 11-19% | 31-53% |
+| Both models, 95% one-sided, guard veto | 0.1-0.4% | 4-6% | 19-30% | 46-67% |
+| **Revision 2 (adopted): primary model only, 95% one-sided, case and component, guard veto** | **3.0-5.2%** | **21-24%** | **45-54%** | **68-84%** |
+| Either model passes (rejected) | 6.3-10.2% | 38-43% | 67-82% | 89-98% |
+
+Trade-off, stated plainly: revision 2 is a weaker rule. At zero true effect it passes about 3 to 5 times in 100 (the intended 5% one-sided level), where revision 1 passed about never; that is the price of power. At +10 points, the size of the original held-out gain, power rises from roughly 11-19% to 45-54%, and at +16 from 31-53% to 68-84%. It remains underpowered at +5. "Either model passes" was rejected because it nearly doubles the false-positive rate. A conjunction over both models was rejected because it loses most of the power, and its extra stringency is not needed when one model is primary. The false-answer veto costs about one point of power in the simulation, so it is kept. A failed rule is still not evidence of no gain, and a pass is a one-sided 5%-level result from one run, not proof.
 
 ## Conditional cost estimate (inference, not a cap)
 Saved original-held-out mean generation cost per case (USD): r3 0.00193 and 0.00343, hybrid 0.00124 and 0.00271 for `gpt-6-luna` and `gpt-5.6-luna`. At 65 cases that is about $0.61 for generation, plus about $0.22 for judging scaled from the saved judge totals (0.1045 USD over 31 cases per four arms): about **$0.82** in total. The larger corpus and new document lengths can change token use; reranking cost per query is unchanged by corpus size only if the candidate pool size is unchanged. Prices from `specs/prices.yaml` were read on 2026-10-30 and are not re-verified here.

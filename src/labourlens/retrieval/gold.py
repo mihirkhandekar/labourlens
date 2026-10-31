@@ -7,6 +7,7 @@ whether a question is good or the evidence right; only the owner's review does t
 from __future__ import annotations
 
 import json
+import re
 from collections import Counter
 from datetime import date
 
@@ -123,6 +124,23 @@ def validate(path=None) -> list[str]:
     return errs
 
 
+def _clip(text: str, n: int = 6) -> str:
+    """Rights rule D-001/D-004: never reproduce more than n consecutive words of source text."""
+    w = text.split()
+    return text if len(w) <= n else " ".join(w[:n]) + " [...]"
+
+
+def _clip_segments(text: str) -> str:
+    return " | ".join(_clip(seg) for seg in text.split(" | "))
+
+
+def _clip_locator(loc: str) -> str:
+    head, sep, tail = loc.rpartition(", ")
+    if sep and re.fullmatch(r"(?:item|para|paragraph|row|table|p\.?)\s*\S+", tail):
+        return _clip(head) + sep + tail
+    return _clip(loc)
+
+
 def review_sheet() -> str:
     f = ev.GOLD / "draft_cases.jsonl"
     cases = [json.loads(line) for line in f.read_text().splitlines() if line.strip()]
@@ -137,10 +155,10 @@ def review_sheet() -> str:
         L += [f"### {c['case_id']} ({c['split']}, {c['family']})", "", f"**Question:** {c['question']}", ""]
     L += ["", "---", "## Pass 2: draft details", ""]
     for c in cases:
-        ev_t = "; ".join(f"`{e['source_id']}` {e['locator']}{' (primary)' if e.get('primary') else ''}" for e in c["evidence_text"]) or "none"
-        ev_d = "; ".join(f"`{e['source_id']}` {e['period']} {e.get('dimension') or ''}".strip() for e in c["evidence_data"]) or "none"
+        ev_t = "; ".join(f"`{e['source_id']}` {_clip_locator(e['locator'])}{' (primary)' if e.get('primary') else ''}" for e in c["evidence_text"]) or "none"
+        ev_d = "; ".join(f"`{e['source_id']}` {e['period']} {_clip(e.get('dimension') or '')}".strip() for e in c["evidence_data"]) or "none"
         L += [f"#### {c['case_id']}", f"- Expected behaviour: **{c['expected_behavior']}**", f"- Text evidence: {ev_t}", f"- Data evidence: {ev_d}",
-              "- Reference facts: " + " | ".join(c["reference_facts"]) if c["reference_facts"] else "- Reference facts: none (non-answer case)"]
+              "- Reference facts: " + " | ".join(_clip_segments(x) for x in c["reference_facts"]) if c["reference_facts"] else "- Reference facts: none (non-answer case)"]
         if c["abstain_reason"]:
             L.append(f"- Why no answer: {c['abstain_reason']}")
         if c["adversarial"]:

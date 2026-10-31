@@ -17,6 +17,7 @@ import hashlib
 import hmac
 import json
 import os
+import re
 import subprocess
 import sys
 import tempfile
@@ -30,6 +31,7 @@ from labourlens.mcp.redact import redact, redact_values
 SCHEMA_VERSION = 1
 AUDIT_DIR = paths.DATA / "audit"
 MAX_FIELD = 4000
+FEEDBACK_MAX_BYTES = 2 * 1024 * 1024
 _lock = threading.Lock()
 _failures = 0
 _corrupt_lines = 0
@@ -42,6 +44,9 @@ def _version() -> dict:
         v["git_commit"] = subprocess.run(["git", "rev-parse", "--short", "HEAD"], capture_output=True, text=True, timeout=3, cwd=paths.ROOT).stdout.strip() or None
     except Exception:  # noqa: BLE001
         pass
+    if v["git_commit"] is None:  # the container has no git: LABOURLENS_BUILD carries the commit sha
+        build = re.sub(r"[^0-9A-Za-z._-]", "", os.environ.get("LABOURLENS_BUILD", ""))[:12]
+        v["git_commit"] = build or None
     man = paths.ROOT / "data" / "manifests" / "manifest.json"
     v["manifest_sha256"] = hashlib.sha256(man.read_bytes()).hexdigest()[:12] if man.exists() else None
     return v
@@ -129,7 +134,8 @@ def run_record(res: dict, channel: str, session: str | None = None, ip: str | No
     return {
         "schema": SCHEMA_VERSION, "ts": datetime.now(timezone.utc).isoformat(timespec="seconds"), "run_id": res["run_id"], "channel": channel,
         "session": salted_hash(session), "client": salted_hash(ip), "question": _clip(res["question"], 1200),
-        "question_sha256": hashlib.sha256(res["question"].encode()).hexdigest()[:16], "config": res["config"], "version": _VERSION,
+        "question_sha256": hashlib.sha256(res["question"].encode()).hexdigest()[:16], "config": res["config"],
+        "version": {**_VERSION, "corpus": res.get("corpus")},
         "outcome": res["outcome"], "status": a["status"] if a else None, "errors": [_clip(e, 300) for e in res.get("errors", [])],
         "rounds": res["rounds"], "tool_calls": calls, "operational_failures": sum(1 for c in calls if c["outcome"] == "operational_failure"),
         "tool_errors": sum(1 for c in calls if c["outcome"] == "error"), "guard_events": guard, "data_quality_notes": notes,
@@ -157,7 +163,7 @@ def log_feedback(run_id: str, rating: str, comment: str | None = None, session: 
            "comment": _clip((comment or "").replace("\x00", ""), 1000), "tags": [t[:40] for t in (tags or [])][:6], "session": None}
     try:
         rec["session"] = salted_hash(session)
-        _append("feedback.jsonl", rec)
+        _append("feedback.jsonl", rec, max_bytes=FEEDBACK_MAX_BYTES)
     except Exception as error:  # noqa: BLE001 - no public fallback if private salt is unavailable
         _write_failure(error)
     return rec
@@ -202,14 +208,43 @@ def failures() -> int:
     return _failures
 
 
+def _prune_feedback(cutoff: float) -> int:
+    """feedback.jsonl is one growing file: drop records older than the cutoff (by their ts), keep the rest. Returns how many were dropped."""
+    path = AUDIT_DIR / "feedback.jsonl"
+    if not path.exists():
+        return 0
+    with _lock, open(path, "r+b") as stream:
+        fcntl.flock(stream.fileno(), fcntl.LOCK_EX)
+        lines = stream.read().splitlines()
+        keep = []
+        for line in lines:
+            try:
+                when = datetime.fromisoformat(json.loads(line)["ts"]).timestamp()
+            except Exception:  # noqa: BLE001 - an unreadable record is kept rather than silently destroyed
+                keep.append(line)
+                continue
+            if when >= cutoff:
+                keep.append(line)
+        if len(keep) != len(lines):
+            stream.seek(0)
+            stream.truncate()
+            stream.write(b"".join(line + b"\n" for line in keep))
+        return len(lines) - len(keep)
+
+
 def prune(days: int) -> list[str]:
+    """Delete audit runs, daily event files and saved traces older than `days`, and feedback records older than `days`."""
     cutoff = time.time() - days * 86400
     gone = []
-    files = list(AUDIT_DIR.glob("runs-*.jsonl")) + list((paths.DATA / "runs" / "agent").glob("*.json"))
+    files = (list(AUDIT_DIR.glob("runs-*.jsonl")) + list(AUDIT_DIR.glob("events-*.jsonl"))
+             + list((paths.DATA / "runs" / "agent").glob("*.json")))
     for f in files:
         if f.stat().st_mtime < cutoff:
             f.unlink()
             gone.append(f.name)
+    dropped = _prune_feedback(cutoff)
+    if dropped:
+        gone.append(f"feedback.jsonl ({dropped} records)")
     return gone
 
 

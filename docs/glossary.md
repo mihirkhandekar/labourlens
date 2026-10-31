@@ -13,7 +13,7 @@ Plain-English definitions. Add a term the first time it matters. Entries marked 
 - **Resident / citizen / overall:** resident = citizens plus permanent residents; overall includes foreigners; citizen = citizens only. Never mix them silently.
 - **MDW / FDW:** migrant (or foreign) domestic workers. MOM's headline employment figures exclude them; some other tables may include them. Unresolved for the sector dataset (see `docs/progress.md`).
 - **SSIC:** Singapore Standard Industrial Classification; the sector dataset's industry codes follow SSIC 2020 and were revised.
-- **Retrenchment:** termination of permanent employees due to redundancy, plus early termination of term-contract employees due to redundancy (data.gov.sg dataset description).
+- **Retrenchment:** termination of permanent employees due to [...], plus early termination of term-contract employees [...] (data.gov.sg dataset description).
 - **Re-entry rate:** share of retrenched residents who are employed again within 6 or 12 months.
 - **Quarantine (data):** rows that fail validation are written to a separate file with the reason, instead of being dropped or silently fixed.
 - **Idempotent build:** running the pipeline twice on the same snapshot produces byte-identical output.

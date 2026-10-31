@@ -68,15 +68,18 @@ def chat(model: str, messages: list[dict], max_completion_tokens: int = 6000, ex
             continue
         dt = time.perf_counter() - t0
         if r.status_code == 200:
-            d = r.json()
-            msg = d["choices"][0]["message"]
-            u = d["usage"]
-            return LLMResult(msg.get("content") or "", u["prompt_tokens"], u["completion_tokens"],
-                             (u.get("completion_tokens_details") or {}).get("reasoning_tokens", 0), dt, msg.get("refusal"))
+            try:
+                d = r.json()
+                msg = d["choices"][0]["message"]
+                u = d["usage"]
+                return LLMResult(msg.get("content") or "", int(u["prompt_tokens"]), int(u["completion_tokens"]),
+                                 (u.get("completion_tokens_details") or {}).get("reasoning_tokens", 0), dt, msg.get("refusal"))
+            except (KeyError, IndexError, TypeError, ValueError, AttributeError) as e:  # malformed provider body is an operational failure
+                raise LLMError(f"chat API returned an unexpected response shape: {type(e).__name__}") from e
         last = f"{r.status_code}: {r.text[:300]}"
         if r.status_code not in (429, 500, 502, 503, 504):
             raise LLMError(f"chat API {last}")
-        if deadline is not None:
-            raise LLMError(f"chat API {last}")
+        if deadline is not None and deadline - time.perf_counter() <= 2 ** attempt:
+            raise LLMError(f"chat API {last}")  # no time left for another attempt inside the run deadline
         time.sleep(2 ** attempt)
     raise LLMError(f"chat API failed after {MAX_RETRIES} attempts: {last}")

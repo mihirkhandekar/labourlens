@@ -26,7 +26,7 @@ KPIS = [
     ("vacancy_ratio", "Job vacancies per unemployed person (SA)", dict(source_id="vacancy_to_unemployed_ratio"), "better"),
     ("job_vacancy_rate", "Job vacancy rate", dict(source_id="job_vacancy_rate"), "better"),
     ("retrenchments", "Retrenched employees", dict(source_id="retrenched_employees"), "worse"),
-    ("reentry_6m", "Re-entry into employment within 6 months", dict(source_id="reentry_6m"), "better"),
+    ("reentry_6m", "Re-employment rate, 6 months after retrenchment", dict(source_id="reentry_6m"), "better"),
 ]
 
 SERIES = {

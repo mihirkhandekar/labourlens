@@ -4,6 +4,20 @@
  "sources": [
   {
    "licence": "Singapore-Open-Data-Licence-1.0",
+   "publication_date": "2026-09-22",
+   "publisher": "Ministry of Manpower",
+   "redistribution": "local_only",
+   "release_stage": "dataset_snapshot",
+   "rights_status": "assumed_open_unverified",
+   "sha256": "6efbf95d8d0e0389984643985e69f364044dca6c3462fc41b885eaf660c13f46",
+   "snapshot_id": "20261031-6efbf95d8d0e",
+   "source_id": "avg_weekly_paid_hours_quarterly",
+   "title": "Average Weekly Total Paid Hours Worked Per Employee - Quarterly",
+   "type": "dataset_csv",
+   "url": "https://data.gov.sg/datasets/d_aebf156556c15c9c312ff23d24bf7278/view"
+  },
+  {
+   "licence": "Singapore-Open-Data-Licence-1.0",
    "publication_date": "2026-09-29",
    "publisher": "Ministry of Manpower",
    "redistribution": "commit_raw",
@@ -732,6 +746,20 @@
   },
   {
    "licence": null,
+   "publication_date": "2026-10-23",
+   "publisher": "Manpower Research and Statistics Department, Ministry of Manpower",
+   "redistribution": "local_only",
+   "release_stage": "annual",
+   "rights_status": "verified_all_rights_reserved",
+   "sha256": "9e49b9683c623f1300952e1949632199ab1b2a7be219e4107373eef052169ab4",
+   "snapshot_id": "20261031-9e49b9683c62",
+   "source_id": "mom-nwc-lower-wage2025",
+   "title": "Wage Adjustments and Adoption of NWC Guidelines for Lower-Wage Employees 2025",
+   "type": "report_pdf",
+   "url": "https://stats.mom.gov.sg/iMAS_PdfLibrary/mrsd-Wage-Adjustments-and-Adoption-of-NWC-Guidelines-for-Lower-Wage-Employees-2025.pdf"
+  },
+  {
+   "licence": null,
    "publication_date": "2025-05-28",
    "publisher": "Manpower Research and Statistics Department, Ministry of Manpower",
    "redistribution": "local_only",
@@ -757,6 +785,34 @@
    "title": "Total wages continued to grow in 2024",
    "type": "release_html",
    "url": "https://www.mom.gov.sg/newsroom/press-releases/2025/0528-report-on-wage-practices-2024"
+  },
+  {
+   "licence": null,
+   "publication_date": "2026-05-28",
+   "publisher": "Manpower Research and Statistics Department, Ministry of Manpower",
+   "redistribution": "local_only",
+   "release_stage": "annual",
+   "rights_status": "verified_all_rights_reserved",
+   "sha256": "aed7135a2358d702823e9d0291c2e2ef262193d8bd03ca961b4e851bfa26ecd1",
+   "snapshot_id": "20261031-aed7135a2358",
+   "source_id": "mom-wage-practices2025",
+   "title": "Report on Wage Practices 2025",
+   "type": "report_pdf",
+   "url": "https://stats.mom.gov.sg/Pages/Report-On-Wage-Practices-2025.aspx"
+  },
+  {
+   "licence": null,
+   "publication_date": "2026-08-11",
+   "publisher": "Ministry of Trade and Industry (Singapore)",
+   "redistribution": "local_only",
+   "release_stage": "not_applicable",
+   "rights_status": "unresolved",
+   "sha256": "045f7a56cc1e4a98b84fe6db57a6e1a39dfd1c0351cc220862001ee426c1db13",
+   "snapshot_id": "20261031-045f7a56cc1e",
+   "source_id": "mti-2026-q2-feature-ai-employment",
+   "title": "Measuring Firm-Level Artificial Intelligence Use and its Effects on Firm Performance and Employment in Singapore",
+   "type": "report_pdf",
+   "url": "https://www.mti.gov.sg/resources/economic-survey-of-singapore/economic-survey-of-singapore-and-feature-articles/measuring-firm-level-artificial-intelligence-use-and-its-effects-on-firm-performance-and-employment-in-singapore"
   },
   {
    "licence": "Singapore-Open-Data-Licence-1.0",
@@ -1096,6 +1152,20 @@
   },
   {
    "licence": "Singapore-Open-Data-Licence-1.0",
+   "publication_date": "2026-08-11",
+   "publisher": "Singapore Department of Statistics",
+   "redistribution": "local_only",
+   "release_stage": "dataset_snapshot",
+   "rights_status": "assumed_open_unverified",
+   "sha256": "d6a9eae1cf7fc5c4e0d260dfde47d551e32d12407df9bdd470b5c783b898353a",
+   "snapshot_id": "20261031-d6a9eae1cf7f",
+   "source_id": "unit_labour_cost_index_quarterly",
+   "title": "Unit Labour Cost Index (2015 = 100), Quarterly",
+   "type": "dataset_csv",
+   "url": "https://data.gov.sg/datasets/d_f9fc9b5420d96bcab45bc31eeb8ae3c3/view"
+  },
+  {
+   "licence": "Singapore-Open-Data-Licence-1.0",
    "publication_date": "2026-09-22",
    "publisher": "Ministry of Manpower",
    "redistribution": "commit_raw",
@@ -1107,6 +1177,20 @@
    "title": "Job Vacancy to Unemployed Person Ratio - Quarterly",
    "type": "dataset_csv",
    "url": "https://data.gov.sg/datasets/d_80c0cf251ee9a26d240808297f52c820/view"
+  },
+  {
+   "licence": "Singapore-Open-Data-Licence-1.0",
+   "publication_date": "2026-08-11",
+   "publisher": "Singapore Department of Statistics",
+   "redistribution": "local_only",
+   "release_stage": "dataset_snapshot",
+   "rights_status": "assumed_open_unverified",
+   "sha256": "5a108683edcfb99d7868429a5fdaef5f8ae72275f0d430f4f863dd82d8b551ac",
+   "snapshot_id": "20261031-5a108683edcf",
+   "source_id": "value_added_per_worker_quarterly",
+   "title": "Value Added Per Worker In Chained (2015) Dollars, By Industry (SSIC 2020), Quarterly",
+   "type": "dataset_csv",
+   "url": "https://data.gov.sg/datasets/d_fa4dcbefadf3e93e99c7d88de0f53406/view"
   }
  ]
 }

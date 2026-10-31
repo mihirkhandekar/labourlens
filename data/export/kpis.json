@@ -501,7 +501,7 @@
    "change": -5.8,
    "change_unit": "percentage_points",
    "higher_is": "better",
-   "label": "Re-entry into employment within 6 months",
+   "label": "Re-employment rate, 6 months after retrenchment",
    "observation_id": "61d598b64afaabe0",
    "period": "2026-Q2",
    "population": "unverified_basis",

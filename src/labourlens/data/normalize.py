@@ -120,7 +120,10 @@ def _snapshot_path(source_id: str) -> tuple[str, Path]:
     m = raw_store.load_manifest().get(source_id)
     if not m or m.retrieval_status != "ok" or not m.raw_path or not m.snapshot_id:
         raise SpecViolation(f"no successfully fetched snapshot for {source_id}")
-    return m.snapshot_id, paths.ROOT / m.raw_path
+    path = paths.ROOT / m.raw_path
+    if not path.exists():
+        raise SpecViolation(f"raw file for {source_id} is not present ({m.redistribution_policy}, {m.rights_status}); run `labourlens fetch --only {source_id}`")
+    return m.snapshot_id, path
 
 
 def _make_obs(*, spec: dict[str, Any], measure: dict[str, Any], snapshot_id: str, locator: str, year: int, q: int,

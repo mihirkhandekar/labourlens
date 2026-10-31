@@ -5,7 +5,7 @@ import pymupdf
 import pytest
 
 from labourlens.data.pdf_extract import (
-    _Block, _clean_controls, _is_heading, _printed_label, extract_pdf, has_controls, looks_garbled,
+    _Block, _clean_controls, _is_heading, _printed_label, extract_pdf, has_controls, looks_garbled, looks_tabular, symbolic_note,
 )
 from labourlens.data.html_extract import extract_html
 
@@ -27,6 +27,29 @@ def test_trailing_control_transformation_is_conservative():
     assert _clean_controls("bad\x14text\x01")[1] == ()
     assert _clean_controls("bad\x01")[1] == ()
 
+
+LEGEND = "Signif. codes: * p<0.10, ** p<0.05, *** p<0.01. Synthetic legend sentence that explains the base category used."
+EQUATION = "𝑙𝑛(Z𝑗s) = ∑ θm group𝑗s × period𝑗s + ζ𝑗s = μ × η𝑗s ∑ ρ ∼ N[0, 1] where j is a unit"
+COEF_ROW = "lag(synthetic term)\n0.125***\n0.095***\n0.115***\n0.002\n0.009\n0.035\n0.237"
+
+
+@pytest.mark.parametrize("text", [LEGEND, EQUATION, COEF_ROW])
+def test_statistical_symbols_alone_are_not_garbled(text):
+    assert not looks_garbled(text)[0]
+    if text is COEF_ROW:
+        assert looks_tabular(text)
+    else:
+        assert symbolic_note(text).startswith("symbolic text")
+
+
+@pytest.mark.parametrize("text", [
+    "+RZZRXOG\\RXUDWH WKLV SXEOLFDWLRQ LQ WHUPV RI [ #  @ ~ ` \\ \\ \\ \\ ",
+    "Synthetic prose with stray font debris \\ \\ \\ \\ \\ \\ ` ` ` ` ` # # # # inside the block of text.",
+    "bad\x01control in a long synthetic legend: *** p<0.01, ** p<0.05, * p<0.1 and more words here",
+])
+def test_real_garble_is_still_flagged(text):
+    assert looks_garbled(text)[0]
+    assert not symbolic_note(text)
 
 def test_page_body_font_not_document_table_font(tmp_path):
     doc = pymupdf.open()

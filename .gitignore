@@ -33,3 +33,8 @@ data/audit/
 
 # Local UI screenshots (not committed)
 artifacts/screenshots-redesign/
+
+# Corpus-v3 datasets whose open licence is assumed, not verified on the dataset page: raw CSVs stay local-only
+data/snapshots/unit_labour_cost_index_quarterly/
+data/snapshots/value_added_per_worker_quarterly/
+data/snapshots/avg_weekly_paid_hours_quarterly/

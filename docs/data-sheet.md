@@ -1,99 +1,142 @@
 # LabourLens data sheet
 
-Snapshot date: **2026-10-30**; manifest generated **2026-10-30T02:44:54+00:00**. Analysis window: **2024-Q1 to 2026-Q2** (answer scope). Earlier history is context only, not an answerable earlier subject period (D-031). **MEASURED RESULT (31 Oct):** corpus v2 was rebuilt twice offline from the existing immutable raw files with `extract-0.2`; 49 passage/Parquet files were byte-identical across builds (`artifacts/data-quality/determinism-v2.json`). No network refetch or raw-source change.
+Corpus: **v3** (manifest generated **2026-10-31T05:38:08+00:00**; rights fields of three dataset entries amended afterwards, see section 7). Analysis window: **2024-Q1 to 2026-Q2** (answer scope). Earlier history is context only, not an answerable earlier subject period (D-031). All counts below are read from `data/manifests/manifest.json`, `data/processed/observations.parquet`, `data/passages/*.jsonl` and `artifacts/data-quality/validation.json`; nothing is estimated.
 
-**Attribution.** Contains information from data.gov.sg datasets published by the Ministry of Manpower and the Singapore Department of Statistics, accessed 2026-10-30 and made available under the [Singapore Open Data Licence v1.0](https://developers.data.gov.sg/open-data-licence). Not endorsed by any agency. MOM reports and releases are cited and linked, not redistributed.
+**Attribution.** Contains information from data.gov.sg datasets published by the Ministry of Manpower and the Singapore Department of Statistics, accessed 2026-10-30 and 2026-10-31, made available under the [Singapore Open Data Licence v1.0](https://developers.data.gov.sg/open-data-licence) where that licence applies (see the rights column). Not endorsed by any agency. MOM and MTI reports and releases are cited and linked, not redistributed.
 
 ## At a glance
 | | |
 |---|---|
-| Sources | 79: 33 statistical datasets and 46 documents |
-| Statistical datasets | 33 (4 core, 29 supporting), 43,662 normalised observations, 3,790 in answer scope |
-| Documents | 46: 24 PDFs and 22 HTML releases; 15,915 extracted passages (corpus v2) |
-| Rights | 33 verified open-licensed datasets; 24 all-rights-reserved PDFs; 22 rights-unresolved HTML releases |
-| Quality checks | Current saved build: 255 checks, **248 pass, 7 warnings, 0 failures** |
-| Spot-check by a human | **Not yet done.** Sheets in `docs/human-review/` |
+| Sources | **85**: 36 statistical datasets and 49 documents |
+| Statistical datasets | 36 (4 core, 32 supporting), **52,020** normalised observations, **4,300** in answer scope, 0 quarantined rows |
+| Documents | 49: 27 PDFs and 22 HTML releases; **16,419** extracted passages in 49 files (`extract-0.2`) |
+| Passage quality flags | 9,040 `ok`, 7,093 `table_unreliable`, 286 `garbled` (246 control-character, 40 symbol-ratio; the 40 are false positives, see section 5) |
+| Rights | 33 datasets `verified_open_licence`; **3 datasets `assumed_open_unverified`** (local-only); 26 PDFs `verified_all_rights_reserved`; 23 documents `unresolved` (22 HTML releases and the MTI feature PDF) |
+| Quality checks | Saved build: **276 checks, 269 pass, 7 warnings, 0 failures** |
+| Chunks (`merge200`, `ok` passages only) | 1,847 on corpus v3 |
+| Spot-check by a human | **Not yet done** for statistical values and passages. Sheets in `docs/human-review/` |
 | Historical M1 tests | 51 passed in `artifacts/tests/pytest-m1.txt`; not a current-suite result |
 
-## 1. Statistical datasets (data.gov.sg, Open Data Licence)
-Core datasets (ADR-001) are the first four rows. The table is a selected inventory, not all 33 datasets; all source IDs, URLs, hashes and rights records are in the manifest and `data/export/sources.json`. Supporting industry, occupation and workforce-adjustment tables are included under ADR-003 and D-019.
+## Corpus version history
+| Version | Sources | Passages | Chunks | Extraction | Fingerprint | Used by |
+|---|---|---|---|---|---|---|
+| **v1 (frozen)** | 79 (33 datasets, 46 documents) | 13,484 | not recorded | `extract-0.1` | `experiments/corpus-snapshots/v1.json` | Dev and held-out v1 results, E1 to E7 retrieval runs, G and A1 to A5 answer and agent runs, threat suite; all frozen, never rescored on another corpus |
+| **v2** | 79 (33 datasets, 46 documents) | 15,915 | 1,732 | `extract-0.2` | `experiments/corpus-snapshots/v2.json`, `v2-observations.json` (33 sources, 43,662 rows) | X1 extraction-only dev run and the held-out diagnostic rerun (D-037, D-041) |
+| **v3 (current)** | 85 (36 datasets, 49 documents) | 16,419 | 1,847 | `extract-0.2` | `experiments/corpus-snapshots/v3.json` | Live data on disk and the website; held-out v2 cases (65 drafts) are written against it, **no scored run yet** |
 
-| Source id | Title | Observations | Coverage | SHA-256 (first 10) |
-|---|---|---|---|---|
-| `resident_unemployment_rate` | Resident Unemployment Rate, Quarterly | 276 | 1992-Q1 to 2026-Q2 | f3be9ef6e2 |
-| `vacancy_to_unemployed_ratio` | Job Vacancy to Unemployed Person Ratio | 114 | 1998-Q1 to 2026-Q2 | a6767d98d9 |
-| `retrenched_employees` | Number of Retrenched Employees | 114 | 1998-Q1 to 2026-Q2 | 783e51acc3 |
-| `employment_change_by_sector` | Changes in Employment by Sector | 3,692 | 1991-Q1 to 2026-Q2 | 8a5f067e69 |
-| `overall_unemployment_rate`, `citizen_unemployment_rate` | Unemployment rate, overall and citizen | 276 each | 1992-Q1 to 2026-Q2 | 73166a2b08, 56cfa6f25b |
-| `unemployed_overall`, `unemployed_residents` | Number unemployed | 276 each | 1992-Q1 to 2026-Q2 | e7eb43e553, 04c58b53fe |
-| `job_vacancy_count`, `job_vacancy_rate` | Job vacancies | 114 each | 1998-Q1 to 2026-Q2 | fb712c4849, 26c128e2e0 |
-| `recruitment_rate`, `resignation_rate` | Average monthly rates | 114 each | 1998-Q1 to 2026-Q2 | 2094a9dede, 1b2ab310fb |
-| `retrenched_permanent`, `retrenched_term_contract` | Retrenched by contract type | 114 each | 1998-Q1 to 2026-Q2 | 07915e05ce, fa2de87c36 |
-| `retrenched_by_industry` | Retrenched employees by industry | 4,700 | 1998-Q1 to 2026-Q2 | 9ac82750b7 |
-| `reentry_6m`, `reentry_12m` | Re-entry into employment after retrenchment | 106 each | 2000-Q1 to 2026-Q2 | afc5f10982, 21ad7b0081 |
+The post-fix T-I06 threat run (`experiments/threats/m7-ti06-postfix-20261031`) does not record its corpus label in its `SUMMARY.md`. v3 is additive: every v2 passage file and every v2 per-source observation hash is unchanged (corpus tests in `tests/data/test_corpus_v3_additive.py` passed on the local build; two builds gave 52 byte-identical files, `artifacts/data-quality/determinism-v3.json`). Metrics reported for v1 or v2 must not be read as v3 results (D-040).
 
-Full URLs, snapshot ids and licences: `data/export/sources.json`. Raw CSVs: `data/snapshots/`.
+## 1. Statistical datasets (data.gov.sg)
+Core datasets (ADR-001) are the first four rows. Supporting industry, occupation and workforce-adjustment tables are included under ADR-003 and D-019; the three corpus-v3 tables follow D-040. Full URLs, snapshot ids and rights records are in the manifest and `data/export/sources.json` (that export predates v3 and omits the six v3 sources until `labourlens export` is rerun).
 
-## 2. Documents (MOM)
-| Group | Items | Rights status (in manifest) | Committed? |
+| Source id | Observations | In scope | Coverage | SHA-256 (first 10) | Rights (manifest) |
+|---|---|---|---|---|---|
+| `resident_unemployment_rate` | 276 | 20 | 1992-Q1 to 2026-Q2 | f3be9ef6e2 | open licence (ODL), verified |
+| `vacancy_to_unemployed_ratio` | 114 | 10 | 1998-Q1 to 2026-Q2 | a6767d98d9 | open licence (ODL), verified |
+| `retrenched_employees` | 114 | 10 | 1998-Q1 to 2026-Q2 | 783e51acc3 | open licence (ODL), verified |
+| `employment_change_by_sector` | 3,692 | 260 | 1991-Q1 to 2026-Q2 | 8a5f067e69 | open licence (ODL), verified |
+| `avg_weekly_paid_hours_quarterly` | 114 | 10 | 1998-Q1 to 2026-Q2 | 6efbf95d8d | ODL **assumed, not verified**; local-only |
+| `citizen_unemployment_rate` | 276 | 20 | 1992-Q1 to 2026-Q2 | 56cfa6f25b | open licence (ODL), verified |
+| `job_vacancies_by_industry` | 4,700 | 420 | 1998-Q1 to 2026-Q2 | d1097e7ba3 | open licence (ODL), verified |
+| `job_vacancies_by_occupation` | 450 | 50 | 1998-Q1 to 2026-Q2 | 7ce7b94317 | open licence (ODL), verified |
+| `job_vacancy_count` | 114 | 10 | 1998-Q1 to 2026-Q2 | fb712c4849 | open licence (ODL), verified |
+| `job_vacancy_rate` | 114 | 10 | 1998-Q1 to 2026-Q2 | 26c128e2e0 | open licence (ODL), verified |
+| `job_vacancy_rate_by_industry` | 4,700 | 420 | 1998-Q1 to 2026-Q2 | 2eb9ffdce1 | open licence (ODL), verified |
+| `job_vacancy_rate_by_occupation` | 450 | 50 | 1998-Q1 to 2026-Q2 | cffa55da17 | open licence (ODL), verified |
+| `overall_unemployment_rate` | 276 | 20 | 1992-Q1 to 2026-Q2 | 73166a2b08 | open licence (ODL), verified |
+| `recruitment_rate` | 114 | 10 | 1998-Q1 to 2026-Q2 | 2094a9dede | open licence (ODL), verified |
+| `recruitment_rate_by_industry` | 4,700 | 420 | 1998-Q1 to 2026-Q2 | 99efe67f00 | open licence (ODL), verified |
+| `recruitment_rate_by_occupation` | 342 | 30 | 1998-Q1 to 2026-Q2 | 2068a1fd41 | open licence (ODL), verified |
+| `reentry_12m` | 106 | 10 | 2000-Q1 to 2026-Q2 | 21ad7b0081 | open licence (ODL), verified |
+| `reentry_6m` | 106 | 10 | 2000-Q1 to 2026-Q2 | afc5f10982 | open licence (ODL), verified |
+| `resignation_rate` | 114 | 10 | 1998-Q1 to 2026-Q2 | 1b2ab310fb | open licence (ODL), verified |
+| `resignation_rate_by_industry` | 4,700 | 420 | 1998-Q1 to 2026-Q2 | 7b2e8dfe7c | open licence (ODL), verified |
+| `resignation_rate_by_occupation` | 342 | 30 | 1998-Q1 to 2026-Q2 | 35e9bfd3e0 | open licence (ODL), verified |
+| `retrenched_by_industry` | 4,700 | 420 | 1998-Q1 to 2026-Q2 | 9ac82750b7 | open licence (ODL), verified |
+| `retrenched_by_occupation` | 342 | 30 | 1998-Q1 to 2026-Q2 | 2372ea3b98 | open licence (ODL), verified |
+| `retrenched_permanent` | 114 | 10 | 1998-Q1 to 2026-Q2 | 07915e05ce | open licence (ODL), verified |
+| `retrenched_permanent_by_industry` | 4,700 | 420 | 1998-Q1 to 2026-Q2 | fb1671f718 | open licence (ODL), verified |
+| `retrenched_permanent_by_occupation` | 342 | 30 | 1998-Q1 to 2026-Q2 | ac6b96b757 | open licence (ODL), verified |
+| `retrenched_term_contract` | 114 | 10 | 1998-Q1 to 2026-Q2 | fa2de87c36 | open licence (ODL), verified |
+| `retrenched_term_contract_by_industry` | 4,700 | 420 | 1998-Q1 to 2026-Q2 | 39ebe96980 | open licence (ODL), verified |
+| `retrenched_term_contract_by_occupation` | 342 | 30 | 1998-Q1 to 2026-Q2 | 7156b1b6f4 | open licence (ODL), verified |
+| `short_workweek_temporary_layoff` | 336 | 24 | 1998-Q1 to 2025-Q4 | 0f959d8327 | open licence (ODL), verified |
+| `short_workweek_temporary_layoff_by_industry` | 1,344 | 96 | 1998-Q1 to 2025-Q4 | caff893ccd | open licence (ODL), verified |
+| `unemployed_citizens` | 276 | 20 | 1992-Q1 to 2026-Q2 | b5a0ca2544 | open licence (ODL), verified |
+| `unemployed_overall` | 276 | 20 | 1992-Q1 to 2026-Q2 | e7eb43e553 | open licence (ODL), verified |
+| `unemployed_residents` | 276 | 20 | 1992-Q1 to 2026-Q2 | 04c58b53fe | open licence (ODL), verified |
+| `unit_labour_cost_index_quarterly` | 4,836 | 260 | 1980-Q1 to 2026-Q2 | d6a9eae1cf | ODL **assumed, not verified**; local-only |
+| `value_added_per_worker_quarterly` | 3,408 | 240 | 1991-Q1 to 2026-Q2 | 5a108683ed | ODL **assumed, not verified**; local-only |
+| **Total (36)** | **52,020** | **4,300** | | | |
+
+**What "verified" means here.** The manifest note on every dataset says the Open Data Licence text was read at the licence URL on 2026-10-30 and that the data.gov.sg metadata API exposes no per-dataset licence field, so the dataset-level licence label was not independently read from the script-rendered dataset page. `verified_open_licence` therefore means the licence text was read and the dataset was accepted under D-004, not that each page was checked. The three corpus-v3 datasets carry an additional caveat (licence assumed from the same platform) and are recorded `assumed_open_unverified` with `redistribution_policy: local_only`. The `fetch` code now derives the status from what was checked: a dataset is `verified_open_licence` only if its spec records `licence_verified_on` or its existing manifest entry was already verified; otherwise it is `assumed_open_unverified` and its raw CSV is stored under `data/raw/` rather than the committed `data/snapshots/`.
+
+## 2. Documents (MOM and MTI)
+| Group | Items | Rights status (manifest) | Committed? |
 |---|---|---|---|
 | Quarterly labour-market reports, 2023-Q1 through 2026-Q2 | 14 PDFs | Verified all rights reserved | No |
 | Labour-force publications for 2024 and 2025 | 8 PDFs, four per year | Verified all rights reserved | No |
 | Job-vacancy 2025 and wage-practices 2024 reports | 2 PDFs | Verified all rights reserved | No |
+| Wage-practices 2025 and National Wages Council lower-wage 2025 (corpus v3) | 2 PDFs | Verified all rights reserved (notice read before fetch; re-confirm on the file) | No |
+| MTI 2026-Q2 feature article on AI and employment (corpus v3) | 1 PDF | **Unresolved**: the article's own notice has not been read | No |
 | Advance and final quarterly releases, 2024-Q1 through 2026-Q2 | 20 HTML pages | **Unresolved**, not permission to redistribute | No |
 | Job-vacancy 2025 and wage-practices 2024 releases | 2 HTML pages | **Unresolved**, not permission to redistribute | No |
 
-Documents are fetched into `data/raw/` (gitignored); extracted text stays in `data/passages/` (gitignored). The repository carries identifiers, hashes, locators and links, not full MOM documents or extensive extracted text. Public accessibility does not grant redistribution permission. All 22 unresolved-rights sources stay local-only pending individual rights clearance.
+Documents are fetched into `data/raw/` (gitignored); extracted text stays in `data/passages/` (gitignored). The repository carries identifiers, hashes, locators and links, not full MOM or MTI documents or extensive extracted text. Public accessibility does not grant redistribution permission. All 23 unresolved-rights sources stay local-only pending individual clearance.
 
 ## 3. Provenance
-Every source has a manifest entry: original URL, publisher, title, publication and retrieval dates, release stage (advance, final, annual), snapshot id, SHA-256, rights status and note, transformation version. Every observation and passage carries `source_id`, `snapshot_id` and a locator (CSV row and column, or PDF page and block). `uv run labourlens trace <observation_id|passage_id>` prints the full chain. Snapshots are immutable and hash-addressed; re-fetching never overwrites, and `data/manifests/manifest_history.jsonl` is append-only.
+Every source has a manifest entry: original URL, publisher, title, publication and retrieval dates, release stage (advance, final, annual), snapshot id, SHA-256, rights status and note, transformation version. Every observation and passage carries `source_id`, `snapshot_id` and a locator (CSV row and column, or PDF page and block). `uv run labourlens trace <observation_id|passage_id>` prints the full chain. Snapshots are immutable and hash-addressed; re-fetching never overwrites, and `data/manifests/manifest_history.jsonl` is append-only. Exception, disclosed: the three corpus-v3 dataset entries were amended in place (and their one history line each) to change `rights_status` and `redistribution_policy`; hashes, snapshot ids and paths are unchanged. This changes the SHA-256 of `manifest.json` from `5bb67d4e...` (recorded in `experiments/corpus-snapshots/v3.json`, frozen and not edited) to `55ad2b51...`.
 
 ## 4. Transformations (`norm-0.1`)
 1. Period normalisation to calendar quarters (`2026-Q2`); the unemployment datasets use `YYYY-MM` quarter-end months and are mapped, other months are rejected.
 2. Values parsed strictly. Declared missing tokens (`na`, `-`) become null with a reason. A missing value is never turned into zero.
-3. Wide tables (sector) pivoted to long; the leading-whitespace hierarchy becomes `sector_path` and `sector_level`.
-4. Population and adjustment labelled per series (overall, resident, citizen, establishments; seasonally adjusted or not). Never mixed.
+3. Wide tables (sector, unit labour cost, value added per worker) pivoted to long; the leading-whitespace hierarchy becomes `sector_path` and `sector_level`.
+4. Population and adjustment labelled per series (overall, resident, citizen, establishments, employees; seasonally adjusted or not; `unspecified` for the three v3 tables because their titles do not state it). Never mixed.
 5. Nothing is forecast or imputed.
 
 ## 5. Things a reader must know
 **Three employment-change numbers per quarter.** For 2026-Q2: MOM advance release 10,700; MOM final report 11,400; sector dataset total 14,700. Advance versus final is a revision. Dataset versus final differs by 3,100 to 5,100 persons in every quarter we checked. MOM's headline excludes migrant domestic workers; the dataset's basis is unverified. That the gap is a migrant-domestic-worker effect is an **inference**, not a verified fact. See `docs/presentation-plan.md` section 3 and `artifacts/figures/fig3_employment_change_reconciliation.png`.
 
-**Ratio is not a rate.** The vacancy-to-unemployed ratio counts vacancies per unemployed person; it is not a percentage. Our recomputation from the vacancy count and overall unemployed differs from the published ratio by up to 0.67 because they come from different surveys. Treated as a warning, not an error.
+**Reconciliation and revisions rest on little.** `reconcile.py` checks four hand-verified quarters. `artifacts/data-quality/revisions.json` reports `baseline_only_no_earlier_snapshot` for every dataset: only one snapshot of each exists, so **no dataset revision has been observed**, and none can be ruled out.
 
-**'-' cells.** 605 industry cells (47 in the answer scope) are '-' in the source. The publisher does not say whether that means nil or suppressed, so they stay null and are never read as zero.
+**Ratio is not a rate.** The vacancy-to-unemployed ratio counts vacancies per unemployed person; it is not a percentage. Our recomputation from the vacancy count and overall unemployed differs from the published ratio by up to 0.67 (maximum 0.6651, mean 0.5956 over the 10 in-scope quarters) because they come from different surveys. Treated as a warning, not an error.
 
-**Rounding and units.** Retrenchment figures are rounded by the publisher. Rates are percentages; changes between rates are percentage points.
+**'-' cells.** 416 in-scope cells across five tables are '-' in the source (47, 50, 288, 3 and 28; section 6). The publisher does not say whether that means nil or suppressed, so they stay null and are never read as zero.
+
+**Seasonality of the v3 index tables.** The unit labour cost, value added per worker and paid-hours tables carry `adjustment: unspecified`, and at least the unit labour cost series is visibly seasonal (the first quarter of a year can sit well above the second in the file). Adjacent-quarter comparisons on these series are unsafe; compare the same quarter across years.
+
+**Rounding and units.** Retrenchment figures are rounded by the publisher. Rates are percentages; changes between rates are percentage points. New units: `index_2015_100`, `chained_2015_dollars`, `hours_per_week`.
 
 **Not computed.** Retrenchments per 1,000 employees: no verified denominator dataset.
 
-**PDF extraction flags.** Across the rebuilt extraction records, 7,055 PDF blocks are `table_unreliable`, 8,091 are `ok`, and 246 are `garbled`. Including HTML gives 8,614 `ok` passages. The 57 previously control-bearing `ok` blocks are now flagged, not repaired by guessing. Conservative layout headings retain narrative; footers become printed labels; note fragments retain explicit adjacency/context requirements. Article-bounded HTML preserves revision evidence while keeping rights notices in local metadata. Same-source duplicates collapse only during context assembly. Flagged tables are not a reliable numerical answer source; use compatible validated dataset records.
+**PDF extraction flags.** Across all 49 documents: 9,040 `ok`, 7,093 `table_unreliable`, 286 `garbled`. The 246 control-character blocks are real font-encoding debris (mostly reader-feedback forms and cover boilerplate) and are flagged, not repaired by guessing. The other 40 `garbled` blocks are all in the MTI feature PDF (40 of its 218 passages) and are **false positives**: significance legends, coefficient rows with asterisks and typeset estimating equations trip the symbol-ratio signal although the text is legible. A refined rule is implemented but **not applied**, because applying it needs a rebuild, a re-index and a re-embed (`docs/experiments/m7-corpus-v3-runbook.md`, "Pending change"). Until then those 40 passages are excluded from retrieval chunks and treated as unusable evidence. Flagged tables are not a reliable numerical answer source; use compatible validated dataset records.
+
+**Corpus-v3 PDFs.** `mom-wage-practices2025`: 32 pages, 174 passages (151 `ok`, 23 `table_unreliable`). `mom-nwc-lower-wage2025`: 18 pages, 112 passages (all `ok`); its publication date, 2026-10-23, is the PDF creation date and is **not confirmed** against the publisher's newsroom. `mti-2026-q2-feature-ai-employment`: 23 pages, 218 passages (163 `ok`, 15 `table_unreliable`, 40 `garbled`); the MTI running page header is kept as a passage on some pages and `printed_page_label` is empty for all of them, so citations show the PDF page number.
 
 **Low-yield PDF.** The Labour Force 2025 survey-findings PDF yields 250 passages over 80 pages after extraction corrections (198 on frozen corpus v1). Image-heavy content is a possible explanation, not a verified diagnosis.
 
 ## 6. Quality checks and known warnings
-The rebuilt `artifacts/data-quality/validation.json` and `quality-report.md` agree: **255 checks = 248 passes + 7 warnings + 0 failures**. The ingestion heuristic scanned 15,915 passages and 147 distinct statistical text values with zero hits. This is not evidence of complete injection resistance; the heuristic can miss paraphrases. Frozen corpus v1 had 13,484 passages; its retrieval/answer results must not be attributed to corpus v2. D-037 and `docs/experiments/m7-corpus-v2-runbook.md` record preservation, migration and separately labelled reruns.
+`artifacts/data-quality/validation.json` and `quality-report.md` agree: **276 checks = 269 passes + 7 warnings + 0 failures**. The seven warnings: unresolved rights for 23 sources (22 HTML releases and the MTI PDF; kept local-only); undefined dash markers in five tables (47 retrenchment-by-industry, 50 permanent-by-industry, 288 term-contract-by-industry, 3 term-contract-by-occupation and 28 short-workweek/temporary-layoff-by-industry in-scope cells); and the recomputed vacancy-ratio discrepancy. These are observed offline-build results, not proof of human verification.
 
-Checks cover manifest integrity, schemas, periods, duplicates, ranges, hierarchy sums, extraction, dates, instruction-like source content, reconciliation and packaging. Warnings are unresolved rights for 22 HTML sources; undefined dash markers in five tables (47 retrenchment-industry, 50 permanent-industry, 288 term-contract-industry, 3 term-contract-occupation and 28 short-workweek/temporary-layoff-industry in-scope cells); and the recomputed vacancy ratio discrepancy. These are observed offline-build results, not proof of human verification.
+Checks cover manifest integrity, schemas, periods, duplicates, ranges, hierarchy sums, extraction, dates, instruction-like source content, reconciliation and packaging. `manifest.raw_files_match_sha256` re-hashes every present raw file against the manifest. A local-only file that is absent (a fresh clone has no `data/raw/` and no v3 dataset CSVs) is reported as "local-only, not present" and is not a failure; a missing or altered committed file still fails. The injection heuristic scanned the corpus passages and statistical text values; it is not evidence of complete injection resistance, because it can miss paraphrases. Frozen corpus v1 had 13,484 passages; its results must not be attributed to a later corpus.
 
-## 7. Limits
+## 7. Corpus-v3 batch (fetched 2026-10-31)
+Catalogued in `specs/sources.d/heldout-v2-expansion.yaml` (D-040); fetched, built, indexed and embedded (embeddings cost: estimated USD 0.0030 for 101 new vectors and 22,736 tokens, `artifacts/data-quality/embedding-plan-v3.json`; the billed amount is not recorded). Excluded by owner decision: MTI GDP advance and Economic Survey pairs.
+
+| Source id | Kind | Publisher | Publication date | Stage | Rights (manifest) | SHA-256 (first 10) | Rows / passages |
+|---|---|---|---|---|---|---|---|
+| `mom-wage-practices2025` | PDF | MOM MRSD | 2026-05-28 | annual | all rights reserved; local-only | aed7135a23 | 174 passages |
+| `mom-nwc-lower-wage2025` | PDF | MOM MRSD | 2026-10-23 (PDF creation date; unconfirmed) | annual | all rights reserved; local-only | 9e49b9683c | 112 passages |
+| `mti-2026-q2-feature-ai-employment` | PDF | MTI | 2026-08-11 | not applicable | unresolved; local-only | 045f7a56cc | 218 passages |
+| `unit_labour_cost_index_quarterly` | dataset | SingStat | 2026-08-11 (lastUpdated) | snapshot | ODL assumed, not verified; local-only | d6a9eae1cf | 4,836 rows (260 in scope) |
+| `value_added_per_worker_quarterly` | dataset | SingStat | 2026-08-11 (lastUpdated) | snapshot | ODL assumed, not verified; local-only | 5a108683ed | 3,408 rows (240 in scope) |
+| `avg_weekly_paid_hours_quarterly` | dataset | MOM | 2026-09-22 (lastUpdated) | snapshot | ODL assumed, not verified; local-only | 6efbf95d8d | 114 rows (10 in scope) |
+
+Coverage checked by the build (exact first periods): ULC 1980-Q1 to 2026-Q2; value added per worker 1991-Q1 to 2026-Q2; paid hours 1998-Q1 to 2026-Q2. Missing cells are `na` in the source and stay null: 1,200 (ULC) and 864 (value added), all before the answer scope. The three raw CSVs live under `data/snapshots/<source_id>/` on the author's machine and are **gitignored** until the licence is verified on each dataset page; the committed manifest and the committed `observations.parquet` still describe them. The three MOM/MTI PDFs are local-only like every document.
+
+## 8. Limits
 - Extraction quality for tables is not reliable; numbers come from datasets, text supplies explanation.
 - Saved page-date checks cover releases; internal PDF dates and representative extraction fidelity still need human inspection.
 - No human has yet verified values; sheets are prepared (`docs/human-review/`).
 - Coverage is one snapshot per source, so revision tracking is baseline-only until a second fetch is made.
-
-## 8. Corpus v3 batch for the evidence-disjoint held-out (PREPARED, NOT YET FETCHED)
-
-**Status:** catalogued in `specs/sources.d/heldout-v2-expansion.yaml` (D-040); nothing fetched, built, indexed or embedded. Sections 1 to 7 above describe corpus v2 (46 documents, 33 datasets) until the run in `docs/experiments/m7-corpus-v3-runbook.md` completes; **no count above has been changed**. Excluded by owner decision: MTI GDP advance/Economic Survey pairs.
-
-| Source id | Kind | Publisher | Publication date | Stage | Rights (local-only for documents) | Fetched / SHA-256 / rows / passages |
-|---|---|---|---|---|---|---|
-| `mom-wage-practices2025` | PDF | MOM MRSD | 2026-05-28 | annual | all rights reserved (to re-confirm on file) | TBD |
-| `mom-nwc-lower-wage2025` | PDF | MOM MRSD | 2026-10-23 (PDF creation date; confirm) | annual | all rights reserved (to re-confirm on file) | TBD |
-| `mti-2026-q2-feature-ai-employment` | PDF | MTI | 2026-08-11 | not applicable | unresolved | TBD |
-| `unit_labour_cost_index_quarterly` | dataset | SingStat | TBD (lastUpdated) | snapshot | Open Data Licence assumed; to verify on dataset page | TBD |
-| `value_added_per_worker_quarterly` | dataset | SingStat | TBD | snapshot | as above | TBD |
-| `avg_weekly_paid_hours_quarterly` | dataset | MOM | TBD | snapshot | as above | TBD |
-
-Expected coverage (checked by the build, exact first periods): ULC 1980-Q1 to 2026-Q2; value added per worker 1991-Q1 to 2026-Q2; paid hours 1998-Q1 to 2026-Q2. Units added to the schema: `index_2015_100`, `chained_2015_dollars`, `hours_per_week`; adjustment status is `unspecified` for all three because the dataset titles do not state it.
-
-**To fill after the run (do not pre-fill):** at-a-glance counts (sources, documents, datasets, observations, passages); quality check totals; extraction flags for the three PDFs; additivity result against `experiments/corpus-snapshots/v2.json` and `v2-observations.json`; fingerprint `experiments/corpus-snapshots/v3.json`; confirmation of each dataset's licence and of the NWC publication date.
+- A fresh clone has the manifest, the committed dataset snapshots and the processed tables, but not the PDFs, passages, indexes or the three v3 dataset CSVs. `uv run pytest -q` skips corpus tests there; `labourlens build` stops with a message naming the absent raw file, because a rebuild needs the local corpus.

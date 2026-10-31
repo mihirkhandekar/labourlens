@@ -138,11 +138,24 @@ COLS = ["valid_rate", "behavior_accuracy", "over_abstention_rate", "false_answer
         "gold_cited_any_rate", "tool_calls_mean", "tool_error_rate", "operational_failures", "latency_p50_s", "cost_per_case_usd"]
 
 
+def existing_outputs(exp: str, labels: list[str]) -> list:
+    """Raw runs, scores and summary this experiment id would overwrite."""
+    found = []
+    for label in labels:
+        found += [p for p in (paths.DATA / "runs" / exp / f"{label}.jsonl", paths.EXPERIMENTS / "runs" / exp / f"{label}.scores.jsonl",
+                              paths.EXPERIMENTS / "runs" / exp / f"{label}.metrics.json") if p.exists()]
+    summary = paths.EXPERIMENTS / "runs" / f"{exp}-SUMMARY.md"
+    return found + ([summary] if summary.exists() else [])
+
+
 def run(split: str = "dev", pairs: list[str] | None = None, answer_prompt: str = "answer_v3", tag: str = "A1",
-        retrieval: str = "hybrid", planner_prompt: str = "planner_v1", gold_path=None) -> None:
+        retrieval: str = "hybrid", planner_prompt: str = "planner_v1", gold_path=None, force: bool = False) -> None:
     cases = ev.load_cases(split, gold_path)
     shared = Shared()
     exp = f"agent-{split}-{tag}"
+    existing = existing_outputs(exp, pairs or list(MODEL_PAIRS))
+    if existing and not force:
+        raise FileExistsError(f"{exp} already has outputs ({', '.join(str(p) for p in existing)}); choose a new --tag or pass --force to overwrite.")
     rows = {}
     for label in pairs or MODEL_PAIRS:
         pm, am = MODEL_PAIRS[label]

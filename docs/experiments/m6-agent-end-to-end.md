@@ -28,16 +28,16 @@ Every row below comes from `experiments/eval/agent-dev-A{1,2,3,4,5}/{model}.metr
 
 | Run | Model | n | Behaviour [95% CI] | Over-abstain | False answer | Claim support | Unsupported claim | Fact coverage | Contradiction | Gold cited | Calculation correct | p50 / p95 s | $/case |
 |---|---|---:|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
-| A1 | gpt-6-luna | 235 | 0.779 [0.728, 0.830] | 0.157 | 0.025 | 0.881 | 0.000 | 0.687 | 0.007 | 0.674 | 0.667 | 10.7 / 22.8 | 0.00137 |
+| A1 | gpt-6-luna | 235 | 0.779 [0.728, 0.830] | 0.157 | 0.025 | 0.881 | 0.000 | 0.687 | 0.007 | 0.674 | 0.667 | 10.7 / 23.3 | 0.00137 |
 | A1 | gpt-5.6-luna | 235 | 0.800 [0.749, 0.851] | 0.136 | 0.030 | 0.819 | 0.000 | 0.724 | 0.014 | 0.690 | 0.750 | 9.6 / 18.0 | 0.00274 |
-| A2 | gpt-6-luna | 235 | 0.762 [0.706, 0.813] | 0.170 | 0.036 | 0.888 | 0.004 | 0.692 | 0.014 | 0.658 | 0.750 | 12.7 / 24.7 | 0.00142 |
-| A2 | gpt-5.6-luna | 235 | 0.796 [0.745, 0.847] | 0.136 | 0.034 | 0.829 | 0.003 | 0.716 | 0.034 | 0.695 | 0.750 | 10.8 / 20.6 | 0.00280 |
-| A3 | gpt-6-luna | 237 | 0.903 [0.865, 0.937] | 0.030 | 0.030 | 0.887 | 0.000 | 0.728 | 0.006 | 0.836 | 0.750 | 15.4 / 35.6 | 0.00212 |
-| A3 | gpt-5.6-luna | 237 | 0.903 [0.861, 0.941] | 0.025 | 0.030 | 0.874 | 0.003 | 0.765 | 0.006 | 0.841 | 0.750 | 15.5 / 34.4 | 0.00360 |
-| A4 | gpt-6-luna | 237 | 0.899 [0.861, 0.937] | 0.034 | 0.026 | 0.856 | 0.000 | 0.734 | 0.011 | 0.836 | 0.667 | 14.8 / 35.6 | 0.00215 |
-| A4 | gpt-5.6-luna | 237 | 0.907 [0.869, 0.941] | 0.030 | 0.026 | 0.878 | 0.000 | 0.766 | 0.000 | 0.836 | 0.667 | 15.1 / 34.7 | 0.00367 |
-| A5 | gpt-6-luna | 237 | 0.911 [0.873, 0.945] | 0.021 | 0.034 | 0.879 | 0.000 | 0.724 | 0.006 | 0.841 | 0.750 | 16.4 / 37.5 | 0.00217 |
-| A5 | gpt-5.6-luna | 237 | 0.916 [0.878, 0.949] | 0.030 | 0.022 | 0.856 | 0.000 | 0.760 | 0.000 | 0.841 | 0.708 | 14.7 / 34.0 | 0.00369 |
+| A2 | gpt-6-luna | 235 | 0.762 [0.706, 0.813] | 0.170 | 0.036 | 0.888 | 0.004 | 0.692 | 0.014 | 0.658 | 0.750 | 12.7 / 25.9 | 0.00142 |
+| A2 | gpt-5.6-luna | 235 | 0.796 [0.745, 0.847] | 0.136 | 0.034 | 0.829 | 0.003 | 0.716 | 0.034 | 0.695 | 0.750 | 10.8 / 21.2 | 0.00280 |
+| A3 | gpt-6-luna | 237 | 0.903 [0.865, 0.937] | 0.030 | 0.030 | 0.887 | 0.000 | 0.728 | 0.006 | 0.836 | 0.750 | 15.4 / 37.0 | 0.00212 |
+| A3 | gpt-5.6-luna | 237 | 0.903 [0.861, 0.941] | 0.025 | 0.030 | 0.874 | 0.003 | 0.765 | 0.006 | 0.841 | 0.750 | 15.5 / 34.7 | 0.00360 |
+| A4 | gpt-6-luna | 237 | 0.899 [0.861, 0.937] | 0.034 | 0.026 | 0.856 | 0.000 | 0.734 | 0.011 | 0.836 | 0.667 | 14.8 / 35.9 | 0.00215 |
+| A4 | gpt-5.6-luna | 237 | 0.907 [0.869, 0.941] | 0.030 | 0.026 | 0.878 | 0.000 | 0.766 | 0.000 | 0.836 | 0.667 | 15.1 / 36.1 | 0.00367 |
+| A5 | gpt-6-luna | 237 | 0.911 [0.873, 0.945] | 0.021 | 0.034 | 0.879 | 0.000 | 0.724 | 0.006 | 0.841 | 0.750 | 16.4 / 37.6 | 0.00217 |
+| A5 | gpt-5.6-luna | 237 | 0.916 [0.878, 0.949] | 0.030 | 0.022 | 0.856 | 0.000 | 0.760 | 0.000 | 0.841 | 0.708 | 14.7 / 34.5 | 0.00369 |
 
 Rates use different eligible populations. `over_abstention_rate` divides by all evaluated cases. `false_answer_rate` excludes over-abstentions from its denominator; it is not conditional on gold non-answer cases. Claim support and unsupported-claim rates pool judged claims. Fact coverage pools reference facts in judged answers. Contradiction is the fraction of judged answers with any contradicted reference fact. Gold-cited and calculation-correct exclude ineligible/null cases. See `docs/evaluation-report.md` and `src/labourlens/evaluation/harness.py`; each metrics JSON provides denominators and intervals for all rates.
 
@@ -72,7 +72,7 @@ Source: `by_family` in the A1 and A3 metrics files above. Counts are shown separ
 
 **H4 does not establish a model winner.** A3 behaviour is **0.903** for both models with overlapping intervals. Alternative-model fact coverage is higher, but so is cost (A3 metric files). Keep `gpt-6-luna`, retrieval `r3`, `answer_v3` and `planner_v1` (D-030/D-032 in `docs/decisions.md`), pending owner confirmation of the retrieval default.
 
-A3 `gpt-6-luna` p95 latency is **35.6 seconds**, versus **22.8 seconds** for A1; cost is **$0.00212** versus **$0.00137** per case (respective metrics JSON files). These are single-run API/wall-time estimates, not a service-level guarantee. Judge costs are separate. Missing usage on a timed-out request can undercount provider billing.
+A3 `gpt-6-luna` p95 latency is **37.0 seconds**, versus **23.3 seconds** for A1; cost is **$0.00212** versus **$0.00137** per case (respective metrics JSON files). These are single-run API/wall-time estimates, not a service-level guarantee. Judge costs are separate. Missing usage on a timed-out request can undercount provider billing.
 
 ## Limits and next evidence
 

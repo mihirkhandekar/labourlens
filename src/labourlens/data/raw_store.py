@@ -23,24 +23,38 @@ def snapshot_id_for(content: bytes, retrieval_utc: str) -> str:
     return f"{retrieval_utc[:10].replace('-', '')}-{sha256_hex(content)[:12]}"
 
 
+def _primary_file(snapshot_dir: Path) -> Path | None:
+    """The data file of a snapshot dir, chosen deterministically: the only non-metadata file, preferring a CSV.
+
+    Dataset snapshot dirs also hold `<dataset_id>.metadata.json`; directory listing order must never decide `raw_path`.
+    """
+    files = sorted(f for f in snapshot_dir.iterdir() if f.is_file())
+    data_files = [f for f in files if not f.name.endswith(".metadata.json")]
+    csvs = [f for f in data_files if f.suffix.lower() == ".csv"]
+    chosen = csvs or data_files
+    return chosen[0] if chosen else None
+
+
 def store_snapshot(
     source_id: str, content: bytes, filename: str, retrieval_utc: str, *, committed: bool
 ) -> tuple[str, Path, bool]:
     """Write bytes once. Returns (snapshot_id, path, newly_written).
 
-    If any existing snapshot of this source has the same SHA-256, that snapshot is reused so repeated
-    fetches of unchanged data produce no new snapshot.
+    If any existing snapshot of this source (in either store) has the same SHA-256, that snapshot is reused so
+    repeated fetches of unchanged data produce no new snapshot.
     """
-    root = (paths.SNAPSHOTS if committed else paths.RAW) / source_id
+    primary, other = (paths.SNAPSHOTS, paths.RAW) if committed else (paths.RAW, paths.SNAPSHOTS)
     digest12 = sha256_hex(content)[:12]
-    if root.exists():
-        for existing in sorted(root.iterdir()):
-            if existing.is_dir() and existing.name.endswith(f"-{digest12}"):
-                files = [f for f in existing.iterdir() if f.is_file()]
-                if files:
-                    return existing.name, files[0], False
+    for store in (primary, other):
+        root = store / source_id
+        if root.exists():
+            for existing in sorted(root.iterdir()):
+                if existing.is_dir() and existing.name.endswith(f"-{digest12}"):
+                    found = _primary_file(existing)
+                    if found:
+                        return existing.name, found, False
     sid = snapshot_id_for(content, retrieval_utc)
-    d = root / sid
+    d = primary / source_id / sid
     d.mkdir(parents=True, exist_ok=True)
     target = d / filename
     target.write_bytes(content)

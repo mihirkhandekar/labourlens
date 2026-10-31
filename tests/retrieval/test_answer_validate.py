@@ -3,14 +3,14 @@ from labourlens.answer.schema import Answer, Citation, Claim
 from labourlens.answer.validate import check, key_numbers, norm, numbers
 
 P1 = ContextPassage("P1", "doc:p1", "doc", "T", "2026-01-01", "final", "p.1",
-                    "Total employment grew by 11,400 in 2Q 2026, a “seasonally adjusted” rate of 2.9%.")
+                    "Synthetic test headcount rose by 11,400 in 2Q 2026, a “seasonally adjusted” rate of 2.9%.")
 
 
 def ans(status="answered", claims=None, reason="", clar=""):
     return Answer(status=status, summary="s", claims=claims or [], caveats=[], clarification_question=clar, reason=reason)
 
 
-def claim(text, label="P1", quote="grew by 11,400 in 2Q 2026"):
+def claim(text, label="P1", quote="rose by 11,400 in 2Q 2026"):
     return Claim(text=text, citations=[Citation(label=label, quote=quote)])
 
 
@@ -20,7 +20,7 @@ def test_valid_answer_with_curly_quotes_and_whitespace():
 
 
 def test_quote_not_in_passage_is_invalid():
-    r = check(ans(claims=[claim("x", quote="grew by 12,400 in 2Q 2026")]), [P1])
+    r = check(ans(claims=[claim("x", quote="rose by 12,400 in 2Q 2026")]), [P1])
     assert any("not verbatim" in e for e in r.errors)
 
 

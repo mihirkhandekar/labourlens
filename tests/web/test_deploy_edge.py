@@ -38,8 +38,8 @@ def test_healthz_is_minimal_and_unauthenticated(tmp_path):
 
     response = asyncio.run(scenario())
     assert response.status_code == 200
-    assert set(response.json()) == {"status", "version"}
-    assert response.json()["status"] == "ok"
+    assert set(response.json()) == {"status", "version", "corpus"}  # corpus is null until a corpus is loaded
+    assert response.json()["status"] == "ok" and response.json()["corpus"] is None
     assert response.headers["content-security-policy"]
 
 

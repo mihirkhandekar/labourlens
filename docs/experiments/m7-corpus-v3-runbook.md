@@ -120,18 +120,33 @@ uv run pytest -q -m 'not corpus'
 uv run pytest -q tests/data -m corpus
 ```
 
-## Results to record after the run (placeholders; do not pre-fill)
+## Results recorded after the run (31 Oct 2026; read from the saved artifacts)
 
 | Quantity | Value |
 |---|---|
-| New documents extracted / pages / passages (each of 3) | TBD |
-| New observations per dataset; in-scope rows | TBD |
-| Total passages / chunks / sources (expected sources 79 + 6 = 85; documents 49, datasets 36) | TBD |
-| Checks total / pass / warn / fail | TBD |
-| Build determinism (`determinism-v3.json`) | TBD |
-| v2 passage files and v2 per-source observation hashes unchanged | TBD (step 8) |
-| New vectors / tokens / exact estimated cost / billed cost | TBD (steps 10 and 11) |
-| BM25 index directory and corpus hash | TBD |
-| Fingerprint SHA of `experiments/corpus-snapshots/v3.json` | TBD |
+| New documents extracted / pages / passages | `mom-wage-practices2025` 32 pages, 174 passages; `mom-nwc-lower-wage2025` 18 pages, 112; `mti-2026-q2-feature-ai-employment` 23 pages, 218 (extraction_stats.json) |
+| New observations per dataset; in-scope rows | ULC 4,836 (260 in scope); value added per worker 3,408 (240); paid hours 114 (10); total 8,358 new rows, 510 in scope |
+| Total passages / chunks / sources | 16,419 passages in 49 files; 1,847 `merge200` chunks; 85 sources (36 datasets, 49 documents) |
+| Checks total / pass / warn / fail | 276 / 269 / 7 / 0 (`validation.json`) |
+| Build determinism (`determinism-v3.json`) | 52 files, byte-identical across two builds |
+| v2 passage files and v2 per-source observation hashes unchanged | Yes: corpus test `test_corpus_v2_passages_and_observations_unchanged_after_v3_build` passed on the local build |
+| New vectors / tokens / exact estimated cost / billed cost | 101 new vectors, 22,736 input tokens, estimated USD 0.0030 (`embedding-plan-v3.json`); billed cost not recorded |
+| BM25 index directory | `data/index/bm25/merge200-d684aa76e93a-4659afc7` (v2's was `merge200-794cf9c9814d-4659afc7`) |
+| `experiments/corpus-snapshots/v3.json` SHA-256 | `6caba3d61a3addbef4b182ec3455e99fa8e509ff056e5ecdf82fe4da33377bc6` |
 
-Rollback: delete `specs/sources.d/heldout-v2-expansion.yaml`, the three adapter specs and the new manifest/data entries (or restore `private/corpus-v2-frozen/`). Frozen v1 and v2 results and `experiments/corpus-snapshots/{v1,v2}.json` are never edited.
+**Rights amendment after the run (E2E review, P1-3).** The three new datasets were recorded `verified_open_licence` / `commit_raw` although their notes say the licence is only assumed. The manifest and history entries for those three were amended in place to `assumed_open_unverified` / `local_only` (hashes, snapshot ids and paths unchanged), and their snapshot directories are now gitignored. This changes the SHA-256 of `data/manifests/manifest.json` from `5bb67d4e36572d1573eb3cc6834d449fc44e053215f98e4a4895b17607e1449b` (the value frozen in `v3.json`, which is not edited) to `55ad2b5160585ccf632bbbd3ad7706f79a60774dbd8b69c87e3de5f38b58144d`. Passage, observation and chunk hashes are unaffected. To re-verify a licence, read the dataset page, add `licence_verified_on: <date>` to the dataset's entry in `specs/sources.d/heldout-v2-expansion.yaml`, and only then commit the snapshot.
+
+## Pending change: symbolic-text rule for the garbled flag (NOT applied to the corpus)
+
+**Problem.** `looks_garbled` counted `*`, `<`, `=`, summation signs and similar as "weird" characters, so significance legends, coefficient rows and estimating equations in the MTI feature PDF were flagged `garbled` (40 of its 218 passages, all by the symbol-ratio signal; the other 246 `garbled` passages in the corpus are real control-character debris). `garbled` passages are excluded from chunks.
+
+**Code change (implemented and unit-tested in `src/labourlens/data/pdf_extract.py`; `tests/data/test_extraction_fixes.py`).**
+1. The symbol-ratio signal ignores statistical symbols (ASCII `* < > = ^ _ [ ] { } | ~`, Greek letters, mathematical operators). Control-character, long-token and mixed-case signals are unchanged.
+2. New `symbolic_note`: a legible block that is symbol-dense only because of those symbols stays `ok` and carries the note "symbolic text (statistical legend or equation)".
+3. `looks_tabular` accepts numbers with trailing significance stars (`0.043**`), so coefficient rows become `table_unreliable` instead of `garbled`.
+
+**Read-only effect on the current `data/passages` (computed by re-classifying the stored passage text; nothing rebuilt).** 44 passages change flag, all in `mti-2026-q2-feature-ai-employment`: 16 `garbled` to `ok` (legends and equations, with the symbolic note), 24 `garbled` to `table_unreliable`, and 4 `ok` to `table_unreliable` (coefficient rows with stars that the old numeric test missed). MTI would go from 163 `ok` / 15 `table_unreliable` / 40 `garbled` to 175 / 43 / 0. No other source changes; the 246 control-character passages stay `garbled`.
+
+**Consequences if applied (parent decision).** Rebuild passages (`labourlens build`); rebuild chunks and the BM25 index (12 more `ok` passages net, so the chunk count and some chunk ids for the MTI document change); embed any new chunk text (content-keyed cache; cost from the embedding-plan command in step 10); re-freeze a v4 fingerprint. Passage ids of unchanged text are stable; v1 and v2 results are unaffected. Held-out v2 cases that cite MTI passages must be re-checked against the new ids. Not run: this change was written without a rebuild.
+
+Rollback of the v3 batch: delete `specs/sources.d/heldout-v2-expansion.yaml`, the three adapter specs and the new manifest/data entries (or restore `private/corpus-v2-frozen/`). Frozen v1 and v2 results and `experiments/corpus-snapshots/{v1,v2}.json` are never edited.

@@ -386,6 +386,15 @@ class McpStatsClient:
         return await self.call("get_provenance", observation_id=observation_id)
 
 
+class _Rows(list):
+    """Rows of one statistics reply plus the number of rows the client quarantined, so the agent can report an
+    operational/security event instead of 'the dataset has no row'. A plain list everywhere else."""
+
+    def __init__(self, rows, quarantined: int = 0) -> None:
+        super().__init__(rows)
+        self.quarantined = int(quarantined or 0)
+
+
 class SyncStatsBackend:
     """Same contract as StatsData.query, backed by a persistent MCP session on a private event-loop thread.
 
@@ -446,8 +455,8 @@ class SyncStatsBackend:
                 if self.client is None:
                     self._run(self._connect(), CONNECT_TIMEOUT_S + 5)
                 reply = self._run(self.client.get_statistic(**args), self.call_timeout_s + 5)
-                self.calls.append({"ms": round((time.perf_counter() - t0) * 1000, 1), "ok": True, "attempt": attempt})
-                return reply.rows, None
+                self.calls.append({"ms": round((time.perf_counter() - t0) * 1000, 1), "ok": True, "attempt": attempt, "quarantined": reply.quarantined})
+                return _Rows(reply.rows, reply.quarantined), None
             except McpClientError as e:
                 self.calls.append({"ms": round((time.perf_counter() - t0) * 1000, 1), "ok": False, "kind": e.kind, "attempt": attempt})
                 if e.kind in ("invalid_arguments", "not_found", "too_large"):

@@ -60,7 +60,7 @@ def assert_private(record, sid):
 def test_default_runner_passes_context_and_writes_one_shared_run(settings, monkeypatch):
     calls = []
 
-    def fake_run_agent(question, shared, *, save_trace, audit):
+    def fake_run_agent(question, shared, cfg=None, *, save_trace, audit):
         calls.append((question, shared, save_trace, audit))
         result = agent_result(question)
         result.update(config={"fixture": True}, rounds=1)
@@ -257,6 +257,8 @@ def test_unexpected_audit_exceptions_never_replace_http_outcome(settings, monkey
     async def scenario():
         async with client_for(settings) as (_, client):
             await login(client)
+            if target == "feedback":
+                await client.post("/api/ask", json={"question": QUESTION})  # feedback is accepted only for the session's own runs
             if target == "run":
                 response = await client.post("/api/ask", json={"question": QUESTION})
                 expected = 200

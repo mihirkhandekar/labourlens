@@ -1,6 +1,6 @@
 # Deploying LabourLens on one DigitalOcean Droplet
 
-**Status: PROPOSAL / operator runbook. Nothing in this document has been run against a real Droplet.** The files it relies on (`Dockerfile`, `deploy/`, `scripts/`, `.github/workflows/deploy.yml`) were exercised locally only; section 12 lists what that did and did not cover.
+**Status: operator runbook for a Droplet that exists.** The site is live at <https://labourlens.navig.me> on one Droplet (`labourlens`, `sgp1`), deployed by `.github/workflows/deploy.yml`. Live research is switched on (`/api/status` reported `enabled: true` when the end-to-end review read it on 31 Oct 2026). The earlier sslip.io hostname is retired. **Verified on the Droplet:** bootstrap, workflow run, GHCR pull, certificate, `/healthz`, HSTS and CSP headers (`docs/progress.md`, "Droplet deployed"). **Not verified:** a provider-side OpenAI spend cap (only the application's own estimated budget is in place), restart rollback, the backup procedure, snapshot cost and memory under load. Sections below that say "verified locally" refer to the author's Mac, not the Droplet.
 
 **DECISION (owner, 30 Oct 2026):** host on one DigitalOcean Droplet (Ubuntu LTS, Singapore region `sgp1`) with Docker Compose and Caddy, deployed by GitHub Actions. Not approved: App Platform, Kubernetes, managed Postgres, public MCP exposure, OAuth.
 
@@ -122,6 +122,8 @@ Everything else under `data/` (raw PDFs and HTML, other embedding models, `runs/
 
 **VERIFIED (local, 30 Oct 2026):** starting `Shared()` and then the web app against a `data/` directory containing exactly this set loaded 2,106 chunks, 13,484 passages and 3,790 in-scope observations without a network call or API key use, in about 2.5 seconds on the author's machine with a warm file cache. The container reported healthy about 9 seconds after start. The earlier estimate of 30 seconds for startup was not reproduced; no on-disk BM25 cache exists and none is needed at this size. Allow for slower cold-disk reads on the Droplet; the compose health check allows 120 seconds.
 
+**Corpus on the Droplet.** The numbers in this section (2,106 chunks, 13,484 passages, 3,790 in-scope observations) are corpus v1. The live Droplet serves corpus v1 data and pre-fix code until the v3 upload and redeploy (pending); the parent will update this line after the upload. The committed manifest and the local store are corpus v3 (16,419 passages, 4,300 in-scope observations); see the corpus-versions statement in the [README](../README.md#corpus-versions).
+
 Upload from your machine (dry run first, then transfer):
 
 ```sh
@@ -202,7 +204,32 @@ On the Droplet and from your machine:
 - **Authentication is shared access codes**, not accounts. There is no OAuth and no per-user authorisation.
 - **Report rights are still restrictive.** The web projection replaces free-text fields containing more than 12 consecutive evidence words, allows at most 12 claims and 3 citations per claim, caps each quotation at 40 words and total quotations at 120 words per answer, and deduplicates evidence-card quotes (also capped at 120 words per card). These controls reduce verbatim disclosure, not confer a reproduction licence. Paraphrase and accumulation across repeated questions remain residual rights risks; do not publicly package full reports or extensive extracts.
 - **Dependency review is informational.** `uv.lock` and `uv sync --frozen` preserve the reviewed resolution. No advisory scan was run as part of this security documentation update; no CVE or vulnerability-free claim is made. See the full AI review and all ten finding statuses in `docs/security-review-web.md`.
-- **Not verified on a real Droplet:** the bootstrap script, the GitHub Actions run, GHCR pull from the Droplet, certificate issuance, the real client address, memory under load, and the snapshot cost.
+- **Not verified on the Droplet:** a provider-side OpenAI spend cap, restart rollback, the backup procedure, the real client address behind Docker's published ports, memory under load, and the snapshot cost. Bootstrap, the Actions run, the GHCR pull and certificate issuance did succeed on 31 Oct 2026 (`docs/progress.md`).
+
+## 11a. Operations added after the end-to-end review (D-043)
+
+**Corpus identity.** `GET /healthz` returns `{"status","version","corpus"}`. `corpus.passage_set_sha256` is a hash of the sorted
+passage ids (each id embeds a content hash), with `passages` and `chunks` counts. After an upload, compare it with the local value
+(on the machine that built the corpus: `uv run python -c 'from labourlens.retrieval import chunk as c, runtime as r; p=c.load_passages(); k=c.build_chunks(c.CONFIGS[r.CHUNK_CONFIG], p); print(r.corpus_fingerprint({x["passage_id"]:x for x in p}, {y.chunk_id:y for y in k}))'`; it printed `d402120f6f8f`, 16,419 passages, 1,847 chunks on 31 Oct 2026) before
+assuming v1 or v2 is served. Audit records carry the same value under `version.corpus`.
+
+**No embedding at startup.** The container sets `LABOURLENS_ALLOW_EMBED=0`. If `cache.npz` lacks a vector for any chunk the app
+exits at start with "embedding cache incomplete", the health check fails and `deploy.sh` rolls back; it never calls the paid API.
+`deploy/runtime-data.txt` lists exactly what must be uploaded (`scripts/upload-corpus.sh`), including `cache.npz`.
+
+**Retention.** Run once a day (cron or a systemd timer) from `/srv/labourlens/deploy` as the deploy user:
+
+```
+IMAGE_TAG="$(cat /srv/labourlens/state/current_tag)" docker compose --env-file /srv/labourlens/.env \
+  run --rm --no-deps --entrypoint labourlens app audit-prune --days 30
+```
+
+It deletes audit run logs, daily event files and saved traces older than 30 days and drops feedback records older than 30 days.
+It does not touch `budget.json`. No timer is installed by this change.
+
+**Login lock.** The lock is per client address: 10 failed logins in 10 minutes lock that address. A global threshold (200 failures) still refuses invalid codes, but a valid code is never refused by either lock, so one address cannot lock everyone out. The per-address request limit (5 a minute) is unchanged.
+
+**Feedback.** Feedback is accepted only for run ids that the same session started, and `feedback.jsonl` is capped at 2 MiB.
 
 ## 12. What was verified locally (30 Oct 2026)
 

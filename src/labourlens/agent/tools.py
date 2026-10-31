@@ -113,6 +113,9 @@ class Shared:
 
         self.retrieval = retrieval
         self.retriever, self.chunks_by_id, self.passages_by_id = world or load_world()
+        from labourlens.retrieval.runtime import corpus_fingerprint
+
+        self.corpus = corpus_fingerprint(self.passages_by_id, self.chunks_by_id)
         self.stats = stats or StatsData(observations)
         self.obs, self.titles = self.stats.obs, self.stats.titles
         # Optional replacement for the direct statistics lookup, e.g. an MCP client. Same contract as StatsData.query.
@@ -202,7 +205,7 @@ class Tools:
                 self._note(f"Evidence contains both the advance and the final MOM release for {year}-Q{q}. Figures may differ; the final release supersedes the advance one. State which release each figure comes from and report any difference.")
                 return
 
-    def _coverage_notes(self, rows: list[dict], period_from: str, period_to: str) -> None:
+    def _coverage_notes(self, rows: list[dict], period_from: str, period_to: str, quarantined: int = 0) -> None:
         expected = [f"{y}-Q{q}" for y in range(_q(period_from)[0], _q(period_to)[0] + 1) for q in range(1, 5) if _q(period_from) <= (y, q) <= _q(period_to)]
         series: dict[tuple, dict[str, dict]] = {}
         for r in rows:
@@ -213,7 +216,10 @@ class Tools:
             absent = [p for p in expected if p not in by_period]
             if nulls:
                 self._note(f"{label}: no published number for {', '.join(nulls)} (the source marks it unavailable). Do not estimate it.")
-            if absent:
+            if absent and quarantined:
+                self._note(f"{label}: no usable row for {', '.join(absent)}. {quarantined} row(s) of this reply were withheld by the MCP client "
+                           "as unsafe, so the figure is unavailable because of a service/security event, not because the dataset lacks it. Do not estimate it.")
+            elif absent:
                 self._note(f"{label}: the dataset has no row for {', '.join(absent)}. Do not estimate it.")
         if len({(r["indicator_id"], r["population"], r["adjustment"]) for r in rows}) > 1:
             self._note("The statistics returned for one request contain more than one series (different indicator, population or adjustment). Never mix them; say which series each figure belongs to.")
@@ -328,8 +334,13 @@ class Tools:
                                        "population": r["population"], "adjustment": r["adjustment"], "dimension": r["dimension"], "unit": r["unit"],
                                        "period": r["period"], "value": r["value"]}
                 new.append(it)
-        self._coverage_notes(rows, period_from, period_to)
-        return ToolResult(True, new, f"{len(new)} new observations: " + ", ".join(f"{i.label}={self._obs[i.label]['period']}" for i in new[:20]))
+        quarantined = getattr(rows, "quarantined", 0)
+        if quarantined and not rows:
+            self._note(f"{quarantined} row(s) of this statistics reply were withheld by the MCP client as unsafe; none remain. "
+                       "The figures are unavailable because of a service/security event, not because the dataset lacks them. Do not estimate them.")
+        self._coverage_notes(rows, period_from, period_to, quarantined)
+        shown = f"{len(new)} new observations: " + ", ".join(f"{i.label}={self._obs[i.label]['period']}" for i in new[:20])
+        return ToolResult(True, new, shown + (f" ({quarantined} quarantined by the MCP client)" if quarantined else ""))
 
     # ---- calculate_change -----------------------------------------------------------------------------------------
     def calculate_change(self, obs_a: str, obs_b: str, kind: str = "difference") -> ToolResult:

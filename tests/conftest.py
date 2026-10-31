@@ -1,5 +1,15 @@
-"""Keep local-corpus integration tests selectable without loading data at collection."""
+"""Keep local-corpus integration tests selectable without loading data at collection.
+
+Corpus-marked tests also skip cleanly when the local corpus is absent (a fresh clone has the committed manifest, snapshots and
+processed tables, but not the gitignored passages, raw PDFs, indexes or run logs).
+"""
 import pytest
+
+from labourlens import paths
+
+
+def _corpus_present() -> bool:
+    return paths.PASSAGES.is_dir() and any(paths.PASSAGES.glob("*.jsonl"))
 
 
 # These modules mix protocol integration and corpus-free boundary tests.
@@ -23,9 +33,18 @@ INDEPENDENT_MCP = {
 }
 
 
+# Tests that build the real retrieval world (BM25 over data/passages) before reaching the code under test.
+CORPUS_TESTS = {"test_agent_exp_refuses_existing_run_without_force"}
+
+
 def pytest_collection_modifyitems(items):
     for item in items:
         path = item.path.as_posix()
         if (path.endswith(("mcp/test_mcp.py", "mcp/test_tools.py", "mcp/test_http.py"))
-                and item.originalname not in INDEPENDENT_MCP) or "rec" in item.fixturenames:
+                and item.originalname not in INDEPENDENT_MCP) or "rec" in item.fixturenames or item.originalname in CORPUS_TESTS:
             item.add_marker(pytest.mark.corpus)
+    if not _corpus_present():
+        skip = pytest.mark.skip(reason="local corpus not present (data/passages is empty); run `labourlens fetch` and `build`")
+        for item in items:
+            if item.get_closest_marker("corpus"):
+                item.add_marker(skip)

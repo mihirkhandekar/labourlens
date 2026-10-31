@@ -40,7 +40,7 @@ Every row below: raw block/bbox/text match = **yes**. `table_unreliable` correct
 | `mom-lf2024-survey-highlights:p001:b002:d587550c` | 1 / null | ok | HIGHLIGHTS | Raw fidelity confirmed. |
 | `mom-lf2025-copyright:p001:b008:b07f9297` | 1 / null | ok | COPYRIGHT NOTICE | Raw fidelity confirmed. |
 | `mom-lf2025-coverage-methodology:p008:b004:109e394b` | 8 / null | ok | Sampling Design | Raw fidelity confirmed. |
-| `mom-lf2025-survey-findings:p043:b004:85cd29f8` | 43 / null | ok | Chart 41 Full-time resident employees aged | Raw fidelity confirmed. |
+| `mom-lf2025-survey-findings:p043:b004:85cd29f8` | 43 / null | ok | Chart 41 Full-time resident employees [...] | Raw fidelity confirmed. |
 | `mom-lf2025-survey-highlights:p001:b001:8d6ff0f3` | 1 / null | ok | HIGHLIGHTS | Raw fidelity confirmed. |
 | `mom-2024-q2-final:p042:b042:49f8225b` | 42 / null | table_unreliable | 7.2 LABOUR TURNOVER | Raw fidelity confirmed; semantic table context not reconstructed. |
 | `mom-2024-q1-final:p040:b052:defad3ba` | 40 / null | ok | OCCUPATIONAL GROUP | Appendix notes survive; printed A16 not retained in metadata. |

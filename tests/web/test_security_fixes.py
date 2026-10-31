@@ -129,9 +129,12 @@ def test_quote_reconstruction_limits_apply_to_answer_and_cards():
     citations = [c for claim in claims for c in claim["citations"]]
     assert len(claims) == 12
     assert all(len(claim["citations"]) <= 3 for claim in claims)
-    assert sum(len(c["quote"].split()) for c in citations) <= 120
-    assert len({c["quote"] for c in citations}) == len(citations)
+    # A quote repeated inside one claim is listed once; reuse across claims costs no extra quote budget.
+    assert all(len({c["quote"] for c in claim["citations"]}) == len(claim["citations"]) for claim in claims)
+    unique = {c["quote"] for c in citations}
+    assert sum(len(q.split()) for q in unique) <= 120
     assert sum(len(q.split()) for q in result["evidence"][0]["quotes"]) <= 120
+    assert len(result["evidence"][0]["quotes"]) == len(set(result["evidence"][0]["quotes"]))
 
 
 def test_response_redaction_preserves_json_and_short_codes_not_global_substrings(settings):
@@ -149,15 +152,35 @@ def test_response_redaction_preserves_json_and_short_codes_not_global_substrings
     asyncio.run(scenario())
 
 
-def test_global_login_lock_cannot_be_evaded_by_address_rotation(settings):
+def test_login_lock_is_per_address_and_a_valid_code_passes_while_locked(settings):
+    settings.login_limit = 1000
+    settings.login_lock_per_address = 3
     async def scenario():
         app = create_app(settings, runner=lambda *args: agent_result(), shared_factory=lambda: None)
         async with app.router.lifespan_context(app):
-            for i in range(51):
+            def client(address):
+                return httpx.AsyncClient(transport=httpx.ASGITransport(app=app, client=(address, 1234)), base_url="https://testserver")
+            async with client("198.51.100.1") as attacker, client("198.51.100.2") as other:
+                assert [(await attacker.post("/api/login", json={"code": "wrong"})).status_code for _ in range(5)] == [401, 401, 401, 429, 429]
+                # The locked address can still sign in with a valid code, and other addresses were never affected.
+                assert (await attacker.post("/api/login", json={"code": ACCESS_CODE})).status_code == 200
+                assert (await other.post("/api/login", json={"code": ACCESS_CODE})).status_code == 200
+                assert (await other.post("/api/login", json={"code": "wrong"})).status_code == 401
+    asyncio.run(scenario())
+
+
+def test_global_failure_threshold_refuses_invalid_codes_from_any_address_but_not_valid_ones(settings):
+    settings.login_lock_global = 5
+    async def scenario():
+        app = create_app(settings, runner=lambda *args: agent_result(), shared_factory=lambda: None)
+        async with app.router.lifespan_context(app):
+            for i in range(7):
                 transport = httpx.ASGITransport(app=app, client=(f"198.51.100.{i}", 1234))
                 async with httpx.AsyncClient(transport=transport, base_url="https://testserver") as client:
-                    response = await client.post("/api/login", json={"code": "wrong" if i < 50 else ACCESS_CODE})
-                    assert response.status_code == (401 if i < 50 else 429)
+                    assert (await client.post("/api/login", json={"code": "wrong"})).status_code == (401 if i < 5 else 429)
+            transport = httpx.ASGITransport(app=app, client=("198.51.100.99", 1234))
+            async with httpx.AsyncClient(transport=transport, base_url="https://testserver") as client:
+                assert (await client.post("/api/login", json={"code": ACCESS_CODE})).status_code == 200
     asyncio.run(scenario())
 
 

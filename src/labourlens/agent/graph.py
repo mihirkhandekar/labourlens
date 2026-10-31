@@ -42,6 +42,9 @@ class AgentConfig:
     answer_prompt: str = "answer_v3"
     tool_timeout_s: float = TOOL_TIMEOUT_S
     retrieval: str = "r3"  # D-030: period/release filter then rerank; "hybrid" is the earlier default, kept for comparison
+    # Total wall-clock budget for the planner and answer LLM calls of one run (None = unbounded, as in the evaluated runs).
+    # The web app sets it so an abandoned run releases its slot; it is not part of key() and changes no model setting.
+    run_deadline_s: float | None = None
 
     def __post_init__(self) -> None:
         if self.retrieval not in ("hybrid", "r3", "r3w"):
@@ -123,6 +126,20 @@ def build_graph(shared: Shared, tools: Tools, cfg: AgentConfig):
     answer_sys, answer_user, _ = load_prompt(cfg.answer_prompt)
     pool = ThreadPoolExecutor(max_workers=2)
     schema = plan_schema(shared)
+    clock = {"start": None}
+
+    def llm_budget() -> float | None:
+        """Seconds left for the next LLM call under cfg.run_deadline_s (never negative), or None when unbounded."""
+        if cfg.run_deadline_s is None:
+            return None
+        if clock["start"] is None:
+            clock["start"] = time.perf_counter()
+        return max(0.0, cfg.run_deadline_s - (time.perf_counter() - clock["start"]))
+
+    def deadline() -> dict:
+        """chat() keyword for the remaining budget; empty when unbounded, so unbounded runs call chat exactly as the evaluated runs did."""
+        left = llm_budget()
+        return {} if left is None else {"timeout_s": left}
 
     def validate_question(s: State):
         q = (s.get("question") or "").strip()
@@ -130,6 +147,7 @@ def build_graph(shared: Shared, tools: Tools, cfg: AgentConfig):
             return {"outcome": "rejected_input", "errors": [f"question must be 1 to {MAX_QUESTION_CHARS} characters"],
                     "trace": _ev("validate_question", "rejected", length=len(q))}
         tools.question = q
+        clock["start"] = time.perf_counter()
         return {"question": q, "trace": _ev("validate_question", "accepted", length=len(q), input_flags=injection_flags(q))}
 
     def after_validate(s: State):
@@ -154,12 +172,14 @@ def build_graph(shared: Shared, tools: Tools, cfg: AgentConfig):
         for attempt in range(2):  # one retry for malformed planner output (ADR-002 item 6)
             try:
                 r = llm.chat(cfg.planner_model, [{"role": "system", "content": planner_sys}, {"role": "user", "content": user}],
-                             max_completion_tokens=1500, schema=schema, schema_name="plan")
+                             max_completion_tokens=1500, schema=schema, schema_name="plan", **deadline())
                 plan = json.loads(r.content)
+                if not isinstance(plan, dict) or not {"decision", "calls", "note"} <= plan.keys():
+                    plan, last = None, "MalformedPlan"
                 break
             except json.JSONDecodeError:
                 last = "JSONDecodeError"
-            except llm.LLMError as e:
+            except Exception as e:  # LLMError, or a provider/shape failure: operational, never an escaped exception
                 last = type(e).__name__
                 break
         if plan is None:
@@ -253,9 +273,9 @@ def build_graph(shared: Shared, tools: Tools, cfg: AgentConfig):
             msgs = [{"role": "system", "content": answer_sys},
                     {"role": "user", "content": answer_user.format(context=cx.render(tools.items, tools.notes) if tools.items else "(no evidence items were collected)", question=s["question"])}]
         try:
-            r = llm.chat(cfg.answer_model, msgs, 6000)
-        except llm.LLMError as e:
-            return {"outcome": "operational_failure", "errors": [f"operational failure: {e}"], "trace": _ev("generate_answer", "operational_failure")}
+            r = llm.chat(cfg.answer_model, msgs, 6000, **deadline())
+        except Exception as e:  # LLMError, or a provider/shape failure: operational, never an escaped exception
+            return {"outcome": "operational_failure", "errors": [f"operational failure: {type(e).__name__}: {e}"], "trace": _ev("generate_answer", "operational_failure")}
         ans, perr = _parse(r.content)
         return {"messages": msgs + [{"role": "assistant", "content": r.content or "{}"}], "attempts": s.get("attempts", 0) + 1,
                 "answer": ans.model_dump() if ans else None, "errors": [r.refusal or perr or "empty output"] if ans is None else [],
@@ -338,7 +358,8 @@ def run_agent(question: str, shared: Shared, cfg: AgentConfig = AgentConfig(), s
            "crosscheck_enabled": os.environ.get("LABOURLENS_GUARDS") != "off" and os.environ.get("LABOURLENS_CROSSCHECK") != "off",
            "evidence": [{"label": i.label, "id": i.passage_id, "source_id": i.source_id} for i in tools.items],
            "evidence_text": {i.label: i.text for i in tools.items}, "cited_ids": cited, "usage": u,
-           "seconds": round(time.perf_counter() - t0, 2), "trace": final["trace"]}
+           "seconds": round(time.perf_counter() - t0, 2), "trace": final["trace"],
+           "corpus": shared.corpus if isinstance(getattr(shared, "corpus", None), dict) else None}
     if save_trace:
         d = paths.DATA / "runs" / "agent"
         d.mkdir(parents=True, exist_ok=True)

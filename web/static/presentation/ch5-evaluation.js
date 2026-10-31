@@ -231,7 +231,7 @@ function errorFigure(m) {
     id: 'fig-errors', title: `Behaviour mismatches are ${fmt.int(counts.behavior_mismatch)} of ${fmt.int(total)} case records pooled over all runs; operational failures are ${fmt.int(counts.operational_failure ?? 0)}`,
     takeaway: 'A mismatch means the status differed from the label, not that the answer was wrong.',
     summary: rows.map(r => `${r.label}: ${r.value}`).join('. '),
-    source: {data: 'report.json › evaluation.errors.counts', files: ['experiments/runs/agent-dev-A1..A5/*.scores.jsonl']},
+    source: {data: 'report.json › evaluation.errors.counts', files: ['experiments/eval/agent-dev-A1..A5/*.cases.jsonl']},
     note: 'Counts pool all eleven runs, including the early ones, so they overstate the current agent. Warnings can repeat inside one case.',
     table: () => ({caption: 'Pooled score-record counts', columns: ['Category', 'Count'], rows: rows.map(r => [r.label, r.value])}),
     draw: (host, c) => dotPlot(host, c, {rows, mode: 'bar', domain: [0, 500], ticks: [0, 100, 200, 300, 400, 500], format: v => fmt.int(v), valueText: r => fmt.int(r.value), axisTitle: 'Case records', label: 'Pooled error counts'})

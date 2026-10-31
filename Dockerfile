@@ -19,7 +19,8 @@ ENV PATH="/app/.venv/bin:${PATH}" \
     PYTHONDONTWRITEBYTECODE=1 \
     HOME=/tmp \
     MPLCONFIGDIR=/tmp/mpl \
-    LABOURLENS_BUILD=${LABOURLENS_BUILD}
+    LABOURLENS_BUILD=${LABOURLENS_BUILD} \
+    LABOURLENS_ALLOW_EMBED=0
 RUN groupadd --system --gid 10001 labourlens \
  && useradd --system --uid 10001 --gid 10001 --no-create-home --shell /usr/sbin/nologin labourlens
 WORKDIR /app

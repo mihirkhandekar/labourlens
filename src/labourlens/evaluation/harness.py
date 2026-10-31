@@ -8,8 +8,9 @@ The gold labels and the judge are both AI-produced: results show consistency wit
 
 from __future__ import annotations
 
-import json
 import hashlib
+import json
+import math
 import random
 import statistics
 
@@ -140,6 +141,36 @@ def pooled_ci(rows: list[dict], num, den, n: int = 2000, seed: int = 7) -> dict:
     return {"rate": round(point, 3), "ci95": [round(stats[int(0.025 * n)], 3), round(stats[int(0.975 * n) - 1], 3)], "n": sum(den(r) for r in rows), "n_cases": len(rows)}
 
 
+def nearest_rank(sorted_values: list[float], q: float) -> float:
+    """Nearest-rank percentile: the value at 1-based rank ceil(q * n)."""
+    return sorted_values[max(0, math.ceil(q * len(sorted_values)) - 1)]
+
+
+class GoldMismatch(RuntimeError):
+    pass
+
+
+def recorded_gold_hashes(recs: list[dict], metrics_path) -> set[str]:
+    """Gold hashes a run was previously scored or generated under: its saved metrics first, else its raw generation provenance."""
+    if metrics_path.exists():
+        recorded = json.loads(metrics_path.read_text()).get("provenance", {}).get("gold_sha256")
+        if recorded:
+            return {recorded}
+    return {h for r in recs if (h := (r.get("generation_provenance") or {}).get("gold_sha256"))}
+
+
+def check_gold(label: str, recs: list[dict], metrics_path, current: str | None, allow_mismatch: bool) -> None:
+    """Refuse to rescore a run under a different gold file (which also means a different corpus id scheme) unless explicitly allowed."""
+    recorded = recorded_gold_hashes(recs, metrics_path)
+    if not recorded or current in recorded:
+        return
+    msg = (f"{label}: gold file hash {str(current)[:12]} differs from the recorded {sorted(h[:12] for h in recorded)}. "
+           "Pass --gold with the archived file (experiments/gold/archive/) or --allow-gold-mismatch to rescore deliberately.")
+    if not allow_mismatch:
+        raise GoldMismatch(msg)
+    print(f"WARNING (--allow-gold-mismatch): {msg}", flush=True)
+
+
 def aggregate(rows: list[dict]) -> dict:
     answered = [r for r in rows if "claims_supported" in r]
     tot_claims = sum(r["claims_supported"] + r["claims_partial"] + r["claims_unsupported"] for r in answered)
@@ -162,7 +193,7 @@ def aggregate(rows: list[dict]) -> dict:
         "fact_coverage": pooled_ci(answered, lambda r: r["facts_covered"], lambda r: r["facts_total"]),
         "answers_contradicting_a_reference_fact": rate_ci(answered, "facts_contradicted", where=lambda r: r["facts_total"] > 0),
         "latency_p50_s": round(statistics.median(r["seconds"] for r in rows), 1),
-        "latency_p95_s": round(sorted(r["seconds"] for r in rows)[max(0, int(len(rows) * 0.95) - 1)], 1),
+        "latency_p95_s": round(nearest_rank(sorted(r["seconds"] for r in rows), 0.95), 1),
         "cost_per_case_usd": round(statistics.fmean(r["cost_usd"] for r in rows), 5),
         "judge_cost_total_usd": round(sum(r.get("judge_cost_usd", 0) for r in rows), 4),
     }
@@ -179,20 +210,24 @@ def by_family(rows: list[dict]) -> dict:
 
 
 def run(exp: str = "agent-dev-A1", split: str = "dev", labels: list[str] | None = None, judge: bool = True,
-        rejudge_stale: bool = True, gold_path=None) -> None:
+        rejudge_stale: bool = True, gold_path=None, allow_gold_mismatch: bool = False) -> None:
     cases = {c["case_id"]: c for c in ev.load_cases(split, gold_path)}
     raw_dir = paths.DATA / "runs" / exp
     pub = paths.EXPERIMENTS / "eval" / exp
+    raw_files = [f for f in sorted(raw_dir.glob("*.jsonl")) if not labels or f.stem in labels]
+    if not raw_files:
+        raise FileNotFoundError(f"No raw runs in {raw_dir}" + (f" for labels {labels}" if labels else "") + "; nothing scored and no report written.")
+    gold_hash = file_hash(gold_path or paths.EXPERIMENTS / "gold" / "draft_cases.jsonl")
+    for f in raw_files:  # check every run before anything is written
+        check_gold(f.stem, [json.loads(line) for line in f.read_text().splitlines() if line.strip()], pub / f"{f.stem}.metrics.json", gold_hash, allow_gold_mismatch)
     pub.mkdir(parents=True, exist_ok=True)
     reviewed = sum(c.get("review_status") == "owner_reviewed" for c in cases.values())
     report = [f"# Evaluation of `{exp}` ({split}, n={len(cases)})", "",
               f"Gold was AI-drafted; {reviewed}/{len(cases)} cases record per-card owner review, which may agree with AI suggestions and is not independent inter-rater evidence. "
               "The judge is AI-produced. Judge model: `" + JUDGE_MODEL + "` (different from the generators). "
               "Intervals are bootstrap 95% over cases; with this n, treat differences under about 10 points as noise.", ""]
-    for f in sorted(raw_dir.glob("*.jsonl")):
+    for f in raw_files:
         label = f.stem
-        if labels and label not in labels:
-            continue
         recs = [json.loads(line) for line in f.read_text().splitlines() if line.strip()]
         rows = []
         cache = pub / f"{label}.judgements.json"

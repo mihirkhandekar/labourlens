@@ -42,7 +42,7 @@ def test_runtime_data_list_is_a_precise_data_only_list():
     assert "data/processed/observations.parquet" in entries
     assert "data/manifests/manifest.json" in entries
     assert any(e.startswith("data/passages/") and e.endswith(".jsonl") for e in entries)
-    assert "data/index/embeddings/text-embedding-3-large/vectors.npy" in entries
+    assert "data/index/embeddings/text-embedding-3-large/cache.npz" in entries
 
 
 def test_upload_script_is_dry_run_by_default():

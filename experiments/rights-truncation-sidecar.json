@@ -1,0 +1,122 @@
+{
+ "policy": "D-001/D-004: any run of >=7 consecutive words shared with a local MOM/MTI passage is cut to its first 6 words followed by ' [...]'. Counts only; no text.",
+ "tool": "labourlens rights-scan finds the runs; truncation was applied programmatically per JSON string field.",
+ "truncated_runs_by_file": {
+  "experiments/eval/agent-dev-A1/gpt-5.6-luna.judgements.json": {
+   "note": 1
+  },
+  "experiments/gold/ai-review-2/a.jsonl": {
+   "issues": 1,
+   "proposed_correction": 1,
+   "verified": 1
+  },
+  "experiments/gold/ai-review-2/b.jsonl": {
+   "verified": 1
+  },
+  "experiments/gold/ai-review/a.jsonl": {
+   "dimension": 3
+  },
+  "experiments/gold/ai-review/base.jsonl": {
+   "locator": 3,
+   "reference_facts": 1
+  },
+  "experiments/runs/dev-E1-chunking/blocks.cases.jsonl": {
+   "locator": 12
+  },
+  "experiments/runs/dev-E1-chunking/fixed150.cases.jsonl": {
+   "locator": 40
+  },
+  "experiments/runs/dev-E1-chunking/merge120+tables.cases.jsonl": {
+   "locator": 38
+  },
+  "experiments/runs/dev-E1-chunking/merge120.cases.jsonl": {
+   "locator": 33
+  },
+  "experiments/runs/dev-E1-chunking/merge200.cases.jsonl": {
+   "locator": 27
+  },
+  "experiments/runs/dev-E2-tokenisation/baseline.cases.jsonl": {
+   "locator": 33
+  },
+  "experiments/runs/dev-E2-tokenisation/period_norm_off.cases.jsonl": {
+   "locator": 40
+  },
+  "experiments/runs/dev-E2-tokenisation/stem_on.cases.jsonl": {
+   "locator": 25
+  },
+  "experiments/runs/dev-E2-tokenisation/stopwords_off.cases.jsonl": {
+   "locator": 41
+  },
+  "experiments/runs/dev-E3-bm25-params/b=0.4.cases.jsonl": {
+   "locator": 44
+  },
+  "experiments/runs/dev-E3-bm25-params/b=0.75.cases.jsonl": {
+   "locator": 33
+  },
+  "experiments/runs/dev-E3-bm25-params/b=0.9.cases.jsonl": {
+   "locator": 22
+  },
+  "experiments/runs/dev-E3-bm25-params/k1=0.9.cases.jsonl": {
+   "locator": 37
+  },
+  "experiments/runs/dev-E3-bm25-params/k1=1.2.cases.jsonl": {
+   "locator": 35
+  },
+  "experiments/runs/dev-E3-bm25-params/k1=1.5.cases.jsonl": {
+   "locator": 33
+  },
+  "experiments/runs/dev-E3-bm25-params/k1=2.0.cases.jsonl": {
+   "locator": 29
+  },
+  "experiments/runs/dev-E4-combined/merge200+stopwords_off+b=0.4.cases.jsonl": {
+   "locator": 56
+  },
+  "experiments/runs/dev-E4-combined/merge200+stopwords_off.cases.jsonl": {
+   "locator": 32
+  },
+  "experiments/runs/dev-dense-E5/bm25_baseline.cases.jsonl": {
+   "locator": 33
+  },
+  "experiments/runs/dev-dense-E5/text-embedding-3-large.cases.jsonl": {
+   "locator": 34
+  },
+  "experiments/runs/dev-dense-E5/text-embedding-3-small.cases.jsonl": {
+   "locator": 39
+  },
+  "experiments/runs/dev-dense-E5/text-embedding-ada-002.cases.jsonl": {
+   "locator": 58
+  },
+  "experiments/runs/dev-dense-E6/merge120 bm25.cases.jsonl": {
+   "locator": 33
+  },
+  "experiments/runs/dev-dense-E6/merge120 dense.cases.jsonl": {
+   "locator": 34
+  },
+  "experiments/runs/dev-dense-E6/merge120 hybrid-rrf.cases.jsonl": {
+   "locator": 44
+  },
+  "experiments/runs/dev-dense-E6/merge200 bm25.cases.jsonl": {
+   "locator": 27
+  },
+  "experiments/runs/dev-dense-E6/merge200 dense.cases.jsonl": {
+   "locator": 10
+  },
+  "experiments/runs/dev-dense-E6/merge200 hybrid-rrf.cases.jsonl": {
+   "locator": 31
+  },
+  "experiments/runs/dev-dense-E7/text-embedding-3-large+hdr.cases.jsonl": {
+   "locator": 32
+  },
+  "experiments/runs/dev-dense-E7/text-embedding-3-large.cases.jsonl": {
+   "locator": 34
+  }
+ },
+ "total_runs_truncated": 1031,
+ "files_changed": 35,
+ "not_modified_pinned_or_bibliographic": {
+  "experiments/gold/draft_cases.jsonl": "SHA-256 pinned in tracked eval metrics, corpus snapshots, decisions and CHANGELOG; owner decision needed",
+  "experiments/gold/heldout_v2_draft.jsonl": "SHA-256 pinned in FREEZE.md, authoring-checks.json and decisions; owner decision needed",
+  "experiments/eval/agent-dev-A1/gpt-5.6-luna.cases.jsonl": "SHA-256 referenced by report.json; owner decision needed",
+  "experiments/heldout-v2/evidence-audit-v3.json": "hits are official document titles (bibliographic metadata); allowlisted"
+ }
+}

@@ -28,6 +28,19 @@ def dataset_rights_note(entry: dict) -> str:
     return f"{ODL_NOTE} {extra}" if extra else ODL_NOTE
 
 
+def dataset_rights(entry: dict, previous: SourceManifestEntry | None = None) -> tuple[str, str]:
+    """(rights_status, redistribution_policy) for a dataset, from what was actually checked.
+
+    `fetch` never reads the script-rendered dataset page, so it cannot verify a licence itself. A dataset is
+    `verified_open_licence` only if a human recorded `licence_verified_on` (a date) in its spec, or its existing manifest
+    entry is already verified (carried forward, never silently downgraded or upgraded). Everything else is
+    `assumed_open_unverified` and kept local-only (not committed) until verified.
+    """
+    if entry.get("licence_verified_on") or (previous is not None and previous.rights_status == "verified_open_licence"):
+        return "verified_open_licence", "commit_raw"
+    return "assumed_open_unverified", "local_only"
+
+
 def _log(msg: str) -> None:
     print(msg, file=sys.stderr, flush=True)
 
@@ -40,6 +53,7 @@ def fetch_datasets(fetcher: acquire.Fetcher, only: set[str] | None = None) -> li
         if only and sid not in only:
             continue
         retrieval = acquire.utc_now_iso()
+        rights_status, redistribution = dataset_rights(d, manifest.get(sid))
         base = dict(
             source_id=sid,
             source_type="dataset_csv",
@@ -50,9 +64,9 @@ def fetch_datasets(fetcher: acquire.Fetcher, only: set[str] | None = None) -> li
             release_stage="dataset_snapshot",
             licence_id="Singapore-Open-Data-Licence-1.0",
             licence_url=ODL_URL,
-            rights_status="verified_open_licence",
+            rights_status=rights_status,
             rights_note=dataset_rights_note(d),
-            redistribution_policy="commit_raw",
+            redistribution_policy=redistribution,
             mime_type="text/csv",
         )
         try:
@@ -66,7 +80,7 @@ def fetch_datasets(fetcher: acquire.Fetcher, only: set[str] | None = None) -> li
             if b"\x00" in csv.content[:4096]:
                 raise acquire.AcquisitionError("CSV body looks binary")
             snap, path, new = raw_store.store_snapshot(
-                sid, csv.content, f"{d['dataset_id']}.csv", retrieval, committed=True
+                sid, csv.content, f"{d['dataset_id']}.csv", retrieval, committed=redistribution == "commit_raw"
             )
             meta_bytes = json.dumps(meta_json, indent=2, sort_keys=True, ensure_ascii=False).encode()
             if new:

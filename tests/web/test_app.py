@@ -448,6 +448,9 @@ def test_feedback_length_is_bounded_and_run_id_cannot_be_a_path(settings):
             response = await client.post("/api/feedback", json={"run_id": "../outside", "rating": "up", "comment": "fine"})
             assert response.status_code == 422
             assert not audit_log.read_feedback()
+            assert (await client.post("/api/feedback", json={"run_id": "a1b2c3d4e5f6", "rating": "up", "comment": "fine"})).status_code == 404  # no run yet
+            assert not audit_log.read_feedback()
+            assert (await client.post("/api/ask", json={"question": QUESTION})).status_code == 200
             response = await client.post("/api/feedback", json={"run_id": "a1b2c3d4e5f6", "rating": "up", "comment": "fine"})
             assert response.status_code == 200
             assert audit_log.read_feedback()[0]["run_id"] == "a1b2c3d4e5f6"

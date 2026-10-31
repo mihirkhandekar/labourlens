@@ -56,7 +56,7 @@ function hero(m) {
   root.append(stats);
   root.append(callout({
     tone: 'warn', title: 'Caveats',
-    items: ['Gold v3.5: 45 cases owner-reviewed, 223 AI drafts. Of 125 owner cards, 95 agreed with an AI suggestion. Not independent review.', `Development rows use ${goldOf(a3).label}; held-out rows use ${goldOf(r3).label}${goldOf(r3).version ? '; a v3.5 rescore is pending' : ''}.`, 'Held-out n = 31. The r3 gain is not demonstrated.', 'T-I06: handled once post fix, scorer written after the run (chapter 6). The ingestion scanner missed paraphrased attacks. Extraction has known defects.'],
+    items: ['Gold v3.5: 45 cases owner-reviewed, 223 AI drafts. Of 125 owner cards, 95 agreed with an AI suggestion. Not independent review.', `Development rows use ${goldOf(a3).label}; held-out rows use ${goldOf(r3).label}. Both were rescored from saved outputs after post-run label edits (chapter 8).`, 'Corpus: results ran on v1 (registered) and v2 (X1). The committed corpus is v3 (85 sources). No experiment has run on v3.', 'Held-out n = 31. The r3 gain is not demonstrated.', 'T-I06: handled once post fix, scorer written after the run (chapter 6). The ingestion scanner missed paraphrased attacks. Extraction has known defects.'],
     src: 'README.md · docs/system-card.md · docs/human-review/owner-review-summary.md · chapter 8'
   }));
   return root;

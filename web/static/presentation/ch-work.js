@@ -131,12 +131,12 @@ function failures(m) {
     c.append(el('span', 'pr-limit-no', status), el('h5', 'pr-limit-title', title), el('p', '', what), el('p', '', fix), evi(src));
     wrap.append(c);
   });
-  const table = [['r3 / gpt-6-luna', '83.9%', '83.9%', '83.9%'], ['r3 / gpt-5.6-luna', '87.1%', '83.9%', '80.6%'], ['hybrid / gpt-6-luna', '67.7%', '67.7%', '67.7%'], ['hybrid / gpt-5.6-luna', '74.2%', '71.0%', '71.0%']];
+  const table = [['r3 / gpt-6-luna', '83.9%', '83.9%', '83.9%', '87.1%'], ['r3 / gpt-5.6-luna', '87.1%', '83.9%', '80.6%', '83.9%'], ['hybrid / gpt-6-luna', '67.7%', '67.7%', '67.7%', '71.0%'], ['hybrid / gpt-5.6-luna', '74.2%', '71.0%', '71.0%', '74.2%']];
   const out = el('div');
-  out.append(wrap, el('h5', 'pr-mini-title', 'Held-out behaviour accuracy by gold version'), dataTable('n=31 cases per row', ['Run', 'v3.2 (as run)', 'v3.3', 'v3.4'], table));
+  out.append(wrap, el('h5', 'pr-mini-title', 'Held-out behaviour accuracy by gold version'), dataTable('n=31 cases per row', ['Run', 'v3.2 (as run)', 'v3.3', 'v3.4', 'v3.5 (current)'], table));
   const pe = m.paired;
   if (pe.length) out.append(dataTable('Paired difference, r3 minus hybrid, by gold version', ['Version', 'gpt-6-luna', 'gpt-5.6-luna'], pe.map(e => [e.gold_version, ...['gpt-6-luna', 'gpt-5.6-luna'].map(n => `${fmt.pts(e.models[n].diff)} [${fmt.pts(e.models[n].ci95[0])}, ${fmt.pts(e.models[n].ci95[1])}]`)])));
-  out.append(el('p', 'pr-small', 'Gold v3.5 applies HO-022 and DEV-018. Development runs A1\u2013A5 were rescored on v3.5 from saved outputs without the judge. Held-out v3.5 results are not in the report yet.'), evi('report.json \u203a evaluation.paired \u00b7 docs/evaluation-report.md \u00b7 README.md'));
+  out.append(el('p', 'pr-small', 'Gold v3.5 applies HO-022 and DEV-018. Development runs A1\u2013A5 and the four registered held-out arms were rescored on v3.5 from saved outputs, with no new answer generation. v3.6 migrates evidence ids for corpus v2 only.'), evi('report.json \u203a evaluation.paired \u00b7 docs/evaluation-report.md \u00b7 README.md'));
   return out;
 }
 
@@ -193,6 +193,7 @@ export function renderWork(m, ctx) {
     stat({value: rows.length, label: 'Experiment groups', note: 'Retrieval, agent, held-out, safety, models', src: 'report.json \u203a evaluation, retrieval, security'}),
     stat({value: notAdopted, label: 'Not adopted', note: 'Retained in the log', src: 'registry in ch-work.js'}),
     stat({value: inconclusive, label: 'Inconclusive', tone: 'warn', src: 'registry in ch-work.js'}));
+  ch.body.append(callout({tone: 'warn', title: 'Corpus versions', items: ['Registered results (A1\u2013A5, held-out, pre-guard threat suites) ran on corpus v1, 13,484 passages.', 'The X1 extraction experiments and the T-I06 post-fix run used corpus v2, 15,915 passages.', 'The committed corpus is v3: 85 sources, 52,020 observations, 16,419 passages. No experiment has run on v3.'], src: 'README.md \u203a Corpus versions \u00b7 docs/evaluation-report.md'}));
   ch.body.append(stats);
   const s1 = section('Milestones recorded in the progress log'); s1.append(timeline(m)); ch.body.append(s1);
   const s2 = section(`${rows.length} experiment groups, one factor changed in each`, ['Sort by any column. Open a row for its configuration.']); s2.append(registryTable(rows, ids)); ch.body.append(s2);

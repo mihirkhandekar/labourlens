@@ -26,6 +26,7 @@ _LABELS = {
     "job_vacancies": "Job vacancies",
     "retrenched_employees": "Retrenched employees",
     "vacancy_ratio": "Vacancies per unemployed person",
+    "reentry_6m": "Re-employment rate, 6 months after retrenchment",
 }
 
 
@@ -376,32 +377,44 @@ def _eda(charts: list) -> dict:
 
 
 def _agent_trace(artifacts: _Artifacts) -> tuple[list, list, dict]:
+    """Tool-use trace rows from generation-time score files, with outcomes taken from the current rescored case files.
+
+    The generation-time scores were computed against the gold of the day. The registered current outcomes are
+    `experiments/eval/<exp>/<model>.cases.jsonl`, the same records behind the headline tables, so behaviour,
+    validity, tool-error and ungrounded-number counts come only from those. A run with no current case file, or a
+    case absent from it (dropped, or its question text changed after the run), is left out.
+    """
     trace, paths, errors = [], [], Counter()
-    fields = ("tool_calls", "rounds", "seconds", "cost_usd", "tool_errors", "attempts", "prompt_tokens", "completion_tokens", "behavior_ok", "valid", "operational_failure")
+    fields = ("tool_calls", "rounds", "seconds", "cost_usd", "attempts", "prompt_tokens", "completion_tokens")
     for path in artifacts.paths:
         if not path.startswith("experiments/runs/agent-") or not path.endswith(".scores.jsonl"):
             continue
         records = artifacts.load(path)
-        if not isinstance(records, list):
+        case_path = path.replace("experiments/runs/", "experiments/eval/", 1).removesuffix(".scores.jsonl") + ".cases.jsonl"
+        current = artifacts.load(case_path) if case_path in artifacts.paths else None
+        if not isinstance(records, list) or not isinstance(current, list):
             continue
-        paths.append(path)
+        rescored = {c["case_id"]: c for c in current if isinstance(c, dict) and isinstance(c.get("case_id"), str)}
+        paths += [path, case_path]
         for record in records:
-            if not isinstance(record, dict):
+            if not isinstance(record, dict) or record.get("case_id") not in rescored:
                 continue
-            row = {"run_id": path.removesuffix(".scores.jsonl"), **_selected(record, fields)}
+            now = rescored[record["case_id"]]
+            row = {"run_id": path.removesuffix(".scores.jsonl"), **_selected(record, fields),
+                   **_selected(now, ("tool_errors", "behavior_ok", "valid", "operational_failure"))}
             for key in ("case_id", "family"):
                 if _label(record.get(key)):
                     row[key] = record[key]
             # Counts and tool names only: never call arguments or results.
             row["tools_used"] = [tool for tool in record.get("tools_used", []) if tool in {"get_series", "get_statistic", "search_reports", "calculate", "calculate_change", "get_source", "compare_periods"}]
             trace.append(row)
-            for key in ("tool_errors", "operational_failure", "n_ungrounded_numbers"):
-                value = record.get(key)
+            for key, source in (("tool_errors", "tool_errors"), ("operational_failure", "operational_failure"), ("n_ungrounded_numbers", "ungrounded_numbers")):
+                value = now.get(source)
                 if _number(value) or isinstance(value, bool):
                     errors[key] += value
-            if record.get("behavior_ok") is False:
+            if now.get("behavior_ok") is False:
                 errors["behavior_mismatch"] += 1
-            if record.get("valid") is False:
+            if now.get("valid") is False:
                 errors["invalid_output"] += 1
     return trace, paths, dict(errors)
 
@@ -590,7 +603,7 @@ def build_report(root: Path) -> dict:
         "reconciliation": reconciliation,
         "security": _section("Threat-suite measurements. They do not guarantee security.", security_rows, security_paths + postfix_paths, postfix=postfix_rows),
         "evaluation": _section("Development A1–A5 and registered held-out H-r3/H-hybrid luna runs. Measurements retain their recorded gold versions. Owner review complete 31 Oct 2026: 125 cards decided by the owner (30 own verdicts, 95 by agreeing per card with AI suggestions or the three-pass AI tie-break), not independent inter-rater evidence. Gold v3.5 development and all four registered held-out rescoring runs are complete on existing generated outputs; held-out stale judge entries were rejudged. `paired` holds the registered corpus-v1 comparison, current first, with v3.2–v3.4 history; `corpus_v2_diagnostic` is a separate extraction-only diagnostic.", eval_rows, eval_paths + [path for entry in paired + ([paired_v2] if paired_v2 else []) for path in entry["provenance"]],
-                               errors={"scope": "agent score records", "counts": errors, "provenance": trace_paths}, paired=paired, corpus_v2_diagnostic=paired_v2,
+                               errors={"scope": "rescored case records (experiments/eval, gold as recorded in each metrics file)", "counts": errors, "provenance": trace_paths}, paired=paired, corpus_v2_diagnostic=paired_v2,
                                limitations=["Generation used AI-drafted gold before owner review; post-run owner review covers selected cards, not the entire gold set.", "Forty-five gold cards are owner reviewed; the remaining 223 remain draft.", "Current v3.5 and historical paired intervals include zero; the comparison is inconclusive under the registered rule.", "Gold v3.5 changes HO-022 after held-out execution; rescoring is post-run adjudication, not a fresh frozen-gold experiment.", "AI-assisted per-card owner decisions are not blinded independent annotation or inter-rater evidence.", "Metric definitions differ between evaluation stages."]),
         "quality": _section("Validation outcomes, including warnings.", quality_rows, [quality_path], metrics=_numeric(quality_data.get("summary", {}))),
         "work": _work(artifacts),

@@ -11,7 +11,12 @@ from decimal import Decimal
 
 from labourlens.answer.schema import Answer, Citation, Claim
 from labourlens.data.reconcile import QUARTERS
+from labourlens.retrieval import period as _period
 from labourlens.retrieval.period import parse
+
+# The quarterly datasets cannot confirm a figure for a single month. parse() maps "December 2025" to 2025-Q4, so a sentence
+# that names a month is not a quarterly statement and must not be compared (the monthly value would be mistaken for the quarter's).
+_MONTH_MENTION = next(pattern for pattern, kind in _period._PATTERNS if kind == "month")
 
 _NUMBER = r"(?P<value>\d{1,3}(?:,\d{3})+(?:\.\d+)?|\d+(?:\.\d+)?)"
 # Explicit level statements only: do not turn percentage-point changes into rates.
@@ -45,7 +50,7 @@ def figures(text: str) -> list[Figure]:
     # A sentence must name exactly one quarter. Decimal points are not boundaries.
     for sentence in re.split(r"(?<=[.!?])\s+(?=[A-Z])|[;\n]", text):
         hints = parse(sentence)
-        if len(hints.quarters) != 1:
+        if len(hints.quarters) != 1 or _MONTH_MENTION.search(sentence):
             continue
         low = sentence.casefold()
         if re.search(r"percentage\s*points?|\bp\.?p\.?\b|\b(?:rose|fell|change|increase|decrease)\b", low):

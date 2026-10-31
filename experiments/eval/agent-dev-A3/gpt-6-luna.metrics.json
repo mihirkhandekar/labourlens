@@ -133,7 +133,7 @@
    "n": 175
   },
   "latency_p50_s": 15.4,
-  "latency_p95_s": 35.6,
+  "latency_p95_s": 37.0,
   "cost_per_case_usd": 0.00212,
   "judge_cost_total_usd": 0.2442
  },

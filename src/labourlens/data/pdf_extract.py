@@ -56,12 +56,34 @@ class _Block:
     bold: bool
 
 
+_PROSE_PUNCT = ".,;:%()'\"/&-+$–—’‘“”•·°@?!"
+_STAT_ASCII = set("*<>=^_[]{}|~")
+
+
+def _is_statistical_symbol(c: str) -> bool:
+    """Characters that legitimately dominate significance legends and estimating equations.
+
+    ASCII relation/footnote marks, Greek letters, mathematical operators (U+2200-22FF, includes the minus sign and summation)
+    and mathematical alphanumerics (U+1D400-1D7FF, the italic letters of typeset equations).
+    """
+    o = ord(c)
+    return c in _STAT_ASCII or c in "×±÷∼≈≠≤≥" or 0x0370 <= o <= 0x03FF or 0x2200 <= o <= 0x22FF or 0x1D400 <= o <= 0x1D7FF
+
+
+def _symbol_counts(t: str) -> tuple[int, int]:
+    """(all characters outside prose punctuation, the subset that is not a statistical symbol)."""
+    weird = [c for c in t if not (c.isalnum() or c.isspace() or c in _PROSE_PUNCT)]
+    return len(weird), sum(1 for c in weird if not _is_statistical_symbol(c))
+
+
 def looks_garbled(text: str) -> tuple[bool, str]:
     """Heuristic for font-encoding garbage such as '+RZZRXOG\\RXUDWH' (seen on report pages that use
     an unmapped font, for example the reader-feedback form on the last page of the 2Q 2026 report).
 
     Three independent signals; any one flags the block:
-      1. high share of characters outside normal prose punctuation
+      1. high share of characters outside normal prose punctuation, NOT counting statistical symbols
+         (`*`, `<`, `=`, Greek letters, math operators and italics); a legend such as 'p<0.01' or an estimating
+         equation is legible text, see `symbolic_note`
       2. many very long letter-only tokens (words run together by a broken font map)
       3. many tokens that mix lower->upper case inside a word
     A low rate of English function words is deliberately NOT used: legitimate abbreviation lists and
@@ -72,9 +94,9 @@ def looks_garbled(text: str) -> tuple[bool, str]:
         return True, "C0/C1 control characters; wording not decoded"
     if len(t) < 60:
         return False, ""
-    weird = sum(1 for c in t if not (c.isalnum() or c.isspace() or c in ".,;:%()'\"/&-+$–—’‘“”•·°@?!"))
-    if weird / len(t) > 0.04:
-        return True, f"symbol_ratio={weird / len(t):.3f}"
+    _, unexplained = _symbol_counts(t)
+    if unexplained / len(t) > 0.04:
+        return True, f"symbol_ratio={unexplained / len(t):.3f}"
     tokens = re.findall(r"[A-Za-z][A-Za-z'\-]*", t)
     if len(tokens) >= 8:
         long_rate = sum(1 for w in tokens if len(w) > 16 and w.isalpha()) / len(tokens)
@@ -84,11 +106,22 @@ def looks_garbled(text: str) -> tuple[bool, str]:
     return False, ""
 
 
+def symbolic_note(text: str) -> str:
+    """Non-empty when the block is legible but symbol-dense only because of statistical symbols (legend or equation)."""
+    t = text.strip()
+    if len(t) < 60 or has_controls(text):
+        return ""
+    weird, unexplained = _symbol_counts(t)
+    if weird / len(t) > 0.04 and unexplained / len(t) <= 0.04:
+        return f"symbolic text (statistical legend or equation); symbol_ratio={weird / len(t):.3f}"
+    return ""
+
+
 def looks_tabular(text: str) -> bool:
     toks = text.split()
     if len(toks) < 6:
         return False
-    num = sum(1 for w in toks if re.fullmatch(r"[+\-–]?[\d,]+(\.\d+)?%?", w))
+    num = sum(1 for w in toks if re.fullmatch(r"[+\-–]?[\d,]+(\.\d+)?%?\**", w))  # trailing * = significance stars
     return num / len(toks) > 0.45
 
 
@@ -202,6 +235,8 @@ def extract_pdf(path: Path, *, source_id: str, snapshot_id: str, original_url: s
             flag, note = "garbled", why
         elif looks_tabular(text):
             flag, note = "table_unreliable", "numeric-dense block; do not use for numerical answers"
+        else:
+            note = symbolic_note(text)
         # Adjacent small-font note blocks can start/end inside a numbered note. Preserve
         # the original target and geometry, explicitly require its linked neighbours.
         neighbours = [x.index for x in page_blocks if x.index != b.index

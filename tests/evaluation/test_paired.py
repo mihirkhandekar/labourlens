@@ -1,3 +1,4 @@
+import hashlib
 import json
 
 import pytest
@@ -53,7 +54,7 @@ def test_clear_gain_is_demonstrated():
     assert r["case_bootstrap_interval"][0] > 0 and r["component_bootstrap_interval"][0] > 0
     assert r["n_evidence_components"] == 60
     assert r["demonstrated_gain"] is True
-    assert p.decide({"m1": r, "m2": r})["demonstrated_gain_all_models"] is True
+    assert p.decide({"gpt-6-luna": r, "m2": r})["demonstrated_gain_primary"] is True
 
 
 def test_no_difference_is_not_a_gain():
@@ -96,16 +97,27 @@ def test_too_few_components_blocks_gain():
     assert r["demonstrated_gain"] is False
 
 
-@pytest.mark.parametrize("field", ["false", "contradicted"])
-def test_guardrails_block_gain(field):
+def test_added_false_answer_blocks_gain():
     cases = gold(60)
-    cand = rows(cases, lambda i: True, false_fn=(lambda i: i == 0) if field == "false" else (lambda i: False),
-                contra_fn=(lambda i: i == 0) if field == "contradicted" else (lambda i: False))
+    cand = rows(cases, lambda i: True, false_fn=lambda i: i == 0)
     base = rows(cases, lambda i: i % 2 == 0)
     r = p.compare(cand, base, cases, n_boot=2000)
-    key = "no_added_false_answers" if field == "false" else "no_added_contradicted_answers"
-    assert r["conditions"][key] is False
+    assert r["conditions"]["no_added_false_answers"] is False
     assert r["demonstrated_gain"] is False
+
+
+def test_contradicted_answer_is_reported_but_does_not_veto():
+    cases = gold(60)
+    cand = rows(cases, lambda i: True, contra_fn=lambda i: i == 0)
+    base = rows(cases, lambda i: i % 2 == 0)
+    r = p.compare(cand, base, cases, n_boot=2000)
+    assert "no_added_contradicted_answers" not in r["conditions"]
+    assert r["guardrails"]["answers_with_contradicted_fact"] == {"candidate": 1, "baseline": 0}
+    assert r["demonstrated_gain"] is True
+
+
+def test_one_sided_95_bound_is_the_lower_end_of_the_two_sided_90_interval():
+    assert p.LEVEL == 0.90
 
 
 def test_missing_or_extra_case_is_incomplete():
@@ -130,11 +142,14 @@ def test_bootstrap_is_deterministic_for_fixed_seed():
     assert a["seed"] == 20261031
 
 
-def test_decision_requires_every_model():
+def test_primary_model_decides_and_replication_is_reported_only():
     good = {"demonstrated_gain": True}
     bad = {"demonstrated_gain": False}
-    assert p.decide({"a": good, "b": bad})["demonstrated_gain_all_models"] is False
-    assert p.decide({})["demonstrated_gain_all_models"] is False
+    d = p.decide({"gpt-6-luna": good, "gpt-5.6-luna": bad})
+    assert d["demonstrated_gain_primary"] is True and d["replication_models"] == {"gpt-5.6-luna": False}
+    assert p.decide({"gpt-6-luna": bad, "gpt-5.6-luna": good})["demonstrated_gain_primary"] is False
+    assert p.decide({"gpt-5.6-luna": good})["demonstrated_gain_primary"] is False
+    assert p.decide({})["demonstrated_gain_primary"] is False
 
 
 def test_run_reads_scored_case_files_and_writes_result(tmp_path, monkeypatch):
@@ -146,6 +161,7 @@ def test_run_reads_scored_case_files_and_writes_result(tmp_path, monkeypatch):
         d = tmp_path / "experiments" / "eval" / exp
         d.mkdir(parents=True)
         (d / "m.cases.jsonl").write_text("\n".join(json.dumps(r) for r in rows(cases, ok).values()) + "\n")
+        (d / "m.metrics.json").write_text(json.dumps({"provenance": {"gold_sha256": hashlib.sha256(gold_path.read_bytes()).hexdigest()}}))
     out = tmp_path / "paired.json"
     result = p.run(gold_path, "cand", "base", ["m"], out, n_boot=500, seed=1)
     assert json.loads(out.read_text())["per_model"]["m"]["paired_difference"] == result["per_model"]["m"]["paired_difference"] == 0.5

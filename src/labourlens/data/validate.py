@@ -43,7 +43,7 @@ def check_manifest() -> list[dict]:
     out.append(_check("manifest.all_sources_present", not missing, f"{len(wanted)} catalogued, missing={missing}"))
     bad_status = [s for s in wanted if s in m and m[s].retrieval_status != "ok"]
     out.append(_check("manifest.all_retrievals_ok", not bad_status, f"not ok: {bad_status}"))
-    incomplete, mismatched = [], []
+    incomplete, mismatched, local_only_absent = [], [], []
     for s in wanted:
         e = m.get(s)
         if not e or e.retrieval_status != "ok":
@@ -52,13 +52,17 @@ def check_manifest() -> list[dict]:
             incomplete.append(s)
         p = paths.ROOT / (e.raw_path or "")
         if not p.exists():
-            mismatched.append((s, "file missing"))
+            if e.redistribution_policy != "commit_raw":
+                local_only_absent.append(s)  # not committed by design; absent in a fresh clone
+            else:
+                mismatched.append((s, "file missing"))
         else:
             data = p.read_bytes()
             if sha256_hex(data) != e.sha256 or len(data) != e.byte_count:
                 mismatched.append((s, "hash/size mismatch"))
     out.append(_check("manifest.required_fields_present", not incomplete, f"incomplete: {incomplete}"))
-    out.append(_check("manifest.raw_files_match_sha256", not mismatched, f"mismatches: {mismatched}"))
+    out.append(_check("manifest.raw_files_match_sha256", not mismatched,
+                      f"mismatches: {mismatched}; local-only, not present (not checked): {local_only_absent}"))
     text = (paths.MANIFESTS / "manifest.json").read_text() + (paths.MANIFESTS / "manifest_history.jsonl").read_text()
     leaked = [t for t in ("X-Amz", "Signature=", "Security-Token") if t in text]
     out.append(_check("manifest.no_signed_url_material", not leaked, f"found markers: {leaked}"))

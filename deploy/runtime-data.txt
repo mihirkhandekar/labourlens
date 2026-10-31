@@ -52,8 +52,13 @@ data/passages/mom-lf2025-copyright.jsonl
 data/passages/mom-lf2025-coverage-methodology.jsonl
 data/passages/mom-lf2025-survey-findings.jsonl
 data/passages/mom-lf2025-survey-highlights.jsonl
+data/passages/mom-nwc-lower-wage2025.jsonl
 data/passages/mom-wage-practices2024-release.jsonl
 data/passages/mom-wage-practices2024.jsonl
-# Cached embeddings for the shipped retrieval model (text-embedding-3-large). The app embeds only the user's question at runtime.
-data/index/embeddings/text-embedding-3-large/keys.json
-data/index/embeddings/text-embedding-3-large/vectors.npy
+data/passages/mom-wage-practices2025.jsonl
+data/passages/mti-2026-q2-feature-ai-employment.jsonl
+# Cached embeddings for the shipped retrieval model (text-embedding-3-large): one cache.npz holding a vector for every chunk.
+# VectorCache prefers cache.npz over the legacy keys.json/vectors.npy pair, so the legacy pair is not shipped. The container runs
+# with LABOURLENS_ALLOW_EMBED=0, so a chunk without a cached vector stops startup instead of calling the embeddings API.
+# At runtime the app embeds only the user's question.
+data/index/embeddings/text-embedding-3-large/cache.npz

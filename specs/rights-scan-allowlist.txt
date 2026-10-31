@@ -1,0 +1,11 @@
+# Rights-scan allowlist: '<glob> | <reason>' (fnmatch against repo-relative paths). Every entry needs a reason.
+data/snapshots/* | Open Data Licence statistical CSVs and their metadata (data.gov.sg, attribution licence); table rows and dataset definitions legitimately recur in report tables
+data/manifests/* | Source manifests carry official dataset/document titles and the publisher's legal copyright notice, recorded verbatim for rights provenance
+specs/* | Source and dataset specs carry official dataset titles, definitions and table captions needed to identify sources
+data/export/*.json | Generated exports carry dataset titles, locators and the publisher's legal notices
+artifacts/data-quality/reconciliation.json | Generated reconciliation record carries official document-section locators
+experiments/heldout-v2/evidence-audit-v3.json | Hits are official document titles (bibliographic metadata) in the source audit table
+experiments/gold/draft_cases.jsonl | pinned hash (D-043 option A): hits are section headings and category names in locators, not prose; owner may revisit
+experiments/gold/heldout_v2_draft.jsonl | pinned hash in FREEZE.md: section headings and category names in locators
+experiments/eval/agent-dev-A1/gpt-5.6-luna.cases.jsonl | frozen run output referenced by report.json: one section heading
+docs/human-review/gold-review.md | generated from pinned draft_cases.jsonl: official category names in question text

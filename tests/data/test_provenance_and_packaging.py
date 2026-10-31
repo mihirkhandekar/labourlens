@@ -19,6 +19,8 @@ def test_every_ok_entry_has_matching_file_hash():
             continue
         f = paths.ROOT / e.raw_path
         if not f.exists():
+            if e.redistribution_policy != "commit_raw":
+                continue  # local-only, not present: reported by manifest.raw_files_match_sha256, not a failure
             bad.append((sid, "missing"))
         elif hashlib.sha256(f.read_bytes()).hexdigest() != e.sha256:
             bad.append((sid, "hash"))

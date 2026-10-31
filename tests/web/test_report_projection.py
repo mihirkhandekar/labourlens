@@ -5,7 +5,7 @@ from pathlib import Path
 
 import pytest
 
-from labourlens.report.build import _Artifacts, _experiments, _paired, _paired_corpus_v2
+from labourlens.report.build import _Artifacts, _agent_trace, _experiments, _paired, _paired_corpus_v2
 
 
 class SyntheticArtifacts:
@@ -81,6 +81,23 @@ def test_legacy_aggregate_without_case_file_remains_available():
     assert "denominators" not in rows[0]
     assert "judge" not in rows[0]
     assert paths == [path]
+
+
+def test_error_panel_counts_only_rescored_case_files():
+    stale = [{"case_id": "A", "behavior_ok": False, "valid": False, "tool_errors": 2, "tool_calls": 1, "rounds": 1, "tools_used": ["get_series"]},
+             {"case_id": "B", "behavior_ok": False, "valid": True, "tool_errors": 0, "tool_calls": 1, "rounds": 1, "tools_used": []},
+             {"case_id": "DROPPED", "behavior_ok": False, "valid": True, "tool_errors": 0}]
+    rescored = [{"case_id": "A", "behavior_ok": True, "valid": True, "tool_errors": 0, "operational_failure": False, "ungrounded_numbers": 1},
+                {"case_id": "B", "behavior_ok": False, "valid": True, "tool_errors": 1, "operational_failure": False, "ungrounded_numbers": 0}]
+    orphan = [{"case_id": "A", "behavior_ok": False, "valid": True, "tool_errors": 9}]
+    trace, paths, errors = _agent_trace(SyntheticArtifacts({
+        "experiments/runs/agent-dev-A1/m.scores.jsonl": stale,
+        "experiments/eval/agent-dev-A1/m.cases.jsonl": rescored,
+        "experiments/runs/agent-dev-A2/m.scores.jsonl": orphan,  # no current case file: excluded entirely
+    }))
+    assert [r["case_id"] for r in trace] == ["A", "B"]
+    assert errors == {"tool_errors": 1, "operational_failure": 0, "n_ungrounded_numbers": 1, "behavior_mismatch": 1}
+    assert paths == ["experiments/runs/agent-dev-A1/m.scores.jsonl", "experiments/eval/agent-dev-A1/m.cases.jsonl"]
 
 
 def test_security_keeps_pass_intervals_and_category_counts():

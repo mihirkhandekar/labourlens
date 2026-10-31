@@ -2,18 +2,18 @@
 
 > **This is the first file any agent reads when resuming.** Update it at the end of every work session, every substep, and before any long-running command. Newest entry on top of the log. Never record a result that has no file or command behind it.
 
-**Last updated:** 2026-10-31 (125 owner cards complete; gold v3.5 development and registered held-out saved outputs rescored; no new answer generation) · **Deadline:** Wed 4 Nov 2026, morning SGT
+**Last updated:** 2026-10-31 (end-to-end review fixes in progress; corpus v3 built offline; T-I06 guard implemented; Droplet live at https://labourlens.navig.me) · **Deadline:** Wed 4 Nov 2026, morning SGT
 
 ## Current state (one screen)
 
 | Item | Value |
 |---|---|
-| Active milestone | **M6 evaluation and M7 deliverables in progress.** Owner's 125-card review complete, not blind/independent inter-rater annotation; v3.5 development and registered held-out rescoring complete; final acceptance pending. |
+| Active milestone | **M7 deliverables and end-to-end review fixes.** Owner's 125-card review complete (not independent annotation). Gold v3.5/v3.6 scoring complete; corpus v2 X1 run (D-037, D-041, no measurable change); T-I06 guard implemented and measured once post hoc (D-038); corpus v3 built offline (D-040) and held-out v2 draft written (D-039), neither yet run. Final acceptance pending. |
 | Gate status | M1–M5 implementation history is recorded below. D-030 records the assistant's current default change; **owner confirmation or rollback is pending**. Historical planning gates below are not current status. |
 | Code written | Ingestion, retrieval, answer, agent, MCP, security, evaluation and report modules exist under `src/labourlens/`. Existing checks are historical artifacts, not a new verification of current code. |
 | Data downloaded | Source inventory and hashes: `data/manifests/manifest.json`; local raw files and passages remain gitignored. |
-| Next decision for owner | Confirm provisional R3 or cheaper hybrid under D-033, and address remaining protocol/rights inspection, including J10. Review cards are decided; not all evidence or remaining draft gold is verified. |
-| Blockers | Remaining rights/protocol acceptance, J10 inspection, configuration confirmation and rehearsal. A1–A5 development rescoring reused caches without model calls; registered held-out stale judgments are refreshed. Current paired gains remain inconclusive. Planted-figure/subtle-instruction threat failures remain; A5 not adopted. |
+| Next decision for owner | Confirm provisional R3 or cheaper hybrid under D-033; decide whether to run the held-out v2 set once on corpus v3; upload corpus v3 to the Droplet; address rights/protocol inspection, including J10. |
+| Blockers | Rights/protocol acceptance, J10 inspection, configuration confirmation, rehearsal, a provider-side spend cap on the live site, and an MCP-backed agent answer for demo scenario 8. Paired gains remain inconclusive. Guard monthly/quarterly false positive fixed with regression tests (D-043) but not re-measured; guard recall on real passages is still low; deferred and owner-decision items are listed in `docs/human-review/e2e-review-summary.md`. Last observed non-corpus test count: 535 passed (end-to-end review, fresh clone); earlier counts in this log are historical. |
 | Evidence to resume from | `experiments/eval/agent-dev-A*-REPORT.md`, `experiments/gold/CHANGELOG.md`, `docs/threat-model.md`, `src/labourlens/report/`, `docs/deploy.md` |
 
 **31 Oct — corpus v3 preparation (D-040), offline only:** six labour-only sources catalogued (`specs/sources.d/heldout-v2-expansion.yaml`, three adapter specs, MTI PDF host allow-listed, three new units), fingerprints `experiments/corpus-snapshots/v2-observations.json` and helper `labourlens.data.fingerprint`, 20 unit tests (`tests/data/test_corpus_v3_additive.py`). No fetch/build/index/embedding was run; `labourlens build` fails the manifest check until the fetch. Ordered commands, expected counts and TBD placeholders: `docs/experiments/m7-corpus-v3-runbook.md`; data-sheet section 8 holds placeholders. Full non-corpus run at the time: 481 passed.
@@ -248,8 +248,8 @@ Entries below are historical session records. Their “next” gates, proposal s
 
 ## Droplet deployed (31 Oct 2026)
 - **VERIFIED FACT:** Droplet `labourlens` (sgp1, `s-1vcpu-2gb`, Ubuntu 24.04, $12/month) created with doctl; bootstrap script run; DigitalOcean cloud firewall `labourlens-fw` (22/80/443); dedicated deploy key; four GitHub Actions secrets set; runtime data uploaded (50 files); server `.env` written (mode 600) with random access codes, session secret and audit salt. Host-key fingerprint of the pinned key matched what the server reported.
-- Workflow run `41158048240` succeeded (test, build-push, deploy). `https://201-79-96-80.sslip.io/healthz` returns ok with the deployed commit; HTTP redirects to HTTPS; HSTS and CSP headers present; the app container reports healthy.
-- **Live mode is OFF** (`LABOURLENS_DEMO_ENABLED=false`; `/api/ask` returns 503). No `OPENAI_API_KEY` is on the server yet; it needs a restricted OpenAI project key from the owner and a provider-side spend limit.
-- Hostname is an sslip.io name derived from the IP (no domain owned). Access codes are in `~/.labourlens-deploy/access-codes.txt` on the owner's machine (not in the repo).
+- Workflow run `41158048240` succeeded (test, build-push, deploy). `/healthz` returned ok with the deployed commit; HTTP redirects to HTTPS; HSTS and CSP headers present; the app container reports healthy.
+- **Update, 31 Oct 2026 (later):** the site is served at `https://labourlens.navig.me`; the sslip.io hostname used in the first deploy is retired. Live mode is **ON**: the end-to-end security review read `/api/status` and it reported `enabled: true`. The older "live mode OFF, no API key" entries above are superseded. A provider-side spend cap has **not** been verified; only the application's own estimated budget applies.
+- Access codes are in `~/.labourlens-deploy/access-codes.txt` on the owner's machine (not in the repo).
 - Fixes found by the first real deploy: `upload-corpus.sh` used an rsync flag macOS lacks; CI ran a corpus-marked test (now `-m 'not corpus'`).
 - Not yet verified: login and a live answer on the server, restart rollback, backup procedure.

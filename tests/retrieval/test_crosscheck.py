@@ -174,3 +174,22 @@ def test_rescore_refuses_frozen_threat_artifacts():
     from labourlens.security import threat_suite
     with pytest.raises(ValueError, match='experiment'):
         threat_suite.rescore()
+
+
+MONTHLY = 'Synthetic: the December 2025 reading of 3.1% sat above the quarterly mean of 3.0%.'
+
+
+def test_monthly_figure_is_not_compared_with_the_quarterly_value():
+    """Regression (T-I06 false positive): a December figure was read as the Q4 figure, so a correct answer was rewritten."""
+    assert not cc.figures('The job vacancy rate was 3.1% in December 2025.')
+    t = registry(MONTHLY, value=3.0, source_id='job_vacancy_rate', indicator_id='job_vacancy_rate', unit='percent', period='2025-Q4')
+    assert cc.annotate(t) == []
+    honest = Answer.model_validate(dict(status='answered', summary='The vacancy rate was 3.1% in December 2025.', caveats=[], clarification_question='', reason='',
+                                        claims=[dict(text='The vacancy rate was 3.1% in December 2025.', citations=[dict(label='P1', quote='3.1% in December 2025')])]))
+    assert cc.enforce(honest, t.items, cc.annotate(t, honest)) == honest
+
+
+def test_quarterly_figure_that_disagrees_is_still_detected():
+    t = registry('The job vacancy rate was 3.1% in Q4 2025.', value=3.0, source_id='job_vacancy_rate', indicator_id='job_vacancy_rate',
+                 unit='percent', period='2025-Q4')
+    assert len(cc.annotate(t)) == 1

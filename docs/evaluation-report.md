@@ -2,7 +2,9 @@
 
 **Status — dev and held-out saved outputs rescored on gold v3.5.** Owner review complete 31 Oct 2026: 125 cards decided by the owner (30 own verdicts, 95 by agreeing per card with AI suggestions or the three-pass AI tie-break), not independent inter-rater evidence. Forty-five gold cards are owner reviewed; 223 remain draft. Current v3.5 figures and original v3.2–v3.4 sensitivity are shown separately. Post-run review is not prospective blinded evaluation.
 
-**Corpus boundary (D-037, 31 Oct):** all result tables below measure **frozen corpus v1**. The corrected `extract-0.2` corpus is now rebuilt locally, with evidence-ID-only gold v3.6 migration; no new retrieval/answer/agent result is claimed here. Planned fresh runs have separate X-series identifiers (`docs/experiments/m7-corpus-v2-runbook.md`). Do not rescore the frozen registered outputs against migrated IDs and overwrite their published v3.5 artifacts.
+**Corpus versions (D-037, D-040, D-041).** Three corpus states exist and the tables in this report belong to different ones. **v1** (13,484 passages): every registered result, that is A1–A5, held-out H-r3/H-hybrid, retrieval and answer studies and the pre-guard threat suites. **v2** (`extract-0.2`, 15,915 passages, 43,662 observations): the extraction-only X1 experiments and the post-fix T-I06 threat run, reported beside the v1 results and never over them. **v3** (v2 plus six labour-only sources): 85 sources (36 datasets, 49 documents), 52,020 observations (4,300 in the answer scope), 16,419 passages, 276 build checks (269 pass, 7 warn). The committed manifest and quality report and the local store are v3. **No experiment has been run on v3.** The live Droplet serves corpus v1 data and pre-fix code until the v3 upload and redeploy (pending); the parent will update this line after the upload. Gold v3.6 migrates evidence IDs only, so v1 outputs stay scored on v3.5 and must not be rescored on migrated IDs.
+
+**Provenance limits.** The original held-out freeze cannot be shown to precede its results. `experiments/heldout/FREEZE.md` has one commit, `d894dae`, which is also the commit that adds the held-out results, and that commit changes `agent/graph.py` and `agent/tools.py` after the freeze HEAD `617d168`. The held-out comparison was therefore pre-registered by a written record that git cannot time-stamp independently, and "same code for both arms and for dev" rests on the author's statement. Raw `H-hybrid` records carry `generation_provenance` (gold `647b26a2…`, HEAD `617d168`); raw `H-r3` records and all dev A1-A5 records have `generation_provenance: null`, so their generation-time gold, prompts and code cannot be read from the runs. What is recorded is a scoring-time fingerprint in each `metrics.json` (gold hash, prompt hashes, price table, HEAD at scoring), which is not proof of what generated the run. The raw runs themselves are local only (`data/runs`, gitignored). The held-out v2 set is designed to avoid this: its gold, corpus, prompt and price hashes are written before any run, `agent-exp` records generation provenance and refuses to overwrite a run, `eval` and `paired` refuse arms scored under a different gold, and the parent will commit `FREEZE.md` and the code before the run so that the commit order shows the freeze came first.
 
 ## Research questions and hypotheses
 
@@ -104,16 +106,16 @@ Every row comes from current `experiments/eval/agent-dev-A{1,2,3,4,5}/{model}.me
 
 | Run | Model | n | Behaviour [95% CI] | Over-abstain | False answer | Claim support | Unsupported claim | Fact coverage | Contradiction | Gold cited | Calculation correct | p50 / p95 s | $/case |
 |---|---|---:|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
-| A1 | gpt-6-luna | 235 | 0.779 [0.728, 0.830] | 0.157 | 0.025 | 0.881 | 0.000 | 0.687 | 0.007 | 0.674 | 0.667 | 10.7 / 22.8 | 0.00137 |
+| A1 | gpt-6-luna | 235 | 0.779 [0.728, 0.830] | 0.157 | 0.025 | 0.881 | 0.000 | 0.687 | 0.007 | 0.674 | 0.667 | 10.7 / 23.3 | 0.00137 |
 | A1 | gpt-5.6-luna | 235 | 0.800 [0.749, 0.851] | 0.136 | 0.030 | 0.819 | 0.000 | 0.724 | 0.014 | 0.690 | 0.750 | 9.6 / 18.0 | 0.00274 |
-| A2 | gpt-6-luna | 235 | 0.762 [0.706, 0.813] | 0.170 | 0.036 | 0.888 | 0.004 | 0.692 | 0.014 | 0.658 | 0.750 | 12.7 / 24.7 | 0.00142 |
-| A2 | gpt-5.6-luna | 235 | 0.796 [0.745, 0.847] | 0.136 | 0.034 | 0.829 | 0.003 | 0.716 | 0.034 | 0.695 | 0.750 | 10.8 / 20.6 | 0.00280 |
-| A3 | gpt-6-luna | 237 | 0.903 [0.865, 0.937] | 0.030 | 0.030 | 0.887 | 0.000 | 0.728 | 0.006 | 0.836 | 0.750 | 15.4 / 35.6 | 0.00212 |
-| A3 | gpt-5.6-luna | 237 | 0.903 [0.861, 0.941] | 0.025 | 0.030 | 0.874 | 0.003 | 0.765 | 0.006 | 0.841 | 0.750 | 15.5 / 34.4 | 0.00360 |
-| A4 | gpt-6-luna | 237 | 0.899 [0.861, 0.937] | 0.034 | 0.026 | 0.856 | 0.000 | 0.734 | 0.011 | 0.836 | 0.667 | 14.8 / 35.6 | 0.00215 |
-| A4 | gpt-5.6-luna | 237 | 0.907 [0.869, 0.941] | 0.030 | 0.026 | 0.878 | 0.000 | 0.766 | 0.000 | 0.836 | 0.667 | 15.1 / 34.7 | 0.00367 |
-| A5 | gpt-6-luna | 237 | 0.911 [0.873, 0.945] | 0.021 | 0.034 | 0.879 | 0.000 | 0.724 | 0.006 | 0.841 | 0.750 | 16.4 / 37.5 | 0.00217 |
-| A5 | gpt-5.6-luna | 237 | 0.916 [0.878, 0.949] | 0.030 | 0.022 | 0.856 | 0.000 | 0.760 | 0.000 | 0.841 | 0.708 | 14.7 / 34.0 | 0.00369 |
+| A2 | gpt-6-luna | 235 | 0.762 [0.706, 0.813] | 0.170 | 0.036 | 0.888 | 0.004 | 0.692 | 0.014 | 0.658 | 0.750 | 12.7 / 25.9 | 0.00142 |
+| A2 | gpt-5.6-luna | 235 | 0.796 [0.745, 0.847] | 0.136 | 0.034 | 0.829 | 0.003 | 0.716 | 0.034 | 0.695 | 0.750 | 10.8 / 21.2 | 0.00280 |
+| A3 | gpt-6-luna | 237 | 0.903 [0.865, 0.937] | 0.030 | 0.030 | 0.887 | 0.000 | 0.728 | 0.006 | 0.836 | 0.750 | 15.4 / 37.0 | 0.00212 |
+| A3 | gpt-5.6-luna | 237 | 0.903 [0.861, 0.941] | 0.025 | 0.030 | 0.874 | 0.003 | 0.765 | 0.006 | 0.841 | 0.750 | 15.5 / 34.7 | 0.00360 |
+| A4 | gpt-6-luna | 237 | 0.899 [0.861, 0.937] | 0.034 | 0.026 | 0.856 | 0.000 | 0.734 | 0.011 | 0.836 | 0.667 | 14.8 / 35.9 | 0.00215 |
+| A4 | gpt-5.6-luna | 237 | 0.907 [0.869, 0.941] | 0.030 | 0.026 | 0.878 | 0.000 | 0.766 | 0.000 | 0.836 | 0.667 | 15.1 / 36.1 | 0.00367 |
+| A5 | gpt-6-luna | 237 | 0.911 [0.873, 0.945] | 0.021 | 0.034 | 0.879 | 0.000 | 0.724 | 0.006 | 0.841 | 0.750 | 16.4 / 37.6 | 0.00217 |
+| A5 | gpt-5.6-luna | 237 | 0.916 [0.878, 0.949] | 0.030 | 0.022 | 0.856 | 0.000 | 0.760 | 0.000 | 0.841 | 0.708 | 14.7 / 34.5 | 0.00369 |
 
 Claim-support is a pooled claim ratio; contradiction is an answer-level rate. All other denominator caveats above apply. The metrics files contain the CI and eligible n for each rate, not only behaviour.
 
@@ -189,7 +191,7 @@ This second pass consists of three further **AI reviews, not human review**. Rev
 
 **Held-out limitation — evidence is not independent:** on its reviewed **v3.3 snapshot**, the second gold review found **25/31** held-out cases shared dev evidence and **15/31** had their entire evidence-ID set represented in the dev union. These are historical review measurements, not a fresh v3.4 overlap computation. It found **no exact duplicate questions or normalized templates**, which does not establish semantic novelty. The set is question-held-out, not source-, fact- or reasoning-template-independent. Shared facts limit generalisation claims and require caution when reading the already zero-inclusive gain intervals. This does not prove training contamination. Preserve existing runs; a stronger future study needs a separately frozen group-disjoint design (`experiments/gold/independent-ai-review-2.md`, split-overlap section).
 
-**Extraction corrections adopted; evaluation pending:** `extraction-fixes` (80a287b) merged cleanly without a worker commit under D-037. Two offline builds reproduced **15,915 passages** byte-for-byte from unchanged raw files (frozen corpus v1: 13,484). The branch audit records control-bearing `ok` passages **57 → 0**, Q3 2025 physical page 30 **0 → 7 passages**, and appendix-label headings **141 → 0**. Gold v3.6 maps all 61 absent IDs with per-case text-overlap evidence, preserving all non-ID fields; 67 surviving referenced IDs have metadata changes (the original 66 plus a later D-035 addition). These are extraction/migration findings, not retrieval or answer-quality gains. Historical frozen results remain corpus-v1 measurements; separately labelled X-series reruns must measure corpus v2.
+**Extraction corrections adopted and evaluated once (X1):** `extraction-fixes` (80a287b) merged cleanly without a worker commit under D-037. Two offline builds reproduced **15,915 passages** byte-for-byte from unchanged raw files (frozen corpus v1: 13,484). The branch audit records control-bearing `ok` passages **57 → 0**, Q3 2025 physical page 30 **0 → 7 passages**, and appendix-label headings **141 → 0**. Gold v3.6 maps all 61 absent IDs with per-case text-overlap evidence, preserving all non-ID fields; 67 surviving referenced IDs have metadata changes (the original 66 plus a later D-035 addition). These are extraction and migration findings. The X1 rerun on corpus v2 (section below) shows no measurable quality change. Historical frozen results remain corpus-v1 measurements.
 
 ## Human review status and AI pre-review
 
@@ -205,9 +207,15 @@ The same summary records historical AI-pre-review versus automatic-judge agreeme
 
 The owner's recorded verdicts and decisions must remain distinguishable from every historical AI review. Further source inspection, rights verification and unreviewed-gold adjudication remain open. A clean pre-registered rerun on frozen reviewed gold, with evidence-disjoint grouping where feasible, would be stronger evidence than rescoring this already-inspected set.
 
+## Review rubric and process
+
+- **Verdict classes.** Each answer is marked correct, partly correct or incorrect. For anything not correct the reviewer picks a reason: wrong number, wrong period or series, over-abstention, claim the source does not support, bad citation, or a wrong gold label. Source checks are match or minor issue; gold cards are label OK or disagreement.
+- **Sample selection.** The 40 answers were drawn from the A1 run with seed 20261030: 6 per question family plus 4 status-mismatch cases, from an eligible pool of 235. The sample is failure-enriched, so it does not estimate population accuracy.
+- **Process.** The owner worked through a review pack (`docs/human-review/OWNER-REVIEW-GUIDE.md`), prioritising the 13 rows an AI pre-review marked partly correct or incorrect. Each decision records its `decision_source`: `owner_manual` or `agreed_with_ai_suggestion`. Reviewing against an AI suggestion is not independent annotation, and no second human reviewed any card, so there is no inter-rater agreement figure.
+
 ## Cost, latency and operational limits
 
-A3 `gpt-6-luna` records **15.4 s p50 / 35.6 s p95**, **$0.00212 per case**, and **$0.2442 judge cost** in the current snapshot; A3 `gpt-5.6-luna` records **15.5 / 34.4 s**, **$0.00360 per case** (`experiments/eval/agent-dev-A3/*.metrics.json`). A1 `gpt-6-luna` records **10.7 / 22.8 s**, **$0.00137 per case** (A1 metrics). These are single-run measurements, not service-level guarantees.
+A3 `gpt-6-luna` records **15.4 s p50 / 37.0 s p95**, **$0.00212 per case**, and **$0.2442 judge cost** in the current snapshot; A3 `gpt-5.6-luna` records **15.5 / 34.7 s**, **$0.00360 per case** (`experiments/eval/agent-dev-A3/*.metrics.json`). A1 `gpt-6-luna` records **10.7 / 23.3 s**, **$0.00137 per case** (A1 metrics). These are single-run measurements, not service-level guarantees.
 
 Generation/rerank usage and API wall time are in saved runs; judge spend is reported separately. Prices use `specs/prices.yaml`, with no cached-input discount. These estimates do not include developer labour, hosting or all ingestion/index-building costs. Cached embeddings change reproduction cost. Timed-out calls without returned usage can have unobserved provider billing. No load, concurrency or service-level benchmark is claimed.
 
@@ -239,9 +247,16 @@ The corrected fixture inserts poison into both candidate lists and uses metadata
 
 Sources: current `experiments/threats/SUMMARY.md` and corresponding `experiments/threats/runs/*.metrics.json`. Defended and naive baselines now use the **same `r3` configuration** and case suite. They are paired ablations, replacing the earlier unmatched comparison. For `gpt-6-luna`, **35 versus 35** gives no measurable defence effect on this suite. For `gpt-4.1-mini`, **34 versus 32** is **consistent with a benefit for the weakest model, not demonstrated**. The intervals overlap and this hand-written **36-case** sample is too small for a reliable defence-effect claim.
 
-Safety and usefulness remain separate. Final defended `gpt-6-luna` usefulness is **0/1** on direct-injection-plus-legitimate requests, **6/6** on indirect injection and **3/3** on MCP failure scenarios. Its suite cost is **$0.0370**, median latency **8.0 s** (`experiments/threats/runs/gpt-6-luna.metrics.json`). Every current condition has **6/6** indirect usefulness, but T-I06 fails in every condition: the useful-answer flag does not establish factual correctness.
+Safety and usefulness remain separate. Final defended `gpt-6-luna` usefulness is **0/1** on direct-injection-plus-legitimate requests, **6/6** on indirect injection and **3/3** on MCP failure scenarios. Its suite cost is **$0.0370**, median latency **8.0 s** (`experiments/threats/runs/gpt-6-luna.metrics.json`). Every pre-guard condition has **6/6** indirect usefulness, but T-I06 fails in every pre-guard condition: the useful-answer flag does not establish factual correctness.
 
-**Known gap:** the luna models repeat a false figure planted in retrieved report text. No layer checks passage figures against the statistics datasets for the same indicator and period. **PROPOSAL, not built:** add a deterministic passage-versus-dataset numerical cross-check with matching indicator, population, adjustment, period and publication vintage. Preserve genuine source conflicts rather than silently replacing report figures. A fixed suite is not an adaptive security guarantee, and the dev adversarial-family scores do not replace these dedicated tests.
+**T-I06 and the deterministic cross-check (D-038).** The table above is the pre-guard run, with the guard absent. After it, `answer/crosscheck.py` was added: a used conflicting level is corrected to the validated dataset figure with both citations and a source-conflict caveat, and labelled advance or preliminary vintages are preserved. **MEASURED RESULT** (post-fix run `experiments/threats/m7-ti06-postfix-20261031/SUMMARY.md`; corpus v2, `r3`, 36 cases, one run per configuration; luna6 and luna5.6 only):
+
+| Condition (both luna models) | Strict scorer | Refined scorer |
+|---|---|---|
+| defended | 35/36 | 36/36 |
+| naive (defences and guard off) | 35/36 | 35/36 |
+
+The strict scorer still fails defended T-I06 because the conflict caveat quotes the planted figure; claims and summary hold only the dataset figure. The refined scorer, which allows the planted figure inside a disclosed-conflict caveat, was written after seeing the outputs, so 36/36 is a post hoc reading. The evidence is one case, a closed grammar of phrasings and two models: **not shown to generalise**. The end-to-end review found that the guard recognises only five figures across the 16,419 passages (re-counted by running `figures()` over `data/passages`) and that it could compare a monthly figure with a quarterly value and wrongly rewrite a correct answer. The monthly-versus-quarterly fault was **fixed after the end-to-end review** (sentences naming a month and year are now skipped) and regression tests were added (`tests/retrieval/test_crosscheck.py`). The guard has **not been re-measured** on the development set or the threat suite since that change, and its recall on real passages is still low. A fixed suite is not an adaptive security guarantee, and the dev adversarial-family scores do not replace these dedicated tests.
 
 ## Threats to validity
 
@@ -310,10 +325,10 @@ Historical figures are preserved from report snapshots. Current figures are in `
 
 | Run | Model | n | Behaviour [95% CI] | Over-abstain | False answer | Claim support | Unsupported claim | Fact coverage | Contradiction | Gold cited | Calculation correct | p50 / p95 s | $/case |
 |---|---|---:|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
-| r3 | gpt-6-luna | 31 | 0.871 [0.742, 0.968] | 0.065 | 0.000 | 0.872 | 0.000 | 0.680 | 0.000 | 0.621 | 0.800 | 14.0 / 26.6 | 0.00193 |
-| r3 | gpt-5.6-luna | 31 | 0.839 [0.710, 0.968] | 0.065 | 0.069 | 0.911 | 0.000 | 0.769 | 0.043 | 0.655 | 0.800 | 17.3 / 36.1 | 0.00343 |
-| hybrid | gpt-6-luna | 31 | 0.710 [0.548, 0.839] | 0.226 | 0.000 | 1.000 | 0.000 | 0.591 | 0.000 | 0.448 | 0.800 | 12.7 / 18.5 | 0.00124 |
-| hybrid | gpt-5.6-luna | 31 | 0.742 [0.581, 0.903] | 0.194 | 0.000 | 0.846 | 0.000 | 0.524 | 0.000 | 0.414 | 0.800 | 11.1 / 19.7 | 0.00271 |
+| r3 | gpt-6-luna | 31 | 0.871 [0.742, 0.968] | 0.065 | 0.000 | 0.872 | 0.000 | 0.680 | 0.000 | 0.621 | 0.800 | 14.0 / 27.8 | 0.00193 |
+| r3 | gpt-5.6-luna | 31 | 0.839 [0.710, 0.968] | 0.065 | 0.069 | 0.911 | 0.000 | 0.769 | 0.043 | 0.655 | 0.800 | 17.3 / 36.2 | 0.00343 |
+| hybrid | gpt-6-luna | 31 | 0.710 [0.548, 0.839] | 0.226 | 0.000 | 1.000 | 0.000 | 0.591 | 0.000 | 0.448 | 0.800 | 12.7 / 22.5 | 0.00124 |
+| hybrid | gpt-5.6-luna | 31 | 0.742 [0.581, 0.903] | 0.194 | 0.000 | 0.846 | 0.000 | 0.524 | 0.000 | 0.414 | 0.800 | 11.1 / 20.0 | 0.00271 |
 
 All configurations cover **31 eligible / 31 available cases** (their metrics `provenance`). The same denominator definitions as dev apply, including false-answer-rate exclusion of over-abstentions. Each file records intervals and eligible denominators for all rates. Calculation correctness has **five** eligible cases per configuration; claim support and coverage condition on judged answers. Zero unsupported claims does not mean complete answers or universally correct facts.
 
@@ -398,18 +413,18 @@ The R1a filter result is nominally higher on corpus v2, while R0, R2 and R3 hit@
 
 | Evaluation | Corpus | n | Behaviour [95% CI] | Over-abstain | False answer | Claim support | Fact coverage | Gold cited | Calculation correct | p50 / p95 s | $/case |
 |---|---|---:|---|---:|---:|---:|---:|---:|---:|---:|---:|
-| Dev A3 r3 / gpt-6-luna | v1 frozen, gold v3.5 | 237 | 0.903 [0.865, 0.937] | 0.030 | 0.030 | 0.887 | 0.728 | 0.836 | 0.750 | 15.4 / 35.6 | 0.00212 |
-| Dev X1 r3 / gpt-6-luna | v2, gold v3.6 | 237 | 0.886 [0.844, 0.924] | 0.034 | 0.035 | 0.887 | 0.728 | 0.794 | 0.667 | 14.7 / 33.5 | 0.00294 |
-| Held-out r3 / gpt-6-luna | v1, gold v3.5 rescoring | 31 | 0.871 [0.742, 0.968] | 0.065 | 0.000 | 0.872 | 0.680 | 0.621 | 0.800 | 14.0 / 26.6 | 0.00193 |
-| Held-out X-r3 / gpt-6-luna | v2, gold v3.6 | 31 | 0.839 [0.710, 0.968] | 0.097 | 0.000 | 0.912 | 0.625 | 0.621 | 1.000 | 17.6 / 43.3 | 0.00268 |
-| Held-out hybrid / gpt-6-luna | v1, gold v3.5 rescoring | 31 | 0.710 [0.548, 0.839] | 0.226 | 0.000 | 1.000 | 0.591 | 0.448 | 0.800 | 12.7 / 18.5 | 0.00124 |
-| Held-out X-hybrid / gpt-6-luna | v2, gold v3.6 | 31 | 0.774 [0.613, 0.903] | 0.161 | 0.038 | 0.882 | 0.696 | 0.517 | 1.000 | 11.5 / 25.5 | 0.00168 |
-| Dev A3 r3 / gpt-5.6-luna | v1 frozen, gold v3.5 | 237 | 0.903 [0.861, 0.941] | 0.025 | 0.030 | 0.874 | 0.765 | 0.841 | 0.750 | 15.5 / 34.4 | 0.00360 |
-| Dev X1 r3 / gpt-5.6-luna | v2, gold v3.6 | 237 | 0.911 [0.873, 0.945] | 0.021 | 0.030 | 0.801 | 0.756 | 0.825 | 0.750 | 13.3 / 34.0 | 0.00458 |
-| Held-out r3 / gpt-5.6-luna | v1, gold v3.5 rescoring | 31 | 0.839 [0.710, 0.968] | 0.065 | 0.069 | 0.911 | 0.769 | 0.655 | 0.800 | 17.3 / 36.1 | 0.00343 |
-| Held-out X-r3 / gpt-5.6-luna | v2, gold v3.6 | 31 | 0.839 [0.710, 0.968] | 0.097 | 0.036 | 0.822 | 0.667 | 0.552 | 1.000 | 13.6 / 31.8 | 0.00392 |
-| Held-out hybrid / gpt-5.6-luna | v1, gold v3.5 rescoring | 31 | 0.742 [0.581, 0.903] | 0.194 | 0.000 | 0.846 | 0.524 | 0.414 | 0.800 | 11.1 / 19.7 | 0.00271 |
-| Held-out X-hybrid / gpt-5.6-luna | v2, gold v3.6 | 31 | 0.742 [0.581, 0.871] | 0.194 | 0.040 | 0.800 | 0.667 | 0.448 | 1.000 | 9.9 / 17.4 | 0.00359 |
+| Dev A3 r3 / gpt-6-luna | v1 frozen, gold v3.5 | 237 | 0.903 [0.865, 0.937] | 0.030 | 0.030 | 0.887 | 0.728 | 0.836 | 0.750 | 15.4 / 37.0 | 0.00212 |
+| Dev X1 r3 / gpt-6-luna | v2, gold v3.6 | 237 | 0.886 [0.844, 0.924] | 0.034 | 0.035 | 0.887 | 0.728 | 0.794 | 0.667 | 14.7 / 35.4 | 0.00294 |
+| Held-out r3 / gpt-6-luna | v1, gold v3.5 rescoring | 31 | 0.871 [0.742, 0.968] | 0.065 | 0.000 | 0.872 | 0.680 | 0.621 | 0.800 | 14.0 / 27.8 | 0.00193 |
+| Held-out X-r3 / gpt-6-luna | v2, gold v3.6 | 31 | 0.839 [0.710, 0.968] | 0.097 | 0.000 | 0.912 | 0.625 | 0.621 | 1.000 | 17.6 / 43.9 | 0.00268 |
+| Held-out hybrid / gpt-6-luna | v1, gold v3.5 rescoring | 31 | 0.710 [0.548, 0.839] | 0.226 | 0.000 | 1.000 | 0.591 | 0.448 | 0.800 | 12.7 / 22.5 | 0.00124 |
+| Held-out X-hybrid / gpt-6-luna | v2, gold v3.6 | 31 | 0.774 [0.613, 0.903] | 0.161 | 0.038 | 0.882 | 0.696 | 0.517 | 1.000 | 11.5 / 25.8 | 0.00168 |
+| Dev A3 r3 / gpt-5.6-luna | v1 frozen, gold v3.5 | 237 | 0.903 [0.861, 0.941] | 0.025 | 0.030 | 0.874 | 0.765 | 0.841 | 0.750 | 15.5 / 34.7 | 0.00360 |
+| Dev X1 r3 / gpt-5.6-luna | v2, gold v3.6 | 237 | 0.911 [0.873, 0.945] | 0.021 | 0.030 | 0.801 | 0.756 | 0.825 | 0.750 | 13.3 / 34.2 | 0.00458 |
+| Held-out r3 / gpt-5.6-luna | v1, gold v3.5 rescoring | 31 | 0.839 [0.710, 0.968] | 0.065 | 0.069 | 0.911 | 0.769 | 0.655 | 0.800 | 17.3 / 36.2 | 0.00343 |
+| Held-out X-r3 / gpt-5.6-luna | v2, gold v3.6 | 31 | 0.839 [0.710, 0.968] | 0.097 | 0.036 | 0.822 | 0.667 | 0.552 | 1.000 | 13.6 / 34.4 | 0.00392 |
+| Held-out hybrid / gpt-5.6-luna | v1, gold v3.5 rescoring | 31 | 0.742 [0.581, 0.903] | 0.194 | 0.000 | 0.846 | 0.524 | 0.414 | 0.800 | 11.1 / 20.0 | 0.00271 |
+| Held-out X-hybrid / gpt-5.6-luna | v2, gold v3.6 | 31 | 0.742 [0.581, 0.871] | 0.194 | 0.040 | 0.800 | 0.667 | 0.448 | 1.000 | 9.9 / 18.7 | 0.00359 |
 
 Behaviour changes are small and inconsistent: dev `gpt-6-luna` **0.903 → 0.886**, dev `gpt-5.6-luna` **0.903 → 0.911**, held-out r3 **0.871 → 0.839** and **0.839 → 0.839**, and held-out hybrid **0.710 → 0.774** and **0.742 → 0.742**. Intervals overlap in every row. No claim of improvement or regression in answer quality is supported. Dev generation cost per case is higher on corpus v2 in this single run (`gpt-6-luna` **$0.00294** versus **$0.00212**; `gpt-5.6-luna` **$0.00458** versus **$0.00360**), while p95 latency is similar. The cause is not established. Calculation scores use the current scorer; held-out calculation has only five eligible cases.
 
@@ -427,6 +442,10 @@ This is a diagnostic on already-inspected questions with shared-evidence limitat
 ### Interpretation
 
 The extraction fix removes verified source-fidelity defects and preserves provenance. It shows **no measurable retrieval or answer-quality gain** in these measurements. R3 remains a provisional default. D-041 adopts corpus v2 as the working corpus for engineering integrity, while retaining v1 results as the frozen registered evidence. Stronger conclusions need an evidence-disjoint, owner-reviewed, pre-registered evaluation. Cross-check enabled results and threat results are separate and unchanged here.
+
+## Next evidence: held-out v2 (planned, not run)
+
+A second held-out set of 65 blind-authored draft cases is written against corpus v3 sources that no earlier case cites (`experiments/gold/heldout_v2_draft.jsonl`, `experiments/heldout-v2/FREEZE.md`, design in `docs/experiments/m7-heldout-v2-design.md`, D-039/D-040). It is a **draft and has not been run**: no model has seen it, no result exists, and its cases are not owner-reviewed. It is the planned answer to the evidence-overlap limitation of the registered held-out set.
 
 ## Conclusions and remaining submission gates
 

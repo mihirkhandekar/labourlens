@@ -23,6 +23,8 @@ services:
       # The app believes X-Forwarded-For / -Proto only from this one address (Caddy's fixed address on the edge network).
       # Anything else, including a spoofed header sent by a client, cannot change the rate-limit key.
       LABOURLENS_FORWARDED_ALLOW_IPS: 172.30.0.2
+      # Startup must not call the embeddings API for chunks missing from the cache: fail fast instead (retrieval/runtime.py).
+      LABOURLENS_ALLOW_EMBED: "0"
     volumes:
       - /srv/labourlens/data:/app/data
     read_only: true

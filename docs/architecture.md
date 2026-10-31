@@ -1,6 +1,6 @@
 # LabourLens architecture
 
-This document describes the system as built on 30 October 2026. Decision ids (D-nnn) refer to `docs/decisions.md`. Evaluation results are not in this document. See section 10 of the interactive page and `experiments/eval/`.
+This document describes the system as built on 31 October 2026. Decision ids (D-nnn) refer to `docs/decisions.md`. Evaluation results are not in this document. See chapter 5 of the interactive report (`/#presentation/pr-evaluation`) and `experiments/eval/`.
 
 ## 1. Overview
 
@@ -13,9 +13,11 @@ Two kinds of source feed the system.
 
 One bounded LangGraph agent reads both through three read-only tools. Code does all arithmetic. A deterministic validator checks every answer before it is returned. The answer has one of four statuses: answered, abstained, clarify or refused (D-024).
 
-The README (`README.md`) lists the current data counts. The data sheet (`docs/data-sheet.md`) records sources, licences and checks.
+The README (`README.md`) states the current data counts. The data sheet (`docs/data-sheet.md`) records sources, licences and checks.
 
-**Corpus version boundary (D-037, 31 Oct 2026).** Current local passages use `extract-0.2`: 15,915 passages and 1,732 `merge200` chunks. The same raw snapshots produced byte-identical passage/Parquet outputs in two offline builds. PDF parsing uses page-local layout headings, control detection, footer provenance and explicit context-required fragments; HTML parsing stays article-bounded. Context deduplication is limited to identical normalized text within one source snapshot. Gold v3.6 migrates evidence IDs only, with a per-case hash/overlap audit. Existing results remain **frozen corpus v1**. The premerge code tag is `corpus-v1-frozen`; private premerge stores are retained separately. Dense embeddings are content/model-keyed, so unchanged inputs reuse cached vectors even when passage IDs move; 776 unique chunk inputs need new vectors before corpus-v2 dense serving/evaluation. See `docs/experiments/m7-corpus-v2-runbook.md`.
+**Corpus versions.** Three corpus states exist. **v1** (13,484 passages) is what every registered experiment ran on. **v2** (`extract-0.2`, D-037/D-041: 15,915 passages, 1,732 `merge200` chunks, 43,662 observations) was used for the extraction-only X1 runs and the post-fix T-I06 run. **v3** (v2 plus six labour-only sources, D-040) is what the committed manifest and quality report and the local store hold: 85 sources (36 datasets, 49 documents), 52,020 observations (4,300 in the answer scope), 16,419 passages, 276 build checks (269 pass, 7 warn). **No experiment has been run on v3.** The live Droplet serves corpus v1 data and pre-fix code until the v3 upload and redeploy (pending); the parent will update this line after the upload.
+
+The v2 extraction rebuild was byte-identical across two offline builds. PDF parsing uses page-local layout headings, control detection, footer provenance and explicit context-required fragments; HTML parsing stays article-bounded. Context deduplication is limited to identical normalised text within one source snapshot. Gold v3.6 migrates evidence IDs only. The premerge code tag is `corpus-v1-frozen`; private premerge stores are retained separately. Dense embeddings are content- and model-keyed, so unchanged inputs reuse cached vectors even when passage IDs move. See `docs/experiments/m7-corpus-v2-runbook.md` and `docs/experiments/m7-corpus-v3-runbook.md`.
 
 ## 2. Component diagram
 
@@ -34,10 +36,10 @@ flowchart TB
     ADMIT --> INPUT[Input guard<br/>length checks + injection flags]
     INPUT --> PLAN[Plan research]
     PLAN --> TOOLS[Typed read-only tools<br/>search / series / deterministic change]
-    TOOLS --> ASSESS[Assess evidence]
+    TOOLS --> ASSESS[Assess evidence<br/>+ source-conflict cross-check: annotate]
     ASSESS -->|bounded next round| PLAN
     ASSESS --> ANSWER[Generate structured answer]
-    ANSWER --> VALID[Quote / citation / status validator]
+    ANSWER --> VALID[Quote / citation / status validator<br/>+ source-conflict cross-check: enforce]
     VALID -->|one repair| ANSWER
     VALID --> REDACT[Output blocking + redaction]
     REDACT --> OUT[Cited answer + activity timeline]
@@ -52,10 +54,10 @@ flowchart TB
     RUNS[Saved answers + traces] --> HARNESS
     HARNESS --> DETER[Deterministic metrics]
     HARNESS --> JUDGE[LLM judge<br/>support + fact coverage]
-    HARNESS --> HUMAN[Human review sheets<br/>review pending]
+    HARNESS --> HUMAN[Owner review: 125 cards<br/>AI-assisted, not independent]
     DETER --> REPORT[Versioned metrics + error analysis]
     JUDGE --> REPORT
-    HUMAN -. completed human judgments required .-> REPORT
+    HUMAN -. selected-card decisions, not population accuracy .-> REPORT
   end
   INDEX --> TOOLS
   STORE --> TOOLS
@@ -95,9 +97,9 @@ Built in `src/labourlens/agent/graph.py` with LangGraph `StateGraph` (ADR-002, D
 | `validate_question` | Rejects an empty question or one over 1,000 characters. Records heuristic injection flags. |
 | `plan_research` | Planner model proposes up to three tool calls, or decides to finish. |
 | `execute_tool` | Runs each call in a worker thread with a timeout. |
-| `assess_evidence` | Counts passages, observations and calculations. Reports an operational failure if every tool call failed. |
+| `assess_evidence` | Counts passages, observations and calculations. Reports an operational failure if every tool call failed. Annotates conflicts between a passage figure and the validated dataset value for the same indicator and period (`answer/crosscheck.py`, D-038). |
 | `generate_answer` | Answer model writes the structured answer from the evidence. |
-| `validate_answer` | Runs the checks in section 3, step 9. |
+| `validate_answer` | Runs the checks in section 3, step 9, and enforces the source-conflict cross-check: a used conflicting level is replaced by the dataset figure with both citations and a caveat. Closed grammar of phrasings; advance and preliminary vintages are preserved. |
 | `finalize` | Applies the output guard and sets the outcome. |
 
 Bounds, all constants or fields in `graph.py`:
@@ -183,5 +185,5 @@ The evaluation branch consumes saved runs rather than changing live answers. Dev
 | Operational failures end the run and are never "no data" | A tool outage must not look like an absence of evidence. | ADR-002, D-028 |
 | MCP server with nine read-only tools and a screening client | The server is treated as untrusted even when local. | D-028 |
 | MCP is an optional route and direct calls are the default | Direct calls are faster and the protocol adds a failure mode. | D-028 |
-| Structured data scope of 33 datasets through a spec-driven adapter | One adapter and a spec per dataset keep the cost of each addition low. | ADR-003, D-003 |
+| Structured data scope of 36 datasets through a spec-driven adapter (33 until corpus v3) | One adapter and a spec per dataset keep the cost of each addition low. | ADR-003, D-003, D-040 |
 | Labels follow what the evidence supports | One rule makes abstain, refuse and answer cases consistent. | `experiments/gold/CHANGELOG.md`, section v3 |

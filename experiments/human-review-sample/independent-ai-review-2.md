@@ -229,7 +229,7 @@ All 40 gold behaviour labels are defensible under the explicit project scope. Tw
 
 | 1 / P6 | `mom-2025-q2-final:p056:b013:246b78de`; p.56 | Job vacancy to unemployed ratio is | none | HTML-entity mismatch in persisted quote; decoded original supports claim. |
 
-| 2 / P10 | `mom-2025-q2-final-release:s01:i004:1b27cae6`; HTML s01:i004 | with the ratio standing at 1.35. | 1.35 | Persisted verbatim match; original supports claim. |
+| 2 / P10 | `mom-2025-q2-final-release:s01:i004:1b27cae6`; HTML s01:i004 | with the ratio standing at 1 [...]. | 1.35 | Persisted verbatim match; original supports claim. |
 
 **Collected observation ledger** (also covers inline/caveat numbers, not only formal citations):
 
@@ -596,13 +596,13 @@ All 40 gold behaviour labels are defensible under the explicit project scope. Tw
 
 | 1 / O1 | `a0cd2320a04906b0`; 2024-Q2: 55 percent; all | 2024-Q2 \| unverified_basis, unspecified \| 55% | 2024, 55% | Rendered quote matches; raw CSV value and series verified. |
 
-| 2 / P3 | `mom-2024-q2-final-release:s01:i014:a2ec3b69`; HTML s01:i014 | the resident rate of re-entry dipped | 59.4%, 2024, 55.0%, 2024 | Persisted verbatim match; original supports claim. |
+| 2 / P3 | `mom-2024-q2-final-release:s01:i014:a2ec3b69`; HTML s01:i014 | the resident rate of re-entry [...] | 59.4%, 2024, 55.0%, 2024 | Persisted verbatim match; original supports claim. |
 
-| 3 / P17 | `mom-2024-q2-final:p049:b013:9a39e4e7`; p.49 | the re-entry rate for the second | 2024, 2023 | HTML-entity mismatch in persisted quote; decoded original supports claim. |
+| 3 / P17 | `mom-2024-q2-final:p049:b013:9a39e4e7`; p.49 | the re-entry rate for the [...] | 2024, 2023 | HTML-entity mismatch in persisted quote; decoded original supports claim. |
 
-| 4 / P3 | `mom-2024-q2-final-release:s01:i014:a2ec3b69`; HTML s01:i014 | the re-entry rate improves significantly with | 2023, 12 | Persisted verbatim match; original supports claim. |
+| 4 / P3 | `mom-2024-q2-final-release:s01:i014:a2ec3b69`; HTML s01:i014 | the re-entry rate improves significantly [...] | 2023, 12 | Persisted verbatim match; original supports claim. |
 
-| 5 / P1 | `mom-2024-q2-final:p050:b002:85a20ca7`; p.50 | A low re-entry rate could also | none | HTML-entity mismatch in persisted quote; decoded original supports claim. |
+| 5 / P1 | `mom-2024-q2-final:p050:b002:85a20ca7`; p.50 | A low re-entry rate could [...] | none | HTML-entity mismatch in persisted quote; decoded original supports claim. |
 
 | 5 / P1 | `mom-2024-q2-final:p050:b002:85a20ca7`; p.50 | the indicator could be cohort-specific. | none | Persisted verbatim match; original supports claim. |
 
@@ -698,7 +698,7 @@ All 40 gold behaviour labels are defensible under the explicit project scope. Tw
 
 | 2 / P11 | `mom-2024-q3-final-release:s01:i016:5de77f22`; HTML s01:i016 | 63,400) compared to June 2024 (81,200) | 63,400, 2024, 81,200 | Persisted verbatim match; original supports claim. |
 
-| 2 / P11 | `mom-2024-q3-final-release:s01:i016:5de77f22`; HTML s01:i016 | In September 2024, there were 1.39 | 2024, 1.39 | Persisted verbatim match; original supports claim. |
+| 2 / P11 | `mom-2024-q3-final-release:s01:i016:5de77f22`; HTML s01:i016 | In September 2024, there were 1 [...] | 2024, 1.39 | Persisted verbatim match; original supports claim. |
 
 | 3 / P3 | `mom-2024-q3-final-release:s01:i003:e7354cad`; HTML s01:i003 | The decline was driven by Construction | none | HTML-entity mismatch in persisted quote; decoded original supports claim. |
 
@@ -735,9 +735,9 @@ All 40 gold behaviour labels are defensible under the explicit project scope. Tw
 | Claim / citation | Exact evidence ID and locator | Quote excerpt (≤6 words) | Full-quote numerical tokens | Independent check |
 |---|---|---|---|---|
 
-| 1 / P34 | `mom-lf2024-survey-findings:p014:b000:ed7f2cec`; p.14 | The resident time-related under-employment rate held | 2.3%, 2024 | Persisted verbatim match; original supports claim. |
+| 1 / P34 | `mom-lf2024-survey-findings:p014:b000:ed7f2cec`; p.14 | The resident time-related under-employment [...] | 2.3%, 2024 | Persisted verbatim match; original supports claim. |
 
-| 1 / P23 | `mom-lf2025-survey-findings:p019:b002:8926e4a5`; p.19 | continued to decline to 1.9% in | 1.9%, 2025, 2023, 2024, 2.3% | HTML-entity mismatch in persisted quote; decoded original supports claim. |
+| 1 / P23 | `mom-lf2025-survey-findings:p019:b002:8926e4a5`; p.19 | continued to decline to 1.9 [...] | 1.9%, 2025, 2023, 2024, 2.3% | HTML-entity mismatch in persisted quote; decoded original supports claim. |
 
 
 
@@ -854,7 +854,7 @@ All 40 gold behaviour labels are defensible under the explicit project scope. Tw
 
 **Inline quotation audit** (summary/caveats/reason, separate from structured claims):
 
-- Excerpt Employees on Short Work-Week or Temporary; numeric tokens none: Supported by `O1` / `a3ed3d17a49fe551`.
+- Excerpt Employees on Short Work-Week or [...]; numeric tokens none: Supported by `O1` / `a3ed3d17a49fe551`.
 
 
 
@@ -1217,9 +1217,9 @@ All 40 gold behaviour labels are defensible under the explicit project scope. Tw
 | Claim / citation | Exact evidence ID and locator | Quote excerpt (≤6 words) | Full-quote numerical tokens | Independent check |
 |---|---|---|---|---|
 
-| 1 / P4 | `mom-2025-q4-advance:s01:i004:e5fa11e6`; HTML s01:i004 | Total employment grew by 19,600 in | 19,600, 2025 | Persisted verbatim match; original supports claim. |
+| 1 / P4 | `mom-2025-q4-advance:s01:i004:e5fa11e6`; HTML s01:i004 | Total employment grew by 19,600 [...] | 19,600, 2025 | Persisted verbatim match; original supports claim. |
 
-| 1 / P9 | `mom-2025-q4-final-release:s01:i002:257c8baa`; HTML s01:i002 | Total employment expanded by 17,700 in | 17,700, 2025 | Persisted verbatim match; original supports claim. |
+| 1 / P9 | `mom-2025-q4-final-release:s01:i002:257c8baa`; HTML s01:i002 | Total employment expanded by 17,700 [...] | 17,700, 2025 | Persisted verbatim match; original supports claim. |
 
 | 1 / P17 | `mom-2025-q4-advance:s02:i003:86c4ac6d`; HTML s02:i003 | Data for 4Q 2025 and the | 2025, 2025 | Persisted verbatim match; original supports claim. |
 
@@ -1381,7 +1381,7 @@ All 40 gold behaviour labels are defensible under the explicit project scope. Tw
 
 | 1 / P23 | `mom-2025-q4-final:p006:b076:6f232b1b`; p.6 (printed iii) | Ratio of job vacancies to unemployed | none | HTML-entity mismatch in persisted quote; decoded original supports claim. |
 
-| 2 / P4 | `mom-2025-q3-final-release:s01:i004:c218f947`; HTML s01:i004 | increased from 1.35 in June 2025 | 1.35, 2025, 1.49, 2025 | Persisted verbatim match; original supports claim. |
+| 2 / P4 | `mom-2025-q3-final-release:s01:i004:c218f947`; HTML s01:i004 | increased from 1.35 in June [...] | 1.35, 2025, 1.49, 2025 | Persisted verbatim match; original supports claim. |
 
 | 2 / P21 | `mom-2025-q4-final-release:s01:i004:6b5d0787`; HTML s01:i004 | from 1.50 to 1.58 over the | 1.50, 1.58 | Persisted verbatim match; original supports claim. |
 
@@ -1410,7 +1410,7 @@ All 40 gold behaviour labels are defensible under the explicit project scope. Tw
 | Claim / citation | Exact evidence ID and locator | Quote excerpt (≤6 words) | Full-quote numerical tokens | Independent check |
 |---|---|---|---|---|
 
-| 1 / P51 | `mom-2025-q1-final-release:s01:i001:b0363360`; HTML s01:i001 | Total employment growth eased to 2,400 | 2,400, 2025 | Persisted verbatim match; original supports claim. |
+| 1 / P51 | `mom-2025-q1-final-release:s01:i001:b0363360`; HTML s01:i001 | Total employment growth eased to 2 [...] | 2,400, 2025 | Persisted verbatim match; original supports claim. |
 
 | 2 / P59 | `mom-2025-q4-advance:s01:i004:e5fa11e6`; HTML s01:i004 | 1Q 2025: 2,300 | 2025, 2,300 | Persisted verbatim match; original supports claim. |
 

@@ -24,6 +24,7 @@ SourceType = Literal["dataset_csv", "report_pdf", "release_html"]
 ReleaseStage = Literal["advance", "final", "dataset_snapshot", "annual", "not_applicable"]
 RightsStatus = Literal[
     "verified_open_licence",
+    "assumed_open_unverified",
     "verified_all_rights_reserved",
     "unresolved",
 ]

@@ -13,6 +13,7 @@ import os
 import re
 import secrets
 import time
+import unicodedata
 from collections import defaultdict, deque
 from contextlib import asynccontextmanager
 from dataclasses import dataclass, field
@@ -26,6 +27,7 @@ from fastapi.responses import FileResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 
 from labourlens import paths
+from labourlens.answer.validate import key_numbers, norm, quote_in
 from labourlens.mcp.redact import redact, redact_values
 from labourlens.audit import log as audit_log
 from labourlens.report import audit as web_audit
@@ -49,6 +51,9 @@ class Settings:
     max_concurrent: int = 2
     request_timeout: float = 90.0
     body_limit: int = 8192
+    login_lock_per_address: int = 10   # failed codes from one client address within 10 minutes before it is locked
+    login_lock_global: int = 200       # failed codes from all addresses within 10 minutes before every invalid code is refused
+    run_deadline_s: float = 80.0       # planner + answer LLM budget for one run; below request_timeout so the slot is freed
     feedback_dir: Path = field(default_factory=lambda: paths.DATA / "audit")
 
     @classmethod
@@ -88,16 +93,46 @@ def _provenance():
     except (OSError, ValueError, KeyError):
         return {}
 
+RIGHTS_WORD_WINDOW = 13
+RIGHTS_CHAR_WINDOW = 80
+_TOKEN = re.compile(r"[^\W_]+")
+
+
+def _tokens(text) -> list[str]:
+    """Letters and digits only, NFKC case-folded: punctuation, hyphens, spacing and zero-width characters do not change tokens."""
+    return _TOKEN.findall(unicodedata.normalize("NFKC", str(text or "")).casefold())
+
+
+class _Overlap:
+    """Does free text reproduce a stretch of the evidence? Two tests on the punctuation-free text: a 13-word window and an
+    80-character window over the letters and digits with the spaces removed (so hyphenating, re-spacing or re-punctuating words
+    does not hide a copied stretch). Light word substitutions every few words still evade it: this reduces verbatim
+    disclosure, it does not prove its absence."""
+
+    def __init__(self, texts):
+        w, c = RIGHTS_WORD_WINDOW, RIGHTS_CHAR_WINDOW
+        self.words, self.chars = set(), set()
+        for text in texts:
+            tokens = _tokens(text)
+            self.words.update(tuple(tokens[i:i + w]) for i in range(max(0, len(tokens) - w + 1)))
+            joined = "".join(tokens)
+            self.chars.update(hash(joined[i:i + c]) for i in range(max(0, len(joined) - c + 1)))
+
+    def copies(self, value) -> bool:
+        w, c = RIGHTS_WORD_WINDOW, RIGHTS_CHAR_WINDOW
+        tokens = _tokens(value)
+        if any(tuple(tokens[i:i + w]) in self.words for i in range(max(0, len(tokens) - w + 1))):
+            return True
+        joined = "".join(tokens)
+        return any(hash(joined[i:i + c]) in self.chars for i in range(max(0, len(joined) - c + 1)))
+
+
 def _bounded_answer(answer, evidence_text):
     """Rights boundary independent of model compliance and internal answer validators."""
-    windows = set()
-    for text in evidence_text.values():
-        words = str(text).casefold().split()
-        windows.update(tuple(words[i:i + 13]) for i in range(max(0, len(words) - 12)))
+    overlap = _Overlap(evidence_text.values())
 
     def free_text(value):
-        words = str(value or "").casefold().split()
-        return RIGHTS_NOTICE if any(tuple(words[i:i + 13]) in windows for i in range(max(0, len(words) - 12))) else str(value or "")
+        return RIGHTS_NOTICE if overlap.copies(value) else str(value or "")
 
     result = {k: free_text(answer.get(k, "")) for k in ("status", "summary", "reason", "clarification_question")}
     result["caveats"] = [free_text(c) for c in answer.get("caveats", [])]
@@ -107,19 +142,35 @@ def _bounded_answer(answer, evidence_text):
     for claim in answer.get("claims", [])[:12]:
         projected = {k: free_text(v) if isinstance(v, str) else v for k, v in claim.items() if k != "citations"}
         projected["citations"] = []
+        shown = set()  # a quote is listed once per claim; the same quote may support several claims
         for citation in claim.get("citations", [])[:3]:
             label, quote = str(citation.get("label", "")), str(citation.get("quote", ""))
             count = len(quote.split())
-            normalized = " ".join(quote.casefold().split())
-            if (not quote or not count or count > 40 or normalized in seen
-                    or quote not in str(evidence_text.get(label, "")) or total + count > 120 or per_card[label] + count > 120):
+            normalized = norm(quote)
+            # Same matching rule as answer.validate.check, so a citation the validator accepted is not dropped here.
+            if (not count or count > 40 or (label, normalized) in shown
+                    or not quote_in(quote, str(evidence_text.get(label, "")))):
                 continue
-            seen.add(normalized)
-            total += count
-            per_card[label] += count
+            if normalized not in seen:  # reuse of an already shown quote discloses nothing new, so it costs no quote budget
+                if total + count > 120 or per_card[label] + count > 120:
+                    continue
+                seen.add(normalized)
+                total += count
+                per_card[label] += count
+            shown.add((label, normalized))
             projected["citations"].append({**citation, "quote": quote})
         result["claims"].append(projected)
     return result
+
+
+def _ungrounded_numbers(raw: dict) -> list[str]:
+    """Figures the validator could not find in the evidence (last validate_answer event), as 'where: number'."""
+    for event in reversed(raw.get("trace", []) or []):
+        if isinstance(event, dict) and event.get("node") == "validate_answer":
+            flagged = (event.get("detail") or {}).get("ungrounded_numbers") or []
+            # The trace keeps every flag; the browser shows key figures only (decimals, comma-grouped, 100 or more), not "Q1" or "2 sectors".
+            return [str(x)[:60] for x in flagged if isinstance(x, str) and key_numbers(x.rsplit(": ", 1)[-1])][:12]
+    return []
 
 
 def public_result(raw: dict, shared) -> dict:
@@ -128,6 +179,11 @@ def public_result(raw: dict, shared) -> dict:
     if not isinstance(answer, dict) or raw.get("outcome") not in ("answered", "abstained", "clarify", "refused"):
         answer = {"status": "abstained", "summary": "The run did not produce a validated answer.", "claims": [], "caveats": [], "reason": "Evidence or service unavailable.", "clarification_question": ""}
     answer = _bounded_answer(answer, raw.get("evidence_text", {}))
+    flagged = _ungrounded_numbers(raw)
+    answer["ungrounded_numbers"] = flagged
+    if flagged:
+        # Visible in the browser: the run was not rejected (validator behaviour is unchanged), but the reader is told.
+        answer["caveats"] = [*answer["caveats"], "Number not found in evidence: " + ", ".join(f.replace(": ", " (", 1) + ")" for f in flagged) + ". Treat as unverified."]
     quotes = defaultdict(list)
     for claim in answer.get("claims", []):
         for c in claim.get("citations", []):
@@ -154,7 +210,7 @@ def public_result(raw: dict, shared) -> dict:
                 "locator": metadata.get("locator", metadata.get("period", "")), "url": _safe_url(source.get("canonical_url", source.get("url", source.get("landing_url", ""))))}
         # A report excerpt must be both cited and an actual substring of fetched evidence.
         text = str(raw.get("evidence_text", {}).get(label, ""))
-        card["quotes"] = [q for q in quotes[label] if q and q in text]
+        card["quotes"] = list(dict.fromkeys(q for q in quotes[label] if q and quote_in(q, text)))
         if record is not None:
             for key in ("unit", "indicator_id", "population", "adjustment", "dimension", "period", "missing_reason", "source_locator"):
                 if key in record and isinstance(record[key], str):
@@ -188,8 +244,8 @@ def create_app(settings: Settings | None = None, runner=None, shared_factory=Non
     cfg = settings or Settings.from_env()
     injected_runner = runner is not None
     if runner is None:
-        from labourlens.agent.graph import run_agent
-        runner = lambda question, shared, audit=None: run_agent(question, shared, save_trace=True, audit=audit)
+        from labourlens.agent.graph import AgentConfig, run_agent
+        runner = lambda question, shared, audit=None: run_agent(question, shared, AgentConfig(run_deadline_s=cfg.run_deadline_s), save_trace=True, audit=audit)
     if shared_factory is None:
         from labourlens.agent.tools import Shared
         shared_factory = Shared
@@ -197,7 +253,9 @@ def create_app(settings: Settings | None = None, runner=None, shared_factory=Non
     tasks = set()
     budget_file = cfg.feedback_dir / "budget.json"
     sessions = {}
-    login_failures = deque()
+    login_failures = defaultdict(deque)  # per client address, monotonic times of recent failed codes
+    global_failures = deque()
+    session_runs = defaultdict(lambda: deque(maxlen=50))  # run ids produced for each session; feedback must match one
 
     def persist_budget():
         try:
@@ -316,8 +374,10 @@ def create_app(settings: Settings | None = None, runner=None, shared_factory=Non
 
     @app.get("/healthz")
     async def healthz():
-        # Liveness only: no secrets, no cost data, no corpus detail. Lifespan has finished loading before this answers.
-        return {"status": "ok", "version": _version()}
+        # Liveness plus identity: code version and the corpus fingerprint (passage-set hash, passage and chunk counts).
+        # No secrets, no cost data, no passage text. Lifespan has finished loading before this answers.
+        corpus = getattr(app.state.shared, "corpus", None) if getattr(app.state, "shared", None) is not None else None
+        return {"status": "ok", "version": _version(), "corpus": corpus if isinstance(corpus, dict) else None}
 
     @app.get("/api/status")
     async def status(request: Request):
@@ -326,12 +386,14 @@ def create_app(settings: Settings | None = None, runner=None, shared_factory=Non
     @app.post("/api/login")
     async def login(request: Request):
         check_origin(request)
-        hit(("login", client_host(request)), cfg.login_limit)
+        ip = client_host(request)
+        hit(("login", ip), cfg.login_limit)
         now = time.monotonic()
-        while login_failures and login_failures[0] <= now - 600:
-            login_failures.popleft()
-        if len(login_failures) >= 50:
-            raise HTTPException(429, "Login temporarily locked. Try again later.")
+        for stale in [a for a, q in login_failures.items() if not q or q[-1] <= now - 600]:
+            login_failures.pop(stale, None)
+        for failures in (*login_failures.values(), global_failures):
+            while failures and failures[0] <= now - 600:
+                failures.popleft()
         if not cfg.enabled:
             raise HTTPException(503, "Live demo disabled.")
         data = await body(request)
@@ -339,11 +401,17 @@ def create_app(settings: Settings | None = None, runner=None, shared_factory=Non
         # Hash both inputs to a fixed size; always check every configured code.
         matches = [hmac.compare_digest(hashlib.sha256(candidate.encode()).digest(), hashlib.sha256(c.encode()).digest()) for c in cfg.access_codes]
         if not any(matches):
-            login_failures.append(now)
+            # The lock is per client address, so one address cannot lock out the others; a valid code is never refused by it.
+            locked = len(login_failures.get(ip, ())) >= cfg.login_lock_per_address or len(global_failures) >= cfg.login_lock_global
+            login_failures[ip].append(now)
+            global_failures.append(now)
+            if locked:
+                raise HTTPException(429, "Login temporarily locked. Try again later.")
             raise HTTPException(401, "Invalid access code.")
         expiry = int(time.time()) + 28800
         for old in [key for key, end in sessions.items() if end <= time.time()]:
             sessions.pop(old, None)
+            session_runs.pop(old, None)
         code_hash = hmac.new(cfg.session_secret.encode(), candidate.encode(), hashlib.sha256).hexdigest()
         sid = secrets.token_urlsafe(24) + "~" + code_hash
         sessions[sid] = expiry
@@ -357,6 +425,7 @@ def create_app(settings: Settings | None = None, runner=None, shared_factory=Non
         check_origin(request)
         sid = session(request)
         sessions.pop(sid, None)
+        session_runs.pop(sid, None)
         response = JSONResponse({"authenticated": False})
         response.delete_cookie(COOKIE, httponly=True, secure=request.url.scheme == "https", samesite="strict")
         return response
@@ -389,6 +458,8 @@ def create_app(settings: Settings | None = None, runner=None, shared_factory=Non
                 parameters = inspect.signature(runner).parameters
                 kwargs = {"audit": context} if "audit" in parameters or any(p.kind == inspect.Parameter.VAR_KEYWORD for p in parameters.values()) else {}
                 raw = await runner(question, app.state.shared, **kwargs) if inspect.iscoroutinefunction(runner) else await asyncio.to_thread(runner, question, app.state.shared, **kwargs)
+                if isinstance(raw.get("run_id"), str) and sid in sessions:
+                    session_runs[sid].append(raw["run_id"])
                 if injected_runner:
                     web_audit.log_injected_run(raw, question, sid, context["ip"])
                 response = redact_values(public_result(raw, app.state.shared), list(cfg.access_codes) + [cfg.session_secret])
@@ -432,6 +503,8 @@ def create_app(settings: Settings | None = None, runner=None, shared_factory=Non
         tags = data.get("tags", [])
         if not isinstance(run_id, str) or not re.fullmatch(r"[0-9a-f]{12}", run_id) or not isinstance(tags, list) or len(tags) > 4 or any(not isinstance(tag, str) or tag not in {"wrong_number", "wrong_source", "missing_info", "other"} for tag in tags):
             raise HTTPException(422, "Invalid feedback.")
+        if run_id not in session_runs.get(sid, ()):
+            raise HTTPException(404, "Unknown run for this session.")  # feedback attaches only to runs this session started
         try:
             audit_log.log_feedback(run_id, data["rating"], redact(comment, list(cfg.access_codes) + [cfg.session_secret]), sid, tags)
         except Exception:
