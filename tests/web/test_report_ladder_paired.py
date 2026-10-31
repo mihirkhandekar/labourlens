@@ -115,3 +115,19 @@ def test_site_copy_does_not_claim_t_i06_is_fixed_or_open():
     text = "".join(p.read_text() for p in (REPO / "web/static").rglob("*.js"))
     assert not re.search(r"T-I06[^.]{0,60}\b(is open|open\)|fixed|closed(?!-grammar))", text)
     assert "proposed, not built" not in text
+
+
+def test_committed_report_keeps_x2_and_e2efix_separate_from_registered_entries():
+    report = json.loads((REPO / "web/static/data/report.json").read_text())
+    x2 = {row["id"]: row for row in report["evaluation"]["rows"] if row.get("corpus_version") == "v3"}
+    assert set(x2) == {"experiments/eval/agent-dev-X2/gpt-6-luna", "experiments/eval/agent-dev-X2/gpt-5.6-luna"}
+    assert all(row["regression_check"] and row["gold_version"] == "v3.6" and row["metrics"]["n_cases"] == 237 for row in x2.values())
+    assert report["evaluation"]["dev_x2_regression_check"]["ablation"] is False
+    e2e = report["security"]["e2efix"]
+    assert e2e["experiment"] == "m7-e2efix-20261031" and e2e["corpus_version"] == "v3"
+    assert {r["label"] for r in e2e["rows"]} == {"gpt-6-luna", "gpt-5.6-luna", "gpt-6-luna+naive", "gpt-5.6-luna+naive"}
+    assert all("e2efix" not in r["id"] for r in report["security"]["rows"] + report["security"]["postfix"])
+    assert all(entry["corpus_version"] == "v1" for entry in report["evaluation"]["paired"])
+    assert report["evaluation"]["paired"][0]["gold_version"] == "v3.5"
+    raw = json.dumps(report)
+    assert "verdicts.jsonl" not in raw and "judgements.json" not in raw

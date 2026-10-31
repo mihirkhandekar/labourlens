@@ -247,7 +247,7 @@ export function renderRetrieval(m, ctx) {
   ch.body.append(callout({
     tone: 'warn', title: 'Retrieval evaluation limits',
     items: [
-      'Most gold labels are AI drafts; 45 of 268 cases are owner-reviewed. The ladder above ran on corpus v1. A corpus v2 rerun (X1) found no measurable change (chapter 10).',
+      'Most gold labels are AI drafts; 45 of 268 cases are owner-reviewed. The ladder above ran on corpus v1. A corpus v2 rerun (X1) found no measurable change (chapter 10). The X2 regression check on corpus v3 did not rerun the ladder.',
       'An LLM reranks and an LLM drafted the labels, so R2 and R3 may look better than they are.',
       'A hard period filter can exclude the right document when a later release restates an earlier quarter. Documented, not fixed.',
       'The development set was inspected many times, so it is not an unbiased estimate for new questions.',

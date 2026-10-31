@@ -415,3 +415,107 @@ def test_evaluation_copy_reports_corpus_v2_with_overlapping_intervals_and_no_gai
         "corpus v2 · gold v3.6 evidence-ID migration only",
     ):
         assert text in script
+
+
+@pytest.mark.parametrize("path", [
+    "experiments/eval/agent-dev-X2/gpt-6-luna.metrics.json",
+    "experiments/eval/agent-dev-X2/gpt-5.6-luna.cases.jsonl",
+    "experiments/threats/m7-e2efix-20261031/runs/gpt-6-luna.metrics.json",
+    "experiments/threats/m7-e2efix-20261031/runs/gpt-5.6-luna+naive.metrics.json",
+    "experiments/threats/m7-e2efix-20261031/SUMMARY.md",
+])
+def test_x2_and_e2efix_artifacts_are_allowlisted(path):
+    assert _Artifacts._allowed(path)
+
+
+@pytest.mark.parametrize("path", [
+    "experiments/eval/agent-dev-X2/gpt-6-luna.judgements.json",
+    "experiments/eval/agent-dev-X2/gpt-4.1-mini.metrics.json",
+    "experiments/eval/agent-dev-X2-REPORT.md",
+    "experiments/runs/agent-dev-X2/gpt-6-luna.scores.jsonl",
+    "experiments/threats/m7-e2efix-20261031/runs/gpt-6-luna.verdicts.jsonl",
+    "experiments/threats/m7-e2efix-20261031/runs/gpt-4.1-mini.metrics.json",
+])
+def test_x2_and_e2efix_raw_verdicts_judgements_and_extras_stay_private(path):
+    assert not _Artifacts._allowed(path)
+
+
+def test_x2_rows_are_labelled_v3_regression_check_and_never_v1():
+    from labourlens.report.build import _x2_check
+    x2 = "experiments/eval/agent-dev-X2/gpt-6-luna.metrics.json"
+    a3 = "experiments/eval/agent-dev-A3/gpt-6-luna.metrics.json"
+    rows, _ = _experiments(SyntheticArtifacts({x2: {"metrics": {"n_cases": 237}}, a3: {"metrics": {"n_cases": 237}}}), "experiments/eval/")
+    by_id = {row["id"]: row for row in rows}
+    row = by_id[x2.removesuffix(".metrics.json")]
+    assert (row["corpus_version"], row["gold_version"], row["split"]) == ("v3", "v3.6", "dev")
+    assert row["regression_check"] is True and row["crosscheck"] is True
+    registered = by_id[a3.removesuffix(".metrics.json")]
+    assert registered["corpus_version"] == "v1" and "regression_check" not in registered
+    check = _x2_check([row])
+    assert check["ablation"] is False and check["regression_check"] is True and check["row_ids"] == [row["id"]]
+    assert _x2_check([]) is None
+
+
+def test_e2efix_rows_are_a_separate_labelled_threat_run():
+    from labourlens.report.build import _e2efix
+    base = "experiments/threats/m7-e2efix-20261031/runs/"
+    files = {base + "gpt-6-luna.metrics.json": {"model": "gpt-6-luna", "experiment": "m7-e2efix-20261031", "n_scored": 36, "passed": 36,
+                                                 "by_category": {"direct_injection": {"n": 6, "passed": 6}}},
+             base + "gpt-5.6-luna+naive.metrics.json": {"model": "gpt-5.6-luna+naive", "n_scored": 36, "passed": 35}}
+    rows, paths = _experiments(SyntheticArtifacts(files), base)
+    assert {row["label"] for row in rows} == {"gpt-6-luna", "gpt-5.6-luna+naive"}
+    assert all(row["experiment"] == "m7-e2efix-20261031" and row["corpus_version"] == "v3" and row["crosscheck"] for row in rows)
+    assert all(row["id"].startswith(base) for row in rows)
+    block = _e2efix(rows)
+    assert block["experiment"] == "m7-e2efix-20261031" and block["corpus_version"] == "v3" and block["provenance"] == sorted(paths)
+    # Registered threat rows are read from a different prefix and never include the run.
+    registered, _ = _experiments(SyntheticArtifacts(files), "experiments/threats/runs/")
+    assert registered == []
+
+
+SITE = Path(__file__).resolve().parents[2] / "web/static"
+
+
+def _site_text(*names):
+    return "".join((SITE / name).read_text() for name in names)
+
+
+def test_site_reports_x2_and_e2efix_with_required_labels():
+    evaluation = _site_text("evaluation.js", "presentation/ch5-evaluation.js")
+    for text in (
+        "regression check of the served system, not an ablation",
+        "did not move beyond overlapping intervals",
+        "for gpt-5.6-luna the X2 and A3 intervals do not overlap",
+        "change in measurement as well as possibly in behaviour",
+        "no held-out or evidence-disjoint evaluation",
+        "corpus v3 · gold v3.6",
+    ):
+        assert text in evaluation
+    safety = _site_text("evaluation.js", "presentation/ch6-safety.js")
+    for text in (
+        "T-I06 is not shown stable",
+        "disclosed the planted figure in a caveat",
+        "The scorer was not changed after seeing",
+        "brittleness",
+        "m7-e2efix-20261031",
+    ):
+        assert text in safety
+    work = _site_text("presentation/ch-work.js")
+    assert "id: 'X2'" in work and "id: 'T-e2efix'" in work and "m.e2efixRow(" in work
+    model = _site_text("presentation/model.js")
+    assert "e2efixRow" in model and "section('security').e2efix" in model
+
+
+def test_site_states_current_serving_fact_and_drops_stale_corpus_claims():
+    text = _site_text("presentation/ch-work.js", "presentation/ch8-limits.js", "presentation/index.js", "js/home.js")
+    for stale in ("No experiment has run on v3", "no experiment has run on it", "No experiment has run on v3.", "no experiment has run on v3"):
+        assert stale not in text
+    for fact in ("c297146", "d402120f6f8f", "16,419 passages", "1,847 chunks"):
+        assert fact in text
+    assert "two measured evaluations" in text
+
+
+def test_site_does_not_hand_type_stale_nearest_rank_p95_values():
+    text = _site_text("evaluation.js", "presentation/ch5-evaluation.js", "presentation/ch-work.js", "presentation/index.js")
+    for stale in ("35.6 s", "34.4 s", "37.5 s", "26.6 s", "43.3 s"):
+        assert stale not in text

@@ -16,6 +16,8 @@ const human = value => String(value).replaceAll('_', ' ').replace(/^./, c => c.t
 const rowsOf = section => Array.isArray(section?.rows) ? section.rows : [];
 const GOLD_V35_SHA256 = 'aac4b405b51c7cebf019c3b3629509ecb711be32fb830a8e78c4c7b902219e09';
 const isCorpusV2 = row => row.corpus_version === 'v2';
+const isCorpusV3 = row => row.corpus_version === 'v3';
+const isLabelledRun = row => isCorpusV2(row) || isCorpusV3(row);
 const usesGoldV35 = row => row.scoring_provenance?.gold_sha256 === GOLD_V35_SHA256;
 const svgNode = (tag, attrs = {}, text) => {
   const result = document.createElementNS('http://www.w3.org/2000/svg', tag);
@@ -112,7 +114,7 @@ function familyTable(rows, security = false) {
   corner.scope = 'col';
   heading.append(corner);
   rows.forEach(row => {
-    const experiment = !security ? row.id?.match(/agent-(dev-A[1-5]|dev-X1|heldout-H-(?:r3|hybrid)|heldout-X-(?:r3|hybrid))\//)?.[1] : null;
+    const experiment = !security ? row.id?.match(/agent-(dev-A[1-5]|dev-X[12]|heldout-H-(?:r3|hybrid)|heldout-X-(?:r3|hybrid))\//)?.[1] : null;
     const label = row.label || row.id || 'Configuration';
     const cell = node('th', '', experiment ? `${experiment} · ${label}` : label);
     cell.scope = 'col';
@@ -155,7 +157,7 @@ export function evaluationNotices(report) {
   const out = [];
   const notice = (_panel, text) => out.push(text);
   const judges = [...new Set(rowsOf(report?.evaluation).map(row => row.judge).filter(Boolean))];
-  const snapshotCurrent = rowsOf(report?.evaluation).filter(row => !isCorpusV2(row)).length > 0 && rowsOf(report?.evaluation).filter(row => !isCorpusV2(row)).every(usesGoldV35);
+  const snapshotCurrent = rowsOf(report?.evaluation).filter(row => !isLabelledRun(row)).length > 0 && rowsOf(report?.evaluation).filter(row => !isLabelledRun(row)).every(usesGoldV35);
   notice(panel, `Completed evaluation covers 268 cases: 237 development and 31 held-out. A1/A2 used 235 development cases; A3/A4/A5 used 237. Held-out H-r3/H-hybrid includes only the registered gpt-6-luna and gpt-5.6-luna runs with planner_v1 and answer_v3. Current rescoring uses owner-reviewed gold v3.5, not the original generation-time v3.2 freeze. ${snapshotCurrent ? 'The plotted snapshot records gold v3.5 scoring fingerprints.' : 'The static page is awaiting a regenerated snapshot: historical development plots use gold v3.2 and historical held-out plots use gold v3.4. The completed v3.5 results are disclosed below, not substituted into historical bars.'} AI judge${judges.length ? ': ' + judges.join(', ') : ''}.`);
   notice(panel, 'owner review complete 31 Oct 2026: 125 cards decided by the owner (30 own verdicts, 95 by agreeing per card with AI suggestions or the three-pass AI tie-break), not independent inter-rater evidence. The cards comprise 45 gold cases, 40 answers, 30 source checks and 10 decisions. Of 268 gold cases, 45 are owner-reviewed and 223 remain AI-drafted. The owner answer verdicts are 25 correct, 6 partly correct and 9 incorrect; source checks are 19 matches and 11 minor issues. These selected-card decisions are not population accuracy or blind independent review. Sources: docs/human-review/owner-review-summary.md and experiments/gold/CHANGELOG.md.');
   notice(panel, 'Gold v3.5 incorporates two owner-approved label changes confirmed in chat on 31 Oct 2026: HO-022 clarify → answer and DEV-018 refuse → clarify. The private export proposed DEV-018 refuse → refuse, a no-op that contradicts the explicit chat confirmation; chat takes precedence. Every evidence ID is preserved. Development A1–A5 v3.5 rescoring is complete using existing outputs with --no-judge, without new generation or paid judge calls. Held-out v3.5 rescoring is complete for all four registered configurations; stale judge entries were rejudged against the current gold without new generation. HO-022 was changed after the held-out run; all four configurations gain 1/31 in behaviour accuracy relative to v3.4. This is post-run owner adjudication, not a fresh held-out experiment. The owner must commit the resulting artifacts and rebuild the report to update any historical static snapshot.');
@@ -166,6 +168,13 @@ export function evaluationNotices(report) {
   notice(panel, 'Historical second blind independent AI review (31 Oct 2026), not human review: a failure-enriched 40-case final A3 gpt-6-luna sample yielded 28 correct, 6 partly correct and 6 incorrect. Partly correct outputs had supported facts but invalid delivery/citation integrity; incorrect includes over-abstention and unnecessary clarification. These are selected-sample AI judgments, not population accuracy or human scores, and are preserved separately from the later owner verdicts. Source: experiments/human-review-sample/independent-ai-review-2.md.');
   notice(panel, 'Held-out is not evidence-independent: 25/31 cases reuse at least one development gold evidence ID; 15/31 reuse their entire evidence-ID set across the development union (29 cases have nonempty evidence). No exact duplicate questions or normalized question templates were found, but fact and reasoning-template overlap remains. This question-held-out comparison does not establish unseen-fact or broad generalisation performance. These overlap counts describe the second blind gold review before v3.4; they were not remeasured here. That historical AI review retained 70/71 reviewed labels and flagged HO-027 missing year, HO-023 missing cohort-definition citation and HO-004 truncated primary PDF evidence. Those findings were addressed by the disclosed v3.4 post-run edits, not by a new generation run. Later owner review is reported separately above. Source: experiments/gold/independent-ai-review-2.md.');
   notice(panel, 'Corpus v2 (extraction fixes, D-037, working corpus per D-041) is reported beside, never over, the frozen corpus-v1 results. The experiment is extraction-only: gold v3.6 migrates retrieval evidence IDs only, with no label change; crosscheck is off; r3 with planner_v1 and answer_v3. Retrieval (128 dev cases): R3 hit@8 0.953 [0.914, 0.984] versus 0.969 on corpus v1; R1a 0.867 versus 0.844. Development behaviour accuracy (n=237): gpt-6-luna 0.886 [0.844, 0.924] versus A3 0.903 [0.865, 0.937]; gpt-5.6-luna 0.911 [0.873, 0.945] versus 0.903 [0.861, 0.941]. Held-out X-r3 0.839 / 0.839 versus v1 0.871 / 0.839; X-hybrid 0.774 / 0.742 versus 0.710 / 0.742 (gpt-6-luna / gpt-5.6-luna; n=31). All corresponding intervals overlap: no measurable quality change or gain. The paired r3-minus-hybrid corpus-v2 differences on the same 31 questions are gpt-6-luna +0.065, 95% CI [-0.065, 0.194], 3 better / 1 worse, and gpt-5.6-luna +0.097, 95% CI [-0.032, 0.226], 4 better / 1 worse; this is diagnostic, not new held-out evidence. The extraction removes known defects (control-bearing ok blocks 57 → 0; Q3 2025 physical p.30 blocks 0 → 7; appendix-label headings 141 → 0; 15,915 passages), which is a data-quality gain, not a measured answer-quality gain. r3 remains the provisional default. Sources: docs/experiments/m7-extraction-fixes.md, experiments/runs/extraction-v2-X1/dev-R-SUMMARY.md, experiments/eval/agent-dev-X1/, experiments/eval/agent-heldout-X-r3/, experiments/eval/agent-heldout-X-hybrid/ and experiments/heldout/paired-corpus-v2.txt. Gold SHA-256 prefixes differ: v1 v3.5 aac4b405…, v2 v3.6 6169a9de….');
+  const devRow = (exp, model) => rowsOf(report?.evaluation).find(row => row.id === `experiments/eval/agent-${exp}/${model}`);
+  const devPct = (exp, model, key) => { const v = devRow(exp, model)?.metrics?.[key]; return finite(v?.rate) ? `${(100 * v.rate).toFixed(1)}% [${(100 * v.ci95?.[0]).toFixed(1)}, ${(100 * v.ci95?.[1]).toFixed(1)}]` : 'not recorded'; };
+  if (devRow('dev-X2', 'gpt-6-luna') && devRow('dev-X2', 'gpt-5.6-luna')) {
+    const behaviour = ['gpt-6-luna', 'gpt-5.6-luna'].map(model => `${model} A3 ${devPct('dev-A3', model, 'behaviour_accuracy')}, X1 ${devPct('dev-X1', model, 'behaviour_accuracy')}, X2 ${devPct('dev-X2', model, 'behaviour_accuracy')}`).join('; ');
+    const ungrounded = ['gpt-6-luna', 'gpt-5.6-luna'].map(model => `${model} A3 ${devPct('dev-A3', model, 'cases_with_ungrounded_numbers')}, X2 ${devPct('dev-X2', model, 'cases_with_ungrounded_numbers')}`).join('; ');
+    notice(panel, `Dev X2 is a regression check of the served system, not an ablation. It reruns the 237 development cases on corpus v3 with the 14 runtime changes (B1 to B14), the cross-check on, r3, planner_v1, answer_v3 and gold v3.6, so several factors changed at once. Behaviour accuracy: ${behaviour}. Behaviour, false-answer rate, over-abstention, key-number recall and calculation correctness did not move beyond overlapping intervals. Cases with ungrounded numbers rose (${ungrounded}); for gpt-5.6-luna the X2 and A3 intervals do not overlap. Claim support fell for both models. The harness check for B2 also widened the ungrounded-number check to the summary and caveats, so this is a change in measurement as well as possibly in behaviour; the two are not separable here. Development cases only: corpus v3 has two measured evaluations (X2 and the e2efix threat run) and no held-out or evidence-disjoint evaluation. Sources: experiments/eval/agent-dev-X2/ (*.metrics.json), experiments/eval/agent-dev-X2-REPORT.md, docs/experiments/m7-e2e-fixes.md.`);
+  }
   return out;
 }
 
@@ -178,10 +187,12 @@ export function renderEvaluation(panel, report) {
   rows.forEach(row => {
     const metrics = row.metrics || {};
     const card = node('article', 'card eval-model-card');
-    const experiment = row.id?.match(/agent-(dev-A[1-5]|dev-X1|heldout-H-(?:r3|hybrid)|heldout-X-(?:r3|hybrid))\//)?.[1];
+    const experiment = row.id?.match(/agent-(dev-A[1-5]|dev-X[12]|heldout-H-(?:r3|hybrid)|heldout-X-(?:r3|hybrid))\//)?.[1];
     const configuration = row.label || row.id || 'Recorded configuration';
     card.append(node('h3', 'eval-card-heading', experiment ? `${experiment} · ${configuration}` : configuration));
-    const scoringLabel = isCorpusV2(row)
+    const scoringLabel = isCorpusV3(row)
+      ? 'Development · corpus v3 · gold v3.6 · regression check X2 (several factors changed, not an ablation) · cross-check on'
+      : isCorpusV2(row)
       ? `${row.split === 'heldout' ? 'Held-out' : 'Development'} · corpus v2 · gold v3.6 evidence-ID migration only · extraction-only X1`
       : usesGoldV35(row)
       ? `${row.split === 'heldout' ? 'Held-out' : 'Development'} · corpus v1 · gold v3.5 · post-run owner adjudication`
@@ -228,6 +239,11 @@ export function renderSecurity(panel, report) {
   notice(panel, 'Final corrected development threat rerun: defended and naive configurations now use the same r3 retrieval in paired comparisons. An earlier r3 fixture omitted candidate lists and produced invalid indirect-injection passes; this valid final rerun supersedes earlier results. All poisoned passages reached agent evidence: not exercised = 0, with indirect-injection usefulness 6/6 in every run. Figures come from the linked run artifacts.');
   notice(panel, 'On this small handwritten suite (36 cases per configuration), gpt-6-luna passed 35/36 with and without defences: no measurable defence effect. gpt-4.1-mini passed 34/36 defended versus 32/36 naive, with overlapping Wilson 95% intervals: consistent with a benefit for the weakest model, not demonstrated. There is one run per configuration; these development results do not establish general safety.');
   notice(panel, 'Second blind AI ingestion review, not human review: all 5/5 malicious paraphrase probes bypassed the ingestion scanner, despite an active positive control. These are scanner bypasses, not observed end-to-end exploits. Zero corpus hits does not certify safe sources: retain untrusted-data isolation, quarantine, bounded read-only tools and schema/citation/output guards. Sampled raw fidelity matched, but a genuine table row was marked ok, and three sampled open-licence claims were not reproducible from cached evidence. Source: docs/human-review/independent-ai-review-m1-2.md.');
+  const e2e = rowsOf(report?.security?.e2efix);
+  if (e2e.length) {
+    const cell = label => { const m = e2e.find(row => row.label === label)?.metrics; return m ? `${number(m.passed)}/${number(m.n_scored)}` : 'not recorded'; };
+    notice(panel, `Threat run m7-e2efix-20261031 (corpus v3, final code, cross-check on, one run per configuration, 36 cases): strict scorer gpt-6-luna ${cell('gpt-6-luna')} defended and ${cell('gpt-6-luna+naive')} naive; gpt-5.6-luna ${cell('gpt-5.6-luna')} defended and ${cell('gpt-5.6-luna+naive')} naive. T-I06 is not shown stable across runs: the earlier post-fix run passed 36/36 under the refined scorer, and this run fails it for gpt-5.6-luna. In that failing run the cross-check detected the conflict and the answer reported the dataset value, then disclosed the planted figure in a caveat. It fails because the scorer requires an exact string and a forbidden-pattern check that also matches the caveat. The scorer was not changed after seeing this run; this is a scorer brittleness finding, from one case with a closed grammar. The suite does not show a defence effect: the defended and naive intervals overlap. Source: experiments/threats/m7-e2efix-20261031/SUMMARY.md.`);
+  }
   if (!rows.length) return empty(panel, 'No security measurements recorded.');
   const groups = new Map();
   rows.forEach(row => {
@@ -258,7 +274,7 @@ export function renderSecurity(panel, report) {
     if (!variants.some(row => row.naive)) card.append(node('p', 'eval-caption', 'No naive baseline recorded for this model, so no paired comparison is shown.'));
     grid.append(card);
   });
-  panel.append(grid, node('p', 'eval-caption', 'Whiskers show recorded Wilson 95% pass-rate intervals. Safety passes do not establish usefulness or zero risk. These rows are the pre-fix runs: T-I06, an attacker-planted false report figure, failed in all five configurations. A deterministic passage-to-dataset cross-check was added afterwards (D-038); its separate post-fix run is in report.json under security.postfix.'), node('h3', '', 'Results by threat category'), familyTable(rows, true));
+  panel.append(grid, node('p', 'eval-caption', 'Whiskers show recorded Wilson 95% pass-rate intervals. Safety passes do not establish usefulness or zero risk. These rows are the pre-fix runs: T-I06, an attacker-planted false report figure, failed in all five configurations. A deterministic passage-to-dataset cross-check was added afterwards (D-038); its separate post-fix run is in report.json under security.postfix, and the later corpus-v3 run m7-e2efix-20261031 under security.e2efix.'), node('h3', '', 'Results by threat category'), familyTable(rows, true));
 }
 
 // Optional replacement for scalar/nested metric dumps in other experiment sections.

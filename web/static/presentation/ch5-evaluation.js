@@ -1,5 +1,5 @@
 import {el, fmt, finite, quantile, figure, lineChart, dotPlot, dumbbell, heatmap, boxStrip, scatter} from '../charts.js';
-import {chapter, section, grid, stat, details} from './ui.js';
+import {chapter, section, grid, stat, details, dataTable, callout} from './ui.js';
 import {FAMILIES, FAMILY_LABEL, metricOf, runLabel, goldOf} from './model.js';
 
 const STEPS = [
@@ -238,6 +238,46 @@ function errorFigure(m) {
   });
 }
 
+// Dev X2 regression check beside A3 and X1. Every number is read from report.json rows; the interval
+// comparison is computed here, so a regenerated report changes the sentence with it.
+const X2_METRICS = [
+  ['Behaviour accuracy', 'behaviour_accuracy'], ['False-answer rate', 'false_answer_rate'], ['Over-abstention', 'over_abstention_rate'],
+  ['Key-number recall', 'key_number_recall'], ['Calculation correct', 'calc_correct'],
+  ['Cases with ungrounded numbers', 'cases_with_ungrounded_numbers'], ['Claim support', 'claim_supported_rate']
+];
+const intervalsOverlap = (a, b) => (a.ci && b.ci ? a.ci[0] <= b.ci[1] && b.ci[0] <= a.ci[1] : null);
+const withInterval = v => (finite(v.rate) ? `${fmt.pct(v.rate)}${v.ci ? ` [${fmt.pct(v.ci[0])}, ${fmt.pct(v.ci[1])}]` : ''}` : 'not recorded');
+
+function regressionSection(m) {
+  const runs = ['gpt-6-luna', 'gpt-5.6-luna'].map(name => ({name, a3: m.evalRow('dev-A3', name), x1: m.evalRow('dev-X1', name), x2: m.evalRow('dev-X2', name)})).filter(r => r.a3 && r.x2);
+  if (!runs.length) return null;
+  const rows = [], moved = [];
+  runs.forEach(r => {
+    X2_METRICS.forEach(([label, key]) => {
+      const [a, x, y] = [r.a3, r.x1, r.x2].map(row => metricOf(row?.metrics?.[key]));
+      const ov = intervalsOverlap(a, y);
+      if (ov === false) moved.push(`${label.toLowerCase()} (${r.name})`);
+      rows.push([`${label} · ${r.name}`, withInterval(a), r.x1 ? withInterval(x) : 'not run', withInterval(y), ov === null ? 'no interval' : ov ? 'overlap' : 'do not overlap']);
+    });
+    const p95 = (row, k) => (row ? fmt.seconds(row.metrics?.[k]) : 'not run');
+    rows.push([`95th percentile latency · ${r.name}`, p95(r.a3, 'latency_p95_s'), p95(r.x1, 'latency_p95_s'), p95(r.x2, 'latency_p95_s'), 'no interval']);
+    const cost = row => (row ? fmt.money(row.metrics?.cost_per_case_usd) : 'not run');
+    rows.push([`Generation cost per case · ${r.name}`, cost(r.a3), cost(r.x1), cost(r.x2), 'no interval']);
+  });
+  const sec = section('X2 regression check: development results on corpus v3 with the 14 runtime changes', ['Not an ablation. Corpus, runtime fixes, cross-check and gold version all changed together.']);
+  sec.append(callout({tone: 'warn', title: 'What X2 is', items: [
+    'X2 reruns the 237 development cases on corpus v3 with the runtime changes B1 to B14, the cross-check on, r3, planner_v1, answer_v3 and gold v3.6.',
+    'It checks that the served system has not regressed. It does not show which change caused any difference.',
+    'Development cases only. No held-out or evidence-disjoint evaluation exists on corpus v3.'], src: 'docs/experiments/m7-e2e-fixes.md \u00b7 experiments/eval/agent-dev-X2-REPORT.md'}));
+  sec.append(dataTable('Development, n=237 per run. A3: corpus v1, gold v3.5. X1: corpus v2. X2: corpus v3, gold v3.6. Rates with 95% bootstrap intervals; p95 is the nearest-rank value in each metrics file.', ['Metric and model', 'A3', 'X1', 'X2', 'X2 against A3 intervals'], rows));
+  sec.append(el('p', 'pr-small', moved.length
+    ? `Beyond overlapping intervals against A3: ${moved.join('; ')}. For the other compared metrics the X2 and A3 intervals overlap, so no change is shown. Overlap is a conservative check, not a significance test.`
+    : 'Every compared X2 interval overlaps its A3 interval, so no change is shown.'));
+  sec.append(el('p', 'pr-small', 'Cases with ungrounded numbers rose and claim support fell for both models, although only the interval for gpt-5.6-luna ungrounded numbers separates from A3. The harness check for B2 also widened the ungrounded-number check to the summary and caveats, so this is a change in measurement as well as possibly in behaviour. The two are not separable here. See docs/experiments/m7-e2e-fixes.md.'));
+  sec.append(el('p', 'pr-small', 'Source: report.json \u203a evaluation.rows[agent-dev-A3|X1|X2/*] \u00b7 experiments/eval/agent-dev-X2/*.metrics.json'));
+  return sec;
+}
+
 export function renderEvaluation(m, ctx) {
   const a3 = m.evalRow('dev-A3', 'gpt-6-luna'), r3 = m.heldRow('r3', 'gpt-6-luna');
   const ch = chapter({
@@ -262,6 +302,8 @@ export function renderEvaluation(m, ctx) {
   if (hl) dev.append(hl.root);
   dev.append(pr.root, familyHeat(m).root);
   ch.body.append(dev);
+  const x2 = regressionSection(m);
+  if (x2) ch.body.append(x2);
 
   const pa = m.paired[0]?.models?.['gpt-6-luna'];
   const held = section(r3 ? `Held-out: r3 scores ${fmt.pct(metricOf(r3.metrics.behaviour_accuracy).rate)} on ${fmt.int(r3.metrics.n_cases)} cases${pa ? `, and the gain over hybrid is ${pa.ci95[0] <= 0 ? 'not demonstrated' : 'outside the interval around zero'}` : ''}` : 'Held-out results', ['One run on a frozen configuration, scored afterwards.', 'Comparison: r3 against hybrid retrieval.']);

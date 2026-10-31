@@ -30,8 +30,14 @@ _LABELS = {
 }
 
 
+_E2EFIX_DIR = "experiments/threats/m7-e2efix-20261031/"
+_E2EFIX_EXPERIMENT = "m7-e2efix-20261031"
+
+
 def _corpus_version(path: str) -> str:
-    """Explicit corpus label: v2 only for the separately labelled X1 artifacts."""
+    """Explicit corpus label: v2 only for the separately labelled X1 artifacts, v3 only for dev X2."""
+    if "/agent-dev-X2/" in path:
+        return "v3"
     return "v2" if re.search(r"/(?:agent-dev-X1|agent-heldout-X-(?:r3|hybrid)|extraction-v2-X1)/", path) else "v1"
 
 
@@ -89,15 +95,19 @@ class _Artifacts:
         # Raw held-out runs and extra/unregistered models stay private.
         if path.startswith("experiments/eval/"):
             development = re.fullmatch(r"experiments/eval/agent-dev-A[1-5]/[^/]+", path)
-            # Corpus-v2 X1 runs: registered luna models only, no raw/judge files.
+            # Labelled non-registered runs (corpus v2 X1, corpus v3 X2): registered luna models only, no raw/judge files.
             heldout = re.fullmatch(
-                r"experiments/eval/agent-(?:heldout-H|heldout-X|dev-X1)(?:-(?:r3|hybrid))?/gpt-(?:6|5\.6)-luna\.(?:metrics\.json|cases\.jsonl)",
+                r"experiments/eval/agent-(?:heldout-H|heldout-X|dev-X[12])(?:-(?:r3|hybrid))?/gpt-(?:6|5\.6)-luna\.(?:metrics\.json|cases\.jsonl)",
                 path,
-            ) if "/agent-dev-X1/" in path or re.search(r"/agent-heldout-(?:H|X)-(?:r3|hybrid)/", path) else None
+            ) if re.search(r"/agent-dev-X[12]/", path) or re.search(r"/agent-heldout-(?:H|X)-(?:r3|hybrid)/", path) else None
             if not (development or heldout):
                 return False
         if path.startswith("experiments/runs/agent-"):
             if not re.fullmatch(r"experiments/runs/agent-dev-A[1-5]/[^/]+", path):
+                return False
+        if path.startswith(_E2EFIX_DIR):
+            # Threat run m7-e2efix: aggregate metrics and the summary only; raw verdicts stay private.
+            if not re.fullmatch(_E2EFIX_DIR + r"(?:SUMMARY\.md|runs/gpt-(?:6|5\.6)-luna(?:\+naive)?\.metrics\.json)", path):
                 return False
         return (
             (p.parent.as_posix() == "data/export" and p.suffix == ".json")
@@ -154,6 +164,11 @@ def _experiments(artifacts: _Artifacts, prefix: str) -> tuple[list, list]:
                 row["corpus_version"] = _corpus_version(path)
                 if row["corpus_version"] == "v2":
                     row["gold_version"] = "v3.6 (evidence-ID migration only)"
+                elif row["corpus_version"] == "v3":
+                    # Dev X2: a regression check of the served system, several factors changed at once.
+                    row.update({"gold_version": "v3.6", "regression_check": True, "crosscheck": True})
+            if prefix == _E2EFIX_DIR + "runs/":
+                row.update({"experiment": _E2EFIX_EXPERIMENT, "corpus_version": "v3", "crosscheck": True})
             label = _label(data.get("label", data.get("model", Path(path).name.removesuffix(".metrics.json"))))
             if label:
                 row["label"] = label
@@ -563,6 +578,21 @@ def _work(artifacts: _Artifacts) -> dict:
     return {"decisions": decisions, "milestones": milestones, "provenance": paths}
 
 
+def _x2_check(rows: list) -> dict | None:
+    """Labelled descriptor for the corpus-v3 dev X2 regression check; the metrics stay in `rows`."""
+    if not rows:
+        return None
+    return {"experiment": "dev-X2", "corpus_version": "v3", "gold_version": "v3.6", "regression_check": True,
+            "crosscheck": True, "ablation": False, "row_ids": sorted(row["id"] for row in rows),
+            "provenance": sorted({path for row in rows for path in row["provenance"]})}
+
+
+def _e2efix(rows: list) -> dict:
+    """Threat run m7-e2efix-20261031 (corpus v3, crosscheck on), kept apart from the registered v1 rows."""
+    return {"experiment": _E2EFIX_EXPERIMENT, "corpus_version": "v3", "crosscheck": True, "rows": rows,
+            "provenance": sorted({path for row in rows for path in row["provenance"]})}
+
+
 def build_report(root: Path) -> dict:
     artifacts = _Artifacts(root)
     sources = _sources(artifacts)
@@ -583,6 +613,8 @@ def build_report(root: Path) -> dict:
     eval_rows, eval_paths = _experiments(artifacts, "experiments/eval/")
     security_rows, security_paths = _experiments(artifacts, "experiments/threats/runs/")
     postfix_rows, postfix_paths = _experiments(artifacts, "experiments/threats/m7-ti06-postfix-20261031/runs/")
+    e2efix_rows, e2efix_paths = _experiments(artifacts, _E2EFIX_DIR + "runs/")
+    x2_rows = [row for row in eval_rows if row.get("corpus_version") == "v3"]
     trace, trace_paths, errors = _agent_trace(artifacts)
     quality_path = "data/export/quality.json"
     quality_data = artifacts.mapping(quality_path)
@@ -601,10 +633,10 @@ def build_report(root: Path) -> dict:
         "agent": _section("Bounded workflow measurements on statistics-only traces.", agent_rows, agent_paths + trace_paths, trace=trace, events=_saved_replay(artifacts)),
         "mcp": mcp,
         "reconciliation": reconciliation,
-        "security": _section("Threat-suite measurements. They do not guarantee security.", security_rows, security_paths + postfix_paths, postfix=postfix_rows),
-        "evaluation": _section("Development A1–A5 and registered held-out H-r3/H-hybrid luna runs. Measurements retain their recorded gold versions. Owner review complete 31 Oct 2026: 125 cards decided by the owner (30 own verdicts, 95 by agreeing per card with AI suggestions or the three-pass AI tie-break), not independent inter-rater evidence. Gold v3.5 development and all four registered held-out rescoring runs are complete on existing generated outputs; held-out stale judge entries were rejudged. `paired` holds the registered corpus-v1 comparison, current first, with v3.2–v3.4 history; `corpus_v2_diagnostic` is a separate extraction-only diagnostic.", eval_rows, eval_paths + [path for entry in paired + ([paired_v2] if paired_v2 else []) for path in entry["provenance"]],
-                               errors={"scope": "rescored case records (experiments/eval, gold as recorded in each metrics file)", "counts": errors, "provenance": trace_paths}, paired=paired, corpus_v2_diagnostic=paired_v2,
-                               limitations=["Generation used AI-drafted gold before owner review; post-run owner review covers selected cards, not the entire gold set.", "Forty-five gold cards are owner reviewed; the remaining 223 remain draft.", "Current v3.5 and historical paired intervals include zero; the comparison is inconclusive under the registered rule.", "Gold v3.5 changes HO-022 after held-out execution; rescoring is post-run adjudication, not a fresh frozen-gold experiment.", "AI-assisted per-card owner decisions are not blinded independent annotation or inter-rater evidence.", "Metric definitions differ between evaluation stages."]),
+        "security": _section("Threat-suite measurements. They do not guarantee security. `postfix` and `e2efix` are separate labelled runs; neither replaces the registered rows.", security_rows, security_paths + postfix_paths + e2efix_paths, postfix=postfix_rows, e2efix=_e2efix(e2efix_rows)),
+        "evaluation": _section("Development A1–A5 and registered held-out H-r3/H-hybrid luna runs. Measurements retain their recorded gold versions. Owner review complete 31 Oct 2026: 125 cards decided by the owner (30 own verdicts, 95 by agreeing per card with AI suggestions or the three-pass AI tie-break), not independent inter-rater evidence. Gold v3.5 development and all four registered held-out rescoring runs are complete on existing generated outputs; held-out stale judge entries were rejudged. `paired` holds the registered corpus-v1 comparison, current first, with v3.2–v3.4 history; `corpus_v2_diagnostic` is a separate extraction-only diagnostic; `dev_x2_regression_check` labels the corpus-v3 dev X2 rows (a regression check, not an ablation).", eval_rows, eval_paths + [path for entry in paired + ([paired_v2] if paired_v2 else []) for path in entry["provenance"]],
+                               errors={"scope": "rescored case records (experiments/eval, gold as recorded in each metrics file)", "counts": errors, "provenance": trace_paths}, paired=paired, corpus_v2_diagnostic=paired_v2, dev_x2_regression_check=_x2_check(x2_rows),
+                               limitations=["Generation used AI-drafted gold before owner review; post-run owner review covers selected cards, not the entire gold set.", "Forty-five gold cards are owner reviewed; the remaining 223 remain draft.", "Current v3.5 and historical paired intervals include zero; the comparison is inconclusive under the registered rule.", "Gold v3.5 changes HO-022 after held-out execution; rescoring is post-run adjudication, not a fresh frozen-gold experiment.", "AI-assisted per-card owner decisions are not blinded independent annotation or inter-rater evidence.", "Metric definitions differ between evaluation stages.", "Dev X2 (corpus v3, gold v3.6, crosscheck on, 14 runtime changes) is a regression check of the served system, not an ablation: several factors changed at once, and the ungrounded-number check was widened, so that metric is not comparable with A3 or X1."]),
         "quality": _section("Validation outcomes, including warnings.", quality_rows, [quality_path], metrics=_numeric(quality_data.get("summary", {}))),
         "work": _work(artifacts),
         "limitations": ["Model outputs are not published.", "Report passages are not published.", "Missing artifacts are marked missing.", "Only committed artifacts supply measurements.", "Series definitions are kept separate.", "The population basis of the dataset employment series is unverified."],

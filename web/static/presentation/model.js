@@ -26,6 +26,10 @@ export function model(report) {
     answerRow: (group, name) => find('answers', `experiments/runs/answer-dev-${group}/${name}`),
     retrievalRow: (group, name) => find('retrieval', `experiments/runs/${group}/${name}`),
     securityRow: name => find('security', `experiments/threats/runs/${name}`),
+    // Corpus-v3 threat run m7-e2efix-20261031: its own key, never a registered security row.
+    e2efixRow: name => (Array.isArray(section('security').e2efix?.rows) ? section('security').e2efix.rows : []).find(row => row.id === `experiments/threats/m7-e2efix-20261031/runs/${name}`) || null,
+    e2efixThreats: Array.isArray(section('security').e2efix?.rows) ? section('security').e2efix.rows : [],
+    devX2RegressionCheck: section('evaluation').dev_x2_regression_check && typeof section('evaluation').dev_x2_regression_check === 'object' ? section('evaluation').dev_x2_regression_check : null,
     ladder: section('retrieval').ladder || null,
     paired: Array.isArray(section('evaluation').paired) ? section('evaluation').paired : [],
     pairedCorpusV2Diagnostic: section('evaluation').corpus_v2_diagnostic && typeof section('evaluation').corpus_v2_diagnostic === 'object' ? section('evaluation').corpus_v2_diagnostic : null,

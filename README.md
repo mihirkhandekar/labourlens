@@ -15,7 +15,8 @@ All numbers are saved outputs, each with its source file. Behaviour accuracy mea
 | Does filter plus rerank (A3) beat plain hybrid retrieval (A1) with `gpt-6-luna`? | Development behaviour 0.903 [0.865, 0.937] (n=237) versus 0.779 [0.728, 0.830] (n=235); over-abstention 3.0% versus 15.7%. Descriptive, not a paired test. | [`experiments/eval/`](experiments/eval/) |
 | Does it hold on the 31 held-out cases? | r3 0.871 [0.742, 0.968] versus hybrid 0.710 [0.548, 0.839]. Paired gain +16.1 points [0.0, 32.3]: **not demonstrated**. | [`experiments/heldout/paired.txt`](experiments/heldout/paired.txt) |
 | Do the extraction fixes (corpus v2) help? | No measurable change (dev 0.886 [0.844, 0.924] versus 0.903). | [evaluation report](docs/evaluation-report.md) |
-| Threat suite, 36 hand-written cases | Defended 35/36 [0.858, 0.995] for both luna models, 34/36 for mini. The one shared failure was a planted false figure (T-I06); a deterministic cross-check was added afterwards. Post-fix: strict scorer 35/36, refined scorer 36/36, the refined scorer written after seeing the run; one case, closed grammar, not shown to generalise. | [`experiments/threats/SUMMARY.md`](experiments/threats/SUMMARY.md) |
+| Does the served system (corpus v3, end-to-end review fixes, cross-check on) hold up on the development set? | **MEASURED** regression check, not an ablation: several factors changed together. Behaviour `gpt-6-luna` 0.903 [0.865, 0.941], `gpt-5.6-luna` 0.916 [0.878, 0.949], both overlapping A3. Cases with an ungrounded number rose for `gpt-5.6-luna` to 0.165 [0.118, 0.215] from 0.051 [0.025, 0.080] in A3 (no overlap), and the check itself was widened in the same change. | [X2 report](experiments/eval/agent-dev-X2-REPORT.md), [evaluation report](docs/evaluation-report.md) |
+| Threat suite, 36 hand-written cases | Pre-guard (corpus v1): defended 35/36 [0.858, 0.995] for both luna models, 34/36 for mini; the shared failure was a planted false figure (T-I06). Final-code run `m7-e2efix-20261031` (corpus v3, cross-check on, one run per configuration): `gpt-6-luna` defended 36/36 strict, `gpt-5.6-luna` 35/36 (T-I06 fails strict and the post-hoc refined scorer), naive baselines 35/36 on both. T-I06 is **not shown stable** across runs, the scorer is brittle (exact-string checks) and was not changed, and the suite shows no defence effect. | [`experiments/threats/m7-e2efix-20261031/SUMMARY.md`](experiments/threats/m7-e2efix-20261031/SUMMARY.md), [`experiments/threats/SUMMARY.md`](experiments/threats/SUMMARY.md) |
 | Human review | Owner decided 125 cards: 30 own verdicts, 95 agreeing with an AI suggestion. Not inter-rater evidence. | [owner review summary](docs/human-review/owner-review-summary.md) |
 
 Caveats that matter for reading the table: the held-out set shares evidence with development; its labels changed after the run (HO-022, v3.5), and the full version history is in the [evaluation report](docs/evaluation-report.md). Each configuration was run once.
@@ -29,10 +30,10 @@ Three corpus states exist, and different parts of this repository belong to diff
 | Corpus | Contents | Used for |
 |---|---|---|
 | **v1** | 13,484 passages | All registered experiments: A1–A5, held-out H-r3/H-hybrid, pre-guard threat suites |
-| **v2** (`extract-0.2`) | 15,915 passages, 43,662 observations | Extraction-only X1 experiments and the post-fix T-I06 run |
-| **v3** (v2 plus six labour-only sources, D-040) | 85 sources (36 datasets, 49 documents: 27 PDFs and 22 HTML), 52,020 observations (4,300 in the answer scope), 16,419 passages, 276 build checks (269 pass, 7 warn) | The committed [manifest](data/manifests/manifest.json) and [quality report](artifacts/data-quality/quality-report.md), and the local store |
+| **v2** (`extract-0.2`) | 15,915 passages, 43,662 observations | Extraction-only X1 experiments and the earlier post-fix T-I06 run (`m7-ti06-postfix-20261031`) |
+| **v3** (v2 plus six labour-only sources, D-040) | 85 sources (36 datasets, 49 documents: 27 PDFs and 22 HTML), 52,020 observations (4,300 in the answer scope), 16,419 passages, 1,847 chunks, 276 build checks (269 pass, 7 warn) | The committed [manifest](data/manifests/manifest.json) and [quality report](artifacts/data-quality/quality-report.md), the local store, the X2 development regression check and the `m7-e2efix-20261031` threat run |
 
-**No experiment has been run on v3.** The live Droplet serves corpus v1 data and pre-fix code until the v3 upload and redeploy (pending); the parent will update this line after the upload. Details: [data sheet](docs/data-sheet.md), [evaluation report](docs/evaluation-report.md).
+**Corpus v3 has two measured evaluations: the X2 development regression check and the `m7-e2efix-20261031` threat run. It has no held-out or evidence-disjoint evaluation yet** (the held-out v2 draft has not been run). Frozen v1 and v2 results are retained unchanged. **Owner-supplied, not checkable from the repository:** the Droplet serves corpus v3 and the post-fix code (commit `c297146`; `/healthz` fingerprint `d402120f6f8f`, 16,419 passages, 1,847 chunks), so the served system is the one X2 and the threat run measured. Details: [data sheet](docs/data-sheet.md), [evaluation report](docs/evaluation-report.md).
 
 ## Quick start
 
@@ -152,7 +153,8 @@ Treat user input, retrieved passages and MCP content as untrusted data. Do not s
 
 - Gold labels are mostly AI-drafted; owner review used AI suggestions and is not independent.
 - The held-out set shares evidence with development; its gain over hybrid retrieval is not demonstrated.
-- The planted-figure guard is a closed grammar, was measured on one case with a scorer written after the run, and had known faults found by the end-to-end review (see the [threat model](docs/threat-model.md)).
+- The planted-figure guard is a closed grammar and had known faults found by the end-to-end review (see the [threat model](docs/threat-model.md)). T-I06 is one case: the post-fix runs gave 36/36 refined once and 35/36 once for `gpt-5.6-luna`, and its scorer requires exact strings, so it is brittle and was not changed after the failure was seen.
+- The X2 regression check changed several factors at once; it does not isolate any one of them. Its rise in ungrounded-number cases mixes a wider check with possible behaviour change.
 - The ingestion scanner missed all five paraphrased attack probes; citation checks confirm a quote exists, not that it supports the claim.
 - PDF tables can extract poorly; report-only figures are not deterministic calculation inputs.
 - Dataset and report employment totals can differ in definition or vintage; the corpus does not explain every gap.

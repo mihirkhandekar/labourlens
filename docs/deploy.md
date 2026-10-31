@@ -122,7 +122,7 @@ Everything else under `data/` (raw PDFs and HTML, other embedding models, `runs/
 
 **VERIFIED (local, 30 Oct 2026):** starting `Shared()` and then the web app against a `data/` directory containing exactly this set loaded 2,106 chunks, 13,484 passages and 3,790 in-scope observations without a network call or API key use, in about 2.5 seconds on the author's machine with a warm file cache. The container reported healthy about 9 seconds after start. The earlier estimate of 30 seconds for startup was not reproduced; no on-disk BM25 cache exists and none is needed at this size. Allow for slower cold-disk reads on the Droplet; the compose health check allows 120 seconds.
 
-**Corpus on the Droplet.** The numbers in this section (2,106 chunks, 13,484 passages, 3,790 in-scope observations) are corpus v1. The live Droplet serves corpus v1 data and pre-fix code until the v3 upload and redeploy (pending); the parent will update this line after the upload. The committed manifest and the local store are corpus v3 (16,419 passages, 4,300 in-scope observations); see the corpus-versions statement in the [README](../README.md#corpus-versions).
+**Corpus on the Droplet.** Per the owner (31 Oct 2026; not verifiable from repository files), the Droplet now serves corpus v3 and the post-fix code at commit c297146. `/healthz` reports fingerprint `d402120f6f8f`, 16,419 passages and 1,847 chunks. The local figures in the VERIFIED paragraph above (2,106 chunks, 13,484 passages, 3,790 in-scope observations) are corpus v1, measured on 30 Oct 2026 and kept as history of the startup check. Corpus v3 has 4,300 in-scope observations; see the corpus-versions statement in the [README](../README.md#corpus-versions). Two measured evaluations exist on v3 (the X2 development regression check and the `m7-e2efix-20261031` threat run); no held-out or evidence-disjoint evaluation has been run on v3.
 
 Upload from your machine (dry run first, then transfer):
 
@@ -211,7 +211,7 @@ On the Droplet and from your machine:
 **Corpus identity.** `GET /healthz` returns `{"status","version","corpus"}`. `corpus.passage_set_sha256` is a hash of the sorted
 passage ids (each id embeds a content hash), with `passages` and `chunks` counts. After an upload, compare it with the local value
 (on the machine that built the corpus: `uv run python -c 'from labourlens.retrieval import chunk as c, runtime as r; p=c.load_passages(); k=c.build_chunks(c.CONFIGS[r.CHUNK_CONFIG], p); print(r.corpus_fingerprint({x["passage_id"]:x for x in p}, {y.chunk_id:y for y in k}))'`; it printed `d402120f6f8f`, 16,419 passages, 1,847 chunks on 31 Oct 2026) before
-assuming v1 or v2 is served. Audit records carry the same value under `version.corpus`.
+assuming which corpus is served. Per the owner (not verifiable from files), the Droplet's `/healthz` reports the same fingerprint, 16,419 passages and 1,847 chunks (corpus v3). Audit records carry the same value under `version.corpus`.
 
 **No embedding at startup.** The container sets `LABOURLENS_ALLOW_EMBED=0`. If `cache.npz` lacks a vector for any chunk the app
 exits at start with "embedding cache incomplete", the health check fails and `deploy.sh` rolls back; it never calls the paid API.
