@@ -1,6 +1,6 @@
 {
   "schema_version": "report-1.0",
-  "generated_at": "2026-10-31T05:25:28.237466+00:00",
+  "generated_at": "2026-10-31T05:28:09.288608+00:00",
   "summary": {
     "title": "LabourLens research workbench",
     "scope": [
@@ -56923,7 +56923,7 @@
   },
   "evaluation": {
     "status": "available",
-    "summary": "Development A1–A5 and registered held-out H-r3/H-hybrid luna runs. Measurements retain their recorded gold versions. Owner review complete 31 Oct 2026: 125 cards decided by the owner (30 own verdicts, 95 by agreeing per card with AI suggestions or the three-pass AI tie-break), not independent inter-rater evidence. Gold v3.5 development and all four registered held-out rescoring runs are complete on existing generated outputs; held-out stale judge entries were rejudged. Paired v3.2/v3.3/v3.4 history is retained beside v3.5.",
+    "summary": "Development A1–A5 and registered held-out H-r3/H-hybrid luna runs. Measurements retain their recorded gold versions. Owner review complete 31 Oct 2026: 125 cards decided by the owner (30 own verdicts, 95 by agreeing per card with AI suggestions or the three-pass AI tie-break), not independent inter-rater evidence. Gold v3.5 development and all four registered held-out rescoring runs are complete on existing generated outputs; held-out stale judge entries were rejudged. `paired` holds the registered corpus-v1 comparison, current first, with v3.2–v3.4 history; `corpus_v2_diagnostic` is a separate extraction-only diagnostic.",
     "metrics": {},
     "rows": [
       {
@@ -61081,37 +61081,6 @@
     },
     "paired": [
       {
-        "corpus_version": "v2",
-        "diagnostic": true,
-        "gold_version": "v3.6",
-        "n": 31,
-        "resamples": 10000,
-        "seed": 20261030,
-        "models": {
-          "gpt-6-luna": {
-            "diff": 0.065,
-            "ci95": [
-              -0.065,
-              0.194
-            ],
-            "better": 3,
-            "worse": 1
-          },
-          "gpt-5.6-luna": {
-            "diff": 0.097,
-            "ci95": [
-              -0.032,
-              0.226
-            ],
-            "better": 4,
-            "worse": 1
-          }
-        },
-        "provenance": [
-          "experiments/heldout/paired-corpus-v2.txt"
-        ]
-      },
-      {
         "corpus_version": "v1",
         "gold_version": "v3.5",
         "n": 31,
@@ -61232,6 +61201,37 @@
         ]
       }
     ],
+    "corpus_v2_diagnostic": {
+      "corpus_version": "v2",
+      "gold_version": "v3.6",
+      "n": 31,
+      "resamples": 10000,
+      "seed": 20261030,
+      "models": {
+        "gpt-6-luna": {
+          "diff": 0.065,
+          "ci95": [
+            -0.065,
+            0.194
+          ],
+          "better": 3,
+          "worse": 1
+        },
+        "gpt-5.6-luna": {
+          "diff": 0.097,
+          "ci95": [
+            -0.032,
+            0.226
+          ],
+          "better": 4,
+          "worse": 1
+        }
+      },
+      "provenance": [
+        "experiments/heldout/paired-corpus-v2.txt"
+      ],
+      "diagnostic": true
+    },
     "limitations": [
       "Generation used AI-drafted gold before owner review; post-run owner review covers selected cards, not the entire gold set.",
       "Forty-five gold cards are owner reviewed; the remaining 223 remain draft.",
@@ -61763,7 +61763,7 @@
     "The population basis of the dataset employment series is unverified."
   ],
   "provenance": {
-    "commit": "ac258a4f550f567d34ec02edf89fabf593c527b2",
+    "commit": "e41062c04aafe37d060c71a232069f17fa1b3465",
     "artifacts": [
       {
         "path": "data/export/sources.json",
@@ -61941,11 +61941,6 @@
         "sha256": "930d58188f38d8a9bbbaa6cc74f33bd80948db7797c102c8817c425f53ddeeaa"
       },
       {
-        "path": "experiments/heldout/paired-corpus-v2.txt",
-        "status": "available",
-        "sha256": "c88392e2ee1b3c424fd1c3d5abee47a3cfbe443307eeffec4ce96ba4e8c465ce"
-      },
-      {
         "path": "experiments/heldout/paired.txt",
         "status": "available",
         "sha256": "b247d170e90881a4be1aa0d80eda08b4fdbb6ae3a08100e4876e9ea6b44bd3a1"
@@ -61964,6 +61959,11 @@
         "path": "experiments/heldout/paired-v3.2.txt",
         "status": "available",
         "sha256": "e385a387f9ebb73ff0d0704969d7f29fc39a759841fa75beb47775a9f4a35f36"
+      },
+      {
+        "path": "experiments/heldout/paired-corpus-v2.txt",
+        "status": "available",
+        "sha256": "c88392e2ee1b3c424fd1c3d5abee47a3cfbe443307eeffec4ce96ba4e8c465ce"
       },
       {
         "path": "experiments/runs/answer-dev-G0/gpt-4.1-mini.metrics.json",
