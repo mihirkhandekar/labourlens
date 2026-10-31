@@ -206,3 +206,8 @@ Entries below are historical session records. Their “next” gates, proposal s
 - State: gold v3.2 (D-031, hard period scope), retrieval experiments rerun on it, threat suite corrected and re-run. All committed and pushed.
 - Superseded by the current refresh above: A5 and all ten gold-v3.2 dev scoring files are complete; `planner_v2` is not adopted. Held-out execution is now in progress, without results reported here.
 - Remaining handoff: owner reviews gold, answer sheet and M1 sheets, records protocol approval, confirms or reverts D-030, and completes final build/test/clean-checkout, rehearsal and deployment checks. Historical commands above are not a claim that these checks ran.
+
+## Owner review ingested (31 Oct 2026)
+- **VERIFIED FACT:** `review-ingest` of the owner's own export (reviewer "Mihir", exported 2026-10-31) wrote `docs/human-review/owner-review-summary.md`. Human-entered content: 7 of 40 answer verdicts (3 correct, 2 partly correct, 2 incorrect; 6 of 7 agree with the independent AI review), decisions J1–J10, and nothing on the 31 held-out gold cards, the 30 source checks or the 12-item checklist.
+- **Status:** human review is **partial**, not complete. AI reviews were not copied into human fields. No gold label has been changed on the basis of owner review (`proposed_label_changes.jsonl` is empty). Gold stays `review_status: draft`.
+- **Decisions recorded:** J1 verified by owner (evidence in owner's private comment); J2 MOM text stays private and rights stay open; J3 basis unverified; J4 accept any labelled vintage; J5 accept grounded correction; J6 facts-for-conflicts, abstain on explanation-only; J7 per card; J8 reject unsafe part and help with safe remainder; J9 bounded claim; J10 needs more inspection (not accepted).
