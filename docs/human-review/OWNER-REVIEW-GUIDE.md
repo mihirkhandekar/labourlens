@@ -8,15 +8,25 @@ Budget: about 2.5 to 3 hours in total. Do the parts in this order. Each part sta
 
 Run `uv run labourlens review-pack`, then open
 `private/human-review/review-pack/index.html` in your browser. It is a single offline
-file containing the 40 saved answers, 31 held-out questions, extra causation-boundary
-cases and 30 source checks with local PDF/CSV links. **PRIVATE: contains MOM text;
-do not commit or share the pack, its exports, or screenshots.**
+file containing the 40 saved answers, 31 held-out questions, extra owner-decision
+cases and 30 source checks. Rendered PDF pages with extraction rectangles, full
+HTML context, raw CSV headers/neighbouring rows, sibling series, definitions and
+publisher metadata are embedded: **no separate PDF, CSV or document is needed**.
+The guide, worked example, labelling rule, glossary and checklist are inside too.
+**PRIVATE: contains MOM text; do not commit or share the pack, exports or screenshots.**
 
 Read each question and form your own view before opening **Gold says**, **Reveal
-draft**, or **AI review**. The page saves decisions in this browser's local storage;
-export regularly as a backup. Type your own name and click **Export** to download
+draft**, or **AI review**. The sticky bar provides tab/family, undecided and priority
+filters, progress, reviewer name and Export. Decisions are saved in localStorage
+and retained in memory; a visible warning appears if storage fails. An automatic
+JSON backup is requested every 25 newly decided cards (allow downloads in your
+browser). Export regularly too. Type your own name and click **Export** to download
 `review-results.json` and `review-results.md` (allow multiple downloads if prompted).
 No reviewer name or verdict is prefilled. The name must be typed again after reload.
+If `docs/human-review/ai-adjudication.md` exists, rebuilding adds its final ten-item
+owner-check list as a priority banner with card jump links. Rebuild later to add it
+if absent. Publisher authenticity/current rights still require independent external
+verification; the offline pack cannot establish them.
 
 Run `uv run labourlens review-ingest /path/to/review-results.json` to write
 `docs/human-review/owner-review-summary.md` and

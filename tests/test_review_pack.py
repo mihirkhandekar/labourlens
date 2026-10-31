@@ -5,6 +5,8 @@ from pathlib import Path
 
 import pandas as pd
 import pytest
+import pymupdf
+import re
 from bs4 import BeautifulSoup
 from pydantic import ValidationError
 
@@ -23,18 +25,27 @@ def fixture_root(tmp_path):
     subprocess.run(['git', 'init', '-q', str(tmp_path)], check=True)
     put(tmp_path, '.gitignore', 'private/\n')
     put(tmp_path, 'data/snapshots/test/s1/raw.csv', 'quarter,value\n2026-Q2,2.9\n')
-    put(tmp_path, 'data/raw/report/s1/report.html', '<p>Synthetic report</p>')
+    put(tmp_path, 'data/raw/report/s1/report.html', '<article><h1>Synthetic report</h1><p>Surrounding article before.</p><p>Synthetic text &lt;script&gt;attack()&lt;/script&gt;</p><p>Article after.</p></article>')
     manifest = [dict(source_id='test', snapshot_id='s1', title='Synthetic statistics', raw_path='data/snapshots/test/s1/raw.csv', canonical_url='https://data.gov.sg/synthetic'), dict(source_id='report', snapshot_id='s1', title='Synthetic report', raw_path='data/raw/report/s1/report.html')]
+    raw_pdf = tmp_path / 'data/raw/pdf/s1/report.pdf'
+    raw_pdf.parent.mkdir(parents=True)
+    with pymupdf.open() as doc:
+        page = doc.new_page()
+        page.insert_text((50, 60), 'Synthetic PDF passage')
+        doc.save(raw_pdf)
+    manifest.append(dict(source_id='pdf', snapshot_id='s1', title='Synthetic PDF', raw_path='data/raw/pdf/s1/report.pdf'))
     put(tmp_path, 'data/manifests/manifest.json', json.dumps({'entries': manifest}))
     observation = dict(observation_id='obs1', source_id='test', snapshot_id='s1', source_locator='csv_row=2;col=value', indicator_id='unemployment', dimension='', period='2026-Q2', value=2.9, unit='percent', release_stage='final')
     (tmp_path / 'data/processed').mkdir()
     pd.DataFrame([observation]).to_parquet(tmp_path / 'data/processed/observations.parquet')
     passage = dict(passage_id='report:p001:test', source_id='report', snapshot_id='s1', document_title='Synthetic report', page_number=1, original_url='https://www.mom.gov.sg/synthetic', text='Synthetic text <script>attack()</script>', release_stage='final')
     put(tmp_path, 'data/passages/report.jsonl', json.dumps(passage))
+    pdf_passage = dict(passage, passage_id='pdf:p001:test', source_id='pdf', document_title='Synthetic PDF', text='Synthetic PDF passage', bbox=[45, 45, 250, 70], printed_page_label='i')
+    put(tmp_path, 'data/passages/pdf.jsonl', json.dumps(pdf_passage))
     sample = [f'DEV-{n:03}' for n in range(1, 41)]
     cases = []
     for cid in sample + [f'HO-{n:03}' for n in range(1, 32)] + [c for c in EXTRA if c not in sample]:
-        cases.append(dict(case_id=cid, question='What was the resident rate in Q2 2026?', family='factual_lookup', expected_behavior='answer', evidence_text=[{'passage_ids': ['report:p001:test']}], evidence_data=[{'observation_ids': ['obs1']}], reference_facts=['Synthetic 2.9%'], difficulty_note='Synthetic lookup'))
+        cases.append(dict(case_id=cid, question='What was the resident rate in Q2 2026?', family='factual_lookup', expected_behavior='answer', evidence_text=[{'passage_ids': ['report:p001:test', 'pdf:p001:test']}], evidence_data=[{'observation_ids': ['obs1']}], reference_facts=['Synthetic 2.9%'], difficulty_note='Synthetic lookup'))
     put(tmp_path, 'experiments/gold/draft_cases.jsonl', '\n'.join(json.dumps(c) for c in cases))
     put(tmp_path, 'experiments/human-review-sample/selection.json', json.dumps({'ids': sample}))
     put(tmp_path, 'experiments/human-review-sample/independent-ai-review.md', '| DEV-001 | answered | incorrect | retrieval miss |\n')
@@ -57,7 +68,16 @@ def test_build_synthetic_pack(fixture_root):
     assert len(soup.select('article[data-tab=gold][data-case^=HO-]')) == 31
     assert len(soup.select('article[data-tab=sources]')) == 30
     assert len(soup.select('[data-check]')) == 12
-    assert not soup.select('[src],link,iframe,img,form')
+    assert not soup.select('[src],link,iframe,form')
+    assert soup.select('img[data-page]')
+    assets = json.loads(re.search(r'const PAGE_IMAGES=(.*?);</script>', path.read_text()).group(1))
+    assert len(assets) == 1  # Same PDF page occurs on many cards, encoded only once.
+    assert soup.select('.bbox')
+    assert soup.select('mark')
+    assert soup.select('tr.cited')
+    assert soup.select_one('#priority')
+    assert soup.select_one('#tab-filter')
+    assert 'Worked example' in soup.get_text()
     assert 'connect-src \'none\'' in path.read_text()
     assert not soup.select('[data-field][checked],option[selected]')
     assert soup.select_one('#reviewer').get('value') is None
@@ -68,7 +88,8 @@ def test_build_synthetic_pack(fixture_root):
     assert not soup.find('script', string='attack()')
     assert 'CSV row 2' in soup.get_text()
     assert '2026-Q2,2.9' in soup.get_text()
-    assert 'file://' in path.read_text()
+    assert not soup.select('a[href^="file:"]')
+    assert soup.select_one('a[href="#evidence-DEV-001-O1"]')
 
 
 def test_export_schema():
@@ -77,10 +98,9 @@ def test_export_schema():
     invalid['results'][0]['fields']['verdict'] = 'automatic pass'
     with pytest.raises(ValidationError):
         ReviewExport.model_validate(invalid)
-    invalid = export_data()
-    invalid['results'][0]['fields'] = {'label': 'disagree'}
-    with pytest.raises(ValidationError):
-        ReviewExport.model_validate(invalid)
+    draft = export_data()
+    draft['results'][0]['fields'] = {'label': 'disagree'}
+    assert ReviewExport.model_validate(draft)  # Automatic backups must preserve unfinished drafts.
 
 
 def test_ingest_requires_owner_and_excludes_private_comments(fixture_root):
@@ -107,6 +127,23 @@ def test_private_output_guard(fixture_root):
     (fixture_root / '.gitignore').write_text('')
     with pytest.raises(ValueError, match='gitignored'):
         build_pack(fixture_root)
+
+
+def test_optional_adjudication_priorities(fixture_root):
+    put(fixture_root, 'docs/human-review/ai-adjudication.md', "# Optional adjudication\n## Owner's eyes only — ten actual decisions/checks\n1. HO-022: decide the correction boundary.\n")
+    soup = BeautifulSoup(build_pack(fixture_root).read_text(), 'html.parser')
+    assert soup.select_one('#gold-HO-022')['data-priority'] == 'true'
+    assert soup.select_one('a[data-jump=\"HO-022\"]')
+
+
+def test_ingest_refuses_incomplete_disagreement(fixture_root):
+    data = export_data()
+    data['reviewer_name'] = 'Synthetic reviewer'
+    data['results'] = [dict(case_id='HO-001', tab='gold', fields={'label': 'disagree'}, timestamp='2026-10-31T00:00:00Z')]
+    path = put(fixture_root, 'private/incomplete.json', json.dumps(data))
+    with pytest.raises(ValueError, match='complete the proposed'):
+        ingest_review(path, fixture_root)
+    assert not (fixture_root / 'docs/human-review/owner-review-summary.md').exists()
 
 
 @pytest.mark.corpus
