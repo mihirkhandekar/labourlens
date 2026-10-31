@@ -1,6 +1,6 @@
 {
   "schema_version": "report-1.0",
-  "generated_at": "2026-10-31T04:02:22.051547+00:00",
+  "generated_at": "2026-10-31T05:25:28.237466+00:00",
   "summary": {
     "title": "LabourLens research workbench",
     "scope": [
@@ -2292,6 +2292,7 @@
         "provenance": [
           "experiments/runs/dev-E1-chunking/blocks.metrics.json"
         ],
+        "corpus_version": "v1",
         "label": "blocks",
         "configuration": {
           "chunk": {
@@ -2350,6 +2351,7 @@
         "provenance": [
           "experiments/runs/dev-E1-chunking/fixed150.metrics.json"
         ],
+        "corpus_version": "v1",
         "label": "fixed150",
         "configuration": {
           "chunk": {
@@ -2408,6 +2410,7 @@
         "provenance": [
           "experiments/runs/dev-E1-chunking/merge120+tables.metrics.json"
         ],
+        "corpus_version": "v1",
         "label": "merge120+tables",
         "configuration": {
           "chunk": {
@@ -2466,6 +2469,7 @@
         "provenance": [
           "experiments/runs/dev-E1-chunking/merge120.metrics.json"
         ],
+        "corpus_version": "v1",
         "label": "merge120",
         "configuration": {
           "chunk": {
@@ -2524,6 +2528,7 @@
         "provenance": [
           "experiments/runs/dev-E1-chunking/merge200.metrics.json"
         ],
+        "corpus_version": "v1",
         "label": "merge200",
         "configuration": {
           "chunk": {
@@ -2582,6 +2587,7 @@
         "provenance": [
           "experiments/runs/dev-E2-tokenisation/baseline.metrics.json"
         ],
+        "corpus_version": "v1",
         "label": "baseline",
         "configuration": {
           "chunk": {
@@ -2640,6 +2646,7 @@
         "provenance": [
           "experiments/runs/dev-E2-tokenisation/period_norm_off.metrics.json"
         ],
+        "corpus_version": "v1",
         "label": "period_norm_off",
         "configuration": {
           "chunk": {
@@ -2698,6 +2705,7 @@
         "provenance": [
           "experiments/runs/dev-E2-tokenisation/stem_on.metrics.json"
         ],
+        "corpus_version": "v1",
         "label": "stem_on",
         "configuration": {
           "chunk": {
@@ -2756,6 +2764,7 @@
         "provenance": [
           "experiments/runs/dev-E2-tokenisation/stopwords_off.metrics.json"
         ],
+        "corpus_version": "v1",
         "label": "stopwords_off",
         "configuration": {
           "chunk": {
@@ -2814,6 +2823,7 @@
         "provenance": [
           "experiments/runs/dev-E3-bm25-params/b=0.4.metrics.json"
         ],
+        "corpus_version": "v1",
         "label": "b=0.4",
         "configuration": {
           "chunk": {
@@ -2872,6 +2882,7 @@
         "provenance": [
           "experiments/runs/dev-E3-bm25-params/b=0.75.metrics.json"
         ],
+        "corpus_version": "v1",
         "label": "b=0.75",
         "configuration": {
           "chunk": {
@@ -2930,6 +2941,7 @@
         "provenance": [
           "experiments/runs/dev-E3-bm25-params/b=0.9.metrics.json"
         ],
+        "corpus_version": "v1",
         "label": "b=0.9",
         "configuration": {
           "chunk": {
@@ -2988,6 +3000,7 @@
         "provenance": [
           "experiments/runs/dev-E3-bm25-params/k1=0.9.metrics.json"
         ],
+        "corpus_version": "v1",
         "label": "k1=0.9",
         "configuration": {
           "chunk": {
@@ -3046,6 +3059,7 @@
         "provenance": [
           "experiments/runs/dev-E3-bm25-params/k1=1.2.metrics.json"
         ],
+        "corpus_version": "v1",
         "label": "k1=1.2",
         "configuration": {
           "chunk": {
@@ -3104,6 +3118,7 @@
         "provenance": [
           "experiments/runs/dev-E3-bm25-params/k1=1.5.metrics.json"
         ],
+        "corpus_version": "v1",
         "label": "k1=1.5",
         "configuration": {
           "chunk": {
@@ -3162,6 +3177,7 @@
         "provenance": [
           "experiments/runs/dev-E3-bm25-params/k1=2.0.metrics.json"
         ],
+        "corpus_version": "v1",
         "label": "k1=2.0",
         "configuration": {
           "chunk": {
@@ -3220,6 +3236,7 @@
         "provenance": [
           "experiments/runs/dev-E4-combined/merge200+stopwords_off+b=0.4.metrics.json"
         ],
+        "corpus_version": "v1",
         "label": "merge200+stopwords_off+b=0.4",
         "configuration": {
           "chunk": {
@@ -3278,6 +3295,7 @@
         "provenance": [
           "experiments/runs/dev-E4-combined/merge200+stopwords_off.metrics.json"
         ],
+        "corpus_version": "v1",
         "label": "merge200+stopwords_off",
         "configuration": {
           "chunk": {
@@ -3336,6 +3354,7 @@
         "provenance": [
           "experiments/runs/dev-dense-E5/bm25_baseline.metrics.json"
         ],
+        "corpus_version": "v1",
         "label": "bm25_baseline",
         "configuration": {
           "chunk": {
@@ -3395,6 +3414,7 @@
         "provenance": [
           "experiments/runs/dev-dense-E5/text-embedding-3-large.metrics.json"
         ],
+        "corpus_version": "v1",
         "label": "text-embedding-3-large",
         "configuration": {
           "chunk": {
@@ -3454,6 +3474,7 @@
         "provenance": [
           "experiments/runs/dev-dense-E5/text-embedding-3-small.metrics.json"
         ],
+        "corpus_version": "v1",
         "label": "text-embedding-3-small",
         "configuration": {
           "chunk": {
@@ -3513,6 +3534,7 @@
         "provenance": [
           "experiments/runs/dev-dense-E5/text-embedding-ada-002.metrics.json"
         ],
+        "corpus_version": "v1",
         "label": "text-embedding-ada-002",
         "configuration": {
           "chunk": {
@@ -3572,6 +3594,7 @@
         "provenance": [
           "experiments/runs/dev-dense-E6/merge120 bm25.metrics.json"
         ],
+        "corpus_version": "v1",
         "label": "merge120 bm25",
         "configuration": {
           "chunk": {
@@ -3631,6 +3654,7 @@
         "provenance": [
           "experiments/runs/dev-dense-E6/merge120 dense.metrics.json"
         ],
+        "corpus_version": "v1",
         "label": "merge120 dense",
         "configuration": {
           "chunk": {
@@ -3690,6 +3714,7 @@
         "provenance": [
           "experiments/runs/dev-dense-E6/merge120 hybrid-rrf.metrics.json"
         ],
+        "corpus_version": "v1",
         "label": "merge120 hybrid-rrf",
         "configuration": {
           "chunk": {
@@ -3749,6 +3774,7 @@
         "provenance": [
           "experiments/runs/dev-dense-E6/merge200 bm25.metrics.json"
         ],
+        "corpus_version": "v1",
         "label": "merge200 bm25",
         "configuration": {
           "chunk": {
@@ -3808,6 +3834,7 @@
         "provenance": [
           "experiments/runs/dev-dense-E6/merge200 dense.metrics.json"
         ],
+        "corpus_version": "v1",
         "label": "merge200 dense",
         "configuration": {
           "chunk": {
@@ -3867,6 +3894,7 @@
         "provenance": [
           "experiments/runs/dev-dense-E6/merge200 hybrid-rrf.metrics.json"
         ],
+        "corpus_version": "v1",
         "label": "merge200 hybrid-rrf",
         "configuration": {
           "chunk": {
@@ -3926,6 +3954,7 @@
         "provenance": [
           "experiments/runs/dev-dense-E7/text-embedding-3-large+hdr.metrics.json"
         ],
+        "corpus_version": "v1",
         "label": "text-embedding-3-large+hdr",
         "configuration": {
           "chunk": {
@@ -3985,6 +4014,7 @@
         "provenance": [
           "experiments/runs/dev-dense-E7/text-embedding-3-large.metrics.json"
         ],
+        "corpus_version": "v1",
         "label": "text-embedding-3-large",
         "configuration": {
           "chunk": {
@@ -4035,9 +4065,11 @@
       "experiments/runs/dev-dense-E6/merge200 dense.metrics.json",
       "experiments/runs/dev-dense-E6/merge200 hybrid-rrf.metrics.json",
       "experiments/runs/dev-dense-E7/text-embedding-3-large+hdr.metrics.json",
-      "experiments/runs/dev-dense-E7/text-embedding-3-large.metrics.json"
+      "experiments/runs/dev-dense-E7/text-embedding-3-large.metrics.json",
+      "experiments/runs/extraction-v2-X1/dev-R-summary.json"
     ],
     "ladder": {
+      "corpus_version": "v1",
       "n_cases": 128,
       "configs": {
         "R0": {
@@ -4602,6 +4634,579 @@
       },
       "provenance": [
         "experiments/runs/dev-R-summary.json"
+      ]
+    },
+    "ladder_corpus_v2": {
+      "corpus_version": "v2",
+      "n_cases": 128,
+      "configs": {
+        "R0": {
+          "n_cases": 128,
+          "hit@3": 0.4062,
+          "hit@5": 0.4766,
+          "hit@8": 0.5391,
+          "hit@10": 0.5469,
+          "mrr@10": 0.3136,
+          "gold_passage_coverage@8": 0.4607,
+          "pool_recall@30": 0.75,
+          "pool_recall@50": 0.8125,
+          "hit@8_ci95": [
+            0.4531,
+            0.625
+          ],
+          "by_family_hit@8": {
+            "adversarial": {
+              "n": 13,
+              "hit@8": 0.308
+            },
+            "ambiguity_insufficient_causal": {
+              "n": 2,
+              "hit@8": 0.0
+            },
+            "cross_source_synthesis": {
+              "n": 34,
+              "hit@8": 0.412
+            },
+            "factual_lookup": {
+              "n": 50,
+              "hit@8": 0.68
+            },
+            "numerical_comparison": {
+              "n": 10,
+              "hit@8": 0.9
+            },
+            "revision_conflict": {
+              "n": 19,
+              "hit@8": 0.421
+            }
+          },
+          "by_hint_hit@8": {
+            "has_hint": {
+              "n": 96,
+              "hit@8": 0.417
+            },
+            "no_hint": {
+              "n": 32,
+              "hit@8": 0.906
+            }
+          },
+          "added_latency_ms_p50": 0.0,
+          "added_latency_ms_p95": 0.0,
+          "retrieval_fuse_ms_p50": 0.104
+        },
+        "R1a": {
+          "n_cases": 128,
+          "hit@3": 0.6094,
+          "hit@5": 0.7578,
+          "hit@8": 0.8672,
+          "hit@10": 0.8984,
+          "mrr@10": 0.4962,
+          "gold_passage_coverage@8": 0.7609,
+          "pool_recall@30": 0.9766,
+          "pool_recall@50": 0.9844,
+          "hit@8_ci95": [
+            0.8047,
+            0.9297
+          ],
+          "hit@8_diff_vs_R0": 0.3281,
+          "hit@8_diff_ci95": [
+            0.2422,
+            0.4141
+          ],
+          "paired_hit@8_better_worse": [
+            43,
+            1
+          ],
+          "paired_rank_better_worse_same": [
+            67,
+            4,
+            57
+          ],
+          "by_family_hit@8": {
+            "adversarial": {
+              "n": 13,
+              "hit@8": 0.923
+            },
+            "ambiguity_insufficient_causal": {
+              "n": 2,
+              "hit@8": 0.5
+            },
+            "cross_source_synthesis": {
+              "n": 34,
+              "hit@8": 0.706
+            },
+            "factual_lookup": {
+              "n": 50,
+              "hit@8": 1.0
+            },
+            "numerical_comparison": {
+              "n": 10,
+              "hit@8": 0.8
+            },
+            "revision_conflict": {
+              "n": 19,
+              "hit@8": 0.842
+            }
+          },
+          "by_hint_hit@8": {
+            "has_hint": {
+              "n": 96,
+              "hit@8": 0.854
+            },
+            "no_hint": {
+              "n": 32,
+              "hit@8": 0.906
+            }
+          },
+          "added_latency_ms_p50": 0.61,
+          "added_latency_ms_p95": 1.55,
+          "retrieval_fuse_ms_p50": 0.766
+        },
+        "R1b": {
+          "n_cases": 128,
+          "hit@3": 0.5078,
+          "hit@5": 0.5781,
+          "hit@8": 0.6562,
+          "hit@10": 0.6953,
+          "mrr@10": 0.4117,
+          "gold_passage_coverage@8": 0.5747,
+          "pool_recall@30": 0.875,
+          "pool_recall@50": 0.8906,
+          "hit@8_ci95": [
+            0.5781,
+            0.7422
+          ],
+          "hit@8_diff_vs_R0": 0.1172,
+          "hit@8_diff_ci95": [
+            0.0625,
+            0.1797
+          ],
+          "paired_hit@8_better_worse": [
+            15,
+            0
+          ],
+          "paired_rank_better_worse_same": [
+            37,
+            1,
+            90
+          ],
+          "by_family_hit@8": {
+            "adversarial": {
+              "n": 13,
+              "hit@8": 0.538
+            },
+            "ambiguity_insufficient_causal": {
+              "n": 2,
+              "hit@8": 0.0
+            },
+            "cross_source_synthesis": {
+              "n": 34,
+              "hit@8": 0.5
+            },
+            "factual_lookup": {
+              "n": 50,
+              "hit@8": 0.84
+            },
+            "numerical_comparison": {
+              "n": 10,
+              "hit@8": 0.9
+            },
+            "revision_conflict": {
+              "n": 19,
+              "hit@8": 0.474
+            }
+          },
+          "by_hint_hit@8": {
+            "has_hint": {
+              "n": 96,
+              "hit@8": 0.573
+            },
+            "no_hint": {
+              "n": 32,
+              "hit@8": 0.906
+            }
+          },
+          "added_latency_ms_p50": 0.16,
+          "added_latency_ms_p95": 0.38,
+          "retrieval_fuse_ms_p50": 0.312
+        },
+        "R2": {
+          "n_cases": 128,
+          "hit@3": 0.7188,
+          "hit@5": 0.7344,
+          "hit@8": 0.7422,
+          "hit@10": 0.7422,
+          "mrr@10": 0.6417,
+          "gold_passage_coverage@8": 0.6774,
+          "pool_recall@30": 0.75,
+          "pool_recall@50": 0.8125,
+          "hit@8_ci95": [
+            0.6719,
+            0.8125
+          ],
+          "hit@8_diff_vs_R0": 0.2031,
+          "hit@8_diff_ci95": [
+            0.1406,
+            0.2734
+          ],
+          "paired_hit@8_better_worse": [
+            26,
+            0
+          ],
+          "paired_rank_better_worse_same": [
+            67,
+            3,
+            58
+          ],
+          "by_family_hit@8": {
+            "adversarial": {
+              "n": 13,
+              "hit@8": 0.615
+            },
+            "ambiguity_insufficient_causal": {
+              "n": 2,
+              "hit@8": 0.5
+            },
+            "cross_source_synthesis": {
+              "n": 34,
+              "hit@8": 0.588
+            },
+            "factual_lookup": {
+              "n": 50,
+              "hit@8": 0.88
+            },
+            "numerical_comparison": {
+              "n": 10,
+              "hit@8": 0.9
+            },
+            "revision_conflict": {
+              "n": 19,
+              "hit@8": 0.684
+            }
+          },
+          "by_hint_hit@8": {
+            "has_hint": {
+              "n": 96,
+              "hit@8": 0.677
+            },
+            "no_hint": {
+              "n": 32,
+              "hit@8": 0.938
+            }
+          },
+          "added_latency_ms_p50": 4879.18,
+          "added_latency_ms_p95": 9983.83,
+          "retrieval_fuse_ms_p50": 0.104,
+          "cost_usd_per_query_mean": 0.001147,
+          "cost_usd_total": 0.14678,
+          "rerank_failures": 2,
+          "rerank_latency_s_p50_p95": [
+            4.88,
+            9.98
+          ]
+        },
+        "R3": {
+          "n_cases": 128,
+          "hit@3": 0.9141,
+          "hit@5": 0.9453,
+          "hit@8": 0.9531,
+          "hit@10": 0.9609,
+          "mrr@10": 0.784,
+          "gold_passage_coverage@8": 0.9021,
+          "pool_recall@30": 0.9766,
+          "pool_recall@50": 0.9844,
+          "hit@8_ci95": [
+            0.9141,
+            0.9844
+          ],
+          "hit@8_diff_vs_R0": 0.4141,
+          "hit@8_diff_ci95": [
+            0.3281,
+            0.5078
+          ],
+          "paired_hit@8_better_worse": [
+            54,
+            1
+          ],
+          "paired_rank_better_worse_same": [
+            93,
+            6,
+            29
+          ],
+          "by_family_hit@8": {
+            "adversarial": {
+              "n": 13,
+              "hit@8": 1.0
+            },
+            "ambiguity_insufficient_causal": {
+              "n": 2,
+              "hit@8": 1.0
+            },
+            "cross_source_synthesis": {
+              "n": 34,
+              "hit@8": 0.912
+            },
+            "factual_lookup": {
+              "n": 50,
+              "hit@8": 1.0
+            },
+            "numerical_comparison": {
+              "n": 10,
+              "hit@8": 0.9
+            },
+            "revision_conflict": {
+              "n": 19,
+              "hit@8": 0.895
+            }
+          },
+          "by_hint_hit@8": {
+            "has_hint": {
+              "n": 96,
+              "hit@8": 0.958
+            },
+            "no_hint": {
+              "n": 32,
+              "hit@8": 0.938
+            }
+          },
+          "added_latency_ms_p50": 4940.63,
+          "added_latency_ms_p95": 8885.95,
+          "retrieval_fuse_ms_p50": 0.104,
+          "cost_usd_per_query_mean": 0.001068,
+          "cost_usd_total": 0.1367,
+          "rerank_failures": 0,
+          "rerank_latency_s_p50_p95": [
+            4.94,
+            8.89
+          ],
+          "hit@8_diff_vs_R2": 0.2109,
+          "hit@8_diff_vs_R2_ci95": [
+            0.1406,
+            0.2891
+          ],
+          "paired_hit@8_vs_R2_better_worse": [
+            28,
+            1
+          ]
+        },
+        "R1b_x0.5": {
+          "n_cases": 128,
+          "hit@3": 0.4844,
+          "hit@5": 0.5234,
+          "hit@8": 0.5781,
+          "hit@10": 0.625,
+          "mrr@10": 0.3878,
+          "gold_passage_coverage@8": 0.5044,
+          "pool_recall@30": 0.8516,
+          "pool_recall@50": 0.8906,
+          "hit@8_ci95": [
+            0.5,
+            0.6641
+          ],
+          "hit@8_diff_vs_R0": 0.0391,
+          "hit@8_diff_ci95": [
+            0.0078,
+            0.0781
+          ],
+          "paired_hit@8_better_worse": [
+            5,
+            0
+          ],
+          "paired_rank_better_worse_same": [
+            27,
+            0,
+            101
+          ],
+          "by_family_hit@8": {
+            "adversarial": {
+              "n": 13,
+              "hit@8": 0.385
+            },
+            "ambiguity_insufficient_causal": {
+              "n": 2,
+              "hit@8": 0.0
+            },
+            "cross_source_synthesis": {
+              "n": 34,
+              "hit@8": 0.441
+            },
+            "factual_lookup": {
+              "n": 50,
+              "hit@8": 0.74
+            },
+            "numerical_comparison": {
+              "n": 10,
+              "hit@8": 0.9
+            },
+            "revision_conflict": {
+              "n": 19,
+              "hit@8": 0.421
+            }
+          },
+          "by_hint_hit@8": {
+            "has_hint": {
+              "n": 96,
+              "hit@8": 0.469
+            },
+            "no_hint": {
+              "n": 32,
+              "hit@8": 0.906
+            }
+          },
+          "added_latency_ms_p50": 0.16,
+          "added_latency_ms_p95": 0.39,
+          "retrieval_fuse_ms_p50": 0.315
+        },
+        "R1b_x2": {
+          "n_cases": 128,
+          "hit@3": 0.5547,
+          "hit@5": 0.6875,
+          "hit@8": 0.8203,
+          "hit@10": 0.8281,
+          "mrr@10": 0.4493,
+          "gold_passage_coverage@8": 0.7212,
+          "pool_recall@30": 0.8828,
+          "pool_recall@50": 0.8906,
+          "hit@8_ci95": [
+            0.7578,
+            0.8906
+          ],
+          "hit@8_diff_vs_R0": 0.2812,
+          "hit@8_diff_ci95": [
+            0.2031,
+            0.3594
+          ],
+          "paired_hit@8_better_worse": [
+            36,
+            0
+          ],
+          "paired_rank_better_worse_same": [
+            55,
+            1,
+            72
+          ],
+          "by_family_hit@8": {
+            "adversarial": {
+              "n": 13,
+              "hit@8": 0.692
+            },
+            "ambiguity_insufficient_causal": {
+              "n": 2,
+              "hit@8": 1.0
+            },
+            "cross_source_synthesis": {
+              "n": 34,
+              "hit@8": 0.676
+            },
+            "factual_lookup": {
+              "n": 50,
+              "hit@8": 0.98
+            },
+            "numerical_comparison": {
+              "n": 10,
+              "hit@8": 0.9
+            },
+            "revision_conflict": {
+              "n": 19,
+              "hit@8": 0.684
+            }
+          },
+          "by_hint_hit@8": {
+            "has_hint": {
+              "n": 96,
+              "hit@8": 0.792
+            },
+            "no_hint": {
+              "n": 32,
+              "hit@8": 0.906
+            }
+          },
+          "added_latency_ms_p50": 0.17,
+          "added_latency_ms_p95": 0.43,
+          "retrieval_fuse_ms_p50": 0.315
+        }
+      },
+      "hint_coverage": {
+        "any_hint": 96,
+        "period_hint": 91,
+        "stage_hint": 68,
+        "stage_conflict": 9,
+        "filter_active_R1a": 96,
+        "period_hint_but_no_document_in_period": 0,
+        "hint_but_no_filter": 0
+      },
+      "end_to_end_context": {
+        "R0": {
+          "n": 128,
+          "gold_in_context_of_top8_chunks": 0.5391,
+          "gold_in_first8_context_passages": 0.2578
+        },
+        "R3": {
+          "n": 128,
+          "gold_in_context_of_top8_chunks": 0.9531,
+          "gold_in_first8_context_passages": 0.6641
+        }
+      },
+      "first_relevant_rank_histogram": {
+        "R0": {
+          "0": 58,
+          "1": 25,
+          "2": 17,
+          "3": 10,
+          "4": 4,
+          "5": 5,
+          "6": 4,
+          "7": 2,
+          "8": 2,
+          "10": 1
+        },
+        "R1a": {
+          "0": 13,
+          "1": 41,
+          "2": 20,
+          "3": 17,
+          "4": 12,
+          "5": 7,
+          "6": 5,
+          "7": 4,
+          "8": 5,
+          "9": 2,
+          "10": 2
+        },
+        "R1b": {
+          "0": 39,
+          "1": 36,
+          "2": 18,
+          "3": 11,
+          "4": 6,
+          "5": 3,
+          "6": 2,
+          "7": 4,
+          "8": 4,
+          "9": 2,
+          "10": 3
+        },
+        "R2": {
+          "0": 33,
+          "1": 72,
+          "2": 17,
+          "3": 3,
+          "4": 2,
+          "7": 1
+        },
+        "R3": {
+          "0": 5,
+          "1": 83,
+          "2": 29,
+          "3": 5,
+          "4": 3,
+          "5": 1,
+          "8": 1,
+          "9": 1
+        }
+      },
+      "provenance": [
+        "experiments/runs/extraction-v2-X1/dev-R-summary.json"
       ]
     }
   },
@@ -56442,6 +57047,7 @@
           "experiments/eval/agent-dev-A1/gpt-4.1-mini.metrics.json",
           "experiments/eval/agent-dev-A1/gpt-4.1-mini.cases.jsonl"
         ],
+        "corpus_version": "v1",
         "label": "gpt-4.1-mini",
         "strata": {
           "adversarial": {
@@ -56635,6 +57241,7 @@
           "experiments/eval/agent-dev-A1/gpt-5.6-luna.metrics.json",
           "experiments/eval/agent-dev-A1/gpt-5.6-luna.cases.jsonl"
         ],
+        "corpus_version": "v1",
         "label": "gpt-5.6-luna",
         "strata": {
           "adversarial": {
@@ -56828,6 +57435,7 @@
           "experiments/eval/agent-dev-A1/gpt-6-luna.metrics.json",
           "experiments/eval/agent-dev-A1/gpt-6-luna.cases.jsonl"
         ],
+        "corpus_version": "v1",
         "label": "gpt-6-luna",
         "strata": {
           "adversarial": {
@@ -57021,6 +57629,7 @@
           "experiments/eval/agent-dev-A2/gpt-5.6-luna.metrics.json",
           "experiments/eval/agent-dev-A2/gpt-5.6-luna.cases.jsonl"
         ],
+        "corpus_version": "v1",
         "label": "gpt-5.6-luna",
         "strata": {
           "adversarial": {
@@ -57214,6 +57823,7 @@
           "experiments/eval/agent-dev-A2/gpt-6-luna.metrics.json",
           "experiments/eval/agent-dev-A2/gpt-6-luna.cases.jsonl"
         ],
+        "corpus_version": "v1",
         "label": "gpt-6-luna",
         "strata": {
           "adversarial": {
@@ -57407,6 +58017,7 @@
           "experiments/eval/agent-dev-A3/gpt-5.6-luna.metrics.json",
           "experiments/eval/agent-dev-A3/gpt-5.6-luna.cases.jsonl"
         ],
+        "corpus_version": "v1",
         "label": "gpt-5.6-luna",
         "strata": {
           "adversarial": {
@@ -57600,6 +58211,7 @@
           "experiments/eval/agent-dev-A3/gpt-6-luna.metrics.json",
           "experiments/eval/agent-dev-A3/gpt-6-luna.cases.jsonl"
         ],
+        "corpus_version": "v1",
         "label": "gpt-6-luna",
         "strata": {
           "adversarial": {
@@ -57793,6 +58405,7 @@
           "experiments/eval/agent-dev-A4/gpt-5.6-luna.metrics.json",
           "experiments/eval/agent-dev-A4/gpt-5.6-luna.cases.jsonl"
         ],
+        "corpus_version": "v1",
         "label": "gpt-5.6-luna",
         "strata": {
           "adversarial": {
@@ -57986,6 +58599,7 @@
           "experiments/eval/agent-dev-A4/gpt-6-luna.metrics.json",
           "experiments/eval/agent-dev-A4/gpt-6-luna.cases.jsonl"
         ],
+        "corpus_version": "v1",
         "label": "gpt-6-luna",
         "strata": {
           "adversarial": {
@@ -58179,6 +58793,7 @@
           "experiments/eval/agent-dev-A5/gpt-5.6-luna.metrics.json",
           "experiments/eval/agent-dev-A5/gpt-5.6-luna.cases.jsonl"
         ],
+        "corpus_version": "v1",
         "label": "gpt-5.6-luna",
         "strata": {
           "adversarial": {
@@ -58372,6 +58987,7 @@
           "experiments/eval/agent-dev-A5/gpt-6-luna.metrics.json",
           "experiments/eval/agent-dev-A5/gpt-6-luna.cases.jsonl"
         ],
+        "corpus_version": "v1",
         "label": "gpt-6-luna",
         "strata": {
           "adversarial": {
@@ -58442,6 +59058,396 @@
         "judge": "gpt-6.1-terra",
         "denominators": {
           "fact_coverage": 312
+        }
+      },
+      {
+        "id": "experiments/eval/agent-dev-X1/gpt-5.6-luna",
+        "metrics": {
+          "n_cases": 237,
+          "behaviour_accuracy": {
+            "rate": 0.911,
+            "ci95": [
+              0.873,
+              0.945
+            ],
+            "n": 237
+          },
+          "false_answer_rate": {
+            "rate": 0.03,
+            "ci95": [
+              0.009,
+              0.056
+            ],
+            "n": 232
+          },
+          "over_abstention_rate": {
+            "rate": 0.021,
+            "ci95": [
+              0.004,
+              0.042
+            ],
+            "n": 237
+          },
+          "key_number_recall": {
+            "rate": 0.858,
+            "ci95": [
+              0.81,
+              0.901
+            ],
+            "n": 153
+          },
+          "calc_correct": {
+            "rate": 0.75,
+            "ci95": [
+              0.583,
+              0.917
+            ],
+            "n": 24
+          },
+          "gold_cited_any": {
+            "rate": 0.825,
+            "ci95": [
+              0.772,
+              0.878
+            ],
+            "n": 189
+          },
+          "cases_with_ungrounded_numbers": {
+            "rate": 0.101,
+            "ci95": [
+              0.068,
+              0.139
+            ],
+            "n": 237
+          },
+          "answers_with_ungrounded_numbers": {
+            "rate": 0.101,
+            "ci95": [
+              0.068,
+              0.139
+            ],
+            "n": 237
+          },
+          "claims_judged": 381,
+          "claim_supported_rate": {
+            "rate": 0.801,
+            "ci95": [
+              0.749,
+              0.851
+            ],
+            "n": 381,
+            "n_cases": 184
+          },
+          "claim_unsupported_rate": {
+            "rate": 0.003,
+            "ci95": [
+              0.0,
+              0.008
+            ],
+            "n": 381,
+            "n_cases": 184
+          },
+          "answers_with_any_unsupported_claim": {
+            "rate": 0.005,
+            "ci95": [
+              0.0,
+              0.016
+            ],
+            "n": 184
+          },
+          "fact_coverage": {
+            "rate": 0.756,
+            "ci95": [
+              0.706,
+              0.805
+            ],
+            "n": 311,
+            "n_cases": 177
+          },
+          "answers_contradicting_a_reference_fact": {
+            "rate": 0.028,
+            "ci95": [
+              0.006,
+              0.056
+            ],
+            "n": 177
+          },
+          "latency_p50_s": 13.3,
+          "latency_p95_s": 34.0,
+          "cost_per_case_usd": 0.00458,
+          "judge_cost_total_usd": 0.2673
+        },
+        "provenance": [
+          "experiments/eval/agent-dev-X1/gpt-5.6-luna.metrics.json",
+          "experiments/eval/agent-dev-X1/gpt-5.6-luna.cases.jsonl"
+        ],
+        "corpus_version": "v2",
+        "gold_version": "v3.6 (evidence-ID migration only)",
+        "label": "gpt-5.6-luna",
+        "strata": {
+          "adversarial": {
+            "n": 35,
+            "behaviour_accuracy": 0.914,
+            "false_answer": 1,
+            "over_abstain": 1,
+            "unsupported_claims": 0,
+            "contradicted_facts": 0
+          },
+          "ambiguity_insufficient_causal": {
+            "n": 44,
+            "behaviour_accuracy": 0.75,
+            "false_answer": 3,
+            "over_abstain": 0,
+            "unsupported_claims": 0,
+            "contradicted_facts": 3
+          },
+          "cross_source_synthesis": {
+            "n": 35,
+            "behaviour_accuracy": 1.0,
+            "false_answer": 0,
+            "over_abstain": 0,
+            "unsupported_claims": 1,
+            "contradicted_facts": 0
+          },
+          "factual_lookup": {
+            "n": 70,
+            "behaviour_accuracy": 0.971,
+            "false_answer": 1,
+            "over_abstain": 1,
+            "unsupported_claims": 0,
+            "contradicted_facts": 1
+          },
+          "numerical_comparison": {
+            "n": 34,
+            "behaviour_accuracy": 0.853,
+            "false_answer": 2,
+            "over_abstain": 3,
+            "unsupported_claims": 0,
+            "contradicted_facts": 0
+          },
+          "revision_conflict": {
+            "n": 19,
+            "behaviour_accuracy": 1.0,
+            "false_answer": 0,
+            "over_abstain": 0,
+            "unsupported_claims": 0,
+            "contradicted_facts": 2
+          }
+        },
+        "split": "dev",
+        "scoring_provenance": {
+          "eligible_n": 237,
+          "available_n": 237,
+          "gold_sha256": "6169a9deca78cb5908c584bdf7d17b1c8dd9a15ff7840b3752f3bbb4febb2f9b",
+          "git_head": "b212c9eb8a6ce9f3cbb717a6ef9cd3c6efe34c19",
+          "price_table_sha256": "634b32441c3495b4c3ec13efa3af1e9cc99e5c7523eac3a15a5c238c3acaeb5c",
+          "prompt_sha256": {
+            "planner": "df68ef8e5e287d1a0b1f71d938e85ec25b4f03eeec501bc439a3a77aec2482dc",
+            "answer": "e854b64c72116c4c175082e70f39c312ed94b1f37778e7daf3f9a51de1bac350",
+            "judge": "85f3529fca32faec681b3d4b1e6899b8620c383ed2aa54bc423241e2b7f4a10f",
+            "rerank": "e45ed816ccefd679d046cf9bcbd4dad92ba27b20cfc5f45b900063b84784793a",
+            "planner_user": "e59f408b00f5a99e0fb867c635a84d2d77947171620ab035f6067a3cdfb8136f",
+            "answer_user": "c4f4ef05d7d1b87fca94bee65cbf2a38999c181dc2e92bced9cdf8ef92b006e7"
+          }
+        },
+        "judge": "gpt-6.1-terra",
+        "denominators": {
+          "fact_coverage": 311
+        }
+      },
+      {
+        "id": "experiments/eval/agent-dev-X1/gpt-6-luna",
+        "metrics": {
+          "n_cases": 237,
+          "behaviour_accuracy": {
+            "rate": 0.886,
+            "ci95": [
+              0.844,
+              0.924
+            ],
+            "n": 237
+          },
+          "false_answer_rate": {
+            "rate": 0.035,
+            "ci95": [
+              0.013,
+              0.061
+            ],
+            "n": 229
+          },
+          "over_abstention_rate": {
+            "rate": 0.034,
+            "ci95": [
+              0.013,
+              0.059
+            ],
+            "n": 237
+          },
+          "key_number_recall": {
+            "rate": 0.814,
+            "ci95": [
+              0.763,
+              0.862
+            ],
+            "n": 153
+          },
+          "calc_correct": {
+            "rate": 0.667,
+            "ci95": [
+              0.458,
+              0.833
+            ],
+            "n": 24
+          },
+          "gold_cited_any": {
+            "rate": 0.794,
+            "ci95": [
+              0.735,
+              0.847
+            ],
+            "n": 189
+          },
+          "cases_with_ungrounded_numbers": {
+            "rate": 0.08,
+            "ci95": [
+              0.046,
+              0.118
+            ],
+            "n": 237
+          },
+          "answers_with_ungrounded_numbers": {
+            "rate": 0.08,
+            "ci95": [
+              0.046,
+              0.118
+            ],
+            "n": 237
+          },
+          "claims_judged": 309,
+          "claim_supported_rate": {
+            "rate": 0.887,
+            "ci95": [
+              0.846,
+              0.926
+            ],
+            "n": 309,
+            "n_cases": 182
+          },
+          "claim_unsupported_rate": {
+            "rate": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "n": 309,
+            "n_cases": 182
+          },
+          "answers_with_any_unsupported_claim": {
+            "rate": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "n": 182
+          },
+          "fact_coverage": {
+            "rate": 0.728,
+            "ci95": [
+              0.678,
+              0.777
+            ],
+            "n": 301,
+            "n_cases": 174
+          },
+          "answers_contradicting_a_reference_fact": {
+            "rate": 0.011,
+            "ci95": [
+              0.0,
+              0.029
+            ],
+            "n": 174
+          },
+          "latency_p50_s": 14.7,
+          "latency_p95_s": 33.5,
+          "cost_per_case_usd": 0.00294,
+          "judge_cost_total_usd": 0.2398
+        },
+        "provenance": [
+          "experiments/eval/agent-dev-X1/gpt-6-luna.metrics.json",
+          "experiments/eval/agent-dev-X1/gpt-6-luna.cases.jsonl"
+        ],
+        "corpus_version": "v2",
+        "gold_version": "v3.6 (evidence-ID migration only)",
+        "label": "gpt-6-luna",
+        "strata": {
+          "adversarial": {
+            "n": 35,
+            "behaviour_accuracy": 0.914,
+            "false_answer": 1,
+            "over_abstain": 1,
+            "unsupported_claims": 0,
+            "contradicted_facts": 0
+          },
+          "ambiguity_insufficient_causal": {
+            "n": 44,
+            "behaviour_accuracy": 0.682,
+            "false_answer": 4,
+            "over_abstain": 0,
+            "unsupported_claims": 0,
+            "contradicted_facts": 2
+          },
+          "cross_source_synthesis": {
+            "n": 35,
+            "behaviour_accuracy": 1.0,
+            "false_answer": 0,
+            "over_abstain": 0,
+            "unsupported_claims": 0,
+            "contradicted_facts": 1
+          },
+          "factual_lookup": {
+            "n": 70,
+            "behaviour_accuracy": 0.971,
+            "false_answer": 1,
+            "over_abstain": 1,
+            "unsupported_claims": 0,
+            "contradicted_facts": 0
+          },
+          "numerical_comparison": {
+            "n": 34,
+            "behaviour_accuracy": 0.794,
+            "false_answer": 2,
+            "over_abstain": 5,
+            "unsupported_claims": 0,
+            "contradicted_facts": 0
+          },
+          "revision_conflict": {
+            "n": 19,
+            "behaviour_accuracy": 0.947,
+            "false_answer": 0,
+            "over_abstain": 1,
+            "unsupported_claims": 0,
+            "contradicted_facts": 0
+          }
+        },
+        "split": "dev",
+        "scoring_provenance": {
+          "eligible_n": 237,
+          "available_n": 237,
+          "gold_sha256": "6169a9deca78cb5908c584bdf7d17b1c8dd9a15ff7840b3752f3bbb4febb2f9b",
+          "git_head": "b212c9eb8a6ce9f3cbb717a6ef9cd3c6efe34c19",
+          "price_table_sha256": "634b32441c3495b4c3ec13efa3af1e9cc99e5c7523eac3a15a5c238c3acaeb5c",
+          "prompt_sha256": {
+            "planner": "df68ef8e5e287d1a0b1f71d938e85ec25b4f03eeec501bc439a3a77aec2482dc",
+            "answer": "e854b64c72116c4c175082e70f39c312ed94b1f37778e7daf3f9a51de1bac350",
+            "judge": "85f3529fca32faec681b3d4b1e6899b8620c383ed2aa54bc423241e2b7f4a10f",
+            "rerank": "e45ed816ccefd679d046cf9bcbd4dad92ba27b20cfc5f45b900063b84784793a",
+            "planner_user": "e59f408b00f5a99e0fb867c635a84d2d77947171620ab035f6067a3cdfb8136f",
+            "answer_user": "c4f4ef05d7d1b87fca94bee65cbf2a38999c181dc2e92bced9cdf8ef92b006e7"
+          }
+        },
+        "judge": "gpt-6.1-terra",
+        "denominators": {
+          "fact_coverage": 301
         }
       },
       {
@@ -58565,6 +59571,7 @@
           "experiments/eval/agent-heldout-H-hybrid/gpt-5.6-luna.metrics.json",
           "experiments/eval/agent-heldout-H-hybrid/gpt-5.6-luna.cases.jsonl"
         ],
+        "corpus_version": "v1",
         "label": "gpt-5.6-luna",
         "strata": {
           "adversarial": {
@@ -58758,6 +59765,7 @@
           "experiments/eval/agent-heldout-H-hybrid/gpt-6-luna.metrics.json",
           "experiments/eval/agent-heldout-H-hybrid/gpt-6-luna.cases.jsonl"
         ],
+        "corpus_version": "v1",
         "label": "gpt-6-luna",
         "strata": {
           "adversarial": {
@@ -58951,6 +59959,7 @@
           "experiments/eval/agent-heldout-H-r3/gpt-5.6-luna.metrics.json",
           "experiments/eval/agent-heldout-H-r3/gpt-5.6-luna.cases.jsonl"
         ],
+        "corpus_version": "v1",
         "label": "gpt-5.6-luna",
         "strata": {
           "adversarial": {
@@ -59144,6 +60153,7 @@
           "experiments/eval/agent-heldout-H-r3/gpt-6-luna.metrics.json",
           "experiments/eval/agent-heldout-H-r3/gpt-6-luna.cases.jsonl"
         ],
+        "corpus_version": "v1",
         "label": "gpt-6-luna",
         "strata": {
           "adversarial": {
@@ -59215,6 +60225,786 @@
         "denominators": {
           "fact_coverage": 25
         }
+      },
+      {
+        "id": "experiments/eval/agent-heldout-X-hybrid/gpt-5.6-luna",
+        "metrics": {
+          "n_cases": 31,
+          "behaviour_accuracy": {
+            "rate": 0.742,
+            "ci95": [
+              0.581,
+              0.871
+            ],
+            "n": 31
+          },
+          "false_answer_rate": {
+            "rate": 0.04,
+            "ci95": [
+              0.0,
+              0.12
+            ],
+            "n": 25
+          },
+          "over_abstention_rate": {
+            "rate": 0.194,
+            "ci95": [
+              0.065,
+              0.355
+            ],
+            "n": 31
+          },
+          "key_number_recall": {
+            "rate": 0.644,
+            "ci95": [
+              0.47,
+              0.821
+            ],
+            "n": 19
+          },
+          "calc_correct": {
+            "rate": 1.0,
+            "ci95": [
+              1.0,
+              1.0
+            ],
+            "n": 5
+          },
+          "gold_cited_any": {
+            "rate": 0.448,
+            "ci95": [
+              0.276,
+              0.621
+            ],
+            "n": 29
+          },
+          "cases_with_ungrounded_numbers": {
+            "rate": 0.032,
+            "ci95": [
+              0.0,
+              0.097
+            ],
+            "n": 31
+          },
+          "answers_with_ungrounded_numbers": {
+            "rate": 0.032,
+            "ci95": [
+              0.0,
+              0.097
+            ],
+            "n": 31
+          },
+          "claims_judged": 40,
+          "claim_supported_rate": {
+            "rate": 0.8,
+            "ci95": [
+              0.651,
+              0.93
+            ],
+            "n": 40,
+            "n_cases": 19
+          },
+          "claim_unsupported_rate": {
+            "rate": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "n": 40,
+            "n_cases": 19
+          },
+          "answers_with_any_unsupported_claim": {
+            "rate": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "n": 19
+          },
+          "fact_coverage": {
+            "rate": 0.667,
+            "ci95": [
+              0.45,
+              0.85
+            ],
+            "n": 21,
+            "n_cases": 18
+          },
+          "answers_contradicting_a_reference_fact": {
+            "rate": 0.056,
+            "ci95": [
+              0.0,
+              0.167
+            ],
+            "n": 18
+          },
+          "latency_p50_s": 9.9,
+          "latency_p95_s": 17.4,
+          "cost_per_case_usd": 0.00359,
+          "judge_cost_total_usd": 0.0242
+        },
+        "provenance": [
+          "experiments/eval/agent-heldout-X-hybrid/gpt-5.6-luna.metrics.json",
+          "experiments/eval/agent-heldout-X-hybrid/gpt-5.6-luna.cases.jsonl"
+        ],
+        "corpus_version": "v2",
+        "gold_version": "v3.6 (evidence-ID migration only)",
+        "label": "gpt-5.6-luna",
+        "strata": {
+          "adversarial": {
+            "n": 5,
+            "behaviour_accuracy": 0.6,
+            "false_answer": 1,
+            "over_abstain": 1,
+            "unsupported_claims": 0,
+            "contradicted_facts": 0
+          },
+          "ambiguity_insufficient_causal": {
+            "n": 6,
+            "behaviour_accuracy": 0.833,
+            "false_answer": 0,
+            "over_abstain": 0,
+            "unsupported_claims": 0,
+            "contradicted_facts": 0
+          },
+          "cross_source_synthesis": {
+            "n": 5,
+            "behaviour_accuracy": 0.8,
+            "false_answer": 0,
+            "over_abstain": 1,
+            "unsupported_claims": 0,
+            "contradicted_facts": 0
+          },
+          "factual_lookup": {
+            "n": 5,
+            "behaviour_accuracy": 0.8,
+            "false_answer": 0,
+            "over_abstain": 1,
+            "unsupported_claims": 0,
+            "contradicted_facts": 0
+          },
+          "numerical_comparison": {
+            "n": 6,
+            "behaviour_accuracy": 1.0,
+            "false_answer": 0,
+            "over_abstain": 0,
+            "unsupported_claims": 0,
+            "contradicted_facts": 0
+          },
+          "revision_conflict": {
+            "n": 4,
+            "behaviour_accuracy": 0.25,
+            "false_answer": 0,
+            "over_abstain": 3,
+            "unsupported_claims": 0,
+            "contradicted_facts": 1
+          }
+        },
+        "split": "heldout",
+        "scoring_provenance": {
+          "eligible_n": 31,
+          "available_n": 31,
+          "gold_sha256": "6169a9deca78cb5908c584bdf7d17b1c8dd9a15ff7840b3752f3bbb4febb2f9b",
+          "git_head": "b212c9eb8a6ce9f3cbb717a6ef9cd3c6efe34c19",
+          "price_table_sha256": "634b32441c3495b4c3ec13efa3af1e9cc99e5c7523eac3a15a5c238c3acaeb5c",
+          "prompt_sha256": {
+            "planner": "df68ef8e5e287d1a0b1f71d938e85ec25b4f03eeec501bc439a3a77aec2482dc",
+            "answer": "e854b64c72116c4c175082e70f39c312ed94b1f37778e7daf3f9a51de1bac350",
+            "judge": "85f3529fca32faec681b3d4b1e6899b8620c383ed2aa54bc423241e2b7f4a10f",
+            "rerank": "e45ed816ccefd679d046cf9bcbd4dad92ba27b20cfc5f45b900063b84784793a",
+            "planner_user": "e59f408b00f5a99e0fb867c635a84d2d77947171620ab035f6067a3cdfb8136f",
+            "answer_user": "c4f4ef05d7d1b87fca94bee65cbf2a38999c181dc2e92bced9cdf8ef92b006e7"
+          }
+        },
+        "judge": "gpt-6.1-terra",
+        "denominators": {
+          "fact_coverage": 21
+        }
+      },
+      {
+        "id": "experiments/eval/agent-heldout-X-hybrid/gpt-6-luna",
+        "metrics": {
+          "n_cases": 31,
+          "behaviour_accuracy": {
+            "rate": 0.774,
+            "ci95": [
+              0.613,
+              0.903
+            ],
+            "n": 31
+          },
+          "false_answer_rate": {
+            "rate": 0.038,
+            "ci95": [
+              0.0,
+              0.115
+            ],
+            "n": 26
+          },
+          "over_abstention_rate": {
+            "rate": 0.161,
+            "ci95": [
+              0.032,
+              0.29
+            ],
+            "n": 31
+          },
+          "key_number_recall": {
+            "rate": 0.66,
+            "ci95": [
+              0.456,
+              0.842
+            ],
+            "n": 19
+          },
+          "calc_correct": {
+            "rate": 1.0,
+            "ci95": [
+              1.0,
+              1.0
+            ],
+            "n": 5
+          },
+          "gold_cited_any": {
+            "rate": 0.517,
+            "ci95": [
+              0.345,
+              0.69
+            ],
+            "n": 29
+          },
+          "cases_with_ungrounded_numbers": {
+            "rate": 0.032,
+            "ci95": [
+              0.0,
+              0.097
+            ],
+            "n": 31
+          },
+          "answers_with_ungrounded_numbers": {
+            "rate": 0.032,
+            "ci95": [
+              0.0,
+              0.097
+            ],
+            "n": 31
+          },
+          "claims_judged": 34,
+          "claim_supported_rate": {
+            "rate": 0.882,
+            "ci95": [
+              0.742,
+              1.0
+            ],
+            "n": 34,
+            "n_cases": 20
+          },
+          "claim_unsupported_rate": {
+            "rate": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "n": 34,
+            "n_cases": 20
+          },
+          "answers_with_any_unsupported_claim": {
+            "rate": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "n": 20
+          },
+          "fact_coverage": {
+            "rate": 0.696,
+            "ci95": [
+              0.5,
+              0.857
+            ],
+            "n": 23,
+            "n_cases": 19
+          },
+          "answers_contradicting_a_reference_fact": {
+            "rate": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "n": 19
+          },
+          "latency_p50_s": 11.5,
+          "latency_p95_s": 25.5,
+          "cost_per_case_usd": 0.00168,
+          "judge_cost_total_usd": 0.0241
+        },
+        "provenance": [
+          "experiments/eval/agent-heldout-X-hybrid/gpt-6-luna.metrics.json",
+          "experiments/eval/agent-heldout-X-hybrid/gpt-6-luna.cases.jsonl"
+        ],
+        "corpus_version": "v2",
+        "gold_version": "v3.6 (evidence-ID migration only)",
+        "label": "gpt-6-luna",
+        "strata": {
+          "adversarial": {
+            "n": 5,
+            "behaviour_accuracy": 0.6,
+            "false_answer": 1,
+            "over_abstain": 1,
+            "unsupported_claims": 0,
+            "contradicted_facts": 0
+          },
+          "ambiguity_insufficient_causal": {
+            "n": 6,
+            "behaviour_accuracy": 0.833,
+            "false_answer": 0,
+            "over_abstain": 0,
+            "unsupported_claims": 0,
+            "contradicted_facts": 0
+          },
+          "cross_source_synthesis": {
+            "n": 5,
+            "behaviour_accuracy": 1.0,
+            "false_answer": 0,
+            "over_abstain": 0,
+            "unsupported_claims": 0,
+            "contradicted_facts": 0
+          },
+          "factual_lookup": {
+            "n": 5,
+            "behaviour_accuracy": 0.8,
+            "false_answer": 0,
+            "over_abstain": 1,
+            "unsupported_claims": 0,
+            "contradicted_facts": 0
+          },
+          "numerical_comparison": {
+            "n": 6,
+            "behaviour_accuracy": 1.0,
+            "false_answer": 0,
+            "over_abstain": 0,
+            "unsupported_claims": 0,
+            "contradicted_facts": 0
+          },
+          "revision_conflict": {
+            "n": 4,
+            "behaviour_accuracy": 0.25,
+            "false_answer": 0,
+            "over_abstain": 3,
+            "unsupported_claims": 0,
+            "contradicted_facts": 0
+          }
+        },
+        "split": "heldout",
+        "scoring_provenance": {
+          "eligible_n": 31,
+          "available_n": 31,
+          "gold_sha256": "6169a9deca78cb5908c584bdf7d17b1c8dd9a15ff7840b3752f3bbb4febb2f9b",
+          "git_head": "b212c9eb8a6ce9f3cbb717a6ef9cd3c6efe34c19",
+          "price_table_sha256": "634b32441c3495b4c3ec13efa3af1e9cc99e5c7523eac3a15a5c238c3acaeb5c",
+          "prompt_sha256": {
+            "planner": "df68ef8e5e287d1a0b1f71d938e85ec25b4f03eeec501bc439a3a77aec2482dc",
+            "answer": "e854b64c72116c4c175082e70f39c312ed94b1f37778e7daf3f9a51de1bac350",
+            "judge": "85f3529fca32faec681b3d4b1e6899b8620c383ed2aa54bc423241e2b7f4a10f",
+            "rerank": "e45ed816ccefd679d046cf9bcbd4dad92ba27b20cfc5f45b900063b84784793a",
+            "planner_user": "e59f408b00f5a99e0fb867c635a84d2d77947171620ab035f6067a3cdfb8136f",
+            "answer_user": "c4f4ef05d7d1b87fca94bee65cbf2a38999c181dc2e92bced9cdf8ef92b006e7"
+          }
+        },
+        "judge": "gpt-6.1-terra",
+        "denominators": {
+          "fact_coverage": 23
+        }
+      },
+      {
+        "id": "experiments/eval/agent-heldout-X-r3/gpt-5.6-luna",
+        "metrics": {
+          "n_cases": 31,
+          "behaviour_accuracy": {
+            "rate": 0.839,
+            "ci95": [
+              0.71,
+              0.968
+            ],
+            "n": 31
+          },
+          "false_answer_rate": {
+            "rate": 0.036,
+            "ci95": [
+              0.0,
+              0.107
+            ],
+            "n": 28
+          },
+          "over_abstention_rate": {
+            "rate": 0.097,
+            "ci95": [
+              0.0,
+              0.194
+            ],
+            "n": 31
+          },
+          "key_number_recall": {
+            "rate": 0.858,
+            "ci95": [
+              0.716,
+              0.972
+            ],
+            "n": 19
+          },
+          "calc_correct": {
+            "rate": 1.0,
+            "ci95": [
+              1.0,
+              1.0
+            ],
+            "n": 5
+          },
+          "gold_cited_any": {
+            "rate": 0.552,
+            "ci95": [
+              0.379,
+              0.724
+            ],
+            "n": 29
+          },
+          "cases_with_ungrounded_numbers": {
+            "rate": 0.032,
+            "ci95": [
+              0.0,
+              0.097
+            ],
+            "n": 31
+          },
+          "answers_with_ungrounded_numbers": {
+            "rate": 0.032,
+            "ci95": [
+              0.0,
+              0.097
+            ],
+            "n": 31
+          },
+          "claims_judged": 45,
+          "claim_supported_rate": {
+            "rate": 0.822,
+            "ci95": [
+              0.659,
+              0.945
+            ],
+            "n": 45,
+            "n_cases": 22
+          },
+          "claim_unsupported_rate": {
+            "rate": 0.022,
+            "ci95": [
+              0.0,
+              0.07
+            ],
+            "n": 45,
+            "n_cases": 22
+          },
+          "answers_with_any_unsupported_claim": {
+            "rate": 0.045,
+            "ci95": [
+              0.0,
+              0.136
+            ],
+            "n": 22
+          },
+          "fact_coverage": {
+            "rate": 0.667,
+            "ci95": [
+              0.464,
+              0.857
+            ],
+            "n": 24,
+            "n_cases": 21
+          },
+          "answers_contradicting_a_reference_fact": {
+            "rate": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "n": 21
+          },
+          "latency_p50_s": 13.6,
+          "latency_p95_s": 31.8,
+          "cost_per_case_usd": 0.00392,
+          "judge_cost_total_usd": 0.0286
+        },
+        "provenance": [
+          "experiments/eval/agent-heldout-X-r3/gpt-5.6-luna.metrics.json",
+          "experiments/eval/agent-heldout-X-r3/gpt-5.6-luna.cases.jsonl"
+        ],
+        "corpus_version": "v2",
+        "gold_version": "v3.6 (evidence-ID migration only)",
+        "label": "gpt-5.6-luna",
+        "strata": {
+          "adversarial": {
+            "n": 5,
+            "behaviour_accuracy": 0.4,
+            "false_answer": 1,
+            "over_abstain": 2,
+            "unsupported_claims": 0,
+            "contradicted_facts": 0
+          },
+          "ambiguity_insufficient_causal": {
+            "n": 6,
+            "behaviour_accuracy": 0.833,
+            "false_answer": 0,
+            "over_abstain": 0,
+            "unsupported_claims": 0,
+            "contradicted_facts": 0
+          },
+          "cross_source_synthesis": {
+            "n": 5,
+            "behaviour_accuracy": 1.0,
+            "false_answer": 0,
+            "over_abstain": 0,
+            "unsupported_claims": 1,
+            "contradicted_facts": 0
+          },
+          "factual_lookup": {
+            "n": 5,
+            "behaviour_accuracy": 1.0,
+            "false_answer": 0,
+            "over_abstain": 0,
+            "unsupported_claims": 0,
+            "contradicted_facts": 0
+          },
+          "numerical_comparison": {
+            "n": 6,
+            "behaviour_accuracy": 1.0,
+            "false_answer": 0,
+            "over_abstain": 0,
+            "unsupported_claims": 0,
+            "contradicted_facts": 0
+          },
+          "revision_conflict": {
+            "n": 4,
+            "behaviour_accuracy": 0.75,
+            "false_answer": 0,
+            "over_abstain": 1,
+            "unsupported_claims": 0,
+            "contradicted_facts": 0
+          }
+        },
+        "split": "heldout",
+        "scoring_provenance": {
+          "eligible_n": 31,
+          "available_n": 31,
+          "gold_sha256": "6169a9deca78cb5908c584bdf7d17b1c8dd9a15ff7840b3752f3bbb4febb2f9b",
+          "git_head": "b212c9eb8a6ce9f3cbb717a6ef9cd3c6efe34c19",
+          "price_table_sha256": "634b32441c3495b4c3ec13efa3af1e9cc99e5c7523eac3a15a5c238c3acaeb5c",
+          "prompt_sha256": {
+            "planner": "df68ef8e5e287d1a0b1f71d938e85ec25b4f03eeec501bc439a3a77aec2482dc",
+            "answer": "e854b64c72116c4c175082e70f39c312ed94b1f37778e7daf3f9a51de1bac350",
+            "judge": "85f3529fca32faec681b3d4b1e6899b8620c383ed2aa54bc423241e2b7f4a10f",
+            "rerank": "e45ed816ccefd679d046cf9bcbd4dad92ba27b20cfc5f45b900063b84784793a",
+            "planner_user": "e59f408b00f5a99e0fb867c635a84d2d77947171620ab035f6067a3cdfb8136f",
+            "answer_user": "c4f4ef05d7d1b87fca94bee65cbf2a38999c181dc2e92bced9cdf8ef92b006e7"
+          }
+        },
+        "judge": "gpt-6.1-terra",
+        "denominators": {
+          "fact_coverage": 24
+        }
+      },
+      {
+        "id": "experiments/eval/agent-heldout-X-r3/gpt-6-luna",
+        "metrics": {
+          "n_cases": 31,
+          "behaviour_accuracy": {
+            "rate": 0.839,
+            "ci95": [
+              0.71,
+              0.968
+            ],
+            "n": 31
+          },
+          "false_answer_rate": {
+            "rate": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "n": 28
+          },
+          "over_abstention_rate": {
+            "rate": 0.097,
+            "ci95": [
+              0.0,
+              0.194
+            ],
+            "n": 31
+          },
+          "key_number_recall": {
+            "rate": 0.777,
+            "ci95": [
+              0.611,
+              0.918
+            ],
+            "n": 19
+          },
+          "calc_correct": {
+            "rate": 1.0,
+            "ci95": [
+              1.0,
+              1.0
+            ],
+            "n": 5
+          },
+          "gold_cited_any": {
+            "rate": 0.621,
+            "ci95": [
+              0.448,
+              0.793
+            ],
+            "n": 29
+          },
+          "cases_with_ungrounded_numbers": {
+            "rate": 0.032,
+            "ci95": [
+              0.0,
+              0.097
+            ],
+            "n": 31
+          },
+          "answers_with_ungrounded_numbers": {
+            "rate": 0.032,
+            "ci95": [
+              0.0,
+              0.097
+            ],
+            "n": 31
+          },
+          "claims_judged": 34,
+          "claim_supported_rate": {
+            "rate": 0.912,
+            "ci95": [
+              0.769,
+              1.0
+            ],
+            "n": 34,
+            "n_cases": 21
+          },
+          "claim_unsupported_rate": {
+            "rate": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "n": 34,
+            "n_cases": 21
+          },
+          "answers_with_any_unsupported_claim": {
+            "rate": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "n": 21
+          },
+          "fact_coverage": {
+            "rate": 0.625,
+            "ci95": [
+              0.423,
+              0.826
+            ],
+            "n": 24,
+            "n_cases": 21
+          },
+          "answers_contradicting_a_reference_fact": {
+            "rate": 0.048,
+            "ci95": [
+              0.0,
+              0.143
+            ],
+            "n": 21
+          },
+          "latency_p50_s": 17.6,
+          "latency_p95_s": 43.3,
+          "cost_per_case_usd": 0.00268,
+          "judge_cost_total_usd": 0.027
+        },
+        "provenance": [
+          "experiments/eval/agent-heldout-X-r3/gpt-6-luna.metrics.json",
+          "experiments/eval/agent-heldout-X-r3/gpt-6-luna.cases.jsonl"
+        ],
+        "corpus_version": "v2",
+        "gold_version": "v3.6 (evidence-ID migration only)",
+        "label": "gpt-6-luna",
+        "strata": {
+          "adversarial": {
+            "n": 5,
+            "behaviour_accuracy": 0.4,
+            "false_answer": 0,
+            "over_abstain": 2,
+            "unsupported_claims": 0,
+            "contradicted_facts": 0
+          },
+          "ambiguity_insufficient_causal": {
+            "n": 6,
+            "behaviour_accuracy": 0.833,
+            "false_answer": 0,
+            "over_abstain": 0,
+            "unsupported_claims": 0,
+            "contradicted_facts": 1
+          },
+          "cross_source_synthesis": {
+            "n": 5,
+            "behaviour_accuracy": 1.0,
+            "false_answer": 0,
+            "over_abstain": 0,
+            "unsupported_claims": 0,
+            "contradicted_facts": 0
+          },
+          "factual_lookup": {
+            "n": 5,
+            "behaviour_accuracy": 1.0,
+            "false_answer": 0,
+            "over_abstain": 0,
+            "unsupported_claims": 0,
+            "contradicted_facts": 0
+          },
+          "numerical_comparison": {
+            "n": 6,
+            "behaviour_accuracy": 1.0,
+            "false_answer": 0,
+            "over_abstain": 0,
+            "unsupported_claims": 0,
+            "contradicted_facts": 0
+          },
+          "revision_conflict": {
+            "n": 4,
+            "behaviour_accuracy": 0.75,
+            "false_answer": 0,
+            "over_abstain": 1,
+            "unsupported_claims": 0,
+            "contradicted_facts": 0
+          }
+        },
+        "split": "heldout",
+        "scoring_provenance": {
+          "eligible_n": 31,
+          "available_n": 31,
+          "gold_sha256": "6169a9deca78cb5908c584bdf7d17b1c8dd9a15ff7840b3752f3bbb4febb2f9b",
+          "git_head": "b212c9eb8a6ce9f3cbb717a6ef9cd3c6efe34c19",
+          "price_table_sha256": "634b32441c3495b4c3ec13efa3af1e9cc99e5c7523eac3a15a5c238c3acaeb5c",
+          "prompt_sha256": {
+            "planner": "df68ef8e5e287d1a0b1f71d938e85ec25b4f03eeec501bc439a3a77aec2482dc",
+            "answer": "e854b64c72116c4c175082e70f39c312ed94b1f37778e7daf3f9a51de1bac350",
+            "judge": "85f3529fca32faec681b3d4b1e6899b8620c383ed2aa54bc423241e2b7f4a10f",
+            "rerank": "e45ed816ccefd679d046cf9bcbd4dad92ba27b20cfc5f45b900063b84784793a",
+            "planner_user": "e59f408b00f5a99e0fb867c635a84d2d77947171620ab035f6067a3cdfb8136f",
+            "answer_user": "c4f4ef05d7d1b87fca94bee65cbf2a38999c181dc2e92bced9cdf8ef92b006e7"
+          }
+        },
+        "judge": "gpt-6.1-terra",
+        "denominators": {
+          "fact_coverage": 24
+        }
       }
     ],
     "provenance": [
@@ -59240,6 +61030,10 @@
       "experiments/eval/agent-dev-A5/gpt-5.6-luna.metrics.json",
       "experiments/eval/agent-dev-A5/gpt-6-luna.cases.jsonl",
       "experiments/eval/agent-dev-A5/gpt-6-luna.metrics.json",
+      "experiments/eval/agent-dev-X1/gpt-5.6-luna.cases.jsonl",
+      "experiments/eval/agent-dev-X1/gpt-5.6-luna.metrics.json",
+      "experiments/eval/agent-dev-X1/gpt-6-luna.cases.jsonl",
+      "experiments/eval/agent-dev-X1/gpt-6-luna.metrics.json",
       "experiments/eval/agent-heldout-H-hybrid/gpt-5.6-luna.cases.jsonl",
       "experiments/eval/agent-heldout-H-hybrid/gpt-5.6-luna.metrics.json",
       "experiments/eval/agent-heldout-H-hybrid/gpt-6-luna.cases.jsonl",
@@ -59248,6 +61042,15 @@
       "experiments/eval/agent-heldout-H-r3/gpt-5.6-luna.metrics.json",
       "experiments/eval/agent-heldout-H-r3/gpt-6-luna.cases.jsonl",
       "experiments/eval/agent-heldout-H-r3/gpt-6-luna.metrics.json",
+      "experiments/eval/agent-heldout-X-hybrid/gpt-5.6-luna.cases.jsonl",
+      "experiments/eval/agent-heldout-X-hybrid/gpt-5.6-luna.metrics.json",
+      "experiments/eval/agent-heldout-X-hybrid/gpt-6-luna.cases.jsonl",
+      "experiments/eval/agent-heldout-X-hybrid/gpt-6-luna.metrics.json",
+      "experiments/eval/agent-heldout-X-r3/gpt-5.6-luna.cases.jsonl",
+      "experiments/eval/agent-heldout-X-r3/gpt-5.6-luna.metrics.json",
+      "experiments/eval/agent-heldout-X-r3/gpt-6-luna.cases.jsonl",
+      "experiments/eval/agent-heldout-X-r3/gpt-6-luna.metrics.json",
+      "experiments/heldout/paired-corpus-v2.txt",
       "experiments/heldout/paired-v3.2.txt",
       "experiments/heldout/paired-v3.3.txt",
       "experiments/heldout/paired-v3.4.txt",
@@ -59278,6 +61081,38 @@
     },
     "paired": [
       {
+        "corpus_version": "v2",
+        "diagnostic": true,
+        "gold_version": "v3.6",
+        "n": 31,
+        "resamples": 10000,
+        "seed": 20261030,
+        "models": {
+          "gpt-6-luna": {
+            "diff": 0.065,
+            "ci95": [
+              -0.065,
+              0.194
+            ],
+            "better": 3,
+            "worse": 1
+          },
+          "gpt-5.6-luna": {
+            "diff": 0.097,
+            "ci95": [
+              -0.032,
+              0.226
+            ],
+            "better": 4,
+            "worse": 1
+          }
+        },
+        "provenance": [
+          "experiments/heldout/paired-corpus-v2.txt"
+        ]
+      },
+      {
+        "corpus_version": "v1",
         "gold_version": "v3.5",
         "n": 31,
         "resamples": 10000,
@@ -59307,6 +61142,7 @@
         ]
       },
       {
+        "corpus_version": "v1",
         "gold_version": "v3.4",
         "n": 31,
         "resamples": 10000,
@@ -59336,6 +61172,7 @@
         ]
       },
       {
+        "corpus_version": "v1",
         "gold_version": "v3.3",
         "n": 31,
         "resamples": 10000,
@@ -59365,6 +61202,7 @@
         ]
       },
       {
+        "corpus_version": "v1",
         "gold_version": "v3.2",
         "n": 31,
         "resamples": 10000,
@@ -59777,6 +61615,46 @@
         "date": "31 Oct 2026",
         "alternatives": "",
         "summary": "DECISION / approval: on 31 Oct 2026, the owner explicitly confirmed “Yes I confirm”: HO-022 clarify → answer; DEV-018 refuse → clarify"
+      },
+      {
+        "id": "D-037",
+        "title": "Adopt extraction corrections and isolate corpus-v2 evaluation",
+        "status": "DECISION",
+        "date": "31 Oct 2026",
+        "alternatives": "",
+        "summary": "Owner approval: merge extraction-fixes (80a287b), rebuild from existing raw sources, migrate evidence IDs only and run a clean separately labelled evaluation"
+      },
+      {
+        "id": "D-038",
+        "title": "Deterministic passage/dataset source-conflict guard",
+        "status": "DECISION",
+        "date": "31 Oct 2026",
+        "alternatives": "evidence annotation alone supplies trustworthy context but still depends on model compliance; deterministic enforcement in the existing output-validation guard ensures a used conflicting figure cannot survive as an asserted level",
+        "summary": "Owner approval: investigate and fix T-I06's planted-statistic failure, preserve genuine labelled revisions, and run a separately labelled post-fix threat evaluation"
+      },
+      {
+        "id": "D-039",
+        "title": "Evidence-disjoint held-out v2 design and blocker",
+        "status": "DECISION / VERIFIED FACT",
+        "date": "31 Oct 2026",
+        "alternatives": "",
+        "summary": "Owner approval: fix the held-out evidence-overlap limitation without altering the registered original held-out artifacts."
+      },
+      {
+        "id": "D-040",
+        "title": "Corpus v3: add labour-only sources for the evidence-disjoint held-out",
+        "status": "DECISION / PREPARED",
+        "date": "31 Oct 2026",
+        "alternatives": "",
+        "summary": "Owner decision: build the evidence-disjoint held-out (D-039, design A) from new, labour-relevant sources only; no MTI GDP revision pairs"
+      },
+      {
+        "id": "D-041",
+        "title": "Adopt corpus v2 as the working corpus; frozen v1 results retained",
+        "status": "DECISION / MEASURED",
+        "date": "31 Oct 2026",
+        "alternatives": "",
+        "summary": "DECISION: corpus v2 (D-037 extraction fixes, parser extract-0.2, 15,915 passages) is the working corpus for new development, the web application and demos"
       }
     ],
     "milestones": [
@@ -59885,7 +61763,7 @@
     "The population basis of the dataset employment series is unverified."
   ],
   "provenance": {
-    "commit": "f3e947bcb435358a20f3b61ec46dac3f59d51b50",
+    "commit": "ac258a4f550f567d34ec02edf89fabf593c527b2",
     "artifacts": [
       {
         "path": "data/export/sources.json",
@@ -60056,6 +61934,16 @@
         "path": "experiments/runs/dev-R-summary.json",
         "status": "available",
         "sha256": "63c1413228560132130e4ebab514cd80bb3a6be0f4c2d71c1c96a2fd5e88c426"
+      },
+      {
+        "path": "experiments/runs/extraction-v2-X1/dev-R-summary.json",
+        "status": "available",
+        "sha256": "930d58188f38d8a9bbbaa6cc74f33bd80948db7797c102c8817c425f53ddeeaa"
+      },
+      {
+        "path": "experiments/heldout/paired-corpus-v2.txt",
+        "status": "available",
+        "sha256": "c88392e2ee1b3c424fd1c3d5abee47a3cfbe443307eeffec4ce96ba4e8c465ce"
       },
       {
         "path": "experiments/heldout/paired.txt",
@@ -60368,6 +62256,26 @@
         "sha256": "1aa90e79e63ef2aa79f0d6963aacbb6a1c18418b8d175a910285fb57d08907c6"
       },
       {
+        "path": "experiments/eval/agent-dev-X1/gpt-5.6-luna.metrics.json",
+        "status": "available",
+        "sha256": "b8290273bb30ee48b335b12bbe22a1ca9dc6829602e9cd407d80de5bf1a421ca"
+      },
+      {
+        "path": "experiments/eval/agent-dev-X1/gpt-5.6-luna.cases.jsonl",
+        "status": "available",
+        "sha256": "deb364cc5141ccd0ea3501e4a367d8e67dd019abc36b92d6767da75da17b81b7"
+      },
+      {
+        "path": "experiments/eval/agent-dev-X1/gpt-6-luna.metrics.json",
+        "status": "available",
+        "sha256": "05580f1dda6cdf18f67dd0a1562aeccbe1e1fa399dabb1e55e4cb84a5802d14f"
+      },
+      {
+        "path": "experiments/eval/agent-dev-X1/gpt-6-luna.cases.jsonl",
+        "status": "available",
+        "sha256": "5c4fec40d42ce09964de09ad5ae088c60e3cc62042a916b8c0a6eece71cb03de"
+      },
+      {
         "path": "experiments/eval/agent-heldout-H-hybrid/gpt-5.6-luna.metrics.json",
         "status": "available",
         "sha256": "fcced021b72770b440b93a7a4370a9ec43f4a44afee4668dd4a61cc42ee39b33"
@@ -60406,6 +62314,46 @@
         "path": "experiments/eval/agent-heldout-H-r3/gpt-6-luna.cases.jsonl",
         "status": "available",
         "sha256": "985363dc3434d049c3b713fbf44aa93c87434e0a6e638cbc4dd70a889a444ee6"
+      },
+      {
+        "path": "experiments/eval/agent-heldout-X-hybrid/gpt-5.6-luna.metrics.json",
+        "status": "available",
+        "sha256": "dcc712015344d0b64849eb100f82be6fa590c0a4f1868c786258a55c672b35ce"
+      },
+      {
+        "path": "experiments/eval/agent-heldout-X-hybrid/gpt-5.6-luna.cases.jsonl",
+        "status": "available",
+        "sha256": "0bd94e0ffeaa92c7928308496ef4e1ed680ae081903263b2186b1f0bc17ec983"
+      },
+      {
+        "path": "experiments/eval/agent-heldout-X-hybrid/gpt-6-luna.metrics.json",
+        "status": "available",
+        "sha256": "acfcdb3aafd1a4c2c47ae8427294b0dd815564ba656cdb959a8177cdb87cff96"
+      },
+      {
+        "path": "experiments/eval/agent-heldout-X-hybrid/gpt-6-luna.cases.jsonl",
+        "status": "available",
+        "sha256": "cbf3d3090d7afa4a5e824a73aa44c5e2c7efd2d9e176fd0b9e36df70f83349b0"
+      },
+      {
+        "path": "experiments/eval/agent-heldout-X-r3/gpt-5.6-luna.metrics.json",
+        "status": "available",
+        "sha256": "7c3f07915b5ea53b180c59f19556e8c52ff4dcceba78c6b5fdc2c7c7078a1526"
+      },
+      {
+        "path": "experiments/eval/agent-heldout-X-r3/gpt-5.6-luna.cases.jsonl",
+        "status": "available",
+        "sha256": "dc99753a68eaab11349cac47a42459705963d194c582cb24b63623c867e16648"
+      },
+      {
+        "path": "experiments/eval/agent-heldout-X-r3/gpt-6-luna.metrics.json",
+        "status": "available",
+        "sha256": "64a1078581056ead7970a209685f77c9e9f87915e49dc2230ce115047ca3b4ea"
+      },
+      {
+        "path": "experiments/eval/agent-heldout-X-r3/gpt-6-luna.cases.jsonl",
+        "status": "available",
+        "sha256": "fa1085705f2085bca6297f5bc0db7a9279e0c43999adf80d706fc70bc14ce9b6"
       },
       {
         "path": "experiments/threats/runs/gpt-4.1-mini+naive.metrics.json",
@@ -60505,12 +62453,12 @@
       {
         "path": "docs/decisions.md",
         "status": "available",
-        "sha256": "a7f2d43f4aea8829f7e10f204ccc46f0b7ef97723ae22c2c681fd8c7e5d7db40"
+        "sha256": "606e0496a590a5776eb1ceb96218068b65855f1a614fdf37e31331630118dba8"
       },
       {
         "path": "docs/progress.md",
         "status": "available",
-        "sha256": "cd3cbffd2489f878442ea94c69d6ae4b9a3482f306a8ecd60a5afb88a8eff2c7"
+        "sha256": "244a90dffd77aae6e2251dcc394c74bb0d65c8051bd1759de2682866a6d81fac"
       }
     ],
     "policy": "Committed artifacts only; numeric fields only."
