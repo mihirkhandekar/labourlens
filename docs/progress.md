@@ -93,7 +93,7 @@ Every row came from a live call; none is stored as a repo artifact yet. M1.1 mus
 | D-030 / D-033 | Current R3 / `gpt-6-luna` / `answer_v3` agent default | provisional after inconclusive held-out comparison; owner to confirm or prefer cheaper hybrid |
 | Gold review | Resolve remaining behaviour/definition questions and review evidence | owner pending; see `experiments/gold/CHANGELOG.md` |
 | Held-out protocol | Review executed evidence and record remaining label/protocol sign-off | execution authorized and complete; human gold review still incomplete; preserve frozen outputs |
-| Human answer review | Review the prepared sample using the documented rubric | pending; AI pre-review is not human review |
+| Human answer review | Review the prepared sample using the documented rubric | partial: 17/40 independent owner verdicts; 23 owner-endorsed AI, not independent; see owner-review-summary.md |
 
 ## Log (newest first)
 
