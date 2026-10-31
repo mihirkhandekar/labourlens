@@ -10,7 +10,7 @@ import re
 from bs4 import BeautifulSoup
 from pydantic import ValidationError
 
-from labourlens.review.pack import EXTRA, ROOT, ReviewExport, build_pack, ingest_review
+from labourlens.review.pack import EXTRA, ROOT, ReviewExport, build_pack, endorsement_statement, ingest_review
 
 
 def put(root, name, value):
@@ -171,6 +171,75 @@ def test_quick_path_keeps_union_of_a1_concerns(fixture_root):
     assert soup.select_one('#answers-DEV-003')['data-quick'] == 'false'
     assert len(soup.select('article[data-tab=gold][data-quick=true]')) == 8
     assert len(soup.select('article[data-tab=sources][data-quick=true]')) == 8
+
+
+def endorsed_export(name='Synthetic Owner'):
+    data = export_data()
+    data['reviewer_name'] = name
+    data['results'] = [
+        dict(case_id='DEV-001', tab='answers', fields={'verdict': 'incorrect'}, timestamp='2026-10-31T00:00:00Z'),
+        dict(case_id='DEV-002', tab='answers', fields={}, timestamp='2026-10-31T00:00:00Z', endorsement='owner_endorsed_ai'),
+        dict(case_id='HO-001', tab='gold', fields={}, timestamp='2026-10-31T00:00:00Z', endorsement='owner_endorsed_ai'),
+    ]
+    data['attestation'] = dict(reviewer_name=name, statement=endorsement_statement(2), timestamp='2026-10-31T00:00:00Z', counts={'answers': 1, 'gold': 1, 'sources': 0, 'decisions': 0})
+    return data
+
+
+def test_endorsement_schema_is_separate_and_strict():
+    assert ReviewExport.model_validate(endorsed_export()).attestation.counts['answers'] == 1
+    mixed = endorsed_export()
+    mixed['results'][1]['fields'] = {'verdict': 'correct'}
+    with pytest.raises(ValidationError, match='cannot be combined'):
+        ReviewExport.model_validate(mixed)
+    decision = endorsed_export()
+    decision['results'].append(dict(case_id='J1', tab='decisions', fields={}, timestamp='2026-10-31T00:00:00Z', endorsement='owner_endorsed_ai'))
+    with pytest.raises(ValidationError, match='cannot be endorsed'):
+        ReviewExport.model_validate(decision)
+    no_attestation = endorsed_export()
+    no_attestation['attestation'] = None
+    with pytest.raises(ValidationError, match='require an attestation'):
+        ReviewExport.model_validate(no_attestation)
+    altered = endorsed_export()
+    altered['attestation']['statement'] = 'I independently reviewed these cards.'
+    with pytest.raises(ValidationError, match='exact endorsement statement'):
+        ReviewExport.model_validate(altered)
+    unnamed = endorsed_export('')
+    with pytest.raises(ValidationError):
+        ReviewExport.model_validate(unnamed)
+
+
+def test_ingest_separates_endorsement_and_never_proposes_changes(fixture_root):
+    data = endorsed_export()
+    path = put(fixture_root, 'private/endorsed.json', json.dumps(data))
+    gold = (fixture_root / 'experiments/gold/draft_cases.jsonl').read_bytes()
+    summary, proposal = ingest_review(path, fixture_root)
+    text = summary.read_text()
+    assert '## Independent human review' in text
+    assert '## Owner-endorsed AI review (no independent per-item review)' in text
+    assert endorsement_statement(2) in text
+    assert '1/1 comparable independent owner verdicts' in text
+    assert proposal.read_text() == ''
+    assert '| answers | DEV-002 |' in text
+    assert (fixture_root / 'experiments/gold/draft_cases.jsonl').read_bytes() == gold
+    assert 'reviewed_by' not in text
+
+
+def test_ingest_refuses_endorsement_without_matching_name(fixture_root):
+    data = endorsed_export()
+    data['reviewer_name'] = ''
+    path = put(fixture_root, 'private/unnamed-endorsed.json', json.dumps(data))
+    with pytest.raises(ValidationError):
+        ingest_review(path, fixture_root)
+    assert not (fixture_root / 'docs/human-review/owner-review-summary.md').exists()
+
+
+def test_pack_contains_endorsement_controls(fixture_root):
+    soup = BeautifulSoup(build_pack(fixture_root).read_text(), 'html.parser')
+    assert soup.select_one('#endorse-all').get_text(strip=True) == 'Endorse AI review for all undecided cards'
+    assert soup.select_one('#undo-all-endorsements')
+    page = soup.decode()
+    assert 'NOT as independent human review' in page
+    assert 'owner_endorsed_ai' in page
 
 
 @pytest.mark.corpus

@@ -38,6 +38,20 @@ count. Time remaining is a transparent estimate of **1.5 minutes per undecided
 card**, not a measured duration. Omitted cards remain unreviewed.
 Existing per-case localStorage keys and old JSON exports remain compatible.
 
+**Owner endorsement (not independent review).** If you decide not to review every
+item, type your name and use **Endorse AI review for all undecided cards**. The
+confirmation shows exact counts and says: “I have read the AI reviews and the
+adjudication. I endorse them for N cards without independent per-item review. This
+will be recorded as owner endorsement, NOT as independent human review.” It marks only
+cards with no independent input in a separate `endorsement` field; it never writes
+an AI verdict into a verdict, label, disagreement or decision field, and J1–J10
+are not endorsable. Endorsed cards show a purple badge and can be undone one by
+one or all together. Progress reports independent, endorsed and undecided counts
+separately. Export includes an `attestation` object. `review-ingest` reports
+independent review and endorsement in separate sections, calculates agreement
+only from independent items, excludes endorsements from proposed label changes,
+and never changes gold `reviewed_by`.
+
 Read each question and form your own view before opening **Gold says**, **Reveal
 draft**, or **AI review**. The sticky bar provides tab/family, undecided and priority
 filters, progress, reviewer name and Export. Decisions are saved in localStorage

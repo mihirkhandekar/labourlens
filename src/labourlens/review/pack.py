@@ -84,6 +84,17 @@ OWNER_DECISIONS = [
 ]
 
 
+ENDORSEMENT = 'owner_endorsed_ai'
+ENDORSEMENT_TABS = ('answers', 'gold', 'sources', 'decisions')
+INDEPENDENT_FIELDS = ('verdict', 'failure_type', 'label', 'proposed_behavior', 'evidence', 'facts', 'match',
+                      'realistic', 'in_scope', 'unambiguous', 'expected_evidence', 'decision')
+
+
+def endorsement_statement(count: int) -> str:
+    return (f'I have read the AI reviews and the adjudication. I endorse them for {count} cards without independent per-item review. '
+            'This will be recorded as owner endorsement, NOT as independent human review.')
+
+
 def rows(path: Path) -> list[dict]:
     return [json.loads(s) for s in path.read_text().splitlines() if s.strip()]
 
@@ -439,7 +450,7 @@ def build_pack(root: Path = ROOT) -> Path:
     checklist += para('Publisher-side authenticity, current licence applicability and unresolved employment-population basis cannot be established from offline snapshots alone. Record an unresolved issue unless independently verified; do not treat this pack as proof of current publisher terms.') + '</section></details>'
     digest = hashlib.sha256(json.dumps({'sample': sample, 'gold_ids': sorted(gold)}, sort_keys=True).encode()).hexdigest()[:16]
     assets = json.dumps(ev.images).replace('<', '\\u003c')
-    page = HEADER + ''.join(content) + checklist + '<script>const PACK_ID=' + json.dumps(digest) + '; const PAGE_IMAGES=' + assets + ';</script><script>' + SCRIPT + '</script></main></body></html>'
+    page = HEADER + ''.join(content) + checklist + '<script>const PACK_ID=' + json.dumps(digest) + '; const INDEPENDENT_FIELDS=' + json.dumps(INDEPENDENT_FIELDS) + '; const PAGE_IMAGES=' + assets + ';</script><script>' + SCRIPT + '</script></main></body></html>'
     destination.parent.mkdir(parents=True, exist_ok=True)
     destination.write_text(page)
     return destination
@@ -476,6 +487,7 @@ class ReviewResult(BaseModel):
     tab: str
     fields: ReviewFields
     timestamp: str
+    endorsement: str = ''
 
     @model_validator(mode='after')
     def valid_record(self):
@@ -487,6 +499,13 @@ class ReviewResult(BaseModel):
             options = next(options for cid, _, _, options in OWNER_DECISIONS if cid == self.case_id)
             if self.fields.decision not in ('', *(value for value, _, _ in options)):
                 raise ValueError('Invalid decision option')
+        if self.endorsement not in ('', ENDORSEMENT):
+            raise ValueError('Invalid endorsement')
+        if self.endorsement:
+            if self.tab == 'decisions':
+                raise ValueError('J1–J10 decisions cannot be endorsed')
+            if any(getattr(self.fields, field) for field in INDEPENDENT_FIELDS):
+                raise ValueError('Endorsement cannot be combined with independent review choices')
         return self
 
 
@@ -497,6 +516,26 @@ def parse_timestamp(value: str) -> datetime:
     return parsed
 
 
+class ReviewAttestation(BaseModel):
+    model_config = ConfigDict(extra='forbid', strict=True)
+    reviewer_name: str = Field(min_length=1, max_length=200)
+    statement: str
+    timestamp: str
+    counts: dict[str, int]
+
+    @model_validator(mode='after')
+    def valid_attestation(self):
+        if not self.reviewer_name.strip():
+            raise ValueError('Endorsement requires reviewer name')
+        parse_timestamp(self.timestamp)
+        if set(self.counts) != set(ENDORSEMENT_TABS) or any(n < 0 for n in self.counts.values()) or self.counts['decisions'] != 0:
+            raise ValueError('Invalid endorsement counts; decisions are not endorsable')
+        total = sum(self.counts.values())
+        if total < 1 or self.statement != endorsement_statement(total):
+            raise ValueError('Attestation must contain the exact endorsement statement and count')
+        return self
+
+
 class ReviewExport(BaseModel):
     model_config = ConfigDict(extra='forbid', strict=True)
     schema_version: int
@@ -505,6 +544,7 @@ class ReviewExport(BaseModel):
     exported_at: str
     results: list[ReviewResult]
     checklist: dict[str, bool] = Field(default_factory=dict)
+    attestation: ReviewAttestation | None = None
 
     @model_validator(mode='after')
     def valid_export(self):
@@ -516,6 +556,17 @@ class ReviewExport(BaseModel):
             raise ValueError('Duplicate review records')
         if any(not re.fullmatch(r'check-(?:[1-9]|1[0-2])', k) for k in self.checklist):
             raise ValueError('Invalid checklist item')
+        endorsed = [r for r in self.results if r.endorsement]
+        if endorsed and self.attestation is None:
+            raise ValueError('Endorsed records require an attestation')
+        if self.attestation is not None:
+            if not self.reviewer_name.strip() or self.attestation.reviewer_name.strip() != self.reviewer_name.strip():
+                raise ValueError('Endorsement requires the matching reviewer name')
+            if parse_timestamp(self.attestation.timestamp) > parse_timestamp(self.exported_at):
+                raise ValueError('Attestation timestamp is later than export')
+            active_counts = Counter(r.tab for r in endorsed)
+            if any(active_counts[tab] > self.attestation.counts[tab] for tab in ENDORSEMENT_TABS):
+                raise ValueError('Active endorsements exceed the attested counts')
         return self
 
 
@@ -537,35 +588,51 @@ def ingest_review(path: Path, root: Path = ROOT) -> tuple[Path, Path]:
             raise ValueError(f'Case not in review pack: {r.case_id}')
         if r.tab == 'sources' and int(r.case_id.split('-')[1]) not in range(1, 17 if r.case_id.startswith('passage') else 15):
             raise ValueError('Source row not in review pack')
-    counts = Counter(r.fields.verdict for r in export.results if r.tab == 'answers' and r.fields.verdict)
-    failures = Counter(r.fields.failure_type for r in export.results if r.fields.failure_type)
+    independent = [r for r in export.results if not r.endorsement]
+    endorsed = [r for r in export.results if r.endorsement]
+    counts = Counter(r.fields.verdict for r in independent if r.tab == 'answers' and r.fields.verdict)
+    failures = Counter(r.fields.failure_type for r in independent if r.fields.failure_type)
     ai = ai_verdicts(root)
-    paired = [(r.fields.verdict, ai[r.case_id]) for r in export.results if r.tab == 'answers' and r.fields.verdict and r.case_id in ai]
+    paired = [(r.fields.verdict, ai[r.case_id]) for r in independent if r.tab == 'answers' and r.fields.verdict and r.case_id in ai]
     agree = sum(a == b for a, b in paired)
     summary = '# Owner review summary\n\nThis is a rights-safe summary of owner-entered fields, not an automatic sign-off of gold.\n\n'
     summary += f'Reviewer: {md_cell(export.reviewer_name)}\n\nExport date: {md_cell(export.exported_at)}\n\n'
-    summary += '## Answer verdict counts\n\n' + ''.join(f'- {k}: {v}\n' for k, v in sorted(counts.items()))
-    summary += '\n## Failure-type counts\n\n' + ''.join(f'- {k}: {v}\n' for k, v in sorted(failures.items()))
-    summary += f'\n## Agreement with independent AI answer review\n\n{agree}/{len(paired)} comparable owner verdicts' + (f' ({agree / len(paired):.1%}).' if paired else ' (rate unavailable).') + ' This is agreement, not accuracy.\n'
-    summary += '\n## Gold disagreements\n\n| Case | Existing behaviour | Proposed behaviour |\n|---|---|---|\n'
+    summary += '## Independent human review\n\nOnly independent owner-entered choices are counted here. An endorsement is not independent per-item review. Partial fields do not by themselves establish a completed review.\n\n'
+    summary += '### Answer verdict counts\n\n' + ''.join(f'- {k}: {v}\n' for k, v in sorted(counts.items()))
+    summary += '\n### Failure-type counts\n\n' + ''.join(f'- {k}: {v}\n' for k, v in sorted(failures.items()))
+    summary += f'\n### Agreement with independent AI answer review\n\n{agree}/{len(paired)} comparable independent owner verdicts' + (f' ({agree / len(paired):.1%}).' if paired else ' (rate unavailable).') + ' This is agreement, not accuracy; endorsements are excluded.\n'
+    summary += '\n### Gold disagreements\n\n| Case | Existing behaviour | Proposed behaviour |\n|---|---|---|\n'
     proposals = []
-    for r in export.results:
+    for r in independent:
         if r.tab == 'gold' and r.fields.label == 'disagree':
             summary += f'| {r.case_id} | {gold[r.case_id]["expected_behavior"]} | {r.fields.proposed_behavior} |\n'
             proposal = {'case_id': r.case_id, 'current_behavior': gold[r.case_id]['expected_behavior'], 'proposed_behavior': r.fields.proposed_behavior, 'reviewer_name': export.reviewer_name, 'timestamp': r.timestamp, 'status': 'proposed_not_applied'}
             if r.fields.shareable:
                 proposal['comment'] = r.fields.comment
             proposals.append(proposal)
-    summary += '\n## Owner decisions (choices, not automatic verification)\n\n| Decision | Selected option | Consequence |\n|---|---|---|\n'
+    summary += '\n### Owner decisions (choices, not automatic verification)\n\n| Decision | Selected option | Consequence |\n|---|---|---|\n'
     decision_options = {cid: {value: (label, consequence) for value, label, consequence in options} for cid, _, _, options in OWNER_DECISIONS}
-    for result in export.results:
+    for result in independent:
         if result.tab == 'decisions' and result.fields.decision:
             label, consequence = decision_options[result.case_id][result.fields.decision]
             summary += f'| {result.case_id} | {md_cell(label)} | {md_cell(consequence)} |\n'
-    summary += '\n## Source checks and gold field counts\n\n'
+    summary += '\n### Source checks and gold field counts\n\n'
     for tab, field in [('sources', 'match'), ('gold', 'label'), ('gold', 'evidence'), ('gold', 'facts')]:
-        count = Counter(getattr(r.fields, field) for r in export.results if r.tab == tab and getattr(r.fields, field))
+        count = Counter(getattr(r.fields, field) for r in independent if r.tab == tab and getattr(r.fields, field))
         summary += f'- {tab} / {field}: {dict(count)}\n'
+    summary += '\n## Owner-endorsed AI review (no independent per-item review)\n\n'
+    active_counts = Counter(r.tab for r in endorsed)
+    summary += f'Active endorsed cards: {len(endorsed)}. These are not counted as human-reviewed items, do not enter agreement statistics, and never produce proposed gold changes.\n\n'
+    summary += ''.join(f'- {tab}: {active_counts[tab]}\n' for tab in ENDORSEMENT_TABS)
+    if export.attestation:
+        attestation = export.attestation
+        summary += f'\nAttested by: {md_cell(attestation.reviewer_name)}\n\nAttestation time: {md_cell(attestation.timestamp)}\n\n'
+        summary += attestation.statement + '\n\n'
+        summary += 'Counts at confirmation: ' + ', '.join(f'{tab}={attestation.counts[tab]}' for tab in ENDORSEMENT_TABS) + '. Individual undo or later independent decisions can reduce the active counts above; the original attestation is retained unchanged.\n\n'
+    else:
+        summary += '\nNo owner endorsement attestation was supplied.\n\n'
+    if endorsed:
+        summary += '| Tab | Endorsed case ID |\n|---|---|\n' + ''.join(f'| {r.tab} | {r.case_id} |\n' for r in endorsed)
     summary += f'\nChecklist completed: {sum(export.checklist.values())}/12.\n\n## Owner-marked shareable comments\n\n| Tab | Case | Comment |\n|---|---|---|\n'
     for r in export.results:
         if r.fields.shareable and r.fields.comment:
@@ -588,10 +655,11 @@ HEADER = '''<!doctype html><html lang="en"><head><meta charset="utf-8"><meta nam
  body{padding-bottom:100px}.review-split{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.25fr);gap:24px;align-items:start}.answer-pane,.evidence-pane{min-width:0}.focus-mode main{max-width:1480px}.focus-mode .review-split>.answer-pane,.focus-mode .review-split>.evidence-pane{position:sticky;top:calc(var(--review-bar,180px) + 12px);max-height:calc(100vh - var(--review-bar,180px) - 145px);overflow:auto;overscroll-behavior:contain;padding:10px}.focus-mode .review-split .source-comparison{display:flex;flex-direction:column-reverse}.focus-navigation{position:fixed;bottom:0;inset-inline:0;background:#fff;border-top:2px solid #276b70;padding:12px;z-index:30;display:flex;justify-content:center;gap:16px;align-items:center}.focus-navigation button{font-weight:700;font-size:1.05rem;min-height:48px}.decision-option{padding:14px;border:1px solid #b6c8c5;border-radius:5px}.decision-option span{display:block;padding-left:28px;font-size:.92rem}.check-hint{background:#eaf4f1;padding:12px}.progress-line{display:flex;gap:14px;align-items:center;flex-wrap:wrap}progress{width:240px;accent-color:#276b70}#quick-description{font-size:.85rem;margin:4px 0}#shortcuts{max-width:640px;border:2px solid #276b70;border-radius:8px}#shortcuts::backdrop{background:#0006}.focus-navigation button:disabled{opacity:.45;cursor:default}article{scroll-margin-top:calc(var(--review-bar,180px) + 12px)}@media(max-width:850px){.review-split{grid-template-columns:1fr}.focus-mode .review-split>.answer-pane,.focus-mode .review-split>.evidence-pane{position:static;max-height:none;overflow:visible}.focus-navigation{gap:5px;padding:6px}.focus-navigation button{font-size:.85rem;padding:6px}#step-position{font-size:.8rem}progress{width:160px}}
  .focus-mode .review-split:has(.source-comparison.expanded){grid-template-columns:1fr}
  .sticky-review .toolbar{gap:8px;font-size:14px}.sticky-review label.inline{margin-right:0}.sticky-review button{padding:6px 10px}.sticky-review #family{max-width:190px}.sticky-review #reviewer{max-width:135px}.progress-line{font-size:14px}#quick-description{font-size:12px;line-height:1.35}.focus-mode article.card>h2{margin:4px 0;font-size:1.2rem}.focus-mode article.card>.check-hint{margin:6px 0;padding:8px}.focus-mode article.card>p:not(.check-hint){margin:4px 0;font-size:.8rem}.focus-mode h3{margin:8px 0;font-size:.92rem}.focus-mode .answer-pane p{margin:8px 0}.focus-mode .evidence h4{margin:6px 0;font-size:.9rem}.focus-mode .evidence p{margin:4px 0;font-size:.85rem}.focus-mode .purpose{font-size:.85rem}
+ .endorsement-bar{background:#f0eafa;border:1px solid #795c9c;color:#4a3264;padding:10px;margin:8px 0}.endorsement-bar button{margin-left:12px}.card[data-endorsed=true]{border-right:5px solid #795c9c}#endorsement-warning{font-size:.85rem;color:#6c4100;margin:3px 0}
 </style></head><body><header><a class="skip" href="#cards">Skip to review cards</a><p class="private">PRIVATE: contains MOM text; do not commit or share</p><h1>LabourLens / Owner review</h1><h2>How to use this</h2><p>1. Open this file in your browser; no connection or API is needed.<br>2. Decide each card yourself. Use two passes: form a view before opening Gold says or AI review.<br>3. Type your reviewer name and click Export. Keep the downloads private; ingest only shares comments you mark shareable.</p>
 <details><summary>Glossary — plain English</summary><dl><dt>Resident vs total</dt><dd>Residents are citizens and permanent residents; total/overall may include non-residents. Do not substitute one population for another.</dd><dt>Seasonally adjusted vs not</dt><dd>Adjusted values remove recurring seasonal patterns to improve comparisons. Unadjusted values retain them; they are distinct series.</dd><dt>Advance vs final release</dt><dd>Advance is an early estimate. Final releases use fuller information; later dataset snapshots may revise history again.</dd><dt>Quarter notation: 2026-Q2</dt><dd>April to June 2026. Q1 is January–March; Q3 July–September; Q4 October–December.</dd><dt>Ratio vs percent vs percentage points</dt><dd>A ratio compares quantities; a percent is per hundred. A rise from 2% to 3% is 1 percentage point, or a 50% relative increase.</dd><dt>Vacancy ratio</dt><dd>Job vacancies per unemployed person. A ratio of 1.48 means about 148 vacancies for every 100 unemployed people; it is not 1.48%.</dd></dl></details>
 <nav role="tablist" aria-label="Review sections"><button role="tab" data-open="guided" aria-selected="true">Guided review</button><button role="tab" data-open="decisions" aria-selected="false">Decisions (10)</button><button role="tab" data-open="answers" aria-selected="false">Answers (40)</button><button role="tab" data-open="gold" aria-selected="false">Held-out gold (31)</button><button role="tab" data-open="sources" aria-selected="false">Source checks</button></nav><noscript>JavaScript is required to display inline PDF images, save decisions and export.</noscript></header>
-<div class="sticky-review"><div class="toolbar"><strong>PRIVATE</strong><label class="inline"><input id="focus-mode" type="checkbox" checked> Focus mode (one card)</label><label class="inline"><input id="quick-path" type="checkbox"> Quick path</label><label>Tab<select id="tab-filter"><option value="guided">Guided order</option><option value="decisions">Decisions</option><option value="answers">Answers</option><option value="gold">Held-out gold</option><option value="sources">Source checks</option></select></label><label class="inline"><input id="undecided" type="checkbox">Undecided</label><label class="inline"><input id="priority" type="checkbox">Priority</label><label>Family<select id="family"><option value="">All families</option></select></label><label>Reviewer name<input id="reviewer" type="text" maxlength="200" autocomplete="off" placeholder="Type your own name"></label><button id="export">Export JSON + Markdown</button><button id="show-guide">Guide</button><button id="show-shortcuts">? Shortcuts</button></div><div class="progress-line"><progress id="progress-bar" value="0" max="125" aria-label="Review progress"></progress><p id="progress" aria-live="polite"></p><span id="minutes-left"></span></div><p id="quick-description"></p><p id="notice" role="status"></p><p id="storage-warning" class="storage-warning" role="alert"></p></div>
+<div class="sticky-review"><div class="toolbar"><strong>PRIVATE</strong><label class="inline"><input id="focus-mode" type="checkbox" checked> Focus mode (one card)</label><label class="inline"><input id="quick-path" type="checkbox"> Quick path</label><label>Tab<select id="tab-filter"><option value="guided">Guided order</option><option value="decisions">Decisions</option><option value="answers">Answers</option><option value="gold">Held-out gold</option><option value="sources">Source checks</option></select></label><label class="inline"><input id="undecided" type="checkbox">Undecided</label><label class="inline"><input id="priority" type="checkbox">Priority</label><label>Family<select id="family"><option value="">All families</option></select></label><label>Reviewer name<input id="reviewer" type="text" maxlength="200" autocomplete="off" placeholder="Type your own name"></label><button id="export">Export JSON + Markdown</button><button id="show-guide">Guide</button><button id="show-shortcuts">? Shortcuts</button><button id="endorse-all">Endorse AI review for all undecided cards</button><button id="undo-all-endorsements" disabled>Undo all endorsements</button></div><div class="progress-line"><progress id="progress-bar" value="0" max="125" aria-label="Review disposition progress (independent plus endorsed)"></progress><p id="progress" aria-live="polite"></p><span id="minutes-left"></span></div><p id="endorsement-warning" role="status"></p><p id="quick-description"></p><p id="notice" role="status"></p><p id="storage-warning" class="storage-warning" role="alert"></p></div>
 <div class="focus-navigation" id="focus-navigation"><button id="previous">Previous (k)</button><span id="step-position" aria-live="polite"></span><button id="next">Next (j)</button><button id="next-undecided">Next undecided</button></div>
 <dialog id="shortcuts"><h2>Keyboard shortcuts</h2><ul><li>j / k: next / previous card.</li><li>1 / 2 / 3: correct / partly correct / incorrect on answer cards. On a decision card, select that numbered option.</li><li>y / n on a held-out gold card: label OK / disagree.</li><li>n on other cards: next undecided. Shift+N: next undecided on every card (including gold).</li><li>?: show this help. Escape: close it.</li></ul><p>Shortcuts never run while typing in a text box or choosing a dropdown. Use the large buttons whenever you prefer. Choices are never preselected.</p><button id="close-shortcuts">Close</button></dialog><main id="cards"><p id="empty-state" hidden>No cards match these filters. Clear a filter or turn off “Undecided”.</p>
 '''
@@ -600,7 +668,7 @@ SCRIPT = r'''
 const cards = [...document.querySelectorAll('article.card')];
 // Keep this prefix and per-card keys unchanged: old review decisions survive UI upgrades.
 const prefix = 'labourlens-review:' + PACK_ID + ':';
-const memory = new Map(), times = {};
+const memory = new Map(), times = {}, endorsements = new Map();
 let storageOK = true, tab = 'guided', activeKey = '';
 function storageWarning() {
   storageOK = false;
@@ -621,6 +689,7 @@ function save(key, value) {
 }
 try { localStorage.setItem(prefix + 'probe', '1'); localStorage.removeItem(prefix + 'probe'); }
 catch (e) { storageWarning(); }
+let attestation = load('owner-attestation');
 function fields(card) {
   const result = {};
   card.querySelectorAll('[data-field]').forEach(el => {
@@ -633,6 +702,35 @@ function fields(card) {
   return result;
 }
 function key(card) { return card.dataset.tab + ':' + card.dataset.case; }
+function endorsed(card) { return endorsements.get(key(card)) === 'owner_endorsed_ai'; }
+function hasIndependentInput(card) {
+  const value = fields(card);
+  return INDEPENDENT_FIELDS.some(field => !!value[field]);
+}
+function resolved(card) { return decided(card) || endorsed(card); }
+function persistCard(card) {
+  save(key(card), {fields:fields(card), timestamp:times[key(card)], endorsement:endorsements.get(key(card)) || ''});
+}
+function clearAttestationIfEmpty() {
+  if (!endorsements.size) { attestation = null; save('owner-attestation', null); }
+}
+function undoEndorsement(card) {
+  if (!endorsements.delete(key(card))) return;
+  times[key(card)] = new Date().toISOString();
+  persistCard(card); clearAttestationIfEmpty(); update();
+}
+function endorsementStatement(count) {
+  return 'I have read the AI reviews and the adjudication. I endorse them for ' + count + ' cards without independent per-item review. This will be recorded as owner endorsement, NOT as independent human review.';
+}
+function canExport() {
+  if (!endorsements.size && !attestation) return true;
+  const name = document.querySelector('#reviewer').value.trim();
+  if (!name || !attestation || name !== attestation.reviewer_name) {
+    document.querySelector('#notice').textContent = 'Endorsed exports require your name matching the attestation. Type that name, or undo and re-endorse under your own name. No export was downloaded.';
+    return false;
+  }
+  return true;
+}
 function decided(card) {
   const f = fields(card);
   if (card.dataset.tab === 'decisions') return !!f.decision;
@@ -649,13 +747,14 @@ function download(name, text, type) {
 }
 function exportData() {
   const now = new Date().toISOString();
-  const data = {schema_version:1, pack_id:PACK_ID, reviewer_name:document.querySelector('#reviewer').value,
+  const data = {schema_version:1, pack_id:PACK_ID, reviewer_name:document.querySelector('#reviewer').value.trim(),
     exported_at:now, results:cards.map(card => ({case_id:card.dataset.case, tab:card.dataset.tab,
-      fields:fields(card), timestamp:times[key(card)] || now})), checklist:{}};
+      fields:fields(card), timestamp:times[key(card)] || now, endorsement:endorsements.get(key(card)) || ''})), checklist:{}, attestation};
   document.querySelectorAll('[data-check]').forEach(el => data.checklist[el.dataset.check] = el.checked);
   return data;
 }
 function backup() {
+  if (!canExport()) return;
   download('review-results.json', JSON.stringify(exportData(), null, 2), 'application/json');
   document.querySelector('#notice').textContent = 'Automatic JSON backup requested after 25 newly decided cards. Allow downloads; the browser may block them.';
 }
@@ -672,10 +771,21 @@ cards.forEach(card => {
       else el.value = value || '';
     });
   }
+  if (saved?.endorsement === 'owner_endorsed_ai' && card.dataset.tab !== 'decisions' && !hasIndependentInput(card)) endorsements.set(key(card), 'owner_endorsed_ai');
+  const badge = document.createElement('div');
+  badge.className = 'endorsement-bar'; badge.hidden = true;
+  const label = document.createElement('strong');
+  label.textContent = 'Owner-endorsed AI review — NOT independently reviewed';
+  const undo = document.createElement('button');
+  undo.type = 'button'; undo.textContent = 'Undo endorsement';
+  undo.addEventListener('click', () => undoEndorsement(card));
+  badge.append(label, undo);
+  card.querySelector('h2').insertAdjacentElement('afterend', badge);
   if (decided(card)) alreadyCompleted.add(key(card));
   card.addEventListener('input', () => {
     times[key(card)] = new Date().toISOString();
-    save(key(card), {fields:fields(card), timestamp:times[key(card)]});
+    if (endorsed(card) && hasIndependentInput(card)) { endorsements.delete(key(card)); clearAttestationIfEmpty(); }
+    persistCard(card);
     if (decided(card) && !alreadyCompleted.has(key(card))) {
       alreadyCompleted.add(key(card)); completionCount++;
       save('completion-count', completionCount); save('completed-cards', [...alreadyCompleted]);
@@ -683,6 +793,45 @@ cards.forEach(card => {
     }
     update();
   });
+});
+document.querySelector('#endorse-all').addEventListener('click', () => {
+  const reviewer = document.querySelector('#reviewer').value.trim();
+  if (!reviewer) {
+    document.querySelector('#notice').textContent = 'Type your own reviewer name before endorsing. Nothing was changed. J1–J10 cannot be endorsed.';
+    return;
+  }
+  // A partial independent judgement is protected too, even if its card is not complete.
+  const targets = cards.filter(card => card.dataset.tab !== 'decisions' && !hasIndependentInput(card));
+  if (!targets.length) {
+    document.querySelector('#notice').textContent = 'No eligible cards remain. Independent choices are never replaced; J1–J10 require your own answers.';
+    return;
+  }
+  const counts = {answers:0, gold:0, sources:0, decisions:0};
+  targets.forEach(card => counts[card.dataset.tab]++);
+  const statement = endorsementStatement(targets.length);
+  const blankDecisions = cards.filter(card => card.dataset.tab === 'decisions' && !decided(card)).length;
+  const prompt = statement + '\n\nExact counts across the whole pack (not just current filters):\n' +
+    'Answers: ' + counts.answers + '\nHeld-out gold and extra cases: ' + counts.gold +
+    '\nSource checks: ' + counts.sources + '\nDecisions J1–J10: 0 (not endorsable).\n\n' +
+    blankDecisions + ' owner decisions remain unanswered. Independent and partially entered review choices will be preserved. Existing endorsements, if any, are reaffirmed under this name.';
+  if (!window.confirm(prompt)) return;
+  const now = new Date().toISOString();
+  attestation = {reviewer_name:reviewer, statement, timestamp:now, counts};
+  save('owner-attestation', attestation);
+  targets.forEach(card => {
+    if (!endorsed(card)) {
+      endorsements.set(key(card), 'owner_endorsed_ai');
+      times[key(card)] = now; persistCard(card);
+    }
+  });
+  update();
+  document.querySelector('#notice').textContent = targets.length + ' cards owner-endorsed, NOT independently reviewed. No human verdicts or labels were filled. ' + blankDecisions + ' J1–J10 decisions still require your own answers.';
+});
+document.querySelector('#undo-all-endorsements').addEventListener('click', () => {
+  const targets = cards.filter(endorsed), now = new Date().toISOString();
+  targets.forEach(card => { endorsements.delete(key(card)); times[key(card)] = now; persistCard(card); });
+  attestation = null; save('owner-attestation', null); update();
+  document.querySelector('#notice').textContent = 'All endorsements undone. Independent review choices were preserved.';
 });
 const rank = card => card.dataset.tab === 'decisions' ? 0 : card.dataset.priority === 'true' ? 1 : 2;
 const guided = [...cards].sort((a, b) => rank(a) - rank(b));
@@ -706,7 +855,7 @@ function candidates() {
   const quick = document.querySelector('#quick-path').checked;
   return (tab === 'guided' ? guided : cards).filter(card =>
     (tab === 'guided' || card.dataset.tab === tab) &&
-    (!family || card.dataset.family === family) && (!only || !decided(card)) &&
+    (!family || card.dataset.family === family) && (!only || !resolved(card)) &&
     (!priority || card.dataset.priority === 'true') && (!quick || card.dataset.quick === 'true'));
 }
 function update() {
@@ -718,10 +867,16 @@ function update() {
   document.querySelectorAll('[data-panel]').forEach(panel => panel.hidden = panel.dataset.panel !== (current?.dataset.tab || tab));
   const scoped = (tab === 'guided' ? guided : cards.filter(card => card.dataset.tab === tab))
     .filter(card => !document.querySelector('#quick-path').checked || card.dataset.quick === 'true');
-  const done = scoped.filter(decided).length, remaining = scoped.length - done;
-  document.querySelector('#progress').textContent = done + '/' + scoped.length + ' decided in this path · ' + cards.filter(decided).length + '/' + cards.length + ' overall';
+  const done = scoped.filter(decided).length, endorsedN = scoped.filter(endorsed).length;
+  const remaining = scoped.length - done - endorsedN;
+  const allIndependent = cards.filter(decided).length, allEndorsed = cards.filter(endorsed).length;
+  document.querySelector('#progress').textContent = done + ' independent, ' + endorsedN + ' endorsed, ' + remaining + ' undecided in this path · ' + allIndependent + ' independent, ' + allEndorsed + ' endorsed, ' + (cards.length - allIndependent - allEndorsed) + ' undecided overall';
+  cards.forEach(card => { card.dataset.endorsed = String(endorsed(card)); card.querySelector('.endorsement-bar').hidden = !endorsed(card); });
+  document.querySelector('#undo-all-endorsements').disabled = allEndorsed === 0;
+  const blankDecisions = cards.filter(card => card.dataset.tab === 'decisions' && !decided(card)).length;
+  document.querySelector('#endorsement-warning').textContent = allEndorsed ? 'Owner endorsement is NOT independent review. J1–J10 cannot be endorsed; ' + blankDecisions + ' still need your own decision. Undoing individual endorsements retains the original attestation; active counts are shown separately.' : '';
   const progress = document.querySelector('#progress-bar');
-  progress.max = Math.max(scoped.length, 1); progress.value = done;
+  progress.max = Math.max(scoped.length, 1); progress.value = done + endorsedN;
   document.querySelector('#minutes-left').textContent = 'About ' + Math.ceil(remaining * 1.5) + ' min left (1.5 min/card estimate)';
   const quickCards = cards.filter(card => card.dataset.quick === 'true');
   const answerN = quickCards.filter(card => card.dataset.tab === 'answers').length;
@@ -734,7 +889,7 @@ function update() {
   document.querySelector('#step-position').textContent = queue.length ? (position + 1) + ' of ' + queue.length + ' · ' + current.dataset.case : 'No matching cards';
   document.querySelector('#previous').disabled = position <= 0;
   document.querySelector('#next').disabled = position < 0 || position >= queue.length - 1;
-  document.querySelector('#next-undecided').disabled = !queue.some(card => !decided(card));
+  document.querySelector('#next-undecided').disabled = !queue.some(card => !resolved(card));
   document.querySelector('#focus-navigation').hidden = !focus;
   document.querySelector('#empty-state').hidden = queue.length !== 0;
   document.querySelector('#tab-filter').value = tab;
@@ -753,7 +908,7 @@ function move(direction, undecided = false) {
   if (undecided) {
     for (let offset = 1; offset <= queue.length; offset++) {
       const next = queue[(Math.max(index, 0) + offset) % queue.length];
-      if (!decided(next)) { activeKey = key(next); showCurrent(); return; }
+      if (!resolved(next)) { activeKey = key(next); showCurrent(); return; }
     }
     document.querySelector('#notice').textContent = 'No undecided cards remain in this filtered path.';
   } else if (queue[index + direction]) { activeKey = key(queue[index + direction]); showCurrent(); }
@@ -817,10 +972,13 @@ document.addEventListener('keydown', event => {
 });
 function cell(value) { return String(value ?? '').replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('|','&#124;').replaceAll('\n','<br>'); }
 document.querySelector('#export').addEventListener('click', () => {
+  if (!canExport()) return;
   const data = exportData();
   download('review-results.json', JSON.stringify(data, null, 2), 'application/json');
-  let markdown = '# PRIVATE owner review results\n\nReviewer: ' + cell(data.reviewer_name) + '\n\nDate: ' + data.exported_at + '\n\n| Case | Tab | Fields | Timestamp |\n|---|---|---|---|\n';
-  data.results.forEach(result => markdown += '| ' + cell(result.case_id) + ' | ' + cell(result.tab) + ' | ' + cell(JSON.stringify(result.fields)) + ' | ' + result.timestamp + ' |\n');
+  let markdown = '# PRIVATE owner review results\n\nReviewer: ' + cell(data.reviewer_name) + '\n\nDate: ' + data.exported_at + '\n\n';
+  if (data.attestation) markdown += '## Owner endorsement (NOT independent review)\n\n' + cell(data.attestation.statement) + '\n\nAttested at: ' + data.attestation.timestamp + '\n\n';
+  markdown += '| Case | Tab | Endorsement | Fields | Timestamp |\n|---|---|---|---|---|\n';
+  data.results.forEach(result => markdown += '| ' + cell(result.case_id) + ' | ' + cell(result.tab) + ' | ' + cell(result.endorsement) + ' | ' + cell(JSON.stringify(result.fields)) + ' | ' + result.timestamp + ' |\n');
   download('review-results.md', markdown, 'text/markdown');
   document.querySelector('#notice').textContent = 'Export requested. Allow multiple downloads. Blank names and incomplete disagreements can be saved as drafts, but must be completed before ingestion.';
 });
