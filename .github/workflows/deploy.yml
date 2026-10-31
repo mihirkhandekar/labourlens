@@ -42,7 +42,7 @@ jobs:
       # (tests/data/test_provenance_and_packaging.py::test_every_ok_entry_has_matching_file_hash). It runs locally only.
       - name: Tests (corpus-free)
         run: >
-          uv run pytest -q -p no:cacheprovider
+          uv run pytest -q -p no:cacheprovider -m 'not corpus'
           --deselect tests/data/test_provenance_and_packaging.py::test_every_ok_entry_has_matching_file_hash
 
   build-push:
