@@ -18,6 +18,9 @@ def main(argv: list[str] | None = None) -> int:
 
     sub.add_parser("eda", help="generate EDA figures and findings from the validated store")
     sub.add_parser("review-sheets", help="generate unreviewed human spot-check sheets")
+    sub.add_parser("review-pack", help="build the private offline owner review pack (no network)")
+    ri = sub.add_parser("review-ingest", help="validate owner export; write summary and proposed gold changes only")
+    ri.add_argument("results")
     rx = sub.add_parser("retrieval-exp", help="run BM25 experiments on a gold split")
     rx.add_argument("--split", default="dev", choices=["dev", "heldout"])
     dx = sub.add_parser("dense-exp", help="run dense/hybrid embedding experiments (calls the OpenAI embeddings API; needs OPENAI_API_KEY)")
@@ -67,6 +70,20 @@ def main(argv: list[str] | None = None) -> int:
     t.add_argument("id")
 
     args = p.parse_args(argv)
+    if args.cmd in ("review-pack", "review-ingest"):
+        from pathlib import Path
+        from labourlens.review.pack import build_pack, ingest_review
+
+        try:
+            if args.cmd == "review-pack":
+                print(build_pack())
+            else:
+                for output in ingest_review(Path(args.results)):
+                    print(output)
+        except ValueError as exc:
+            print(f"Review error: {exc}", file=sys.stderr)
+            return 2
+        return 0
     if args.cmd == "fetch":
         from labourlens.data import fetch
 
