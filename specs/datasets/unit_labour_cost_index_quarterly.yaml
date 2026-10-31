@@ -1,0 +1,21 @@
+source_id: unit_labour_cost_index_quarterly
+adapter: sector_wide
+label_col: DataSeries
+indent_width: 4
+period_regex: ^(\d{4})([1-4])Q$
+measures:
+- column: '*'
+  indicator_id: unit_labour_cost_index
+  unit: index_2015_100
+  population: not_applicable
+  adjustment: unspecified
+  definition: Unit Labour Cost Index (2015 = 100), quarterly, by industry (SSIC 2020). Source SingStat. The adjustment status is not stated in the dataset title; a separate seasonally adjusted table exists and must not be mixed in. Parent/child sums are not asserted.
+  plausible_range:
+  - 20
+  - 200
+expected_first_period: 1980-Q1
+expected_last_period: 2026-Q2
+missing_tokens:
+- na
+- '-'
+- ''

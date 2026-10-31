@@ -375,8 +375,61 @@ The five development `eval --no-judge` commands had already completed without mo
 
 The v3.5 paired bootstrap was regenerated from matched case IDs, **31 cases**, **10,000 resamples**, seed **20261030**, after preserving the previous text as `paired-v3.4.txt`. Unregistered mini records remain excluded from registered conclusions. The static report must be rebuilt from committed artifacts after the owner commits; no report build or commit was performed here.
 
+## Corpus v2 extraction-only experiment (X1)
+
+**Scope.** X1 evaluates the owner-approved extraction-fix corpus (D-037, D-041) with gold **v3.6**, retrieval `r3`, `planner_v1`, `answer_v3` and the source-conflict cross-check **off**. Gold v3.6 migrates passage IDs only; labels and questions are unchanged (`experiments/gold/CHANGELOG.md`). Frozen corpus-v1 dev, held-out and retrieval results above remain in place. X1 is a separately labelled experiment on a different passage store, not a replacement or retroactive edit.
+
+**Hypothesis.** Removing known extraction defects could improve evidence availability or answer quality. The null is no measurable difference. The extraction record reports **13,484 → 15,915** passages, control-bearing `ok` passages **57 → 0**, Q3 2025 physical page 30 **0 → 7** passages and appendix-label headings **141 → 0** (`docs/experiments/m7-extraction-fixes.md`). More passages are not a retrieval-quality result.
+
+**Sources.** Retrieval: `experiments/runs/extraction-v2-X1/dev-R-SUMMARY.md` against v1 `experiments/runs/dev-R-SUMMARY.md`, both n=128 text-evidence cases. Dev agent: `experiments/eval/agent-dev-X1/` against frozen A3. Held-out diagnostic: `experiments/eval/agent-heldout-X-{r3,hybrid}/` against v1 `H-{r3,hybrid}` rescored on v3.5. Bootstrap intervals are per run; nothing here is a paired v1-versus-v2 significance test.
+
+### Retrieval ladder
+
+| Retrieval dev text cases (n=128) | Corpus v1 hit@8 [95% CI] | Corpus v2 hit@8 [95% CI] | v1 MRR@10 | v2 MRR@10 |
+|---|---|---|---:|---:|
+| R0 hybrid | 0.570 [0.492, 0.656] | 0.539 [0.453, 0.625] | 0.324 | 0.314 |
+| R1a period/release filter | 0.844 [0.781, 0.906] | 0.867 [0.805, 0.930] | 0.542 | 0.496 |
+| R2 LLM rerank | 0.789 [0.726, 0.859] | 0.742 [0.672, 0.812] | 0.764 | 0.642 |
+| R3 filter then rerank | 0.969 [0.938, 0.992] | 0.953 [0.914, 0.984] | 0.912 | 0.784 |
+
+The R1a filter result is nominally higher on corpus v2, while R0, R2 and R3 hit@8 are nominally lower; every adjacent pair of intervals overlaps. R3 remains the strongest retrieval configuration (**0.953 [0.914, 0.984]** versus R0 **0.539 [0.453, 0.625]**). MRR is lower for R2 and R3 on corpus v2 (R3 **0.912 → 0.784**). That is an observed ordering difference only; this experiment does not establish whether additional retained passages, changed IDs or reranker variability caused it. Gold hashes differ (`...dev-R-SUMMARY.md` headers), reflecting the ID migration.
+
+### End-to-end comparison
+
+| Evaluation | Corpus | n | Behaviour [95% CI] | Over-abstain | False answer | Claim support | Fact coverage | Gold cited | Calculation correct | p50 / p95 s | $/case |
+|---|---|---:|---|---:|---:|---:|---:|---:|---:|---:|---:|
+| Dev A3 r3 / gpt-6-luna | v1 frozen, gold v3.5 | 237 | 0.903 [0.865, 0.937] | 0.030 | 0.030 | 0.887 | 0.728 | 0.836 | 0.750 | 15.4 / 35.6 | 0.00212 |
+| Dev X1 r3 / gpt-6-luna | v2, gold v3.6 | 237 | 0.886 [0.844, 0.924] | 0.034 | 0.035 | 0.887 | 0.728 | 0.794 | 0.667 | 14.7 / 33.5 | 0.00294 |
+| Held-out r3 / gpt-6-luna | v1, gold v3.5 rescoring | 31 | 0.871 [0.742, 0.968] | 0.065 | 0.000 | 0.872 | 0.680 | 0.621 | 0.800 | 14.0 / 26.6 | 0.00193 |
+| Held-out X-r3 / gpt-6-luna | v2, gold v3.6 | 31 | 0.839 [0.710, 0.968] | 0.097 | 0.000 | 0.912 | 0.625 | 0.621 | 1.000 | 17.6 / 43.3 | 0.00268 |
+| Held-out hybrid / gpt-6-luna | v1, gold v3.5 rescoring | 31 | 0.710 [0.548, 0.839] | 0.226 | 0.000 | 1.000 | 0.591 | 0.448 | 0.800 | 12.7 / 18.5 | 0.00124 |
+| Held-out X-hybrid / gpt-6-luna | v2, gold v3.6 | 31 | 0.774 [0.613, 0.903] | 0.161 | 0.038 | 0.882 | 0.696 | 0.517 | 1.000 | 11.5 / 25.5 | 0.00168 |
+| Dev A3 r3 / gpt-5.6-luna | v1 frozen, gold v3.5 | 237 | 0.903 [0.861, 0.941] | 0.025 | 0.030 | 0.874 | 0.765 | 0.841 | 0.750 | 15.5 / 34.4 | 0.00360 |
+| Dev X1 r3 / gpt-5.6-luna | v2, gold v3.6 | 237 | 0.911 [0.873, 0.945] | 0.021 | 0.030 | 0.801 | 0.756 | 0.825 | 0.750 | 13.3 / 34.0 | 0.00458 |
+| Held-out r3 / gpt-5.6-luna | v1, gold v3.5 rescoring | 31 | 0.839 [0.710, 0.968] | 0.065 | 0.069 | 0.911 | 0.769 | 0.655 | 0.800 | 17.3 / 36.1 | 0.00343 |
+| Held-out X-r3 / gpt-5.6-luna | v2, gold v3.6 | 31 | 0.839 [0.710, 0.968] | 0.097 | 0.036 | 0.822 | 0.667 | 0.552 | 1.000 | 13.6 / 31.8 | 0.00392 |
+| Held-out hybrid / gpt-5.6-luna | v1, gold v3.5 rescoring | 31 | 0.742 [0.581, 0.903] | 0.194 | 0.000 | 0.846 | 0.524 | 0.414 | 0.800 | 11.1 / 19.7 | 0.00271 |
+| Held-out X-hybrid / gpt-5.6-luna | v2, gold v3.6 | 31 | 0.742 [0.581, 0.871] | 0.194 | 0.040 | 0.800 | 0.667 | 0.448 | 1.000 | 9.9 / 17.4 | 0.00359 |
+
+Behaviour changes are small and inconsistent: dev `gpt-6-luna` **0.903 → 0.886**, dev `gpt-5.6-luna` **0.903 → 0.911**, held-out r3 **0.871 → 0.839** and **0.839 → 0.839**, and held-out hybrid **0.710 → 0.774** and **0.742 → 0.742**. Intervals overlap in every row. No claim of improvement or regression in answer quality is supported. Dev generation cost per case is higher on corpus v2 in this single run (`gpt-6-luna` **$0.00294** versus **$0.00212**; `gpt-5.6-luna` **$0.00458** versus **$0.00360**), while p95 latency is similar. The cause is not established. Calculation scores use the current scorer; held-out calculation has only five eligible cases.
+
+### Held-out paired diagnostic
+
+`experiments/heldout/paired-corpus-v2.txt` recomputes r3 minus hybrid on the same **31** held-out questions with **10,000** case-bootstrap resamples and seed **20261030**:
+
+| Model | r3 − hybrid on corpus v2 [95% CI] | Cases better / worse |
+|---|---:|---|
+| gpt-6-luna | +0.065 [-0.065, 0.194] | 3 / 1 |
+| gpt-5.6-luna | +0.097 [-0.032, 0.226] | 4 / 1 |
+
+This is a diagnostic on already-inspected questions with shared-evidence limitations, not new held-out evidence. Both intervals span zero. It does not strengthen or weaken the registered corpus-v1 decision.
+
+### Interpretation
+
+The extraction fix removes verified source-fidelity defects and preserves provenance. It shows **no measurable retrieval or answer-quality gain** in these measurements. R3 remains a provisional default. D-041 adopts corpus v2 as the working corpus for engineering integrity, while retaining v1 results as the frozen registered evidence. Stronger conclusions need an evidence-disjoint, owner-reviewed, pre-registered evaluation. Cross-check enabled results and threat results are separate and unchanged here.
+
 ## Conclusions and remaining submission gates
 
 The dev evidence supports improved evidence acquisition as the main demonstrated intervention. It does not establish production readiness, reliable causal analysis or a final model winner. Remaining failures include planner omissions, clarification/status handling, missing calculation outputs and unsettled gold policy.
 
-The complete v3.5 held-out comparison remains inconclusive under the registered rule: one paired interval touches zero and the other spans both signs. Keep r3 provisional. Owner review covers the 125-card pack and 45 gold records, not the full set; it used AI-assisted decisions and occurred after generation. Preserve all scoring versions and address evidence overlap and remaining inspection before stronger generalisation claims. A clean pre-registered run on frozen reviewed gold would provide stronger evidence.
+The complete v3.5 held-out comparison remains inconclusive under the registered rule: one paired interval touches zero and the other spans both signs. The separately labelled corpus-v2 extraction experiment also shows no measurable quality change. Keep r3 provisional. Owner review covers the 125-card pack and 45 gold records, not the full set; it used AI-assisted decisions and occurred after generation. Preserve all scoring versions and address evidence overlap and remaining inspection before stronger generalisation claims. A clean pre-registered run on frozen reviewed gold would provide stronger evidence.

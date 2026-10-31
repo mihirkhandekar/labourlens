@@ -31,7 +31,7 @@ def test_paired_projection_parses_numbers_only():
     )
     entries = _paired(SyntheticArtifacts({"experiments/heldout/paired.txt": text}))
     assert entries == [{
-        "gold_version": "v3.4", "n": 31, "resamples": 10000, "seed": 20261030,
+        "corpus_version": "v1", "gold_version": "v3.4", "n": 31, "resamples": 10000, "seed": 20261030,
         "models": {
             "gpt-6-luna": {"diff": 0.161, "ci95": [0.0, 0.323], "better": 6, "worse": 1},
             "gpt-5.6-luna": {"diff": 0.097, "ci95": [-0.032, 0.226], "better": 4, "worse": 1},

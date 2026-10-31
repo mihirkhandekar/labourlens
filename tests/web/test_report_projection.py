@@ -314,3 +314,83 @@ def test_paired_projection_preserves_v35_and_all_historical_gold_versions():
         assert entry["models"]["gpt-5.6-luna"] == {
             "diff": 0.097, "ci95": [-0.032, 0.226], "better": 4, "worse": 1,
         }
+
+
+@pytest.mark.parametrize("path", [
+    "experiments/eval/agent-dev-X1/gpt-6-luna.metrics.json",
+    "experiments/eval/agent-dev-X1/gpt-5.6-luna.cases.jsonl",
+    "experiments/eval/agent-heldout-X-r3/gpt-6-luna.metrics.json",
+    "experiments/eval/agent-heldout-X-hybrid/gpt-5.6-luna.cases.jsonl",
+    "experiments/runs/extraction-v2-X1/dev-R-summary.json",
+    "experiments/heldout/paired-corpus-v2.txt",
+])
+def test_corpus_v2_artifacts_are_allowlisted(path):
+    assert _Artifacts._allowed(path)
+
+
+@pytest.mark.parametrize("path", [
+    "experiments/eval/agent-dev-X1/gpt-4.1-mini.metrics.json",
+    "experiments/eval/agent-heldout-X-r3/gpt-4.1-mini.metrics.json",
+    "experiments/eval/agent-heldout-X-hybrid/gpt-4.1-mini.cases.jsonl",
+    "experiments/eval/agent-dev-X1/gpt-6-luna.judgements.json",
+    "experiments/eval/agent-heldout-X-other/gpt-6-luna.metrics.json",
+    "experiments/runs/agent-heldout-X-r3/gpt-6-luna.scores.jsonl",
+])
+def test_corpus_v2_excludes_mini_judgements_and_raw_runs(path):
+    assert not _Artifacts._allowed(path)
+
+
+def test_rows_carry_explicit_corpus_version_labels():
+    v1 = "experiments/eval/agent-heldout-H-r3/gpt-6-luna.metrics.json"
+    v2 = "experiments/eval/agent-heldout-X-r3/gpt-6-luna.metrics.json"
+    rows, _ = _experiments(SyntheticArtifacts({
+        v1: {"metrics": {"n_cases": 31}}, v2: {"metrics": {"n_cases": 31}},
+    }), "experiments/eval/")
+    by_id = {row["id"]: row for row in rows}
+    assert by_id[v1.removesuffix(".metrics.json")]["corpus_version"] == "v1"
+    assert "gold_version" not in by_id[v1.removesuffix(".metrics.json")]
+    row = by_id[v2.removesuffix(".metrics.json")]
+    assert row["corpus_version"] == "v2"
+    assert row["gold_version"].startswith("v3.6")
+
+
+def test_ladder_labels_v1_and_v2_separately():
+    from labourlens.report.build import _ladder
+    v1 = "experiments/runs/dev-R-summary.json"
+    v2 = "experiments/runs/extraction-v2-X1/dev-R-summary.json"
+    artifacts = SyntheticArtifacts({
+        v1: {"n_cases": 128, "metrics": {"R3": {"hit_at_8": 0.969}}},
+        v2: {"n_cases": 128, "metrics": {"R3": {"hit_at_8": 0.953}}},
+    })
+    first, second = _ladder(artifacts), _ladder(artifacts, v2)
+    assert (first["corpus_version"], second["corpus_version"]) == ("v1", "v2")
+    assert first["provenance"] == [v1] and second["provenance"] == [v2]
+    assert second["configs"]["R3"]["hit_at_8"] == 0.953
+
+
+def test_paired_corpus_v2_is_labelled_diagnostic_beside_v1():
+    v2 = "experiments/heldout/paired-corpus-v2.txt"
+    v1 = "experiments/heldout/paired.txt"
+    body = (
+        "n=31, 10000 case-bootstrap resamples, seed 20261030, GOLD {gold}\n"
+        "gpt-6-luna diff 0.065 95% CI [-0.065, 0.194] better 3 worse 1\n"
+        "gpt-5.6-luna diff 0.097 95% CI [-0.032, 0.226] better 4 worse 1\n"
+    )
+    entries = _paired(SyntheticArtifacts({v2: body.format(gold="v3.6"), v1: body.format(gold="v3.5")}))
+    assert [(e["corpus_version"], e["gold_version"]) for e in entries] == [("v2", "v3.6"), ("v1", "v3.5")]
+    assert entries[0]["diagnostic"] is True and "diagnostic" not in entries[1]
+    assert entries[0]["provenance"] == [v2]
+
+
+def test_evaluation_copy_reports_corpus_v2_with_overlapping_intervals_and_no_gain():
+    script = (Path(__file__).resolve().parents[2] / "web/static/evaluation.js").read_text()
+    for text in (
+        "reported beside, never over, the frozen corpus-v1 results",
+        "gold v3.6 migrates retrieval evidence IDs only, with no label change",
+        "no measurable quality change or gain",
+        "diagnostic, not new held-out evidence",
+        "gpt-6-luna +0.065, 95% CI [-0.065, 0.194], 3 better / 1 worse",
+        "r3 remains the provisional default",
+        "corpus v2 · gold v3.6 evidence-ID migration only",
+    ):
+        assert text in script

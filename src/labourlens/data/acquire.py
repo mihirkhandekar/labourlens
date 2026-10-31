@@ -24,6 +24,7 @@ ALLOWED_HOSTS = {
     "data.gov.sg",
     "stats.mom.gov.sg",
     "www.mom.gov.sg",
+    "isomer-user-content.by.gov.sg",  # MTI PDFs (corpus v3 batch); the www.mti.gov.sg page host is deliberately not allowed
 }
 S3_HOST = "s3.ap-southeast-1.amazonaws.com"
 S3_PATH_PREFIX = "/table-downloads-ingest.data.gov.sg/"

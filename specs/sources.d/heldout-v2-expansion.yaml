@@ -1,0 +1,81 @@
+# Corpus-v3 expansion batch (D-040; labour-only evidence-disjoint held-out v2, owner decision 31 Oct 2026; design in D-039).
+# Additive: no existing source entry, adapter spec or id is changed by this file. Promoted from specs/sources-heldout-v2.proposed.yaml
+# (SourceScout, 31 Oct 2026) by ExtractionMerge. NOTHING IN THIS FILE HAS BEEN FETCHED YET (fetch is a single-writer step, see
+# docs/experiments/m7-corpus-v3-runbook.md). Deliberately EXCLUDED: all MTI advance/Economic Survey GDP pairs (not labour evidence) and the
+# optional candidates (B3-B6, C2, D4, D5).
+#
+# Rights (D-001/D-004): every document below is local-only. Passage text, PDFs and raw files stay in gitignored data/. `rights_status`
+# records what SourceScout read in each PDF on 31 Oct 2026; it must be re-confirmed from the fetched file (the first fetch records the
+# real SHA-256). The MTI feature article's own notice was NOT read. Datasets: the Open Data Licence is ASSUMED, as for the 33 existing
+# datasets; each dataset carries `rights_note_extra` repeating "to verify on dataset page" in its manifest note. If a dataset page shows a
+# different licence, set the entry to local-only before committing any snapshot (the fetcher otherwise marks datasets commit_raw).
+documents:
+- source_id: mom-wage-practices2025
+  expansion_batch: heldout-v2
+  source_type: report_pdf
+  title: Report on Wage Practices 2025
+  publisher: Manpower Research and Statistics Department, Ministry of Manpower
+  canonical_url: https://stats.mom.gov.sg/Pages/Report-On-Wage-Practices-2025.aspx
+  download_url: https://stats.mom.gov.sg/iMAS_PdfLibrary/mrsd-report-on-wage-practices-2025.pdf
+  publication_date: '2026-05-28'
+  release_stage: annual
+  period_start: '2025-01-01'
+  period_end: '2025-12-31'
+  rights_status: verified_all_rights_reserved
+  rights_note: 'Local-only. SourceScout read an all-rights-reserved notice in the PDF on 2026-10-31 (reproduction needs written permission); re-confirm
+    on the fetched file. Not covered by the data.gov.sg Open Data Licence.'
+- source_id: mom-nwc-lower-wage2025
+  expansion_batch: heldout-v2
+  source_type: report_pdf
+  title: Wage Adjustments and Adoption of NWC Guidelines for Lower-Wage Employees 2025
+  publisher: Manpower Research and Statistics Department, Ministry of Manpower
+  canonical_url: https://stats.mom.gov.sg/iMAS_PdfLibrary/mrsd-Wage-Adjustments-and-Adoption-of-NWC-Guidelines-for-Lower-Wage-Employees-2025.pdf
+  download_url: https://stats.mom.gov.sg/iMAS_PdfLibrary/mrsd-Wage-Adjustments-and-Adoption-of-NWC-Guidelines-for-Lower-Wage-Employees-2025.pdf
+  publication_date: '2026-10-23'
+  release_stage: annual
+  period_start: '2025-01-01'
+  period_end: '2025-12-31'
+  rights_status: verified_all_rights_reserved
+  rights_note: 'Local-only. SourceScout read an all-rights-reserved notice in the PDF on 2026-10-31; re-confirm on the fetched file. Not covered by
+    the Open Data Licence. publication_date is the PDF creation date (cover says October 2026): CONFIRM against the MOM newsroom after fetch
+    before using it in any time-scoped gold case.'
+- source_id: mti-2026-q2-feature-ai-employment
+  expansion_batch: heldout-v2
+  source_type: report_pdf
+  title: Measuring Firm-Level Artificial Intelligence Use and its Effects on Firm Performance and Employment in Singapore
+  publisher: Ministry of Trade and Industry (Singapore)
+  canonical_url: https://www.mti.gov.sg/resources/economic-survey-of-singapore/economic-survey-of-singapore-and-feature-articles/measuring-firm-level-artificial-intelligence-use-and-its-effects-on-firm-performance-and-employment-in-singapore
+  download_url: https://isomer-user-content.by.gov.sg/1004/dfc3009e-5a9c-4d2c-9fdd-49e63d2c4aad/FA_2Q26.pdf
+  publication_date: '2026-08-11'
+  release_stage: not_applicable
+  period_start: '2026-04-01'
+  period_end: '2026-06-30'
+  rights_status: unresolved
+  rights_note: 'Local-only. Feature article published with the Economic Survey. The sibling full report carries an all-rights-reserved notice; this
+    file''s own notice was not read. Treat as unresolved until read after fetch. Public accessibility is not permission to redistribute.'
+
+datasets:
+- source_id: unit_labour_cost_index_quarterly
+  expansion_batch: heldout-v2
+  dataset_id: d_f9fc9b5420d96bcab45bc31eeb8ae3c3
+  title: Unit Labour Cost Index (2015 = 100), Quarterly
+  publisher: Singapore Department of Statistics
+  tier: tier2
+  canonical_url: https://data.gov.sg/datasets/d_f9fc9b5420d96bcab45bc31eeb8ae3c3/view
+  rights_note_extra: Open Data Licence ASSUMED for this dataset (same publisher platform as the existing datasets); to verify on dataset page before any snapshot is committed.
+- source_id: value_added_per_worker_quarterly
+  expansion_batch: heldout-v2
+  dataset_id: d_fa4dcbefadf3e93e99c7d88de0f53406
+  title: Value Added Per Worker In Chained (2015) Dollars, By Industry (SSIC 2020), Quarterly
+  publisher: Singapore Department of Statistics
+  tier: tier2
+  canonical_url: https://data.gov.sg/datasets/d_fa4dcbefadf3e93e99c7d88de0f53406/view
+  rights_note_extra: Open Data Licence ASSUMED for this dataset (same publisher platform as the existing datasets); to verify on dataset page before any snapshot is committed.
+- source_id: avg_weekly_paid_hours_quarterly
+  expansion_batch: heldout-v2
+  dataset_id: d_aebf156556c15c9c312ff23d24bf7278
+  title: Average Weekly Total Paid Hours Worked Per Employee - Quarterly
+  publisher: Ministry of Manpower
+  tier: tier2
+  canonical_url: https://data.gov.sg/datasets/d_aebf156556c15c9c312ff23d24bf7278/view
+  rights_note_extra: Open Data Licence ASSUMED for this dataset (same publisher platform as the existing datasets); to verify on dataset page before any snapshot is committed.

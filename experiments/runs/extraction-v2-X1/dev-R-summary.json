@@ -1,0 +1,578 @@
+{
+ "n_cases": 128,
+ "gold_file_sha256": "6169a9deca78cb5908c584bdf7d17b1c8dd9a15ff7840b3752f3bbb4febb2f9b",
+ "r0_equals_shipped_hybrid_first10": 10,
+ "corpus_hash": "794cf9c9814d1f451803adb7de81a829ebda0d708cb98d9a268e7c2fdc0063e0",
+ "best_vs_R0": "R3",
+ "r3_ran": true,
+ "total_cost_usd_rerank_new_calls": 0.24459,
+ "end_to_end_context_coverage": [
+  {
+   "config": "R0",
+   "n": 128,
+   "gold_in_context_of_top8_chunks": 0.5391,
+   "gold_in_first8_context_passages": 0.2578
+  },
+  {
+   "config": "R3",
+   "n": 128,
+   "gold_in_context_of_top8_chunks": 0.9531,
+   "gold_in_first8_context_passages": 0.6641
+  }
+ ],
+ "metrics": {
+  "R0": {
+   "n_cases": 128,
+   "hit@3": 0.4062,
+   "hit@5": 0.4766,
+   "hit@8": 0.5391,
+   "hit@10": 0.5469,
+   "mrr@10": 0.3136,
+   "gold_passage_coverage@8": 0.4607,
+   "pool_recall@30": 0.75,
+   "pool_recall@50": 0.8125,
+   "hit@8_ci95": [
+    0.4531,
+    0.625
+   ],
+   "by_family_hit@8": {
+    "adversarial": {
+     "n": 13,
+     "hit@8": 0.308
+    },
+    "ambiguity_insufficient_causal": {
+     "n": 2,
+     "hit@8": 0.0
+    },
+    "cross_source_synthesis": {
+     "n": 34,
+     "hit@8": 0.412
+    },
+    "factual_lookup": {
+     "n": 50,
+     "hit@8": 0.68
+    },
+    "numerical_comparison": {
+     "n": 10,
+     "hit@8": 0.9
+    },
+    "revision_conflict": {
+     "n": 19,
+     "hit@8": 0.421
+    }
+   },
+   "by_hint_hit@8": {
+    "has_hint": {
+     "n": 96,
+     "hit@8": 0.417
+    },
+    "no_hint": {
+     "n": 32,
+     "hit@8": 0.906
+    }
+   },
+   "added_latency_ms_p50": 0.0,
+   "added_latency_ms_p95": 0.0,
+   "retrieval_fuse_ms_p50": 0.104
+  },
+  "R1a": {
+   "n_cases": 128,
+   "hit@3": 0.6094,
+   "hit@5": 0.7578,
+   "hit@8": 0.8672,
+   "hit@10": 0.8984,
+   "mrr@10": 0.4962,
+   "gold_passage_coverage@8": 0.7609,
+   "pool_recall@30": 0.9766,
+   "pool_recall@50": 0.9844,
+   "hit@8_ci95": [
+    0.8047,
+    0.9297
+   ],
+   "hit@8_diff_vs_R0": 0.3281,
+   "hit@8_diff_ci95": [
+    0.2422,
+    0.4141
+   ],
+   "paired_hit@8_better_worse": [
+    43,
+    1
+   ],
+   "paired_rank_better_worse_same": [
+    67,
+    4,
+    57
+   ],
+   "by_family_hit@8": {
+    "adversarial": {
+     "n": 13,
+     "hit@8": 0.923
+    },
+    "ambiguity_insufficient_causal": {
+     "n": 2,
+     "hit@8": 0.5
+    },
+    "cross_source_synthesis": {
+     "n": 34,
+     "hit@8": 0.706
+    },
+    "factual_lookup": {
+     "n": 50,
+     "hit@8": 1.0
+    },
+    "numerical_comparison": {
+     "n": 10,
+     "hit@8": 0.8
+    },
+    "revision_conflict": {
+     "n": 19,
+     "hit@8": 0.842
+    }
+   },
+   "by_hint_hit@8": {
+    "has_hint": {
+     "n": 96,
+     "hit@8": 0.854
+    },
+    "no_hint": {
+     "n": 32,
+     "hit@8": 0.906
+    }
+   },
+   "added_latency_ms_p50": 0.61,
+   "added_latency_ms_p95": 1.55,
+   "retrieval_fuse_ms_p50": 0.766
+  },
+  "R1b": {
+   "n_cases": 128,
+   "hit@3": 0.5078,
+   "hit@5": 0.5781,
+   "hit@8": 0.6562,
+   "hit@10": 0.6953,
+   "mrr@10": 0.4117,
+   "gold_passage_coverage@8": 0.5747,
+   "pool_recall@30": 0.875,
+   "pool_recall@50": 0.8906,
+   "hit@8_ci95": [
+    0.5781,
+    0.7422
+   ],
+   "hit@8_diff_vs_R0": 0.1172,
+   "hit@8_diff_ci95": [
+    0.0625,
+    0.1797
+   ],
+   "paired_hit@8_better_worse": [
+    15,
+    0
+   ],
+   "paired_rank_better_worse_same": [
+    37,
+    1,
+    90
+   ],
+   "by_family_hit@8": {
+    "adversarial": {
+     "n": 13,
+     "hit@8": 0.538
+    },
+    "ambiguity_insufficient_causal": {
+     "n": 2,
+     "hit@8": 0.0
+    },
+    "cross_source_synthesis": {
+     "n": 34,
+     "hit@8": 0.5
+    },
+    "factual_lookup": {
+     "n": 50,
+     "hit@8": 0.84
+    },
+    "numerical_comparison": {
+     "n": 10,
+     "hit@8": 0.9
+    },
+    "revision_conflict": {
+     "n": 19,
+     "hit@8": 0.474
+    }
+   },
+   "by_hint_hit@8": {
+    "has_hint": {
+     "n": 96,
+     "hit@8": 0.573
+    },
+    "no_hint": {
+     "n": 32,
+     "hit@8": 0.906
+    }
+   },
+   "added_latency_ms_p50": 0.16,
+   "added_latency_ms_p95": 0.38,
+   "retrieval_fuse_ms_p50": 0.312
+  },
+  "R2": {
+   "n_cases": 128,
+   "hit@3": 0.7188,
+   "hit@5": 0.7344,
+   "hit@8": 0.7422,
+   "hit@10": 0.7422,
+   "mrr@10": 0.6417,
+   "gold_passage_coverage@8": 0.6774,
+   "pool_recall@30": 0.75,
+   "pool_recall@50": 0.8125,
+   "hit@8_ci95": [
+    0.6719,
+    0.8125
+   ],
+   "hit@8_diff_vs_R0": 0.2031,
+   "hit@8_diff_ci95": [
+    0.1406,
+    0.2734
+   ],
+   "paired_hit@8_better_worse": [
+    26,
+    0
+   ],
+   "paired_rank_better_worse_same": [
+    67,
+    3,
+    58
+   ],
+   "by_family_hit@8": {
+    "adversarial": {
+     "n": 13,
+     "hit@8": 0.615
+    },
+    "ambiguity_insufficient_causal": {
+     "n": 2,
+     "hit@8": 0.5
+    },
+    "cross_source_synthesis": {
+     "n": 34,
+     "hit@8": 0.588
+    },
+    "factual_lookup": {
+     "n": 50,
+     "hit@8": 0.88
+    },
+    "numerical_comparison": {
+     "n": 10,
+     "hit@8": 0.9
+    },
+    "revision_conflict": {
+     "n": 19,
+     "hit@8": 0.684
+    }
+   },
+   "by_hint_hit@8": {
+    "has_hint": {
+     "n": 96,
+     "hit@8": 0.677
+    },
+    "no_hint": {
+     "n": 32,
+     "hit@8": 0.938
+    }
+   },
+   "added_latency_ms_p50": 4879.18,
+   "added_latency_ms_p95": 9983.83,
+   "retrieval_fuse_ms_p50": 0.104,
+   "cost_usd_per_query_mean": 0.001147,
+   "cost_usd_total": 0.14678,
+   "rerank_failures": 2,
+   "rerank_latency_s_p50_p95": [
+    4.88,
+    9.98
+   ]
+  },
+  "R3": {
+   "n_cases": 128,
+   "hit@3": 0.9141,
+   "hit@5": 0.9453,
+   "hit@8": 0.9531,
+   "hit@10": 0.9609,
+   "mrr@10": 0.784,
+   "gold_passage_coverage@8": 0.9021,
+   "pool_recall@30": 0.9766,
+   "pool_recall@50": 0.9844,
+   "hit@8_ci95": [
+    0.9141,
+    0.9844
+   ],
+   "hit@8_diff_vs_R0": 0.4141,
+   "hit@8_diff_ci95": [
+    0.3281,
+    0.5078
+   ],
+   "paired_hit@8_better_worse": [
+    54,
+    1
+   ],
+   "paired_rank_better_worse_same": [
+    93,
+    6,
+    29
+   ],
+   "by_family_hit@8": {
+    "adversarial": {
+     "n": 13,
+     "hit@8": 1.0
+    },
+    "ambiguity_insufficient_causal": {
+     "n": 2,
+     "hit@8": 1.0
+    },
+    "cross_source_synthesis": {
+     "n": 34,
+     "hit@8": 0.912
+    },
+    "factual_lookup": {
+     "n": 50,
+     "hit@8": 1.0
+    },
+    "numerical_comparison": {
+     "n": 10,
+     "hit@8": 0.9
+    },
+    "revision_conflict": {
+     "n": 19,
+     "hit@8": 0.895
+    }
+   },
+   "by_hint_hit@8": {
+    "has_hint": {
+     "n": 96,
+     "hit@8": 0.958
+    },
+    "no_hint": {
+     "n": 32,
+     "hit@8": 0.938
+    }
+   },
+   "added_latency_ms_p50": 4940.63,
+   "added_latency_ms_p95": 8885.95,
+   "retrieval_fuse_ms_p50": 0.104,
+   "cost_usd_per_query_mean": 0.001068,
+   "cost_usd_total": 0.1367,
+   "rerank_failures": 0,
+   "rerank_latency_s_p50_p95": [
+    4.94,
+    8.89
+   ],
+   "r1_component": "R1a",
+   "hit@8_diff_vs_R2": 0.2109,
+   "hit@8_diff_vs_R2_ci95": [
+    0.1406,
+    0.2891
+   ],
+   "paired_hit@8_vs_R2_better_worse": [
+    28,
+    1
+   ]
+  },
+  "R1b_x0.5": {
+   "n_cases": 128,
+   "hit@3": 0.4844,
+   "hit@5": 0.5234,
+   "hit@8": 0.5781,
+   "hit@10": 0.625,
+   "mrr@10": 0.3878,
+   "gold_passage_coverage@8": 0.5044,
+   "pool_recall@30": 0.8516,
+   "pool_recall@50": 0.8906,
+   "hit@8_ci95": [
+    0.5,
+    0.6641
+   ],
+   "hit@8_diff_vs_R0": 0.0391,
+   "hit@8_diff_ci95": [
+    0.0078,
+    0.0781
+   ],
+   "paired_hit@8_better_worse": [
+    5,
+    0
+   ],
+   "paired_rank_better_worse_same": [
+    27,
+    0,
+    101
+   ],
+   "by_family_hit@8": {
+    "adversarial": {
+     "n": 13,
+     "hit@8": 0.385
+    },
+    "ambiguity_insufficient_causal": {
+     "n": 2,
+     "hit@8": 0.0
+    },
+    "cross_source_synthesis": {
+     "n": 34,
+     "hit@8": 0.441
+    },
+    "factual_lookup": {
+     "n": 50,
+     "hit@8": 0.74
+    },
+    "numerical_comparison": {
+     "n": 10,
+     "hit@8": 0.9
+    },
+    "revision_conflict": {
+     "n": 19,
+     "hit@8": 0.421
+    }
+   },
+   "by_hint_hit@8": {
+    "has_hint": {
+     "n": 96,
+     "hit@8": 0.469
+    },
+    "no_hint": {
+     "n": 32,
+     "hit@8": 0.906
+    }
+   },
+   "added_latency_ms_p50": 0.16,
+   "added_latency_ms_p95": 0.39,
+   "retrieval_fuse_ms_p50": 0.315
+  },
+  "R1b_x2": {
+   "n_cases": 128,
+   "hit@3": 0.5547,
+   "hit@5": 0.6875,
+   "hit@8": 0.8203,
+   "hit@10": 0.8281,
+   "mrr@10": 0.4493,
+   "gold_passage_coverage@8": 0.7212,
+   "pool_recall@30": 0.8828,
+   "pool_recall@50": 0.8906,
+   "hit@8_ci95": [
+    0.7578,
+    0.8906
+   ],
+   "hit@8_diff_vs_R0": 0.2812,
+   "hit@8_diff_ci95": [
+    0.2031,
+    0.3594
+   ],
+   "paired_hit@8_better_worse": [
+    36,
+    0
+   ],
+   "paired_rank_better_worse_same": [
+    55,
+    1,
+    72
+   ],
+   "by_family_hit@8": {
+    "adversarial": {
+     "n": 13,
+     "hit@8": 0.692
+    },
+    "ambiguity_insufficient_causal": {
+     "n": 2,
+     "hit@8": 1.0
+    },
+    "cross_source_synthesis": {
+     "n": 34,
+     "hit@8": 0.676
+    },
+    "factual_lookup": {
+     "n": 50,
+     "hit@8": 0.98
+    },
+    "numerical_comparison": {
+     "n": 10,
+     "hit@8": 0.9
+    },
+    "revision_conflict": {
+     "n": 19,
+     "hit@8": 0.684
+    }
+   },
+   "by_hint_hit@8": {
+    "has_hint": {
+     "n": 96,
+     "hit@8": 0.792
+    },
+    "no_hint": {
+     "n": 32,
+     "hit@8": 0.906
+    }
+   },
+   "added_latency_ms_p50": 0.17,
+   "added_latency_ms_p95": 0.43,
+   "retrieval_fuse_ms_p50": 0.315
+  }
+ },
+ "hint_coverage": {
+  "any_hint": 96,
+  "period_hint": 91,
+  "stage_hint": 68,
+  "stage_conflict": 9,
+  "filter_active_R1a": 96,
+  "period_hint_but_no_document_in_period": 0,
+  "hint_but_no_filter": 0
+ },
+ "first_relevant_rank_histogram": {
+  "R0": {
+   "0": 58,
+   "1": 25,
+   "2": 17,
+   "3": 10,
+   "4": 4,
+   "5": 5,
+   "6": 4,
+   "7": 2,
+   "8": 2,
+   "10": 1
+  },
+  "R1a": {
+   "0": 13,
+   "1": 41,
+   "2": 20,
+   "3": 17,
+   "4": 12,
+   "5": 7,
+   "6": 5,
+   "7": 4,
+   "8": 5,
+   "9": 2,
+   "10": 2
+  },
+  "R1b": {
+   "0": 39,
+   "1": 36,
+   "2": 18,
+   "3": 11,
+   "4": 6,
+   "5": 3,
+   "6": 2,
+   "7": 4,
+   "8": 4,
+   "9": 2,
+   "10": 3
+  },
+  "R2": {
+   "0": 33,
+   "1": 72,
+   "2": 17,
+   "3": 3,
+   "4": 2,
+   "7": 1
+  },
+  "R3": {
+   "0": 5,
+   "1": 83,
+   "2": 29,
+   "3": 5,
+   "4": 3,
+   "5": 1,
+   "8": 1,
+   "9": 1
+  }
+ }
+}

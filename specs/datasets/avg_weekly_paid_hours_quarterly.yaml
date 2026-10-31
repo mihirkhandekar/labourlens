@@ -1,0 +1,21 @@
+source_id: avg_weekly_paid_hours_quarterly
+adapter: quarterly_long
+period_col: quarter
+expected_columns:
+- quarter
+- total_paid_hours
+measures:
+- column: total_paid_hours
+  indicator_id: avg_weekly_total_paid_hours
+  unit: hours_per_week
+  population: employees
+  adjustment: unspecified
+  definition: Average weekly total paid hours worked per employee (standard hours plus paid overtime), quarterly. Source Labour Market Survey, MRSD, MOM. The dataset description does not state seasonal-adjustment status.
+  plausible_range:
+  - 40
+  - 50
+expected_first_period: 1998-Q1
+expected_last_period: 2026-Q2
+missing_tokens:
+- na
+- '-'

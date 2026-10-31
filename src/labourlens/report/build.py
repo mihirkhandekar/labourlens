@@ -29,6 +29,11 @@ _LABELS = {
 }
 
 
+def _corpus_version(path: str) -> str:
+    """Explicit corpus label: v2 only for the separately labelled X1 artifacts."""
+    return "v2" if re.search(r"/(?:agent-dev-X1|agent-heldout-X-(?:r3|hybrid)|extraction-v2-X1)/", path) else "v1"
+
+
 def _label(value: object) -> str | None:
     if isinstance(value, str) and _TOKEN.fullmatch(value) and len(value.split()) <= 6:
         return value
@@ -83,10 +88,11 @@ class _Artifacts:
         # Raw held-out runs and extra/unregistered models stay private.
         if path.startswith("experiments/eval/"):
             development = re.fullmatch(r"experiments/eval/agent-dev-A[1-5]/[^/]+", path)
+            # Corpus-v2 X1 runs: registered luna models only, no raw/judge files.
             heldout = re.fullmatch(
-                r"experiments/eval/agent-heldout-H-(?:r3|hybrid)/gpt-(?:6|5\.6)-luna\.(?:metrics\.json|cases\.jsonl)",
+                r"experiments/eval/agent-(?:heldout-H|heldout-X|dev-X1)(?:-(?:r3|hybrid))?/gpt-(?:6|5\.6)-luna\.(?:metrics\.json|cases\.jsonl)",
                 path,
-            )
+            ) if "/agent-dev-X1/" in path or re.search(r"/agent-heldout-(?:H|X)-(?:r3|hybrid)/", path) else None
             if not (development or heldout):
                 return False
         if path.startswith("experiments/runs/agent-"):
@@ -96,7 +102,7 @@ class _Artifacts:
             (p.parent.as_posix() == "data/export" and p.suffix == ".json")
             or (path.startswith("experiments/") and p.suffix in {".json", ".jsonl", ".md"})
             or path in {"docs/mcp-demo-transcript.md", "docs/decisions.md", "docs/progress.md"}
-            or re.fullmatch(r"experiments/heldout/paired(?:-v3\.[234])?\.txt", path) is not None
+            or re.fullmatch(r"experiments/heldout/paired(?:-v3\.[234]|-corpus-v2)?\.txt", path) is not None
             or (path.startswith("data/manifests/") and p.suffix in {".json", ".jsonl"})
         )
 
@@ -143,6 +149,10 @@ def _experiments(artifacts: _Artifacts, prefix: str) -> tuple[list, list]:
             if not metrics:
                 continue
             row = {"id": path.removesuffix(".metrics.json"), "metrics": metrics, "provenance": [path]}
+            if prefix in {"experiments/eval/", "experiments/runs/dev-", "experiments/runs/extraction-v2-X1/dev-"}:
+                row["corpus_version"] = _corpus_version(path)
+                if row["corpus_version"] == "v2":
+                    row["gold_version"] = "v3.6 (evidence-ID migration only)"
             label = _label(data.get("label", data.get("model", Path(path).name.removesuffix(".metrics.json"))))
             if label:
                 row["label"] = label
@@ -446,9 +456,8 @@ def _saved_replay(artifacts: _Artifacts) -> list[dict]:
 
 
 
-def _ladder(artifacts: _Artifacts) -> dict:
+def _ladder(artifacts: _Artifacts, path: str = "experiments/runs/dev-R-summary.json") -> dict:
     """Retrieval ladder R0-R3 (128 dev cases): numeric measurements only."""
-    path = "experiments/runs/dev-R-summary.json"
     data = artifacts.mapping(path)
     configs = _numeric(data.get("metrics"))
     if not configs:
@@ -457,7 +466,8 @@ def _ladder(artifacts: _Artifacts) -> dict:
     for item in data.get("end_to_end_context_coverage", []):
         if isinstance(item, dict) and _label(item.get("config")):
             context[item["config"]] = _selected(item, ("n", "gold_in_context_of_top8_chunks", "gold_in_first8_context_passages"))
-    return {"n_cases": data.get("n_cases") if _number(data.get("n_cases")) else None,
+    return {"corpus_version": _corpus_version(path),
+            "n_cases": data.get("n_cases") if _number(data.get("n_cases")) else None,
             "configs": configs, "hint_coverage": _numeric(data.get("hint_coverage")),
             "end_to_end_context": context,
             "first_relevant_rank_histogram": _numeric(data.get("first_relevant_rank_histogram")),
@@ -470,7 +480,7 @@ _PAIRED_LINE = re.compile(r"(gpt-[A-Za-z0-9.]+-luna) diff (-?[\d.]+) 95% CI \[(-
 def _paired(artifacts: _Artifacts) -> list[dict]:
     """Held-out r3-minus-hybrid paired differences, one entry per gold version."""
     entries = []
-    for path, version in (("experiments/heldout/paired.txt", "v3.5"), ("experiments/heldout/paired-v3.4.txt", "v3.4"),
+    for path, version in (("experiments/heldout/paired-corpus-v2.txt", "v3.6"), ("experiments/heldout/paired.txt", "v3.5"), ("experiments/heldout/paired-v3.4.txt", "v3.4"),
                           ("experiments/heldout/paired-v3.3.txt", "v3.3"), ("experiments/heldout/paired-v3.2.txt", "v3.2")):
         text = artifacts.load(path)
         if not isinstance(text, str):
@@ -482,7 +492,9 @@ def _paired(artifacts: _Artifacts) -> list[dict]:
                   for m in _PAIRED_LINE.finditer(text)}
         n, resamples, seed = (re.search(pattern, text) for pattern in (r"n=(\d+)", r"(\d+) case-bootstrap resamples", r"seed (\d+)"))
         if models and n and resamples and seed:
-            entries.append({"gold_version": version, "n": int(n[1]), "resamples": int(resamples[1]),
+            entries.append({"corpus_version": "v2" if path.endswith("-corpus-v2.txt") else "v1",
+                            **({"diagnostic": True} if path.endswith("-corpus-v2.txt") else {}),
+                            "gold_version": version, "n": int(n[1]), "resamples": int(resamples[1]),
                             "seed": int(seed[1]), "models": models, "provenance": [path]})
     return entries
 
@@ -529,7 +541,10 @@ def build_report(root: Path) -> dict:
     charts = _charts(artifacts)
     summary = _summary(artifacts)
     retrieval_rows, retrieval_paths = _experiments(artifacts, "experiments/runs/dev-")
+    v2_rows, v2_paths = _experiments(artifacts, "experiments/runs/extraction-v2-X1/dev-")
+    retrieval_rows, retrieval_paths = retrieval_rows + v2_rows, retrieval_paths + v2_paths
     ladder = _ladder(artifacts)
+    ladder_v2 = _ladder(artifacts, "experiments/runs/extraction-v2-X1/dev-R-summary.json")
     paired = _paired(artifacts)
     answer_rows, answer_paths = _experiments(artifacts, "experiments/runs/answer-")
     _answer_costs(artifacts, answer_rows)
@@ -550,7 +565,7 @@ def build_report(root: Path) -> dict:
         "schema_version": "report-1.0",
         "generated_at": datetime.now(timezone.utc).isoformat(),
         "summary": summary, "sources": sources, "charts": charts, "eda": _eda(charts),
-        "retrieval": _section("Development retrieval comparisons. Configurations differ between experiments.", retrieval_rows, retrieval_paths + ladder.get("provenance", []), ladder=ladder),
+        "retrieval": _section("Development retrieval comparisons. Configurations differ between experiments.", retrieval_rows, retrieval_paths + ladder.get("provenance", []) + ladder_v2.get("provenance", []), ladder=ladder, ladder_corpus_v2=ladder_v2),
         "answers": _section("Saved answer metrics. Model outputs are not published.", answer_rows, answer_paths,
                             limitations=["Costs that were not recorded are not estimated."]),
         "agent": _section("Bounded workflow measurements on statistics-only traces.", agent_rows, agent_paths + trace_paths, trace=trace, events=_saved_replay(artifacts)),

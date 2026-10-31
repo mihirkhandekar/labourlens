@@ -22,6 +22,12 @@ ODL_NOTE = (
 )
 
 
+def dataset_rights_note(entry: dict) -> str:
+    """ODL_NOTE plus an optional per-dataset caveat (`rights_note_extra`), e.g. 'to verify on dataset page' for assumed licences."""
+    extra = (entry.get("rights_note_extra") or "").strip()
+    return f"{ODL_NOTE} {extra}" if extra else ODL_NOTE
+
+
 def _log(msg: str) -> None:
     print(msg, file=sys.stderr, flush=True)
 
@@ -45,7 +51,7 @@ def fetch_datasets(fetcher: acquire.Fetcher, only: set[str] | None = None) -> li
             licence_id="Singapore-Open-Data-Licence-1.0",
             licence_url=ODL_URL,
             rights_status="verified_open_licence",
-            rights_note=ODL_NOTE,
+            rights_note=dataset_rights_note(d),
             redistribution_policy="commit_raw",
             mime_type="text/csv",
         )

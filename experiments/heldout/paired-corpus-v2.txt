@@ -1,0 +1,4 @@
+Paired held-out difference in behaviour accuracy, r3 minus hybrid, n=31, 10000 case-bootstrap resamples, seed 20261030, GOLD v3.6 (evidence-ID migration only), CORPUS v2 extraction-only X1, crosscheck OFF; DIAGNOSTIC on the same 31 questions, not new held-out evidence
+Method: join by case_id, sort IDs, bootstrap paired case differences with Python random.Random(20261030), percentile indices 250 and 9749. Source: experiments/eval/agent-heldout-X-{r3,hybrid}/{model}.cases.jsonl.
+gpt-6-luna diff 0.065 95% CI [-0.065, 0.194] better 3 worse 1
+gpt-5.6-luna diff 0.097 95% CI [-0.032, 0.226] better 4 worse 1

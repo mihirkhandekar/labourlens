@@ -1,0 +1,139 @@
+{
+  "label": "corpus v2 / norm-0.1 per-source observation hashes (baseline for additive corpus v3)",
+  "sources": 33,
+  "rows": 43662,
+  "observations": {
+    "citizen_unemployment_rate": {
+      "rows": 276,
+      "sha256": "03ad82b63f79bf5c3fb4c144a8010e96888321f6ee6779d20db8d90a2fcfc61b"
+    },
+    "employment_change_by_sector": {
+      "rows": 3692,
+      "sha256": "242baf9a14a670dc570276ca304deb182e388ac32fd1a427dcb0481e6d73f44e"
+    },
+    "job_vacancies_by_industry": {
+      "rows": 4700,
+      "sha256": "e30cfb6d1d56050bc54642218a9e7788ddd3b67ca05094f7c01eb5be75e7c435"
+    },
+    "job_vacancies_by_occupation": {
+      "rows": 450,
+      "sha256": "b8ec9bb9eb167b892c37e10b9fd604778c3ff87ec5139dfa8b131fba7d34c163"
+    },
+    "job_vacancy_count": {
+      "rows": 114,
+      "sha256": "c3d54ca895e0b631b2986c99d18166c7abe0cc8ca2653c78d387e280adda11d8"
+    },
+    "job_vacancy_rate": {
+      "rows": 114,
+      "sha256": "bfd72815edfc339e9f0b75b97e129efb129b1ba2693efc101aba6fdb446278f5"
+    },
+    "job_vacancy_rate_by_industry": {
+      "rows": 4700,
+      "sha256": "016b57790d8759c2fa01152f3b9d81ebb752e4b63bced05328d89c45246c1d50"
+    },
+    "job_vacancy_rate_by_occupation": {
+      "rows": 450,
+      "sha256": "6cb8641eab9a23a1569204d1377cf0616e3ed97ed6834a2d36e88cc66e57cfa9"
+    },
+    "overall_unemployment_rate": {
+      "rows": 276,
+      "sha256": "cbdde3d503adf80dd8e1851b72daa3c1174fcc0bad47385a569ab308bbeb2ca7"
+    },
+    "recruitment_rate": {
+      "rows": 114,
+      "sha256": "f4f7fcf7269ddc394c33ced72b43fafb08693ec440d472f486e85032df06b43a"
+    },
+    "recruitment_rate_by_industry": {
+      "rows": 4700,
+      "sha256": "244ec1698f0c61c09c04182b3813938ea5d19a5ec75fde76fcc09c03e08ab6bd"
+    },
+    "recruitment_rate_by_occupation": {
+      "rows": 342,
+      "sha256": "1f8e161a812896d276ad8ee7032c120253f16a593a7592a0eca5ab07d1b7c14d"
+    },
+    "reentry_12m": {
+      "rows": 106,
+      "sha256": "9b5f74d7cf7f5ce173ff8e251bafce012858910bb3964d137a9ce3fef5b9ae46"
+    },
+    "reentry_6m": {
+      "rows": 106,
+      "sha256": "70b005a02dcee25ce0b80376bc5cdece32eee45f5acf4deff320d91f4836b7b0"
+    },
+    "resident_unemployment_rate": {
+      "rows": 276,
+      "sha256": "a753b7c5ea628b0f8f88c3562be663a9424e8a692bdd652345d9675838a6e24d"
+    },
+    "resignation_rate": {
+      "rows": 114,
+      "sha256": "bd726811a0d2df332c9036dc68a54939325ec9f977964f2426dcb9e52a8637f6"
+    },
+    "resignation_rate_by_industry": {
+      "rows": 4700,
+      "sha256": "062fc907f7a3ba7c90bbaf68a2c85f6ce7ae8be4b6ffa21f99522a614f663886"
+    },
+    "resignation_rate_by_occupation": {
+      "rows": 342,
+      "sha256": "343e6d5a75903064ff80e89e2febfa55b54306cd5f9e5375bfadb3e741e6a3d1"
+    },
+    "retrenched_by_industry": {
+      "rows": 4700,
+      "sha256": "501e75431d8d8a6a3993d56c3c23cb95a7a3408d75f3bdfae6f40fd407ad1e79"
+    },
+    "retrenched_by_occupation": {
+      "rows": 342,
+      "sha256": "e439d81c97137bcf1d2eac751edce57f757e8289ae492516c86dea4ba25b16c0"
+    },
+    "retrenched_employees": {
+      "rows": 114,
+      "sha256": "bdafc296f31a3552b3b5768c67c00e6f6092a7b15fcd14587d592918e654662c"
+    },
+    "retrenched_permanent": {
+      "rows": 114,
+      "sha256": "1c7726e73fd1d3e327a281a7b451511d6e3d5e813dab5d67b73be582a235e93a"
+    },
+    "retrenched_permanent_by_industry": {
+      "rows": 4700,
+      "sha256": "25e15f9baa6b27e3065dee561933871c8f3a5a40757e58af12d6e168efacf366"
+    },
+    "retrenched_permanent_by_occupation": {
+      "rows": 342,
+      "sha256": "5b21eb1b885ef4dabd70f3236746bb2d1a7ae42d4f3944d027701f397b5f035c"
+    },
+    "retrenched_term_contract": {
+      "rows": 114,
+      "sha256": "78b63eec4adcf90b6e0bfbb81ed7dec6136d80ab5f2334d1e09d69aab850945f"
+    },
+    "retrenched_term_contract_by_industry": {
+      "rows": 4700,
+      "sha256": "059e6b6510f573543c90623b52ef1bd720b053fed5b421c1acfd3c67606f0da9"
+    },
+    "retrenched_term_contract_by_occupation": {
+      "rows": 342,
+      "sha256": "87bca66c80c24852103f0fed8cc0fdfdcb9a36df3c7760b7bc5550d368eb7f89"
+    },
+    "short_workweek_temporary_layoff": {
+      "rows": 336,
+      "sha256": "d78cb914b8ad1ef1dcd544f252bf500ca88e19cdf6ca57ff4d1897eb370145ac"
+    },
+    "short_workweek_temporary_layoff_by_industry": {
+      "rows": 1344,
+      "sha256": "fbe7186140cfeac1975c7cd278bee25d3839b931be3e5ad6540c9aa237900cfc"
+    },
+    "unemployed_citizens": {
+      "rows": 276,
+      "sha256": "01bf39d21697b8c47e2f81464190d24c95d420d2f857ddd8f40ec3049dd143ef"
+    },
+    "unemployed_overall": {
+      "rows": 276,
+      "sha256": "ebb43ea387a800e208609b79a58d58d1a5d2a896444e7b27c195dcd97212a882"
+    },
+    "unemployed_residents": {
+      "rows": 276,
+      "sha256": "51d9a83d4c97e53ca1f373f5bbb3510e14e2cfb54814b6ab307648b6cc922e87"
+    },
+    "vacancy_to_unemployed_ratio": {
+      "rows": 114,
+      "sha256": "f7e40b50113038a7f5d63f72ee6b60f52eedc6d6b0a413153c896bb9fd95b39c"
+    }
+  }
+}

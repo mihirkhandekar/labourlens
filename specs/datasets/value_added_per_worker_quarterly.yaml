@@ -1,0 +1,21 @@
+source_id: value_added_per_worker_quarterly
+adapter: sector_wide
+label_col: DataSeries
+indent_width: 4
+period_regex: ^(\d{4})([1-4])Q$
+measures:
+- column: '*'
+  indicator_id: value_added_per_worker_chained
+  unit: chained_2015_dollars
+  population: not_applicable
+  adjustment: unspecified
+  definition: Value added per worker in chained (2015) dollars by industry (SSIC 2020), quarterly. Source SingStat and MOM. Based on gross value added in chained (2015) dollars. Parent/child sums are not asserted.
+  plausible_range:
+  - 10000
+  - 60000
+expected_first_period: 1991-Q1
+expected_last_period: 2026-Q2
+missing_tokens:
+- na
+- '-'
+- ''

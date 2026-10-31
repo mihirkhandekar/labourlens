@@ -354,3 +354,48 @@ Reversibility: relabel the affected gold cases and remove the scope sentence in 
 
 **Reversibility:** remove the v2 files and `--gold` option; original gold and results are untouched. **Owner decision pending:** approve new untouched sources for A, or accept C as a separately labelled diagnostic.
 
+
+### D-040 — Corpus v3: add labour-only sources for the evidence-disjoint held-out (DECISION / PREPARED, 31 Oct 2026)
+
+**Owner decision:** build the evidence-disjoint held-out (D-039, design A) from new, labour-relevant sources only; **no MTI GDP revision pairs**. This entry records the offline preparation. No fetch, build, index or embedding ran.
+
+| Alternative | Benefit | Cost | Disposition |
+|---|---|---|---|
+| Add 12 sources including MTI GDP advance/survey pairs | Real advance/final revision pairs | Not labour evidence; labour chapters repeat MOM figures | Rejected by owner |
+| Add 6 labour sources (2 MOM wage reports, 1 MTI AI-and-employment article, 3 datasets) | Untouched evidence for factual, numeric, synthesis and causal-limits cases | No new labour-only revision pair exists; revision coverage must come from existing sources or be dropped | Chosen |
+| Keep corpus v2 | No change | Held-out remains evidence-overlapping | Rejected (D-039) |
+
+**VERIFIED FACT (code/tests, observed):** additive spec file, three adapter specs with exact first/last periods, MTI PDF host allow-listed (https only), `Unit` literal extended, per-dataset "to verify on dataset page" note, fingerprint helper and 20 new unit tests passed (`tests/data/test_corpus_v3_additive.py`; 1 corpus test skipped until fetch). Full `uv run pytest -q -m 'not corpus'`: 481 passed, 54 deselected (before TI06Fix/HeldoutDesign edits landed later). Synthetic proof that adding a source leaves existing passage files, ids, hashes and `merge200` chunk ids byte-identical; the real-corpus equivalent is the post-fetch corpus test against `experiments/corpus-snapshots/v2.json` (46 passage files) and `v2-observations.json` (33 sources, 43,662 rows).
+
+**Rights (D-001/D-004):** all documents local-only. Notice status is what SourceScout read on 31 Oct (MOM wage reports: all rights reserved; MTI article: unresolved, own notice not read) and must be re-confirmed on the fetched files. Datasets: Open Data Licence assumed, flagged to verify on each dataset page; do not commit their snapshots before that.
+
+**Limits:** corpus-v3 retrieval is not comparable to corpus-v2 dev runs (new documents enter period/stage filtering; new MTI layout untested; T-I06 guard does not cover the new datasets; no deterministic vintage tool for non-MOM ids). Expected checks 276 and all new counts are placeholders until the run. Commands: `docs/experiments/m7-corpus-v3-runbook.md`. Reversibility: remove the spec files and new manifest entries or restore `private/corpus-v2-frozen/`.
+
+### D-041 — Adopt corpus v2 as the working corpus; frozen v1 results retained (DECISION / MEASURED, 31 Oct 2026)
+
+**DECISION:** corpus v2 (D-037 extraction fixes, parser `extract-0.2`, 15,915 passages) is the working corpus for new development, the web application and demos. Corpus-v1 results are **frozen history, not overwritten**. The extraction-only X1 run changed one factor: extraction plus gold v3.6 evidence-ID migration (no label or review-provenance change), with `r3`, `planner_v1`/`answer_v3` and `LABOURLENS_CROSSCHECK=off`. The `r3` default stays **provisional** (D-033).
+
+| Alternative | Benefit | Cost | Disposition |
+|---|---|---|---|
+| Stay on corpus v1 | Scores directly comparable | Known extraction defects stay in the working corpus | Retained as frozen history only |
+| Adopt corpus v2 and keep v1 results beside it | Removes known defects; audit trail intact | Two result sets to label carefully | **Chosen** |
+| Claim X1 as an improvement | Simple story | Not supported: no measurable quality change | Rejected |
+
+**MEASURED RESULT (side by side; intervals overlap, no demonstrated gain or loss):**
+
+| Measure | Corpus v1 (frozen; gold v3.5, `aac4…`) | Corpus v2 X1 (gold v3.6, `6169…`) |
+|---|---|---|
+| Dev retrieval hit@8, n=128, R3 | 0.969 | 0.953 [0.914, 0.984] |
+| Dev retrieval hit@8, R1a | 0.844 | 0.867 |
+| Dev agent behaviour accuracy, n=237 | A3 0.903 | gpt-6-luna 0.886 [0.844, 0.924]; gpt-5.6-luna 0.911 [0.873, 0.945] |
+| Held-out r3, n=31 (luna6 / luna5.6) | 0.871 / 0.839 | 0.839 [0.710, 0.968] / 0.839 [0.710, 0.968] |
+| Held-out hybrid, n=31 (luna6 / luna5.6) | 0.710 / 0.742 | 0.774 [0.613, 0.903] / 0.742 [0.581, 0.871] |
+| Held-out paired r3 − hybrid | `experiments/heldout/paired.txt` | luna6 +0.065 [−0.065, 0.194] (3 better, 1 worse); luna5.6 +0.097 [−0.032, 0.226] (4/1) |
+
+Sources: `experiments/runs/extraction-v2-X1/dev-R-SUMMARY.md` against `experiments/runs/dev-R-SUMMARY.md`; `experiments/eval/agent-dev-X1/*.metrics.json`; `experiments/eval/agent-heldout-X-{r3,hybrid}/*.metrics.json`; `experiments/heldout/paired-corpus-v2.txt`. Paired intervals include zero.
+
+**VERIFIED FACT (extraction, `docs/experiments/m7-extraction-fixes.md`):** control characters 57 → 0; Q3 2025 page 30 0 → 7 passages; appendix labels 141 → 0; 15,915 passages.
+
+**Limits:** the held-out rerun reuses the same 31 questions and shares evidence with development (D-039); it is a **diagnostic, not new held-out evidence**. The v1 and v2 gold hashes differ (ID migration only). X1 uses crosscheck OFF; D-038 and corpus v3 (D-040) are separate configurations. Human review, threat results and rights caveats are unchanged.
+
+**Reversibility:** restore the `corpus-v1-frozen` code tag (8b8c3a9) and the private `private/corpus-v1-frozen/` stores; no registered result is deleted.

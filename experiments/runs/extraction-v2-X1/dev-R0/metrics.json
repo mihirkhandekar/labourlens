@@ -1,0 +1,68 @@
+{
+ "config": {
+  "split": "dev",
+  "chunks": "merge200",
+  "embedding": "text-embedding-3-large",
+  "depth": 50,
+  "rrf_c": 60,
+  "gold_file_sha256": "6169a9deca78cb5908c584bdf7d17b1c8dd9a15ff7840b3752f3bbb4febb2f9b",
+  "soft_bonus": null,
+  "rerank_model": null,
+  "rerank_prompt_hash": null,
+  "pool": null
+ },
+ "metrics": {
+  "n_cases": 128,
+  "hit@3": 0.4062,
+  "hit@5": 0.4766,
+  "hit@8": 0.5391,
+  "hit@10": 0.5469,
+  "mrr@10": 0.3136,
+  "gold_passage_coverage@8": 0.4607,
+  "pool_recall@30": 0.75,
+  "pool_recall@50": 0.8125,
+  "hit@8_ci95": [
+   0.4531,
+   0.625
+  ],
+  "by_family_hit@8": {
+   "adversarial": {
+    "n": 13,
+    "hit@8": 0.308
+   },
+   "ambiguity_insufficient_causal": {
+    "n": 2,
+    "hit@8": 0.0
+   },
+   "cross_source_synthesis": {
+    "n": 34,
+    "hit@8": 0.412
+   },
+   "factual_lookup": {
+    "n": 50,
+    "hit@8": 0.68
+   },
+   "numerical_comparison": {
+    "n": 10,
+    "hit@8": 0.9
+   },
+   "revision_conflict": {
+    "n": 19,
+    "hit@8": 0.421
+   }
+  },
+  "by_hint_hit@8": {
+   "has_hint": {
+    "n": 96,
+    "hit@8": 0.417
+   },
+   "no_hint": {
+    "n": 32,
+    "hit@8": 0.906
+   }
+  },
+  "added_latency_ms_p50": 0.0,
+  "added_latency_ms_p95": 0.0,
+  "retrieval_fuse_ms_p50": 0.104
+ }
+}

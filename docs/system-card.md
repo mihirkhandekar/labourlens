@@ -72,7 +72,7 @@ Sources: `experiments/eval/agent-heldout-H-{r3,hybrid}/{gpt-6-luna,gpt-5.6-luna}
 
 **Split limitation:** the second gold review found evidence-ID overlap with development in 25/31 held-out cases, including each case's entire evidence-ID set in 15/31. No exact question or normalized-template duplicates were found, but the set is question-held-out, not evidence-independent; these results do not establish novel-fact or broad out-of-distribution generalisation.
 
-**Corpus boundary:** `extraction-fixes` commit `80a287b` is unmerged and not adopted. Its report, `docs/experiments/m7-extraction-fixes.md` on that branch, describes extraction changes and passage-ID migration; separate retrieval/answer evaluation remains pending owner approval. Existing scores describe the frozen main corpus, not that corrected extraction.
+**Corpus boundary:** the working corpus is **corpus v2** (D-037/D-041): `extract-0.2`, 15,915 passages, gold v3.6 evidence-ID migration only. Extraction removes known defects (control characters 57 → 0; Q3 2025 page 30 0 → 7 passages; appendix labels 141 → 0), but extraction-only X1 shows **no measurable quality change**: dev hit@8 R3 0.953 [0.914, 0.984] versus frozen v1 0.969; dev behaviour accuracy gpt-6-luna 0.886 versus A3 0.903, gpt-5.6-luna 0.911 versus 0.903; held-out r3 0.839/0.839 versus v1 0.871/0.839 and hybrid 0.774/0.742 versus 0.710/0.742, all with overlapping intervals. The held-out rerun is a diagnostic on the same 31 evidence-sharing questions, not new held-out evidence. Frozen corpus-v1 scores are retained and labelled; `r3` stays provisional. Rollback: `corpus-v1-frozen` tag and private stores.
 
 ## Risks, controls and oversight
 

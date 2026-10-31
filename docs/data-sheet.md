@@ -80,3 +80,20 @@ Checks cover manifest integrity, schemas, periods, duplicates, ranges, hierarchy
 - Saved page-date checks cover releases; internal PDF dates and representative extraction fidelity still need human inspection.
 - No human has yet verified values; sheets are prepared (`docs/human-review/`).
 - Coverage is one snapshot per source, so revision tracking is baseline-only until a second fetch is made.
+
+## 8. Corpus v3 batch for the evidence-disjoint held-out (PREPARED, NOT YET FETCHED)
+
+**Status:** catalogued in `specs/sources.d/heldout-v2-expansion.yaml` (D-040); nothing fetched, built, indexed or embedded. Sections 1 to 7 above describe corpus v2 (46 documents, 33 datasets) until the run in `docs/experiments/m7-corpus-v3-runbook.md` completes; **no count above has been changed**. Excluded by owner decision: MTI GDP advance/Economic Survey pairs.
+
+| Source id | Kind | Publisher | Publication date | Stage | Rights (local-only for documents) | Fetched / SHA-256 / rows / passages |
+|---|---|---|---|---|---|---|
+| `mom-wage-practices2025` | PDF | MOM MRSD | 2026-05-28 | annual | all rights reserved (to re-confirm on file) | TBD |
+| `mom-nwc-lower-wage2025` | PDF | MOM MRSD | 2026-10-23 (PDF creation date; confirm) | annual | all rights reserved (to re-confirm on file) | TBD |
+| `mti-2026-q2-feature-ai-employment` | PDF | MTI | 2026-08-11 | not applicable | unresolved | TBD |
+| `unit_labour_cost_index_quarterly` | dataset | SingStat | TBD (lastUpdated) | snapshot | Open Data Licence assumed; to verify on dataset page | TBD |
+| `value_added_per_worker_quarterly` | dataset | SingStat | TBD | snapshot | as above | TBD |
+| `avg_weekly_paid_hours_quarterly` | dataset | MOM | TBD | snapshot | as above | TBD |
+
+Expected coverage (checked by the build, exact first periods): ULC 1980-Q1 to 2026-Q2; value added per worker 1991-Q1 to 2026-Q2; paid hours 1998-Q1 to 2026-Q2. Units added to the schema: `index_2015_100`, `chained_2015_dollars`, `hours_per_week`; adjustment status is `unspecified` for all three because the dataset titles do not state it.
+
+**To fill after the run (do not pre-fill):** at-a-glance counts (sources, documents, datasets, observations, passages); quality check totals; extraction flags for the three PDFs; additivity result against `experiments/corpus-snapshots/v2.json` and `v2-observations.json`; fingerprint `experiments/corpus-snapshots/v3.json`; confirmation of each dataset's licence and of the NWC publication date.
