@@ -215,3 +215,11 @@ Entries below are historical session records. Their “next” gates, proposal s
 ## Owner review, second export (31 Oct 2026; supersedes the partial entry above)
 - **VERIFIED FACT:** `docs/human-review/owner-review-summary.md` (reviewer Mihir, export 2026-10-31T01:33Z): **independent human review** = 17 of 40 answer verdicts (2 correct, 6 partly correct, 9 incorrect; 17/17 agree with the independent AI review) plus decisions J1–J10. **Owner-endorsed AI review** (attested, no independent per-item review) = 98 cards: 23 answers, 45 gold/held-out, 30 source checks.
 - **Status:** human review is **partial**. Endorsed items are not human-reviewed items and feed no statistic or label change. Gold stays `review_status: draft`; no `reviewed_by` set. J10 is "need more inspection" (extraction gaps not accepted by owner). No gold disagreements entered.
+
+## Droplet deployed (31 Oct 2026)
+- **VERIFIED FACT:** Droplet `labourlens` (sgp1, `s-1vcpu-2gb`, Ubuntu 24.04, $12/month) created with doctl; bootstrap script run; DigitalOcean cloud firewall `labourlens-fw` (22/80/443); dedicated deploy key; four GitHub Actions secrets set; runtime data uploaded (50 files); server `.env` written (mode 600) with random access codes, session secret and audit salt. Host-key fingerprint of the pinned key matched what the server reported.
+- Workflow run `41158048240` succeeded (test, build-push, deploy). `https://201-79-96-80.sslip.io/healthz` returns ok with the deployed commit; HTTP redirects to HTTPS; HSTS and CSP headers present; the app container reports healthy.
+- **Live mode is OFF** (`LABOURLENS_DEMO_ENABLED=false`; `/api/ask` returns 503). No `OPENAI_API_KEY` is on the server yet; it needs a restricted OpenAI project key from the owner and a provider-side spend limit.
+- Hostname is an sslip.io name derived from the IP (no domain owned). Access codes are in `~/.labourlens-deploy/access-codes.txt` on the owner's machine (not in the repo).
+- Fixes found by the first real deploy: `upload-corpus.sh` used an rsync flag macOS lacks; CI ran a corpus-marked test (now `-m 'not corpus'`).
+- Not yet verified: login and a live answer on the server, restart rollback, backup procedure.
