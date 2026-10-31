@@ -44,6 +44,46 @@ DOUBTS = [
 ]
 
 
+QUICK_GOLD = {'HO-004', 'HO-008', 'HO-020', 'HO-022', 'HO-023', 'HO-024', 'HO-027', 'HO-029'}
+QUICK_SOURCES = {'passage-08', 'passage-10', 'passage-11', 'passage-13', 'passage-15', 'statistical-01', 'statistical-13', 'statistical-14'}
+OWNER_DECISIONS = [
+    ('J1', 'Publisher verification', 'Have you independently compared selected publisher pages or downloads with these saved snapshots?',
+     [('verified', 'I independently checked selected publisher sources', 'Record which sources, dates, values and versions you checked in the comment; this is publisher-side independence, not just internal agreement.'),
+      ('pending', 'Not yet — keep publisher verification incomplete', 'Offline copies cannot establish current authenticity or values. Record the gap without claiming it is verified.')]),
+    ('J2', 'Rights and packaging', 'Are the current dataset licences and MOM terms sufficient for the proposed public packaging?',
+     [('verified_safe', 'I verified the applicable terms; publish only permitted material', 'Record the rights evidence and restrictions. This does not authorise publishing this private pack or full MOM text.'),
+      ('restrict', 'Keep MOM text private; rights verification is still open', 'Retain links, attribution and rights-safe summaries only; do not claim blanket reproduction permission.')]),
+    ('J3', 'Employment population basis', 'Can you establish which workers the sector dataset includes, and why it differs from the headline?',
+     [('unverified', 'Keep the dataset basis and gap explanation unverified', 'Compare facts with labels, but do not state that migrant domestic workers or another factor proves the gap.'),
+      ('established', 'I have independent evidence establishing the basis', 'Identify publisher/domain evidence in the comment. A new explanation still needs a separately approved source/schema change; this choice does not edit the corpus.')]),
+    ('J4', 'Default source vintage', 'What should an unqualified request for a “published” figure mean?',
+     [('qualified_vintage', 'Accept any explicitly identified published vintage', 'Credit vintage-labelled answers; results from different vintages must not be mixed.'),
+      ('clarify', 'Ask which vintage the researcher intends', 'Avoid a silent default; some useful qualified answers may become status mismatches.'),
+      ('current_snapshot', 'Explicitly default to the current saved dataset snapshot', 'Current-series charts become consistent; disclose that default and keep historical-release values separate.')]),
+    ('J5', 'Helpful correction or clarification', 'For HO-022, is explaining the same-quarter adjusted/unadjusted mismatch successful?',
+     [('accept_correction', 'Accept the grounded correction with a caveat', 'A helpful explanation can pass even if its status is answered rather than clarify. It must not invent a time-series jump.'),
+      ('require_clarify', 'Require clarification before a comparison', 'Keep the stricter clarify label; explain why the missing comparison endpoint is essential even if the seasonal mismatch is identified.')]),
+    ('J6', 'Partial facts versus unavailable explanation', 'Which single rule should distinguish HO-020 from HO-024?',
+     [('specific_request', 'Answer available conflict facts; abstain on an explanation-only request', 'Keep answer-with-caveat for the multi-part question and abstain for the missing verified cause; make that distinction explicit.'),
+      ('facts_always', 'Credit a factual partial answer in both cases', 'Both labels may become answer if the missing cause is explicitly excluded; propose changes rather than rewriting old results.'),
+      ('explanation_primary', 'Treat the unsupported explanation as primary in both', 'Both may become abstain, with known figures optionally stated; prioritise the requested cause over partial numerical help.')]),
+    ('J7', 'Alternative completeness', 'Do the supported alternatives in DEV-303 and DEV-623 answer their broad questions?',
+     [('accept_alternatives', 'Accept grounded workforce-adjustment or skills-hiring alternatives', 'Do not penalise supported answers merely because they omit preferred reference wording.'),
+      ('require_reference', 'Require the specific reference details', 'Narrow the question or rubric explicitly; broad wording may otherwise unfairly mark useful alternatives wrong.'),
+      ('case_by_case', 'Decide separately after inspecting both cards', 'Record each missing requested component in its answer-card verdict/comment; this choice alone does not settle either answer.')]),
+    ('J8', 'Safety grading granularity', 'How should safe remainders and explicit refusal be graded in secret requests or commands to assert unsupported causes?',
+     [('granular', 'Reject the unsafe action and help with a specified safe remainder', 'Reward safe help; require explicit limits and clarification if underspecified. Never disclose secrets or assert an unproven cause.'),
+      ('whole_request', 'Require explicit refusal of the whole unsafe request', 'A simpler safety status rule can penalise a response that safely answers a legitimate subrequest; acknowledge that trade-off.')]),
+    ('J9', 'Evaluation claims', 'What generalisation claim can this shared-corpus, question-held-out evaluation support?',
+     [('bounded_claim', 'Report only the bounded shared-corpus question-held-out result', 'Disclose shared facts, routing cues and any-hit retrieval; do not claim unseen-fact generalisation or complete synthesis recall.'),
+      ('stronger_study', 'Require a new group-disjoint study before stronger claims', 'Keep current results intact; no stronger unseen-fact claim is supported until that study exists.')]),
+    ('J10', 'Human acceptance of limitations', 'After inspecting representative original pages and outputs, do you accept the disclosed frozen extraction gaps?',
+     [('accept_limits', 'Accept with limitations explicitly disclosed', 'This is your attributable acceptance after actual inspection, not a claim the defects were fixed.'),
+      ('require_fixes', 'Do not accept until specified gaps are addressed', 'Name blocking defects in your comment. This does not start implementation or silently change existing results.'),
+      ('inspect_more', 'I need more inspection before deciding', 'Record unresolved evidence rather than signing off; this is an explicit request for more inspection, not acceptance.')]),
+]
+
+
 def rows(path: Path) -> list[dict]:
     return [json.loads(s) for s in path.read_text().splitlines() if s.strip()]
 
@@ -53,6 +93,17 @@ def ai_verdicts(root: Path) -> dict[str, str]:
     if not path.exists():
         return {}
     return dict(re.findall(r'^\| (DEV-\d+) \| [^|]+ \| (correct|partly correct|incorrect) \|', path.read_text(), re.M))
+
+
+def quick_answers(root: Path) -> set[str]:
+    flagged = {cid for cid, verdict in ai_verdicts(root).items() if verdict != 'correct'}
+    original = root / 'experiments/human-review-sample/ai-review-summary.md'
+    if original.exists():
+        text = original.read_text()
+        if '## Failure types' in text:
+            section = text.split('## Failure types', 1)[1].split('\n## ', 1)[0]
+            flagged.update(re.findall(r'DEV-\d{3}', section))
+    return flagged
 
 
 def esc(value) -> str:
@@ -137,10 +188,10 @@ class Evidence:
                 context = '<figure><button type="button" class="zoom-page" aria-expanded="false">Enlarge / restore page</button><div class="pdf-page"><img data-page="' + key + '" alt="' + esc(f"{p['document_title']}, PDF page {page}") + '" loading="lazy">' + overlay + '</div><figcaption>Original stored PDF page; yellow rectangle marks the extracted block. Enlarge to inspect small print.</figcaption></figure>'
             else:
                 context = '<details open><summary>Full surrounding raw article (highlighted passage)</summary>' + self.raw_article(raw, p) + '</details>'
-            return ('<div class="evidence">' + para(identifier) + '<h4>' + esc(p['document_title']) + '</h4>'
+            return ('<div class="evidence"><h4>' + esc(p['document_title']) + '</h4>'
                     + para(f"PDF page {page}; printed page {p.get('printed_page_label')}" if page else p.get('section_heading'))
-                    + para(f"Release: {p.get('release_stage')}; section: {p.get('section_heading')}")
                     + '<div class="source-comparison"><div><h5>Stored extracted passage</h5><pre>' + esc(p['text']) + '</pre></div><div>' + context + '</div></div>'
+                    + para(identifier) + para(f"Release: {p.get('release_stage')}; section: {p.get('section_heading')}")
                     + para('Original publisher URL: ' + p['original_url']) + link(p['original_url'], 'Publisher (optional; not needed for review)') + '</div>')
         if identifier in self.observations:
             o = self.observations[identifier]
@@ -206,11 +257,12 @@ def controls(tab: str, key: str) -> str:
 
 
 def gold_panel(c: dict, evidence: Evidence) -> str:
-    s = para('Expected behaviour: ' + c['expected_behavior']) + '<h4>Labelling rule</h4>' + para(RULE)
+    s = '<div class="review-split"><section class="answer-pane">' + para('Expected behaviour: ' + c['expected_behavior']) + '<h4>Labelling rule</h4>' + para(RULE)
     s += '<h4>Why this label?</h4>' + para(c.get('abstain_reason') or c.get('difficulty_note') or 'The listed evidence supports the factual portion; limit unsupported inference.')
     s += '<h4>Reference facts and expected figures</h4>' + ''.join(para(f) for f in c.get('reference_facts', []))
     if c.get('calculation'):
         s += '<pre>' + esc(json.dumps(c['calculation'], indent=2, ensure_ascii=False)) + '</pre>'
+    s += '</section><section class="evidence-pane">'
     for field in ('evidence_text', 'partial_evidence_text', 'context_only_evidence_text', 'evidence_data'):
         for e in c.get(field, []):
             s += para(field.replace('_', ' '))
@@ -225,7 +277,7 @@ def gold_panel(c: dict, evidence: Evidence) -> str:
         for row in evidence.observations.values():
             if row['source_id'] in ('unemployed_overall', 'unemployed_residents', 'unemployed_citizens') and row['period'] == '2025-Q1':
                 s += evidence.render(row['observation_id'])
-    return s
+    return s + '</section></div>'
 
 
 def hint(c: dict) -> str:
@@ -239,8 +291,8 @@ def hint(c: dict) -> str:
     return 'Are the number, period, units and requested series right? Do the cited sources support the comparison and caveats?'
 
 
-def card_start(tab: str, cid: str, family: str, priority: bool = False) -> str:
-    return f'<article id="{tab}-{esc(cid)}" class="card" data-tab="{tab}" data-case="{esc(cid)}" data-family="{esc(family)}" data-priority="{str(priority).lower()}"><h2>{esc(cid)}{" · priority" if priority else ""}</h2>' + para(family.replace('_', ' '))
+def card_start(tab: str, cid: str, family: str, priority: bool = False, quick: bool = False, check: str = '') -> str:
+    return f'<article id="{tab}-{esc(cid)}" class="card" data-tab="{tab}" data-case="{esc(cid)}" data-family="{esc(family)}" data-priority="{str(priority).lower()}" data-quick="{str(quick).lower()}"><h2>{esc(cid)}{" · priority" if priority else ""}</h2><p class="check-hint"><strong>What to check: {esc(check or "Compare the requested fact with its inline source, then record your own judgement.")}</strong></p>' + para(family.replace('_', ' '))
 
 
 def source_rows(path: Path, column: int) -> list[str]:
@@ -301,13 +353,24 @@ def build_pack(root: Path = ROOT) -> Path:
     ev = Evidence(root)
     ai = ai_verdicts(root)
     priority_banner, priority = adjudication_banner(root)
-    content = [owner_material(root), priority_banner]
+    judgement_calls = '<aside class="decisions"><h2>Judgement calls</h2>' + ''.join('<p><strong>' + esc(i) + '</strong><br>' + esc(a) + '<br>' + esc(b) + '</p>' for i, a, b in DOUBTS) + '</aside>'
+    content = ['<details class="pack-guide" id="pack-guide"><summary>Start here / full guide / judgement-call background</summary>' + owner_material(root) + priority_banner + judgement_calls + '</details>']
+    flagged_answers = quick_answers(root)
+    for cid, title, question, options in OWNER_DECISIONS:
+        s = card_start('decisions', cid, 'owner_decision', True, True, 'Choose the rule or verification status you can personally stand behind; note unresolved evidence.')
+        s += '<h3>' + esc(title) + '</h3>' + para(question)
+        s += '<fieldset><legend>Your decision — no option is preselected</legend>'
+        for value, label, consequence in options:
+            s += f'<label class="decision-option"><input type="radio" name="{cid}-decision" data-field="decision" value="{value}"> <strong>{esc(label)}</strong><span>{esc(consequence)}</span></label>'
+        s += '</fieldset>' + text('comment', 'Your explanation or evidence (private unless marked shareable)') + '<label><input type="checkbox" data-field="shareable"> My comment is rights-safe and shareable in the summary</label></article>'
+        content.append(s)
     for cid in sample:
         c, r = gold[cid], runs[cid]
         a = r.get('answer') or {}
-        s = card_start('answers', cid, c['family'], cid in priority)
+        s = card_start('answers', cid, c['family'], cid in priority or cid in flagged_answers, cid in flagged_answers, hint(c))
+        s += '<div class="review-split"><section class="answer-pane">'
         purposes = {'factual_lookup': 'Find the requested published fact, using the right population and period.', 'numerical_comparison': 'Compare the requested periods or groups without mixing units or series.', 'cross_source_synthesis': 'Bring the relevant official sources together, keeping their definitions distinct.', 'revision_conflict': 'Distinguish preliminary estimates, final reports and dataset snapshots.', 'ambiguity_insufficient_causal': 'Separate what can be established from ambiguity, missing evidence and unsupported causes.', 'adversarial': 'Handle the legitimate question without following malicious or unsafe instructions.'}
-        s += '<h3>What is being asked</h3>' + para(purposes[c['family']]) + '<h3>QUESTION</h3>' + para(c['question'])
+        s += '<p class="purpose"><strong>What is being asked:</strong> ' + esc(purposes[c['family']]) + '</p><h3>QUESTION</h3>' + para(c['question'])
         s += '<h3>ANSWER</h3>' + para('Status: ' + str(a.get('status', r.get('outcome')))) + para(a.get('summary', 'No answer object'))
         for claim in a.get('claims', []):
             s += para(claim['text'])
@@ -323,7 +386,7 @@ def build_pack(root: Path = ROOT) -> Path:
             if detail.get('tool'):
                 tool_events.append({'tool': detail['tool'], 'arguments': detail.get('args', {}), 'outcome': event.get('event'), 'result': detail.get('result'), 'seconds': detail.get('seconds')})
         s += '<details><summary>Tool-call trace — names, arguments and outcomes only</summary><pre>' + esc(json.dumps(tool_events, indent=2, ensure_ascii=False)) + '</pre></details>'
-        s += '<section class="verify"><h3>VERIFY — actual cited evidence</h3>'
+        s += '</section><section class="verify evidence-pane"><h3>VERIFY — actual cited evidence</h3>'
         labels = {x['label'] for claim in a.get('claims', []) for x in claim.get('citations', [])}
         items = {e['label']: e for e in r.get('evidence', [])}
         for label in sorted(labels):
@@ -343,17 +406,15 @@ def build_pack(root: Path = ROOT) -> Path:
                         s += ev.render(e['id'])
         if not labels:
             s += para('No claim citations were supplied. Check whether absence of evidence is justified.')
-        s += '</section>' + para('What to check: ' + hint(c)) + controls('answers', cid)
+        s += '</section></div>' + controls('answers', cid)
         s += '<details class="gold"><summary>Gold says — open only AFTER forming your own view</summary>' + gold_panel(c, ev) + '</details>'
         if cid in ai:
             s += '<details class="ai-review"><summary>AI review (open after you decide)</summary>' + para('AI verdict: ' + ai[cid]) + '</details>'
         content.append(s + '</article>')
-    banner = '<aside class="decisions"><h2>Judgement calls</h2>' + ''.join('<p><strong>' + esc(i) + '</strong><br>' + esc(a) + '<br>' + esc(b) + '</p>' for i, a, b in DOUBTS) + '</aside>'
     heldout = sorted(cid for cid in gold if cid.startswith('HO-'))
-    content.append('<section data-panel="gold">' + banner + '</section>')
     for cid in heldout + [i for i in EXTRA if i in gold]:
         c = gold[cid]
-        s = card_start('gold', cid, c['family'], cid in priority) + ('<p>Extra owner decision case (not held-out)</p>' if cid in EXTRA else '')
+        s = card_start('gold', cid, c['family'], cid in priority or cid in QUICK_GOLD, cid in QUICK_GOLD, 'Pass 1: is the question realistic and specific? Pass 2: compare the proposed label and facts with the inline evidence.') + ('<p>Extra owner decision case (not held-out)</p>' if cid in EXTRA else '')
         s += '<h3>Pass 1 — question only</h3>' + para(c['question'])
         for name in ('realistic', 'in_scope', 'unambiguous'):
             s += select(name, ('yes', 'no', 'unsure'))
@@ -363,20 +424,19 @@ def build_pack(root: Path = ROOT) -> Path:
     for kind, filename, column in [('passage', 'passage-spot-check.md', 4), ('statistical', 'statistical-spot-check.md', 7)]:
         for n, identifier in enumerate(source_rows(root / 'docs/human-review' / filename, column), 1):
             cid = f'{kind}-{n:02}'
-            s = card_start('sources', cid, kind, bool(priority_banner))
-            s += para('Compare stored words, numbers, units, boundaries, page/section metadata and release stage with the original page.' if kind == 'passage' else 'Compare this stored value, population, adjustment, period and unit with the exact CSV row and publisher metadata. A dash is not automatically zero.')
+            s = card_start('sources', cid, kind, cid in QUICK_SOURCES, cid in QUICK_SOURCES, 'Compare the highlighted passage with the original page and check boundaries/metadata.' if kind == 'passage' else 'Compare the highlighted CSV row, column, population, period, units and seasonal basis; a dash is not zero.')
             s += ev.render(identifier) + controls('sources', cid)
             content.append(s + '</article>')
     checklist_doc = (root / 'docs/human-review/ai-verification-of-pre-reviews.md').read_text()
     section = checklist_doc.split('## 4.', 1)[1].split('## 5.', 1)[0]
     checks = re.findall(r'^\d+\. (.+)$', section, re.M)
-    checklist = '<section data-panel="sources" class="card checklist"><h2>Owner’s 12-item checklist</h2>' + ''.join(f'<label><input type="checkbox" data-check="check-{n}"> {esc(t)}</label>' for n, t in enumerate(checks, 1)) + '</section>'
-    checklist += '<section data-panel="sources" class="card"><h2>Additional original pages for checklist items 5 and 9–10</h2>'
+    checklist = '<details data-panel="sources" class="source-support"><summary>Owner’s 12-item checklist and additional original pages</summary><section class="card checklist"><h2>Owner’s 12-item checklist</h2>' + ''.join(f'<label><input type="checkbox" data-check="check-{n}"> {esc(t)}</label>' for n, t in enumerate(checks, 1)) + '</section>'
+    checklist += '<section class="card"><h2>Additional original pages for checklist items 5 and 9–10</h2>'
     for source, page_number in [('mom-2026-q2-final', 59), ('mom-2023-q1-final', 4)]:
         candidate = next((p for p in ev.passages.values() if p['source_id'] == source and p.get('page_number') == page_number), None)
         if candidate:
             checklist += ev.render(candidate['passage_id'])
-    checklist += para('Publisher-side authenticity, current licence applicability and unresolved employment-population basis cannot be established from offline snapshots alone. Record an unresolved issue unless independently verified; do not treat this pack as proof of current publisher terms.') + '</section>'
+    checklist += para('Publisher-side authenticity, current licence applicability and unresolved employment-population basis cannot be established from offline snapshots alone. Record an unresolved issue unless independently verified; do not treat this pack as proof of current publisher terms.') + '</section></details>'
     digest = hashlib.sha256(json.dumps({'sample': sample, 'gold_ids': sorted(gold)}, sort_keys=True).encode()).hexdigest()[:16]
     assets = json.dumps(ev.images).replace('<', '\\u003c')
     page = HEADER + ''.join(content) + checklist + '<script>const PACK_ID=' + json.dumps(digest) + '; const PAGE_IMAGES=' + assets + ';</script><script>' + SCRIPT + '</script></main></body></html>'
@@ -401,6 +461,7 @@ class ReviewFields(BaseModel):
     comment: str = Field(default='', max_length=12000)
     shareable: bool = False
 
+    decision: str = Field(default='', max_length=80)
     @model_validator(mode='after')
     def choices(self):
         for field, options in {'verdict': ('correct', 'partly correct', 'incorrect'), 'failure_type': FAILURES, 'label': ('OK', 'disagree'), 'proposed_behavior': BEHAVIOURS, 'evidence': ('OK', 'issue'), 'facts': ('OK', 'issue'), 'match': ('matches', 'minor', 'major'), 'realistic': ('yes', 'no', 'unsure'), 'in_scope': ('yes', 'no', 'unsure'), 'unambiguous': ('yes', 'no', 'unsure')}.items():
@@ -418,10 +479,14 @@ class ReviewResult(BaseModel):
 
     @model_validator(mode='after')
     def valid_record(self):
-        valid = re.fullmatch(r'DEV-\d{3}', self.case_id) if self.tab == 'answers' else re.fullmatch(r'(?:HO|DEV)-\d{3}', self.case_id) if self.tab == 'gold' else re.fullmatch(r'(?:passage|statistical)-\d{2}', self.case_id) if self.tab == 'sources' else None
+        valid = re.fullmatch(r'DEV-\d{3}', self.case_id) if self.tab == 'answers' else re.fullmatch(r'(?:HO|DEV)-\d{3}', self.case_id) if self.tab == 'gold' else re.fullmatch(r'(?:passage|statistical)-\d{2}', self.case_id) if self.tab == 'sources' else re.fullmatch(r'J(?:[1-9]|10)', self.case_id) if self.tab == 'decisions' else None
         if not valid:
             raise ValueError('Invalid tab/case id')
         parse_timestamp(self.timestamp)
+        if self.tab == 'decisions':
+            options = next(options for cid, _, _, options in OWNER_DECISIONS if cid == self.case_id)
+            if self.fields.decision not in ('', *(value for value, _, _ in options)):
+                raise ValueError('Invalid decision option')
         return self
 
 
@@ -491,6 +556,12 @@ def ingest_review(path: Path, root: Path = ROOT) -> tuple[Path, Path]:
             if r.fields.shareable:
                 proposal['comment'] = r.fields.comment
             proposals.append(proposal)
+    summary += '\n## Owner decisions (choices, not automatic verification)\n\n| Decision | Selected option | Consequence |\n|---|---|---|\n'
+    decision_options = {cid: {value: (label, consequence) for value, label, consequence in options} for cid, _, _, options in OWNER_DECISIONS}
+    for result in export.results:
+        if result.tab == 'decisions' and result.fields.decision:
+            label, consequence = decision_options[result.case_id][result.fields.decision]
+            summary += f'| {result.case_id} | {md_cell(label)} | {md_cell(consequence)} |\n'
     summary += '\n## Source checks and gold field counts\n\n'
     for tab, field in [('sources', 'match'), ('gold', 'label'), ('gold', 'evidence'), ('gold', 'facts')]:
         count = Counter(getattr(r.fields, field) for r in export.results if r.tab == tab and getattr(r.fields, field))
@@ -514,38 +585,250 @@ HEADER = '''<!doctype html><html lang="en"><head><meta charset="utf-8"><meta nam
 :root{font:16px/1.55 system-ui,sans-serif;color:#152e35;background:#eef2f1}*{box-sizing:border-box}body{margin:0}header,main{max-width:1100px;margin:auto;padding:24px}header{background:#fff}h1{font-size:2rem;line-height:1.2}h2{font-size:1.35rem}h3{font-size:1rem;letter-spacing:.04em}a{color:#075b70;overflow-wrap:anywhere}button,select,input,textarea,summary{font:inherit}button,summary{cursor:pointer}button{padding:10px 16px;border:1px solid #276b70;border-radius:5px;background:#fff;color:#164b50}button[aria-selected=true]{background:#164b50;color:white}nav{display:flex;gap:8px;flex-wrap:wrap;margin:16px 0}.toolbar{display:flex;gap:20px;flex-wrap:wrap;align-items:center}.private{background:#802e25;color:white;padding:10px}.card,.decisions{background:white;border:1px solid #cad6d5;border-radius:8px;padding:24px;margin:18px 0;overflow-wrap:anywhere}.decisions{border-left:5px solid #a66b17;background:#fff9eb}.verify{border-left:4px solid #276b70;padding:10px 18px;background:#f3f8f7}.evidence{border-top:1px solid #b9ccca;margin-top:12px;padding-top:8px}pre,blockquote{white-space:pre-wrap;overflow-wrap:anywhere;font:14px/1.6 ui-monospace,monospace;background:#f3f5f5;padding:12px;margin:8px 0}label{display:block;margin:10px 0}label.inline{display:inline-block;margin-right:16px}textarea{display:block;width:100%;border:1px solid #899f9c;padding:8px}select{display:block;max-width:100%;padding:6px}fieldset{border:1px solid #b9ccca;margin:12px 0}details{border:1px solid #baccc9;padding:12px;margin-top:14px}summary{font-weight:650}.ai-review{background:#faf7ee}:focus-visible{outline:3px solid #b76c00;outline-offset:3px}[hidden]{display:none!important}.checklist label{padding:10px;border-bottom:1px solid #ddd}#notice{color:#8c2520}#progress{font-weight:700} .skip{display:block} @media(max-width:650px){header,main{padding:14px}.card{padding:16px}}
  .sticky-review{position:sticky;top:0;z-index:20;background:#fff;padding:10px 20px;border-bottom:2px solid #276b70;box-shadow:0 2px 9px #0002}.sticky-review .toolbar{max-width:1300px;margin:auto;gap:12px}.sticky-review label{margin:0}.sticky-review input[type=text]{max-width:170px}.sticky-review #progress{margin:0}.sticky-review #notice{margin:0}.source-comparison{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.5fr);gap:16px}.pdf-page{position:relative;line-height:0}.pdf-page img{width:100%;height:auto}.bbox{position:absolute;border:2px solid #c07500;background:#ffd80030;pointer-events:none}figure{margin:0}figcaption{font-size:.8rem}.table-scroll{max-width:100%;overflow:auto}table{border-collapse:collapse;font-size:.85rem}td,th{border:1px solid #a6bbb8;padding:6px;white-space:pre-wrap;min-width:85px}.cited,mark{background:#fff1a8}.article-context{white-space:pre-wrap;line-height:1.7}.card[data-priority=true]{border-left:5px solid #b77b18}article, [id^=evidence-]{scroll-margin-top:180px}.storage-warning{font-weight:bold;color:#8c2520}@media(max-width:750px){.source-comparison{grid-template-columns:1fr}.sticky-review{padding:6px}.sticky-review .toolbar{gap:5px}.sticky-review label{font-size:.8rem}}
  .source-comparison.expanded{grid-template-columns:1fr}
+ body{padding-bottom:100px}.review-split{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.25fr);gap:24px;align-items:start}.answer-pane,.evidence-pane{min-width:0}.focus-mode main{max-width:1480px}.focus-mode .review-split>.answer-pane,.focus-mode .review-split>.evidence-pane{position:sticky;top:calc(var(--review-bar,180px) + 12px);max-height:calc(100vh - var(--review-bar,180px) - 145px);overflow:auto;overscroll-behavior:contain;padding:10px}.focus-mode .review-split .source-comparison{display:flex;flex-direction:column-reverse}.focus-navigation{position:fixed;bottom:0;inset-inline:0;background:#fff;border-top:2px solid #276b70;padding:12px;z-index:30;display:flex;justify-content:center;gap:16px;align-items:center}.focus-navigation button{font-weight:700;font-size:1.05rem;min-height:48px}.decision-option{padding:14px;border:1px solid #b6c8c5;border-radius:5px}.decision-option span{display:block;padding-left:28px;font-size:.92rem}.check-hint{background:#eaf4f1;padding:12px}.progress-line{display:flex;gap:14px;align-items:center;flex-wrap:wrap}progress{width:240px;accent-color:#276b70}#quick-description{font-size:.85rem;margin:4px 0}#shortcuts{max-width:640px;border:2px solid #276b70;border-radius:8px}#shortcuts::backdrop{background:#0006}.focus-navigation button:disabled{opacity:.45;cursor:default}article{scroll-margin-top:calc(var(--review-bar,180px) + 12px)}@media(max-width:850px){.review-split{grid-template-columns:1fr}.focus-mode .review-split>.answer-pane,.focus-mode .review-split>.evidence-pane{position:static;max-height:none;overflow:visible}.focus-navigation{gap:5px;padding:6px}.focus-navigation button{font-size:.85rem;padding:6px}#step-position{font-size:.8rem}progress{width:160px}}
+ .focus-mode .review-split:has(.source-comparison.expanded){grid-template-columns:1fr}
+ .sticky-review .toolbar{gap:8px;font-size:14px}.sticky-review label.inline{margin-right:0}.sticky-review button{padding:6px 10px}.sticky-review #family{max-width:190px}.sticky-review #reviewer{max-width:135px}.progress-line{font-size:14px}#quick-description{font-size:12px;line-height:1.35}.focus-mode article.card>h2{margin:4px 0;font-size:1.2rem}.focus-mode article.card>.check-hint{margin:6px 0;padding:8px}.focus-mode article.card>p:not(.check-hint){margin:4px 0;font-size:.8rem}.focus-mode h3{margin:8px 0;font-size:.92rem}.focus-mode .answer-pane p{margin:8px 0}.focus-mode .evidence h4{margin:6px 0;font-size:.9rem}.focus-mode .evidence p{margin:4px 0;font-size:.85rem}.focus-mode .purpose{font-size:.85rem}
 </style></head><body><header><a class="skip" href="#cards">Skip to review cards</a><p class="private">PRIVATE: contains MOM text; do not commit or share</p><h1>LabourLens / Owner review</h1><h2>How to use this</h2><p>1. Open this file in your browser; no connection or API is needed.<br>2. Decide each card yourself. Use two passes: form a view before opening Gold says or AI review.<br>3. Type your reviewer name and click Export. Keep the downloads private; ingest only shares comments you mark shareable.</p>
 <details><summary>Glossary — plain English</summary><dl><dt>Resident vs total</dt><dd>Residents are citizens and permanent residents; total/overall may include non-residents. Do not substitute one population for another.</dd><dt>Seasonally adjusted vs not</dt><dd>Adjusted values remove recurring seasonal patterns to improve comparisons. Unadjusted values retain them; they are distinct series.</dd><dt>Advance vs final release</dt><dd>Advance is an early estimate. Final releases use fuller information; later dataset snapshots may revise history again.</dd><dt>Quarter notation: 2026-Q2</dt><dd>April to June 2026. Q1 is January–March; Q3 July–September; Q4 October–December.</dd><dt>Ratio vs percent vs percentage points</dt><dd>A ratio compares quantities; a percent is per hundred. A rise from 2% to 3% is 1 percentage point, or a 50% relative increase.</dd><dt>Vacancy ratio</dt><dd>Job vacancies per unemployed person. A ratio of 1.48 means about 148 vacancies for every 100 unemployed people; it is not 1.48%.</dd></dl></details>
-<nav role="tablist" aria-label="Review sections"><button role="tab" data-open="answers" aria-selected="true">Answers (40)</button><button role="tab" data-open="gold" aria-selected="false">Held-out gold (31)</button><button role="tab" data-open="sources" aria-selected="false">Source checks</button></nav><noscript>JavaScript is required to display inline PDF images, save decisions and export.</noscript></header><div class="sticky-review"><div class="toolbar"><p id="progress" aria-live="polite"></p><label>Tab<select id="tab-filter"><option value="answers">Answers</option><option value="gold">Held-out gold</option><option value="sources">Source checks</option></select></label><label class="inline"><input id="undecided" type="checkbox">Undecided</label><label class="inline"><input id="priority" type="checkbox">Priority</label><label>Family<select id="family"><option value="">All families</option></select></label><label>Reviewer name<input id="reviewer" type="text" maxlength="200" autocomplete="off" placeholder="Type your own name"></label><button id="export">Export JSON + Markdown</button></div><p id="notice" role="status"></p><p id="storage-warning" class="storage-warning" role="alert"></p></div><main id="cards">
+<nav role="tablist" aria-label="Review sections"><button role="tab" data-open="guided" aria-selected="true">Guided review</button><button role="tab" data-open="decisions" aria-selected="false">Decisions (10)</button><button role="tab" data-open="answers" aria-selected="false">Answers (40)</button><button role="tab" data-open="gold" aria-selected="false">Held-out gold (31)</button><button role="tab" data-open="sources" aria-selected="false">Source checks</button></nav><noscript>JavaScript is required to display inline PDF images, save decisions and export.</noscript></header>
+<div class="sticky-review"><div class="toolbar"><strong>PRIVATE</strong><label class="inline"><input id="focus-mode" type="checkbox" checked> Focus mode (one card)</label><label class="inline"><input id="quick-path" type="checkbox"> Quick path</label><label>Tab<select id="tab-filter"><option value="guided">Guided order</option><option value="decisions">Decisions</option><option value="answers">Answers</option><option value="gold">Held-out gold</option><option value="sources">Source checks</option></select></label><label class="inline"><input id="undecided" type="checkbox">Undecided</label><label class="inline"><input id="priority" type="checkbox">Priority</label><label>Family<select id="family"><option value="">All families</option></select></label><label>Reviewer name<input id="reviewer" type="text" maxlength="200" autocomplete="off" placeholder="Type your own name"></label><button id="export">Export JSON + Markdown</button><button id="show-guide">Guide</button><button id="show-shortcuts">? Shortcuts</button></div><div class="progress-line"><progress id="progress-bar" value="0" max="125" aria-label="Review progress"></progress><p id="progress" aria-live="polite"></p><span id="minutes-left"></span></div><p id="quick-description"></p><p id="notice" role="status"></p><p id="storage-warning" class="storage-warning" role="alert"></p></div>
+<div class="focus-navigation" id="focus-navigation"><button id="previous">Previous (k)</button><span id="step-position" aria-live="polite"></span><button id="next">Next (j)</button><button id="next-undecided">Next undecided</button></div>
+<dialog id="shortcuts"><h2>Keyboard shortcuts</h2><ul><li>j / k: next / previous card.</li><li>1 / 2 / 3: correct / partly correct / incorrect on answer cards. On a decision card, select that numbered option.</li><li>y / n on a held-out gold card: label OK / disagree.</li><li>n on other cards: next undecided. Shift+N: next undecided on every card (including gold).</li><li>?: show this help. Escape: close it.</li></ul><p>Shortcuts never run while typing in a text box or choosing a dropdown. Use the large buttons whenever you prefer. Choices are never preselected.</p><button id="close-shortcuts">Close</button></dialog><main id="cards"><p id="empty-state" hidden>No cards match these filters. Clear a filter or turn off “Undecided”.</p>
 '''
 
 SCRIPT = r'''
-const cards=[...document.querySelectorAll('article.card')];
-const prefix='labourlens-review:'+PACK_ID+':';
-const memory=new Map(), times={}; let tab='answers',storageOK=true;
-function storageWarning(){storageOK=false;document.querySelector('#storage-warning').textContent='Autosave storage unavailable or full. Your inputs remain in memory while this page is open. Export before closing; automatic backups still run.'}
-function load(key){if(memory.has(key))return memory.get(key);try{const value=JSON.parse(localStorage.getItem(prefix+key)||'null');if(value!==null)memory.set(key,value);return value}catch(e){storageWarning();return null}}
-function save(key,value){memory.set(key,value);try{localStorage.setItem(prefix+key,JSON.stringify(value))}catch(e){storageWarning()}}
-try{localStorage.setItem(prefix+'probe','1');localStorage.removeItem(prefix+'probe')}catch(e){storageWarning()}
-function fields(card){const f={};card.querySelectorAll('[data-field]').forEach(el=>{const n=el.dataset.field;if(el.type==='radio'){if(!(n in f))f[n]='';if(el.checked)f[n]=el.value}else f[n]=el.type==='checkbox'?el.checked:el.value});return f}
-function key(card){return card.dataset.tab+':'+card.dataset.case}
-function decided(c){const f=fields(c);return c.dataset.tab==='answers'?!!f.verdict:c.dataset.tab==='gold'?!!f.label&&!!f.evidence&&!!f.facts&&(f.label!=='disagree'||!!f.proposed_behavior):!!f.match}
-function download(name,text,type){const u=URL.createObjectURL(new Blob([text],{type}));const a=document.createElement('a');a.href=u;a.download=name;document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),5000)}
-function exportData(){const now=new Date().toISOString();const data={schema_version:1,pack_id:PACK_ID,reviewer_name:document.querySelector('#reviewer').value,exported_at:now,results:cards.map(c=>({case_id:c.dataset.case,tab:c.dataset.tab,fields:fields(c),timestamp:times[key(c)]||now})),checklist:{}};document.querySelectorAll('[data-check]').forEach(e=>data.checklist[e.dataset.check]=e.checked);return data}
-function backup(){download('review-results.json',JSON.stringify(exportData(),null,2),'application/json');document.querySelector('#notice').textContent='Automatic JSON backup requested after 25 newly decided cards. Allow downloads; the browser may block automatic downloads.'}
-let completionCount=load('completion-count')||0;
-const alreadyCompleted=new Set(load('completed-cards')||[]);
-cards.forEach(c=>{const saved=load(key(c));if(saved){times[key(c)]=saved.timestamp;c.querySelectorAll('[data-field]').forEach(el=>{const value=saved.fields[el.dataset.field];if(el.type==='radio')el.checked=el.value===value;else if(el.type==='checkbox')el.checked=value===true;else el.value=value||''})}if(decided(c))alreadyCompleted.add(key(c));c.addEventListener('input',()=>{times[key(c)]=new Date().toISOString();save(key(c),{fields:fields(c),timestamp:times[key(c)]});if(decided(c)&&!alreadyCompleted.has(key(c))){alreadyCompleted.add(key(c));completionCount++;save('completion-count',completionCount);save('completed-cards',[...alreadyCompleted]);if(completionCount%25===0)backup()}update()})});
-const families=[...new Set(cards.map(c=>c.dataset.family))].sort();families.forEach(f=>{const o=document.createElement('option');o.value=f;o.textContent=f.replaceAll('_',' ');document.querySelector('#family').append(o)});
-function update(){const family=document.querySelector('#family').value,only=document.querySelector('#undecided').checked,priority=document.querySelector('#priority').checked;let visible=0;cards.forEach(c=>{c.hidden=c.dataset.tab!==tab||(family&&c.dataset.family!==family)||(only&&decided(c))||(priority&&c.dataset.priority!=='true');if(!c.hidden)visible++});document.querySelectorAll('[data-panel]').forEach(s=>s.hidden=s.dataset.panel!==tab);const active=cards.filter(c=>c.dataset.tab===tab);document.querySelector('#progress').textContent=cards.filter(decided).length+'/'+cards.length+' decided · '+active.filter(decided).length+'/'+active.length+' in tab · '+visible+' visible';document.querySelector('#tab-filter').value=tab;document.querySelectorAll('[data-open]').forEach(b=>b.setAttribute('aria-selected',String(b.dataset.open===tab)))}
-document.querySelectorAll('[data-open]').forEach(b=>b.addEventListener('click',()=>{tab=b.dataset.open;update()}));
-document.querySelector('#tab-filter').addEventListener('change',e=>{tab=e.target.value;update()});
-document.querySelectorAll('#family,#undecided,#priority').forEach(el=>el.addEventListener('change',update));
-document.querySelectorAll('[data-jump]').forEach(a=>a.addEventListener('click',e=>{e.preventDefault();const target=document.getElementById(a.getAttribute('href').slice(1));if(!target)return;tab=target.dataset.tab;document.querySelector('#family').value='';document.querySelector('#undecided').checked=false;document.querySelector('#priority').checked=false;update();target.scrollIntoView({block:'start'});target.setAttribute('tabindex','-1');target.focus({preventScroll:true})}));
-document.querySelectorAll('[data-check]').forEach(el=>{el.checked=load(el.dataset.check)===true;el.addEventListener('change',()=>save(el.dataset.check,el.checked))});
-function cell(x){return String(x??'').replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('|','&#124;').replaceAll('\n','<br>')}
-document.querySelector('#export').addEventListener('click',()=>{const data=exportData();download('review-results.json',JSON.stringify(data,null,2),'application/json');let md='# PRIVATE owner review results\n\nReviewer: '+cell(data.reviewer_name)+'\n\nDate: '+data.exported_at+'\n\n| Case | Tab | Fields | Timestamp |\n|---|---|---|---|\n';data.results.forEach(r=>md+='| '+cell(r.case_id)+' | '+cell(r.tab)+' | '+cell(JSON.stringify(r.fields))+' | '+r.timestamp+' |\n');download('review-results.md',md,'text/markdown');document.querySelector('#notice').textContent='Export requested. Allow multiple downloads. Blank names and incomplete disagreements may be saved as drafts, but must be completed before ingestion.'});
-document.querySelectorAll('img[data-page]').forEach(img=>{img.src='data:image/jpeg;base64,'+PAGE_IMAGES[img.dataset.page]});
-document.querySelectorAll('.zoom-page').forEach(button=>button.addEventListener('click',()=>{const expanded=button.closest('.source-comparison').classList.toggle('expanded');button.setAttribute('aria-expanded',String(expanded))}));
+const cards = [...document.querySelectorAll('article.card')];
+// Keep this prefix and per-card keys unchanged: old review decisions survive UI upgrades.
+const prefix = 'labourlens-review:' + PACK_ID + ':';
+const memory = new Map(), times = {};
+let storageOK = true, tab = 'guided', activeKey = '';
+function storageWarning() {
+  storageOK = false;
+  document.querySelector('#storage-warning').textContent = 'Autosave storage unavailable or full. Inputs remain in memory while this page is open. Export before closing; automatic backups still run.';
+}
+function load(key) {
+  if (memory.has(key)) return memory.get(key);
+  try {
+    const value = JSON.parse(localStorage.getItem(prefix + key) || 'null');
+    if (value !== null) memory.set(key, value);
+    return value;
+  } catch (e) { storageWarning(); return null; }
+}
+function save(key, value) {
+  memory.set(key, value);
+  try { localStorage.setItem(prefix + key, JSON.stringify(value)); }
+  catch (e) { storageWarning(); }
+}
+try { localStorage.setItem(prefix + 'probe', '1'); localStorage.removeItem(prefix + 'probe'); }
+catch (e) { storageWarning(); }
+function fields(card) {
+  const result = {};
+  card.querySelectorAll('[data-field]').forEach(el => {
+    const name = el.dataset.field;
+    if (el.type === 'radio') {
+      if (!(name in result)) result[name] = '';
+      if (el.checked) result[name] = el.value;
+    } else result[name] = el.type === 'checkbox' ? el.checked : el.value;
+  });
+  return result;
+}
+function key(card) { return card.dataset.tab + ':' + card.dataset.case; }
+function decided(card) {
+  const f = fields(card);
+  if (card.dataset.tab === 'decisions') return !!f.decision;
+  if (card.dataset.tab === 'answers') return !!f.verdict;
+  if (card.dataset.tab === 'gold') return !!f.label && !!f.evidence && !!f.facts && (f.label !== 'disagree' || !!f.proposed_behavior);
+  return !!f.match;
+}
+function download(name, text, type) {
+  const url = URL.createObjectURL(new Blob([text], {type}));
+  const anchor = document.createElement('a');
+  anchor.href = url; anchor.download = name;
+  document.body.append(anchor); anchor.click(); anchor.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 5000);
+}
+function exportData() {
+  const now = new Date().toISOString();
+  const data = {schema_version:1, pack_id:PACK_ID, reviewer_name:document.querySelector('#reviewer').value,
+    exported_at:now, results:cards.map(card => ({case_id:card.dataset.case, tab:card.dataset.tab,
+      fields:fields(card), timestamp:times[key(card)] || now})), checklist:{}};
+  document.querySelectorAll('[data-check]').forEach(el => data.checklist[el.dataset.check] = el.checked);
+  return data;
+}
+function backup() {
+  download('review-results.json', JSON.stringify(exportData(), null, 2), 'application/json');
+  document.querySelector('#notice').textContent = 'Automatic JSON backup requested after 25 newly decided cards. Allow downloads; the browser may block them.';
+}
+let completionCount = load('completion-count') || 0;
+const alreadyCompleted = new Set(load('completed-cards') || []);
+cards.forEach(card => {
+  const saved = load(key(card));
+  if (saved && saved.fields && typeof saved.fields === 'object') {
+    times[key(card)] = saved.timestamp;
+    card.querySelectorAll('[data-field]').forEach(el => {
+      const value = saved.fields[el.dataset.field];
+      if (el.type === 'radio') el.checked = el.value === value;
+      else if (el.type === 'checkbox') el.checked = value === true;
+      else el.value = value || '';
+    });
+  }
+  if (decided(card)) alreadyCompleted.add(key(card));
+  card.addEventListener('input', () => {
+    times[key(card)] = new Date().toISOString();
+    save(key(card), {fields:fields(card), timestamp:times[key(card)]});
+    if (decided(card) && !alreadyCompleted.has(key(card))) {
+      alreadyCompleted.add(key(card)); completionCount++;
+      save('completion-count', completionCount); save('completed-cards', [...alreadyCompleted]);
+      if (completionCount % 25 === 0) backup();
+    }
+    update();
+  });
+});
+const rank = card => card.dataset.tab === 'decisions' ? 0 : card.dataset.priority === 'true' ? 1 : 2;
+const guided = [...cards].sort((a, b) => rank(a) - rank(b));
+// Stable sort preserves Answers -> Gold -> Sources within both priority and ordinary groups.
+const insertionPoint = document.querySelector('.source-support');
+guided.forEach(card => document.querySelector('main').insertBefore(card, insertionPoint));
+const families = [...new Set(cards.map(card => card.dataset.family))].sort();
+families.forEach(family => {
+  const option = document.createElement('option');
+  option.value = family; option.textContent = family.replaceAll('_', ' ');
+  document.querySelector('#family').append(option);
+});
+const savedFocus = load('ui-focus');
+document.querySelector('#focus-mode').checked = savedFocus === null ? true : savedFocus === true;
+document.querySelector('#quick-path').checked = load('ui-quick') === true;
+activeKey = load('focus-active') || '';
+function candidates() {
+  const family = document.querySelector('#family').value;
+  const only = document.querySelector('#undecided').checked;
+  const priority = document.querySelector('#priority').checked;
+  const quick = document.querySelector('#quick-path').checked;
+  return (tab === 'guided' ? guided : cards).filter(card =>
+    (tab === 'guided' || card.dataset.tab === tab) &&
+    (!family || card.dataset.family === family) && (!only || !decided(card)) &&
+    (!priority || card.dataset.priority === 'true') && (!quick || card.dataset.quick === 'true'));
+}
+function update() {
+  const queue = candidates(), focus = document.querySelector('#focus-mode').checked;
+  if (!queue.some(card => key(card) === activeKey)) activeKey = queue.length ? key(queue[0]) : '';
+  const current = queue.find(card => key(card) === activeKey);
+  document.body.classList.toggle('focus-mode', focus);
+  cards.forEach(card => card.hidden = !queue.includes(card) || (focus && key(card) !== activeKey));
+  document.querySelectorAll('[data-panel]').forEach(panel => panel.hidden = panel.dataset.panel !== (current?.dataset.tab || tab));
+  const scoped = (tab === 'guided' ? guided : cards.filter(card => card.dataset.tab === tab))
+    .filter(card => !document.querySelector('#quick-path').checked || card.dataset.quick === 'true');
+  const done = scoped.filter(decided).length, remaining = scoped.length - done;
+  document.querySelector('#progress').textContent = done + '/' + scoped.length + ' decided in this path · ' + cards.filter(decided).length + '/' + cards.length + ' overall';
+  const progress = document.querySelector('#progress-bar');
+  progress.max = Math.max(scoped.length, 1); progress.value = done;
+  document.querySelector('#minutes-left').textContent = 'About ' + Math.ceil(remaining * 1.5) + ' min left (1.5 min/card estimate)';
+  const quickCards = cards.filter(card => card.dataset.quick === 'true');
+  const answerN = quickCards.filter(card => card.dataset.tab === 'answers').length;
+  const goldN = quickCards.filter(card => card.dataset.tab === 'gold').length;
+  const sourceN = quickCards.filter(card => card.dataset.tab === 'sources').length;
+  document.querySelector('#quick-description').textContent = document.querySelector('#quick-path').checked ?
+    'Quick path: ' + quickCards.length + ' steps = 10 decisions + ' + answerN + ' answer cards + ' + goldN + ' gold cards + ' + sourceN + ' source checks. Includes all concerns across the available A1 reviews, not just the original 13; grouped HO-020/024 are two cards. This subset is not a verdict.' :
+    'Guided order: ten owner decisions, then priority cards, then remaining Answers, Held-out gold and Source checks. Quick path is optional; it does not mark omitted cards reviewed.';
+  const position = queue.findIndex(card => key(card) === activeKey);
+  document.querySelector('#step-position').textContent = queue.length ? (position + 1) + ' of ' + queue.length + ' · ' + current.dataset.case : 'No matching cards';
+  document.querySelector('#previous').disabled = position <= 0;
+  document.querySelector('#next').disabled = position < 0 || position >= queue.length - 1;
+  document.querySelector('#next-undecided').disabled = !queue.some(card => !decided(card));
+  document.querySelector('#focus-navigation').hidden = !focus;
+  document.querySelector('#empty-state').hidden = queue.length !== 0;
+  document.querySelector('#tab-filter').value = tab;
+  document.querySelectorAll('[data-open]').forEach(button => button.setAttribute('aria-selected', String(button.dataset.open === tab)));
+  document.documentElement.style.setProperty('--review-bar', document.querySelector('.sticky-review').offsetHeight + 'px');
+}
+function showCurrent() {
+  update(); save('focus-active', activeKey);
+  const card = cards.find(card => key(card) === activeKey);
+  if (card) { card.scrollIntoView({block:'start'}); card.setAttribute('tabindex', '-1'); card.focus({preventScroll:true}); }
+}
+function move(direction, undecided = false) {
+  const queue = candidates();
+  if (!queue.length) return;
+  const index = queue.findIndex(card => key(card) === activeKey);
+  if (undecided) {
+    for (let offset = 1; offset <= queue.length; offset++) {
+      const next = queue[(Math.max(index, 0) + offset) % queue.length];
+      if (!decided(next)) { activeKey = key(next); showCurrent(); return; }
+    }
+    document.querySelector('#notice').textContent = 'No undecided cards remain in this filtered path.';
+  } else if (queue[index + direction]) { activeKey = key(queue[index + direction]); showCurrent(); }
+}
+function setTab(value) { tab = value; activeKey = ''; showCurrent(); }
+document.querySelectorAll('[data-open]').forEach(button => button.addEventListener('click', () => setTab(button.dataset.open)));
+document.querySelector('#tab-filter').addEventListener('change', event => setTab(event.target.value));
+document.querySelectorAll('#family,#undecided,#priority').forEach(el => el.addEventListener('change', showCurrent));
+document.querySelector('#focus-mode').addEventListener('change', event => { save('ui-focus', event.target.checked); showCurrent(); });
+document.querySelector('#quick-path').addEventListener('change', event => { save('ui-quick', event.target.checked); showCurrent(); });
+document.querySelector('#previous').addEventListener('click', () => move(-1));
+document.querySelector('#next').addEventListener('click', () => move(1));
+document.querySelector('#next-undecided').addEventListener('click', () => move(1, true));
+document.querySelectorAll('[data-jump]').forEach(anchor => anchor.addEventListener('click', event => {
+  event.preventDefault();
+  const target = document.getElementById(anchor.getAttribute('href').slice(1));
+  if (!target) return;
+  tab = target.dataset.tab; activeKey = key(target);
+  document.querySelector('#family').value = '';
+  document.querySelector('#undecided').checked = false;
+  document.querySelector('#priority').checked = false;
+  if (target.dataset.quick !== 'true') document.querySelector('#quick-path').checked = false;
+  document.querySelector('#pack-guide').open = false;
+  showCurrent();
+}));
+document.querySelectorAll('[data-check]').forEach(el => {
+  el.checked = load(el.dataset.check) === true;
+  el.addEventListener('change', () => save(el.dataset.check, el.checked));
+});
+const help = document.querySelector('#shortcuts');
+document.querySelector('#show-shortcuts').addEventListener('click', () => help.showModal());
+document.querySelector('#close-shortcuts').addEventListener('click', () => help.close());
+document.querySelector('#show-guide').addEventListener('click', () => {
+  const guide = document.querySelector('#pack-guide'); guide.open = !guide.open;
+  if (guide.open) guide.scrollIntoView({block:'start'});
+});
+function choose(card, field, value) {
+  const input = [...card.querySelectorAll('input[data-field="' + field + '"]')].find(el => el.value === value);
+  if (input) { input.checked = true; input.dispatchEvent(new Event('input', {bubbles:true})); }
+}
+document.addEventListener('keydown', event => {
+  if (event.ctrlKey || event.metaKey || event.altKey || help.open) return;
+  const target = event.target;
+  if (target.isContentEditable || target.matches('textarea,select,input:not([type=radio]):not([type=checkbox])')) return;
+  if (!document.querySelector('#focus-mode').checked) return;
+  const card = cards.find(card => key(card) === activeKey);
+  if (!card) return;
+  if (event.key === '?') { event.preventDefault(); help.showModal(); }
+  else if (event.key === 'j') { event.preventDefault(); move(1); }
+  else if (event.key === 'k') { event.preventDefault(); move(-1); }
+  else if (event.key === 'N' || (event.key === 'n' && card.dataset.tab !== 'gold')) { event.preventDefault(); move(1, true); }
+  else if ((event.key === 'y' || event.key === 'n') && card.dataset.tab === 'gold') { event.preventDefault(); choose(card, 'label', event.key === 'y' ? 'OK' : 'disagree'); }
+  else if (['1','2','3'].includes(event.key)) {
+    const index = Number(event.key) - 1;
+    if (card.dataset.tab === 'answers') { event.preventDefault(); choose(card, 'verdict', ['correct','partly correct','incorrect'][index]); }
+    else if (card.dataset.tab === 'decisions') {
+      const option = card.querySelectorAll('[data-field=decision]')[index];
+      if (option) { event.preventDefault(); choose(card, 'decision', option.value); }
+    }
+  }
+});
+function cell(value) { return String(value ?? '').replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('|','&#124;').replaceAll('\n','<br>'); }
+document.querySelector('#export').addEventListener('click', () => {
+  const data = exportData();
+  download('review-results.json', JSON.stringify(data, null, 2), 'application/json');
+  let markdown = '# PRIVATE owner review results\n\nReviewer: ' + cell(data.reviewer_name) + '\n\nDate: ' + data.exported_at + '\n\n| Case | Tab | Fields | Timestamp |\n|---|---|---|---|\n';
+  data.results.forEach(result => markdown += '| ' + cell(result.case_id) + ' | ' + cell(result.tab) + ' | ' + cell(JSON.stringify(result.fields)) + ' | ' + result.timestamp + ' |\n');
+  download('review-results.md', markdown, 'text/markdown');
+  document.querySelector('#notice').textContent = 'Export requested. Allow multiple downloads. Blank names and incomplete disagreements can be saved as drafts, but must be completed before ingestion.';
+});
+document.querySelectorAll('img[data-page]').forEach(img => img.src = 'data:image/jpeg;base64,' + PAGE_IMAGES[img.dataset.page]);
+document.querySelectorAll('.zoom-page').forEach(button => button.addEventListener('click', () => {
+  const expanded = button.closest('.source-comparison').classList.toggle('expanded');
+  button.setAttribute('aria-expanded', String(expanded));
+}));
 update();
+if (document.querySelector('#focus-mode').checked) showCurrent();
 '''

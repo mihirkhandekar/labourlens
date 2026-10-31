@@ -67,6 +67,14 @@ def test_build_synthetic_pack(fixture_root):
     assert len(soup.select('article[data-tab=answers]')) == 40
     assert len(soup.select('article[data-tab=gold][data-case^=HO-]')) == 31
     assert len(soup.select('article[data-tab=sources]')) == 30
+    assert len(soup.select('article[data-tab=decisions]')) == 10
+    assert soup.select_one('#focus-mode').has_attr('checked')
+    assert soup.select_one('#progress-bar')
+    assert soup.select_one('#quick-path')
+    assert soup.select_one('#next-undecided')
+    assert len(soup.select('article > .check-hint strong')) == len(soup.select('article'))
+    assert soup.select_one('#answers-DEV-001 .answer-pane')
+    assert soup.select_one('#answers-DEV-001 .evidence-pane')
     assert len(soup.select('[data-check]')) == 12
     assert not soup.select('[src],link,iframe,form')
     assert soup.select('img[data-page]')
@@ -101,6 +109,12 @@ def test_export_schema():
     draft = export_data()
     draft['results'][0]['fields'] = {'label': 'disagree'}
     assert ReviewExport.model_validate(draft)  # Automatic backups must preserve unfinished drafts.
+    decision = export_data()
+    decision['results'] = [dict(case_id='J1', tab='decisions', fields={'decision': 'pending'}, timestamp='2026-10-31T00:00:00Z')]
+    assert ReviewExport.model_validate(decision)
+    decision['results'][0]['fields']['decision'] = 'accept_alternatives'
+    with pytest.raises(ValidationError, match='Invalid decision option'):
+        ReviewExport.model_validate(decision)
 
 
 def test_ingest_requires_owner_and_excludes_private_comments(fixture_root):
@@ -111,6 +125,7 @@ def test_ingest_requires_owner_and_excludes_private_comments(fixture_root):
     assert not (fixture_root / 'docs/human-review/owner-review-summary.md').exists()
     data['reviewer_name'] = 'Synthetic human'
     data['results'].append(dict(case_id='HO-001', tab='gold', fields={'label': 'disagree', 'proposed_behavior': 'clarify', 'comment': 'Shareable owner explanation', 'shareable': True}, timestamp='2026-10-31T00:00:00Z'))
+    data['results'].append(dict(case_id='J1', tab='decisions', fields={'decision': 'pending', 'comment': 'Private verification note', 'shareable': False}, timestamp='2026-10-31T00:00:00Z'))
     file.write_text(json.dumps(data))
     gold = (fixture_root / 'experiments/gold/draft_cases.jsonl').read_bytes()
     summary, proposal = ingest_review(file, fixture_root)
@@ -118,6 +133,8 @@ def test_ingest_requires_owner_and_excludes_private_comments(fixture_root):
     assert 'Synthetic text' not in summary.read_text()
     assert 'Synthetic human' in summary.read_text()
     assert 'Shareable owner explanation' in summary.read_text()
+    assert 'keep publisher verification incomplete' in summary.read_text()
+    assert 'Private verification note' not in summary.read_text()
     assert '0/1 comparable' in summary.read_text()
     assert json.loads(proposal.read_text())['proposed_behavior'] == 'clarify'
     assert (fixture_root / 'experiments/gold/draft_cases.jsonl').read_bytes() == gold
@@ -144,6 +161,16 @@ def test_ingest_refuses_incomplete_disagreement(fixture_root):
     with pytest.raises(ValueError, match='complete the proposed'):
         ingest_review(path, fixture_root)
     assert not (fixture_root / 'docs/human-review/owner-review-summary.md').exists()
+
+
+def test_quick_path_keeps_union_of_a1_concerns(fixture_root):
+    put(fixture_root, 'experiments/human-review-sample/ai-review-summary.md', '## Failure types\n| other | DEV-002 |\n## Other section\nDEV-003 is not a failure here.')
+    soup = BeautifulSoup(build_pack(fixture_root).read_text(), 'html.parser')
+    assert soup.select_one('#answers-DEV-001')['data-quick'] == 'true'
+    assert soup.select_one('#answers-DEV-002')['data-quick'] == 'true'
+    assert soup.select_one('#answers-DEV-003')['data-quick'] == 'false'
+    assert len(soup.select('article[data-tab=gold][data-quick=true]')) == 8
+    assert len(soup.select('article[data-tab=sources][data-quick=true]')) == 8
 
 
 @pytest.mark.corpus

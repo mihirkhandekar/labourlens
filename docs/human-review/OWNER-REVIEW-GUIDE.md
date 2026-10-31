@@ -15,6 +15,29 @@ publisher metadata are embedded: **no separate PDF, CSV or document is needed**.
 The guide, worked example, labelling rule, glossary and checklist are inside too.
 **PRIVATE: contains MOM text; do not commit or share the pack, exports or screenshots.**
 
+**Focus mode is on by default:** one card at a time, with large **Previous**,
+**Next** and **Next undecided** buttons. The guided order starts with ten simple
+J1–J10 decision cards (options explain their consequences), then priority cards,
+then remaining Answers, Held-out gold and Source checks. Turn Focus mode off for
+the full list. The Guide button opens the embedded instructions and background.
+On wide screens the answer and inline evidence sit side by side in sticky,
+independently scrollable panes.
+
+Keyboard: **j/k** next/previous; **1/2/3** correct/partly correct/incorrect on
+answers (or choose a numbered decision option); **y/n** label OK/disagree on gold.
+Because `n` has two requested uses, **n** is next undecided on other card types;
+**Shift+N** is next undecided everywhere. **?** opens shortcut help. Shortcuts do
+not interrupt typing in a comment, reviewer-name field or dropdown.
+
+**Quick path** retains 33 review cards (17 answers flagged by at least one A1
+pre-review, eight held-out cards across seven judgement-call groups, eight source
+checks), plus the ten decision cards: 43 steps total. The original answer pass
+flagged 13; retaining concerns from both A1 passes produces 17. HO-020 and HO-024
+are separate cards. No flagged concern is silently dropped to meet an approximate
+count. Time remaining is a transparent estimate of **1.5 minutes per undecided
+card**, not a measured duration. Omitted cards remain unreviewed.
+Existing per-case localStorage keys and old JSON exports remain compatible.
+
 Read each question and form your own view before opening **Gold says**, **Reveal
 draft**, or **AI review**. The sticky bar provides tab/family, undecided and priority
 filters, progress, reviewer name and Export. Decisions are saved in localStorage
