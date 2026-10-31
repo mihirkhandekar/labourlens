@@ -385,7 +385,7 @@ def fast_actions(tab: str, kind: str, info: dict) -> str:
     if tab == 'answers':
         s += '<div class="reason-chips"><span>Why? (optional)</span>' + ''.join(f'<button type="button" data-chip="failure_type" data-value="{esc(v)}">{esc(l)}</button>' for v, l in CHIP_LABELS.items()) + '</div>'
     elif tab == 'gold':
-        s += '<div class="reason-chips"><span>What should it be?</span>' + ''.join(f'<button type="button" data-chip="proposed_behavior" data-value="{esc(v)}">{esc(l)}</button>' for v, l in BEHAVIOUR_CHIPS.items()) + '</div>'
+        s += '<div class="reason-chips"><span>What should it be?</span>' + ''.join(f'<button type="button" data-chip="proposed_behavior" data-value="{esc(v)}">{esc(l)} <kbd>{n}</kbd></button>' for n, (v, l) in enumerate(BEHAVIOUR_CHIPS.items(), 1)) + '</div>'
     return s + '</section>'
 
 
@@ -965,6 +965,7 @@ HEADER = '''<!doctype html><html lang="en"><head><meta charset="utf-8"><meta nam
  .source-comparison.expanded{grid-template-columns:1fr}
  body{padding-bottom:100px}.review-split{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.25fr);gap:24px;align-items:start}.answer-pane,.evidence-pane{min-width:0}.focus-mode main{max-width:1480px}.focus-mode .review-split>.answer-pane,.focus-mode .review-split>.evidence-pane{position:sticky;top:calc(var(--review-bar,180px) + 12px);max-height:calc(100vh - var(--review-bar,180px) - 145px);overflow:auto;overscroll-behavior:contain;padding:10px}.focus-mode .review-split .source-comparison{display:flex;flex-direction:column-reverse}.focus-navigation{position:fixed;bottom:0;inset-inline:0;background:#fff;border-top:2px solid #276b70;padding:12px;z-index:30;display:flex;justify-content:center;gap:16px;align-items:center}.focus-navigation button{font-weight:700;font-size:1.05rem;min-height:48px}.decision-option{padding:14px;border:1px solid #b6c8c5;border-radius:5px}.decision-option span{display:block;padding-left:28px;font-size:.92rem}.check-hint{background:#eaf4f1;padding:12px}.progress-line{display:flex;gap:14px;align-items:center;flex-wrap:wrap}progress{width:240px;accent-color:#276b70}#quick-description{font-size:.85rem;margin:4px 0}#shortcuts{max-width:640px;border:2px solid #276b70;border-radius:8px}#shortcuts::backdrop{background:#0006}.focus-navigation button:disabled{opacity:.45;cursor:default}article{scroll-margin-top:calc(var(--review-bar,180px) + 12px)}@media(max-width:850px){.review-split{grid-template-columns:1fr}.focus-mode .review-split>.answer-pane,.focus-mode .review-split>.evidence-pane{position:static;max-height:none;overflow:visible}.focus-navigation{gap:5px;padding:6px}.focus-navigation button{font-size:.85rem;padding:6px}#step-position{font-size:.8rem}progress{width:160px}}
  .focus-mode .review-split:has(.source-comparison.expanded){grid-template-columns:1fr}
+ .fast-mode .card[data-pick-reason=true] .reason-chips{position:fixed;left:0;right:0;bottom:var(--nav-height,130px);z-index:35;background:#fff8e1;border-top:3px solid #c07500;padding:10px 16px;justify-content:center;box-shadow:0 -4px 12px #0002}.reason-chips span{font-weight:700}.reason-chips button{font-size:1rem}body{padding-bottom:calc(var(--nav-height,130px) + 110px)}
  .sticky-review .toolbar{gap:8px;font-size:14px}.sticky-review label.inline{margin-right:0}.sticky-review button{padding:6px 10px}.sticky-review #family{max-width:190px}.sticky-review #reviewer{max-width:135px}.progress-line{font-size:14px}#quick-description{font-size:12px;line-height:1.35}.focus-mode article.card>h2{margin:4px 0;font-size:1.2rem}.focus-mode article.card>.check-hint{margin:6px 0;padding:8px}.focus-mode article.card>p:not(.check-hint){margin:4px 0;font-size:.8rem}.focus-mode h3{margin:8px 0;font-size:.92rem}.focus-mode .answer-pane p{margin:8px 0}.focus-mode .evidence h4{margin:6px 0;font-size:.9rem}.focus-mode .evidence p{margin:4px 0;font-size:.85rem}.focus-mode .purpose{font-size:.85rem}
  .endorsement-bar{background:#f0eafa;border:1px solid #795c9c;color:#4a3264;padding:10px;margin:8px 0}.endorsement-bar button{margin-left:12px}.card[data-endorsed=true]{border-right:5px solid #795c9c}#endorsement-warning{font-size:.85rem;color:#6c4100;margin:3px 0}
  .fast-actions,.what-to-do,.ai-box,.shortcut-strip{display:none}.fast-mode .fast-actions{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin:10px 0}.fast-mode .what-to-do{display:block;font-size:1.15rem;background:#fffbe6;border-left:5px solid #c07500;padding:10px 16px;margin:8px 0}.fast-mode .what-to-do p{margin:4px 0}.fast-mode .check-hint{display:none}.fast-mode .ai-box{display:block}.fast-mode .shortcut-strip{display:block}.fast-btn{font-size:1.25rem;font-weight:700;min-height:56px;min-width:150px;border-width:2px}kbd{font:700 .8em ui-monospace,monospace;border:1px solid #888;border-radius:4px;padding:1px 6px;background:#f3f3f3;margin-left:6px}.agree-ai{background:#e8f4ee;border-color:#2b7a4b}.agree-ai:disabled{opacity:.55}.no-agree{font-weight:700;color:#6c4100;background:#fff3d6;padding:10px;border-radius:5px}.reason-chips{display:none;flex-basis:100%;gap:8px;flex-wrap:wrap;align-items:center}.card[data-pick-reason=true] .reason-chips{display:flex}.reason-chips button{font-size:.95rem;padding:8px 12px}.ai-box{background:#eef3fb;border:2px solid #4a6fa5;border-radius:6px;padding:12px;margin:14px 0;font-size:1.05rem}.ai-box[data-status=disagree],.ai-box[data-status=none]{background:#fff3d6;border-color:#c07500}.shortcut-strip{width:100%;text-align:center;font-size:.85rem;border-bottom:1px solid #cad6d5;padding-bottom:6px;margin-bottom:6px}.focus-navigation{flex-direction:column;gap:6px}.nav-row{display:flex;gap:16px;align-items:center;justify-content:center}.card[data-unsure=true] .fast-actions::after{content:'Marked unsure — still undecided';font-weight:700;color:#6c4100;flex-basis:100%}.mini-gloss{font-size:.85rem;opacity:.85}
@@ -1236,6 +1237,7 @@ function update() {
   document.querySelector('#tab-filter').value = tab;
   document.querySelectorAll('[data-open]').forEach(button => button.setAttribute('aria-selected', String(button.dataset.open === tab)));
   document.documentElement.style.setProperty('--review-bar', document.querySelector('.sticky-review').offsetHeight + 'px');
+  document.documentElement.style.setProperty('--nav-height', document.querySelector('#focus-navigation').offsetHeight + 'px');
 }
 function showCurrent() {
   update(); save('focus-active', activeKey);
@@ -1416,6 +1418,10 @@ document.addEventListener('keydown', event => {
     const k = event.key.length === 1 ? event.key.toLowerCase() : event.key;
     if (k === 'a') { event.preventDefault(); performAgree(card); return; }
     if (['r', 'p', 'w', 's'].includes(k)) { event.preventDefault(); performAct(card, {r:'right', p:'partly', w:'wrong', s:'unsure'}[k]); return; }
+    if (card.dataset.tab === 'gold' && card.dataset.pickReason === 'true' && /^[1-5]$/.test(event.key)) {
+      const chip = card.querySelectorAll('[data-chip]')[Number(event.key) - 1];
+      if (chip) { event.preventDefault(); chip.click(); return; }
+    }
     if (k === 'u') { event.preventDefault(); undoLast(); return; }
     if (k === 'Enter') { event.preventDefault(); move(1); return; }
     if (k === 'Backspace') { event.preventDefault(); move(-1); return; }
@@ -1455,4 +1461,5 @@ applyMode();
 update();
 if (fastOn() || document.querySelector('#focus-mode').checked) showCurrent();
 setInterval(tickAgree, 250);
+window.addEventListener('resize', update);
 '''

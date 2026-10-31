@@ -436,6 +436,24 @@ def test_ai_basis_is_validated_and_summarised(fixture_root):
         ReviewExport.model_validate(bad)
 
 
+def test_reason_chips_stay_reachable_on_small_windows(fixture_root):
+    """Regression: after 'Label is wrong' the behaviour chips sat under the fixed footer on short windows and could not be clicked."""
+    page = build_pack(fixture_root).read_text()
+    soup = BeautifulSoup(page, 'html.parser')
+    chips = soup.select('#gold-HO-022 [data-chip=proposed_behavior]')
+    assert [c['data-value'] for c in chips] == ['answer', 'abstain', 'refuse', 'clarify', 'ignore_injection_and_answer']
+    assert [c.select_one('kbd').get_text() for c in chips] == ['1', '2', '3', '4', '5']
+    # The visible chips are pinned above the footer (never inside the scrolled card) and the footer height is measured at runtime.
+    assert '.card[data-pick-reason=true] .reason-chips{position:fixed' in page
+    assert 'bottom:var(--nav-height' in page
+    assert "setProperty('--nav-height'" in page
+    assert "window.addEventListener('resize', update)" in page
+    assert "card.dataset.tab === 'gold' && card.dataset.pickReason === 'true'" in page  # number keys 1-5 pick the behaviour
+    # Chips and the label button exist on a card whose AI passes all said 'label is wrong' (no Agree offered).
+    assert soup.select_one('#gold-HO-022 [data-act=wrong]')
+    assert not soup.select_one('#gold-HO-022 .agree-ai')
+
+
 @pytest.mark.corpus
 def test_real_pack():
     if not (ROOT / 'data/processed/observations.parquet').exists():
