@@ -43,7 +43,7 @@ export function mountWorkbench(root, {onMode} = {}) {
   // ---------- structure ----------
   const head = el('header', 'wb-head');
   const headCopy = el('div', 'wb-head-copy');
-  add(headCopy, el('p', 'eyebrow', 'Workbench'), el('h1', 'wb-title', 'Research workbench'),
+  add(headCopy, el('h1', 'wb-title', 'Research workbench'),
     el('p', 'lead', 'Ask about the statistical series or MOM reports. Answers include source links and cited excerpts for inspection.'));
   head.append(headCopy);
 
@@ -66,16 +66,14 @@ export function mountWorkbench(root, {onMode} = {}) {
   question.id = 'question-input';
   field.append(question);
   const count = el('span', 'count num', `0 / ${MAX_QUESTION.toLocaleString('en-US')}`);
-  const hint = el('span', 'composer-hint');
-  hint.append(el('span', 'kbd', '/'), document.createTextNode(' focus '), el('span', 'kbd', 'Ctrl'), el('span', 'kbd', 'Enter'), document.createTextNode(' ask'));
-  const ask = el('button', 'btn btn-primary'); ask.type = 'submit';
+  const ask = el('button', 'btn btn-primary'); ask.type = 'submit'; ask.title = 'Ask (Ctrl+Enter)';
   const askLabel = el('span', '', 'Ask'); const askIcon = el('span', 'btn-ico'); askIcon.append(icon('send'));
   ask.append(askLabel, askIcon);
-  add(form, field, add(el('div', 'composer-foot'), add(el('div', 'composer-meta'), count, hint), ask));
+  add(form, field, add(el('div', 'composer-foot'), add(el('div', 'composer-meta'), count), ask));
   core.append(gate, form);
 
   const examples = el('details', 'examples'); examples.open = true;
-  const sum = el('summary'); add(sum, el('span', 'eyebrow', 'Example questions'), el('span', 'examples-count', `${FAMILIES.reduce((n, f) => n + f.questions.length, 0)} questions in ${FAMILIES.length} families`), icon('arrow-r', 'chev'));
+  const sum = el('summary'); add(sum, el('span', '', 'Example questions'), icon('arrow-r', 'chev'));
   const exGrid = el('div', 'example-grid');
   const exButtons = [];
   FAMILIES.forEach(family => {
@@ -101,7 +99,7 @@ export function mountWorkbench(root, {onMode} = {}) {
   const activity = el('div', 'bezel activity-bezel reveal');
   const activityCore = el('div', 'bezel-core activity');
   activity.append(activityCore); rail.append(activity);
-  const railNote = el('p', 'rail-note small muted', 'Submitting a question makes paid model API calls. Activity shows tool calls and outcomes, without private model reasoning.');
+  const railNote = el('p', 'rail-note small muted', 'Submitting a question makes paid model API calls. Activity lists each tool call and its result.');
   rail.append(railNote);
 
   // Session history is deliberately memory-only; reloading discards it.
@@ -158,7 +156,7 @@ export function mountWorkbench(root, {onMode} = {}) {
     const top = el('div', 'drawer-top');
     const close = el('button', 'icon-btn'); close.type = 'button'; close.setAttribute('aria-label', 'Close evidence'); close.append(icon('x'));
     close.addEventListener('click', closeDrawer);
-    add(top, el('p', 'eyebrow', 'Evidence'), close);
+    add(top, el('p', 'drawer-label', 'Evidence'), close);
     drawerBody.append(top);
     if (!item) {
       add(drawerBody, el('h2', 'drawer-title', 'No matching evidence'), el('p', 'callout warn', 'No evidence record matches this citation. Treat the claim as unsupported.'));
@@ -436,7 +434,7 @@ export function mountWorkbench(root, {onMode} = {}) {
     const badge = el('span', `badge ${info ? answer.status : 'neutral'}`);
     badge.append(icon(info?.icon ?? 'help'), el('span', '', info?.label ?? human(answer.status || 'Unknown status')));
     add(top, badge, el('span', 'small muted', info?.hint ?? 'The server returned a status this page does not recognise.'));
-    const asked = el('p', 'asked'); add(asked, el('span', 'eyebrow', 'Question'), el('span', 'asked-text', lastQuestion));
+    const asked = el('p', 'asked'); add(asked, el('span', 'small muted', 'You asked: '), el('span', 'asked-text', lastQuestion));
     const title = el('h2', 'answer-summary', answer.summary || (answer.status === 'answered' ? 'No summary returned.' : info?.label ?? 'Result'));
     title.tabIndex = -1;
     add(c, top, asked, title);
@@ -559,7 +557,7 @@ export function mountWorkbench(root, {onMode} = {}) {
   function calculationCard(item, index, claims, events) {
     const holder = el('section', 'bezel calc-bezel'); holder.setAttribute('aria-label', `Calculation ${item.label}`);
     const c = el('div', 'bezel-core calc'); holder.append(c);
-    add(c, add(el('div', 'calc-head'), icon('calc', 'lg'), add(el('div'), el('p', 'eyebrow', 'Deterministic calculation'), el('h3', '', `${item.label}: ${item.source_title || 'Calculation'}`))),
+    add(c, add(el('div', 'calc-head'), icon('calc', 'lg'), add(el('div'), el('h3', '', `${item.label}: ${item.source_title || 'Calculation'}`))),
       el('p', 'small muted', 'Computed in code from validated observations. The model does not do this arithmetic.'));
     const call = events.find(e => e.node === 'execute_tool' && e.detail?.tool === 'calculate_change' && Array.isArray(e.detail.new_items) && e.detail.new_items.includes(item.label));
     const args = call?.detail?.args ?? {};

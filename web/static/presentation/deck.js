@@ -2,8 +2,7 @@
 // speaker notes drawer, chart fitting, count-up and the number morph between slides.
 // No inline script or style: everything is a DOM call or a CSSOM property write.
 import Reveal from '/static/vendor/reveal/reveal.mjs';
-import {el, svgEl, finite, reduced} from '../charts.js';
-import {model} from './model.js';
+import {el, reduced} from '../charts.js';
 import {slideSpecs} from './slides.js';
 
 const DESIGN_W = 1920, DESIGN_H = 1080, CHART_W = 600;
@@ -36,17 +35,27 @@ function visualBox(node) {
   return box;
 }
 
+const fitRuns = new WeakMap();
 function fitAll() {
-  fits.forEach(({box, fig, mode, w}) => {
-    if (fluid()) { box.style.setProperty('--k', '1'); box.style.removeProperty('height'); box.style.removeProperty('--w'); return; }
+  fits.forEach(entry => {
+    const {box, fig, mode} = entry;
+    if (fluid()) { box.style.setProperty('--k', '1'); box.style.setProperty('--ox', '0px'); box.style.removeProperty('height'); box.style.removeProperty('--w'); return; }
     const bw = box.clientWidth, bh = box.clientHeight;
     const h = fig.offsetHeight;
     if (!bw || !h) return;
+    let w = entry.w;
+    if (mode === 'clamp' && bh) {
+      // Widen the drawing until the chart fills the box: the chart height is fixed, so scale to the height, then redraw wider.
+      const ideal = Math.max(560, Math.min(1000, Math.round(bw / (bh / h))));
+      const runs = fitRuns.get(box) || 0;
+      if (Math.abs(ideal - w) > 24 && runs < 5) { fitRuns.set(box, runs + 1); entry.w = w = ideal; }
+    }
     box.style.setProperty('--w', `${w}px`);
     let k = bw / w;
     if (mode === 'clamp' && bh && h * k > bh) k = bh / h;
     if (mode === 'free') box.style.height = `${Math.ceil(h * k)}px`;
     box.style.setProperty('--k', k.toFixed(3));
+    box.style.setProperty('--ox', `${Math.max(0, Math.round((bw - w * k) / 2))}px`);
   });
 }
 
@@ -90,7 +99,8 @@ function buildSlide(spec) {
     spec.indexItems.forEach(([letter, title]) => { const li = el('li'); li.textContent = `${letter}. ${title}`; ul.append(li); });
     nav.append(ul); inner.append(nav);
   } else {
-    const body = el('div', `deck-body${spec.bullets?.length ? '' : ' is-solo'}`);
+    const stacked = spec.visual?.classList?.contains('pr-fig') && spec.bullets?.length;
+    const body = el('div', `deck-body${spec.bullets?.length ? '' : ' is-solo'}${stacked ? ' is-stack' : ''}`);
     const list = bullets();
     if (list) body.append(list);
     body.append(visualBox(spec.visual));
@@ -105,31 +115,12 @@ function buildSlide(spec) {
   return section;
 }
 
-// Drifting, real data behind the title slide: three normalised series from report.json.
-function backdrop(m) {
-  const wrap = el('div', 'deck-backdrop'); wrap.setAttribute('aria-hidden', 'true');
-  const periods = m.periods();
-  const svg = svgEl('svg', {viewBox: '0 0 2400 1080', preserveAspectRatio: 'none', focusable: 'false'});
-  [['unemployment_resident_sa', 560], ['vacancy_ratio', 420], ['retrenchments', 300]].forEach(([id, base], i) => {
-    const values = m.values(id, periods);
-    const real = values.filter(finite);
-    if (real.length < 2) return;
-    const lo = Math.min(...real), hi = Math.max(...real);
-    const points = values.map((v, j) => finite(v) ? `${Math.round(120 + j * (2160 / (values.length - 1)))},${Math.round(base - ((v - lo) / (hi - lo || 1)) * 240)}` : null).filter(Boolean);
-    svg.append(svgEl('polyline', {points: points.join(' '), class: `bd-line bd-${i}`, fill: 'none'}));
-  });
-  wrap.append(svg);
-  return wrap;
-}
-
 function main(report) {
-  const m = model(report);
   const specs = report && typeof report === 'object' ? slideSpecs(report) : [];
   if (!specs.length) {
     slidesHost.append(buildSlide({layout: 'text', title: 'The report data could not be loaded', bullets: ['Rebuild it with: uv run labourlens build-report.'], notes: ['report.json is missing or malformed.']}));
   }
   specs.forEach(spec => slidesHost.append(buildSlide(spec)));
-  if (report) root.prepend(backdrop(m));
 
   const slides = () => [...slidesHost.querySelectorAll(':scope > section')];
   const deck = new Reveal(root, {
@@ -233,8 +224,6 @@ function main(report) {
     counter.textContent = `${index + 1} / ${all.length}`;
     chapter.textContent = slide?.dataset.chapter || '';
     prev.disabled = index <= 0; next.disabled = index >= all.length - 1;
-    root.style.setProperty('--deck-i', String(index));
-    root.dataset.first = String(index === 0);
     live.textContent = `Slide ${index + 1} of ${all.length}: ${slide?.dataset.title || ''}`;
     if (!drawer.hidden) renderNotes();
     if (event?.type !== 'ready') enter(slide, event?.previousSlide); else enter(slide, null);

@@ -517,6 +517,30 @@ export function slideSpecs(report) {
   indexSpec.visual = idx;
   indexSpec.indexItems = appendixIndex;
 
+  // The slide face shows a plain-language source; the report field and file path go to the speaker notes.
+  const SOURCES = {
+    Start: 'LabourLens evaluation runs and MOM statistics via data.gov.sg',
+    Scope: 'Ministry of Manpower and SingStat via data.gov.sg; MOM labour market reports',
+    Data: 'Ministry of Manpower and SingStat via data.gov.sg, Q1 2024 to Q2 2026',
+    Retrieval: 'LabourLens retrieval experiments on 128 development questions',
+    Agent: 'LabourLens agent runs and architecture notes',
+    Evaluation: 'LabourLens evaluation runs on the 268-case gold set',
+    Safety: 'LabourLens threat suite, 36 handwritten cases',
+    MCP: 'LabourLens MCP demo, saved transcript',
+    Limits: 'LabourLens README, system card and evaluation report',
+    'Next steps': 'LabourLens evaluation report',
+    'Work log': 'LabourLens decision log and experiment registry',
+    Close: 'LabourLens report',
+    Appendix: 'LabourLens project documents and evaluation runs'
+  };
+  specs.forEach(spec => {
+    if (spec.source) spec.notes = [...(spec.notes || []), `Source path: ${spec.source}`];
+    let human = SOURCES[spec.chapter];
+    if (/employment change|advance/i.test(spec.title || '') && spec.chapter === 'Data') human = 'MOM advance and final labour market reports, and the SingStat sector dataset';
+    if (spec.chapter === 'Data' && /source records/i.test(spec.title || '')) human = `LabourLens source register, ${m.sources.length} records`;
+    spec.source = spec.layout === 'title' ? '' : human;
+  });
+
   return specs;
 }
 

@@ -1,5 +1,5 @@
 // Small DOM builders shared by the presentation chapters. Text only: never HTML strings.
-import {el, svgEl, finite, fmt, reduced} from '../charts.js';
+import {el, finite, fmt, reduced} from '../charts.js';
 
 export const append = (parent, ...children) => { children.filter(Boolean).forEach(child => parent.append(child)); return parent; };
 
@@ -212,23 +212,13 @@ export function dataTable(caption, columns, rows) {
   return scroll;
 }
 
-// Tiny line icons (hairline strokes). Drawn here, no icon library.
-const ICONS = {
-  arrow: 'M5 12h14M13 6l6 6-6 6',
-  down: 'M12 5v14M6 13l6 6 6-6',
-  print: 'M7 9V4h10v5M7 17H5a1 1 0 0 1-1-1v-5a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v5a1 1 0 0 1-1 1h-2M7 14h10v6H7z',
-  eye: 'M2 12s3.6-6.5 10-6.5S22 12 22 12s-3.6 6.5-10 6.5S2 12 2 12zM12 9.2a2.8 2.8 0 1 0 0 5.6 2.8 2.8 0 0 0 0-5.6z',
-  shield: 'M12 3l7 3v5.5c0 4.4-3 7.8-7 9.5-4-1.7-7-5.1-7-9.5V6z',
-  play: 'M8 5l11 7-11 7z',
-  pause: 'M8 5v14M16 5v14',
-  prev: 'M15 6l-6 6 6 6',
-  next: 'M9 6l6 6-6 6',
-  reset: 'M5 12a7 7 0 1 0 2.1-5M5 4v4h4'
-};
+// Phosphor icons (vendor/phosphor) drawn as a CSS mask, so they take the text colour.
+const ICONS = {play: 'play', pause: 'pause', prev: 'caret-left', next: 'caret-right', reset: 'arrow-counter-clockwise'};
 export function icon(name, cls = 'pr-icon') {
-  const svg = svgEl('svg', {class: cls, viewBox: '0 0 24 24', 'aria-hidden': 'true', focusable: 'false'});
-  svg.append(svgEl('path', {d: ICONS[name] || ICONS.arrow}));
-  return svg;
+  const node = el('span', cls);
+  node.setAttribute('aria-hidden', 'true');
+  node.style.setProperty('--ico', `url("/static/vendor/phosphor/${ICONS[name] || 'caret-right'}.svg")`);
+  return node;
 }
 
 export function button(label, {iconName, kind = '', onClick, pressed} = {}) {

@@ -14,10 +14,14 @@ export const svg = (tag, map = {}, text) => {
   if (text !== undefined) node.textContent = text;
   return node;
 };
-/** An icon from the sprite in index.html. */
+/** Phosphor regular icons (vendor/phosphor), drawn as a CSS mask so they take the text colour. */
+const ICONS = {'arrow-ur': 'arrow-up-right', 'arrow-r': 'arrow-right', 'arrow-l': 'arrow-left', send: 'arrow-up', sun: 'sun', moon: 'moon', key: 'key', lock: 'lock', search: 'magnifying-glass',
+  check: 'check-circle', minus: 'minus-circle', help: 'question', shield: 'shield', warn: 'warning', calc: 'calculator', chart: 'chart-line', passage: 'file-text', table: 'table', clock: 'clock', x: 'x',
+  external: 'arrow-square-out', keyboard: 'keyboard', layers: 'stack', route: 'path', database: 'database', logout: 'sign-out', 'thumb-up': 'thumbs-up', 'thumb-down': 'thumbs-down', spark: 'sparkle', 'dot-grid': 'dots-nine'};
 export const icon = (name, className = '') => {
-  const node = svg('svg', {class: `icon ${className}`.trim(), 'aria-hidden': 'true', focusable: 'false'});
-  node.append(svg('use', {href: `#i-${name}`}));
+  const node = el('span', `icon ${className}`.trim());
+  node.setAttribute('aria-hidden', 'true');
+  node.style.setProperty('--ico', `url("/static/vendor/phosphor/${ICONS[name] ?? 'question'}.svg")`);
   return node;
 };
 export const button = (label, onClick, className = '', iconName) => {

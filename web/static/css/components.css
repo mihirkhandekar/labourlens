@@ -159,7 +159,7 @@ body.menu-open { overflow: hidden; }
 .more-limits ul { color: var(--ink-2); display: grid; gap: 8px; max-width: 70ch; }
 .picker { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 28px; }
 .chip { padding: 8px 14px; border-radius: var(--r-pill); border: 1px solid var(--line-strong); font-size: 0.85rem; color: var(--ink-2); transition: background-color var(--dur-2) var(--ease), color var(--dur-2) var(--ease), transform var(--dur-1) var(--ease); }
-.chip::first-letter { text-transform: uppercase; }
+.chip::first-letter { text-transform: none; }
 .chip:hover { background: color-mix(in srgb, var(--ink) 6%, transparent); }
 .chip:active { transform: scale(0.97); }
 .chip[aria-pressed="true"] { background: var(--ink); color: var(--paper); border-color: var(--ink); }
@@ -213,7 +213,7 @@ body.menu-open { overflow: hidden; }
 .footer-grid { display: grid; grid-template-columns: 1.4fr 0.6fr 1.4fr; gap: clamp(24px, 4vw, 64px); }
 .footer-brand { display: grid; gap: 12px; align-content: start; } .footer-brand .brand-mark { width: 36px; height: 36px; }
 .footer-col { display: grid; gap: 10px; align-content: start; } .footer-col ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
-.footer-h { font-family: var(--font-mono); font-size: 0.68rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); font-weight: 500; }
+.footer-h { font-family: var(--font-mono); font-size: 0.68rem; letter-spacing: 0; text-transform: none; color: var(--muted); font-weight: 500; }
 .site-footer .muted { color: var(--ink-2); opacity: 0.85; }
 @media (max-width: 767px) { .footer-grid { grid-template-columns: 1fr; } }
 
