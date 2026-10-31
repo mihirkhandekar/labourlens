@@ -136,7 +136,7 @@ def main(argv: list[str] | None = None) -> int:
     if args.cmd == "threat-test":
         from labourlens.security import threat_suite
 
-        threat_suite.rescore() if args.rescore else threat_suite.run(args.models, args.only, args.ablation, args.experiment)
+        threat_suite.rescore(args.experiment) if args.rescore else threat_suite.run(args.models, args.only, args.ablation, args.experiment)
         return 0
     if args.cmd == "mcp-demo":
         from labourlens.mcp import demo
