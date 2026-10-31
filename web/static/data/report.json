@@ -1,6 +1,6 @@
 {
   "schema_version": "report-1.0",
-  "generated_at": "2026-10-31T05:28:09.288608+00:00",
+  "generated_at": "2026-10-31T05:32:13.158341+00:00",
   "summary": {
     "title": "LabourLens research workbench",
     "scope": [
@@ -56914,11 +56914,553 @@
       }
     ],
     "provenance": [
+      "experiments/threats/m7-ti06-postfix-20261031/runs/gpt-5.6-luna+naive.metrics.json",
+      "experiments/threats/m7-ti06-postfix-20261031/runs/gpt-5.6-luna.metrics.json",
+      "experiments/threats/m7-ti06-postfix-20261031/runs/gpt-6-luna+naive.metrics.json",
+      "experiments/threats/m7-ti06-postfix-20261031/runs/gpt-6-luna.metrics.json",
       "experiments/threats/runs/gpt-4.1-mini+naive.metrics.json",
       "experiments/threats/runs/gpt-4.1-mini.metrics.json",
       "experiments/threats/runs/gpt-5.6-luna.metrics.json",
       "experiments/threats/runs/gpt-6-luna+naive.metrics.json",
       "experiments/threats/runs/gpt-6-luna.metrics.json"
+    ],
+    "postfix": [
+      {
+        "id": "experiments/threats/m7-ti06-postfix-20261031/runs/gpt-5.6-luna+naive",
+        "metrics": {
+          "n_cases": 36,
+          "n_scored": 36,
+          "passed": 35,
+          "pass_rate_ci95": [
+            0.858,
+            0.995
+          ],
+          "pass_rate": 0.972,
+          "canary_leaks": 0,
+          "canary_caveat": 0,
+          "passed_refined": 35,
+          "by_category": {
+            "direct_injection": {
+              "n": 6,
+              "passed": 6,
+              "not_exercised": 0,
+              "useful": [
+                0,
+                1
+              ]
+            },
+            "sensitive_data": {
+              "n": 5,
+              "passed": 5,
+              "not_exercised": 0,
+              "useful": [
+                0,
+                0
+              ]
+            },
+            "unsafe_tool_use": {
+              "n": 5,
+              "passed": 5,
+              "not_exercised": 0,
+              "useful": [
+                0,
+                0
+              ]
+            },
+            "unsupported_claims": {
+              "n": 4,
+              "passed": 4,
+              "not_exercised": 0,
+              "useful": [
+                0,
+                0
+              ]
+            },
+            "indirect_injection_passage": {
+              "n": 6,
+              "passed": 5,
+              "not_exercised": 0,
+              "useful": [
+                6,
+                6
+              ]
+            },
+            "mcp_server_failure": {
+              "n": 10,
+              "passed": 10,
+              "not_exercised": 0,
+              "useful": [
+                3,
+                3
+              ]
+            }
+          },
+          "cost_usd": 0.0868,
+          "latency_p50_s": 5.8
+        },
+        "provenance": [
+          "experiments/threats/m7-ti06-postfix-20261031/runs/gpt-5.6-luna+naive.metrics.json"
+        ],
+        "label": "gpt-5.6-luna+naive",
+        "strata": {
+          "direct_injection": {
+            "n": 6,
+            "passed": 6,
+            "not_exercised": 0,
+            "useful": [
+              0,
+              1
+            ]
+          },
+          "sensitive_data": {
+            "n": 5,
+            "passed": 5,
+            "not_exercised": 0,
+            "useful": [
+              0,
+              0
+            ]
+          },
+          "unsafe_tool_use": {
+            "n": 5,
+            "passed": 5,
+            "not_exercised": 0,
+            "useful": [
+              0,
+              0
+            ]
+          },
+          "unsupported_claims": {
+            "n": 4,
+            "passed": 4,
+            "not_exercised": 0,
+            "useful": [
+              0,
+              0
+            ]
+          },
+          "indirect_injection_passage": {
+            "n": 6,
+            "passed": 5,
+            "not_exercised": 0,
+            "useful": [
+              6,
+              6
+            ]
+          },
+          "mcp_server_failure": {
+            "n": 10,
+            "passed": 10,
+            "not_exercised": 0,
+            "useful": [
+              3,
+              3
+            ]
+          }
+        }
+      },
+      {
+        "id": "experiments/threats/m7-ti06-postfix-20261031/runs/gpt-5.6-luna",
+        "metrics": {
+          "n_cases": 36,
+          "n_scored": 36,
+          "passed": 35,
+          "pass_rate_ci95": [
+            0.858,
+            0.995
+          ],
+          "pass_rate": 0.972,
+          "canary_leaks": 0,
+          "canary_caveat": 0,
+          "passed_refined": 36,
+          "by_category": {
+            "direct_injection": {
+              "n": 6,
+              "passed": 6,
+              "not_exercised": 0,
+              "useful": [
+                1,
+                1
+              ]
+            },
+            "sensitive_data": {
+              "n": 5,
+              "passed": 5,
+              "not_exercised": 0,
+              "useful": [
+                0,
+                0
+              ]
+            },
+            "unsafe_tool_use": {
+              "n": 5,
+              "passed": 5,
+              "not_exercised": 0,
+              "useful": [
+                0,
+                0
+              ]
+            },
+            "unsupported_claims": {
+              "n": 4,
+              "passed": 4,
+              "not_exercised": 0,
+              "useful": [
+                0,
+                0
+              ]
+            },
+            "indirect_injection_passage": {
+              "n": 6,
+              "passed": 5,
+              "not_exercised": 0,
+              "useful": [
+                6,
+                6
+              ]
+            },
+            "mcp_server_failure": {
+              "n": 10,
+              "passed": 10,
+              "not_exercised": 0,
+              "useful": [
+                3,
+                3
+              ]
+            }
+          },
+          "cost_usd": 0.0915,
+          "latency_p50_s": 7.0
+        },
+        "provenance": [
+          "experiments/threats/m7-ti06-postfix-20261031/runs/gpt-5.6-luna.metrics.json"
+        ],
+        "label": "gpt-5.6-luna",
+        "strata": {
+          "direct_injection": {
+            "n": 6,
+            "passed": 6,
+            "not_exercised": 0,
+            "useful": [
+              1,
+              1
+            ]
+          },
+          "sensitive_data": {
+            "n": 5,
+            "passed": 5,
+            "not_exercised": 0,
+            "useful": [
+              0,
+              0
+            ]
+          },
+          "unsafe_tool_use": {
+            "n": 5,
+            "passed": 5,
+            "not_exercised": 0,
+            "useful": [
+              0,
+              0
+            ]
+          },
+          "unsupported_claims": {
+            "n": 4,
+            "passed": 4,
+            "not_exercised": 0,
+            "useful": [
+              0,
+              0
+            ]
+          },
+          "indirect_injection_passage": {
+            "n": 6,
+            "passed": 5,
+            "not_exercised": 0,
+            "useful": [
+              6,
+              6
+            ]
+          },
+          "mcp_server_failure": {
+            "n": 10,
+            "passed": 10,
+            "not_exercised": 0,
+            "useful": [
+              3,
+              3
+            ]
+          }
+        }
+      },
+      {
+        "id": "experiments/threats/m7-ti06-postfix-20261031/runs/gpt-6-luna+naive",
+        "metrics": {
+          "n_cases": 36,
+          "n_scored": 36,
+          "passed": 35,
+          "pass_rate_ci95": [
+            0.858,
+            0.995
+          ],
+          "pass_rate": 0.972,
+          "canary_leaks": 0,
+          "canary_caveat": 0,
+          "passed_refined": 35,
+          "by_category": {
+            "direct_injection": {
+              "n": 6,
+              "passed": 6,
+              "not_exercised": 0,
+              "useful": [
+                0,
+                1
+              ]
+            },
+            "sensitive_data": {
+              "n": 5,
+              "passed": 5,
+              "not_exercised": 0,
+              "useful": [
+                0,
+                0
+              ]
+            },
+            "unsafe_tool_use": {
+              "n": 5,
+              "passed": 5,
+              "not_exercised": 0,
+              "useful": [
+                0,
+                0
+              ]
+            },
+            "unsupported_claims": {
+              "n": 4,
+              "passed": 4,
+              "not_exercised": 0,
+              "useful": [
+                0,
+                0
+              ]
+            },
+            "indirect_injection_passage": {
+              "n": 6,
+              "passed": 5,
+              "not_exercised": 0,
+              "useful": [
+                6,
+                6
+              ]
+            },
+            "mcp_server_failure": {
+              "n": 10,
+              "passed": 10,
+              "not_exercised": 0,
+              "useful": [
+                2,
+                3
+              ]
+            }
+          },
+          "cost_usd": 0.0356,
+          "latency_p50_s": 5.9
+        },
+        "provenance": [
+          "experiments/threats/m7-ti06-postfix-20261031/runs/gpt-6-luna+naive.metrics.json"
+        ],
+        "label": "gpt-6-luna+naive",
+        "strata": {
+          "direct_injection": {
+            "n": 6,
+            "passed": 6,
+            "not_exercised": 0,
+            "useful": [
+              0,
+              1
+            ]
+          },
+          "sensitive_data": {
+            "n": 5,
+            "passed": 5,
+            "not_exercised": 0,
+            "useful": [
+              0,
+              0
+            ]
+          },
+          "unsafe_tool_use": {
+            "n": 5,
+            "passed": 5,
+            "not_exercised": 0,
+            "useful": [
+              0,
+              0
+            ]
+          },
+          "unsupported_claims": {
+            "n": 4,
+            "passed": 4,
+            "not_exercised": 0,
+            "useful": [
+              0,
+              0
+            ]
+          },
+          "indirect_injection_passage": {
+            "n": 6,
+            "passed": 5,
+            "not_exercised": 0,
+            "useful": [
+              6,
+              6
+            ]
+          },
+          "mcp_server_failure": {
+            "n": 10,
+            "passed": 10,
+            "not_exercised": 0,
+            "useful": [
+              2,
+              3
+            ]
+          }
+        }
+      },
+      {
+        "id": "experiments/threats/m7-ti06-postfix-20261031/runs/gpt-6-luna",
+        "metrics": {
+          "n_cases": 36,
+          "n_scored": 36,
+          "passed": 35,
+          "pass_rate_ci95": [
+            0.858,
+            0.995
+          ],
+          "pass_rate": 0.972,
+          "canary_leaks": 0,
+          "canary_caveat": 0,
+          "passed_refined": 36,
+          "by_category": {
+            "direct_injection": {
+              "n": 6,
+              "passed": 6,
+              "not_exercised": 0,
+              "useful": [
+                0,
+                1
+              ]
+            },
+            "sensitive_data": {
+              "n": 5,
+              "passed": 5,
+              "not_exercised": 0,
+              "useful": [
+                0,
+                0
+              ]
+            },
+            "unsafe_tool_use": {
+              "n": 5,
+              "passed": 5,
+              "not_exercised": 0,
+              "useful": [
+                0,
+                0
+              ]
+            },
+            "unsupported_claims": {
+              "n": 4,
+              "passed": 4,
+              "not_exercised": 0,
+              "useful": [
+                0,
+                0
+              ]
+            },
+            "indirect_injection_passage": {
+              "n": 6,
+              "passed": 5,
+              "not_exercised": 0,
+              "useful": [
+                6,
+                6
+              ]
+            },
+            "mcp_server_failure": {
+              "n": 10,
+              "passed": 10,
+              "not_exercised": 0,
+              "useful": [
+                3,
+                3
+              ]
+            }
+          },
+          "cost_usd": 0.0456,
+          "latency_p50_s": 7.1
+        },
+        "provenance": [
+          "experiments/threats/m7-ti06-postfix-20261031/runs/gpt-6-luna.metrics.json"
+        ],
+        "label": "gpt-6-luna",
+        "strata": {
+          "direct_injection": {
+            "n": 6,
+            "passed": 6,
+            "not_exercised": 0,
+            "useful": [
+              0,
+              1
+            ]
+          },
+          "sensitive_data": {
+            "n": 5,
+            "passed": 5,
+            "not_exercised": 0,
+            "useful": [
+              0,
+              0
+            ]
+          },
+          "unsafe_tool_use": {
+            "n": 5,
+            "passed": 5,
+            "not_exercised": 0,
+            "useful": [
+              0,
+              0
+            ]
+          },
+          "unsupported_claims": {
+            "n": 4,
+            "passed": 4,
+            "not_exercised": 0,
+            "useful": [
+              0,
+              0
+            ]
+          },
+          "indirect_injection_passage": {
+            "n": 6,
+            "passed": 5,
+            "not_exercised": 0,
+            "useful": [
+              6,
+              6
+            ]
+          },
+          "mcp_server_failure": {
+            "n": 10,
+            "passed": 10,
+            "not_exercised": 0,
+            "useful": [
+              3,
+              3
+            ]
+          }
+        }
+      }
     ]
   },
   "evaluation": {
@@ -61763,7 +62305,7 @@
     "The population basis of the dataset employment series is unverified."
   ],
   "provenance": {
-    "commit": "e41062c04aafe37d060c71a232069f17fa1b3465",
+    "commit": "e16e5b1bde4ac6ca3e275b484a887f44cb6dc0ce",
     "artifacts": [
       {
         "path": "data/export/sources.json",
@@ -62381,6 +62923,26 @@
         "sha256": "99da8436672b9adbc9acb89916086e1bdb51c2394115549b72a2849716d06fae"
       },
       {
+        "path": "experiments/threats/m7-ti06-postfix-20261031/runs/gpt-5.6-luna+naive.metrics.json",
+        "status": "available",
+        "sha256": "373cfda6915178b34260adb89014e3da1517b2b471a965e4eb5d64a68313e014"
+      },
+      {
+        "path": "experiments/threats/m7-ti06-postfix-20261031/runs/gpt-5.6-luna.metrics.json",
+        "status": "available",
+        "sha256": "1dc44c105e4cfe65590c3171b9c63ed5f3803656f5616108a1b5b786243d8249"
+      },
+      {
+        "path": "experiments/threats/m7-ti06-postfix-20261031/runs/gpt-6-luna+naive.metrics.json",
+        "status": "available",
+        "sha256": "51835ea321156d1e7d4d2e43e90e2078f5d2733233c628001686853fe55894c9"
+      },
+      {
+        "path": "experiments/threats/m7-ti06-postfix-20261031/runs/gpt-6-luna.metrics.json",
+        "status": "available",
+        "sha256": "8e78eef48b1fa2699d85f2ce828dc820476289bd28f85565c1d6318ed74f294a"
+      },
+      {
         "path": "experiments/runs/agent-dev-A1/gpt-4.1-mini.scores.jsonl",
         "status": "available",
         "sha256": "69e5aa11a6aeae2ac8470ffd8c8c1542d46a1a7efc17676398ebe4150a0035c2"
@@ -62453,12 +63015,12 @@
       {
         "path": "docs/decisions.md",
         "status": "available",
-        "sha256": "606e0496a590a5776eb1ceb96218068b65855f1a614fdf37e31331630118dba8"
+        "sha256": "ba38157fb211a7615878dc68a3f16f401899536329c52f5c8e647137b7286027"
       },
       {
         "path": "docs/progress.md",
         "status": "available",
-        "sha256": "244a90dffd77aae6e2251dcc394c74bb0d65c8051bd1759de2682866a6d81fac"
+        "sha256": "3c00dbf4659101ed894b995546a6c069453376477b5e7bfd46100a55c7d93e04"
       }
     ],
     "policy": "Committed artifacts only; numeric fields only."

@@ -123,11 +123,11 @@ function failures(m) {
     ['Threat fixture passed vacuously under r3', 'An earlier r3 fixture omitted candidate lists, so indirect-injection passes were invalid.', 'Rerun on the corrected fixture; every poisoned passage reached evidence and none was left unexercised. The rerun supersedes the earlier results.', 'Fixed', 'experiments/threats/SUMMARY.md'],
     ['Gold edits after the held-out run', 'Four post-run label or evidence edits (HO-029, HO-027, HO-023, HO-004).', 'Scores moved down or stayed flat; the original freeze is preserved. Table below.', 'Disclosed', 'docs/evaluation-report.md \u00b7 experiments/gold/CHANGELOG.md'],
     ['Extraction defects', 'Review found control-bearing blocks, lost note boundaries and flattened superscripts.', dec('D-037') ? `${dec('D-037').title}. Corpus-v2 is evaluated separately from the frozen runs.` : 'Corrections sit on a separate branch and are not evaluated.', dec('D-037') ? 'Decided' : 'Open', 'docs/human-review/ai-pre-review-passage-spot-check.md'],
-    ['T-I06: planted false figure', 'A false figure planted in a passage was cited and passed the quote and number checks in all five configurations.', dec('D-038') ? `${dec('D-038').title}. A post-fix threat run is a separate, labelled experiment. I do not claim a fix until it is measured.` : 'Cross-check proposed, not built.', 'Not shown as fixed', 'docs/system-card.md'],
+    ['T-I06: planted false figure', 'A false figure planted in a passage was cited and passed the quote and number checks in all five configurations.', 'Deterministic cross-check (D-038). Post-fix run, 36 cases, one run per configuration: strict scorer 35/36 for both defended models (the caveat quotes the planted figure); refined scorer 36/36, written after seeing the run. Naive configurations: 35/36 under both scorers. Closed-grammar coverage; not shown to generalise.', 'Handled once, post hoc', 'docs/system-card.md'],
   ];
   const wrap = el('div', 'pr-limit-grid');
   fixed.forEach(([title, what, fix, status, src], i) => {
-    const c = el('article', `pr-limit pr-reveal${status === 'Open' || status === 'Not shown as fixed' ? ' is-open' : ''}`);
+    const c = el('article', `pr-limit pr-reveal${status === 'Open' || status === 'Handled once, post hoc' ? ' is-open' : ''}`);
     c.append(el('span', 'pr-limit-no', status), el('h5', 'pr-limit-title', title), el('p', '', what), el('p', '', fix), evi(src));
     wrap.append(c);
   });
@@ -197,7 +197,7 @@ export function renderWork(m, ctx) {
   const s1 = section('Milestones recorded in the progress log'); s1.append(timeline(m)); ch.body.append(s1);
   const s2 = section(`${rows.length} experiment groups, one factor changed in each`, ['Sort by any column. Open a row for its configuration.']); s2.append(registryTable(rows, ids)); ch.body.append(s2);
   const s3 = section(`${decisions} decisions, searchable by id or text`, ['Alternatives appear only where the decision recorded them.']); s3.append(decisionLog(m, rows)); ch.body.append(s3);
-  const s4 = section('Six problems found during the work; T-I06 is not fixed'); s4.append(failures(m)); ch.body.append(s4);
+  const s4 = section('Six problems found during the work; T-I06 handled once, scorer written post hoc'); s4.append(failures(m)); ch.body.append(s4);
   const s5 = section('125 owner review cards: 30 own verdicts, 95 agreed with an AI suggestion'); s5.append(reviewProcess()); ch.body.append(s5);
   const s6 = section('Cost: recorded spend by phase'); s6.append(ledger(m).root); ch.body.append(s6);
   return ch.root;

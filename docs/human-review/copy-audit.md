@@ -48,7 +48,7 @@ Approximate counts of strings rewritten in pass 2: 12 chapter titles, 11 chapter
 | `js/home.js` | Service chip | "Service healthy, v<commit hash>" | "Service running · <first 7 characters>"; full version in the tooltip |
 | `presentation/ui.js` | `chapter()` / `section()` | `lede` paragraph; `intro` string | `bullets` array; `intro` accepts a bullet array |
 
-Facts that stayed as they were: T-I06 is open and the cross-check is proposed, not built; 45 of 268 gold cases are owner-reviewed and 223 are AI drafts; 125 owner cards (30 own verdicts, 95 agreeing with an AI suggestion); held-out n = 31 with a gain that is not demonstrated; the scanner missed 5 of 5 paraphrase probes; extraction defects. Evidence paths and the tests' pinned disclosure strings are unchanged.
+Facts that stayed as they were: 45 of 268 gold cases are owner-reviewed and 223 are AI drafts; 125 owner cards (30 own verdicts, 95 agreeing with an AI suggestion); held-out n = 31 with a gain that is not demonstrated; the scanner missed 5 of 5 paraphrase probes; extraction defects. Evidence paths and the tests' pinned disclosure strings are unchanged.
 
 ## Pass 1 detail (register: assessment submission; many rows superseded by pass 2)
 
@@ -159,3 +159,8 @@ Register: GenAI Engineer assessment submission for technical interviewers. The w
 | `web/static/js/home.js` | Hero caveat | (not present) | State limits on the title page | Most gold labels are AI drafts. The held-out gain is inconclusive; the threat suite accepted a planted false figure. |
 | `web/static/js/home.js` | Contents | (not present) | Provide neutral chapter navigation | Contents: Scope; Data; Retrieval; Agent workflow; Evaluation; Threat tests; MCP; Review and limits; Next experiments |
 | `web/static/js/home.js` | Service version tooltip | Full version in status chip | Keep provenance without a long visible hash | Short version in chip; full version in tooltip |
+
+
+## T-I06 post-fix update (31 Oct 2026)
+
+Every 'T-I06 open / proposed, not built' line was replaced. Sources: `docs/experiments/m7-t-i06-crosscheck.md`, `experiments/threats/m7-ti06-postfix-20261031/SUMMARY.md`, D-038. Wording rule: the cross-check handled the one planted-figure case in both models; the refined scorer that passes it was written after the run (post hoc); closed-grammar coverage; not shown to generalise. The words 'fixed' and 'closed' are not used. Places: `js/home.js` (hero limits line, limits list), `presentation/ch6-safety.js` (callout, title, bullets, new post-fix figure), `presentation/ch8-limits.js` (limit card, limits bullet, open items, next step, questions answer), `presentation/ch-work.js` (failure log), `presentation/index.js` (summary stat and note).

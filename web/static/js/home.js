@@ -63,7 +63,7 @@ export function renderHome(root, report, {go, tryQuestion}) {
   chip('service', 'Checking service');
   add(copy, el('p', 'eyebrow', 'GenAI Engineer assessment'), heroHeadline(),
     el('p', 'lead', 'Cited answers to questions about Singapore unemployment, vacancies and retrenchments, Q1 2024 to Q2 2026.'),
-    add(el('ul', 'pr-list'), el('li', '', 'Data: four MOM datasets from data.gov.sg, MOM labour-market reports'), el('li', '', 'Limits: gold labels are mostly AI drafts; held-out gain not demonstrated; one threat case (T-I06) open')),
+    add(el('ul', 'pr-list'), el('li', '', 'Data: four MOM datasets from data.gov.sg, MOM labour-market reports'), el('li', '', 'Limits: gold labels are mostly AI drafts; held-out gain not demonstrated; one planted-figure case (T-I06) handled by a cross-check, not shown to generalise')),
     add(el('div', 'hero-cta'), cta('Open the workbench', '/workbench', 'btn btn-primary', 'arrow-ur'), cta('Read the write-up', '#presentation', 'btn', 'arrow-r')), chips);
   wrap.append(copy);
 
@@ -270,7 +270,7 @@ function limits(report) {
   const items = [
     'Gold labels are mostly AI drafts; 45 of 268 cases are owner-reviewed.',
     'Held-out set: 31 cases. The gain over the baseline is not demonstrated.',
-    'Threat case T-I06 (a planted false figure) is still accepted. The cross-check is proposed, not built.',
+    'Threat case T-I06 (a planted false figure): a deterministic cross-check handled it in the post-fix run. The scorer that counts it as passed was written after the run. Not shown to generalise.',
     'The injection scanner missed paraphrased attacks.',
     'Some extracted report passages have extraction defects.',
     `Analysis period ${report?.summary?.scope?.join(' to ') ?? 'fixed'} only. No forecasts, no causal claims.`

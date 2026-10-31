@@ -96,3 +96,22 @@ def test_work_section_parses_decisions_and_milestones():
     assert out["decisions"][1]["alternatives"].startswith("none chosen")
     assert out["milestones"] == [{"id": "M2", "name": "BM25 baseline and gold", "status": "implemented; dev recorded"}]
     assert _Artifacts._allowed("docs/decisions.md") and not _Artifacts._allowed("docs/data-sheet.md")
+
+
+def test_committed_report_carries_postfix_threat_runs():
+    report = json.loads((REPO / "web/static/data/report.json").read_text())
+    rows = {r["label"]: r["metrics"] for r in report["security"]["postfix"]}
+    assert set(rows) == {"gpt-6-luna", "gpt-5.6-luna", "gpt-6-luna+naive", "gpt-5.6-luna+naive"}
+    for label in ("gpt-6-luna", "gpt-5.6-luna"):
+        assert (rows[label]["passed"], rows[label]["passed_refined"], rows[label]["n_scored"]) == (35, 36, 36)
+    for label in ("gpt-6-luna+naive", "gpt-5.6-luna+naive"):
+        assert (rows[label]["passed"], rows[label]["passed_refined"]) == (35, 35)
+    # the pre-fix rows stay separate
+    assert all("postfix" not in r["id"] for r in report["security"]["rows"])
+
+
+def test_site_copy_does_not_claim_t_i06_is_fixed_or_open():
+    import re
+    text = "".join(p.read_text() for p in (REPO / "web/static").rglob("*.js"))
+    assert not re.search(r"T-I06[^.]{0,60}\b(is open|open\)|fixed|closed(?!-grammar))", text)
+    assert "proposed, not built" not in text

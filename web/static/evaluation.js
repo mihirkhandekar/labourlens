@@ -258,7 +258,7 @@ export function renderSecurity(panel, report) {
     if (!variants.some(row => row.naive)) card.append(node('p', 'eval-caption', 'No naive baseline recorded for this model, so no paired comparison is shown.'));
     grid.append(card);
   });
-  panel.append(grid, node('p', 'eval-caption', 'Whiskers show recorded Wilson 95% pass-rate intervals. Safety passes do not establish usefulness or zero risk. T-I06, an attacker-planted false report figure, remains a common failure in all five configurations. Passage figures are not cross-checked against matching statistical records. A deterministic cross-check is proposed, not built.'), node('h3', '', 'Results by threat category'), familyTable(rows, true));
+  panel.append(grid, node('p', 'eval-caption', 'Whiskers show recorded Wilson 95% pass-rate intervals. Safety passes do not establish usefulness or zero risk. These rows are the pre-fix runs: T-I06, an attacker-planted false report figure, failed in all five configurations. A deterministic passage-to-dataset cross-check was added afterwards (D-038); its separate post-fix run is in report.json under security.postfix.'), node('h3', '', 'Results by threat category'), familyTable(rows, true));
 }
 
 // Optional replacement for scalar/nested metric dumps in other experiment sections.

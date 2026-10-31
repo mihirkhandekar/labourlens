@@ -569,6 +569,7 @@ def build_report(root: Path) -> dict:
     agent_rows, agent_paths = _experiments(artifacts, "experiments/runs/agent-")
     eval_rows, eval_paths = _experiments(artifacts, "experiments/eval/")
     security_rows, security_paths = _experiments(artifacts, "experiments/threats/runs/")
+    postfix_rows, postfix_paths = _experiments(artifacts, "experiments/threats/m7-ti06-postfix-20261031/runs/")
     trace, trace_paths, errors = _agent_trace(artifacts)
     quality_path = "data/export/quality.json"
     quality_data = artifacts.mapping(quality_path)
@@ -587,7 +588,7 @@ def build_report(root: Path) -> dict:
         "agent": _section("Bounded workflow measurements on statistics-only traces.", agent_rows, agent_paths + trace_paths, trace=trace, events=_saved_replay(artifacts)),
         "mcp": mcp,
         "reconciliation": reconciliation,
-        "security": _section("Threat-suite measurements. They do not guarantee security.", security_rows, security_paths),
+        "security": _section("Threat-suite measurements. They do not guarantee security.", security_rows, security_paths + postfix_paths, postfix=postfix_rows),
         "evaluation": _section("Development A1–A5 and registered held-out H-r3/H-hybrid luna runs. Measurements retain their recorded gold versions. Owner review complete 31 Oct 2026: 125 cards decided by the owner (30 own verdicts, 95 by agreeing per card with AI suggestions or the three-pass AI tie-break), not independent inter-rater evidence. Gold v3.5 development and all four registered held-out rescoring runs are complete on existing generated outputs; held-out stale judge entries were rejudged. `paired` holds the registered corpus-v1 comparison, current first, with v3.2–v3.4 history; `corpus_v2_diagnostic` is a separate extraction-only diagnostic.", eval_rows, eval_paths + [path for entry in paired + ([paired_v2] if paired_v2 else []) for path in entry["provenance"]],
                                errors={"scope": "agent score records", "counts": errors, "provenance": trace_paths}, paired=paired, corpus_v2_diagnostic=paired_v2,
                                limitations=["Generation used AI-drafted gold before owner review; post-run owner review covers selected cards, not the entire gold set.", "Forty-five gold cards are owner reviewed; the remaining 223 remain draft.", "Current v3.5 and historical paired intervals include zero; the comparison is inconclusive under the registered rule.", "Gold v3.5 changes HO-022 after held-out execution; rescoring is post-run adjudication, not a fresh frozen-gold experiment.", "AI-assisted per-card owner decisions are not blinded independent annotation or inter-rater evidence.", "Metric definitions differ between evaluation stages."]),

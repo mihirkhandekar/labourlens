@@ -33,7 +33,7 @@ const limitsFor = m => [
   ['Owner review is per card and partly circular', 'The owner decided 125 cards: 30 with their own verdict, 95 by agreeing with an AI suggestion. No blinded annotation was run.', 'docs/human-review/owner-review-summary.md · docs/system-card.md'],
   ['Held-out reuses development evidence', '31 cases; 25 of 31 reuse a development evidence id and 15 of 31 reuse their whole set. The interval on the r3 gain touches or crosses zero.', 'docs/system-card.md · report.json › evaluation.paired'],
   ['Some scores sit on earlier gold versions', `Development rows use ${goldOf(m.evalRow('dev-A3', 'gpt-6-luna')).label}; held-out rows use ${goldOf(m.heldRow('r3', 'gpt-6-luna')).label}, after three post-run edits that lowered or kept scores. Rows not yet on v3.5 need rescoring for the HO-022 and DEV-018 label changes, from saved outputs with no new generation.`, 'experiments/heldout/FREEZE.md · README.md · experiments/gold/CHANGELOG.md'],
-  ['T-I06 is open', 'A planted false figure in a passage is cited and passes the quote and number checks. The cross-check against validated statistics is proposed, not built.', 'docs/system-card.md'],
+  ['T-I06: handled once, not shown to generalise', 'Before the fix, a planted false figure was cited and passed the quote and number checks. The deterministic cross-check handled that one case in both models. The scorer that counts it as passed was written after the run. Coverage is a closed grammar.', 'docs/experiments/m7-t-i06-crosscheck.md · D-038'],
   ['The scanner missed all 5 paraphrase probes', 'Zero scanner hits does not certify a source as safe.', 'docs/human-review/independent-ai-review-m1-2.md'],
   ['Extraction has known defects', 'In sampled passages, 1 of 16 lost a note boundary and 2 of 4 HTML passages flattened superscripts; some feedback-form blocks are garbled. No corpus-wide count exists, and a fix on an unmerged branch is unevaluated.', 'docs/human-review/ai-pre-review-passage-spot-check.md'],
   ['The sector dataset total sits above MOM\u2019s final figure', 'Migrant domestic workers may explain it, but that is an inference.', 'docs/data-sheet.md › section 5'],
@@ -57,7 +57,7 @@ export function renderLimits(m, ctx) {
     bullets: [
       'Owner review: 125 cards decided, 30 by own verdict, 95 by agreeing with an AI suggestion.',
       'Not independent annotation; no blinded review was run.',
-      `${limitsFor(m).length} limits below constrain what the results show, including T-I06 and the scanner bypass.`
+      `${limitsFor(m).length} limits below constrain what the results show, including the single T-I06 result and the scanner bypass.`
     ]
   });
   const review = section('Owner review covers 45 gold, 40 answer and 30 source cards');
@@ -73,7 +73,7 @@ export function renderLimits(m, ctx) {
 
 const NEXT = [
   ['Rescore on gold v3.5, then rerun held-out on frozen gold', 'I would rescore the saved outputs on v3.5 with no new generation, then rerun held-out on frozen, reviewed gold. The current r3 comparison is inconclusive and was scored after post-run edits.', 'Success: a paired interval for r3 minus hybrid that excludes zero, or a clear null.'],
-  ['Cross-check passage figures against the statistics', 'I would compare a figure in a cited passage with the validated observation for the same series, period and vintage, and surface conflicts instead of overwriting them. This closes T-I06.', 'Success: the planted-figure cases fail safely, with no new false conflicts on the development set.'],
+  ['Test the cross-check beyond one planted case', 'The cross-check handles the one planted figure. I would write more planted-figure cases before seeing results, score them with a scorer fixed in advance, and measure false conflicts on the development set.', 'Success: planted figures corrected at a measured rate with a pre-fixed scorer, and no new false conflicts.'],
   ['Add independent review', 'I would add blinded, independent annotation for the 223 draft gold cases, then promote reviewed gold from draft. 95 owner decisions agreed with an AI suggestion.', 'Success: named independent reviewers on every gold case used in a reported metric.'],
   ['Evaluate the extraction fixes', 'I would run retrieval and answer evaluation on the extraction branch. It lifts passage counts and removes garbled blocks, and 61 gold passage ids need migration.', 'Success: retrieval and answer metrics on the migrated gold, reported next to the current ones.'],
   ['Replace the heuristic scanner', 'I would add model-assisted screening and test it on a larger, human-written set. The current scanner missed all 5 paraphrase probes.', 'Success: paraphrase probes caught at a measured rate, with the false-positive cost reported.'],
@@ -128,7 +128,7 @@ export function renderSummary(m, ctx) {
   block.append(olist(findings));
   const open = section('Open items');
   open.append(olist([
-    'T-I06: a planted false figure in a passage is accepted. A deterministic cross-check is proposed, not built.',
+    'T-I06: a deterministic cross-check handled the one planted-figure case post fix. The scorer that passes it was written after the run.',
     'Gold labels are mostly AI drafts: 45 of 268 are owner-reviewed.',
     'The held-out rerun on frozen, reviewed gold has not been run.'
   ]));
@@ -149,7 +149,7 @@ export function renderQuestions(m, ctx) {
     ['How do you know the agent does no arithmetic?',
       `The model chooses tools and arguments; application code validates them and runs the calculations. The scorer requires a cited deterministic calculation, and calculation correctness is ${fmt.pct(calc.rate)} on ${fmt.int(calc.n)} cases.`],
     ['What happens today if a passage contains a planted false figure?',
-      'The luna models repeat it, and the quote and number checks pass (T-I06, open). A deterministic cross-check against the statistics is proposed, not built.'],
+      'Before the fix the luna models repeated it and the quote and number checks passed (T-I06). A deterministic cross-check now corrects the claim to the dataset value, cites both, and adds a source-conflict caveat. It handled the one planted case in both models; the scorer that passes it was written after the run; coverage is a closed grammar; not shown to generalise.'],
     ['Why one agent and not several?',
       'ADR-002 fixes one bounded StateGraph agent with a model-directed planner and three typed read-only tools. I did not build a multi-agent design.'],
     ['What did the MCP layer cost, and what did it add?',

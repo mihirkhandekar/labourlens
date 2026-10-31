@@ -51,12 +51,12 @@ function hero(m) {
     L ? stat({value: L.R3['hit@8'], format: v => fmt.pct(v), label: 'Hit@8, R3', note: `R0 ${fmt.pct(L.R0['hit@8'])}; 128 development cases`, tone: 'brass', src: 'report.json › retrieval.ladder.configs'}) : null,
     a3 ? stat({value: metricOf(a3.metrics.behaviour_accuracy).rate, format: v => fmt.pct(v), label: 'Development, n = ' + a3.metrics.n_cases, note: `Behaviour accuracy, gpt-6-luna, ${goldOf(a3).label}`, src: 'report.json › evaluation.rows[agent-dev-A3/gpt-6-luna]'}) : null,
     r3 ? stat({value: metricOf(r3.metrics.behaviour_accuracy).rate, format: v => fmt.pct(v), label: 'Held-out, n = ' + r3.metrics.n_cases, note: `Behaviour accuracy, ${goldOf(r3).label}; r3 gain not demonstrated`, src: 'report.json › evaluation.rows[agent-heldout-H-r3/gpt-6-luna]'}) : null,
-    luna ? textStat({text: `${luna.passed}/${luna.n_scored}`, label: 'Threat cases passed', note: 'T-I06 open', tone: 'warn', src: 'report.json › security.rows[gpt-6-luna].metrics'}) : null
+    luna ? textStat({text: `${luna.passed}/${luna.n_scored}`, label: 'Threat cases passed', note: 'T-I06 handled post fix, post hoc scorer', tone: 'warn', src: 'report.json › security.rows[gpt-6-luna].metrics'}) : null
   ].filter(Boolean).forEach(item => stats.append(item));
   root.append(stats);
   root.append(callout({
     tone: 'warn', title: 'Caveats',
-    items: ['Gold v3.5: 45 cases owner-reviewed, 223 AI drafts. Of 125 owner cards, 95 agreed with an AI suggestion. Not independent review.', `Development rows use ${goldOf(a3).label}; held-out rows use ${goldOf(r3).label}${goldOf(r3).version ? '; a v3.5 rescore is pending' : ''}.`, 'Held-out n = 31. The r3 gain is not demonstrated.', 'T-I06 is open (chapter 6). The ingestion scanner missed paraphrased attacks. Extraction has known defects.'],
+    items: ['Gold v3.5: 45 cases owner-reviewed, 223 AI drafts. Of 125 owner cards, 95 agreed with an AI suggestion. Not independent review.', `Development rows use ${goldOf(a3).label}; held-out rows use ${goldOf(r3).label}${goldOf(r3).version ? '; a v3.5 rescore is pending' : ''}.`, 'Held-out n = 31. The r3 gain is not demonstrated.', 'T-I06: handled once post fix, scorer written after the run (chapter 6). The ingestion scanner missed paraphrased attacks. Extraction has known defects.'],
     src: 'README.md · docs/system-card.md · docs/human-review/owner-review-summary.md · chapter 8'
   }));
   return root;
