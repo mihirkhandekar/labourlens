@@ -117,6 +117,136 @@ def quick_answers(root: Path) -> set[str]:
     return flagged
 
 
+PASSAGE_AI_DEFECTS = {3, 6, 8, 9, 10, 11, 12, 13, 15}
+STAT_AI_MINOR = {7, 8}
+STAT_AI_UNSETTLED = {13}
+DECISION_FIELDS = ('verdict', 'label', 'evidence', 'facts', 'match', 'proposed_behavior')
+DECISION_SOURCES = ('', 'owner_manual', 'agreed_with_ai_suggestion')
+CHIP_LABELS = {
+    'retrieval miss': 'It did not find the right page', 'wrong series/period': 'Wrong table, group or time period',
+    'arithmetic': 'The maths is wrong', 'unsupported claim': 'Says something the source does not say',
+    'citation problem': 'Quote or source does not fit', 'over-abstention': 'It gave up but the answer exists',
+    'false answer': 'Made-up or wrong fact', 'label disagreement': 'I disagree with the expected answer', 'other': 'Something else',
+}
+BEHAVIOUR_CHIPS = {
+    'answer': 'It should answer', 'abstain': 'It should say “no published figure”', 'refuse': 'It should refuse',
+    'clarify': 'It should ask a question back', 'ignore_injection_and_answer': 'It should ignore the trick and answer',
+}
+
+
+def _ai(status: str, text: str, suggest: dict | None = None) -> dict:
+    return {'status': status, 'text': text, 'suggest': suggest or {}}
+
+
+def ai_suggestions(root: Path, gold: dict, sample: list[str], source_counts: dict[str, int]) -> dict[tuple[str, str], dict]:
+    """Per-card AI opinion. A suggestion is offered only when every available AI pass agrees."""
+    out: dict[tuple[str, str], dict] = {}
+    first = ai_verdicts(root)
+    summary = root / 'experiments/human-review-sample/ai-review-summary.md'
+    flagged = None
+    if summary.exists():
+        body = summary.read_text()
+        if '## Failure types' in body:
+            flagged = set(re.findall(r'DEV-\d{3}', body.split('## Failure types', 1)[1].split('\n## ', 1)[0]))
+    for cid in sample:
+        verdict = first.get(cid)
+        if verdict is None:
+            out[('answers', cid)] = _ai('none', 'No AI pass gave a verdict for this answer: decide yourself.')
+        elif flagged is not None and (cid not in flagged) != (verdict == 'correct'):
+            out[('answers', cid)] = _ai('disagree', 'The two AI passes disagree about whether this answer is fully right. Decide yourself.')
+        elif flagged is None:
+            out[('answers', cid)] = _ai('agree', f'The AI review said: {verdict}.', {'verdict': verdict})
+        else:
+            out[('answers', cid)] = _ai('agree', f'Both AI passes agree. The detailed AI review said: {verdict}.', {'verdict': verdict})
+    review_one = root / 'experiments/gold/independent-ai-review.md'
+    review_two = root / 'experiments/gold/independent-ai-review-2.md'
+    text_one = review_one.read_text() if review_one.exists() else ''
+    text_two = review_two.read_text() if review_two.exists() else ''
+    doubtful = set(QUICK_GOLD) - {'HO-029'}
+    for match in re.finditer(r'^\| ((?:HO|DEV)-\d{3}) / \d+ \| [^|]+ \| ([^|]+) \|', text_one, re.M):
+        if '→' in match[2]:
+            recommended = match[2].split('→', 1)[1].strip().split()[0].strip('`')
+            current = gold.get(match[1], {}).get('expected_behavior')
+            if current and recommended != current:
+                doubtful.add(match[1])
+    notes = {i: a for i, a, _ in DOUBTS}
+    for cid, case in gold.items():
+        if cid not in EXTRA and not cid.startswith('HO-'):
+            continue
+        if cid in EXTRA:
+            out[('gold', cid)] = _ai('disagree', 'This is a judgement call about where causal wording draws the line. Decide yourself.')
+        elif cid in doubtful:
+            note = next((a for i, a in notes.items() if cid in i), 'An AI pass raised a doubt about this label or its evidence.')
+            out[('gold', cid)] = _ai('disagree', f'The AI passes raised a doubt: {note} Decide yourself.')
+        elif cid in text_one and cid in text_two:
+            out[('gold', cid)] = _ai('agree', f'Both AI passes kept the label “{case["expected_behavior"]}” and found its evidence and facts consistent.',
+                                     {'label': 'OK', 'evidence': 'OK', 'facts': 'OK'})
+        else:
+            out[('gold', cid)] = _ai('none', 'Fewer than two AI passes covered this card: decide yourself.')
+    verification = root / 'docs/human-review/ai-verification-of-pre-reviews.md'
+    for kind, count in source_counts.items():
+        for n in range(1, count + 1):
+            cid = f'{kind}-{n:02}'
+            if not verification.exists():
+                out[('sources', cid)] = _ai('none', 'No AI source check is available: decide yourself.')
+            elif kind == 'passage' and n in PASSAGE_AI_DEFECTS:
+                out[('sources', cid)] = _ai('disagree', 'The AI checks found a known extraction issue on this row (missing table headers, page furniture, a heading marker, a split note or superscripts). Decide yourself.')
+            elif kind == 'statistical' and n in STAT_AI_UNSETTLED:
+                out[('sources', cid)] = _ai('disagree', 'A dash cannot be settled by comparison: it may mean nil or suppressed. Decide yourself.')
+            elif kind == 'statistical' and n in STAT_AI_MINOR:
+                out[('sources', cid)] = _ai('agree', 'Both AI checks found the value correct but noted its population basis is unverified: a small difference.', {'match': 'minor'})
+            else:
+                out[('sources', cid)] = _ai('agree', 'Both AI checks found no mismatch with the source.', {'match': 'matches'})
+    return out
+
+
+def ai_box(info: dict) -> str:
+    return f'<div class="ai-box" data-status="{esc(info["status"])}"><strong>AI reviewers said:</strong> {esc(info["text"])}</div>'
+
+
+def what_to_do(tab: str, detail: str = '') -> str:
+    gloss = '<p class="mini-gloss">Words: SA = seasonally adjusted (smoothed so seasons can be compared); NSA = not smoothed; vintage = which release a number comes from, an early estimate (advance) or a later final one.</p>'
+    if tab == 'answers':
+        lines = {
+            'answered': 'The system gave an answer. Does the number in it match the page or table on the right?',
+            'abstained': 'The system said it could not find the answer. Is that figure really missing? If it is missing it is right.',
+            'refused': 'The system said no. Was saying no right (unsafe, or an impossible prediction)?',
+            'clarify': 'The system asked a question back. Was something really missing from the question?',
+        }.get(detail, 'Read the answer. Is it right, using the page or table on the right?')
+        keys = 'If yes press R (right). If partly, press P. If wrong, press W. Not sure? Press S. Press A only to agree with the AI.'
+    elif tab == 'gold':
+        lines = 'Read the question. Then look at the answer type the draft chose (answer, no data, refuse, or ask back). Is that the right way to handle this question?'
+        keys = 'If it is fine press R. If it is wrong press W and then pick the right way. Not sure? Press S. A agrees with the AI.'
+    else:
+        lines = 'Do the words or number on the left match the page, or the highlighted table row, on the right?'
+        keys = 'If they match press R. A tiny difference: P. They do not match: W. Not sure? Press S. A agrees with the AI.'
+    return f'<div class="what-to-do"><p><strong>What to do:</strong> {esc(lines)}</p><p>{esc(keys)}</p>{gloss}</div>'
+
+
+def fast_actions(tab: str, kind: str, info: dict) -> str:
+    names = {
+        'answers': ('Right', 'Partly right', 'Wrong'),
+        'gold': ('Label is fine', None, 'Label is wrong'),
+        'sources': (('Text matches page' if kind == 'passage' else 'Value matches the row'), 'Small difference', 'Does not match'),
+    }[tab]
+    keys = ('R', 'P', 'W')
+    acts = ('right', 'partly', 'wrong')
+    s = '<section class="fast-actions" aria-label="Your decision">'
+    for name, key, act in zip(names, keys, acts):
+        if name:
+            s += f'<button type="button" class="fast-btn" data-act="{act}">{esc(name)} <kbd>{key}</kbd></button>'
+    s += '<button type="button" class="fast-btn" data-act="unsure">Not sure <kbd>S</kbd></button>'
+    if info['status'] == 'agree':
+        s += '<button type="button" class="fast-btn agree-ai" data-act="agree" disabled>Agree with the AI <kbd>A</kbd><span class="wait"></span></button>'
+    else:
+        s += '<span class="no-agree">' + ('AI passes disagree: decide yourself' if info['status'] == 'disagree' else 'No AI suggestion: decide yourself') + '</span>'
+    if tab == 'answers':
+        s += '<div class="reason-chips"><span>Why? (optional)</span>' + ''.join(f'<button type="button" data-chip="failure_type" data-value="{esc(v)}">{esc(l)}</button>' for v, l in CHIP_LABELS.items()) + '</div>'
+    elif tab == 'gold':
+        s += '<div class="reason-chips"><span>What should it be?</span>' + ''.join(f'<button type="button" data-chip="proposed_behavior" data-value="{esc(v)}">{esc(l)}</button>' for v, l in BEHAVIOUR_CHIPS.items()) + '</div>'
+    return s + '</section>'
+
+
 def esc(value) -> str:
     return html.escape(str(value if value is not None else 'not supplied'))
 
@@ -264,7 +394,7 @@ def controls(tab: str, key: str) -> str:
         s += radio('evidence', ('OK', 'issue'), key) + radio('facts', ('OK', 'issue'), key)
     else:
         s = radio('match', ('matches', 'minor', 'major'), key)
-    return s + text('comment', 'Comment (private unless marked shareable)') + '<label class="inline"><input type="checkbox" data-field="shareable"> My comment is rights-safe and shareable in the summary</label>'
+    return '<details class="manual-controls"><summary>Exact controls, reasons and comment</summary>' + s + text('comment', 'Comment (private unless marked shareable)') + '<label class="inline"><input type="checkbox" data-field="shareable"> My comment is rights-safe and shareable in the summary</label></details>'
 
 
 def gold_panel(c: dict, evidence: Evidence) -> str:
@@ -302,8 +432,13 @@ def hint(c: dict) -> str:
     return 'Are the number, period, units and requested series right? Do the cited sources support the comparison and caveats?'
 
 
-def card_start(tab: str, cid: str, family: str, priority: bool = False, quick: bool = False, check: str = '') -> str:
-    return f'<article id="{tab}-{esc(cid)}" class="card" data-tab="{tab}" data-case="{esc(cid)}" data-family="{esc(family)}" data-priority="{str(priority).lower()}" data-quick="{str(quick).lower()}"><h2>{esc(cid)}{" · priority" if priority else ""}</h2><p class="check-hint"><strong>What to check: {esc(check or "Compare the requested fact with its inline source, then record your own judgement.")}</strong></p>' + para(family.replace('_', ' '))
+def card_start(tab: str, cid: str, family: str, priority: bool = False, quick: bool = False, check: str = '', ai: dict | None = None, todo: str = '', actions: str = '') -> str:
+    attrs = ''
+    if ai is not None:
+        attrs = f' data-ai-status="{esc(ai["status"])}" data-ai-suggest="{esc(json.dumps(ai["suggest"]))}"'
+    return (f'<article id="{tab}-{esc(cid)}" class="card" data-tab="{tab}" data-case="{esc(cid)}" data-family="{esc(family)}" data-priority="{str(priority).lower()}" data-quick="{str(quick).lower()}"{attrs}>'
+            f'<h2>{esc(cid)}{" · priority" if priority else ""}</h2><p class="check-hint"><strong>What to check: {esc(check or "Compare the requested fact with its inline source, then record your own judgement.")}</strong></p>'
+            + todo + actions + para(family.replace('_', ' ')))
 
 
 def source_rows(path: Path, column: int) -> list[str]:
@@ -362,11 +497,12 @@ def build_pack(root: Path = ROOT) -> Path:
     sample = json.loads((root / 'experiments/human-review-sample/selection.json').read_text())['ids']
     runs = {r['case_id']: r for r in rows(root / 'data/runs/agent-dev-A1/gpt-6-luna.jsonl')}
     ev = Evidence(root)
-    ai = ai_verdicts(root)
     priority_banner, priority = adjudication_banner(root)
     judgement_calls = '<aside class="decisions"><h2>Judgement calls</h2>' + ''.join('<p><strong>' + esc(i) + '</strong><br>' + esc(a) + '<br>' + esc(b) + '</p>' for i, a, b in DOUBTS) + '</aside>'
     content = ['<details class="pack-guide" id="pack-guide"><summary>Start here / full guide / judgement-call background</summary>' + owner_material(root) + priority_banner + judgement_calls + '</details>']
     flagged_answers = quick_answers(root)
+    source_counts = {'passage': len(source_rows(root / 'docs/human-review/passage-spot-check.md', 4)), 'statistical': len(source_rows(root / 'docs/human-review/statistical-spot-check.md', 7))}
+    suggestions = ai_suggestions(root, gold, sample, source_counts)
     for cid, title, question, options in OWNER_DECISIONS:
         s = card_start('decisions', cid, 'owner_decision', True, True, 'Choose the rule or verification status you can personally stand behind; note unresolved evidence.')
         s += '<h3>' + esc(title) + '</h3>' + para(question)
@@ -378,7 +514,9 @@ def build_pack(root: Path = ROOT) -> Path:
     for cid in sample:
         c, r = gold[cid], runs[cid]
         a = r.get('answer') or {}
-        s = card_start('answers', cid, c['family'], cid in priority or cid in flagged_answers, cid in flagged_answers, hint(c))
+        info = suggestions[('answers', cid)]
+        s = card_start('answers', cid, c['family'], cid in priority or cid in flagged_answers, cid in flagged_answers, hint(c), info,
+                       what_to_do('answers', a.get('status', r.get('outcome'))), fast_actions('answers', '', info))
         s += '<div class="review-split"><section class="answer-pane">'
         purposes = {'factual_lookup': 'Find the requested published fact, using the right population and period.', 'numerical_comparison': 'Compare the requested periods or groups without mixing units or series.', 'cross_source_synthesis': 'Bring the relevant official sources together, keeping their definitions distinct.', 'revision_conflict': 'Distinguish preliminary estimates, final reports and dataset snapshots.', 'ambiguity_insufficient_causal': 'Separate what can be established from ambiguity, missing evidence and unsupported causes.', 'adversarial': 'Handle the legitimate question without following malicious or unsafe instructions.'}
         s += '<p class="purpose"><strong>What is being asked:</strong> ' + esc(purposes[c['family']]) + '</p><h3>QUESTION</h3>' + para(c['question'])
@@ -417,26 +555,28 @@ def build_pack(root: Path = ROOT) -> Path:
                         s += ev.render(e['id'])
         if not labels:
             s += para('No claim citations were supplied. Check whether absence of evidence is justified.')
-        s += '</section></div>' + controls('answers', cid)
+        s += '</section></div>' + ai_box(info) + controls('answers', cid)
         s += '<details class="gold"><summary>Gold says — open only AFTER forming your own view</summary>' + gold_panel(c, ev) + '</details>'
-        if cid in ai:
-            s += '<details class="ai-review"><summary>AI review (open after you decide)</summary>' + para('AI verdict: ' + ai[cid]) + '</details>'
         content.append(s + '</article>')
     heldout = sorted(cid for cid in gold if cid.startswith('HO-'))
     for cid in heldout + [i for i in EXTRA if i in gold]:
         c = gold[cid]
-        s = card_start('gold', cid, c['family'], cid in priority or cid in QUICK_GOLD, cid in QUICK_GOLD, 'Pass 1: is the question realistic and specific? Pass 2: compare the proposed label and facts with the inline evidence.') + ('<p>Extra owner decision case (not held-out)</p>' if cid in EXTRA else '')
+        info = suggestions[('gold', cid)]
+        s = card_start('gold', cid, c['family'], cid in priority or cid in QUICK_GOLD, cid in QUICK_GOLD, 'Pass 1: is the question realistic and specific? Pass 2: compare the proposed label and facts with the inline evidence.', info,
+                       what_to_do('gold'), fast_actions('gold', '', info)) + ('<p>Extra owner decision case (not held-out)</p>' if cid in EXTRA else '')
         s += '<h3>Pass 1 — question only</h3>' + para(c['question'])
         for name in ('realistic', 'in_scope', 'unambiguous'):
             s += select(name, ('yes', 'no', 'unsure'))
         s += text('expected_evidence', 'Before revealing: what evidence would you expect?')
-        s += '<details class="gold"><summary role="button">Reveal draft — pass 2</summary>' + gold_panel(c, ev) + '</details>' + controls('gold', cid)
+        s += '<details class="gold"><summary role="button">Reveal draft — pass 2</summary>' + gold_panel(c, ev) + '</details>' + ai_box(info) + controls('gold', cid)
         content.append(s + '</article>')
     for kind, filename, column in [('passage', 'passage-spot-check.md', 4), ('statistical', 'statistical-spot-check.md', 7)]:
         for n, identifier in enumerate(source_rows(root / 'docs/human-review' / filename, column), 1):
             cid = f'{kind}-{n:02}'
-            s = card_start('sources', cid, kind, cid in QUICK_SOURCES, cid in QUICK_SOURCES, 'Compare the highlighted passage with the original page and check boundaries/metadata.' if kind == 'passage' else 'Compare the highlighted CSV row, column, population, period, units and seasonal basis; a dash is not zero.')
-            s += ev.render(identifier) + controls('sources', cid)
+            info = suggestions[('sources', cid)]
+            s = card_start('sources', cid, kind, cid in QUICK_SOURCES, cid in QUICK_SOURCES, 'Compare the highlighted passage with the original page and check boundaries/metadata.' if kind == 'passage' else 'Compare the highlighted CSV row, column, population, period, units and seasonal basis; a dash is not zero.', info,
+                           what_to_do('sources'), fast_actions('sources', kind, info))
+            s += ev.render(identifier) + ai_box(info) + controls('sources', cid)
             content.append(s + '</article>')
     checklist_doc = (root / 'docs/human-review/ai-verification-of-pre-reviews.md').read_text()
     section = checklist_doc.split('## 4.', 1)[1].split('## 5.', 1)[0]
@@ -450,7 +590,7 @@ def build_pack(root: Path = ROOT) -> Path:
     checklist += para('Publisher-side authenticity, current licence applicability and unresolved employment-population basis cannot be established from offline snapshots alone. Record an unresolved issue unless independently verified; do not treat this pack as proof of current publisher terms.') + '</section></details>'
     digest = hashlib.sha256(json.dumps({'sample': sample, 'gold_ids': sorted(gold)}, sort_keys=True).encode()).hexdigest()[:16]
     assets = json.dumps(ev.images).replace('<', '\\u003c')
-    page = HEADER + ''.join(content) + checklist + '<script>const PACK_ID=' + json.dumps(digest) + '; const INDEPENDENT_FIELDS=' + json.dumps(INDEPENDENT_FIELDS) + '; const PAGE_IMAGES=' + assets + ';</script><script>' + SCRIPT + '</script></main></body></html>'
+    page = HEADER + ''.join(content) + checklist + '<script>const PACK_ID=' + json.dumps(digest) + '; const INDEPENDENT_FIELDS=' + json.dumps(INDEPENDENT_FIELDS) + '; const DECISION_FIELDS=' + json.dumps(DECISION_FIELDS) + '; const PAGE_IMAGES=' + assets + ';</script><script>' + SCRIPT + '</script></main></body></html>'
     destination.parent.mkdir(parents=True, exist_ok=True)
     destination.write_text(page)
     return destination
@@ -488,6 +628,8 @@ class ReviewResult(BaseModel):
     fields: ReviewFields
     timestamp: str
     endorsement: str = ''
+    decision_source: str = ''
+    unsure: bool = False
 
     @model_validator(mode='after')
     def valid_record(self):
@@ -506,6 +648,15 @@ class ReviewResult(BaseModel):
                 raise ValueError('J1–J10 decisions cannot be endorsed')
             if any(getattr(self.fields, field) for field in INDEPENDENT_FIELDS):
                 raise ValueError('Endorsement cannot be combined with independent review choices')
+        if self.decision_source not in DECISION_SOURCES:
+            raise ValueError('Invalid decision_source')
+        if self.decision_source:
+            if self.endorsement:
+                raise ValueError('An endorsed card has no independent decision source')
+            if not any(getattr(self.fields, field) for field in INDEPENDENT_FIELDS):
+                raise ValueError('decision_source requires an independent decision')
+            if self.decision_source == 'agreed_with_ai_suggestion' and self.fields.label == 'disagree':
+                raise ValueError('An AI suggestion never proposes a gold label change')
         return self
 
 
@@ -590,20 +741,29 @@ def ingest_review(path: Path, root: Path = ROOT) -> tuple[Path, Path]:
             raise ValueError('Source row not in review pack')
     independent = [r for r in export.results if not r.endorsement]
     endorsed = [r for r in export.results if r.endorsement]
+    def source_of(result) -> str:
+        # Exports from before decision provenance existed were all entered manually.
+        return result.decision_source or 'owner_manual'
+
+    decided_items = [r for r in independent if any(getattr(r.fields, field) for field in DECISION_FIELDS) or r.fields.decision]
+    provenance = Counter(source_of(r) for r in decided_items)
+    manual = [r for r in independent if source_of(r) == 'owner_manual']
     counts = Counter(r.fields.verdict for r in independent if r.tab == 'answers' and r.fields.verdict)
     failures = Counter(r.fields.failure_type for r in independent if r.fields.failure_type)
     ai = ai_verdicts(root)
-    paired = [(r.fields.verdict, ai[r.case_id]) for r in independent if r.tab == 'answers' and r.fields.verdict and r.case_id in ai]
+    paired = [(r.fields.verdict, ai[r.case_id]) for r in manual if r.tab == 'answers' and r.fields.verdict and r.case_id in ai]
     agree = sum(a == b for a, b in paired)
     summary = '# Owner review summary\n\nThis is a rights-safe summary of owner-entered fields, not an automatic sign-off of gold.\n\n'
     summary += f'Reviewer: {md_cell(export.reviewer_name)}\n\nExport date: {md_cell(export.exported_at)}\n\n'
     summary += '## Independent human review\n\nOnly independent owner-entered choices are counted here. An endorsement is not independent per-item review. Partial fields do not by themselves establish a completed review.\n\n'
+    summary += '### Decision provenance\n\n' + f'- owner_manual: {provenance["owner_manual"]}\n- agreed_with_ai_suggestion: {provenance["agreed_with_ai_suggestion"]}\n\n'
+    summary += 'Each decision is a per-card owner action. `agreed_with_ai_suggestion` means the owner pressed Agree for that one card; it is counted as an owner decision but excluded from agreement statistics because it is circular. Older exports without provenance are treated as manual.\n\n'
     summary += '### Answer verdict counts\n\n' + ''.join(f'- {k}: {v}\n' for k, v in sorted(counts.items()))
     summary += '\n### Failure-type counts\n\n' + ''.join(f'- {k}: {v}\n' for k, v in sorted(failures.items()))
-    summary += f'\n### Agreement with independent AI answer review\n\n{agree}/{len(paired)} comparable independent owner verdicts' + (f' ({agree / len(paired):.1%}).' if paired else ' (rate unavailable).') + ' This is agreement, not accuracy; endorsements are excluded.\n'
+    summary += f'\n### Agreement with independent AI answer review (owner_manual only)\n\n{agree}/{len(paired)} comparable manual owner verdicts' + (f' ({agree / len(paired):.1%}).' if paired else ' (rate unavailable).') + ' This is agreement, not accuracy; endorsements and agree-with-AI decisions are excluded.\n'
     summary += '\n### Gold disagreements\n\n| Case | Existing behaviour | Proposed behaviour |\n|---|---|---|\n'
     proposals = []
-    for r in independent:
+    for r in manual:
         if r.tab == 'gold' and r.fields.label == 'disagree':
             summary += f'| {r.case_id} | {gold[r.case_id]["expected_behavior"]} | {r.fields.proposed_behavior} |\n'
             proposal = {'case_id': r.case_id, 'current_behavior': gold[r.case_id]['expected_behavior'], 'proposed_behavior': r.fields.proposed_behavior, 'reviewer_name': export.reviewer_name, 'timestamp': r.timestamp, 'status': 'proposed_not_applied'}
@@ -656,12 +816,13 @@ HEADER = '''<!doctype html><html lang="en"><head><meta charset="utf-8"><meta nam
  .focus-mode .review-split:has(.source-comparison.expanded){grid-template-columns:1fr}
  .sticky-review .toolbar{gap:8px;font-size:14px}.sticky-review label.inline{margin-right:0}.sticky-review button{padding:6px 10px}.sticky-review #family{max-width:190px}.sticky-review #reviewer{max-width:135px}.progress-line{font-size:14px}#quick-description{font-size:12px;line-height:1.35}.focus-mode article.card>h2{margin:4px 0;font-size:1.2rem}.focus-mode article.card>.check-hint{margin:6px 0;padding:8px}.focus-mode article.card>p:not(.check-hint){margin:4px 0;font-size:.8rem}.focus-mode h3{margin:8px 0;font-size:.92rem}.focus-mode .answer-pane p{margin:8px 0}.focus-mode .evidence h4{margin:6px 0;font-size:.9rem}.focus-mode .evidence p{margin:4px 0;font-size:.85rem}.focus-mode .purpose{font-size:.85rem}
  .endorsement-bar{background:#f0eafa;border:1px solid #795c9c;color:#4a3264;padding:10px;margin:8px 0}.endorsement-bar button{margin-left:12px}.card[data-endorsed=true]{border-right:5px solid #795c9c}#endorsement-warning{font-size:.85rem;color:#6c4100;margin:3px 0}
+ .fast-actions,.what-to-do,.ai-box,.shortcut-strip{display:none}.fast-mode .fast-actions{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin:10px 0}.fast-mode .what-to-do{display:block;font-size:1.15rem;background:#fffbe6;border-left:5px solid #c07500;padding:10px 16px;margin:8px 0}.fast-mode .what-to-do p{margin:4px 0}.fast-mode .check-hint{display:none}.fast-mode .ai-box{display:block}.fast-mode .shortcut-strip{display:block}.fast-btn{font-size:1.25rem;font-weight:700;min-height:56px;min-width:150px;border-width:2px}kbd{font:700 .8em ui-monospace,monospace;border:1px solid #888;border-radius:4px;padding:1px 6px;background:#f3f3f3;margin-left:6px}.agree-ai{background:#e8f4ee;border-color:#2b7a4b}.agree-ai:disabled{opacity:.55}.no-agree{font-weight:700;color:#6c4100;background:#fff3d6;padding:10px;border-radius:5px}.reason-chips{display:none;flex-basis:100%;gap:8px;flex-wrap:wrap;align-items:center}.card[data-pick-reason=true] .reason-chips{display:flex}.reason-chips button{font-size:.95rem;padding:8px 12px}.ai-box{background:#eef3fb;border:2px solid #4a6fa5;border-radius:6px;padding:12px;margin:14px 0;font-size:1.05rem}.ai-box[data-status=disagree],.ai-box[data-status=none]{background:#fff3d6;border-color:#c07500}.shortcut-strip{width:100%;text-align:center;font-size:.85rem;border-bottom:1px solid #cad6d5;padding-bottom:6px;margin-bottom:6px}.focus-navigation{flex-direction:column;gap:6px}.nav-row{display:flex;gap:16px;align-items:center;justify-content:center}.card[data-unsure=true] .fast-actions::after{content:'Marked unsure — still undecided';font-weight:700;color:#6c4100;flex-basis:100%}.mini-gloss{font-size:.85rem;opacity:.85}
 </style></head><body><header><a class="skip" href="#cards">Skip to review cards</a><p class="private">PRIVATE: contains MOM text; do not commit or share</p><h1>LabourLens / Owner review</h1><h2>How to use this</h2><p>1. Open this file in your browser; no connection or API is needed.<br>2. Decide each card yourself. Use two passes: form a view before opening Gold says or AI review.<br>3. Type your reviewer name and click Export. Keep the downloads private; ingest only shares comments you mark shareable.</p>
 <details><summary>Glossary — plain English</summary><dl><dt>Resident vs total</dt><dd>Residents are citizens and permanent residents; total/overall may include non-residents. Do not substitute one population for another.</dd><dt>Seasonally adjusted vs not</dt><dd>Adjusted values remove recurring seasonal patterns to improve comparisons. Unadjusted values retain them; they are distinct series.</dd><dt>Advance vs final release</dt><dd>Advance is an early estimate. Final releases use fuller information; later dataset snapshots may revise history again.</dd><dt>Quarter notation: 2026-Q2</dt><dd>April to June 2026. Q1 is January–March; Q3 July–September; Q4 October–December.</dd><dt>Ratio vs percent vs percentage points</dt><dd>A ratio compares quantities; a percent is per hundred. A rise from 2% to 3% is 1 percentage point, or a 50% relative increase.</dd><dt>Vacancy ratio</dt><dd>Job vacancies per unemployed person. A ratio of 1.48 means about 148 vacancies for every 100 unemployed people; it is not 1.48%.</dd></dl></details>
 <nav role="tablist" aria-label="Review sections"><button role="tab" data-open="guided" aria-selected="true">Guided review</button><button role="tab" data-open="decisions" aria-selected="false">Decisions (10)</button><button role="tab" data-open="answers" aria-selected="false">Answers (40)</button><button role="tab" data-open="gold" aria-selected="false">Held-out gold (31)</button><button role="tab" data-open="sources" aria-selected="false">Source checks</button></nav><noscript>JavaScript is required to display inline PDF images, save decisions and export.</noscript></header>
-<div class="sticky-review"><div class="toolbar"><strong>PRIVATE</strong><label class="inline"><input id="focus-mode" type="checkbox" checked> Focus mode (one card)</label><label class="inline"><input id="quick-path" type="checkbox"> Quick path</label><label>Tab<select id="tab-filter"><option value="guided">Guided order</option><option value="decisions">Decisions</option><option value="answers">Answers</option><option value="gold">Held-out gold</option><option value="sources">Source checks</option></select></label><label class="inline"><input id="undecided" type="checkbox">Undecided</label><label class="inline"><input id="priority" type="checkbox">Priority</label><label>Family<select id="family"><option value="">All families</option></select></label><label>Reviewer name<input id="reviewer" type="text" maxlength="200" autocomplete="off" placeholder="Type your own name"></label><button id="export">Export JSON + Markdown</button><button id="show-guide">Guide</button><button id="show-shortcuts">? Shortcuts</button><button id="endorse-all">Endorse AI review for all undecided cards</button><button id="undo-all-endorsements" disabled>Undo all endorsements</button></div><div class="progress-line"><progress id="progress-bar" value="0" max="125" aria-label="Review disposition progress (independent plus endorsed)"></progress><p id="progress" aria-live="polite"></p><span id="minutes-left"></span></div><p id="endorsement-warning" role="status"></p><p id="quick-description"></p><p id="notice" role="status"></p><p id="storage-warning" class="storage-warning" role="alert"></p></div>
-<div class="focus-navigation" id="focus-navigation"><button id="previous">Previous (k)</button><span id="step-position" aria-live="polite"></span><button id="next">Next (j)</button><button id="next-undecided">Next undecided</button></div>
-<dialog id="shortcuts"><h2>Keyboard shortcuts</h2><ul><li>j / k: next / previous card.</li><li>1 / 2 / 3: correct / partly correct / incorrect on answer cards. On a decision card, select that numbered option.</li><li>y / n on a held-out gold card: label OK / disagree.</li><li>n on other cards: next undecided. Shift+N: next undecided on every card (including gold).</li><li>?: show this help. Escape: close it.</li></ul><p>Shortcuts never run while typing in a text box or choosing a dropdown. Use the large buttons whenever you prefer. Choices are never preselected.</p><button id="close-shortcuts">Close</button></dialog><main id="cards"><p id="empty-state" hidden>No cards match these filters. Clear a filter or turn off “Undecided”.</p>
+<div class="sticky-review"><div class="toolbar"><strong>PRIVATE</strong><label class="inline"><input id="fast-mode" type="checkbox" checked> Fast review</label><label class="inline"><input id="show-decided" type="checkbox"> Show decided</label><label class="inline"><input id="focus-mode" type="checkbox" checked> Focus mode (one card)</label><label class="inline"><input id="quick-path" type="checkbox"> Quick path</label><label>Tab<select id="tab-filter"><option value="guided">Guided order</option><option value="decisions">Decisions</option><option value="answers">Answers</option><option value="gold">Held-out gold</option><option value="sources">Source checks</option></select></label><label class="inline"><input id="undecided" type="checkbox">Undecided</label><label class="inline"><input id="priority" type="checkbox">Priority</label><label>Family<select id="family"><option value="">All families</option></select></label><label>Reviewer name<input id="reviewer" type="text" maxlength="200" autocomplete="off" placeholder="Type your own name"></label><button id="export">Export JSON + Markdown</button><button id="show-guide">Guide</button><button id="show-shortcuts">? Shortcuts</button><button id="endorse-all">Endorse AI review for all undecided cards</button><button id="undo-all-endorsements" disabled>Undo all endorsements</button></div><div class="progress-line"><progress id="progress-bar" value="0" max="125" aria-label="Review progress (independent decisions in fast mode)"></progress><p id="progress" aria-live="polite"></p><span id="minutes-left"></span></div><p id="endorsement-warning" role="status"></p><p id="quick-description"></p><p id="notice" role="status"></p><p id="storage-warning" class="storage-warning" role="alert"></p></div>
+<div class="focus-navigation" id="focus-navigation"><div class="shortcut-strip"><kbd>A</kbd> agree with AI + next · <kbd>R</kbd> right · <kbd>P</kbd> partly · <kbd>W</kbd> wrong · <kbd>S</kbd> skip/unsure · <kbd>Enter</kbd> next · <kbd>Backspace</kbd> previous · <kbd>U</kbd> undo · <kbd>Shift</kbd>+<kbd>N</kbd> next undecided · <kbd>Esc</kbd> closes zoom</div><div class="nav-row"><button id="previous">Previous (k)</button><span id="step-position" aria-live="polite"></span><button id="next">Next (j)</button><button id="next-undecided">Next undecided</button></div></div>
+<dialog id="shortcuts"><h2>Keyboard shortcuts</h2><ul><li><kbd>A</kbd> agree with the AI for this one card and go to the next (only when the AI passes agree and you have looked at the evidence for 3 seconds).</li><li><kbd>R</kbd> right / fine / matches · <kbd>P</kbd> partly right / small difference · <kbd>W</kbd> wrong / does not match · <kbd>S</kbd> not sure (card stays undecided).</li><li><kbd>Enter</kbd> next · <kbd>Backspace</kbd> previous · <kbd>U</kbd> undo your last decision · <kbd>Shift</kbd>+<kbd>N</kbd> next undecided · <kbd>Esc</kbd> closes a zoomed page.</li><li>Older keys: j / k move, 1 / 2 / 3 choose answer verdicts or decision options, y / n label OK / wrong on gold cards, n next undecided on other cards.</li></ul><p>Shortcuts never run while typing in a text box or choosing a dropdown. No answer is ever filled in automatically; every card needs your own key press or click.</p><button id="close-shortcuts">Close</button></dialog><main id="cards"><p id="empty-state" hidden>No cards match these filters. Turn on “Show decided” or clear a filter.</p>
 '''
 
 SCRIPT = r'''
@@ -708,8 +869,10 @@ function hasIndependentInput(card) {
   return INDEPENDENT_FIELDS.some(field => !!value[field]);
 }
 function resolved(card) { return decided(card) || endorsed(card); }
+const sources = new Map(), unsureCards = new Set();
+let pendingSource = '', lastShownKey = '', shownAt = 0;
 function persistCard(card) {
-  save(key(card), {fields:fields(card), timestamp:times[key(card)], endorsement:endorsements.get(key(card)) || ''});
+  save(key(card), {fields:fields(card), timestamp:times[key(card)], endorsement:endorsements.get(key(card)) || '', decision_source:sources.get(key(card)) || '', unsure:unsureCards.has(key(card))});
 }
 function clearAttestationIfEmpty() {
   if (!endorsements.size) { attestation = null; save('owner-attestation', null); }
@@ -735,7 +898,7 @@ function decided(card) {
   const f = fields(card);
   if (card.dataset.tab === 'decisions') return !!f.decision;
   if (card.dataset.tab === 'answers') return !!f.verdict;
-  if (card.dataset.tab === 'gold') return !!f.label && !!f.evidence && !!f.facts && (f.label !== 'disagree' || !!f.proposed_behavior);
+  if (card.dataset.tab === 'gold') return !!f.label && (f.label !== 'disagree' || !!f.proposed_behavior);
   return !!f.match;
 }
 function download(name, text, type) {
@@ -749,7 +912,8 @@ function exportData() {
   const now = new Date().toISOString();
   const data = {schema_version:1, pack_id:PACK_ID, reviewer_name:document.querySelector('#reviewer').value.trim(),
     exported_at:now, results:cards.map(card => ({case_id:card.dataset.case, tab:card.dataset.tab,
-      fields:fields(card), timestamp:times[key(card)] || now, endorsement:endorsements.get(key(card)) || ''})), checklist:{}, attestation};
+      fields:fields(card), timestamp:times[key(card)] || now, endorsement:endorsements.get(key(card)) || '',
+      decision_source:(!endorsed(card) && decided(card)) ? (sources.get(key(card)) || 'owner_manual') : '', unsure:unsureCards.has(key(card)) && !decided(card)})), checklist:{}, attestation};
   document.querySelectorAll('[data-check]').forEach(el => data.checklist[el.dataset.check] = el.checked);
   return data;
 }
@@ -764,6 +928,8 @@ cards.forEach(card => {
   const saved = load(key(card));
   if (saved && saved.fields && typeof saved.fields === 'object') {
     times[key(card)] = saved.timestamp;
+    if (saved.decision_source) sources.set(key(card), saved.decision_source);
+    if (saved.unsure) unsureCards.add(key(card));
     card.querySelectorAll('[data-field]').forEach(el => {
       const value = saved.fields[el.dataset.field];
       if (el.type === 'radio') el.checked = el.value === value;
@@ -781,10 +947,16 @@ cards.forEach(card => {
   undo.addEventListener('click', () => undoEndorsement(card));
   badge.append(label, undo);
   card.querySelector('h2').insertAdjacentElement('afterend', badge);
+  // Decisions saved before provenance existed were all entered by hand.
+  if (decided(card) && !endorsed(card) && !sources.has(key(card))) sources.set(key(card), 'owner_manual');
   if (decided(card)) alreadyCompleted.add(key(card));
-  card.addEventListener('input', () => {
+  card.addEventListener('input', event => {
     times[key(card)] = new Date().toISOString();
+    const field = event.target?.dataset?.field;
+    if (pendingSource) sources.set(key(card), pendingSource);
+    else if (sources.get(key(card)) !== 'agreed_with_ai_suggestion' || !field || DECISION_FIELDS.includes(field)) sources.set(key(card), 'owner_manual');
     if (endorsed(card) && hasIndependentInput(card)) { endorsements.delete(key(card)); clearAttestationIfEmpty(); }
+    if (decided(card)) unsureCards.delete(key(card));
     persistCard(card);
     if (decided(card) && !alreadyCompleted.has(key(card))) {
       alreadyCompleted.add(key(card)); completionCount++;
@@ -847,21 +1019,35 @@ families.forEach(family => {
 const savedFocus = load('ui-focus');
 document.querySelector('#focus-mode').checked = savedFocus === null ? true : savedFocus === true;
 document.querySelector('#quick-path').checked = load('ui-quick') === true;
-activeKey = load('focus-active') || '';
+const savedFast = load('ui-fast');
+document.querySelector('#fast-mode').checked = savedFast === null ? true : savedFast === true;
+document.querySelector('#show-decided').checked = load('ui-show-decided') === true;
+function fastOn() { return document.querySelector('#fast-mode').checked; }
+// In fast mode start at the first undecided card, wherever you were before.
+activeKey = fastOn() ? '' : (load('focus-active') || '');
 function candidates() {
   const family = document.querySelector('#family').value;
   const only = document.querySelector('#undecided').checked;
   const priority = document.querySelector('#priority').checked;
   const quick = document.querySelector('#quick-path').checked;
+  const hideDecided = fastOn() && !document.querySelector('#show-decided').checked;
   return (tab === 'guided' ? guided : cards).filter(card =>
     (tab === 'guided' || card.dataset.tab === tab) &&
-    (!family || card.dataset.family === family) && (!only || !resolved(card)) &&
+    (!family || card.dataset.family === family) && (!only || !resolved(card) || key(card) === activeKey) &&
+    (!hideDecided || !decided(card) || key(card) === activeKey) &&
     (!priority || card.dataset.priority === 'true') && (!quick || card.dataset.quick === 'true'));
 }
 function update() {
-  const queue = candidates(), focus = document.querySelector('#focus-mode').checked;
+  const queue = candidates(), focus = fastOn() || document.querySelector('#focus-mode').checked;
   if (!queue.some(card => key(card) === activeKey)) activeKey = queue.length ? key(queue[0]) : '';
   const current = queue.find(card => key(card) === activeKey);
+  if (focus && activeKey !== lastShownKey) { lastShownKey = activeKey; shownAt = Date.now(); }
+  document.body.classList.toggle('fast-mode', fastOn());
+  cards.forEach(card => {
+    const f = fields(card);
+    card.dataset.unsure = String(unsureCards.has(key(card)) && !decided(card));
+    card.dataset.pickReason = String((card.dataset.tab === 'answers' && ['partly correct', 'incorrect'].includes(f.verdict)) || (card.dataset.tab === 'gold' && f.label === 'disagree'));
+  });
   document.body.classList.toggle('focus-mode', focus);
   cards.forEach(card => card.hidden = !queue.includes(card) || (focus && key(card) !== activeKey));
   document.querySelectorAll('[data-panel]').forEach(panel => panel.hidden = panel.dataset.panel !== (current?.dataset.tab || tab));
@@ -876,8 +1062,9 @@ function update() {
   const blankDecisions = cards.filter(card => card.dataset.tab === 'decisions' && !decided(card)).length;
   document.querySelector('#endorsement-warning').textContent = allEndorsed ? 'Owner endorsement is NOT independent review. J1–J10 cannot be endorsed; ' + blankDecisions + ' still need your own decision. Undoing individual endorsements retains the original attestation; active counts are shown separately.' : '';
   const progress = document.querySelector('#progress-bar');
-  progress.max = Math.max(scoped.length, 1); progress.value = done + endorsedN;
-  document.querySelector('#minutes-left').textContent = 'About ' + Math.ceil(remaining * 1.5) + ' min left (1.5 min/card estimate)';
+  progress.max = Math.max(scoped.length, 1); progress.value = fastOn() ? done : done + endorsedN;
+  const leftFast = scoped.filter(card => !decided(card)).length;
+  document.querySelector('#minutes-left').textContent = fastOn() ? leftFast + ' cards left, about ' + Math.ceil(leftFast * 0.75) + ' minutes (0.75 min per card)' : 'About ' + Math.ceil(remaining * 1.5) + ' min left (1.5 min/card estimate)';
   const quickCards = cards.filter(card => card.dataset.quick === 'true');
   const answerN = quickCards.filter(card => card.dataset.tab === 'answers').length;
   const goldN = quickCards.filter(card => card.dataset.tab === 'gold').length;
@@ -949,13 +1136,135 @@ function choose(card, field, value) {
   const input = [...card.querySelectorAll('input[data-field="' + field + '"]')].find(el => el.value === value);
   if (input) { input.checked = true; input.dispatchEvent(new Event('input', {bubbles:true})); }
 }
+function setField(card, field, value) {
+  const el = card.querySelector('[data-field="' + field + '"]');
+  if (!el) return;
+  if (el.tagName === 'SELECT') { el.value = value; el.dispatchEvent(new Event('input', {bubbles:true})); }
+  else choose(card, field, value);
+}
+function applyFields(card, values, source) {
+  pendingSource = source;
+  try { Object.entries(values).forEach(([field, value]) => setField(card, field, value)); }
+  finally { pendingSource = ''; }
+}
+const undoStack = [];
+function snapshot(card) {
+  return {key:key(card), fields:fields(card), source:sources.get(key(card)) || '', endorsement:endorsements.get(key(card)) || '',
+    unsure:unsureCards.has(key(card)), time:times[key(card)], attestation:attestation ? JSON.parse(JSON.stringify(attestation)) : null};
+}
+function pushUndo(card) { undoStack.push(snapshot(card)); if (undoStack.length > 100) undoStack.shift(); }
+function restore(card, snap) {
+  card.querySelectorAll('[data-field]').forEach(el => {
+    const value = snap.fields[el.dataset.field];
+    if (el.type === 'radio') el.checked = el.value === value;
+    else if (el.type === 'checkbox') el.checked = value === true;
+    else el.value = value || '';
+  });
+  if (snap.source) sources.set(snap.key, snap.source); else sources.delete(snap.key);
+  if (snap.endorsement) { endorsements.set(snap.key, snap.endorsement); if (!attestation && snap.attestation) { attestation = snap.attestation; save('owner-attestation', attestation); } }
+  else endorsements.delete(snap.key);
+  if (snap.unsure) unsureCards.add(snap.key); else unsureCards.delete(snap.key);
+  if (snap.time) times[snap.key] = snap.time; else delete times[snap.key];
+  if (!decided(card) && alreadyCompleted.delete(snap.key)) {
+    completionCount = Math.max(0, completionCount - 1);
+    save('completion-count', completionCount); save('completed-cards', [...alreadyCompleted]);
+  }
+  persistCard(card);
+}
+function nextAfter(card) {
+  const queue = candidates(), index = queue.findIndex(item => key(item) === key(card));
+  return queue[index + 1] ? key(queue[index + 1]) : '';
+}
+function goOrStay(next) {
+  if (next) { activeKey = next; showCurrent(); }
+  else { update(); document.querySelector('#notice').textContent = 'That was the last card in this view. Use Previous, Show decided or Next undecided.'; }
+}
+function actValues(card, act) {
+  const tabName = card.dataset.tab;
+  if (tabName === 'answers') return {verdict:{right:'correct', partly:'partly correct', wrong:'incorrect'}[act]};
+  if (tabName === 'gold') return act === 'right' ? {label:'OK', evidence:'OK', facts:'OK'} : act === 'wrong' ? {label:'disagree'} : null;
+  if (tabName === 'sources') return {match:{right:'matches', partly:'minor', wrong:'major'}[act]};
+  return null;
+}
+function performAct(card, act) {
+  if (!card || card.dataset.tab === 'decisions') return;
+  if (act === 'unsure') {
+    const next = nextAfter(card);
+    pushUndo(card); unsureCards.add(key(card)); times[key(card)] = new Date().toISOString(); persistCard(card);
+    goOrStay(next); return;
+  }
+  const values = actValues(card, act);
+  if (!values) return;
+  const next = nextAfter(card);
+  pushUndo(card);
+  applyFields(card, values, '');
+  if (card.dataset.tab === 'sources' || act === 'right') goOrStay(next); else update();
+}
+function agreeRemaining() { return Math.max(0, Math.ceil((3000 - (Date.now() - shownAt)) / 1000)); }
+function performAgree(card) {
+  const notice = document.querySelector('#notice');
+  if (!card || card.dataset.tab === 'decisions') return;
+  if (card.dataset.aiStatus !== 'agree') { notice.textContent = 'The AI passes disagree or gave no suggestion: decide yourself.'; return; }
+  const wait = key(card) === activeKey ? agreeRemaining() : 3;
+  if (wait > 0) { notice.textContent = 'Look at the evidence for ' + wait + ' more second(s) before agreeing with the AI.'; return; }
+  const suggestion = JSON.parse(card.dataset.aiSuggest || '{}');
+  if (!Object.keys(suggestion).length) return;
+  const next = nextAfter(card);
+  pushUndo(card);
+  applyFields(card, suggestion, 'agreed_with_ai_suggestion');
+  goOrStay(next);
+}
+function undoLast() {
+  const snap = undoStack.pop(), notice = document.querySelector('#notice');
+  if (!snap) { notice.textContent = 'Nothing to undo.'; return; }
+  const card = cards.find(item => key(item) === snap.key);
+  restore(card, snap); activeKey = snap.key; showCurrent();
+  notice.textContent = 'Undid your last decision on ' + card.dataset.case + '.';
+}
+function tickAgree() {
+  const card = cards.find(item => key(item) === activeKey), button = card?.querySelector('.agree-ai');
+  if (!button) return;
+  const remaining = agreeRemaining();
+  button.disabled = !fastOn() || remaining > 0;
+  button.querySelector('.wait').textContent = remaining > 0 ? ' — look at the evidence first (' + remaining + 's)' : '';
+}
+function applyMode() {
+  const fast = fastOn();
+  document.body.classList.toggle('fast-mode', fast);
+  document.querySelectorAll('.manual-controls').forEach(el => el.open = !fast);
+  cards.filter(card => card.dataset.tab === 'gold').forEach(card => { const panel = card.querySelector(':scope > details.gold'); if (panel) panel.open = fast; });
+}
+document.addEventListener('click', event => {
+  const button = event.target.closest('[data-act],[data-chip]');
+  const card = button?.closest('article.card');
+  if (!card || !fastOn()) return;
+  if (button.dataset.act === 'agree') performAgree(card);
+  else if (button.dataset.act) performAct(card, button.dataset.act);
+  else {
+    const next = nextAfter(card);
+    pushUndo(card);
+    applyFields(card, {[button.dataset.chip]: button.dataset.value}, '');
+    goOrStay(next);
+  }
+});
+document.querySelector('#fast-mode').addEventListener('change', event => { save('ui-fast', event.target.checked); activeKey = ''; applyMode(); showCurrent(); });
+document.querySelector('#show-decided').addEventListener('change', event => { save('ui-show-decided', event.target.checked); showCurrent(); });
 document.addEventListener('keydown', event => {
   if (event.ctrlKey || event.metaKey || event.altKey || help.open) return;
   const target = event.target;
   if (target.isContentEditable || target.matches('textarea,select,input:not([type=radio]):not([type=checkbox])')) return;
-  if (!document.querySelector('#focus-mode').checked) return;
+  if (!(fastOn() || document.querySelector('#focus-mode').checked)) return;
   const card = cards.find(card => key(card) === activeKey);
   if (!card) return;
+  if (event.key === 'Escape') { document.querySelectorAll('.source-comparison.expanded').forEach(el => el.classList.remove('expanded')); return; }
+  if (fastOn() && !(target.matches('button,summary,a') && ['Enter', ' '].includes(event.key))) {
+    const k = event.key.length === 1 ? event.key.toLowerCase() : event.key;
+    if (k === 'a') { event.preventDefault(); performAgree(card); return; }
+    if (['r', 'p', 'w', 's'].includes(k)) { event.preventDefault(); performAct(card, {r:'right', p:'partly', w:'wrong', s:'unsure'}[k]); return; }
+    if (k === 'u') { event.preventDefault(); undoLast(); return; }
+    if (k === 'Enter') { event.preventDefault(); move(1); return; }
+    if (k === 'Backspace') { event.preventDefault(); move(-1); return; }
+  }
   if (event.key === '?') { event.preventDefault(); help.showModal(); }
   else if (event.key === 'j') { event.preventDefault(); move(1); }
   else if (event.key === 'k') { event.preventDefault(); move(-1); }
@@ -987,6 +1296,8 @@ document.querySelectorAll('.zoom-page').forEach(button => button.addEventListene
   const expanded = button.closest('.source-comparison').classList.toggle('expanded');
   button.setAttribute('aria-expanded', String(expanded));
 }));
+applyMode();
 update();
-if (document.querySelector('#focus-mode').checked) showCurrent();
+if (fastOn() || document.querySelector('#focus-mode').checked) showCurrent();
+setInterval(tickAgree, 250);
 '''

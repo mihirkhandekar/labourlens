@@ -49,6 +49,8 @@ def fixture_root(tmp_path):
     put(tmp_path, 'experiments/gold/draft_cases.jsonl', '\n'.join(json.dumps(c) for c in cases))
     put(tmp_path, 'experiments/human-review-sample/selection.json', json.dumps({'ids': sample}))
     put(tmp_path, 'experiments/human-review-sample/independent-ai-review.md', '| DEV-001 | answered | incorrect | retrieval miss |\n')
+    put(tmp_path, 'experiments/gold/independent-ai-review.md', '| HO-001 / 20 | factual_lookup | `answer` → `answer` | x | y |\n')
+    put(tmp_path, 'experiments/gold/independent-ai-review-2.md', '#### HO-001 — `answer`\n')
     runs = [dict(case_id=c, answer={'status': 'answered', 'summary': 'Synthetic answer', 'claims': [{'text': '2.9%', 'citations': [{'label': 'O1', 'quote': '2.9'}]}]}, evidence=[{'label': 'O1', 'id': 'obs1'}], evidence_text={'O1': 'Synthetic 2.9 percent'}) for c in sample]
     put(tmp_path, 'data/runs/agent-dev-A1/gpt-6-luna.jsonl', '\n'.join(json.dumps(r) for r in runs))
     put(tmp_path, 'docs/human-review/passage-spot-check.md', '\n'.join(f'| {n} | report | p1 | ok | `report:p001:test` | link |' for n in range(1, 17)) + '\n| 1 | | | | |')
@@ -89,6 +91,26 @@ def test_build_synthetic_pack(fixture_root):
     assert 'connect-src \'none\'' in path.read_text()
     assert not soup.select('[data-field][checked],option[selected]')
     assert soup.select_one('#reviewer').get('value') is None
+    assert soup.select_one('#fast-mode').has_attr('checked')
+    assert soup.select_one('#shortcuts kbd')
+    assert soup.select_one('.shortcut-strip').get_text().count('Backspace') == 1
+    assert soup.select_one('#answers-DEV-001 .what-to-do')
+    assert soup.select_one('#answers-DEV-001')['data-ai-status'] == 'agree'
+    assert json.loads(soup.select_one('#answers-DEV-001')['data-ai-suggest']) == {'verdict': 'incorrect'}
+    assert soup.select_one('#answers-DEV-002')['data-ai-status'] == 'none'
+    assert not soup.select_one('#answers-DEV-002 .agree-ai')
+    assert 'decide yourself' in soup.select_one('#answers-DEV-002 .no-agree').get_text()
+    assert soup.select_one('#gold-HO-001')['data-ai-status'] == 'agree'
+    assert json.loads(soup.select_one('#gold-HO-001')['data-ai-suggest']) == {'label': 'OK', 'evidence': 'OK', 'facts': 'OK'}
+    assert soup.select_one('#gold-HO-008')['data-ai-status'] == 'disagree'  # a known doubtful label never offers Agree
+    assert not soup.select_one('#gold-HO-008 .agree-ai')
+    assert soup.select_one('#sources-statistical-13')['data-ai-status'] == 'disagree'
+    assert json.loads(soup.select_one('#sources-statistical-07')['data-ai-suggest']) == {'match': 'minor'}
+    assert soup.select_one('#answers-DEV-001 .ai-box').get_text().startswith('AI reviewers said:')
+    assert all(button.has_attr('disabled') for button in soup.select('.agree-ai'))  # enabled only by the 3-second guard
+    assert not soup.select('.fast-actions [checked]')
+    for node in soup.select('.ai-box'):
+        node.decompose()
     for node in soup.select('.ai-review'):
         assert not node.has_attr('open')
         node.decompose()
@@ -135,7 +157,7 @@ def test_ingest_requires_owner_and_excludes_private_comments(fixture_root):
     assert 'Shareable owner explanation' in summary.read_text()
     assert 'keep publisher verification incomplete' in summary.read_text()
     assert 'Private verification note' not in summary.read_text()
-    assert '0/1 comparable' in summary.read_text()
+    assert '0/1 comparable manual owner verdicts' in summary.read_text()
     assert json.loads(proposal.read_text())['proposed_behavior'] == 'clarify'
     assert (fixture_root / 'experiments/gold/draft_cases.jsonl').read_bytes() == gold
 
@@ -217,7 +239,7 @@ def test_ingest_separates_endorsement_and_never_proposes_changes(fixture_root):
     assert '## Independent human review' in text
     assert '## Owner-endorsed AI review (no independent per-item review)' in text
     assert endorsement_statement(2) in text
-    assert '1/1 comparable independent owner verdicts' in text
+    assert '1/1 comparable manual owner verdicts' in text
     assert proposal.read_text() == ''
     assert '| answers | DEV-002 |' in text
     assert (fixture_root / 'experiments/gold/draft_cases.jsonl').read_bytes() == gold
@@ -240,6 +262,63 @@ def test_pack_contains_endorsement_controls(fixture_root):
     page = soup.decode()
     assert 'NOT as independent human review' in page
     assert 'owner_endorsed_ai' in page
+
+
+def test_decision_source_schema_is_strict():
+    data = export_data()
+    data['results'][0]['decision_source'] = 'owner_manual'
+    assert ReviewExport.model_validate(data)
+    data['results'][0]['decision_source'] = 'amended'
+    with pytest.raises(ValidationError, match='Invalid decision_source'):
+        ReviewExport.model_validate(data)
+    data['results'][0]['decision_source'] = 'agreed_with_ai_suggestion'
+    data['results'][0]['fields'] = {}
+    with pytest.raises(ValidationError, match='requires an independent decision'):
+        ReviewExport.model_validate(data)
+    disagree = export_data()
+    disagree['results'] = [dict(case_id='HO-001', tab='gold', fields={'label': 'disagree', 'proposed_behavior': 'clarify'}, timestamp='2026-10-31T00:00:00Z', decision_source='agreed_with_ai_suggestion')]
+    with pytest.raises(ValidationError, match='never proposes'):
+        ReviewExport.model_validate(disagree)
+    endorsed = endorsed_export()
+    endorsed['results'][1]['decision_source'] = 'owner_manual'
+    with pytest.raises(ValidationError, match='no independent decision source'):
+        ReviewExport.model_validate(endorsed)
+    unknown = export_data()
+    unknown['results'][0]['reviewed_by'] = 'owner'
+    with pytest.raises(ValidationError):
+        ReviewExport.model_validate(unknown)
+
+
+def test_ingest_splits_provenance_and_excludes_agreed_from_agreement(fixture_root):
+    data = export_data()
+    data['reviewer_name'] = 'Synthetic human'
+    stamp = '2026-10-31T00:00:00Z'
+    data['results'] = [
+        dict(case_id='DEV-001', tab='answers', fields={'verdict': 'incorrect'}, timestamp=stamp, decision_source='owner_manual'),
+        dict(case_id='DEV-002', tab='answers', fields={'verdict': 'correct'}, timestamp=stamp, decision_source='agreed_with_ai_suggestion'),
+        dict(case_id='HO-001', tab='gold', fields={'label': 'disagree', 'proposed_behavior': 'refuse'}, timestamp=stamp, decision_source='owner_manual'),
+        dict(case_id='HO-002', tab='gold', fields={'label': 'OK', 'evidence': 'OK', 'facts': 'OK'}, timestamp=stamp, decision_source='agreed_with_ai_suggestion'),
+    ]
+    path = put(fixture_root, 'private/provenance.json', json.dumps(data))
+    gold = (fixture_root / 'experiments/gold/draft_cases.jsonl').read_bytes()
+    summary, proposal = ingest_review(path, fixture_root)
+    text = summary.read_text()
+    assert '- owner_manual: 2' in text
+    assert '- agreed_with_ai_suggestion: 2' in text
+    assert '1/1 comparable manual owner verdicts' in text  # DEV-002 agreement with AI is circular and excluded
+    lines = [json.loads(line) for line in proposal.read_text().splitlines()]
+    assert [line['case_id'] for line in lines] == ['HO-001']
+    assert (fixture_root / 'experiments/gold/draft_cases.jsonl').read_bytes() == gold
+    assert 'reviewed_by' not in text
+
+
+def test_older_exports_without_provenance_remain_valid_and_count_as_manual(fixture_root):
+    data = export_data()
+    data['reviewer_name'] = 'Synthetic human'
+    path = put(fixture_root, 'private/legacy.json', json.dumps(data))
+    assert ReviewExport.model_validate_json(path.read_text()).results[0].decision_source == ''
+    summary, _ = ingest_review(path, fixture_root)
+    assert '- owner_manual: 1' in summary.read_text()
 
 
 @pytest.mark.corpus

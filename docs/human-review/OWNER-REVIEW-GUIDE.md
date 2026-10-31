@@ -38,6 +38,25 @@ count. Time remaining is a transparent estimate of **1.5 minutes per undecided
 card**, not a measured duration. Omitted cards remain unreviewed.
 Existing per-case localStorage keys and old JSON exports remain compatible.
 
+**Fast review (default).** Each card starts with a two-line plain-words “What to do”
+and big buttons: answers **Right / Partly right / Wrong** (**R / P / W**), gold
+**Label is fine / Label is wrong** (R / W, then pick what it should be), source checks
+**matches / small difference / does not match**. **S** marks a card unsure (it stays
+undecided), **Enter** / **Backspace** move, **U** undoes your last decision, **Shift+N**
+jumps to the next undecided card. Decided cards are hidden unless you tick **Show
+decided**; the bar shows “X cards left, about Y minutes” at 0.75 minutes per card.
+
+Under the evidence each card shows “AI reviewers said: …”. **A** (or the **Agree with
+the AI** button) copies that suggestion into your own fields for **that one card only**,
+records `decision_source=agreed_with_ai_suggestion` and moves on. It is disabled until
+the card has been on screen for 3 seconds, and unavailable (“AI passes disagree: decide
+yourself”) when the AI passes disagree, flagged a doubt, or gave no suggestion. It is
+never applied in bulk. Every other click or key records `owner_manual`. Agreement
+statistics in the ingest summary use `owner_manual` only (agreeing with the AI is
+circular); proposed gold changes come only from your own “Label is wrong” clicks.
+An endorsed card stays endorsed until you decide it, which removes the endorsement.
+Exports from before decision provenance existed count as manual.
+
 **Owner endorsement (not independent review).** If you decide not to review every
 item, type your name and use **Endorse AI review for all undecided cards**. The
 confirmation shows exact counts and says: “I have read the AI reviews and the
