@@ -436,6 +436,81 @@ def test_ai_basis_is_validated_and_summarised(fixture_root):
         ReviewExport.model_validate(bad)
 
 
+def frozen_corpus(root, text='Frozen corpus v1 wording only.'):
+    """A frozen v1 corpus holding a passage id that the live corpus no longer has (as after the v2/v3 extraction rebuild)."""
+    base = root / 'private/corpus-v1-frozen/data'
+    (base / 'manifests').mkdir(parents=True)
+    (base / 'processed').mkdir(parents=True)
+    (base / 'manifests/manifest.json').write_text((root / 'data/manifests/manifest.json').read_text())
+    (base / 'processed/observations.parquet').write_bytes((root / 'data/processed/observations.parquet').read_bytes())
+    live = (root / 'data/passages/report.jsonl').read_text()
+    old = json.loads(live)
+    old.update(passage_id='report:p001:old', text=text)
+    # The frozen corpus keeps the ids that still exist live (with their v1 text) plus the id the rebuild dropped.
+    put(root, 'private/corpus-v1-frozen/data/passages/report.jsonl', live + '\n' + json.dumps(old))
+    put(root, 'private/corpus-v1-frozen/data/passages/pdf.jsonl', (root / 'data/passages/pdf.jsonl').read_text())
+    return base
+
+
+def cite_old_id(root):
+    runs = [json.loads(line) for line in (root / 'data/runs/agent-dev-A1/gpt-6-luna.jsonl').read_text().splitlines()]
+    runs[0]['evidence'] = [{'label': 'P1', 'id': 'report:p001:old'}]
+    runs[0]['answer']['claims'][0]['citations'][0]['label'] = 'P1'
+    put(root, 'data/runs/agent-dev-A1/gpt-6-luna.jsonl', '\n'.join(json.dumps(r) for r in runs))
+    sheet = root / 'docs/human-review/passage-spot-check.md'
+    sheet.write_text(sheet.read_text().replace('`report:p001:test`', '`report:p001:old`', 1))
+
+
+def test_old_ids_resolve_from_the_frozen_corpus_with_badges(fixture_root):
+    frozen_corpus(fixture_root)
+    cite_old_id(fixture_root)
+    soup = BeautifulSoup(build_pack(fixture_root).read_text(), 'html.parser')
+    answer = soup.select_one('#answers-DEV-001')
+    assert 'Frozen corpus v1 wording only.' in answer.get_text()
+    assert answer['data-corpus'] == 'corpus v1 (frozen run)'
+    assert 'Evidence from corpus v1 (frozen run)' in answer.select_one('.corpus-badge').get_text()
+    source = soup.select_one('#sources-passage-01')
+    assert source['data-corpus'] == 'corpus v1 (frozen run)' and 'Frozen corpus v1 wording only.' in source.get_text()
+    assert soup.select_one('#sources-passage-02')['data-corpus'] == 'corpus v1 (frozen run)'
+    gold = soup.select_one('#gold-HO-001')
+    assert gold['data-corpus'] == 'corpus v3' and 'Synthetic text' in gold.get_text()  # live corpus text, not the frozen wording
+    assert 'Frozen corpus v1 wording only.' not in gold.get_text()
+    assert 'gold evidence ids from corpus v3' in answer.select_one('details.gold summary').get_text()
+    assert not soup.select('a[href^="file:"]')
+
+
+def test_old_id_without_frozen_corpus_fails_strictly(fixture_root):
+    cite_old_id(fixture_root)
+    with pytest.raises(ValueError, match='Unresolved evidence ID in corpus v3: report:p001:old'):
+        build_pack(fixture_root)
+
+
+def test_ids_missing_from_every_corpus_still_fail(fixture_root):
+    frozen_corpus(fixture_root)
+    sheet = fixture_root / 'docs/human-review/passage-spot-check.md'
+    sheet.write_text(sheet.read_text().replace('`report:p001:test`', '`report:p001:nowhere`', 1))
+    with pytest.raises(ValueError, match=r'Unresolved evidence ID in corpus v1 \(frozen run\): report:p001:nowhere'):
+        build_pack(fixture_root)
+
+
+def test_gold_ids_must_exist_in_the_live_corpus_even_if_frozen_has_them(fixture_root):
+    frozen_corpus(fixture_root)
+    cases = [json.loads(line) for line in (fixture_root / 'experiments/gold/draft_cases.jsonl').read_text().splitlines()]
+    next(c for c in cases if c['case_id'] == 'HO-001')['evidence_text'] = [{'passage_ids': ['report:p001:old']}]
+    put(fixture_root, 'experiments/gold/draft_cases.jsonl', '\n'.join(json.dumps(c) for c in cases))
+    with pytest.raises(ValueError, match='Unresolved evidence ID in corpus v3: report:p001:old'):
+        build_pack(fixture_root)
+
+
+def test_pack_id_ignores_corpus_changes(fixture_root):
+    def pack_id(path):
+        return re.search(r'const PACK_ID="([0-9a-f]+)"', path.read_text())[1]
+    before = pack_id(build_pack(fixture_root))
+    frozen_corpus(fixture_root)
+    cite_old_id(fixture_root)
+    assert pack_id(build_pack(fixture_root)) == before  # saved localStorage decisions are keyed by it
+
+
 def test_reason_chips_stay_reachable_on_small_windows(fixture_root):
     """Regression: after 'Label is wrong' the behaviour chips sat under the fixed footer on short windows and could not be clicked."""
     page = build_pack(fixture_root).read_text()

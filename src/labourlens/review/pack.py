@@ -84,6 +84,8 @@ OWNER_DECISIONS = [
 ]
 
 
+# Saved agent runs and the AI reviews were made against corpus v1; its passages and observations are kept here.
+FROZEN_V1 = 'private/corpus-v1-frozen/data'
 ENDORSEMENT = 'owner_endorsed_ai'
 ENDORSEMENT_TABS = ('answers', 'gold', 'sources', 'decisions')
 INDEPENDENT_FIELDS = ('verdict', 'failure_type', 'label', 'proposed_behavior', 'evidence', 'facts', 'match',
@@ -234,9 +236,11 @@ def load_tiebreak(root: Path, directory: Path | None = None) -> dict[tuple[str, 
         raise ValueError('Tie-break verdicts need the cards.jsonl they were written for')
     cards = {(c['tab'], c['case_id']): c for c in rows(directory / 'cards.jsonl')}
     texts: dict[str, str] = {}
-    for path in sorted((root / 'data/passages').glob('*.jsonl')):
-        for passage in rows(path):
-            texts[passage['passage_id']] = passage['text']
+    # Reasons are checked against every corpus a card may cite: the live one and the frozen v1 one used by the saved runs.
+    for passages_dir in (root / 'data/passages', root / FROZEN_V1 / 'passages'):
+        for path in sorted(passages_dir.glob('*.jsonl')) if passages_dir.exists() else []:
+            for passage in rows(path):
+                texts.setdefault(passage['passage_id'], passage['text'])
     result: dict[tuple[str, str], list[dict]] = {key: [] for key in cards}
     for path in files:
         reviewer = path.stem[len('verdicts-'):]
@@ -408,20 +412,24 @@ def link(url: str, label: str) -> str:
 
 
 class Evidence:
-    def __init__(self, root: Path):
+    def __init__(self, root: Path, base: Path | None = None, label: str = 'corpus v3', like: 'Evidence | None' = None):
+        """One corpus: passages, observations and manifest from `base` (default: the live data/ directory)."""
         self.root = root
-        entries = json.loads((root / 'data/manifests/manifest.json').read_text())['entries']
+        self.label = label
+        base = Path(base) if base else root / 'data'
+        entries = json.loads((base / 'manifests/manifest.json').read_text())['entries']
         self.manifest = {(e['source_id'], e['snapshot_id']): e for e in entries}
-        self.passages = {p['passage_id']: p for f in sorted((root / 'data/passages').glob('*.jsonl')) for p in rows(f)}
-        records = json.loads(pd.read_parquet(root / 'data/processed/observations.parquet').to_json(orient='records'))
+        self.passages = {p['passage_id']: p for f in sorted((base / 'passages').glob('*.jsonl')) for p in rows(f)}
+        records = json.loads(pd.read_parquet(base / 'processed/observations.parquet').to_json(orient='records'))
         self.observations = {r['observation_id']: r for r in records}
         self.siblings = {}
         for r in records:
             self.siblings.setdefault((r['source_id'], r['snapshot_id'], r['period']), []).append(r)
-        self.csv_cache: dict[str, list[str]] = {}
-        self.images: dict[str, str] = {}
-        self.page_sizes = {}
-        self.html_cache = {}
+        # Raw files are the same for every corpus, so rendered pages and file caches are shared.
+        self.csv_cache: dict[str, list[str]] = like.csv_cache if like else {}
+        self.images: dict[str, str] = like.images if like else {}
+        self.page_sizes = like.page_sizes if like else {}
+        self.html_cache = like.html_cache if like else {}
 
     def page_image(self, raw: Path, page: int) -> tuple[str, float, float]:
         key = hashlib.sha256(f'{raw}:{page}'.encode()).hexdigest()[:20]
@@ -517,7 +525,7 @@ class Evidence:
                     + para(f"{path} · CSV row {number} · {o['source_locator']}")
                     + '<pre>' + esc(lines[number - 1]) + '</pre>' + table + sibling_table + meta
                     + para('Original URL: ' + m['canonical_url']) + link(m['canonical_url'], 'Publisher (optional)') + '</div>')
-        raise ValueError(f'Unresolved evidence ID: {identifier}')
+        raise ValueError(f'Unresolved evidence ID in {self.label}: {identifier}')
 
 
 def select(name: str, options: tuple | list) -> str:
@@ -578,12 +586,16 @@ def hint(c: dict) -> str:
     return 'Are the number, period, units and requested series right? Do the cited sources support the comparison and caveats?'
 
 
-def card_start(tab: str, cid: str, family: str, priority: bool = False, quick: bool = False, check: str = '', ai: dict | None = None, todo: str = '', actions: str = '') -> str:
+def card_start(tab: str, cid: str, family: str, priority: bool = False, quick: bool = False, check: str = '', ai: dict | None = None, todo: str = '', actions: str = '', corpus: str = '') -> str:
     attrs = ''
     if ai is not None:
         attrs = f' data-ai-status="{esc(ai["status"])}" data-ai-suggest="{esc(json.dumps(ai["suggest"]))}" data-ai-basis="{esc(ai.get("basis", "earlier_passes"))}"'
+    badge = ''
+    if corpus:
+        attrs += f' data-corpus="{esc(corpus)}"'
+        badge = f'<p class="corpus-badge"><span>Evidence from {esc(corpus)}</span></p>'
     return (f'<article id="{tab}-{esc(cid)}" class="card" data-tab="{tab}" data-case="{esc(cid)}" data-family="{esc(family)}" data-priority="{str(priority).lower()}" data-quick="{str(quick).lower()}"{attrs}>'
-            f'<h2>{esc(cid)}{" · priority" if priority else ""}</h2><p class="check-hint"><strong>What to check: {esc(check or "Compare the requested fact with its inline source, then record your own judgement.")}</strong></p>'
+            f'<h2>{esc(cid)}{" · priority" if priority else ""}</h2>{badge}<p class="check-hint"><strong>What to check: {esc(check or "Compare the requested fact with its inline source, then record your own judgement.")}</strong></p>'
             + todo + actions + para(family.replace('_', ' ')))
 
 
@@ -633,7 +645,7 @@ def adjudication_banner(root: Path) -> tuple[str, set[str]]:
     return '<aside class="decisions"><h2>Needs the owner’s eyes — optional adjudication priorities</h2><p>This list identifies open decisions, not verdicts. Decide before revealing AI opinions.</p><pre>' + esc('\n'.join(selected)) + '</pre>' + links + '</aside>', ids
 
 
-def build_pack(root: Path = ROOT, tiebreak_dir: Path | None = None, use_tiebreak: bool = True) -> Path:
+def build_pack(root: Path = ROOT, tiebreak_dir: Path | None = None, use_tiebreak: bool = True, frozen_dir: Path | None = None) -> Path:
     root = root.resolve()
     destination = root / 'private/human-review/review-pack/index.html'
     ignored = subprocess.run(['git', 'check-ignore', '--quiet', str(destination)], cwd=root, check=False)
@@ -642,7 +654,10 @@ def build_pack(root: Path = ROOT, tiebreak_dir: Path | None = None, use_tiebreak
     gold = {c['case_id']: c for c in rows(root / 'experiments/gold/draft_cases.jsonl')}
     sample = json.loads((root / 'experiments/human-review-sample/selection.json').read_text())['ids']
     runs = {r['case_id']: r for r in rows(root / 'data/runs/agent-dev-A1/gpt-6-luna.jsonl')}
-    ev = Evidence(root)
+    ev = Evidence(root, label='corpus v3')  # gold v3.x ids and the held-out v2 cases resolve here
+    frozen = Path(frozen_dir) if frozen_dir else root / FROZEN_V1
+    # Saved runs and the source-check sheets cite corpus v1 ids that no longer exist in the live corpus.
+    ev_old = Evidence(root, base=frozen, label='corpus v1 (frozen run)', like=ev) if (frozen / 'manifests/manifest.json').exists() else ev
     priority_banner, priority = adjudication_banner(root)
     judgement_calls = '<aside class="decisions"><h2>Judgement calls</h2>' + ''.join('<p><strong>' + esc(i) + '</strong><br>' + esc(a) + '<br>' + esc(b) + '</p>' for i, a, b in DOUBTS) + '</aside>'
     content = ['<details class="pack-guide" id="pack-guide"><summary>Start here / full guide / judgement-call background</summary>' + owner_material(root) + priority_banner + judgement_calls + '</details>']
@@ -664,7 +679,7 @@ def build_pack(root: Path = ROOT, tiebreak_dir: Path | None = None, use_tiebreak
         a = r.get('answer') or {}
         info = suggestions[('answers', cid)]
         s = card_start('answers', cid, c['family'], cid in priority or cid in flagged_answers, cid in flagged_answers, hint(c), info,
-                       what_to_do('answers', a.get('status', r.get('outcome'))), fast_actions('answers', '', info))
+                       what_to_do('answers', a.get('status', r.get('outcome'))), fast_actions('answers', '', info), ev_old.label)
         s += '<div class="review-split"><section class="answer-pane">'
         purposes = {'factual_lookup': 'Find the requested published fact, using the right population and period.', 'numerical_comparison': 'Compare the requested periods or groups without mixing units or series.', 'cross_source_synthesis': 'Bring the relevant official sources together, keeping their definitions distinct.', 'revision_conflict': 'Distinguish preliminary estimates, final reports and dataset snapshots.', 'ambiguity_insufficient_causal': 'Separate what can be established from ambiguity, missing evidence and unsupported causes.', 'adversarial': 'Handle the legitimate question without following malicious or unsafe instructions.'}
         s += '<p class="purpose"><strong>What is being asked:</strong> ' + esc(purposes[c['family']]) + '</p><h3>QUESTION</h3>' + para(c['question'])
@@ -691,27 +706,27 @@ def build_pack(root: Path = ROOT, tiebreak_dir: Path | None = None, use_tiebreak
             s += '<h4 id="evidence-' + esc(cid + '-' + label) + '">' + esc(label) + '</h4>'
             if item is None:
                 s += para('Citation has no saved evidence mapping — citation problem.')
-            elif item['id'] in ev.passages or item['id'] in ev.observations:
-                s += ev.render(item['id'])
+            elif not item['id'].startswith('calc:'):
+                s += ev_old.render(item['id'])  # strict: an id missing from the frozen corpus fails the build
                 if label in r.get('evidence_text', {}):
                     s += '<details><summary>Exact rendered input seen by the system</summary><pre>' + esc(r['evidence_text'][label]) + '</pre></details>'
             else:
                 # Calculation citations are saved deterministic tool results; their source rows are linked below.
                 s += '<pre>' + esc(r.get('evidence_text', {}).get(label, json.dumps(item))) + '</pre>'
                 for e in r.get('evidence', []):
-                    if e['id'] in ev.observations:
-                        s += ev.render(e['id'])
+                    if e['id'] in ev_old.observations:
+                        s += ev_old.render(e['id'])
         if not labels:
             s += para('No claim citations were supplied. Check whether absence of evidence is justified.')
         s += '</section></div>' + ai_box(info) + controls('answers', cid)
-        s += '<details class="gold"><summary>Gold says — open only AFTER forming your own view</summary>' + gold_panel(c, ev) + '</details>'
+        s += f'<details class="gold"><summary>Gold says — open only AFTER forming your own view (gold evidence ids from {esc(ev.label)})</summary>' + gold_panel(c, ev) + '</details>'
         content.append(s + '</article>')
     heldout = sorted(cid for cid in gold if cid.startswith('HO-'))
     for cid in heldout + [i for i in EXTRA if i in gold]:
         c = gold[cid]
         info = suggestions[('gold', cid)]
         s = card_start('gold', cid, c['family'], cid in priority or cid in QUICK_GOLD, cid in QUICK_GOLD, 'Pass 1: is the question realistic and specific? Pass 2: compare the proposed label and facts with the inline evidence.', info,
-                       what_to_do('gold'), fast_actions('gold', '', info)) + ('<p>Extra owner decision case (not held-out)</p>' if cid in EXTRA else '')
+                       what_to_do('gold'), fast_actions('gold', '', info), ev.label) + ('<p>Extra owner decision case (not held-out)</p>' if cid in EXTRA else '')
         s += '<h3>Pass 1 — question only</h3>' + para(c['question'])
         for name in ('realistic', 'in_scope', 'unambiguous'):
             s += select(name, ('yes', 'no', 'unsure'))
@@ -724,7 +739,7 @@ def build_pack(root: Path = ROOT, tiebreak_dir: Path | None = None, use_tiebreak
     for c in v2_cases:
         cid = c['case_id']
         s = card_start('heldout2', cid, c['family'], False, False, 'Pass 1: is the question realistic, in scope and unambiguous? Pass 2: compare the proposed label, facts and evidence with the inline source.', v2_info,
-                       what_to_do('heldout2'), fast_actions('heldout2', '', v2_info)) + para('Held-out v2 case · source group: ' + str(c.get('source_group', 'unspecified')) + ' · draft, not human reviewed')
+                       what_to_do('heldout2'), fast_actions('heldout2', '', v2_info), ev.label) + para('Held-out v2 case · source group: ' + str(c.get('source_group', 'unspecified')) + ' · draft, not human reviewed')
         s += '<h3>Pass 1 — question only</h3>' + para(c['question'])
         for name in ('realistic', 'in_scope', 'unambiguous'):
             s += select(name, ('yes', 'no', 'unsure'))
@@ -736,8 +751,8 @@ def build_pack(root: Path = ROOT, tiebreak_dir: Path | None = None, use_tiebreak
             cid = f'{kind}-{n:02}'
             info = suggestions[('sources', cid)]
             s = card_start('sources', cid, kind, cid in QUICK_SOURCES, cid in QUICK_SOURCES, 'Compare the highlighted passage with the original page and check boundaries/metadata.' if kind == 'passage' else 'Compare the highlighted CSV row, column, population, period, units and seasonal basis; a dash is not zero.', info,
-                           what_to_do('sources'), fast_actions('sources', kind, info))
-            s += ev.render(identifier) + ai_box(info) + controls('sources', cid)
+                           what_to_do('sources'), fast_actions('sources', kind, info), ev_old.label)
+            s += ev_old.render(identifier) + ai_box(info) + controls('sources', cid)
             content.append(s + '</article>')
     checklist_doc = (root / 'docs/human-review/ai-verification-of-pre-reviews.md').read_text()
     section = checklist_doc.split('## 4.', 1)[1].split('## 5.', 1)[0]
@@ -745,12 +760,12 @@ def build_pack(root: Path = ROOT, tiebreak_dir: Path | None = None, use_tiebreak
     checklist = '<details data-panel="sources" class="source-support"><summary>Owner’s 12-item checklist and additional original pages</summary><section class="card checklist"><h2>Owner’s 12-item checklist</h2>' + ''.join(f'<label><input type="checkbox" data-check="check-{n}"> {esc(t)}</label>' for n, t in enumerate(checks, 1)) + '</section>'
     checklist += '<section class="card"><h2>Additional original pages for checklist items 5 and 9–10</h2>'
     for source, page_number in [('mom-2026-q2-final', 59), ('mom-2023-q1-final', 4)]:
-        candidate = next((p for p in ev.passages.values() if p['source_id'] == source and p.get('page_number') == page_number), None)
+        candidate = next((p for p in ev_old.passages.values() if p['source_id'] == source and p.get('page_number') == page_number), None)
         if candidate:
-            checklist += ev.render(candidate['passage_id'])
+            checklist += ev_old.render(candidate['passage_id'])
     checklist += para('Publisher-side authenticity, current licence applicability and unresolved employment-population basis cannot be established from offline snapshots alone. Record an unresolved issue unless independently verified; do not treat this pack as proof of current publisher terms.') + '</section></details>'
     digest = hashlib.sha256(json.dumps({'sample': sample, 'gold_ids': sorted(gold)}, sort_keys=True).encode()).hexdigest()[:16]
-    assets = json.dumps(ev.images).replace('<', '\\u003c')
+    assets = json.dumps(ev.images).replace('<', '\\u003c')  # images are shared by both corpus views
     page = HEADER
     if v2_cases:
         page = page.replace('<button role="tab" data-open="sources" aria-selected="false">Source checks</button>', f'<button role="tab" data-open="heldout2" aria-selected="false">Held-out v2 ({len(v2_cases)})</button><button role="tab" data-open="sources" aria-selected="false">Source checks</button>')
@@ -1010,6 +1025,7 @@ HEADER = '''<!doctype html><html lang="en"><head><meta charset="utf-8"><meta nam
  .sticky-review .toolbar{gap:8px;font-size:14px}.sticky-review label.inline{margin-right:0}.sticky-review button{padding:6px 10px}.sticky-review #family{max-width:190px}.sticky-review #reviewer{max-width:135px}.progress-line{font-size:14px}#quick-description{font-size:12px;line-height:1.35}.focus-mode article.card>h2{margin:4px 0;font-size:1.2rem}.focus-mode article.card>.check-hint{margin:6px 0;padding:8px}.focus-mode article.card>p:not(.check-hint){margin:4px 0;font-size:.8rem}.focus-mode h3{margin:8px 0;font-size:.92rem}.focus-mode .answer-pane p{margin:8px 0}.focus-mode .evidence h4{margin:6px 0;font-size:.9rem}.focus-mode .evidence p{margin:4px 0;font-size:.85rem}.focus-mode .purpose{font-size:.85rem}
  .endorsement-bar{background:#f0eafa;border:1px solid #795c9c;color:#4a3264;padding:10px;margin:8px 0}.endorsement-bar button{margin-left:12px}.card[data-endorsed=true]{border-right:5px solid #795c9c}#endorsement-warning{font-size:.85rem;color:#6c4100;margin:3px 0}
  .fast-actions,.what-to-do,.ai-box,.shortcut-strip{display:none}.fast-mode .fast-actions{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin:10px 0}.fast-mode .what-to-do{display:block;font-size:1.15rem;background:#fffbe6;border-left:5px solid #c07500;padding:10px 16px;margin:8px 0}.fast-mode .what-to-do p{margin:4px 0}.fast-mode .check-hint{display:none}.fast-mode .ai-box{display:block}.fast-mode .shortcut-strip{display:block}.fast-btn{font-size:1.25rem;font-weight:700;min-height:56px;min-width:150px;border-width:2px}kbd{font:700 .8em ui-monospace,monospace;border:1px solid #888;border-radius:4px;padding:1px 6px;background:#f3f3f3;margin-left:6px}.agree-ai{background:#e8f4ee;border-color:#2b7a4b}.agree-ai:disabled{opacity:.55}.no-agree{font-weight:700;color:#6c4100;background:#fff3d6;padding:10px;border-radius:5px}.reason-chips{display:none;flex-basis:100%;gap:8px;flex-wrap:wrap;align-items:center}.card[data-pick-reason=true] .reason-chips{display:flex}.reason-chips button{font-size:.95rem;padding:8px 12px}.ai-box{background:#eef3fb;border:2px solid #4a6fa5;border-radius:6px;padding:12px;margin:14px 0;font-size:1.05rem}.ai-box[data-status=disagree],.ai-box[data-status=none]{background:#fff3d6;border-color:#c07500}.shortcut-strip{width:100%;text-align:center;font-size:.85rem;border-bottom:1px solid #cad6d5;padding-bottom:6px;margin-bottom:6px}.focus-navigation{flex-direction:column;gap:6px}.nav-row{display:flex;gap:16px;align-items:center;justify-content:center}.card[data-unsure=true] .fast-actions::after{content:'Marked unsure — still undecided';font-weight:700;color:#6c4100;flex-basis:100%}.mini-gloss{font-size:.85rem;opacity:.85}
+ .corpus-badge{margin:2px 0 6px}.corpus-badge span{display:inline-block;font-size:.75rem;font-weight:700;background:#e9eef3;color:#2f4a63;border:1px solid #9bb0c4;border-radius:10px;padding:1px 10px}.card[data-corpus^='corpus v1'] .corpus-badge span{background:#f3ead9;color:#6c4100;border-color:#d8b872}
 </style></head><body><header><a class="skip" href="#cards">Skip to review cards</a><p class="private">PRIVATE: contains MOM text; do not commit or share</p><h1>LabourLens / Owner review</h1><h2>How to use this</h2><p>1. Open this file in your browser; no connection or API is needed.<br>2. Decide each card yourself. Use two passes: form a view before opening Gold says or AI review.<br>3. Type your reviewer name and click Export. Keep the downloads private; ingest only shares comments you mark shareable.</p>
 <details><summary>Glossary — plain English</summary><dl><dt>Resident vs total</dt><dd>Residents are citizens and permanent residents; total/overall may include non-residents. Do not substitute one population for another.</dd><dt>Seasonally adjusted vs not</dt><dd>Adjusted values remove recurring seasonal patterns to improve comparisons. Unadjusted values retain them; they are distinct series.</dd><dt>Advance vs final release</dt><dd>Advance is an early estimate. Final releases use fuller information; later dataset snapshots may revise history again.</dd><dt>Quarter notation: 2026-Q2</dt><dd>April to June 2026. Q1 is January–March; Q3 July–September; Q4 October–December.</dd><dt>Ratio vs percent vs percentage points</dt><dd>A ratio compares quantities; a percent is per hundred. A rise from 2% to 3% is 1 percentage point, or a 50% relative increase.</dd><dt>Vacancy ratio</dt><dd>Job vacancies per unemployed person. A ratio of 1.48 means about 148 vacancies for every 100 unemployed people; it is not 1.48%.</dd></dl></details>
 <nav role="tablist" aria-label="Review sections"><button role="tab" data-open="guided" aria-selected="true">Guided review</button><button role="tab" data-open="decisions" aria-selected="false">Decisions (10)</button><button role="tab" data-open="answers" aria-selected="false">Answers (40)</button><button role="tab" data-open="gold" aria-selected="false">Held-out gold (31)</button><button role="tab" data-open="sources" aria-selected="false">Source checks</button></nav><noscript>JavaScript is required to display inline PDF images, save decisions and export.</noscript></header>
