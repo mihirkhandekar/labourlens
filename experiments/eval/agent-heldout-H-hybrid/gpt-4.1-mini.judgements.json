@@ -368,7 +368,7 @@
   }
  },
  "HO-022": {
-  "input_sha256": "13d501e0c8b899f2dd03c113a4ccad61bae641f475dd4bf4e2ec91245c25d245",
+  "input_sha256": "92bc6e0812fee61322de40c651d182374caf64c89c7c6f52bc53338103d2e00b",
   "judgement": {
    "claims": [
     {
@@ -387,9 +387,14 @@
      "index": 0,
      "status": "missing",
      "note": ""
+    },
+    {
+     "index": 1,
+     "status": "missing",
+     "note": ""
     }
    ],
-   "cost_usd": 0.001194
+   "cost_usd": 0.001751
   }
  },
  "HO-023": {

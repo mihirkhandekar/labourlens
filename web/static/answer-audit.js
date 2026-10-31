@@ -21,7 +21,7 @@ const label = key => key
 export function decorateAnswer(target, response) {
   const runId = response?.run_id ?? response?.answer?.run_id;
   if (typeof runId === 'string' && /^[a-f0-9]{12}$/.test(runId)) {
-    target.append(element('p', 'small muted', `Audit ID: ${runId}`));
+    target.append(element('p', 'audit-id mono', `Audit ID ${runId}`));
   }
   return target;
 }

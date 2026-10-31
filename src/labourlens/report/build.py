@@ -96,6 +96,7 @@ class _Artifacts:
             (p.parent.as_posix() == "data/export" and p.suffix == ".json")
             or (path.startswith("experiments/") and p.suffix in {".json", ".jsonl", ".md"})
             or path == "docs/mcp-demo-transcript.md"
+            or re.fullmatch(r"experiments/heldout/paired(?:-v3\.[234])?\.txt", path) is not None
             or (path.startswith("data/manifests/") and p.suffix in {".json", ".jsonl"})
         )
 
@@ -382,7 +383,7 @@ def _agent_trace(artifacts: _Artifacts) -> tuple[list, list, dict]:
                 if _label(record.get(key)):
                     row[key] = record[key]
             # Counts and tool names only: never call arguments or results.
-            row["tools_used"] = [tool for tool in record.get("tools_used", []) if tool in {"get_series", "get_statistic", "search_reports", "calculate", "get_source", "compare_periods"}]
+            row["tools_used"] = [tool for tool in record.get("tools_used", []) if tool in {"get_series", "get_statistic", "search_reports", "calculate", "calculate_change", "get_source", "compare_periods"}]
             trace.append(row)
             for key in ("tool_errors", "operational_failure", "n_ungrounded_numbers"):
                 value = record.get(key)
@@ -445,12 +446,55 @@ def _saved_replay(artifacts: _Artifacts) -> list[dict]:
 
 
 
+def _ladder(artifacts: _Artifacts) -> dict:
+    """Retrieval ladder R0-R3 (128 dev cases): numeric measurements only."""
+    path = "experiments/runs/dev-R-summary.json"
+    data = artifacts.mapping(path)
+    configs = _numeric(data.get("metrics"))
+    if not configs:
+        return {}
+    context = {}
+    for item in data.get("end_to_end_context_coverage", []):
+        if isinstance(item, dict) and _label(item.get("config")):
+            context[item["config"]] = _selected(item, ("n", "gold_in_context_of_top8_chunks", "gold_in_first8_context_passages"))
+    return {"n_cases": data.get("n_cases") if _number(data.get("n_cases")) else None,
+            "configs": configs, "hint_coverage": _numeric(data.get("hint_coverage")),
+            "end_to_end_context": context,
+            "first_relevant_rank_histogram": _numeric(data.get("first_relevant_rank_histogram")),
+            "provenance": [path]}
+
+
+_PAIRED_LINE = re.compile(r"(gpt-[A-Za-z0-9.]+-luna) diff (-?[\d.]+) 95% CI \[(-?[\d.]+), (-?[\d.]+)\] better (\d+) worse (\d+)")
+
+
+def _paired(artifacts: _Artifacts) -> list[dict]:
+    """Held-out r3-minus-hybrid paired differences, one entry per gold version."""
+    entries = []
+    for path, version in (("experiments/heldout/paired.txt", "v3.5"), ("experiments/heldout/paired-v3.4.txt", "v3.4"),
+                          ("experiments/heldout/paired-v3.3.txt", "v3.3"), ("experiments/heldout/paired-v3.2.txt", "v3.2")):
+        text = artifacts.load(path)
+        if not isinstance(text, str):
+            continue
+        recorded_version = re.search(r"\bGOLD (v\d+(?:\.\d+)*)\b", text)
+        if recorded_version:
+            version = recorded_version[1]
+        models = {m[1]: {"diff": float(m[2]), "ci95": [float(m[3]), float(m[4])], "better": int(m[5]), "worse": int(m[6])}
+                  for m in _PAIRED_LINE.finditer(text)}
+        n, resamples, seed = (re.search(pattern, text) for pattern in (r"n=(\d+)", r"(\d+) case-bootstrap resamples", r"seed (\d+)"))
+        if models and n and resamples and seed:
+            entries.append({"gold_version": version, "n": int(n[1]), "resamples": int(resamples[1]),
+                            "seed": int(seed[1]), "models": models, "provenance": [path]})
+    return entries
+
+
 def build_report(root: Path) -> dict:
     artifacts = _Artifacts(root)
     sources = _sources(artifacts)
     charts = _charts(artifacts)
     summary = _summary(artifacts)
     retrieval_rows, retrieval_paths = _experiments(artifacts, "experiments/runs/dev-")
+    ladder = _ladder(artifacts)
+    paired = _paired(artifacts)
     answer_rows, answer_paths = _experiments(artifacts, "experiments/runs/answer-")
     _answer_costs(artifacts, answer_rows)
     answer_paths = sorted(set(answer_paths + [path for row in answer_rows for path in row["provenance"]]))
@@ -470,16 +514,16 @@ def build_report(root: Path) -> dict:
         "schema_version": "report-1.0",
         "generated_at": datetime.now(timezone.utc).isoformat(),
         "summary": summary, "sources": sources, "charts": charts, "eda": _eda(charts),
-        "retrieval": _section("Development retrieval comparisons. Configurations differ between experiments.", retrieval_rows, retrieval_paths),
+        "retrieval": _section("Development retrieval comparisons. Configurations differ between experiments.", retrieval_rows, retrieval_paths + ladder.get("provenance", []), ladder=ladder),
         "answers": _section("Saved answer metrics. Model outputs are not published.", answer_rows, answer_paths,
                             limitations=["Costs that were not recorded are not estimated."]),
         "agent": _section("Bounded workflow measurements on statistics-only traces.", agent_rows, agent_paths + trace_paths, trace=trace, events=_saved_replay(artifacts)),
         "mcp": mcp,
         "reconciliation": reconciliation,
         "security": _section("Threat-suite measurements. They do not guarantee security.", security_rows, security_paths),
-        "evaluation": _section("Development comparisons A1–A5 and registered held-out H-r3/H-hybrid luna runs. Gold v3.2: 237 development and 31 held-out cases; AI-drafted, not human reviewed.", eval_rows, eval_paths,
-                               errors={"scope": "agent score records", "counts": errors, "provenance": trace_paths},
-                               limitations=["Held-out evaluation used unreviewed AI-drafted gold, not human-validated labels.", "Paired held-out intervals include zero; retain r3 provisionally, not as a proven winner.", "AI judgments are not human review.", "Metric definitions differ between evaluation stages."]),
+        "evaluation": _section("Development A1–A5 and registered held-out H-r3/H-hybrid luna runs. Measurements retain their recorded gold versions. Owner review complete 31 Oct 2026: 125 cards decided by the owner (30 own verdicts, 95 by agreeing per card with AI suggestions or the three-pass AI tie-break), not independent inter-rater evidence. Gold v3.5 development and all four registered held-out rescoring runs are complete on existing generated outputs; held-out stale judge entries were rejudged. Paired v3.2/v3.3/v3.4 history is retained beside v3.5.", eval_rows, eval_paths + [path for entry in paired for path in entry["provenance"]],
+                               errors={"scope": "agent score records", "counts": errors, "provenance": trace_paths}, paired=paired,
+                               limitations=["Generation used AI-drafted gold before owner review; post-run owner review covers selected cards, not the entire gold set.", "Forty-five gold cards are owner reviewed; the remaining 223 remain draft.", "Current v3.5 and historical paired intervals include zero; the comparison is inconclusive under the registered rule.", "Gold v3.5 changes HO-022 after held-out execution; rescoring is post-run adjudication, not a fresh frozen-gold experiment.", "AI-assisted per-card owner decisions are not blinded independent annotation or inter-rater evidence.", "Metric definitions differ between evaluation stages."]),
         "quality": _section("Validation outcomes, including warnings.", quality_rows, [quality_path], metrics=_numeric(quality_data.get("summary", {}))),
         "limitations": ["Model outputs are not published.", "Report passages are not published.", "Missing artifacts are marked missing.", "Only committed artifacts supply measurements.", "Series definitions are kept separate.", "The population basis of the dataset employment series is unverified."],
         "provenance": {"commit": artifacts.commit, "artifacts": list(artifacts.provenance.values()),

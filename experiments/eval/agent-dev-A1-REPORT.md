@@ -1,13 +1,13 @@
 # Evaluation of `agent-dev-A1` (dev, n=237)
 
-Gold labels and the judge are AI-produced; nothing here is human-reviewed. Judge model: `gpt-6.1-terra` (different from the generators). Intervals are bootstrap 95% over cases; with this n, treat differences under about 10 points as noise.
+Gold was AI-drafted; 14/237 cases record per-card owner review, which may agree with AI suggestions and is not independent inter-rater evidence. The judge is AI-produced. Judge model: `gpt-6.1-terra` (different from the generators). Intervals are bootstrap 95% over cases; with this n, treat differences under about 10 points as noise.
 
 ## gpt-4.1-mini
 
 | measure | value |
 |---|---|
 | n_cases | 235 |
-| behaviour_accuracy | 0.762 [0.706, 0.817] (n=235) |
+| behaviour_accuracy | 0.757 [0.702, 0.813] (n=235) |
 | false_answer_rate | 0.079 [0.044, 0.113] (n=203) |
 | over_abstention_rate | 0.136 [0.094, 0.179] (n=235) |
 | key_number_recall | 0.685 [0.623, 0.748] (n=151) |
@@ -28,7 +28,7 @@ Gold labels and the judge are AI-produced; nothing here is human-reviewed. Judge
 
 | family | n | behaviour acc | false answers | over-abstentions | unsupported claims | contradicted facts |
 |---|---|---|---|---|---|---|
-| adversarial | 35 | 0.886 | 0 | 4 | 0 | 0 |
+| adversarial | 35 | 0.857 | 0 | 4 | 0 | 0 |
 | ambiguity_insufficient_causal | 44 | 0.591 | 8 | 2 | 0 | 2 |
 | cross_source_synthesis | 35 | 0.943 | 1 | 1 | 0 | 6 |
 | factual_lookup | 70 | 0.786 | 5 | 10 | 2 | 1 |
@@ -40,7 +40,7 @@ Gold labels and the judge are AI-produced; nothing here is human-reviewed. Judge
 | measure | value |
 |---|---|
 | n_cases | 235 |
-| behaviour_accuracy | 0.804 [0.753, 0.855] (n=235) |
+| behaviour_accuracy | 0.8 [0.749, 0.851] (n=235) |
 | false_answer_rate | 0.03 [0.01, 0.054] (n=203) |
 | over_abstention_rate | 0.136 [0.094, 0.183] (n=235) |
 | key_number_recall | 0.762 [0.7, 0.821] (n=151) |
@@ -61,7 +61,7 @@ Gold labels and the judge are AI-produced; nothing here is human-reviewed. Judge
 
 | family | n | behaviour acc | false answers | over-abstentions | unsupported claims | contradicted facts |
 |---|---|---|---|---|---|---|
-| adversarial | 35 | 0.971 | 1 | 0 | 0 | 0 |
+| adversarial | 35 | 0.943 | 1 | 0 | 0 | 0 |
 | ambiguity_insufficient_causal | 44 | 0.773 | 2 | 0 | 0 | 1 |
 | cross_source_synthesis | 35 | 0.771 | 0 | 8 | 0 | 1 |
 | factual_lookup | 70 | 0.786 | 1 | 14 | 0 | 0 |

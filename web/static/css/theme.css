@@ -1,0 +1,29 @@
+/* Manual theme override. tokens.css follows the operating system through prefers-color-scheme;
+   the toggle sets data-theme on <html> and these blocks repeat the same token values so that a
+   choice made on the page wins over the system setting. Keep them in step with tokens.css. */
+:root[data-theme="light"] {
+  color-scheme: light;
+  --paper: #fbf8f2; --paper-2: #f3eee4; --paper-3: #e9e2d3; --surface: #fffdf9;
+  --ink: #14201c; --ink-2: #39463f; --muted: #68746d;
+  --line: rgba(20, 32, 28, 0.12); --line-strong: rgba(20, 32, 28, 0.24);
+  --accent: #0f5c4d; --accent-ink: #f6fbf8; --accent-soft: #d9ebe3;
+  --brass: #b07a2a; --brass-soft: #f1e3c8;
+  --ok: #2e7d5b; --warn: #b07a2a; --bad: #a63d2f; --bad-soft: #f4dad4; --info: #2d5f8a;
+  --c1: #0f5c4d; --c2: #b07a2a; --c3: #2d5f8a; --c4: #a63d2f; --c5: #6a5a8c; --c6: #7b8b83;
+  --shadow-soft: 0 1px 1px rgba(20, 32, 28, 0.04), 0 18px 48px -24px rgba(20, 32, 28, 0.22);
+  --shadow-lift: 0 2px 2px rgba(20, 32, 28, 0.05), 0 32px 80px -32px rgba(20, 32, 28, 0.32);
+  --inner-hi: inset 0 1px 0 rgba(255, 255, 255, 0.7);
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --paper: #0f1512; --paper-2: #151d19; --paper-3: #1c2621; --surface: #18211d;
+  --ink: #eef2ee; --ink-2: #c7d1ca; --muted: #8fa097;
+  --line: rgba(238, 242, 238, 0.12); --line-strong: rgba(238, 242, 238, 0.26);
+  --accent: #5fc2a6; --accent-ink: #07130f; --accent-soft: #1c3a31;
+  --brass: #d9a54f; --brass-soft: #3a2f1a;
+  --ok: #6fcf9f; --warn: #d9a54f; --bad: #e8806f; --bad-soft: #3d1f1a; --info: #7fb2e0;
+  --c1: #5fc2a6; --c2: #d9a54f; --c3: #7fb2e0; --c4: #e8806f; --c5: #a898d4; --c6: #8fa097;
+  --shadow-soft: 0 1px 1px rgba(0, 0, 0, 0.3), 0 18px 48px -24px rgba(0, 0, 0, 0.7);
+  --shadow-lift: 0 2px 2px rgba(0, 0, 0, 0.35), 0 32px 80px -32px rgba(0, 0, 0, 0.8);
+  --inner-hi: inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}

@@ -1,3 +1,4 @@
-Paired held-out difference in behaviour accuracy, r3 minus hybrid, n=31, 10000 case-bootstrap resamples, seed 20261030, GOLD v3.4 (HO-027 clarify, HO-023/HO-004 evidence); v3.3 in paired-v3.3.txt, v3.2 in paired-v3.2.txt
+Paired held-out difference in behaviour accuracy, r3 minus hybrid, n=31, 10000 case-bootstrap resamples, seed 20261030, GOLD v3.5 (owner-reviewed HO-022 answer, DEV-018 clarify); history in paired-v3.4.txt, paired-v3.3.txt, paired-v3.2.txt
+Method: join by case_id, sort IDs, bootstrap paired case differences with Python random.Random(20261030), percentile indices 250 and 9749.
 gpt-6-luna diff 0.161 95% CI [0.000, 0.323] better 6 worse 1
 gpt-5.6-luna diff 0.097 95% CI [-0.032, 0.226] better 4 worse 1

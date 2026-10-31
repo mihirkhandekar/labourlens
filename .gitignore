@@ -30,3 +30,6 @@ data/feedback/
 
 # audit logs, feedback and the per-install audit salt: never commit
 data/audit/
+
+# Local UI screenshots (not committed)
+artifacts/screenshots-redesign/

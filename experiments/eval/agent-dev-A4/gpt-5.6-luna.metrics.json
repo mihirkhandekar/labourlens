@@ -2,7 +2,7 @@
  "label": "gpt-5.6-luna",
  "judge": "gpt-6.1-terra",
  "provenance": {
-  "gold_sha256": "647b26a2f0faa86be30ad897840bc1887b54f55c27268d141565b94cb22998e8",
+  "gold_sha256": "aac4b405b51c7cebf019c3b3629509ecb711be32fb830a8e78c4c7b902219e09",
   "prompt_sha256": {
    "planner": "df68ef8e5e287d1a0b1f71d938e85ec25b4f03eeec501bc439a3a77aec2482dc",
    "answer": "e854b64c72116c4c175082e70f39c312ed94b1f37778e7daf3f9a51de1bac350",
@@ -12,7 +12,7 @@
    "answer_user": "c4f4ef05d7d1b87fca94bee65cbf2a38999c181dc2e92bced9cdf8ef92b006e7"
   },
   "agent_config": "planner=gpt-5.6-luna|answer=gpt-5.6-luna|planner_v1|answer_v3|retrieval=r3w",
-  "git_head": "617d168b8badd9db775acd1bfd12f4e26d736ddb",
+  "git_head": "310be48078f8cc57c85fd1f9b92da56c46797193",
   "price_table_sha256": "634b32441c3495b4c3ec13efa3af1e9cc99e5c7523eac3a15a5c238c3acaeb5c",
   "eligible_n": 237,
   "available_n": 237,
@@ -25,10 +25,10 @@
  "metrics": {
   "n_cases": 237,
   "behaviour_accuracy": {
-   "rate": 0.911,
+   "rate": 0.907,
    "ci95": [
-    0.878,
-    0.945
+    0.869,
+    0.941
    ],
    "n": 237
   },
@@ -140,7 +140,7 @@
  "by_family": {
   "adversarial": {
    "n": 35,
-   "behaviour_accuracy": 0.971,
+   "behaviour_accuracy": 0.943,
    "false_answer": 1,
    "over_abstain": 0,
    "unsupported_claims": 0,

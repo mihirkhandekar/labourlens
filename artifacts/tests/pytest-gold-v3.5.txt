@@ -1,0 +1,6 @@
+Verification summary — 31 October 2026
+Command: uv run pytest -q -m 'not corpus'
+Observed result: 416 passed, 52 deselected, 5 warnings in 56.27s
+Warnings: PyMuPDF/SWIG deprecations for SwigPyPacked, SwigPyObject and swigvarlink.
+No corpus tests, report build, paid judge call or model generation was run by this verification command.
+This file is a summary of the observed test output, not a verbatim stdout transcript.

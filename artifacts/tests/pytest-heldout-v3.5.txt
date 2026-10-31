@@ -1,0 +1,8 @@
+Verification summary — held-out v3.5 publication, 31 October 2026
+Command: uv run pytest -q -m 'not corpus'
+Initial run: 1 failed, 416 passed, 52 deselected, 5 warnings in 52.36s.
+Failure: tests/web/test_report_ladder_paired.py::test_paired_projection_parses_numbers_only. The report builder hardcoded paired.txt as v3.5 even when the artifact header recorded v3.4.
+Fix: read an explicit GOLD version from the paired artifact header; retain filename fallback for older headers. Test expectations were not weakened.
+Final run: 417 passed, 52 deselected, 5 warnings in 49.01s.
+Warnings: PyMuPDF/SWIG deprecations.
+This is an observed-output summary, not a verbatim stdout transcript. No corpus tests, report build, model generation or paid calls were run by this verification.

@@ -148,7 +148,7 @@ The evaluation branch consumes saved runs rather than changing live answers. Dev
 | Security | `src/labourlens/security/guards.py`, `threat_suite.py` | Injection and output guards, adversarial suite |
 | Evaluation | `src/labourlens/evaluation/harness.py` | Metrics from saved raw runs |
 | Audit | `src/labourlens/audit/log.py` | Run, feedback and event logs |
-| Web | `src/labourlens/report/app.py`, `serve.py`, `build.py`, `audit.py`; `web/index.html`, `web/static/` | FastAPI server, report builder, 13-section page |
+| Web | `src/labourlens/report/app.py`, `serve.py`, `build.py`, `audit.py`; `web/index.html`, `web/static/` | FastAPI server, report builder; single-page front end with three views (Overview, Presentation, Workbench), self-hosted fonts and no inline script or style |
 | Prompts | `prompts/planner_v1.md`, `answer_v1.md` to `answer_v4.md`, `answer_naive.md`, `repair_v1.md`, `judge_v1.md` | Versioned prompts with matching `_user.md` templates |
 | Tests | `tests/data/`, `tests/retrieval/`, `tests/mcp/`, `tests/web/`, `tests/test_security.py`, `tests/test_audit_and_notes.py` | Unit, integration, protocol and adversarial tests |
 | Gold set | `experiments/gold/draft_cases.jsonl`, `CHANGELOG.md`, `ai-review/`, `ai-review-2/` | Evaluation cases and their review history |

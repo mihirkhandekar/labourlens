@@ -458,18 +458,18 @@
   "judgement": null
  },
  "HO-022": {
-  "input_sha256": "adc0b637c5a5612cf9e7f423873ef8f58946bd12664772e6f54fc5c5b5cb1b5f",
+  "input_sha256": "212a053267b39149464773524c38a6f0bdbe932f7072d182e44dc7deabaaca25",
   "judgement": {
    "claims": [
     {
      "index": 0,
      "verdict": "partial",
-     "note": "The cited excerpt reports the rate but does not identify the release as final."
+     "note": "The excerpt reports 2.9% but does not identify itself as the final MOM release."
     },
     {
      "index": 1,
-     "verdict": "supported",
-     "note": ""
+     "verdict": "partial",
+     "note": "The figures and adjustment bases are stated; the conclusion about a jump is an interpretation."
     }
    ],
    "facts": [
@@ -477,9 +477,14 @@
      "index": 0,
      "status": "covered",
      "note": ""
+    },
+    {
+     "index": 1,
+     "status": "covered",
+     "note": ""
     }
    ],
-   "cost_usd": 0.001506
+   "cost_usd": 0.002478
   }
  },
  "HO-023": {

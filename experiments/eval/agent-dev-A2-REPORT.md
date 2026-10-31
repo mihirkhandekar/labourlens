@@ -1,13 +1,13 @@
 # Evaluation of `agent-dev-A2` (dev, n=237)
 
-Gold labels and the judge are AI-produced; nothing here is human-reviewed. Judge model: `gpt-6.1-terra` (different from the generators). Intervals are bootstrap 95% over cases; with this n, treat differences under about 10 points as noise.
+Gold was AI-drafted; 14/237 cases record per-card owner review, which may agree with AI suggestions and is not independent inter-rater evidence. The judge is AI-produced. Judge model: `gpt-6.1-terra` (different from the generators). Intervals are bootstrap 95% over cases; with this n, treat differences under about 10 points as noise.
 
 ## gpt-5.6-luna
 
 | measure | value |
 |---|---|
 | n_cases | 235 |
-| behaviour_accuracy | 0.8 [0.749, 0.851] (n=235) |
+| behaviour_accuracy | 0.796 [0.745, 0.847] (n=235) |
 | false_answer_rate | 0.034 [0.015, 0.059] (n=203) |
 | over_abstention_rate | 0.136 [0.094, 0.179] (n=235) |
 | key_number_recall | 0.767 [0.71, 0.824] (n=151) |
@@ -28,7 +28,7 @@ Gold labels and the judge are AI-produced; nothing here is human-reviewed. Judge
 
 | family | n | behaviour acc | false answers | over-abstentions | unsupported claims | contradicted facts |
 |---|---|---|---|---|---|---|
-| adversarial | 35 | 0.971 | 1 | 0 | 0 | 0 |
+| adversarial | 35 | 0.943 | 1 | 0 | 0 | 0 |
 | ambiguity_insufficient_causal | 44 | 0.773 | 2 | 0 | 0 | 2 |
 | cross_source_synthesis | 35 | 0.771 | 0 | 8 | 0 | 3 |
 | factual_lookup | 70 | 0.743 | 2 | 16 | 0 | 0 |

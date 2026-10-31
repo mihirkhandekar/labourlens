@@ -463,7 +463,7 @@
   "judgement": null
  },
  "HO-022": {
-  "input_sha256": "c8995859a58792d36adfbf93fd381a210e4d77a3d5bb9c912f91cf87b862990f",
+  "input_sha256": "aa5a69264d5765f24d8dc71afef470b0e078b39ae97c3b47f1541b305c819a4f",
   "judgement": {
    "claims": [
     {
@@ -487,9 +487,14 @@
      "index": 0,
      "status": "covered",
      "note": ""
+    },
+    {
+     "index": 1,
+     "status": "covered",
+     "note": ""
     }
    ],
-   "cost_usd": 0.001198
+   "cost_usd": 0.001625
   }
  },
  "HO-023": {

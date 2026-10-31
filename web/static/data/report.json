@@ -1,6 +1,6 @@
 {
   "schema_version": "report-1.0",
-  "generated_at": "2026-10-30T23:28:12.940999+00:00",
+  "generated_at": "2026-10-31T02:54:30.033917+00:00",
   "summary": {
     "title": "LabourLens research workbench",
     "scope": [
@@ -4023,6 +4023,7 @@
       "experiments/runs/dev-E3-bm25-params/k1=2.0.metrics.json",
       "experiments/runs/dev-E4-combined/merge200+stopwords_off+b=0.4.metrics.json",
       "experiments/runs/dev-E4-combined/merge200+stopwords_off.metrics.json",
+      "experiments/runs/dev-R-summary.json",
       "experiments/runs/dev-dense-E5/bm25_baseline.metrics.json",
       "experiments/runs/dev-dense-E5/text-embedding-3-large.metrics.json",
       "experiments/runs/dev-dense-E5/text-embedding-3-small.metrics.json",
@@ -4035,7 +4036,574 @@
       "experiments/runs/dev-dense-E6/merge200 hybrid-rrf.metrics.json",
       "experiments/runs/dev-dense-E7/text-embedding-3-large+hdr.metrics.json",
       "experiments/runs/dev-dense-E7/text-embedding-3-large.metrics.json"
-    ]
+    ],
+    "ladder": {
+      "n_cases": 128,
+      "configs": {
+        "R0": {
+          "n_cases": 128,
+          "hit@3": 0.3984,
+          "hit@5": 0.4922,
+          "hit@8": 0.5703,
+          "hit@10": 0.5859,
+          "mrr@10": 0.3244,
+          "gold_passage_coverage@8": 0.485,
+          "pool_recall@30": 0.7891,
+          "pool_recall@50": 0.8594,
+          "hit@8_ci95": [
+            0.4922,
+            0.6562
+          ],
+          "by_family_hit@8": {
+            "adversarial": {
+              "n": 13,
+              "hit@8": 0.462
+            },
+            "ambiguity_insufficient_causal": {
+              "n": 2,
+              "hit@8": 0.0
+            },
+            "cross_source_synthesis": {
+              "n": 34,
+              "hit@8": 0.5
+            },
+            "factual_lookup": {
+              "n": 50,
+              "hit@8": 0.72
+            },
+            "numerical_comparison": {
+              "n": 10,
+              "hit@8": 0.8
+            },
+            "revision_conflict": {
+              "n": 19,
+              "hit@8": 0.316
+            }
+          },
+          "by_hint_hit@8": {
+            "has_hint": {
+              "n": 96,
+              "hit@8": 0.458
+            },
+            "no_hint": {
+              "n": 32,
+              "hit@8": 0.906
+            }
+          },
+          "added_latency_ms_p50": 0.0,
+          "added_latency_ms_p95": 0.0,
+          "retrieval_fuse_ms_p50": 0.068
+        },
+        "R1a": {
+          "n_cases": 128,
+          "hit@3": 0.6406,
+          "hit@5": 0.75,
+          "hit@8": 0.8438,
+          "hit@10": 0.8828,
+          "mrr@10": 0.5421,
+          "gold_passage_coverage@8": 0.7539,
+          "pool_recall@30": 0.9688,
+          "pool_recall@50": 0.9844,
+          "hit@8_ci95": [
+            0.7812,
+            0.9062
+          ],
+          "hit@8_diff_vs_R0": 0.2734,
+          "hit@8_diff_ci95": [
+            0.1953,
+            0.3594
+          ],
+          "paired_hit@8_better_worse": [
+            37,
+            2
+          ],
+          "paired_rank_better_worse_same": [
+            67,
+            5,
+            56
+          ],
+          "by_family_hit@8": {
+            "adversarial": {
+              "n": 13,
+              "hit@8": 0.923
+            },
+            "ambiguity_insufficient_causal": {
+              "n": 2,
+              "hit@8": 1.0
+            },
+            "cross_source_synthesis": {
+              "n": 34,
+              "hit@8": 0.824
+            },
+            "factual_lookup": {
+              "n": 50,
+              "hit@8": 0.9
+            },
+            "numerical_comparison": {
+              "n": 10,
+              "hit@8": 0.8
+            },
+            "revision_conflict": {
+              "n": 19,
+              "hit@8": 0.684
+            }
+          },
+          "by_hint_hit@8": {
+            "has_hint": {
+              "n": 96,
+              "hit@8": 0.823
+            },
+            "no_hint": {
+              "n": 32,
+              "hit@8": 0.906
+            }
+          },
+          "added_latency_ms_p50": 0.67,
+          "added_latency_ms_p95": 1.13,
+          "retrieval_fuse_ms_p50": 0.741
+        },
+        "R1b": {
+          "n_cases": 128,
+          "hit@3": 0.5156,
+          "hit@5": 0.5859,
+          "hit@8": 0.7188,
+          "hit@10": 0.75,
+          "mrr@10": 0.4567,
+          "gold_passage_coverage@8": 0.6302,
+          "pool_recall@30": 0.8828,
+          "pool_recall@50": 0.9219,
+          "hit@8_ci95": [
+            0.6484,
+            0.7969
+          ],
+          "hit@8_diff_vs_R0": 0.1484,
+          "hit@8_diff_ci95": [
+            0.0859,
+            0.2109
+          ],
+          "paired_hit@8_better_worse": [
+            19,
+            0
+          ],
+          "paired_rank_better_worse_same": [
+            48,
+            2,
+            78
+          ],
+          "by_family_hit@8": {
+            "adversarial": {
+              "n": 13,
+              "hit@8": 0.692
+            },
+            "ambiguity_insufficient_causal": {
+              "n": 2,
+              "hit@8": 0.0
+            },
+            "cross_source_synthesis": {
+              "n": 34,
+              "hit@8": 0.706
+            },
+            "factual_lookup": {
+              "n": 50,
+              "hit@8": 0.84
+            },
+            "numerical_comparison": {
+              "n": 10,
+              "hit@8": 0.9
+            },
+            "revision_conflict": {
+              "n": 19,
+              "hit@8": 0.421
+            }
+          },
+          "by_hint_hit@8": {
+            "has_hint": {
+              "n": 96,
+              "hit@8": 0.656
+            },
+            "no_hint": {
+              "n": 32,
+              "hit@8": 0.906
+            }
+          },
+          "added_latency_ms_p50": 0.2,
+          "added_latency_ms_p95": 0.27,
+          "retrieval_fuse_ms_p50": 0.276
+        },
+        "R2": {
+          "n_cases": 128,
+          "hit@3": 0.7891,
+          "hit@5": 0.7891,
+          "hit@8": 0.7891,
+          "hit@10": 0.7891,
+          "mrr@10": 0.7643,
+          "gold_passage_coverage@8": 0.7333,
+          "pool_recall@30": 0.7891,
+          "pool_recall@50": 0.8594,
+          "hit@8_ci95": [
+            0.7264,
+            0.8594
+          ],
+          "hit@8_diff_vs_R0": 0.2188,
+          "hit@8_diff_ci95": [
+            0.1484,
+            0.2891
+          ],
+          "paired_hit@8_better_worse": [
+            28,
+            0
+          ],
+          "paired_rank_better_worse_same": [
+            73,
+            0,
+            55
+          ],
+          "by_family_hit@8": {
+            "adversarial": {
+              "n": 13,
+              "hit@8": 0.692
+            },
+            "ambiguity_insufficient_causal": {
+              "n": 2,
+              "hit@8": 1.0
+            },
+            "cross_source_synthesis": {
+              "n": 34,
+              "hit@8": 0.676
+            },
+            "factual_lookup": {
+              "n": 50,
+              "hit@8": 0.92
+            },
+            "numerical_comparison": {
+              "n": 10,
+              "hit@8": 0.9
+            },
+            "revision_conflict": {
+              "n": 19,
+              "hit@8": 0.632
+            }
+          },
+          "by_hint_hit@8": {
+            "has_hint": {
+              "n": 96,
+              "hit@8": 0.729
+            },
+            "no_hint": {
+              "n": 32,
+              "hit@8": 0.969
+            }
+          },
+          "added_latency_ms_p50": 3826.28,
+          "added_latency_ms_p95": 8277.21,
+          "retrieval_fuse_ms_p50": 0.068,
+          "cost_usd_per_query_mean": 0.000876,
+          "cost_usd_total": 0.11209,
+          "rerank_failures": 0,
+          "rerank_latency_s_p50_p95": [
+            3.83,
+            8.28
+          ]
+        },
+        "R3": {
+          "n_cases": 128,
+          "hit@3": 0.9609,
+          "hit@5": 0.9688,
+          "hit@8": 0.9688,
+          "hit@10": 0.9688,
+          "mrr@10": 0.9121,
+          "gold_passage_coverage@8": 0.9182,
+          "pool_recall@30": 0.9688,
+          "pool_recall@50": 0.9844,
+          "hit@8_ci95": [
+            0.9375,
+            0.9922
+          ],
+          "hit@8_diff_vs_R0": 0.3984,
+          "hit@8_diff_ci95": [
+            0.3125,
+            0.4844
+          ],
+          "paired_hit@8_better_worse": [
+            52,
+            1
+          ],
+          "paired_rank_better_worse_same": [
+            96,
+            1,
+            31
+          ],
+          "by_family_hit@8": {
+            "adversarial": {
+              "n": 13,
+              "hit@8": 1.0
+            },
+            "ambiguity_insufficient_causal": {
+              "n": 2,
+              "hit@8": 1.0
+            },
+            "cross_source_synthesis": {
+              "n": 34,
+              "hit@8": 0.912
+            },
+            "factual_lookup": {
+              "n": 50,
+              "hit@8": 1.0
+            },
+            "numerical_comparison": {
+              "n": 10,
+              "hit@8": 0.9
+            },
+            "revision_conflict": {
+              "n": 19,
+              "hit@8": 1.0
+            }
+          },
+          "by_hint_hit@8": {
+            "has_hint": {
+              "n": 96,
+              "hit@8": 0.969
+            },
+            "no_hint": {
+              "n": 32,
+              "hit@8": 0.969
+            }
+          },
+          "added_latency_ms_p50": 3193.23,
+          "added_latency_ms_p95": 5957.51,
+          "retrieval_fuse_ms_p50": 0.068,
+          "cost_usd_per_query_mean": 0.00075,
+          "cost_usd_total": 0.09598,
+          "rerank_failures": 0,
+          "rerank_latency_s_p50_p95": [
+            3.19,
+            5.96
+          ],
+          "hit@8_diff_vs_R2": 0.1797,
+          "hit@8_diff_vs_R2_ci95": [
+            0.1094,
+            0.25
+          ],
+          "paired_hit@8_vs_R2_better_worse": [
+            24,
+            1
+          ]
+        },
+        "R1b_x0.5": {
+          "n_cases": 128,
+          "hit@3": 0.5,
+          "hit@5": 0.5469,
+          "hit@8": 0.6562,
+          "hit@10": 0.6953,
+          "mrr@10": 0.4162,
+          "gold_passage_coverage@8": 0.5677,
+          "pool_recall@30": 0.875,
+          "pool_recall@50": 0.9141,
+          "hit@8_ci95": [
+            0.5781,
+            0.7344
+          ],
+          "hit@8_diff_vs_R0": 0.0859,
+          "hit@8_diff_ci95": [
+            0.0391,
+            0.1328
+          ],
+          "paired_hit@8_better_worse": [
+            11,
+            0
+          ],
+          "paired_rank_better_worse_same": [
+            39,
+            1,
+            88
+          ],
+          "by_family_hit@8": {
+            "adversarial": {
+              "n": 13,
+              "hit@8": 0.538
+            },
+            "ambiguity_insufficient_causal": {
+              "n": 2,
+              "hit@8": 0.0
+            },
+            "cross_source_synthesis": {
+              "n": 34,
+              "hit@8": 0.618
+            },
+            "factual_lookup": {
+              "n": 50,
+              "hit@8": 0.78
+            },
+            "numerical_comparison": {
+              "n": 10,
+              "hit@8": 0.9
+            },
+            "revision_conflict": {
+              "n": 19,
+              "hit@8": 0.421
+            }
+          },
+          "by_hint_hit@8": {
+            "has_hint": {
+              "n": 96,
+              "hit@8": 0.573
+            },
+            "no_hint": {
+              "n": 32,
+              "hit@8": 0.906
+            }
+          },
+          "added_latency_ms_p50": 0.21,
+          "added_latency_ms_p95": 0.28,
+          "retrieval_fuse_ms_p50": 0.279
+        },
+        "R1b_x2": {
+          "n_cases": 128,
+          "hit@3": 0.5781,
+          "hit@5": 0.6953,
+          "hit@8": 0.7969,
+          "hit@10": 0.8125,
+          "mrr@10": 0.4983,
+          "gold_passage_coverage@8": 0.707,
+          "pool_recall@30": 0.8906,
+          "pool_recall@50": 0.9219,
+          "hit@8_ci95": [
+            0.7344,
+            0.8672
+          ],
+          "hit@8_diff_vs_R0": 0.2266,
+          "hit@8_diff_ci95": [
+            0.1484,
+            0.3047
+          ],
+          "paired_hit@8_better_worse": [
+            30,
+            1
+          ],
+          "paired_rank_better_worse_same": [
+            57,
+            1,
+            70
+          ],
+          "by_family_hit@8": {
+            "adversarial": {
+              "n": 13,
+              "hit@8": 0.769
+            },
+            "ambiguity_insufficient_causal": {
+              "n": 2,
+              "hit@8": 0.5
+            },
+            "cross_source_synthesis": {
+              "n": 34,
+              "hit@8": 0.765
+            },
+            "factual_lookup": {
+              "n": 50,
+              "hit@8": 0.92
+            },
+            "numerical_comparison": {
+              "n": 10,
+              "hit@8": 0.8
+            },
+            "revision_conflict": {
+              "n": 19,
+              "hit@8": 0.579
+            }
+          },
+          "by_hint_hit@8": {
+            "has_hint": {
+              "n": 96,
+              "hit@8": 0.76
+            },
+            "no_hint": {
+              "n": 32,
+              "hit@8": 0.906
+            }
+          },
+          "added_latency_ms_p50": 0.22,
+          "added_latency_ms_p95": 0.3,
+          "retrieval_fuse_ms_p50": 0.283
+        }
+      },
+      "hint_coverage": {
+        "any_hint": 96,
+        "period_hint": 91,
+        "stage_hint": 68,
+        "stage_conflict": 9,
+        "filter_active_R1a": 96,
+        "period_hint_but_no_document_in_period": 0,
+        "hint_but_no_filter": 0
+      },
+      "end_to_end_context": {
+        "R0": {
+          "n": 128,
+          "gold_in_context_of_top8_chunks": 0.5703,
+          "gold_in_first8_context_passages": 0.4062
+        },
+        "R3": {
+          "n": 128,
+          "gold_in_context_of_top8_chunks": 0.9688,
+          "gold_in_first8_context_passages": 0.9375
+        }
+      },
+      "first_relevant_rank_histogram": {
+        "R0": {
+          "0": 53,
+          "1": 27,
+          "2": 12,
+          "3": 12,
+          "4": 9,
+          "5": 3,
+          "6": 4,
+          "7": 2,
+          "8": 4,
+          "9": 2
+        },
+        "R1a": {
+          "0": 15,
+          "1": 50,
+          "2": 20,
+          "3": 12,
+          "4": 7,
+          "5": 7,
+          "6": 3,
+          "7": 5,
+          "8": 4,
+          "9": 2,
+          "10": 3
+        },
+        "R1b": {
+          "0": 32,
+          "1": 44,
+          "2": 13,
+          "3": 9,
+          "4": 5,
+          "5": 4,
+          "6": 6,
+          "7": 6,
+          "8": 5,
+          "9": 2,
+          "10": 2
+        },
+        "R2": {
+          "0": 27,
+          "1": 95,
+          "2": 5,
+          "3": 1
+        },
+        "R3": {
+          "0": 4,
+          "1": 111,
+          "2": 9,
+          "3": 3,
+          "4": 1
+        }
+      },
+      "provenance": [
+        "experiments/runs/dev-R-summary.json"
+      ]
+    }
   },
   "answers": {
     "status": "available",
@@ -5263,6 +5831,7 @@
         "case_id": "DEV-005",
         "family": "numerical_comparison",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -5282,6 +5851,7 @@
         "case_id": "DEV-006",
         "family": "numerical_comparison",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -5301,6 +5871,7 @@
         "case_id": "DEV-007",
         "family": "numerical_comparison",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -5475,6 +6046,7 @@
         "case_id": "DEV-016",
         "family": "ambiguity_insufficient_causal",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -5566,6 +6138,7 @@
         "case_id": "DEV-021",
         "family": "factual_lookup",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -5951,6 +6524,7 @@
         "case_id": "DEV-407",
         "family": "ambiguity_insufficient_causal",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -6394,6 +6968,7 @@
         "case_id": "DEV-431",
         "family": "ambiguity_insufficient_causal",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -6452,6 +7027,7 @@
         "case_id": "DEV-434",
         "family": "ambiguity_insufficient_causal",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -8001,6 +8577,7 @@
         "case_id": "DEV-117",
         "family": "numerical_comparison",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -8213,6 +8790,7 @@
         "case_id": "DEV-128",
         "family": "numerical_comparison",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -8232,6 +8810,7 @@
         "case_id": "DEV-129",
         "family": "numerical_comparison",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -8270,6 +8849,7 @@
         "case_id": "DEV-131",
         "family": "numerical_comparison",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -9794,6 +10374,7 @@
         "case_id": "DEV-004",
         "family": "numerical_comparison",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -9813,6 +10394,7 @@
         "case_id": "DEV-005",
         "family": "numerical_comparison",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -9832,6 +10414,7 @@
         "case_id": "DEV-006",
         "family": "numerical_comparison",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -9851,6 +10434,7 @@
         "case_id": "DEV-007",
         "family": "numerical_comparison",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -9870,6 +10454,7 @@
         "case_id": "DEV-008",
         "family": "cross_source_synthesis",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -9889,6 +10474,7 @@
         "case_id": "DEV-009",
         "family": "cross_source_synthesis",
         "tools_used": [
+          "calculate_change",
           "get_series",
           "search_reports"
         ]
@@ -9909,6 +10495,7 @@
         "case_id": "DEV-010",
         "family": "cross_source_synthesis",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -10110,6 +10697,7 @@
         "case_id": "DEV-021",
         "family": "factual_lookup",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -10873,6 +11461,7 @@
         "case_id": "DEV-429",
         "family": "ambiguity_insufficient_causal",
         "tools_used": [
+          "calculate_change",
           "get_series",
           "search_reports"
         ]
@@ -10913,6 +11502,7 @@
         "case_id": "DEV-431",
         "family": "ambiguity_insufficient_causal",
         "tools_used": [
+          "calculate_change",
           "get_series",
           "search_reports"
         ]
@@ -10953,6 +11543,7 @@
         "case_id": "DEV-433",
         "family": "ambiguity_insufficient_causal",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -10972,6 +11563,7 @@
         "case_id": "DEV-434",
         "family": "ambiguity_insufficient_causal",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -12489,6 +13081,7 @@
         "case_id": "DEV-116",
         "family": "numerical_comparison",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -12508,6 +13101,7 @@
         "case_id": "DEV-117",
         "family": "numerical_comparison",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -12527,6 +13121,7 @@
         "case_id": "DEV-118",
         "family": "numerical_comparison",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -12565,6 +13160,7 @@
         "case_id": "DEV-120",
         "family": "numerical_comparison",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -12584,6 +13180,7 @@
         "case_id": "DEV-121",
         "family": "numerical_comparison",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -12603,6 +13200,7 @@
         "case_id": "DEV-122",
         "family": "numerical_comparison",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -12622,6 +13220,7 @@
         "case_id": "DEV-123",
         "family": "numerical_comparison",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -12641,6 +13240,7 @@
         "case_id": "DEV-124",
         "family": "numerical_comparison",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -12660,6 +13260,7 @@
         "case_id": "DEV-125",
         "family": "numerical_comparison",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -12718,6 +13319,7 @@
         "case_id": "DEV-128",
         "family": "numerical_comparison",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -12737,6 +13339,7 @@
         "case_id": "DEV-129",
         "family": "numerical_comparison",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -12756,6 +13359,7 @@
         "case_id": "DEV-130",
         "family": "numerical_comparison",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -12775,6 +13379,7 @@
         "case_id": "DEV-131",
         "family": "numerical_comparison",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -12851,6 +13456,7 @@
         "case_id": "DEV-135",
         "family": "numerical_comparison",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -14292,6 +14898,7 @@
         "case_id": "DEV-004",
         "family": "numerical_comparison",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -14311,6 +14918,7 @@
         "case_id": "DEV-005",
         "family": "numerical_comparison",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -14330,6 +14938,7 @@
         "case_id": "DEV-006",
         "family": "numerical_comparison",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -14349,6 +14958,7 @@
         "case_id": "DEV-007",
         "family": "numerical_comparison",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -14368,6 +14978,7 @@
         "case_id": "DEV-008",
         "family": "cross_source_synthesis",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -14387,6 +14998,7 @@
         "case_id": "DEV-009",
         "family": "cross_source_synthesis",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -14607,6 +15219,7 @@
         "case_id": "DEV-021",
         "family": "factual_lookup",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -15407,6 +16020,7 @@
         "case_id": "DEV-431",
         "family": "ambiguity_insufficient_causal",
         "tools_used": [
+          "calculate_change",
           "get_series",
           "search_reports"
         ]
@@ -15447,6 +16061,7 @@
         "case_id": "DEV-433",
         "family": "ambiguity_insufficient_causal",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -15466,6 +16081,7 @@
         "case_id": "DEV-434",
         "family": "ambiguity_insufficient_causal",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -16974,6 +17590,7 @@
         "case_id": "DEV-116",
         "family": "numerical_comparison",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -16993,6 +17610,7 @@
         "case_id": "DEV-117",
         "family": "numerical_comparison",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -17012,6 +17630,7 @@
         "case_id": "DEV-118",
         "family": "numerical_comparison",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -17050,6 +17669,7 @@
         "case_id": "DEV-120",
         "family": "numerical_comparison",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -17069,6 +17689,7 @@
         "case_id": "DEV-121",
         "family": "numerical_comparison",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -17088,6 +17709,7 @@
         "case_id": "DEV-122",
         "family": "numerical_comparison",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -17107,6 +17729,7 @@
         "case_id": "DEV-123",
         "family": "numerical_comparison",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -17126,6 +17749,7 @@
         "case_id": "DEV-124",
         "family": "numerical_comparison",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -17202,6 +17826,7 @@
         "case_id": "DEV-128",
         "family": "numerical_comparison",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -17221,6 +17846,7 @@
         "case_id": "DEV-129",
         "family": "numerical_comparison",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -17240,6 +17866,7 @@
         "case_id": "DEV-130",
         "family": "numerical_comparison",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -17259,6 +17886,7 @@
         "case_id": "DEV-131",
         "family": "numerical_comparison",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -17337,6 +17965,7 @@
         "case_id": "DEV-135",
         "family": "numerical_comparison",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -18777,6 +19406,7 @@
         "case_id": "DEV-004",
         "family": "numerical_comparison",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -18796,6 +19426,7 @@
         "case_id": "DEV-005",
         "family": "numerical_comparison",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -18815,6 +19446,7 @@
         "case_id": "DEV-006",
         "family": "numerical_comparison",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -18834,6 +19466,7 @@
         "case_id": "DEV-007",
         "family": "numerical_comparison",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -18853,6 +19486,7 @@
         "case_id": "DEV-008",
         "family": "cross_source_synthesis",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -18872,6 +19506,7 @@
         "case_id": "DEV-009",
         "family": "cross_source_synthesis",
         "tools_used": [
+          "calculate_change",
           "get_series",
           "search_reports"
         ]
@@ -18892,6 +19527,7 @@
         "case_id": "DEV-010",
         "family": "cross_source_synthesis",
         "tools_used": [
+          "calculate_change",
           "get_series",
           "search_reports"
         ]
@@ -19094,6 +19730,7 @@
         "case_id": "DEV-021",
         "family": "factual_lookup",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -19856,6 +20493,7 @@
         "case_id": "DEV-429",
         "family": "ambiguity_insufficient_causal",
         "tools_used": [
+          "calculate_change",
           "get_series",
           "search_reports"
         ]
@@ -19896,6 +20534,7 @@
         "case_id": "DEV-431",
         "family": "ambiguity_insufficient_causal",
         "tools_used": [
+          "calculate_change",
           "get_series",
           "search_reports"
         ]
@@ -19936,6 +20575,7 @@
         "case_id": "DEV-433",
         "family": "ambiguity_insufficient_causal",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -19955,6 +20595,7 @@
         "case_id": "DEV-434",
         "family": "ambiguity_insufficient_causal",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -21473,6 +22114,7 @@
         "case_id": "DEV-116",
         "family": "numerical_comparison",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -21492,6 +22134,7 @@
         "case_id": "DEV-117",
         "family": "numerical_comparison",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -21511,6 +22154,7 @@
         "case_id": "DEV-118",
         "family": "numerical_comparison",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -21549,6 +22193,7 @@
         "case_id": "DEV-120",
         "family": "numerical_comparison",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -21568,6 +22213,7 @@
         "case_id": "DEV-121",
         "family": "numerical_comparison",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -21587,6 +22233,7 @@
         "case_id": "DEV-122",
         "family": "numerical_comparison",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -21606,6 +22253,7 @@
         "case_id": "DEV-123",
         "family": "numerical_comparison",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -21625,6 +22273,7 @@
         "case_id": "DEV-124",
         "family": "numerical_comparison",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -21644,6 +22293,7 @@
         "case_id": "DEV-125",
         "family": "numerical_comparison",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -21701,6 +22351,7 @@
         "case_id": "DEV-128",
         "family": "numerical_comparison",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -21720,6 +22371,7 @@
         "case_id": "DEV-129",
         "family": "numerical_comparison",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -21739,6 +22391,7 @@
         "case_id": "DEV-130",
         "family": "numerical_comparison",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -21758,6 +22411,7 @@
         "case_id": "DEV-131",
         "family": "numerical_comparison",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -21834,6 +22488,7 @@
         "case_id": "DEV-135",
         "family": "numerical_comparison",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -23277,6 +23932,7 @@
         "case_id": "DEV-004",
         "family": "numerical_comparison",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -23296,6 +23952,7 @@
         "case_id": "DEV-005",
         "family": "numerical_comparison",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -23315,6 +23972,7 @@
         "case_id": "DEV-006",
         "family": "numerical_comparison",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -23334,6 +23992,7 @@
         "case_id": "DEV-007",
         "family": "numerical_comparison",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -23353,6 +24012,7 @@
         "case_id": "DEV-008",
         "family": "cross_source_synthesis",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -23372,6 +24032,7 @@
         "case_id": "DEV-009",
         "family": "cross_source_synthesis",
         "tools_used": [
+          "calculate_change",
           "get_series",
           "search_reports"
         ]
@@ -23593,6 +24254,7 @@
         "case_id": "DEV-021",
         "family": "factual_lookup",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -24280,6 +24942,7 @@
         "case_id": "DEV-425",
         "family": "ambiguity_insufficient_causal",
         "tools_used": [
+          "calculate_change",
           "get_series",
           "search_reports"
         ]
@@ -24434,6 +25097,7 @@
         "case_id": "DEV-433",
         "family": "ambiguity_insufficient_causal",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -24453,6 +25117,7 @@
         "case_id": "DEV-434",
         "family": "ambiguity_insufficient_causal",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -25967,6 +26632,7 @@
         "case_id": "DEV-116",
         "family": "numerical_comparison",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -25986,6 +26652,7 @@
         "case_id": "DEV-117",
         "family": "numerical_comparison",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -26005,6 +26672,7 @@
         "case_id": "DEV-118",
         "family": "numerical_comparison",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -26043,6 +26711,7 @@
         "case_id": "DEV-120",
         "family": "numerical_comparison",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -26062,6 +26731,7 @@
         "case_id": "DEV-121",
         "family": "numerical_comparison",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -26081,6 +26751,7 @@
         "case_id": "DEV-122",
         "family": "numerical_comparison",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -26100,6 +26771,7 @@
         "case_id": "DEV-123",
         "family": "numerical_comparison",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -26119,6 +26791,7 @@
         "case_id": "DEV-124",
         "family": "numerical_comparison",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -26138,6 +26811,7 @@
         "case_id": "DEV-125",
         "family": "numerical_comparison",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -26195,6 +26869,7 @@
         "case_id": "DEV-128",
         "family": "numerical_comparison",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -26214,6 +26889,7 @@
         "case_id": "DEV-129",
         "family": "numerical_comparison",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -26233,6 +26909,7 @@
         "case_id": "DEV-130",
         "family": "numerical_comparison",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -26252,6 +26929,7 @@
         "case_id": "DEV-131",
         "family": "numerical_comparison",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -26330,6 +27008,7 @@
         "case_id": "DEV-135",
         "family": "numerical_comparison",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -27770,6 +28449,7 @@
         "case_id": "DEV-004",
         "family": "numerical_comparison",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -27789,6 +28469,7 @@
         "case_id": "DEV-005",
         "family": "numerical_comparison",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -27808,6 +28489,7 @@
         "case_id": "DEV-006",
         "family": "numerical_comparison",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -27827,6 +28509,7 @@
         "case_id": "DEV-007",
         "family": "numerical_comparison",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -27846,6 +28529,7 @@
         "case_id": "DEV-008",
         "family": "cross_source_synthesis",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -27865,6 +28549,7 @@
         "case_id": "DEV-009",
         "family": "cross_source_synthesis",
         "tools_used": [
+          "calculate_change",
           "get_series",
           "search_reports"
         ]
@@ -27885,6 +28570,7 @@
         "case_id": "DEV-010",
         "family": "cross_source_synthesis",
         "tools_used": [
+          "calculate_change",
           "get_series",
           "search_reports"
         ]
@@ -28087,6 +28773,7 @@
         "case_id": "DEV-021",
         "family": "factual_lookup",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -28849,6 +29536,7 @@
         "case_id": "DEV-429",
         "family": "ambiguity_insufficient_causal",
         "tools_used": [
+          "calculate_change",
           "get_series",
           "search_reports"
         ]
@@ -28889,6 +29577,7 @@
         "case_id": "DEV-431",
         "family": "ambiguity_insufficient_causal",
         "tools_used": [
+          "calculate_change",
           "get_series",
           "search_reports"
         ]
@@ -28929,6 +29618,7 @@
         "case_id": "DEV-433",
         "family": "ambiguity_insufficient_causal",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -28948,6 +29638,7 @@
         "case_id": "DEV-434",
         "family": "ambiguity_insufficient_causal",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -30449,6 +31140,7 @@
         "case_id": "DEV-116",
         "family": "numerical_comparison",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -30468,6 +31160,7 @@
         "case_id": "DEV-117",
         "family": "numerical_comparison",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -30487,6 +31180,7 @@
         "case_id": "DEV-118",
         "family": "numerical_comparison",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -30526,6 +31220,7 @@
         "case_id": "DEV-120",
         "family": "numerical_comparison",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -30545,6 +31240,7 @@
         "case_id": "DEV-121",
         "family": "numerical_comparison",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -30564,6 +31260,7 @@
         "case_id": "DEV-122",
         "family": "numerical_comparison",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -30583,6 +31280,7 @@
         "case_id": "DEV-123",
         "family": "numerical_comparison",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -30602,6 +31300,7 @@
         "case_id": "DEV-124",
         "family": "numerical_comparison",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -30621,6 +31320,7 @@
         "case_id": "DEV-125",
         "family": "numerical_comparison",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -30678,6 +31378,7 @@
         "case_id": "DEV-128",
         "family": "numerical_comparison",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -30697,6 +31398,7 @@
         "case_id": "DEV-129",
         "family": "numerical_comparison",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -30716,6 +31418,7 @@
         "case_id": "DEV-130",
         "family": "numerical_comparison",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -30735,6 +31438,7 @@
         "case_id": "DEV-131",
         "family": "numerical_comparison",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -30812,6 +31516,7 @@
         "case_id": "DEV-135",
         "family": "numerical_comparison",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -32254,6 +32959,7 @@
         "case_id": "DEV-004",
         "family": "numerical_comparison",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -32273,6 +32979,7 @@
         "case_id": "DEV-005",
         "family": "numerical_comparison",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -32292,6 +32999,7 @@
         "case_id": "DEV-006",
         "family": "numerical_comparison",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -32311,6 +33019,7 @@
         "case_id": "DEV-007",
         "family": "numerical_comparison",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -32349,6 +33058,7 @@
         "case_id": "DEV-009",
         "family": "cross_source_synthesis",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -32368,6 +33078,7 @@
         "case_id": "DEV-010",
         "family": "cross_source_synthesis",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -32569,6 +33280,7 @@
         "case_id": "DEV-021",
         "family": "factual_lookup",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -33367,6 +34079,7 @@
         "case_id": "DEV-431",
         "family": "ambiguity_insufficient_causal",
         "tools_used": [
+          "calculate_change",
           "get_series",
           "search_reports"
         ]
@@ -33407,6 +34120,7 @@
         "case_id": "DEV-433",
         "family": "ambiguity_insufficient_causal",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -33426,6 +34140,7 @@
         "case_id": "DEV-434",
         "family": "ambiguity_insufficient_causal",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -34918,6 +35633,7 @@
         "case_id": "DEV-116",
         "family": "numerical_comparison",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -34937,6 +35653,7 @@
         "case_id": "DEV-117",
         "family": "numerical_comparison",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -34956,6 +35673,7 @@
         "case_id": "DEV-118",
         "family": "numerical_comparison",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -34994,6 +35712,7 @@
         "case_id": "DEV-120",
         "family": "numerical_comparison",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -35013,6 +35732,7 @@
         "case_id": "DEV-121",
         "family": "numerical_comparison",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -35032,6 +35752,7 @@
         "case_id": "DEV-122",
         "family": "numerical_comparison",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -35051,6 +35772,7 @@
         "case_id": "DEV-123",
         "family": "numerical_comparison",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -35070,6 +35792,7 @@
         "case_id": "DEV-124",
         "family": "numerical_comparison",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -35089,6 +35812,7 @@
         "case_id": "DEV-125",
         "family": "numerical_comparison",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -35146,6 +35870,7 @@
         "case_id": "DEV-128",
         "family": "numerical_comparison",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -35165,6 +35890,7 @@
         "case_id": "DEV-129",
         "family": "numerical_comparison",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -35184,6 +35910,7 @@
         "case_id": "DEV-130",
         "family": "numerical_comparison",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -35203,6 +35930,7 @@
         "case_id": "DEV-131",
         "family": "numerical_comparison",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -35280,6 +36008,7 @@
         "case_id": "DEV-135",
         "family": "numerical_comparison",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -36721,6 +37450,7 @@
         "case_id": "DEV-004",
         "family": "numerical_comparison",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -36740,6 +37470,7 @@
         "case_id": "DEV-005",
         "family": "numerical_comparison",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -36759,6 +37490,7 @@
         "case_id": "DEV-006",
         "family": "numerical_comparison",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -36778,6 +37510,7 @@
         "case_id": "DEV-007",
         "family": "numerical_comparison",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -36816,6 +37549,7 @@
         "case_id": "DEV-009",
         "family": "cross_source_synthesis",
         "tools_used": [
+          "calculate_change",
           "get_series",
           "search_reports"
         ]
@@ -36836,6 +37570,7 @@
         "case_id": "DEV-010",
         "family": "cross_source_synthesis",
         "tools_used": [
+          "calculate_change",
           "get_series",
           "search_reports"
         ]
@@ -36911,6 +37646,7 @@
         "case_id": "DEV-014",
         "family": "ambiguity_insufficient_causal",
         "tools_used": [
+          "calculate_change",
           "get_series",
           "search_reports"
         ]
@@ -37038,6 +37774,7 @@
         "case_id": "DEV-021",
         "family": "factual_lookup",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -37801,6 +38538,7 @@
         "case_id": "DEV-429",
         "family": "ambiguity_insufficient_causal",
         "tools_used": [
+          "calculate_change",
           "get_series",
           "search_reports"
         ]
@@ -37841,6 +38579,7 @@
         "case_id": "DEV-431",
         "family": "ambiguity_insufficient_causal",
         "tools_used": [
+          "calculate_change",
           "get_series",
           "search_reports"
         ]
@@ -37881,6 +38620,7 @@
         "case_id": "DEV-433",
         "family": "ambiguity_insufficient_causal",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -37900,6 +38640,7 @@
         "case_id": "DEV-434",
         "family": "ambiguity_insufficient_causal",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -39398,6 +40139,7 @@
         "case_id": "DEV-116",
         "family": "numerical_comparison",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -39417,6 +40159,7 @@
         "case_id": "DEV-117",
         "family": "numerical_comparison",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -39436,6 +40179,7 @@
         "case_id": "DEV-118",
         "family": "numerical_comparison",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -39474,6 +40218,7 @@
         "case_id": "DEV-120",
         "family": "numerical_comparison",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -39513,6 +40258,7 @@
         "case_id": "DEV-122",
         "family": "numerical_comparison",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -39532,6 +40278,7 @@
         "case_id": "DEV-123",
         "family": "numerical_comparison",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -39551,6 +40298,7 @@
         "case_id": "DEV-124",
         "family": "numerical_comparison",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -39570,6 +40318,7 @@
         "case_id": "DEV-125",
         "family": "numerical_comparison",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -39627,6 +40376,7 @@
         "case_id": "DEV-128",
         "family": "numerical_comparison",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -39646,6 +40396,7 @@
         "case_id": "DEV-129",
         "family": "numerical_comparison",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -39665,6 +40416,7 @@
         "case_id": "DEV-130",
         "family": "numerical_comparison",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -39684,6 +40436,7 @@
         "case_id": "DEV-131",
         "family": "numerical_comparison",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -41202,6 +41955,7 @@
         "case_id": "DEV-004",
         "family": "numerical_comparison",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -41221,6 +41975,7 @@
         "case_id": "DEV-005",
         "family": "numerical_comparison",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -41240,6 +41995,7 @@
         "case_id": "DEV-006",
         "family": "numerical_comparison",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -41259,6 +42015,7 @@
         "case_id": "DEV-007",
         "family": "numerical_comparison",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -41297,6 +42054,7 @@
         "case_id": "DEV-009",
         "family": "cross_source_synthesis",
         "tools_used": [
+          "calculate_change",
           "get_series",
           "search_reports"
         ]
@@ -41518,6 +42276,7 @@
         "case_id": "DEV-021",
         "family": "factual_lookup",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -42358,6 +43117,7 @@
         "case_id": "DEV-433",
         "family": "ambiguity_insufficient_causal",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -42377,6 +43137,7 @@
         "case_id": "DEV-434",
         "family": "ambiguity_insufficient_causal",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -43869,6 +44630,7 @@
         "case_id": "DEV-116",
         "family": "numerical_comparison",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -43888,6 +44650,7 @@
         "case_id": "DEV-117",
         "family": "numerical_comparison",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -43907,6 +44670,7 @@
         "case_id": "DEV-118",
         "family": "numerical_comparison",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -43945,6 +44709,7 @@
         "case_id": "DEV-120",
         "family": "numerical_comparison",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -43964,6 +44729,7 @@
         "case_id": "DEV-121",
         "family": "numerical_comparison",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -43983,6 +44749,7 @@
         "case_id": "DEV-122",
         "family": "numerical_comparison",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -44002,6 +44769,7 @@
         "case_id": "DEV-123",
         "family": "numerical_comparison",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -44021,6 +44789,7 @@
         "case_id": "DEV-124",
         "family": "numerical_comparison",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -44097,6 +44866,7 @@
         "case_id": "DEV-128",
         "family": "numerical_comparison",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -44116,6 +44886,7 @@
         "case_id": "DEV-129",
         "family": "numerical_comparison",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -44135,6 +44906,7 @@
         "case_id": "DEV-130",
         "family": "numerical_comparison",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -44154,6 +44926,7 @@
         "case_id": "DEV-131",
         "family": "numerical_comparison",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -44230,6 +45003,7 @@
         "case_id": "DEV-135",
         "family": "numerical_comparison",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -45670,6 +46444,7 @@
         "case_id": "DEV-004",
         "family": "numerical_comparison",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -45689,6 +46464,7 @@
         "case_id": "DEV-005",
         "family": "numerical_comparison",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -45708,6 +46484,7 @@
         "case_id": "DEV-006",
         "family": "numerical_comparison",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -45727,6 +46504,7 @@
         "case_id": "DEV-007",
         "family": "numerical_comparison",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -45746,6 +46524,7 @@
         "case_id": "DEV-008",
         "family": "cross_source_synthesis",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -45765,6 +46544,7 @@
         "case_id": "DEV-009",
         "family": "cross_source_synthesis",
         "tools_used": [
+          "calculate_change",
           "get_series",
           "search_reports"
         ]
@@ -45785,6 +46565,7 @@
         "case_id": "DEV-010",
         "family": "cross_source_synthesis",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -45859,6 +46640,7 @@
         "case_id": "DEV-014",
         "family": "ambiguity_insufficient_causal",
         "tools_used": [
+          "calculate_change",
           "get_series",
           "search_reports"
         ]
@@ -45988,6 +46770,7 @@
         "case_id": "DEV-021",
         "family": "factual_lookup",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -46658,6 +47441,7 @@
         "case_id": "DEV-424",
         "family": "ambiguity_insufficient_causal",
         "tools_used": [
+          "calculate_change",
           "get_series",
           "search_reports"
         ]
@@ -46792,6 +47576,7 @@
         "case_id": "DEV-431",
         "family": "ambiguity_insufficient_causal",
         "tools_used": [
+          "calculate_change",
           "get_series",
           "search_reports"
         ]
@@ -46832,6 +47617,7 @@
         "case_id": "DEV-433",
         "family": "ambiguity_insufficient_causal",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -46851,6 +47637,7 @@
         "case_id": "DEV-434",
         "family": "ambiguity_insufficient_causal",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -48349,6 +49136,7 @@
         "case_id": "DEV-116",
         "family": "numerical_comparison",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -48368,6 +49156,7 @@
         "case_id": "DEV-117",
         "family": "numerical_comparison",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -48387,6 +49176,7 @@
         "case_id": "DEV-118",
         "family": "numerical_comparison",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -48425,6 +49215,7 @@
         "case_id": "DEV-120",
         "family": "numerical_comparison",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -48464,6 +49255,7 @@
         "case_id": "DEV-122",
         "family": "numerical_comparison",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -48483,6 +49275,7 @@
         "case_id": "DEV-123",
         "family": "numerical_comparison",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -48502,6 +49295,7 @@
         "case_id": "DEV-124",
         "family": "numerical_comparison",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -48521,6 +49315,7 @@
         "case_id": "DEV-125",
         "family": "numerical_comparison",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -48578,6 +49373,7 @@
         "case_id": "DEV-128",
         "family": "numerical_comparison",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -48597,6 +49393,7 @@
         "case_id": "DEV-129",
         "family": "numerical_comparison",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -48616,6 +49413,7 @@
         "case_id": "DEV-130",
         "family": "numerical_comparison",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -48635,6 +49433,7 @@
         "case_id": "DEV-131",
         "family": "numerical_comparison",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -48711,6 +49510,7 @@
         "case_id": "DEV-135",
         "family": "numerical_comparison",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -50156,6 +50956,7 @@
         "case_id": "DEV-004",
         "family": "numerical_comparison",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -50175,6 +50976,7 @@
         "case_id": "DEV-005",
         "family": "numerical_comparison",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -50194,6 +50996,7 @@
         "case_id": "DEV-006",
         "family": "numerical_comparison",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -50213,6 +51016,7 @@
         "case_id": "DEV-007",
         "family": "numerical_comparison",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -50251,6 +51055,7 @@
         "case_id": "DEV-009",
         "family": "cross_source_synthesis",
         "tools_used": [
+          "calculate_change",
           "get_series",
           "search_reports"
         ]
@@ -50474,6 +51279,7 @@
         "case_id": "DEV-021",
         "family": "factual_lookup",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -51321,6 +52127,7 @@
         "case_id": "DEV-433",
         "family": "ambiguity_insufficient_causal",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -51340,6 +52147,7 @@
         "case_id": "DEV-434",
         "family": "ambiguity_insufficient_causal",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -52838,6 +53646,7 @@
         "case_id": "DEV-116",
         "family": "numerical_comparison",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -52857,6 +53666,7 @@
         "case_id": "DEV-117",
         "family": "numerical_comparison",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -52876,6 +53686,7 @@
         "case_id": "DEV-118",
         "family": "numerical_comparison",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -52914,6 +53725,7 @@
         "case_id": "DEV-120",
         "family": "numerical_comparison",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -52933,6 +53745,7 @@
         "case_id": "DEV-121",
         "family": "numerical_comparison",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -52952,6 +53765,7 @@
         "case_id": "DEV-122",
         "family": "numerical_comparison",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -52971,6 +53785,7 @@
         "case_id": "DEV-123",
         "family": "numerical_comparison",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -52990,6 +53805,7 @@
         "case_id": "DEV-124",
         "family": "numerical_comparison",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -53009,6 +53825,7 @@
         "case_id": "DEV-125",
         "family": "numerical_comparison",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -53066,6 +53883,7 @@
         "case_id": "DEV-128",
         "family": "numerical_comparison",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -53085,6 +53903,7 @@
         "case_id": "DEV-129",
         "family": "numerical_comparison",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -53104,6 +53923,7 @@
         "case_id": "DEV-130",
         "family": "numerical_comparison",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -53123,6 +53943,7 @@
         "case_id": "DEV-131",
         "family": "numerical_comparison",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -53201,6 +54022,7 @@
         "case_id": "DEV-135",
         "family": "numerical_comparison",
         "tools_used": [
+          "calculate_change",
           "get_series"
         ]
       },
@@ -58425,7 +59247,10 @@
       "experiments/eval/agent-heldout-H-r3/gpt-5.6-luna.cases.jsonl",
       "experiments/eval/agent-heldout-H-r3/gpt-5.6-luna.metrics.json",
       "experiments/eval/agent-heldout-H-r3/gpt-6-luna.cases.jsonl",
-      "experiments/eval/agent-heldout-H-r3/gpt-6-luna.metrics.json"
+      "experiments/eval/agent-heldout-H-r3/gpt-6-luna.metrics.json",
+      "experiments/heldout/paired-v3.2.txt",
+      "experiments/heldout/paired-v3.3.txt",
+      "experiments/heldout/paired.txt"
     ],
     "errors": {
       "scope": "agent score records",
@@ -58450,6 +59275,95 @@
         "experiments/runs/agent-dev-A5/gpt-6-luna.scores.jsonl"
       ]
     },
+    "paired": [
+      {
+        "gold_version": "v3.4",
+        "n": 31,
+        "resamples": 10000,
+        "seed": 20261030,
+        "models": {
+          "gpt-6-luna": {
+            "diff": 0.161,
+            "ci95": [
+              0.0,
+              0.323
+            ],
+            "better": 6,
+            "worse": 1
+          },
+          "gpt-5.6-luna": {
+            "diff": 0.097,
+            "ci95": [
+              -0.032,
+              0.226
+            ],
+            "better": 4,
+            "worse": 1
+          }
+        },
+        "provenance": [
+          "experiments/heldout/paired.txt"
+        ]
+      },
+      {
+        "gold_version": "v3.3",
+        "n": 31,
+        "resamples": 10000,
+        "seed": 20261030,
+        "models": {
+          "gpt-6-luna": {
+            "diff": 0.161,
+            "ci95": [
+              0.0,
+              0.323
+            ],
+            "better": 6,
+            "worse": 1
+          },
+          "gpt-5.6-luna": {
+            "diff": 0.129,
+            "ci95": [
+              0.0,
+              0.29
+            ],
+            "better": 5,
+            "worse": 1
+          }
+        },
+        "provenance": [
+          "experiments/heldout/paired-v3.3.txt"
+        ]
+      },
+      {
+        "gold_version": "v3.2",
+        "n": 31,
+        "resamples": 10000,
+        "seed": 20261030,
+        "models": {
+          "gpt-6-luna": {
+            "diff": 0.161,
+            "ci95": [
+              0.0,
+              0.323
+            ],
+            "better": 6,
+            "worse": 1
+          },
+          "gpt-5.6-luna": {
+            "diff": 0.129,
+            "ci95": [
+              0.0,
+              0.29
+            ],
+            "better": 5,
+            "worse": 1
+          }
+        },
+        "provenance": [
+          "experiments/heldout/paired-v3.2.txt"
+        ]
+      }
+    ],
     "limitations": [
       "Held-out evaluation used unreviewed AI-drafted gold, not human-validated labels.",
       "Paired held-out intervals include zero; retain r3 provisionally, not as a proven winner.",
@@ -58543,7 +59457,7 @@
     "The population basis of the dataset employment series is unverified."
   ],
   "provenance": {
-    "commit": "43af8d5fb752caf6561ff5688b00bb3e225cf5e2",
+    "commit": "310be48078f8cc57c85fd1f9b92da56c46797193",
     "artifacts": [
       {
         "path": "data/export/sources.json",
@@ -58709,6 +59623,26 @@
         "path": "experiments/runs/dev-dense-E7/text-embedding-3-large.metrics.json",
         "status": "available",
         "sha256": "5b83b6b4a94677c7e85d96df62d3a61cda4a0af225ddc0671a292f3e5259c9c6"
+      },
+      {
+        "path": "experiments/runs/dev-R-summary.json",
+        "status": "available",
+        "sha256": "63c1413228560132130e4ebab514cd80bb3a6be0f4c2d71c1c96a2fd5e88c426"
+      },
+      {
+        "path": "experiments/heldout/paired.txt",
+        "status": "available",
+        "sha256": "186ca0be421312a0480b3a6782ada822587d144d22e9ad407e6c1649f8e44824"
+      },
+      {
+        "path": "experiments/heldout/paired-v3.3.txt",
+        "status": "available",
+        "sha256": "aaa14974271f91c7ef5971c66234acbfc36a0b17966c753a3ed9d246201ed00e"
+      },
+      {
+        "path": "experiments/heldout/paired-v3.2.txt",
+        "status": "available",
+        "sha256": "e385a387f9ebb73ff0d0704969d7f29fc39a759841fa75beb47775a9f4a35f36"
       },
       {
         "path": "experiments/runs/answer-dev-G0/gpt-4.1-mini.metrics.json",

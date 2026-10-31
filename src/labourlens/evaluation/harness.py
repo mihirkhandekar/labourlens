@@ -184,8 +184,10 @@ def run(exp: str = "agent-dev-A1", split: str = "dev", labels: list[str] | None 
     raw_dir = paths.DATA / "runs" / exp
     pub = paths.EXPERIMENTS / "eval" / exp
     pub.mkdir(parents=True, exist_ok=True)
+    reviewed = sum(c.get("review_status") == "owner_reviewed" for c in cases.values())
     report = [f"# Evaluation of `{exp}` ({split}, n={len(cases)})", "",
-              "Gold labels and the judge are AI-produced; nothing here is human-reviewed. Judge model: `" + JUDGE_MODEL + "` (different from the generators). "
+              f"Gold was AI-drafted; {reviewed}/{len(cases)} cases record per-card owner review, which may agree with AI suggestions and is not independent inter-rater evidence. "
+              "The judge is AI-produced. Judge model: `" + JUDGE_MODEL + "` (different from the generators). "
               "Intervals are bootstrap 95% over cases; with this n, treat differences under about 10 points as noise.", ""]
     for f in sorted(raw_dir.glob("*.jsonl")):
         label = f.stem

@@ -1,6 +1,6 @@
 # M6: end-to-end agent experiments
 
-**MEASURED RESULT — dev gold v3.2 with corrected judge cache and calculation scoring.** Human source/gold/answer review is incomplete. The registered held-out run executed against unreviewed AI labels; results are in `docs/evaluation-report.md`. Semantic scores supersede stale cache entries. The first strict calculation scorer was found defective and corrected before these final figures; it does not show a numerical-capability collapse.
+**MEASURED RESULT — saved dev and held-out runs rescored on gold v3.5.** Owner review complete 31 Oct 2026: 125 cards decided by the owner (30 own verdicts, 95 by agreeing per card with AI suggestions or the three-pass AI tie-break), not independent inter-rater evidence. Forty-five gold cards are owner reviewed; 223 remain draft. Dev rescoring required no model calls; the owner completed the compatible held-out judge refresh. No answer generation was repeated.
 
 ## Hypotheses and controlled changes
 
@@ -24,20 +24,20 @@ Each model row uses that model for planner and answer. Reranking uses `gpt-6-lun
 
 ## Results
 
-Every row comes from `experiments/eval/agent-dev-A{1,2,3,4,5}/{model}.metrics.json`, rescored against gold **v3.2**. Adjacent `.cases.jsonl` files hold case scores; raw restricted-text runs remain local in `data/runs/agent-dev-A*/`. A1/A2 exclude changed questions/dropped cases and cover **235** cases; A3/A4/A5 cover **237**. D-031 relabelled **nine** dev questions under the hard supported-period rule (`experiments/gold/CHANGELOG.md`); this is a transparent scope-policy correction, not a new generation result. Each run has its own bootstrap interval. No paired significance claim is made across different populations.
+Every row below comes from `experiments/eval/agent-dev-A{1,2,3,4,5}/{model}.metrics.json`, rescored on **v3.5** with `eval --no-judge`. DEV-018 has no answered claims in saved outputs, so no changed-case paid judgment was needed and matching cached judgments were reused. A1/A2 retain **235** scored cases; A3–A5 **237**. Owner-review metadata does not affect scores. No generation, retrieval or reranking rerun occurred; no paired significance claim is made across differing n.
 
 | Run | Model | n | Behaviour [95% CI] | Over-abstain | False answer | Claim support | Unsupported claim | Fact coverage | Contradiction | Gold cited | Calculation correct | p50 / p95 s | $/case |
 |---|---|---:|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
 | A1 | gpt-6-luna | 235 | 0.779 [0.728, 0.830] | 0.157 | 0.025 | 0.881 | 0.000 | 0.687 | 0.007 | 0.674 | 0.667 | 10.7 / 22.8 | 0.00137 |
-| A1 | gpt-5.6-luna | 235 | 0.804 [0.753, 0.855] | 0.136 | 0.030 | 0.819 | 0.000 | 0.724 | 0.014 | 0.690 | 0.750 | 9.6 / 18.0 | 0.00274 |
+| A1 | gpt-5.6-luna | 235 | 0.800 [0.749, 0.851] | 0.136 | 0.030 | 0.819 | 0.000 | 0.724 | 0.014 | 0.690 | 0.750 | 9.6 / 18.0 | 0.00274 |
 | A2 | gpt-6-luna | 235 | 0.762 [0.706, 0.813] | 0.170 | 0.036 | 0.888 | 0.004 | 0.692 | 0.014 | 0.658 | 0.750 | 12.7 / 24.7 | 0.00142 |
-| A2 | gpt-5.6-luna | 235 | 0.800 [0.749, 0.851] | 0.136 | 0.034 | 0.829 | 0.003 | 0.716 | 0.034 | 0.695 | 0.750 | 10.8 / 20.6 | 0.00280 |
+| A2 | gpt-5.6-luna | 235 | 0.796 [0.745, 0.847] | 0.136 | 0.034 | 0.829 | 0.003 | 0.716 | 0.034 | 0.695 | 0.750 | 10.8 / 20.6 | 0.00280 |
 | A3 | gpt-6-luna | 237 | 0.903 [0.865, 0.937] | 0.030 | 0.030 | 0.887 | 0.000 | 0.728 | 0.006 | 0.836 | 0.750 | 15.4 / 35.6 | 0.00212 |
 | A3 | gpt-5.6-luna | 237 | 0.903 [0.861, 0.941] | 0.025 | 0.030 | 0.874 | 0.003 | 0.765 | 0.006 | 0.841 | 0.750 | 15.5 / 34.4 | 0.00360 |
 | A4 | gpt-6-luna | 237 | 0.899 [0.861, 0.937] | 0.034 | 0.026 | 0.856 | 0.000 | 0.734 | 0.011 | 0.836 | 0.667 | 14.8 / 35.6 | 0.00215 |
-| A4 | gpt-5.6-luna | 237 | 0.911 [0.878, 0.945] | 0.030 | 0.026 | 0.878 | 0.000 | 0.766 | 0.000 | 0.836 | 0.667 | 15.1 / 34.7 | 0.00367 |
-| A5 | gpt-6-luna | 237 | 0.907 [0.869, 0.941] | 0.021 | 0.034 | 0.879 | 0.000 | 0.724 | 0.006 | 0.841 | 0.750 | 16.4 / 37.5 | 0.00217 |
-| A5 | gpt-5.6-luna | 237 | 0.911 [0.873, 0.945] | 0.030 | 0.022 | 0.856 | 0.000 | 0.760 | 0.000 | 0.841 | 0.708 | 14.7 / 34.0 | 0.00369 |
+| A4 | gpt-5.6-luna | 237 | 0.907 [0.869, 0.941] | 0.030 | 0.026 | 0.878 | 0.000 | 0.766 | 0.000 | 0.836 | 0.667 | 15.1 / 34.7 | 0.00367 |
+| A5 | gpt-6-luna | 237 | 0.911 [0.873, 0.945] | 0.021 | 0.034 | 0.879 | 0.000 | 0.724 | 0.006 | 0.841 | 0.750 | 16.4 / 37.5 | 0.00217 |
+| A5 | gpt-5.6-luna | 237 | 0.916 [0.878, 0.949] | 0.030 | 0.022 | 0.856 | 0.000 | 0.760 | 0.000 | 0.841 | 0.708 | 14.7 / 34.0 | 0.00369 |
 
 Rates use different eligible populations. `over_abstention_rate` divides by all evaluated cases. `false_answer_rate` excludes over-abstentions from its denominator; it is not conditional on gold non-answer cases. Claim support and unsupported-claim rates pool judged claims. Fact coverage pools reference facts in judged answers. Contradiction is the fraction of judged answers with any contradicted reference fact. Gold-cited and calculation-correct exclude ineligible/null cases. See `docs/evaluation-report.md` and `src/labourlens/evaluation/harness.py`; each metrics JSON provides denominators and intervals for all rates.
 
@@ -55,7 +55,7 @@ Source: `by_family` in the A1 and A3 metrics files above. Counts are shown separ
 | gpt-6-luna | factual_lookup | 70 | 0.743 | 70 | 0.971 | 17 / 1 | 1 / 1 |
 | gpt-6-luna | numerical_comparison | 33 | 0.818 | 34 | 0.882 | 5 / 3 | 1 / 1 |
 | gpt-6-luna | revision_conflict | 18 | 0.667 | 19 | 1.000 | 6 / 0 | 0 / 0 |
-| gpt-5.6-luna | adversarial | 35 | 0.971 | 35 | 0.943 | 0 / 0 | 1 / 1 |
+| gpt-5.6-luna | adversarial | 35 | 0.943 | 35 | 0.943 | 0 / 0 | 1 / 1 |
 | gpt-5.6-luna | ambiguity_insufficient_causal | 44 | 0.773 | 44 | 0.750 | 0 / 0 | 2 / 2 |
 | gpt-5.6-luna | cross_source_synthesis | 35 | 0.771 | 35 | 1.000 | 8 / 0 | 0 / 0 |
 | gpt-5.6-luna | factual_lookup | 70 | 0.786 | 70 | 0.943 | 14 / 2 | 1 / 2 |
@@ -76,12 +76,12 @@ A3 `gpt-6-luna` p95 latency is **35.6 seconds**, versus **22.8 seconds** for A1;
 
 ## Limits and next evidence
 
-Gold and semantic judging are AI-produced. The dev set has been used repeatedly for choices. Reranker, judge and generators share a provider/family. Some family samples are small. Any-one-gold citation credit can hide incomplete comparisons. The independent AI answer review concerns A1, not A3. None replaces owner review.
+Gold was AI-drafted and semantic judging remains AI-produced. Owner per-card review now covers selected records, including AI-assisted agreements; it is not blinded independent annotation. Dev has repeatedly guided choices, related model families are used, family samples are small and any-one-gold scoring can hide incomplete comparisons. Historical A1 and A3 AI reviews and the completed owner pack are distinguished in `docs/evaluation-report.md`.
 **Evaluation corrections:** case-ID-only caching left stale judgments after gold changes. The cache now fingerprints the actual judge inputs; A1–A5 were rejudged (`src/labourlens/evaluation/harness.py`). Metrics record scoring-time gold/prompt/price hashes, configuration, HEAD and eligible/available n; generation provenance is distinct. The first strict calculation scorer overconstrained prose/unit wording and misparsed “not relative percent change”. It was corrected before final figures: cited deterministic records must match operands/order, operation, unit and signed result with prose direction agreement, while wording is flexible. All dev and held-out files were rescored; comparison found only `calc_correct` changed, without new generation. A3 is **0.750 [0.583, 0.917], n=24**, for both models; misses are no-answer cases and ranking questions beyond `calculate_change`, not incorrect arithmetic (`experiments/eval/agent-dev-A3/`, `src/labourlens/agent/experiments.py`). Held-out calculation rescoring is disclosed as a scoring-code deviation. `cases_with_ungrounded_numbers` uses all scored cases; the old answers-named metric is an alias.
 
-**Held-out finding, v3.4 rescoring:** paired differences are **+0.161 [0.000, 0.323]** and **+0.097 [-0.032, 0.226]** for the respective luna models (`experiments/heldout/paired.txt`). Neither demonstrates a gain under the registered rule. Keep r3 provisional. The original v3.2 execution and v3.3/v3.4 adjudications are shown side by side in `docs/evaluation-report.md`; no new model calls occurred. Three v3.4 post-run edits lower or leave scores unchanged. A clean pre-registered rerun on frozen human-reviewed gold would be stronger evidence; current human review remains pending.
+**Complete held-out v3.5 finding:** behaviour accuracy is **0.871 [0.742, 0.968] / 0.839 [0.710, 0.968]** for r3 and **0.710 [0.548, 0.839] / 0.742 [0.581, 0.903]** for hybrid, in luna6/luna5.6 order (registered held-out metrics). Paired gains remain **+0.161 [0.000, 0.323] / +0.097 [-0.032, 0.226]** (`experiments/heldout/paired.txt`, n=31, 10,000 resamples, seed 20261030). Neither demonstrates a gain under the registered rule. HO-022's owner-approved correction raises both arms equally; it is not a model improvement. Original v3.2–v3.4 results and paired histories remain preserved in `docs/evaluation-report.md` and `experiments/heldout/`. Keep r3 provisional.
 
 
-**H5 has no demonstrated benefit; A5 is complete.** `planner_v2` was motivated by DEV-503/505 zero-tool abstentions. Versus A3, behaviour changes by **+0.004** and **+0.008** for the respective luna models, with fully overlapping intervals. A5 p95 latency is **37.5 / 34.0 s** and cost **$0.00217 / $0.00369** per case (A5 metrics above). This is inconclusive, not equivalence. `planner_v2` is not adopted; `planner_v1` stays default. D-031 resolves the historical-context boundary; details and remaining failure IDs are in `docs/evaluation-report.md`.
+**H5 has no demonstrated benefit; A5 is complete.** With DEV-018 now labelled clarify under v3.5, A5 behaviour is **0.911 / 0.916**, versus A3 **0.903 / 0.903**: gains **+0.008 / +0.013** with overlapping intervals (current A3/A5 metrics, luna6/luna5.6 order). This remains inconclusive, not equivalence. `planner_v2` is not adopted; `planner_v1` stays default. p95 latency **37.5 / 34.0 s** and cost **$0.00217 / $0.00369** reflect the original generation runs.
 
 The earlier small agent report (`docs/experiments/m4-agent.md`) is superseded by these larger dev runs where it covers the same questions. Earlier retrieval and answer-only experiments remain mechanism studies, not directly comparable scoreboards. Full error analysis, reviewer status, held-out pre-registration and remaining decisions are in `docs/evaluation-report.md`.

@@ -2,19 +2,23 @@
 
 > **This is the first file any agent reads when resuming.** Update it at the end of every work session, every substep, and before any long-running command. Newest entry on top of the log. Never record a result that has no file or command behind it.
 
-**Last updated:** 2026-10-31 (owner-approved gold v3.4: three post-run adjudications; luna5.6 R3 falls to 80.6%, paired gains still inconclusive; dev remains v3.2) · **Deadline:** Wed 4 Nov 2026, morning SGT
+**Last updated:** 2026-10-31 (125 owner cards complete; gold v3.5 development and registered held-out saved outputs rescored; no new answer generation) · **Deadline:** Wed 4 Nov 2026, morning SGT
 
 ## Current state (one screen)
 
 | Item | Value |
 |---|---|
-| Active milestone | **M6 evaluation and M7 deliverables in progress.** Dev and registered held-out measurements exist; human review and final acceptance remain incomplete. |
+| Active milestone | **M6 evaluation and M7 deliverables in progress.** Owner's 125-card review complete, not blind/independent inter-rater annotation; v3.5 development and registered held-out rescoring complete; final acceptance pending. |
 | Gate status | M1–M5 implementation history is recorded below. D-030 records the assistant's current default change; **owner confirmation or rollback is pending**. Historical planning gates below are not current status. |
 | Code written | Ingestion, retrieval, answer, agent, MCP, security, evaluation and report modules exist under `src/labourlens/`. Existing checks are historical artifacts, not a new verification of current code. |
 | Data downloaded | Source inventory and hashes: `data/manifests/manifest.json`; local raw files and passages remain gitignored. |
-| Next decision for owner | Confirm provisional R3 or prefer cheaper hybrid under D-033; review source/gold/answer samples and remaining protocol sign-off. Registered held-out execution is complete against frozen unreviewed AI gold, not human validation. |
-| Blockers | Required human review has not happened. Paired held-out R3 gain intervals include zero; retain default only provisionally. Corrected threat runs expose planted-figure acceptance and subtle instruction-following; direct over-refusal remains. A5 is complete and not adopted (D-032). Calculation evidence uses corrected scoring; small strata limit conclusions. |
+| Next decision for owner | Confirm provisional R3 or cheaper hybrid under D-033, and address remaining protocol/rights inspection, including J10. Review cards are decided; not all evidence or remaining draft gold is verified. |
+| Blockers | Remaining rights/protocol acceptance, J10 inspection, configuration confirmation and rehearsal. A1–A5 development rescoring reused caches without model calls; registered held-out stale judgments are refreshed. Current paired gains remain inconclusive. Planted-figure/subtle-instruction threat failures remain; A5 not adopted. |
 | Evidence to resume from | `experiments/eval/agent-dev-A*-REPORT.md`, `experiments/gold/CHANGELOG.md`, `docs/threat-model.md`, `src/labourlens/report/`, `docs/deploy.md` |
+
+**MEASURED verification — earlier v3.5 integration:** `uv run pytest -q -m 'not corpus'` completed with **416 passed, 52 deselected, 5 PyMuPDF/SWIG deprecation warnings in 56.27 s**. Evidence: `artifacts/tests/pytest-gold-v3.5.txt` (observed-output summary). This precedes the present publication refresh, not a new check. Five `eval --no-judge` development rescoring commands completed against saved outputs without model calls. Registered held-out v3.5 rescoring and stale-judgment refresh are now complete, without new answer generation; original review export and freeze remain unchanged. Final publication/build verification remains a separate acceptance step.
+
+**MEASURED verification — completed held-out v3.5 publication:** final `uv run pytest -q -m 'not corpus'` result: **417 passed, 52 deselected, 5 deprecation warnings in 49.01 s** (`artifacts/tests/pytest-heldout-v3.5.txt`). The initial run exposed a paired-artifact version projection defect; the builder now uses the recorded GOLD header rather than mislabelling an older current-file snapshot. Existing expectations were preserved. `paired.txt` was regenerated with 31 matched cases, 10,000 resamples and seed 20261030; the previous text is retained as `paired-v3.4.txt`. Both v3.5 gain intervals include zero. No commit or report build was run.
 
 ## Document map (public vs private)
 
@@ -52,19 +56,19 @@ Status values: `not started`, `in progress`, `done (evidence: path)`, `blocked (
 | M1.3 | Dataset normalizers, Parquet, DuckDB read layer | done | evidence: `data/processed/observations.parquet`, 10,896 rows |
 | M1.4 | PDF and HTML passage extraction with quality flags | done | evidence: `artifacts/data-quality/extraction_stats.json` |
 | M1.5 | Quality report, advance/final/dataset reconciliation | done | evidence: `artifacts/data-quality/quality-report.md`, `reconciliation.json` |
-| M1.6 | Clean-room run, data sheet, study note, commit proposal | done except human review | evidence: `artifacts/tests/pytest-m1.txt`, `docs/data-sheet.md`, clean-room run below |
-| M2 | BM25 baseline and draft gold | implemented; owner label review pending; final-agent held-out freeze/execution recorded separately | `src/labourlens/retrieval/`, `docs/experiments/m2-bm25-baseline.md`, `experiments/heldout/FREEZE.md` |
+| M1.6 | Clean-room run, data sheet, study note, commit proposal | historical execution recorded; 30 source cards now decided; rights/basis gaps remain | `artifacts/tests/pytest-m1.txt`, `docs/data-sheet.md`, owner review summary |
+| M2 | BM25 baseline and gold | implemented; 45 owner-reviewed gold cards, 223 drafts; historical held-out freeze/execution recorded separately | `src/labourlens/retrieval/`, `docs/experiments/m2-bm25-baseline.md`, `experiments/heldout/FREEZE.md` |
 | M3 | Dense/hybrid retrieval and cited generation | implemented; dev comparisons recorded | `docs/experiments/m3-dense-hybrid.md`, `docs/experiments/m3-answer-generation.md` |
 | M4 | Bounded research agent and deterministic tools | implemented; dev results recorded | `src/labourlens/agent/`, `docs/experiments/m4-agent.md` |
 | M5 | MCP and responsible-AI controls | implemented; final corrected-fixture paired `r3` threat runs recorded; planted-figure and subtle-instruction failures remain | `src/labourlens/mcp/`, `src/labourlens/security/`, `docs/threat-model.md`, `experiments/threats/SUMMARY.md`, `docs/mcp-demo-transcript.md` |
-| M6.1 | Evaluation harness and dev agent comparisons | A1–A5 re-judged with input-fingerprinted caches against v3.2; direction-aware calculation scoring supersedes old scores; A2/A4/A5 show no demonstrated aggregate benefit | `src/labourlens/evaluation/harness.py`, `experiments/eval/agent-dev-A{1..5}/{gpt-6-luna,gpt-5.6-luna}.metrics.json` |
-| M6.2 | Gold drafting and AI pre-review | gold v3.4 includes D-035's owner-approved HO-027 clarification and HO-023/HO-004 evidence corrections after held-out execution; D-034's HO-029 decision retained; dev remains v3.2; **not human-reviewed** | `experiments/gold/CHANGELOG.md`: 268 draft cases, 237 dev and 31 held-out |
-| M6.3 | Documented answer-review sample | selection and AI pre-review exist; **owner review pending** | `experiments/human-review-sample/selection.json`, `ai-review-summary.md` |
-| M6.4 | Freeze protocol and run held-out evaluation | original registered run used v3.2; current v3.4 is disclosed post-run sensitivity, not new generation; paired gains inconclusive; human review incomplete | `experiments/heldout/FREEZE.md`, `paired-v3.2.txt`, `paired-v3.3.txt`, `paired.txt`, `experiments/eval/agent-heldout-H-{r3,hybrid}/`, D-033–D-035 |
+| M6.1 | Evaluation harness and dev comparisons | A1–A5 saved outputs rescored against v3.5 using `--no-judge`; no new model calls; prior v3.2 history preserved | `src/labourlens/evaluation/harness.py`, `experiments/eval/agent-dev-A{1..5}/` |
+| M6.2 | Gold and owner adjudication | v3.5: 268 cases, 237 dev/31 held-out, 45 reviewed/223 drafts; HO-022 answer and DEV-018 clarify confirmed by chat (D-036); all evidence IDs retained | `experiments/gold/CHANGELOG.md`, owner review summary |
+| M6.3 | Answer-review sample | 40 per-card owner verdicts complete: 25 correct, six partly correct, nine incorrect; not a blind population estimate or independent inter-rater evidence | `experiments/human-review-sample/`, `docs/human-review/owner-review-summary.md` |
+| M6.4 | Freeze protocol and held-out evaluation | original v3.2 generation preserved; v3.3/v3.4 sensitivities historical; HO-022 owner label changed post-run; v3.5 saved-output rescoring and stale-judgment refresh complete, paired gains still inconclusive | `experiments/heldout/FREEZE.md`, `paired.txt`, `paired-v3.{2,3,4}.txt`, D-033–D-036 |
 | M7.1 | Report application, live research and audit/feedback | implementation exists; current checkout not reverified in this refresh | `src/labourlens/report/`, `web/`, `src/labourlens/audit/`, `docs/audit-and-logging.md` |
 | M7.2 | Deployment setup | files and instructions exist; deployment not established by these files | `deploy/`, `Dockerfile`, `docs/deploy.md` |
 | M7.3 | Written submission and demo materials | documentation refresh in progress; final completeness review pending | `docs/architecture.md`, `docs/system-card.md`, `docs/innovation.md`, `docs/demo-script.md`; evaluation report and end-to-end experiment write-up updated in this refresh |
-| Final | Owner reviews, final acceptance and submission rehearsal | pending; held-out experiment is recorded, not a remaining execution task | `docs/human-review/`, `docs/demo-script.md`, `experiments/heldout/` |
+| Final | Remaining inspection, acceptance and rehearsal | 125 owner cards complete; J10 further inspection, rights/protocol acceptance and rehearsal pending; no new generation required | `docs/human-review/`, `docs/demo-script.md`, `experiments/heldout/` |
 
 Existing verification artifacts include `artifacts/tests/pytest-m1.txt` through `pytest-m5.txt` and `artifacts/tests/web-live-smoke.json`. They describe earlier executions only. No tests, builds, fetches, evaluations or verification commands were run for this documentation refresh.
 
@@ -89,15 +93,24 @@ Every row came from a live call; none is stored as a repo artifact yet. M1.1 mus
 | ID | Question | Status |
 |---|---|---|
 | D-003 / D-006 / D-019 / D-020 | Source scope and expansion cap | settled in `docs/decisions.md`; do not reopen without an incompatible requirement |
-| D-004 / D-005 | M1 implementation and private-repo dataset snapshots | approved in D-005; source spot-checks still await the owner |
+| D-004 / D-005 | M1 implementation and private-repo dataset snapshots | approved; 30 source-card decisions complete, not blanket publisher/rights verification |
 | D-030 / D-033 | Current R3 / `gpt-6-luna` / `answer_v3` agent default | provisional after inconclusive held-out comparison; owner to confirm or prefer cheaper hybrid |
-| Gold review | Resolve remaining behaviour/definition questions and review evidence | owner pending; see `experiments/gold/CHANGELOG.md` |
-| Held-out protocol | Review executed evidence and record remaining label/protocol sign-off | execution authorized and complete; human gold review still incomplete; preserve frozen outputs |
-| Human answer review | Review the prepared sample using the documented rubric | partial: 17/40 independent owner verdicts; 23 owner-endorsed AI, not independent; see owner-review-summary.md |
+| Gold review | Preserve owner decisions and remaining draft labels | 45 reviewed (31 held-out/14 dev), 223 drafts; v3.5 development and registered held-out saved outputs rescored |
+| Held-out protocol | Preserve executed evidence and remaining protocol sign-off | generation complete before review; HO-022 adjudicated after outcomes; do not overwrite freeze or call exposed cases blind |
+| Human answer review | Preserve per-card verdicts and AI-agreement provenance | 40 cards decided: 25 correct/six partly/nine incorrect; not independent inter-rater evidence |
 
 ## Log (newest first)
 
-### 2026-10-31 — Gold v3.4 three-case adjudication and sensitivity
+### 2026-10-31 — Owner review complete; gold v3.5 development and held-out rescored
+
+- **VERIFIED FACT:** **owner review complete 31 Oct 2026: 125 cards decided by the owner (30 own verdicts, 95 by agreeing per card with AI suggestions or the three-pass AI tie-break), not independent inter-rater evidence**. Per-card actions are genuine owner decisions, not blinded annotation. The 95 comprise 67 earlier-AI agreements and 28 three-pass tie-break agreements.
+- **VERIFIED FACT:** [summary](human-review/owner-review-summary.md): 45 gold cards (43 OK/two disagreements), 40 answers (25 correct/six partly/nine incorrect), 30 sources (19 match/11 minor), ten decision cards. Gold v3.5 has 45 reviewed and 223 remaining drafts; counts are not all-corpus verification or population accuracy.
+- **DECISION:** owner chat “Yes I confirm”, 31 Oct, approves HO-022 `clarify` → `answer`, DEV-018 `refuse` → `clarify` (D-036). Exported DEV-018 refusal was accidental; explicit chat wins, original private export stays unedited. HO-022 is post-held-out-run. Preserve questions/every evidence ID and original outputs/freeze.
+- **MEASURED RESULT / CURRENT BOUNDARY:** parent ran five successful development `eval --no-judge` commands, without generation/judge calls. Saved metrics use gold SHA-256 `aac4b405b51c7cebf019c3b3629509ecb711be32fb830a8e78c4c7b902219e09`. A1–A5 luna6 behaviour: .779/.762/.903/.899/.911; luna5.6: .800/.796/.903/.907/.916. Changed DEV-018 is a nonanswer without claims; compatible unchanged caches reused. Registered held-out stale judgments are now refreshed against v3.5 saved outputs, without new generation: R3/hybrid behaviour .871 [.742, .968]/.710 [.548, .839] for luna6 and .839 [.710, .968]/.742 [.581, .903] for luna5.6, n=31 each. Paired gains remain +.161 [.000, .323] and +.097 [-.032, .226] (10,000 resamples, seed 20261030): inconclusive. Historical v3.2–v3.4 results, versioned paired files and original freeze remain side by side in [evaluation report](evaluation-report.md); post-run owner labels do not restore blind confirmation. Threat/development results unchanged by held-out rescoring. This documentation worker ran no tests/build/evaluation/model calls.
+- **OPEN:** J2 rights still open; J3 dataset/report gap unverified; J4 explicit vintages must remain separate; J10 asks for further inspection, not acceptance. J9 limits conclusions to shared-corpus question-held-out evaluation. Configuration preference, final protocol sign-off and rehearsal remain open.
+
+
+### 2026-10-31 — Historical gold v3.4 three-case adjudication and sensitivity (superseded status; not v3.5 metrics)
 
 - **DECISION:** owner “Yes”, 31 Oct 2026 (D-035), approved three further changes after held-out execution. HO-027 changes `ignore_injection_and_answer` -> `clarify` because its unchanged question lacks a year; prior report evidence moves to context-only and reference facts are cleared. HO-023 adds nonprimary cohort-definition passage `mom-2026-q2-final:p053:b015:85d629c9`. HO-004's truncated PDF block becomes nonprimary; its release evidence remains primary. HO-029's earlier v3.3 adjudication is retained.
 - **VERIFIED FACT:** read-only JSON counting gives 268 draft cases, all null human reviewers: 237 dev unchanged (165 answer, 25 abstain, 19 refuse, 11 clarify, 17 ignore-injection-and-answer), 31 held-out (21/2/3/3/2 respectively). Current gold SHA-256 `050bb40b4863cf3a00682da0edc305dc4d9c7de1c35b3098989e8afdd50899b9` matches the four registered held-out metrics; these are scoring-time fingerprints, not automatic generation-time provenance.

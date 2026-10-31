@@ -32,6 +32,30 @@ def test_cache_inputs_invalidate(pair, monkeypatch, tmp_path, field):
     assert h.judgement_hash(case, rec) != original
 
 
+@pytest.mark.parametrize("source", ["owner_manual", "agreed_with_ai_suggestion"])
+def test_review_metadata_does_not_change_judge_inputs(pair, source):
+    case, rec = pair
+    original = h.judgement_hash(case, rec)
+    case.update(
+        review_status="owner_reviewed", reviewed_by="Mihir",
+        owner_review={"reviewer": "Mihir", "decision_source": source, "date": "2026-10-31"},
+    )
+    assert h.judgement_hash(case, rec) == original
+
+
+def test_evaluation_report_records_owner_assisted_count(monkeypatch, tmp_path, capsys):
+    monkeypatch.setattr(h.ev, "load_cases", lambda split: [
+        {"case_id": "DEV-001", "review_status": "owner_reviewed"},
+        {"case_id": "DEV-002", "review_status": "draft"},
+    ])
+    monkeypatch.setattr(h.paths, "DATA", tmp_path / "data")
+    monkeypatch.setattr(h.paths, "EXPERIMENTS", tmp_path / "experiments")
+    h.run("empty", judge=False)
+    report = capsys.readouterr().out
+    assert "1/2 cases record per-card owner review" in report
+    assert "not independent inter-rater evidence" in report
+    assert "nothing here is human-reviewed" not in report
+
 def test_stale_cache_rejudged_and_strict_mode_fails(pair, monkeypatch):
     case, rec = pair
     cache = {"test": {"claims": [], "facts": []}}

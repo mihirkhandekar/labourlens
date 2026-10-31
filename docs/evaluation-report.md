@@ -1,6 +1,6 @@
 # Evaluation report
 
-**Status — dev measured on unreviewed AI gold v3.2; held-out generation frozen on v3.2 and transparently rescored through v3.3/v3.4.** Post-run label/evidence adjudications, original scores and current scores are preserved below. Owner source/gold/answer review remains incomplete; no result is a human judgment (`docs/requirements-matrix.md`, R06).
+**Status — dev and held-out saved outputs rescored on gold v3.5.** Owner review complete 31 Oct 2026: 125 cards decided by the owner (30 own verdicts, 95 by agreeing per card with AI suggestions or the three-pass AI tie-break), not independent inter-rater evidence. Forty-five gold cards are owner reviewed; 223 remain draft. Current v3.5 figures and original v3.2–v3.4 sensitivity are shown separately. Post-run review is not prospective blinded evaluation.
 
 ## Research questions and hypotheses
 
@@ -18,23 +18,23 @@ The hypotheses organise the evidence. Completed dev comparisons are not retrospe
 
 **VERIFIED FACT:** `experiments/gold/draft_cases.jsonl` contains **268 cases: 237 dev and 31 held-out**, as recorded in the final-count section of `experiments/gold/CHANGELOG.md`. Families cover factual lookup, numerical comparison, cross-source synthesis, revision conflict, ambiguity/insufficient evidence/causal overreach, and adversarial requests. Each case includes an expected behaviour, evidence IDs and reference facts; applicable cases include a calculation specification. These are authored research questions, not sampled production traffic.
 
-AI drafted the gold set. Three AI pre-review passes inspected label policy, passage/observation evidence and alternative-versus-partial evidence placement. Records are in `experiments/gold/ai-review/`, `ai-review-2/`, `ai-review-3/` and `CHANGELOG.md`. The live file retains draft status and no named human reviewer. Mechanical validation is not human verification.
+AI drafted the gold set and several AI passes inspected labels and evidence (`experiments/gold/ai-review/`, `ai-review-2/`, `ai-review-3/`, and the independent-review reports below). Following the owner's per-card review, only **45** gold records receive `review_status: owner_reviewed` and per-card reviewer/date/decision-source provenance; the other **223** stay draft. Review provenance is not a scoring feature and does not silently validate every fact.
 
-The owner must review source/statistical spot-checks (`docs/human-review/`), gold and remaining policy questions (`experiments/gold/CHANGELOG.md`). D-031 settles the period boundary, not verification of every source or answer. Mixed causal requests, secret-plus-legitimate requests and partially answerable comparisons still need adjudication. Never silently relabel failures.
+The owner decided the review pack, not every item in the full gold set or every unresolved quality issue. J1–J10 and source decisions are recorded in `docs/human-review/owner-review-summary.md`; J10 explicitly requests further inspection. Rights and the employment-dataset basis remain qualified. Approved label changes are versioned in D-036 and the gold changelog, rather than inferred from review-sheet existence.
 
 ### Development/held-out policy
 
-Dev guided configuration selection. The registered held-out run executed once on 30–31 October 2026 after the owner authorised completing the experiments (`experiments/heldout/FREEZE.md`). Labels remain AI-drafted and AI-reviewed, without human verification. Held-out questions were visible during drafting/review, although not used for measured configuration selection. Dev is repeatedly inspected and is not an unbiased generalisation estimate.
+Dev guided configuration selection. Held-out generation executed once on 30–31 October 2026 **before** the completed per-card owner review (`experiments/heldout/FREEZE.md`). Its initial labels were AI-drafted. Subsequent owner adjudications are disclosed separately; they do not retroactively make the run a prospective evaluation on fully human-reviewed gold. Shared evidence and repeated dev inspection still limit generalisation.
 
-A1–A5 use gold **v3.2**. A1/A2 cover **235 eligible cases out of 237 available** after changed-question/dropped-case exclusions; A3/A4/A5 cover **237/237** (`experiments/eval/agent-dev-A*/{model}.metrics.json`, `provenance`). D-031 changed **nine dev labels**, preserved former evidence as unscored context and left questions, IDs and splits unchanged (`experiments/gold/CHANGELOG.md`).
+A1–A5 are now deterministically rescored on gold **v3.5**. A1/A2 retain **235 eligible / 237 available** cases and A3/A4/A5 **237/237** (`experiments/eval/agent-dev-A*/{model}.metrics.json`). Only DEV-018 changes the dev target; owner-review metadata has no scoring effect. Earlier v3.2 dev numbers are historical and superseded by the current table.
 
-**Held-out scoring now uses v3.4.** D-034 corrected HO-029 in v3.3; D-035 applies three further record edits to HO-027, HO-023 and HO-004. All were owner-approved after the run, without model calls. Dev records/results are unchanged. Generation-time hashes remain in the original freeze; current scoring provenance and three-version sensitivity are shown below.
+**Gold v3.5 rescoring is complete.** D-036 changes HO-022 to answer and DEV-018 to clarify. The accidental DEV-018 export proposal remains preserved and is superseded by the owner's explicit chat correction. Saved dev runs were deterministically rescored; the owner completed both held-out evaluations with `--rejudge-stale`, refreshing incompatible HO-022 judgments. No generation was repeated. Original versions remain below.
 
 **Cache correction:** earlier case-ID-keyed judgments survived gold changes, including DEV-034, DEV-202 and DEV-626, despite manual invalidation. Those semantic scores are superseded. The corrected cache fingerprints question, reference facts, expected behaviour, exact answer/cited-evidence payload, judge model and prompt hash; absent/mismatched fingerprints are never reused, including offline mode (`src/labourlens/evaluation/harness.py`). Dev A1–A5 were rejudged.
 
 **Calculation-scorer correction:** the first strict replacement scorer was itself wrong: it overconstrained prose/unit wording and misparsed the gold formula text “not relative percent change”. This was corrected before final figures were published. The current scorer requires a cited deterministic record with correct operands, order, operation, unit, signed result and direction agreement in prose, while permitting free wording (`src/labourlens/agent/experiments.py`). It does not establish a collapse in numerical capability. All dev and held-out files were rescored. Comparing the previously loaded and corrected metrics for the ten dev and four registered held-out configurations found changes only to `calc_correct`; behaviour accuracy, false-answer and other measures were unchanged. This is a scoring-code correction after held-out execution, not a new generation run.
 
-**Recorded provenance:** each current metrics file includes `gold_sha256`, `prompt_sha256` (planner, planner-user, answer, answer-user, judge and rerank where applicable), `agent_config`, `git_head`, `price_table_sha256`, `eligible_n`, `available_n` and `fingerprint_scope`. For A3 `gpt-6-luna`, gold hash is `647b26a2f0faa86be30ad897840bc1887b54f55c27268d141565b94cb22998e8`, recorded HEAD is `617d168b8badd9db775acd1bfd12f4e26d736ddb`, and eligibility is **237/237** (its metrics JSON). These hashes describe files at scoring time; generation-time provenance is established only when stored in the raw run. Held-out hashes and run HEAD are recorded separately in `experiments/heldout/FREEZE.md`.
+**Recorded provenance:** metrics contain gold/prompt/price hashes, exact configuration, scoring HEAD, eligible/available counts and fingerprint scope. Dev and held-out v3.5 scoring use gold hash `aac4b405b51c7cebf019c3b3629509ecb711be32fb830a8e78c4c7b902219e09`; current metric files record the respective scoring HEADs and counts. These are scoring-time snapshots, not generation-time identity. Original generation hashes remain in `experiments/heldout/FREEZE.md`.
 
 ## Baselines and methodology
 
@@ -98,20 +98,20 @@ The earlier answer study covered **30 dev cases**. For `gpt-6-luna`, behaviour a
 
 ## Results: controlled end-to-end experiments
 
-Every row comes from current `experiments/eval/agent-dev-A{1,2,3,4,5}/{model}.metrics.json`, rescored on gold **v3.2**. Per-case scores are adjacent `.cases.jsonl` files. Settings and analysis: `docs/experiments/m6-agent-end-to-end.md`.
+Every row comes from current `experiments/eval/agent-dev-A{1,2,3,4,5}/{model}.metrics.json`, deterministically rescored on gold **v3.5** using saved outputs and the fingerprinted judge cache. No new model calls were needed for DEV-018.
 
 | Run | Model | n | Behaviour [95% CI] | Over-abstain | False answer | Claim support | Unsupported claim | Fact coverage | Contradiction | Gold cited | Calculation correct | p50 / p95 s | $/case |
 |---|---|---:|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
 | A1 | gpt-6-luna | 235 | 0.779 [0.728, 0.830] | 0.157 | 0.025 | 0.881 | 0.000 | 0.687 | 0.007 | 0.674 | 0.667 | 10.7 / 22.8 | 0.00137 |
-| A1 | gpt-5.6-luna | 235 | 0.804 [0.753, 0.855] | 0.136 | 0.030 | 0.819 | 0.000 | 0.724 | 0.014 | 0.690 | 0.750 | 9.6 / 18.0 | 0.00274 |
+| A1 | gpt-5.6-luna | 235 | 0.800 [0.749, 0.851] | 0.136 | 0.030 | 0.819 | 0.000 | 0.724 | 0.014 | 0.690 | 0.750 | 9.6 / 18.0 | 0.00274 |
 | A2 | gpt-6-luna | 235 | 0.762 [0.706, 0.813] | 0.170 | 0.036 | 0.888 | 0.004 | 0.692 | 0.014 | 0.658 | 0.750 | 12.7 / 24.7 | 0.00142 |
-| A2 | gpt-5.6-luna | 235 | 0.800 [0.749, 0.851] | 0.136 | 0.034 | 0.829 | 0.003 | 0.716 | 0.034 | 0.695 | 0.750 | 10.8 / 20.6 | 0.00280 |
+| A2 | gpt-5.6-luna | 235 | 0.796 [0.745, 0.847] | 0.136 | 0.034 | 0.829 | 0.003 | 0.716 | 0.034 | 0.695 | 0.750 | 10.8 / 20.6 | 0.00280 |
 | A3 | gpt-6-luna | 237 | 0.903 [0.865, 0.937] | 0.030 | 0.030 | 0.887 | 0.000 | 0.728 | 0.006 | 0.836 | 0.750 | 15.4 / 35.6 | 0.00212 |
 | A3 | gpt-5.6-luna | 237 | 0.903 [0.861, 0.941] | 0.025 | 0.030 | 0.874 | 0.003 | 0.765 | 0.006 | 0.841 | 0.750 | 15.5 / 34.4 | 0.00360 |
 | A4 | gpt-6-luna | 237 | 0.899 [0.861, 0.937] | 0.034 | 0.026 | 0.856 | 0.000 | 0.734 | 0.011 | 0.836 | 0.667 | 14.8 / 35.6 | 0.00215 |
-| A4 | gpt-5.6-luna | 237 | 0.911 [0.878, 0.945] | 0.030 | 0.026 | 0.878 | 0.000 | 0.766 | 0.000 | 0.836 | 0.667 | 15.1 / 34.7 | 0.00367 |
-| A5 | gpt-6-luna | 237 | 0.907 [0.869, 0.941] | 0.021 | 0.034 | 0.879 | 0.000 | 0.724 | 0.006 | 0.841 | 0.750 | 16.4 / 37.5 | 0.00217 |
-| A5 | gpt-5.6-luna | 237 | 0.911 [0.873, 0.945] | 0.030 | 0.022 | 0.856 | 0.000 | 0.760 | 0.000 | 0.841 | 0.708 | 14.7 / 34.0 | 0.00369 |
+| A4 | gpt-5.6-luna | 237 | 0.907 [0.869, 0.941] | 0.030 | 0.026 | 0.878 | 0.000 | 0.766 | 0.000 | 0.836 | 0.667 | 15.1 / 34.7 | 0.00367 |
+| A5 | gpt-6-luna | 237 | 0.911 [0.873, 0.945] | 0.021 | 0.034 | 0.879 | 0.000 | 0.724 | 0.006 | 0.841 | 0.750 | 16.4 / 37.5 | 0.00217 |
+| A5 | gpt-5.6-luna | 237 | 0.916 [0.878, 0.949] | 0.030 | 0.022 | 0.856 | 0.000 | 0.760 | 0.000 | 0.841 | 0.708 | 14.7 / 34.0 | 0.00369 |
 
 Claim-support is a pooled claim ratio; contradiction is an answer-level rate. All other denominator caveats above apply. The metrics files contain the CI and eligible n for each rate, not only behaviour.
 
@@ -127,7 +127,7 @@ Source: `by_family` in the corresponding A1/A3 metrics files. These are descript
 | gpt-6-luna | factual_lookup | 70 | 0.743 | 70 | 0.971 | 17 / 1 | 1 / 1 |
 | gpt-6-luna | numerical_comparison | 33 | 0.818 | 34 | 0.882 | 5 / 3 | 1 / 1 |
 | gpt-6-luna | revision_conflict | 18 | 0.667 | 19 | 1.000 | 6 / 0 | 0 / 0 |
-| gpt-5.6-luna | adversarial | 35 | 0.971 | 35 | 0.943 | 0 / 0 | 1 / 1 |
+| gpt-5.6-luna | adversarial | 35 | 0.943 | 35 | 0.943 | 0 / 0 | 1 / 1 |
 | gpt-5.6-luna | ambiguity_insufficient_causal | 44 | 0.773 | 44 | 0.750 | 0 / 0 | 2 / 2 |
 | gpt-5.6-luna | cross_source_synthesis | 35 | 0.771 | 35 | 1.000 | 8 / 0 | 0 / 0 |
 | gpt-5.6-luna | factual_lookup | 70 | 0.786 | 70 | 0.943 | 14 / 2 | 1 / 2 |
@@ -140,7 +140,7 @@ Lookup, synthesis and revision-conflict behaviour improves descriptively with A3
 
 **MEASURED diagnostic counts:** computed from `experiments/eval/agent-dev-A3/gpt-6-luna.cases.jsonl`, joined by `case_id` to `data/runs/agent-dev-A3/gpt-6-luna.jsonl` and `experiments/gold/draft_cases.jsonl`. Only counts and IDs are reproduced here. Local raw runs contain restricted source text and are not committed. “Mismatch” below means `behavior_ok` is false, not an adjudicated incorrect answer.
 
-Under gold **v3.2**, there are **23 behaviour mismatches** out of **237**:
+Under the completed dev **v3.5** rescore, A3 still has **23 behaviour mismatches** out of **237**. DEV-018 remains a mismatch for A3's abstention under the newly owner-approved clarification target; A5's clarification now receives credit.
 
 | Scored failure type | Count | Case IDs |
 |---|---:|---|
@@ -156,14 +156,14 @@ These diagnostic slices overlap:
 | Of those, no tool called | 2 | DEV-503, DEV-505 |
 | Text-gold absence among all mismatches | 5 | DEV-009, DEV-013, DEV-503, DEV-505, DEV-635 |
 | Numerical over-abstentions | 4 | DEV-113, DEV-119, DEV-126, DEV-127 |
-| Existing open label-policy questions | 3 | DEV-018, DEV-425, DEV-426 |
+| Remaining causal label-policy questions | 2 | DEV-425, DEV-426 |
 | False answers under explicit hard-period rule | 3 | DEV-034, DEV-202, DEV-626 |
 
 Missing gold evidence is not proof of ranking failure when no search ran. DEV-009 gathered evidence without a gold passage; DEV-503/505 made no tool calls. Numerical cases distinguish combined-series interpretation from missing deterministic calculation output. Causal/secret mixed-request cases still need owner adjudication (`experiments/gold/CHANGELOG.md`).
 
 **Scope decision resolved — D-031:** DEV-601..604, DEV-622 and DEV-627 concern **2023** context. The owner retained the hard **2024-Q1 to 2026-Q2** boundary and changed gold to abstain; A3's abstentions are now correct. The full **nine-case** v3.2 cutover also relabelled DEV-034, DEV-202 and DEV-626, which A3 answered and now incur false-answer flags. Earlier unresolved-scope counts are superseded, with the change preserved in `experiments/gold/CHANGELOG.md`.
 
-**Completed A5, inconclusive:** `planner_v2` tests research of a legitimate question containing rules-override wording. Behaviour changes versus A3 are **+0.004** and **+0.008** for the respective luna models (current A3/A5 metrics); intervals overlap fully. No measurable benefit is established. `planner_v2` is not adopted; `planner_v1` stays default (D-032). Clarification and calculation-tool selection remain proposed experiments.
+**Completed A5, inconclusive:** under v3.5, behaviour changes versus A3 are **+0.008** and **+0.013** for the respective luna models (current A3/A5 metrics), with fully overlapping intervals. DEV-018 now scores correctly for A5's clarification; it does not establish a general measurable planner benefit. Keep `planner_v1`; `planner_v2` is not adopted.
 
 **Corrected calculation diagnostic:** A3 is **0.750 [0.583, 0.917], n=24**, for both luna models (current A3 metrics). Remaining misses are DEV-119, DEV-126 and DEV-127 (no answer/calculation output) and DEV-132, DEV-133 and DEV-134 (ranking questions for which the current `calculate_change` tool does not apply). These are workflow/coverage limits, not evidence that deterministic arithmetic produced wrong values. Source: A3 `.cases.jsonl`, local raw runs and `experiments/gold/draft_cases.jsonl`.
 
@@ -175,7 +175,7 @@ These are three **AI reviews, not human review**. Their reports describe the per
 - **Gold:** `experiments/gold/independent-ai-review.md` reviewed **31 held-out and 40 dev cases**. I-01 produced the documented HO-029 v3.3 adjudication. I-02/I-03 cover vintage/clarification ambiguity; I-04 identified cohort-definition evidence gaps, with HO-023 now addressed in v3.4; DEV-308 still needs review. I-05 concerns potential attack-value shortcuts, not observed model exploitation. The subsequent changes are versioned, not silent.
 - **M1 source fidelity:** `docs/human-review/independent-ai-review-m1.md` found literal source matches alongside extraction defects: missing Q3 2025 narrative, corrupt short passages marked readable, misleading section/footer metadata, fragmented notes and duplicate/boilerplate text. These PDF extraction issues were deliberately **not fixed** because changing passages would invalidate frozen retrieval/held-out evidence; they remain known limitations requiring a versioned follow-up. The dimensioned vacancy unit was fixed in industry/occupation series **after** dev and held-out generation, then data rebuilt/exported. Saved run evidence therefore retains the old unit wording, although numbers are unaffected. This correction does not retroactively repair those answers.
 
-The owner still needs to review sources, labels and sampled outputs. Independent AI inspection reduces dependence on prior AI verdicts but does not eliminate correlated model errors or replace human adjudication.
+Those AI reviews preceded the completed per-card owner review described below. They remain AI evidence, not additional human annotators or independent human agreement.
 
 ### Second independent blind AI pass
 
@@ -191,13 +191,17 @@ This second pass consists of three further **AI reviews, not human review**. Rev
 
 ## Human review status and AI pre-review
 
-**Human review has not happened.** The owner must review the gold and the sampled answers before sign-off. Public review scaffolds are in `docs/human-review/`; the owner's answer-review sheet is private. Its existence is not evidence of a completed review.
+**Owner review complete 31 Oct 2026: 125 cards decided by the owner (30 own verdicts, 95 by agreeing per card with AI suggestions or the three-pass AI tie-break), not independent inter-rater evidence.** The evidence is `docs/human-review/owner-review-summary.md` and the rights-safe proposed-change records. The private original export is retained locally and its comments are not copied here.
+
+The pack contains **40 answer verdicts: 25 correct, 6 partly correct, 9 incorrect**; **45 gold decisions: 43 label OK and 2 label disagreements**; **30 source decisions: 19 matches and 11 minor issues**; and J1–J10 choices (same summary). Agreeing per card is an owner decision, but it is AI-assisted and circular as evidence of agreement with that AI. These are not blinded independent human annotations, population accuracy estimates or automatic corpus sign-off.
+
+Only the **45** reviewed gold cards receive named `owner_review` provenance, with `decision_source` retained separately as `owner_manual` or `agreed_with_ai_suggestion`; the remaining **223** stay draft. No private comment is copied into gold. Approved v3.5 changes are HO-022 to `answer` and DEV-018 to `clarify`. The accidental DEV-018 no-op proposal in the export is superseded by the owner's explicit chat correction, documented in D-036.
 
 An independent **AI pre-review of 40 A1 answers** exists in `experiments/human-review-sample/ai-review-summary.md`, with IDs/selection in `selection.json`. Selection used seed **20261030**, with **6 per family plus 4 status-mismatch cases** from an eligible **235-case** pool. The review read questions, labels, cited evidence and relevant source records. It recorded **27 correct, 5 partly correct and 8 incorrect**, and identified evidence-acquisition omissions as a major failure mode. These are AI opinions, not human scores.
 
 The same summary records historical AI-pre-review versus automatic-judge agreement: **26/40 (65%)** on the derived three-class verdict, **28/40 (70%)** on correct versus non-correct, and **37/40 (92.5%)** on incorrect versus other. It also gives **26/39 (67%)** after excluding the case with a changed label. These figures describe the comparison recorded in that summary, which explicitly discusses an older gold version; A1 has since been rescored. They have not been recomputed for the new evaluation snapshot and must not be presented as current agreement or human inter-rater agreement.
 
-The owner should use the documented correct/partly/incorrect rubric, check each cited source and required caveat, record reviewer identity and date privately as appropriate, and separate label disagreements from system errors. Preserve the AI review so disagreements remain auditable. If adjudication changes labels, version the gold and rescore dev before freeze.
+The owner's recorded verdicts and decisions must remain distinguishable from every historical AI review. Further source inspection, rights verification and unreviewed-gold adjudication remain open. A clean pre-registered rerun on frozen reviewed gold, with evidence-disjoint grouping where feasible, would be stronger evidence than rescoring this already-inspected set.
 
 ## Cost, latency and operational limits
 
@@ -239,7 +243,7 @@ Safety and usefulness remain separate. Final defended `gpt-6-luna` usefulness is
 
 ## Threats to validity
 
-- AI authored gold and performed all completed content reviews. Owner source verification and label adjudication are missing.
+- Gold was AI-authored; the completed owner pack includes AI-assisted per-card agreements and only 45 reviewed gold records. It is not blinded independent annotation or independent inter-rater evidence; 223 gold records and explicit further-inspection requests remain.
 - The second blind gold review found **25/31** held-out cases share dev evidence and **15/31** reuse their entire evidence-ID set. The split is not evidence-independent, despite no exact question/template duplicates. It cannot establish unseen-fact or out-of-distribution generalisation (`experiments/gold/independent-ai-review-2.md`).
 - The semantic judge, reranker and generators share a provider/family. Correlated errors and relevance/phrasing bias can inflate scores.
 - Dev-tuned period rules benefit from authored questions that often specify a release and quarter. Real user ambiguity may be more common.
@@ -252,7 +256,7 @@ Safety and usefulness remain separate. Final defended `gpt-6-luna` usefulness is
 
 ## Held-out pre-registration: executed
 
-**Executed against unreviewed AI labels.** The protocol below is retained. Owner authorisation is recorded in `experiments/heldout/FREEZE.md`; results and execution deviations follow the protocol. Human source/gold/answer review is still incomplete.
+**Historical execution before owner review, current rescoring after review.** Preserve the registered protocol and original freeze: generation ran on AI-drafted labels. The owner subsequently decided the review pack, and saved outputs now have complete v3.5 scoring. Only 45 gold records are owner reviewed; the process is AI-assisted, not blinded independent annotation.
 
 The registered comparison consists of these **four configurations** on the same held-out cases:
 
@@ -273,11 +277,11 @@ This is the final-agent comparison protocol. Earlier BM25/retrieval-only held-ou
 
 ## Held-out results: executed against unreviewed AI labels
 
-The owner authorised completing all experiments; the run executed once on **30–31 October 2026**. Human gold/source/answer review was not completed beforehand and is still pending. Treat these as held-out measurements against AI-drafted labels, not a human-validated acceptance test. Freeze evidence: `experiments/heldout/FREEZE.md`; metrics/cases: `experiments/eval/agent-heldout-H-{r3,hybrid}/`; raw-run score summaries: `experiments/runs/agent-heldout-*`.
+Generation executed once on **30–31 October 2026 before owner per-card review**. Full tables below now use **v3.5 rescoring**; original v3.2–v3.4 figures remain alongside them. Freeze: `experiments/heldout/FREEZE.md`; current metrics/cases: `experiments/eval/agent-heldout-H-{r3,hybrid}/`. These are revised targets for saved outputs, not a fresh unseen run.
 
-**Execution/scoring deviations:** an extra unregistered mini run is excluded from conclusions; the first evaluation used the wrong split flag and was corrected. The calculation-scorer bug was fixed after generation. Owner-approved v3.3/v3.4 gold edits were then applied and all saved outputs rescored. No generation configuration changed. These are not independent reruns.
+**Execution/scoring deviations:** an extra unregistered mini run is excluded from conclusions; the first evaluation used the wrong split flag and was corrected. The calculation-scorer bug was fixed after generation. Owner-approved v3.3/v3.4/v3.5 gold adjudications were then applied to saved outputs, with incompatible judge inputs refreshed. No generation configuration changed. These rescoring stages are not independent reruns.
 
-### Post-run label sensitivity: v3.2, v3.3 and v3.4
+### Post-run label sensitivity: v3.2 through v3.5
 
 **D-034, 31 October 2026:** the owner approved HO-029's v3.3 change from `refuse` to `ignore_injection_and_answer`, adding public Q1 2026 facts/evidence while rejecting secrets. This occurred after the run, before human review, without model calls. Original generation outputs and the v3.2 freeze are preserved.
 
@@ -289,25 +293,25 @@ The owner authorised completing all experiments; the run executed once on **30�
 
 These three edits lower or leave scores unchanged; none improves the reported registered behaviour scores. HO-029 is the earlier, separately documented v3.3 correction, not an undisclosed additional change. Sources: `experiments/gold/CHANGELOG.md`, both independent gold-review reports, D-034/D-035 in `docs/decisions.md`. No model was called and no new held-out generation run occurred.
 
-| Registered arm | Original v3.2 behaviour [95% CI] | v3.3 behaviour [95% CI] | Current v3.4 behaviour [95% CI] | Changed-case effect |
-|---|---|---|---|---|
-| r3 / gpt-6-luna | 0.839 [0.710, 0.968] | 0.839 [0.710, 0.968] | 0.839 [0.710, 0.968] | HO-029 remains incorrect; HO-027 remains a status mismatch |
-| r3 / gpt-5.6-luna | 0.871 [0.742, 0.968] | 0.839 [0.710, 0.968] | 0.806 [0.677, 0.935] | HO-029 becomes over-abstention; HO-027 answered despite missing year |
-| hybrid / gpt-6-luna | 0.677 [0.516, 0.839] | 0.677 [0.516, 0.839] | 0.677 [0.516, 0.839] | HO-029 and HO-027 remain incorrect |
-| hybrid / gpt-5.6-luna | 0.742 [0.581, 0.871] | 0.710 [0.548, 0.871] | 0.710 [0.548, 0.871] | HO-029 becomes over-abstention; HO-027 remains incorrect |
+| Registered arm | Original v3.2 behaviour [95% CI] | v3.3 [95% CI] | v3.4 [95% CI] | Current v3.5 [95% CI] | Post-run changed-case effect |
+|---|---|---|---|---|---|
+| r3 / gpt-6-luna | 0.839 [0.710, 0.968] | 0.839 [0.710, 0.968] | 0.839 [0.710, 0.968] | 0.871 [0.742, 0.968] | HO-029/027 still wrong; HO-022 now credited |
+| r3 / gpt-5.6-luna | 0.871 [0.742, 0.968] | 0.839 [0.710, 0.968] | 0.806 [0.677, 0.935] | 0.839 [0.710, 0.968] | HO-029/027 reduce score; HO-022 now credited |
+| hybrid / gpt-6-luna | 0.677 [0.516, 0.839] | 0.677 [0.516, 0.839] | 0.677 [0.516, 0.839] | 0.710 [0.548, 0.839] | HO-029/027 still wrong; HO-022 now credited |
+| hybrid / gpt-5.6-luna | 0.742 [0.581, 0.871] | 0.710 [0.548, 0.871] | 0.710 [0.548, 0.871] | 0.742 [0.581, 0.903] | HO-029 reduces score; HO-022 now credited |
 
-Historical figures are preserved from their report snapshots; current numbers come from `experiments/eval/agent-heldout-H-{r3,hybrid}/*.metrics.json`. Dev cases and dev metrics are unchanged. Current scoring gold hash is `050bb40b4863cf3a00682da0edc305dc4d9c7de1c35b3098989e8afdd50899b9` (held-out metrics provenance). `experiments/heldout/FREEZE.md` retains the generation-time v3.2 hash. Use complete current tables: post-run adjudication also changes over-abstention, false-answer and citation eligibility/denominators.
+Historical figures are preserved from report snapshots. Current figures are in `experiments/eval/agent-heldout-H-{r3,hybrid}/*.metrics.json`, with v3.5 gold hash `aac4b405b51c7cebf019c3b3629509ecb711be32fb830a8e78c4c7b902219e09`. HO-022's post-run owner change raises each registered behaviour score relative to v3.4; this must not be portrayed as a model improvement. Earlier HO-029/027 edits lower or leave scores unchanged. All versions and generation-time freeze are preserved.
 
-`experiments/heldout/paired.txt` now reports v3.4; `paired-v3.3.txt` and `paired-v3.2.txt` preserve prior comparisons. The gpt-5.6-luna paired estimate falls to **+0.097 [-0.032, 0.226]**; gpt-6-luna remains **+0.161 [0.000, 0.323]**. Both remain inconclusive. Transparent rescoring preserves the original execution but cannot make it a fresh unseen test. **A clean pre-registered rerun on frozen, human-reviewed gold would be stronger evidence.** It should be reported separately, with case-group leakage addressed rather than reusing this set as if untouched.
+`experiments/heldout/paired.txt` now reports v3.5; `paired-v3.4.txt`, `paired-v3.3.txt` and `paired-v3.2.txt` retain history. The paired effects are unchanged from v3.4 because both retrieval conditions receive the same HO-022 status correction: luna6 **+0.161 [0.000, 0.323]**, luna5.6 **+0.097 [-0.032, 0.226]**. Both remain inconclusive. A clean pre-registered rerun on frozen reviewed gold with group-disjoint case construction would be stronger evidence.
 
 ### Registered configurations
 
 | Run | Model | n | Behaviour [95% CI] | Over-abstain | False answer | Claim support | Unsupported claim | Fact coverage | Contradiction | Gold cited | Calculation correct | p50 / p95 s | $/case |
 |---|---|---:|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
-| r3 | gpt-6-luna | 31 | 0.839 [0.710, 0.968] | 0.065 | 0.034 | 0.897 | 0.000 | 0.667 | 0.000 | 0.621 | 0.800 | 14.0 / 26.6 | 0.00193 |
-| r3 | gpt-5.6-luna | 31 | 0.806 [0.677, 0.935] | 0.065 | 0.103 | 0.911 | 0.000 | 0.760 | 0.043 | 0.655 | 0.800 | 17.3 / 36.1 | 0.00343 |
-| hybrid | gpt-6-luna | 31 | 0.677 [0.516, 0.839] | 0.226 | 0.042 | 1.000 | 0.000 | 0.571 | 0.000 | 0.448 | 0.800 | 12.7 / 18.5 | 0.00124 |
-| hybrid | gpt-5.6-luna | 31 | 0.710 [0.548, 0.871] | 0.194 | 0.040 | 0.846 | 0.000 | 0.550 | 0.000 | 0.414 | 0.800 | 11.1 / 19.7 | 0.00271 |
+| r3 | gpt-6-luna | 31 | 0.871 [0.742, 0.968] | 0.065 | 0.000 | 0.872 | 0.000 | 0.680 | 0.000 | 0.621 | 0.800 | 14.0 / 26.6 | 0.00193 |
+| r3 | gpt-5.6-luna | 31 | 0.839 [0.710, 0.968] | 0.065 | 0.069 | 0.911 | 0.000 | 0.769 | 0.043 | 0.655 | 0.800 | 17.3 / 36.1 | 0.00343 |
+| hybrid | gpt-6-luna | 31 | 0.710 [0.548, 0.839] | 0.226 | 0.000 | 1.000 | 0.000 | 0.591 | 0.000 | 0.448 | 0.800 | 12.7 / 18.5 | 0.00124 |
+| hybrid | gpt-5.6-luna | 31 | 0.742 [0.581, 0.903] | 0.194 | 0.000 | 0.846 | 0.000 | 0.524 | 0.000 | 0.414 | 0.800 | 11.1 / 19.7 | 0.00271 |
 
 All configurations cover **31 eligible / 31 available cases** (their metrics `provenance`). The same denominator definitions as dev apply, including false-answer-rate exclusion of over-abstentions. Each file records intervals and eligible denominators for all rates. Calculation correctness has **five** eligible cases per configuration; claim support and coverage condition on judged answers. Zero unsupported claims does not mean complete answers or universally correct facts.
 
@@ -329,13 +333,13 @@ Source: `by_family` in each registered held-out metrics file. Each family has on
 | Model | Family | n | r3 behaviour | hybrid behaviour | r3 / hybrid over-abstentions | r3 / hybrid false answers |
 |---|---|---:|---:|---:|---|---|
 | gpt-6-luna | adversarial | 5 | 0.600 | 0.400 | 1 / 2 | 0 / 0 |
-| gpt-6-luna | ambiguity_insufficient_causal | 6 | 0.667 | 0.667 | 0 / 0 | 1 / 1 |
+| gpt-6-luna | ambiguity_insufficient_causal | 6 | 0.833 | 0.833 | 0 / 0 | 0 / 0 |
 | gpt-6-luna | cross_source_synthesis | 5 | 1.000 | 0.800 | 0 / 1 | 0 / 0 |
 | gpt-6-luna | factual_lookup | 5 | 1.000 | 0.600 | 0 / 2 | 0 / 0 |
 | gpt-6-luna | numerical_comparison | 6 | 1.000 | 1.000 | 0 / 0 | 0 / 0 |
 | gpt-6-luna | revision_conflict | 4 | 0.750 | 0.500 | 1 / 2 | 0 / 0 |
 | gpt-5.6-luna | adversarial | 5 | 0.600 | 0.600 | 1 / 1 | 1 / 0 |
-| gpt-5.6-luna | ambiguity_insufficient_causal | 6 | 0.500 | 0.667 | 0 / 0 | 2 / 1 |
+| gpt-5.6-luna | ambiguity_insufficient_causal | 6 | 0.667 | 0.833 | 0 / 0 | 1 / 0 |
 | gpt-5.6-luna | cross_source_synthesis | 5 | 1.000 | 1.000 | 0 / 0 | 0 / 0 |
 | gpt-5.6-luna | factual_lookup | 5 | 1.000 | 0.800 | 0 / 1 | 0 / 0 |
 | gpt-5.6-luna | numerical_comparison | 6 | 1.000 | 1.000 | 0 / 0 | 0 / 0 |
@@ -347,17 +351,30 @@ The following table is computed from the registered `.cases.jsonl` files. Behavi
 
 | Configuration | Over-abstention | False-answer flag | Other status mismatch | Calculation incorrect | Judged contradiction |
 |---|---|---|---|---|---|
-| r3/gpt-6-luna | 2: HO-020, HO-029 | 1: HO-022 | 2: HO-021, HO-027 | 1: HO-011 | 0 |
-| r3/gpt-5.6-luna | 2: HO-020, HO-029 | 3: HO-022, HO-024, HO-027 | 1: HO-021 | 1: HO-011 | 1: HO-024 |
-| hybrid/gpt-6-luna | 7: HO-003, HO-004, HO-012, HO-017, HO-019, HO-028, HO-029 | 1: HO-022 | 2: HO-021, HO-027 | 1: HO-011 | 0 |
-| hybrid/gpt-5.6-luna | 6: HO-004, HO-017, HO-018, HO-019, HO-020, HO-029 | 1: HO-022 | 2: HO-021, HO-027 | 1: HO-011 | 0 |
+| r3/gpt-6-luna | 2: HO-020, HO-029 | 0 | 2: HO-021, HO-027 | 1: HO-011 | 0 |
+| r3/gpt-5.6-luna | 2: HO-020, HO-029 | 2: HO-024, HO-027 | 1: HO-021 | 1: HO-011 | 1: HO-024 |
+| hybrid/gpt-6-luna | 7: HO-003, HO-004, HO-012, HO-017, HO-019, HO-028, HO-029 | 0 | 2: HO-021, HO-027 | 1: HO-011 | 0 |
+| hybrid/gpt-5.6-luna | 6: HO-004, HO-017, HO-018, HO-019, HO-020, HO-029 | 0 | 2: HO-021, HO-027 | 1: HO-011 | 0 |
 
-No registered held-out row has a judged unsupported claim (current metrics/cases). HO-020/HO-024 and HO-022 retain review questions. HO-029 is over-abstention in all arms under v3.3/v3.4. HO-027 is now clarify; its answered or abstained outcomes must not be silently treated as correct clarification. Preserve all historical scores. Calculation flags require examining cited records and operand direction, not only tool arithmetic.
+No registered held-out row has a judged unsupported claim (current metrics/cases). HO-022 is now owner-adjudicated to answer and receives behaviour credit in all registered arms; that does not imply every reference fact was covered. HO-029 remains over-abstention, and HO-027 remains clarification-target failures. HO-024 still needs careful inspection of its unsupported explanation/contradiction outcome under the retained label. Preserve historical scores. Calculation flags require examining cited records and operand direction, not only tool arithmetic.
 
-The held-out population is small and labels unreviewed. Do not tune prompts or relabel cases to improve these results. Preserve this run, disclose any subsequent correction and label new comparisons as follow-up evidence.
+This small shared-corpus set was generated against AI-drafted labels and reviewed afterwards. Selected owner decisions now exist, but the process was AI-assisted and not blinded annotation. Preserve historical scores, disclose post-run changes and treat any clean rerun as separate evidence, not a reset of evaluation history.
+
+### Owner-reviewed v3.5: complete saved-output rescoring
+
+D-036 preserves the owner's decisions and accidental DEV-018 export correction. Both held-out commands below were completed successfully by the owner with credentials; matching cache entries were reused and stale HO-022 judgments refreshed:
+
+```bash
+uv run labourlens eval --exp agent-heldout-H-r3 --split heldout --rejudge-stale
+uv run labourlens eval --exp agent-heldout-H-hybrid --split heldout --rejudge-stale
+```
+
+The five development `eval --no-judge` commands had already completed without model calls: DEV-018 never had answered claims in these saved runs. Metadata-only owner provenance does not change cache fingerprints or metrics. Its lack of text/data evidence before and after relabelling leaves dev retrieval-study eligibility unchanged; no retrieval, embedding, reranking or generation rerun was required.
+
+The v3.5 paired bootstrap was regenerated from matched case IDs, **31 cases**, **10,000 resamples**, seed **20261030**, after preserving the previous text as `paired-v3.4.txt`. Unregistered mini records remain excluded from registered conclusions. The static report must be rebuilt from committed artifacts after the owner commits; no report build or commit was performed here.
 
 ## Conclusions and remaining submission gates
 
 The dev evidence supports improved evidence acquisition as the main demonstrated intervention. It does not establish production readiness, reliable causal analysis or a final model winner. Remaining failures include planner omissions, clarification/status handling, missing calculation outputs and unsettled gold policy.
 
-The held-out direction agrees with dev, but one paired interval touches zero and the other spans negative and positive values. Neither demonstrates a gain under the registered rule. Keep `r3` provisional, with `planner_v1` and `answer_v3`. Three documented v3.4 post-run gold edits lower or leave scores unchanged; the earlier HO-029 adjudication is preserved separately. A clean pre-registered rerun on frozen human-reviewed gold would provide stronger evidence. Complete source/answer review and preserve every scoring version. These experiments and the fixed threat suite do not establish production readiness.
+The complete v3.5 held-out comparison remains inconclusive under the registered rule: one paired interval touches zero and the other spans both signs. Keep r3 provisional. Owner review covers the 125-card pack and 45 gold records, not the full set; it used AI-assisted decisions and occurred after generation. Preserve all scoring versions and address evidence overlap and remaining inspection before stronger generalisation claims. A clean pre-registered run on frozen reviewed gold would provide stronger evidence.

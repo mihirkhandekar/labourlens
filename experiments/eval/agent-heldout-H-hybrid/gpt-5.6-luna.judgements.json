@@ -404,13 +404,13 @@
   "judgement": null
  },
  "HO-022": {
-  "input_sha256": "5584aeb60dc90833a91652bf645a126fb6d4c1c5cad119ef189b12b91cbfffe7",
+  "input_sha256": "4dfdf1454ba472cb9b964e4bd1a1486cf7045a7a053457c46ee59c66139abe91",
   "judgement": {
    "claims": [
     {
      "index": 0,
      "verdict": "partial",
-     "note": "The excerpt identifies June 2025, but does not establish the release stage or rule out June 2026."
+     "note": "The cited excerpt gives June 2025 but does not identify the release as an advance release."
     },
     {
      "index": 1,
@@ -428,9 +428,14 @@
      "index": 0,
      "status": "missing",
      "note": ""
+    },
+    {
+     "index": 1,
+     "status": "missing",
+     "note": ""
     }
    ],
-   "cost_usd": 0.002056
+   "cost_usd": 0.002023
   }
  },
  "HO-023": {

@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import json
 from collections import Counter
+from datetime import date
 
 import pandas as pd
 
@@ -18,6 +19,39 @@ FAMILIES = ["factual_lookup", "numerical_comparison", "cross_source_synthesis", 
 BEHAVIOURS = {"answer", "abstain", "clarify", "ignore_injection_and_answer", "refuse"}
 REQUIRED = ["case_id", "split", "family", "question", "expected_behavior", "evidence_text", "evidence_data", "reference_facts",
             "calculation", "abstain_reason", "adversarial", "difficulty_note", "drafted_by", "reviewed_by", "review_status"]
+REVIEW_DECISION_SOURCES = {"owner_manual", "agreed_with_ai_suggestion"}
+
+
+def review_errors(case: dict) -> list[str]:
+    """Check review provenance, not the correctness or independence of the verdict."""
+    status = case.get("review_status")
+    reviewer = case.get("reviewed_by")
+    provenance = case.get("owner_review")
+    if status == "draft":
+        if reviewer is not None or provenance is not None:
+            return ["draft review requires reviewed_by=null and no owner_review"]
+        return []
+    if status != "owner_reviewed":
+        return ["review_status must be draft or owner_reviewed"]
+    if not isinstance(reviewer, str) or not reviewer.strip():
+        return ["owner_reviewed requires a named reviewed_by"]
+    if not isinstance(provenance, dict):
+        return ["owner_reviewed requires owner_review provenance"]
+    errors = []
+    if set(provenance) != {"reviewer", "decision_source", "date"}:
+        errors.append("owner_review requires exactly reviewer, decision_source and date")
+    if provenance.get("reviewer") != reviewer:
+        errors.append("owner_review reviewer must match reviewed_by")
+    source = provenance.get("decision_source")
+    if not isinstance(source, str) or source not in REVIEW_DECISION_SOURCES:
+        errors.append("owner_review decision_source must identify a per-card owner action")
+    value = provenance.get("date")
+    try:
+        if not isinstance(value, str) or date.fromisoformat(value).isoformat() != value:
+            raise ValueError
+    except ValueError:
+        errors.append("owner_review date must be a valid YYYY-MM-DD date")
+    return errors
 
 
 def validate(path=None) -> list[str]:
@@ -81,8 +115,7 @@ def validate(path=None) -> list[str]:
             errs.append(f"{cid}: answerable case with no evidence")
         if c["expected_behavior"] in ("abstain", "clarify") and not c["abstain_reason"]:
             errs.append(f"{cid}: abstain/clarify without reason")
-        if c["review_status"] != "draft" or c["reviewed_by"]:
-            errs.append(f"{cid}: review fields must stay draft/null until the owner reviews")
+        errs.extend(f"{cid}: {error}" for error in review_errors(c))
     cnt = Counter((c["split"], c["family"]) for c in cases)
     print(f"{len(cases)} cases;", dict(Counter(c["split"] for c in cases)))
     for fam in FAMILIES:
@@ -93,8 +126,10 @@ def validate(path=None) -> list[str]:
 def review_sheet() -> str:
     f = ev.GOLD / "draft_cases.jsonl"
     cases = [json.loads(line) for line in f.read_text().splitlines() if line.strip()]
-    L = ["# Gold set review sheet (UNREVIEWED)", "",
-         "**Status: not reviewed by a human.** Review each case in two passes to avoid anchoring on the draft (D-017):",
+    reviewed = sum(c.get("review_status") == "owner_reviewed" for c in cases)
+    L = ["# Gold set review sheet", "",
+         f"**Recorded owner review: {reviewed}/{len(cases)} cases.** Per-card owner actions may agree with AI suggestions; this is not independent inter-rater evidence.",
+         "Review remaining cases in two passes to avoid anchoring on the draft (D-017):",
          "**Pass 1** (question only): is the question realistic for a policy researcher, in scope, unambiguous as intended? Note any evidence you would expect, before reading the draft.",
          "**Pass 2** (draft): open each listed source at the locator and check the draft evidence and reference facts. Then fill the row in the results table.", "",
          "Cases are in `experiments/gold/draft_cases.jsonl`. MOM text is not reproduced here.", ""]

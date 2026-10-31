@@ -5,7 +5,7 @@ from pathlib import Path
 
 import pytest
 
-from labourlens.report.build import _Artifacts, _experiments
+from labourlens.report.build import _Artifacts, _experiments, _paired
 
 
 class SyntheticArtifacts:
@@ -187,35 +187,35 @@ def test_evaluation_copy_distinguishes_postrun_gold_from_generation_freeze():
     script = (
         Path(__file__).resolve().parents[2] / "web/static/evaluation.js"
     ).read_text()
-    assert "Development remains scored against gold v3.2" in script
-    assert "held-out results use current gold v3.4" in script
+    assert "historical development plots use gold v3.2" in script
+    assert "historical held-out plots use gold v3.4" in script
     assert "original generation-time v3.2 freeze" in script
     assert "after held-out execution and before human review" in script
     assert "HO-029 from refuse to ignore_injection_and_answer" in script
     assert "source passages and reference facts were added" in script
     assert "without new generation or AI judge calls" in script
     assert "not a pristine frozen-gold estimate" in script
-    assert "has not been human reviewed" in script
+    assert "has not been human reviewed" not in script
     assert "experiments/heldout/FREEZE.md remain unchanged" in script
     assert "experiments/heldout/paired-v3.2.txt" in script
 
 
 @pytest.mark.parametrize("comparison", [
-    "r3 / gpt-6-luna 0.839 → 0.839 → 0.839",
-    "r3 / gpt-5.6-luna 0.871 → 0.839 → 0.806",
-    "hybrid / gpt-6-luna 0.677 → 0.677 → 0.677",
-    "hybrid / gpt-5.6-luna 0.742 → 0.710 → 0.710",
+    "r3 / gpt-6-luna 0.839 → 0.839 → 0.839 → 0.871",
+    "r3 / gpt-5.6-luna 0.871 → 0.839 → 0.806 → 0.839",
+    "hybrid / gpt-6-luna 0.677 → 0.677 → 0.677 → 0.710",
+    "hybrid / gpt-5.6-luna 0.742 → 0.710 → 0.710 → 0.742",
 ])
 def test_evaluation_copy_preserves_gold_version_behaviour_comparison(comparison):
     script = (
         Path(__file__).resolve().parents[2] / "web/static/evaluation.js"
     ).read_text()
     assert comparison in script
-    assert "gold v3.2 → v3.3 → v3.4 (n=31 each)" in script
+    assert "gold v3.2 → v3.3 → v3.4 → v3.5 (n=31 each)" in script
     assert "three v3.4 post-run edits lower or leave scores unchanged" in script
 
 
-def test_evaluation_copy_discloses_v34_edits_and_current_paired_sensitivity():
+def test_evaluation_copy_discloses_v34_edits_and_historical_paired_sensitivity():
     script = (
         Path(__file__).resolve().parents[2] / "web/static/evaluation.js"
     ).read_text()
@@ -229,16 +229,88 @@ def test_evaluation_copy_discloses_v34_edits_and_current_paired_sensitivity():
         "the complete release remains primary",
         "HO-027 lowers r3 / gpt-5.6-luna behaviour accuracy by 1/31",
         "the evidence edits leave behaviour accuracy unchanged",
-        "Current v3.4 paired behaviour differences",
+        "Historical v3.4 paired behaviour differences",
         "gpt-6-luna +0.161, 95% CI [0, 0.323]",
         "gpt-5.6-luna +0.097, 95% CI [-0.032, 0.226]",
         "gpt-5.6-luna interval crosses zero",
         "experiments/heldout/paired-v3.3.txt",
         "clean preregistered rerun on frozen, human-reviewed gold",
         "it has not been run",
-        "Held-out · gold v3.4 · post-run adjudication",
-        "Development · gold v3.2 · unchanged",
+        "Historical held-out · gold v3.4 · post-run adjudication",
+        "Historical development · gold v3.2",
     ):
         assert disclosure in script
     assert "paired behaviour differences are unchanged" not in script
     assert "not newly corrected gold or rerun metrics" not in script
+
+
+def test_evaluation_copy_distinguishes_owner_review_from_historical_scores():
+    script = (
+        Path(__file__).resolve().parents[2] / "web/static/evaluation.js"
+    ).read_text()
+    for disclosure in (
+        "owner review complete 31 Oct 2026: 125 cards decided by the owner "
+        "(30 own verdicts, 95 by agreeing per card with AI suggestions or the "
+        "three-pass AI tie-break), not independent inter-rater evidence",
+        "45 gold cases, 40 answers, 30 source checks and 10 decisions",
+        "45 are owner-reviewed and 223 remain AI-drafted",
+        "25 correct, 6 partly correct and 9 incorrect",
+        "19 matches and 11 minor issues",
+        "HO-022 clarify → answer",
+        "DEV-018 refuse → clarify",
+        "private export proposed DEV-018 refuse → refuse",
+        "chat takes precedence",
+        "Every evidence ID is preserved",
+        "Development A1–A5 v3.5 rescoring is complete",
+        "commit the resulting artifacts and rebuild the report",
+        "Held-out v3.5 rescoring is complete for all four registered configurations",
+        "stale judge entries were rejudged against the current gold without new generation",
+        "all four configurations gain 1/31",
+        "awaiting a regenerated snapshot",
+        "A3 behaviour accuracy 0.903",
+        "A5 0.911 and 0.916",
+        "small gains of 0.008 and 0.013 are inconclusive",
+        "v3.5 rescore complete; snapshot rebuild pending",
+        "gold v3.5 · post-run owner adjudication",
+        "every(usesGoldV35)",
+        "row.scoring_provenance?.gold_sha256 === GOLD_V35_SHA256",
+        "aac4b405b51c7cebf019c3b3629509ecb711be32fb830a8e78c4c7b902219e09",
+        "Current v3.5 paired behaviour differences",
+        "10000 case-bootstrap resamples, seed 20261030",
+        "6 better / 1 worse",
+        "4 better / 1 worse",
+        "experiments/heldout/paired-v3.4.txt",
+        "Historical second blind independent AI review",
+        "preserved separately from the later owner verdicts",
+    ):
+        assert disclosure in script
+    assert "unreviewed AI gold" not in script
+    assert "Current v3.4" not in script
+    assert "Held-out v3.5 rescoring remains pending" not in script
+    assert "no held-out v3.5 scores are claimed" not in script
+
+
+def test_paired_projection_preserves_v35_and_all_historical_gold_versions():
+    paths = [
+        "experiments/heldout/paired.txt",
+        "experiments/heldout/paired-v3.4.txt",
+        "experiments/heldout/paired-v3.3.txt",
+        "experiments/heldout/paired-v3.2.txt",
+    ]
+    text = (
+        "n=31, 10000 case-bootstrap resamples, seed 20261030\n"
+        "gpt-6-luna diff 0.161 95% CI [0.000, 0.323] better 6 worse 1\n"
+        "gpt-5.6-luna diff 0.097 95% CI [-0.032, 0.226] better 4 worse 1\n"
+    )
+    assert all(_Artifacts._allowed(path) for path in paths)
+    entries = _paired(SyntheticArtifacts(dict.fromkeys(paths, text)))
+    assert [entry["gold_version"] for entry in entries] == ["v3.5", "v3.4", "v3.3", "v3.2"]
+    assert [entry["provenance"] for entry in entries] == [[path] for path in paths]
+    for entry in entries:
+        assert (entry["n"], entry["resamples"], entry["seed"]) == (31, 10000, 20261030)
+        assert entry["models"]["gpt-6-luna"] == {
+            "diff": 0.161, "ci95": [0.0, 0.323], "better": 6, "worse": 1,
+        }
+        assert entry["models"]["gpt-5.6-luna"] == {
+            "diff": 0.097, "ci95": [-0.032, 0.226], "better": 4, "worse": 1,
+        }
