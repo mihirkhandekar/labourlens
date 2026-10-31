@@ -5,7 +5,7 @@ from pathlib import Path
 
 import pytest
 
-from labourlens.report.build import _Artifacts, _experiments, _paired
+from labourlens.report.build import _Artifacts, _experiments, _paired, _paired_corpus_v2
 
 
 class SyntheticArtifacts:
@@ -368,7 +368,7 @@ def test_ladder_labels_v1_and_v2_separately():
     assert second["configs"]["R3"]["hit_at_8"] == 0.953
 
 
-def test_paired_corpus_v2_is_labelled_diagnostic_beside_v1():
+def test_paired_corpus_v2_is_a_separate_diagnostic_never_mixed_with_registered_entries():
     v2 = "experiments/heldout/paired-corpus-v2.txt"
     v1 = "experiments/heldout/paired.txt"
     body = (
@@ -376,10 +376,14 @@ def test_paired_corpus_v2_is_labelled_diagnostic_beside_v1():
         "gpt-6-luna diff 0.065 95% CI [-0.065, 0.194] better 3 worse 1\n"
         "gpt-5.6-luna diff 0.097 95% CI [-0.032, 0.226] better 4 worse 1\n"
     )
-    entries = _paired(SyntheticArtifacts({v2: body.format(gold="v3.6"), v1: body.format(gold="v3.5")}))
-    assert [(e["corpus_version"], e["gold_version"]) for e in entries] == [("v2", "v3.6"), ("v1", "v3.5")]
-    assert entries[0]["diagnostic"] is True and "diagnostic" not in entries[1]
-    assert entries[0]["provenance"] == [v2]
+    artifacts = SyntheticArtifacts({v2: body.format(gold="v3.6"), v1: body.format(gold="v3.5")})
+    registered = _paired(artifacts)
+    assert [(e["corpus_version"], e["gold_version"]) for e in registered] == [("v1", "v3.5")]
+    assert all("diagnostic" not in e and v2 not in e["provenance"] for e in registered)
+    diagnostic = _paired_corpus_v2(artifacts)
+    assert (diagnostic["corpus_version"], diagnostic["gold_version"]) == ("v2", "v3.6")
+    assert diagnostic["diagnostic"] is True and diagnostic["provenance"] == [v2]
+    assert _paired_corpus_v2(SyntheticArtifacts({v1: body.format(gold="v3.5")})) is None
 
 
 def test_evaluation_copy_reports_corpus_v2_with_overlapping_intervals_and_no_gain():

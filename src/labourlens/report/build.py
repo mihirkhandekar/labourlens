@@ -477,26 +477,41 @@ def _ladder(artifacts: _Artifacts, path: str = "experiments/runs/dev-R-summary.j
 _PAIRED_LINE = re.compile(r"(gpt-[A-Za-z0-9.]+-luna) diff (-?[\d.]+) 95% CI \[(-?[\d.]+), (-?[\d.]+)\] better (\d+) worse (\d+)")
 
 
+def _paired_entry(artifacts: _Artifacts, path: str, version: str, corpus_version: str) -> dict | None:
+    text = artifacts.load(path)
+    if not isinstance(text, str):
+        return None
+    recorded_version = re.search(r"\bGOLD (v\d+(?:\.\d+)*)\b", text)
+    if recorded_version:
+        version = recorded_version[1]
+    models = {m[1]: {"diff": float(m[2]), "ci95": [float(m[3]), float(m[4])], "better": int(m[5]), "worse": int(m[6])}
+              for m in _PAIRED_LINE.finditer(text)}
+    n, resamples, seed = (re.search(pattern, text) for pattern in (r"n=(\d+)", r"(\d+) case-bootstrap resamples", r"seed (\d+)"))
+    if not (models and n and resamples and seed):
+        return None
+    return {"corpus_version": corpus_version, "gold_version": version, "n": int(n[1]), "resamples": int(resamples[1]),
+            "seed": int(seed[1]), "models": models, "provenance": [path]}
+
+
 def _paired(artifacts: _Artifacts) -> list[dict]:
-    """Held-out r3-minus-hybrid paired differences, one entry per gold version."""
+    """Registered held-out r3-minus-hybrid differences on frozen corpus v1, one entry per gold version.
+
+    The first entry is the current registered result. The corpus-v2 diagnostic is deliberately excluded
+    (see `_paired_corpus_v2`) so that it can never be mistaken for the registered comparison.
+    """
     entries = []
-    for path, version in (("experiments/heldout/paired-corpus-v2.txt", "v3.6"), ("experiments/heldout/paired.txt", "v3.5"), ("experiments/heldout/paired-v3.4.txt", "v3.4"),
+    for path, version in (("experiments/heldout/paired.txt", "v3.5"), ("experiments/heldout/paired-v3.4.txt", "v3.4"),
                           ("experiments/heldout/paired-v3.3.txt", "v3.3"), ("experiments/heldout/paired-v3.2.txt", "v3.2")):
-        text = artifacts.load(path)
-        if not isinstance(text, str):
-            continue
-        recorded_version = re.search(r"\bGOLD (v\d+(?:\.\d+)*)\b", text)
-        if recorded_version:
-            version = recorded_version[1]
-        models = {m[1]: {"diff": float(m[2]), "ci95": [float(m[3]), float(m[4])], "better": int(m[5]), "worse": int(m[6])}
-                  for m in _PAIRED_LINE.finditer(text)}
-        n, resamples, seed = (re.search(pattern, text) for pattern in (r"n=(\d+)", r"(\d+) case-bootstrap resamples", r"seed (\d+)"))
-        if models and n and resamples and seed:
-            entries.append({"corpus_version": "v2" if path.endswith("-corpus-v2.txt") else "v1",
-                            **({"diagnostic": True} if path.endswith("-corpus-v2.txt") else {}),
-                            "gold_version": version, "n": int(n[1]), "resamples": int(resamples[1]),
-                            "seed": int(seed[1]), "models": models, "provenance": [path]})
+        entry = _paired_entry(artifacts, path, version, "v1")
+        if entry:
+            entries.append(entry)
     return entries
+
+
+def _paired_corpus_v2(artifacts: _Artifacts) -> dict | None:
+    """Corpus-v2 extraction-only diagnostic on the same 31 questions; not registered held-out evidence."""
+    entry = _paired_entry(artifacts, "experiments/heldout/paired-corpus-v2.txt", "v3.6", "v2")
+    return {**entry, "diagnostic": True} if entry else None
 
 
 _DECISION = re.compile(r"^### (D-\d{3}) \u2014 (.+)$", re.M)
@@ -546,6 +561,7 @@ def build_report(root: Path) -> dict:
     ladder = _ladder(artifacts)
     ladder_v2 = _ladder(artifacts, "experiments/runs/extraction-v2-X1/dev-R-summary.json")
     paired = _paired(artifacts)
+    paired_v2 = _paired_corpus_v2(artifacts)
     answer_rows, answer_paths = _experiments(artifacts, "experiments/runs/answer-")
     _answer_costs(artifacts, answer_rows)
     answer_paths = sorted(set(answer_paths + [path for row in answer_rows for path in row["provenance"]]))
@@ -572,8 +588,8 @@ def build_report(root: Path) -> dict:
         "mcp": mcp,
         "reconciliation": reconciliation,
         "security": _section("Threat-suite measurements. They do not guarantee security.", security_rows, security_paths),
-        "evaluation": _section("Development A1–A5 and registered held-out H-r3/H-hybrid luna runs. Measurements retain their recorded gold versions. Owner review complete 31 Oct 2026: 125 cards decided by the owner (30 own verdicts, 95 by agreeing per card with AI suggestions or the three-pass AI tie-break), not independent inter-rater evidence. Gold v3.5 development and all four registered held-out rescoring runs are complete on existing generated outputs; held-out stale judge entries were rejudged. Paired v3.2/v3.3/v3.4 history is retained beside v3.5.", eval_rows, eval_paths + [path for entry in paired for path in entry["provenance"]],
-                               errors={"scope": "agent score records", "counts": errors, "provenance": trace_paths}, paired=paired,
+        "evaluation": _section("Development A1–A5 and registered held-out H-r3/H-hybrid luna runs. Measurements retain their recorded gold versions. Owner review complete 31 Oct 2026: 125 cards decided by the owner (30 own verdicts, 95 by agreeing per card with AI suggestions or the three-pass AI tie-break), not independent inter-rater evidence. Gold v3.5 development and all four registered held-out rescoring runs are complete on existing generated outputs; held-out stale judge entries were rejudged. `paired` holds the registered corpus-v1 comparison, current first, with v3.2–v3.4 history; `corpus_v2_diagnostic` is a separate extraction-only diagnostic.", eval_rows, eval_paths + [path for entry in paired + ([paired_v2] if paired_v2 else []) for path in entry["provenance"]],
+                               errors={"scope": "agent score records", "counts": errors, "provenance": trace_paths}, paired=paired, corpus_v2_diagnostic=paired_v2,
                                limitations=["Generation used AI-drafted gold before owner review; post-run owner review covers selected cards, not the entire gold set.", "Forty-five gold cards are owner reviewed; the remaining 223 remain draft.", "Current v3.5 and historical paired intervals include zero; the comparison is inconclusive under the registered rule.", "Gold v3.5 changes HO-022 after held-out execution; rescoring is post-run adjudication, not a fresh frozen-gold experiment.", "AI-assisted per-card owner decisions are not blinded independent annotation or inter-rater evidence.", "Metric definitions differ between evaluation stages."]),
         "quality": _section("Validation outcomes, including warnings.", quality_rows, [quality_path], metrics=_numeric(quality_data.get("summary", {}))),
         "work": _work(artifacts),

@@ -28,6 +28,7 @@ export function model(report) {
     securityRow: name => find('security', `experiments/threats/runs/${name}`),
     ladder: section('retrieval').ladder || null,
     paired: Array.isArray(section('evaluation').paired) ? section('evaluation').paired : [],
+    pairedCorpusV2Diagnostic: section('evaluation').corpus_v2_diagnostic && typeof section('evaluation').corpus_v2_diagnostic === 'object' ? section('evaluation').corpus_v2_diagnostic : null,
     trace: Array.isArray(section('agent').trace) ? section('agent').trace : [],
     events: Array.isArray(section('agent').events) ? section('agent').events : [],
     sources: rows('sources'),

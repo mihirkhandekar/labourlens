@@ -75,6 +75,9 @@ def test_committed_report_carries_ladder_and_paired():
     assert current["gold_version"] == "v3.5" and current["n"] == 31
     assert current["models"]["gpt-6-luna"]["ci95"][0] == 0.0
     assert current["models"]["gpt-5.6-luna"]["ci95"][0] < 0
+    diagnostic = report["evaluation"]["corpus_v2_diagnostic"]
+    assert diagnostic["corpus_version"] == "v2" and diagnostic["gold_version"] == "v3.6" and diagnostic["diagnostic"] is True
+    assert diagnostic["n"] == 31 and all(entry["corpus_version"] == "v1" and "diagnostic" not in entry for entry in report["evaluation"]["paired"])
 
 
 def test_work_section_parses_decisions_and_milestones():
