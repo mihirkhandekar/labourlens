@@ -69,3 +69,42 @@ def test_generated_review_sheet_does_not_claim_unreviewed_or_independent():
     assert "45/268 cases" in sheet
     assert "not independent inter-rater evidence" in sheet
     assert "not reviewed by a human" not in sheet
+
+
+def test_v36_changes_only_evidence_ids_with_complete_audit():
+    import copy
+    import hashlib
+
+    path = paths.EXPERIMENTS / "gold/draft_cases.jsonl"
+    audit = json.loads((path.parent / "evidence-migration-v3.6.json").read_text())
+    cases = [json.loads(line) for line in path.read_text().splitlines()]
+    assert hashlib.sha256(path.read_bytes()).hexdigest() == audit["after_gold_sha256"]
+    assert len(audit["missing_ids"]) == 61
+    assert len(audit["surviving_metadata_changes"]) == 67
+    assert audit["unmapped_ids"] == []
+    assert audit["cases_changed"] == 96
+    assert sum(row["exact_joined_text"] for row in audit["missing_ids"]) == 54
+    by_case = {case["case_id"]: case for case in cases}
+    for row in audit["missing_ids"]:
+        assert row["old_word_overlap"] / row["old_word_count"] >= 0.97
+        assert row["references"]
+        for ref in row["references"]:
+            ids = {pid for evidence in by_case[ref["case_id"]][ref["field"]]
+                   for pid in evidence["passage_ids"]}
+            assert row["old_passage_id"] not in ids
+            assert set(row["new_passage_ids"]) <= ids
+    projection = copy.deepcopy(cases)
+
+    def strip(value):
+        if isinstance(value, dict):
+            value.pop("passage_ids", None)
+            for child in value.values():
+                strip(child)
+        elif isinstance(value, list):
+            for child in value:
+                strip(child)
+
+    strip(projection)
+    digest = hashlib.sha256(json.dumps(projection, sort_keys=True, ensure_ascii=False).encode()).hexdigest()
+    assert digest == audit["non_id_fields_sha256"]
+    assert len(audit["supplemental_ids_outside_branch_two_field_scan"]) == 3

@@ -2,13 +2,13 @@ import {el, svgEl, fmt, finite, figure, interactive, columns, dotPlot, reduced} 
 import {chapter, section, grid, stat, callout, evi, button} from './ui.js';
 
 const NODES = {
-  validate_question: {label: 'validate_question', sub: 'input guard', guard: true, text: 'Rejects an empty question or one over 1,000 characters. Flags instruction-like text without trusting it.'},
-  plan_research: {label: 'plan_research', sub: 'planner model', text: 'The planner proposes up to three read-only tool calls, or decides to finish. It never sees passage text.'},
-  execute_tool: {label: 'execute_tool', sub: 'typed tools', text: 'Runs each call in a worker thread with a 10 second limit. One retry for a transient failure.'},
-  assess_evidence: {label: 'assess_evidence', sub: 'count and check', text: 'Counts passages, observations and calculations. If every tool call failed it reports an operational failure, never "no evidence".'},
+  validate_question: {label: 'validate_question', sub: 'input guard', guard: true, text: 'Rejects an empty question or one over 1,000 characters. Flags instruction-like text as untrusted.'},
+  plan_research: {label: 'plan_research', sub: 'planner model', text: 'Planner proposes up to three read-only tool calls per round, or finishes. Passage text is excluded from its input.'},
+  execute_tool: {label: 'execute_tool', sub: 'typed tools', text: 'Runs each call in a worker thread with a 10 second limit. One retry on a transient failure.'},
+  assess_evidence: {label: 'assess_evidence', sub: 'count and check', text: 'Counts passages, observations and calculations. Failed tool calls are reported as an operational failure, not as missing evidence.'},
   generate_answer: {label: 'generate_answer', sub: 'answer model', text: 'Writes a structured answer from the evidence, with a verbatim quote for each claim.'},
-  validate_answer: {label: 'validate_answer', sub: 'citation guard', guard: true, text: 'Rejects a cited label that is not in the context, a quote that is not verbatim, a quote over 40 words, or a status that contradicts the content. One repair is allowed.'},
-  finalize: {label: 'finalize', sub: 'output guard', guard: true, text: 'Blocks answers that contain a known secret or system-prompt text, then sets the outcome.'}
+  validate_answer: {label: 'validate_answer', sub: 'citation guard', guard: true, text: 'Rejects a cited label not in the context, a quote that is not verbatim, a quote over 40 words, or a status that contradicts the content. One repair allowed.'},
+  finalize: {label: 'finalize', sub: 'output guard', guard: true, text: 'Blocks answers containing a known secret or system-prompt text, then sets the outcome.'}
 };
 const ORDER = Object.keys(NODES);
 
@@ -60,14 +60,14 @@ function layout(W) {
 }
 
 const EXPLAIN = {
-  'validate_question:accepted': () => 'The question passed the length check. Instruction-like text is flagged, never trusted.',
-  'plan_research:gather': d => `Round ${d.round}: the planner chose ${d.n_calls} tool call${d.n_calls === 1 ? '' : 's'}.`,
+  'validate_question:accepted': () => 'Question passed the length check. Instruction-like text was flagged as untrusted.',
+  'plan_research:gather': d => `Round ${d.round}: planner chose ${d.n_calls} tool call${d.n_calls === 1 ? '' : 's'}.`,
   'execute_tool:ok': d => `${d.tool} ran in ${d.seconds} s and returned validated results.`,
-  'plan_research:finish': d => `Round ${d.round}: the planner decided it had enough evidence and made no more calls.`,
+  'plan_research:finish': d => `Round ${d.round}: planner judged the evidence sufficient and made no more calls.`,
   'assess_evidence:evidence_ready': d => `Evidence ready: ${d.passages} passages, ${d.observations} observations, ${d.calculations} calculations.`,
-  'generate_answer:generated': () => 'The answer model wrote a structured answer from the evidence only.',
-  'validate_answer:valid': () => 'Every label and quote checked out, so no repair was needed.',
-  'finalize:answered': () => 'The output guard passed the answer. Outcome: answered.'
+  'generate_answer:generated': () => 'Answer model wrote a structured answer from the evidence.',
+  'validate_answer:valid': () => 'Citation checks passed; no repair requested.',
+  'finalize:answered': () => 'Output guard passed the answer. Outcome: answered.'
 };
 const explain = ev => (EXPLAIN[`${ev.node}:${ev.event}`] || (() => `${ev.node}: ${ev.event}`))(ev.detail || {});
 
@@ -75,8 +75,8 @@ function graphFigure(m) {
   const events = m.events;
   const state = {step: events.length ? -1 : -1, timer: null};
   const card = el('div', 'pr-step-card');
-  const cardTitle = el('p', 'pr-step-title', 'Press Next to step through a recorded run');
-  const cardText = el('p', 'pr-step-text', 'Nothing is shown here except node names, events and counts. No model text is recorded or displayed.');
+  const cardTitle = el('p', 'pr-step-title', 'Step through the recorded run');
+  const cardText = el('p', 'pr-step-text', 'Node names, events and counts only. No model text is recorded.');
   const cardMeta = el('p', 'pr-step-meta mono', '');
   card.append(cardTitle, cardText, cardMeta);
   card.setAttribute('aria-live', 'polite');
@@ -98,7 +98,7 @@ function graphFigure(m) {
       edge.classList.toggle('is-done', used.has(key));
       edge.classList.toggle('is-active', state.step >= 0 && key === `${prev}>${current}`);
     });
-    if (state.step < 0) { cardTitle.textContent = 'Press Next to step through a recorded run'; cardText.textContent = 'Nothing is shown here except node names, events and counts. No model text is recorded or displayed.'; cardMeta.textContent = ''; }
+    if (state.step < 0) { cardTitle.textContent = 'Step through the recorded run'; cardText.textContent = 'Node names, events and counts only. No model text is recorded.'; cardMeta.textContent = ''; }
     else {
       const ev = events[state.step];
       cardTitle.textContent = `${ev.node} \u2192 ${ev.event}`;
@@ -125,8 +125,8 @@ function graphFigure(m) {
   controls.setAttribute('aria-label', 'Step through a recorded run');
   controls.append(prevBtn, nextBtn, playBtn, resetBtn, counter);
   const fig = figure({
-    id: 'fig-graph', title: 'The agent graph: seven nodes, three guards', wide: true,
-    takeaway: 'One agent, one loop for evidence gathering (at most 2 rounds) and one for repair (one attempt). Brass outlines mark the guards. Any tool outage ends as an operational failure, never as "no evidence".',
+    id: 'fig-graph', title: `The agent is one graph of seven nodes and three guards; the recorded run took ${events.length} steps`, wide: true,
+    takeaway: 'Two loops: evidence gathering (at most 2 rounds) and answer repair (one attempt). Brass outlines mark the guards.',
     summary: `LangGraph state graph with seven nodes: ${ORDER.join(', ')}. Guards: validate_question, validate_answer and finalize. Loops: execute_tool back to plan_research; validate_answer back to generate_answer.`,
     source: {data: 'report.json › agent.events (recorded run) · node set from docs/architecture.md §4', files: ['experiments/runs/web-live-smoke.trace.json', 'src/labourlens/agent/graph.py']},
     note: 'The recorded run is a statistics-only smoke test: it used get_series and no report passages.',
@@ -184,9 +184,9 @@ function toolCards(m) {
   const counts = {};
   m.trace.forEach(r => (r.tools_used || []).forEach(t => { counts[t] = (counts[t] || 0) + 1; }));
   const tools = [
-    ['search_reports', 'P', 'Searches the MOM report passages: hybrid search, period and release filter, then rerank. Returns passages labelled P1, P2 and so on.'],
+    ['search_reports', 'P', 'Hybrid search over MOM report passages, with period and release filter, then rerank. Returns passages labelled P1, P2 and so on.'],
     ['get_series', 'O', 'Reads validated statistics by source, indicator, adjustment and period. Returns observations labelled O1, O2 and so on, each with a trace id.'],
-    ['calculate_change', 'C', 'Computes a difference or percent change from two observations using exact decimals. Returns a calculation labelled C1. The model never does arithmetic.']
+    ['calculate_change', 'C', 'Computes a difference or percent change from two observations using exact decimals. Returns a calculation labelled C1.']
   ];
   const wrap = el('div', 'pr-tools');
   tools.forEach(([name, label, text]) => {
@@ -211,8 +211,8 @@ function boundsFigures(m) {
   const ops = trace.reduce((a, r) => a + (r.operational_failure ? 1 : 0), 0), errors = trace.reduce((a, r) => a + (finite(r.tool_errors) ? r.tool_errors : 0), 0);
   const repaired = trace.filter(r => r.attempts > 1).length;
   const figCalls = figure({
-    id: 'fig-calls', title: 'Tool calls per case, all recorded runs',
-    takeaway: `Across ${fmt.int(trace.length)} recorded cases the agent made at most ${maxCalls} tool calls and ran at most ${maxRounds} rounds. The limits are 6 and 2. The planner cannot exceed them, and the data confirm it did not.`,
+    id: 'fig-calls', title: `Across ${fmt.int(trace.length)} recorded cases the agent used at most ${maxCalls} tool calls and ${maxRounds} rounds, against limits of 6 and 2`,
+    takeaway: 'The planner cannot exceed the limits; the recorded runs stay inside them.',
     summary: `Tool calls per case: ${calls.map((n, i) => `${i} calls: ${n} cases`).join(', ')}. Rounds: ${rounds.map((n, i) => `${i}: ${n}`).join(', ')}.`,
     source: {data: 'report.json › agent.trace[*].tool_calls, .rounds', files: ['experiments/runs/agent-dev-A1..A5/*.scores.jsonl']},
     table: () => ({caption: 'Cases by number of tool calls', columns: ['Tool calls', 'Cases', 'Rounds', 'Cases (by rounds)'], rows: calls.map((n, i) => [i, n, i <= 2 ? i : '', i <= 2 ? rounds[i] : ''])}),
@@ -222,8 +222,8 @@ function boundsFigures(m) {
   trace.forEach(r => (r.tools_used || []).forEach(t => { usage[t] = (usage[t] || 0) + 1; }));
   const rows = Object.entries(usage).sort((a, b) => b[1] - a[1]).map(([name, n], i) => ({label: name, value: n, cls: 'c1', hl: i === 0, lines: [name, `${fmt.int(n)} recorded calls`]}));
   const figTools = figure({
-    id: 'fig-tools', title: 'Which tools were called',
-    takeaway: `${fmt.int(errors)} tool errors in ${fmt.int(trace.length)} cases; ${fmt.int(ops)} ended as an operational failure. ${fmt.int(repaired)} cases (${fmt.pct(repaired / trace.length)}) needed the one allowed repair of an invalid answer.`,
+    id: 'fig-tools', title: `${fmt.int(errors)} tool errors in ${fmt.int(trace.length)} cases; ${fmt.int(ops)} operational failures and ${fmt.int(repaired)} repaired answers (${fmt.pct(repaired / trace.length)})`,
+    takeaway: `${rows[0]?.label} was called most (${fmt.int(rows[0]?.value)} recorded calls). A repair is the one allowed retry of an invalid answer.`,
     summary: rows.map(r => `${r.label}: ${r.value} calls`).join('. '),
     source: {data: 'report.json › agent.trace[*].tools_used, .tool_errors, .operational_failure, .attempts', files: ['experiments/runs/agent-dev-A1..A5/*.scores.jsonl']},
     table: () => ({caption: 'Recorded tool calls', columns: ['Tool', 'Calls'], rows: rows.map(r => [r.label, r.value])}),
@@ -233,32 +233,38 @@ function boundsFigures(m) {
 }
 
 export function renderAgent(m, ctx) {
+  const b = boundsFigures(m);
   const ch = chapter({
-    id: 'agent', no: 4, eyebrow: 'The agent', title: 'One bounded agent, with guards at the edges',
-    lede: 'A LangGraph state graph runs one research agent. It can only call three read-only tools, and code does the arithmetic. Every loop has a limit, every limit is enforced in code, and every failure has a named outcome.'
+    id: 'agent', no: 4, eyebrow: 'The agent',
+    title: b ? `I used one bounded agent (6 tool calls, 2 rounds, 1 repair); ${fmt.int(b.total)} recorded cases peaked at ${b.maxCalls} calls and ${b.maxRounds} rounds` : 'I used one bounded agent: 6 tool calls, 2 rounds, 1 repair',
+    bullets: [
+      'LangGraph state graph with seven nodes and three read-only tools. Code does the arithmetic.',
+      b ? `Recorded runs: ${fmt.int(b.errors)} tool errors, ${fmt.int(b.ops)} operational failures, ${fmt.int(b.repaired)} repaired answers.` : 'No recorded runs available.',
+      'Limits are enforced in code. A tool outage ends as operational_failure, not as an abstention.',
+      'Caveat: the stepper replays one statistics-only smoke run with no report passages.'
+    ]
   });
-  const g = section('The state graph', 'Step through a recorded run, or press the arrow keys on the diagram to read what each node does.');
+  const g = section(`The graph: ${Object.keys(NODES).length} nodes, 2 loops, 3 guards`, 'Step through the recorded run, or use arrow keys on the diagram.');
   g.append(graphFigure(m).root);
   ch.body.append(g);
 
-  const t = section('Three typed tools', 'Arguments are checked against enums built from the source catalogue. A tool cannot write, fetch the web or run code.');
+  const t = section('Three typed tools, none able to write, fetch the web or run code', 'Arguments are checked against enums built from the source catalogue.');
   t.append(toolCards(m));
   ch.body.append(t);
 
-  const limits = section('Limits, and whether they held');
+  const limits = section(b ? `Six limits are set in code; recorded runs peaked at ${b.maxCalls} calls and ${b.maxRounds} rounds` : 'Six limits are set in code');
   const stats = el('div', 'pr-stats pr-limits');
-  const b = boundsFigures(m);
   [
     [2, 'Evidence rounds', b ? `Largest seen: ${b.maxRounds}` : ''], [6, 'Tool calls per run', b ? `Largest seen: ${b.maxCalls}. At most 3 per round.` : 'At most 3 per round.'], [10, 'Seconds per tool call', 'Run in a worker thread with a timeout.'],
-    [1, 'Retry, transient tool failure', 'Also 1 retry for malformed planner output.'], [1, 'Repair of an invalid answer', b ? `${fmt.int(b.repaired)} of ${fmt.int(b.total)} cases used it.` : ''], [1000, 'Characters per question', 'Longer input is rejected before any model call.']
+    [1, 'Retry, transient tool failure', 'Also 1 retry for malformed planner output.'], [1, 'Repair of an invalid answer', b ? `${fmt.int(b.repaired)} of ${fmt.int(b.total)} cases used it.` : ''], [1000, 'Characters per question', 'Rejected before any model call.']
   ].forEach(([value, label, note]) => stats.append(stat({value, label, note, src: 'docs/architecture.md › 4. The agent graph · src/labourlens/agent/graph.py'})));
   limits.append(stats);
   if (b) limits.append(grid('pr-split', b.figCalls.root, b.figTools.root));
   ch.body.append(limits);
 
   ch.body.append(callout({
-    tone: 'note', title: 'Eight named outcomes',
-    text: 'answered, abstained, clarify, refused, invalid, rejected_input, blocked_output and operational_failure. A tool outage, a timeout or a planner outage ends as operational_failure. It is never reported as missing evidence.',
+    tone: 'note', title: 'Tool outages end as operational_failure, one of eight named outcomes',
+    text: 'answered, abstained, clarify, refused, invalid, rejected_input, blocked_output and operational_failure. A tool outage, a timeout or a planner outage ends as operational_failure, which is separate from missing evidence.',
     src: 'docs/architecture.md › 4. The agent graph'
   }));
   return ch.root;

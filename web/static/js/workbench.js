@@ -10,11 +10,11 @@ const MAX_QUESTION = 1000;
 export const FAMILIES = [
   {id: 'lookup', name: 'Factual lookup', note: 'One figure, with population and adjustment named.', icon: 'search',
     questions: ['What was the seasonally adjusted overall unemployment rate in Q4 2024, not the resident or citizen rate?']},
-  {id: 'compare', name: 'Period comparison', note: 'The arithmetic runs in code, not in the model.', icon: 'calc',
+  {id: 'compare', name: 'Period comparison', note: 'The calculation tool compares the observations.', icon: 'calc',
     questions: ['How many more people were laid off in 2Q 2026 than in 1Q 2026?']},
   {id: 'synthesis', name: 'Statistics and reports', note: 'A figure from the data, context from MOM commentary.', icon: 'layers',
     questions: ['Using the quarterly dataset and final MOM commentary, how many employees were retrenched in 2026-Q1, and what sector or workforce-adjustment context accompanied that figure?']},
-  {id: 'revision', name: 'Advance and final releases', note: 'Which release is the later, authoritative one.', icon: 'passage',
+  {id: 'revision', name: 'Advance and final releases', note: 'Compare publication dates and release status.', icon: 'passage',
     questions: ['How do the 2Q 2026 advance and final employment growth headlines differ? Identify the later authoritative figure.']},
   {id: 'ambiguity', name: 'Ambiguity and gaps', note: 'The agent should ask, or say the evidence is missing.', icon: 'help',
     questions: ['How many workers were retrenched in the second quarter?', 'How many quantum-computing job vacancies were there in Q2 2026?']},
@@ -23,7 +23,7 @@ export const FAMILIES = [
 ];
 
 const STATUS = {
-  answered: {icon: 'check', label: 'Answered', hint: 'Every claim below lists the evidence it rests on.'},
+  answered: {icon: 'check', label: 'Answered', hint: 'The agent returned citations. Open them to check whether they support the claims.'},
   abstained: {icon: 'minus', label: 'Abstained', hint: 'The evidence did not support an answer, so the agent did not give one.'},
   clarify: {icon: 'help', label: 'Needs clarification', hint: 'The question can be read more than one way.'},
   refused: {icon: 'shield', label: 'Refused', hint: 'The request asked for something this tool does not do.'}
@@ -43,8 +43,8 @@ export function mountWorkbench(root, {onMode} = {}) {
   // ---------- structure ----------
   const head = el('header', 'wb-head');
   const headCopy = el('div', 'wb-head-copy');
-  add(headCopy, el('p', 'eyebrow', 'Workbench'), el('h1', 'wb-title', 'Ask the evidence.'),
-    el('p', 'lead', 'Questions run against statistics and MOM reports through three read-only tools. The answer lists its sources. You can open each one.'));
+  add(headCopy, el('p', 'eyebrow', 'Workbench'), el('h1', 'wb-title', 'Research workbench'),
+    el('p', 'lead', 'Ask about the statistical series or MOM reports. Answers include source links and cited excerpts for inspection.'));
   head.append(headCopy);
 
   const grid = el('div', 'wb-grid');
@@ -101,8 +101,34 @@ export function mountWorkbench(root, {onMode} = {}) {
   const activity = el('div', 'bezel activity-bezel reveal');
   const activityCore = el('div', 'bezel-core activity');
   activity.append(activityCore); rail.append(activity);
-  const railNote = el('p', 'rail-note small muted', 'Each question calls a paid model API. Nothing else on this page does. The list shows tool calls and outcomes only. It never shows the model’s reasoning.');
+  const railNote = el('p', 'rail-note small muted', 'Submitting a question makes paid model API calls. Activity shows tool calls and outcomes, without private model reasoning.');
   rail.append(railNote);
+
+  // Session history is deliberately memory-only; reloading discards it.
+  const historyEntries = [];
+  const historyBox = el('section', 'bezel session-history');
+  const historyCore = el('div', 'bezel-core');
+  const historyList = el('ol', 'history-list');
+  const clearHistory = el('button', 'btn small plain', 'Clear session'); clearHistory.type = 'button';
+  clearHistory.addEventListener('click', () => {
+    if (busy) return;
+    historyEntries.length = 0; historyList.replaceChildren(); evidenceList = [];
+    emptyState(); idleActivity(); setQuestion('');
+    announce.textContent = 'Session history and the displayed answer cleared.';
+  });
+  add(historyCore, el('h2', 'activity-title', 'Session history'), el('p', 'small muted', 'Stored in this page’s memory only. Reloading clears it.'), historyList, clearHistory);
+  historyBox.append(historyCore); rail.prepend(historyBox);
+  function remember(response) {
+    const entry = {question: lastQuestion, response};
+    historyEntries.push(entry);
+    const row = el('li'); const b = el('button', 'history-question'); b.type = 'button'; b.textContent = lastQuestion;
+    b.addEventListener('click', () => {
+      if (busy) return;
+      lastQuestion = entry.question; setQuestion(entry.question);
+      renderAnswer(entry.response); finalActivity(entry.response);
+    });
+    row.append(b); historyList.prepend(row);
+  }
 
   // ---------- evidence drawer ----------
   const drawer = el('dialog', 'drawer'); drawer.setAttribute('aria-labelledby', 'evidence-title');
@@ -157,7 +183,7 @@ export function mountWorkbench(root, {onMode} = {}) {
     const quotes = [...new Set([citedQuote, ...(Array.isArray(item.quotes) ? item.quotes : [])].filter(Boolean))];
     if (item.kind === 'report' || quotes.length) {
       const block = el('section', 'quote-block');
-      block.append(el('h3', '', item.kind === 'calculation' ? 'Calculation text' : item.kind === 'statistic' ? 'Observation text' : 'Exact passage'));
+      block.append(el('h3', '', item.kind === 'calculation' ? 'Calculation text' : item.kind === 'statistic' ? 'Observation text' : 'Cited excerpt'));
       if (quotes.length) {
         quotes.forEach(q => { const bq = el('blockquote', 'quote'); bq.append(el('p', '', q)); block.append(bq); });
         block.append(el('p', 'small muted', 'The server checked that each excerpt appears in the evidence it retrieved. It shows short excerpts only.'));
@@ -209,12 +235,12 @@ export function mountWorkbench(root, {onMode} = {}) {
     if (!statusKnown) {
       gate.append(add(el('div', 'gate-line'), icon('clock'), status));
     } else if (!enabled) {
-      gate.append(add(el('div', 'gate-line report-only'), icon('database'), add(el('div'), el('strong', '', 'Report-only mode'), el('p', 'small', 'The live demo is off on this server. The other sections still work. Example questions are listed below so you can see what the agent is built for.'))));
+      gate.append(add(el('div', 'gate-line report-only'), icon('database'), add(el('div'), el('strong', '', 'Report-only mode'), el('p', 'small', 'The live demo is disabled on this server. The write-up and example questions remain available.'))));
       status.textContent = '';
     } else if (!authenticated) {
       gate.append(add(el('div', 'gate-line'), icon('lock'), add(el('div'), el('strong', '', 'Access code needed'), el('p', 'small', 'Each question calls a paid model API. Ask the presenter for a code.'))), login, status);
     } else {
-      gate.append(add(el('div', 'gate-line signed'), icon('key'), add(el('div'), el('strong', '', 'Signed in'), el('p', 'small', busy ? 'Running. This takes about 10 to 30 seconds.' : 'Pick an example or type a question.')), signout));
+      gate.append(add(el('div', 'gate-line signed'), icon('key'), add(el('div'), el('strong', '', 'Signed in'), el('p', 'small', busy ? 'Running.' : 'Pick an example or type a question.')), signout));
     }
     const chipText = !statusKnown ? 'Checking demo' : !enabled ? 'Report only' : authenticated ? 'Live demo, signed in' : 'Live demo, signed out';
     onMode?.({enabled, authenticated, known: statusKnown, text: chipText});
@@ -272,8 +298,8 @@ export function mountWorkbench(root, {onMode} = {}) {
     lens.append(svg('circle', {cx: 190, cy: 118, r: 38, class: 'art-ring'}), svg('line', {x1: 217, y1: 145, x2: 262, y2: 190, class: 'art-handle'}), svg('path', {d: 'M166 128 Q186 100 214 108', class: 'art-glint'}));
     art.append(sheet, lens);
     const copy = el('div', 'empty-copy');
-    add(copy, el('h2', '', 'No question yet.'),
-      el('p', 'muted', 'Ask about unemployment, vacancies or retrenchments, from 2024-Q1 to 2026-Q2. This space will hold the answer, its sources and any calculation.'));
+    add(copy, el('h2', '', 'No question submitted'),
+      el('p', 'muted', 'Ask about unemployment, vacancies or retrenchments, from 2024-Q1 to 2026-Q2. The answer and source records will appear here.'));
     const promises = el('ul', 'empty-list');
     ['A status: answered, abstained, needs clarification or refused.', 'Numbered citations that open the source, date and release status.', 'Every tool call, listed in order with its outcome.'].forEach(t => promises.append(add(el('li'), icon('check'), el('span', '', t))));
     copy.append(promises);
@@ -290,7 +316,7 @@ export function mountWorkbench(root, {onMode} = {}) {
     region.replaceChildren(); announce.textContent = `The run did not finish. ${message}`;
     const card = el('div', 'bezel answer-bezel error'); const c = el('div', 'bezel-core'); card.append(c);
     const body = el('div', 'error-body');
-    add(body, icon('warn', 'lg'), add(el('div'), el('h2', '', 'The run did not finish.'), el('p', '', message), el('p', 'small muted', 'This says nothing about whether the data exists.')));
+    add(body, icon('warn', 'lg'), add(el('div'), el('h2', '', 'The run did not finish.'), el('p', '', message), el('p', 'small muted', 'A failed run does not establish that evidence is missing.')));
     const retry = el('button', 'btn small plain'); retry.type = 'button'; add(retry, icon('arrow-r'), el('span', '', 'Edit and try again'));
     retry.addEventListener('click', () => { question.focus(); question.select(); });
     add(c, body, retry); region.append(card);
@@ -377,6 +403,7 @@ export function mountWorkbench(root, {onMode} = {}) {
     const usage = response.usage ?? {};
     const line = el('p', 'run-line');
     add(line, add(el('span', 'run-row'), icon('clock'), el('span', '', `Finished in ${seconds(usage.seconds)}`)), el('span', 'run-row', `Estimated model cost ${money(usage.cost_usd)}`));
+    for (const key of ['prompt_tokens', 'completion_tokens']) line.append(el('span', 'run-row', `${human(key)}: ${finite(usage[key]) ? usage[key] : 'Not recorded'}`));
     activityCore.append(line);
   }
   idleActivity();
@@ -453,25 +480,35 @@ export function mountWorkbench(root, {onMode} = {}) {
     }
     // Sources strip
     if (evidenceList.length) {
-      const sources = el('section', 'sources'); sources.append(el('h3', '', 'Evidence'));
+      const sourceBezel = el('section', 'bezel sources-bezel');
+      const sources = el('div', 'bezel-core sources'); sources.append(el('h3', '', 'Sources'));
       const ul = el('ul', 'source-list');
       evidenceList.forEach((item, i) => {
         const li = el('li'); const b = el('button', `source-item${cited.has(item.label) ? ' is-cited' : ''}`); b.type = 'button';
         const [kindIcon, kindName] = KIND[item.kind] ?? ['passage', 'Evidence'];
         add(b, el('span', 'cite-chip static', String(i + 1)), add(el('span', 'source-text'), el('span', 'source-title', item.source_title || item.label || 'Untitled'), el('span', 'source-meta small muted', `${item.label || ''} · ${kindName}${item.locator ? ` · ${item.locator}` : ''}${cited.has(item.label) ? ' · cited' : ' · retrieved, not cited'}`)), icon(kindIcon));
+        b.querySelector('.source-text').append(el('span', 'source-details small muted', [
+          `Publisher: ${item.publisher || 'Not recorded'}`, `Date: ${item.date || 'Not recorded'}`,
+          `Release: ${item.release_stage || 'Not recorded'}`, `Series: ${item.indicator_id || 'Not recorded'}`,
+          `Definition: ${[item.population, item.dimension, item.adjustment].filter(Boolean).join(' · ') || 'Not recorded'}`,
+          `Units: ${item.unit || 'Not recorded'}`
+        ].join(' | ')));
         b.addEventListener('click', () => openEvidence(i, '', b));
-        li.append(b); ul.append(li);
+        li.append(b);
+        const link = safeLink(item.url, 'Open source'); if (link) li.append(link);
+        ul.append(li);
       });
-      sources.append(ul); c.append(sources);
+      sources.append(ul); sourceBezel.append(sources); stack.append(sourceBezel);
     }
     const footer = el('div', 'answer-foot'); decorateAnswer(footer, response); c.append(footer);
 
     // Calculation cards
     const events = Array.isArray(response.trace) ? response.trace : response.trace?.events ?? [];
+    stack.append(explanation(response, events));
     evidenceList.forEach((item, index) => { if (item.kind === 'calculation') stack.append(calculationCard(item, index, claims, events)); });
     // Charts
     const series = Array.isArray(response.chart?.series) ? response.chart.series.filter(s => Array.isArray(s.points) && s.points.length) : [];
-    series.slice(0, 4).forEach((s, i) => {
+    series.forEach(s => {
       const unit = s.unit || '';
       const holder = el('div', 'bezel chart-bezel'); const hc = el('div', 'bezel-core');
       hc.append(lineChart({
@@ -492,6 +529,31 @@ export function mountWorkbench(root, {onMode} = {}) {
     announce.textContent = `Answer ready. Status: ${info?.label ?? 'unknown'}. ${claims.length} claim${claims.length === 1 ? '' : 's'}, ${evidenceList.length} evidence item${evidenceList.length === 1 ? '' : 's'}.`;
     title.focus({preventScroll: true});
     card.scrollIntoView({behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start'});
+  }
+
+  function explanation(response, events) {
+    const box = el('section', 'bezel explanation-bezel'); const c = el('div', 'bezel-core explanation');
+    add(c, el('h2', '', 'Explanation'), el('p', 'small muted', 'A summary of the recorded workflow, not the model’s private reasoning.'));
+    const steps = el('ol', 'explanation-steps'); const tools = events.filter(e => e.node === 'execute_tool');
+    tools.forEach(e => {
+      const d = e.detail ?? {};
+      const names = {get_series: 'Read a statistical series', search_reports: 'Searched report passages', calculate_change: 'Calculated a change in code'};
+      const labels = Array.isArray(d.new_items) ? d.new_items.join(', ') : '';
+      steps.append(el('li', '', `${names[d.tool] || d.tool || 'Tool call'}. Outcome: ${human(e.event)}. ${labels ? `Returned evidence labels ${labels}.` : 'No new evidence labels recorded.'}`));
+    });
+    if (!tools.length) steps.append(el('li', '', 'No tool calls were recorded for this response.'));
+    c.append(steps);
+    const kinds = [...new Set(evidenceList.map(e => KIND[e.kind]?.[1] || human(e.kind)))];
+    c.append(el('p', '', `Evidence types returned: ${kinds.join(', ') || 'none'}.`));
+    const a = response.answer ?? {};
+    c.append(el('p', '', `Answer status: ${STATUS[a.status]?.label || human(a.status || 'not recorded')}.`));
+    if (a.reason) c.append(el('p', '', `Reason returned: ${a.reason}`));
+    if (a.clarification_question) c.append(el('p', '', `Clarification requested: ${a.clarification_question}`));
+    if (Array.isArray(a.caveats) && a.caveats.length) {
+      c.append(el('h3', '', 'Caveats returned'));
+      const ul = el('ul'); a.caveats.forEach(t => ul.append(el('li', '', t))); c.append(ul);
+    }
+    box.append(c); return box;
   }
 
   function calculationCard(item, index, claims, events) {
@@ -576,11 +638,11 @@ export function mountWorkbench(root, {onMode} = {}) {
     try {
       const response = await request('/api/ask', {question: lastQuestion});
       busy = false; ask.classList.remove('is-busy'); region.setAttribute('aria-busy', 'false');
-      renderAnswer(response); finalActivity(response);
+      renderAnswer(response); finalActivity(response); remember(response);
     } catch (error) {
       busy = false; ask.classList.remove('is-busy'); region.setAttribute('aria-busy', 'false'); clearInterval(timer);
       failure(error.message);
-      activityCore.replaceChildren(activityHead('The run failed before steps were returned.'), el('p', 'small muted', 'No steps to show. This says nothing about whether the data exists.'));
+      activityCore.replaceChildren(activityHead('The run failed before steps were returned.'), el('p', 'small muted', 'No steps to show. A failed run does not establish that evidence is missing.'));
     } finally { busy = false; syncState(); }
   });
   question.addEventListener('keydown', event => {

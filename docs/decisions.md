@@ -308,3 +308,49 @@ Reversibility: relabel the affected gold cases and remove the scope sentence in 
 
 **Audit / reversibility:** preserve original private export, saved generation, freeze and all historical score/sensitivity artifacts side by side with any new version. Review completion does not restore an untouched held-out set, satisfy review-before-freeze retrospectively, or establish independent inter-rater agreement. Reversal requires an explicit new owner adjudication and versioned rescore, not erasure of history. Threat-suite outcomes and corpus remain unchanged; remaining rights, J10 inspection, configuration preference and final protocol acceptance stay open.
 
+### D-037 — Adopt extraction corrections and isolate corpus-v2 evaluation (DECISION, 31 Oct 2026)
+
+**Owner approval:** merge `extraction-fixes` (80a287b), rebuild from existing raw sources, migrate evidence IDs only and run a clean separately labelled evaluation. No new source/domain approval is implied.
+
+| Alternative | Benefit | Cost / dependency | Decision |
+|---|---|---|---|
+| Keep frozen corpus v1 | Exact historical comparison | Known narrative loss and incorrect metadata remain | Retain only for reproducibility |
+| Adopt corrected parser, reuse content-keyed embeddings, version gold IDs and runs | Fixes extraction while preserving comparable labels and audit history | Rebuild, 776 new chunk vectors, fresh evaluation and interpretation required | Owner-approved |
+| Overwrite old runs or change labels alongside extraction | Superficially simple | Confounds improvements and erases evidence | Rejected |
+
+**VERIFIED FACT:** clean no-commit merge applied over master; `corpus-v1-frozen` tags premerge 8b8c3a9. No commit was made by the worker. Existing source snapshots were reused; two `uv run --offline labourlens build` executions each produced 43,662 observations, zero quarantine and 255 checks (248 pass / seven warning / zero fail). All 49 passage/Parquet files were byte-identical. New corpus: 15,915 passages, 1,732 `merge200` chunks; BM25 persisted under corpus hash `794cf9c9814d1f451803adb7de81a829ebda0d708cb98d9a268e7c2fdc0063e0`.
+
+**Gold boundary:** v3.6 changes passage IDs only in 96 cases. The audit `experiments/gold/evidence-migration-v3.6.json` covers all 61 absent IDs and every case/field. Fifty-four preserve exact joined text; seven lose only heading/footer tokens, with narrative overlap verified. No unmapped ID remains. The validator also found three dangling `partial_evidence_text` references outside the branch audit (DEV-011, DEV-023, HO-016); they are mapped and disclosed separately. Current v3.6 SHA-256: `6169a9deca78cb5908c584bdf7d17b1c8dd9a15ff7840b3752f3bbb4febb2f9b`. Surviving metadata changes number 67, not the branch's original 66: D-035 added HO-023's cohort-definition passage after the branch audit. All non-ID fields and owner provenance are unchanged; this is not new human review.
+
+**Cost / measured preparation:** content/model-keyed cache covers 506 of 1,282 unique chunk inputs. Remaining 776 vectors contain exactly 176,211 local `cl100k_base` tokens; at `specs/prices.yaml`'s $0.13/M input tokens, estimated embedding cost is **$0.02290743**, excluding new dynamic query embeddings. No embedding/model request was run by this worker. Actual billing must use API usage.
+
+**Reproducibility / limits:** `private/corpus-v1-frozen/` preserves actual premerge passages, index/cache, manifests, processed tables and quality artifacts; `private/extraction-before/` preserves the original 46-file parser audit baseline. Both are private; no MOM text is committed. Frozen experiment/freeze artifacts are unchanged and remain labelled **frozen corpus v1**. The runbook isolates extraction-only X1 using `LABOURLENS_CROSSCHECK=off`; T-I06 security changes and evidence-disjoint evaluation require separately labelled follow-on configurations. The old held-out rerun is a shared-evidence diagnostic, not a fresh unseen-evidence test. Rollback uses the code tag and private stores; never rewrite registered results.
+
+### D-038 — Deterministic passage/dataset source-conflict guard (DECISION, 31 Oct 2026)
+
+**Owner approval:** investigate and fix T-I06's planted-statistic failure, preserve genuine labelled revisions, and run a separately labelled post-fix threat evaluation. No paid worker call or new measured model result is implied.
+
+**Alternatives:** evidence annotation alone supplies trustworthy context but still depends on model compliance; deterministic enforcement in the existing output-validation guard ensures a used conflicting figure cannot survive as an asserted level. **Chosen:** one detector shared by pre-generation annotation and post-generation enforcement; leave citation validation and the answer JSON schema unchanged. Details, boundaries, tests and parent commands: `docs/experiments/m7-t-i06-crosscheck.md`.
+
+**Implementation:** decimal comparison against local validated observations, explicit series/period/unit identification, half-last-digit rounding tolerance, dataset preference, both citations and a source-conflict caveat. No guessed population, adjustment, dimension or missing value. Preliminary/advance vintages and the existing employment reconciliation distinctions remain separate. This is a conservative closed-grammar cross-check, not universal numerical fact verification.
+
+**Experiment integrity:** `LABOURLENS_CROSSCHECK=off` isolates D-037 extraction-only X1; on/default enables the guard for separately labelled X2. Raw records and traces carry the enabled flag. Naive all-defences ablation disables it too. New threat generation requires a new experiment id, refuses overwrites, and records post-fix/r3 metadata; all original frozen results remain unchanged. Original T-I06 constraints stay, with added deterministic conflict/preference checks. Credentialed two-model paired commands and saved-usage cost extrapolation (~$0.42, not a measured bill) are in the runbook.
+
+**Verification / reversibility:** scripted graph tests exercise model acceptance of the poison and deterministic correction, with defence-off controls. The live threat result is pending parent execution. Reverse only this factor using the explicit switch; do not erase source evidence, frozen verdicts or experiment history.
+
+### D-039 — Evidence-disjoint held-out v2 design and blocker (DECISION / VERIFIED FACT, 31 Oct 2026)
+
+**Owner approval:** fix the held-out evidence-overlap limitation without altering the registered original held-out artifacts.
+
+**VERIFIED FACT:** reading v3.5 gold, 25/31 held-out cases share at least one acceptable evidence ID with dev and 14/31 have their whole nonempty evidence union in dev (not 15/31; HO-025 and HO-030 have empty unions). Details: `experiments/heldout-v2/evidence-audit.json`. Within Q1 2024 to Q2 2026 there are 326 dataset-period groups; 162 groups remain after excluding old gold and observed saved dev evidence. Only three documents were never cited by gold, two are copyright pages and the third was supplied to dev agents. Verified untouched substantive documents: zero.
+
+| Alternative | Benefit | Downside | Disposition |
+|---|---|---|---|
+| A. New evidence-reserved confirmatory set | Valid unseen-evidence test | Needs untouched sources or auditable candidate-pool exclusion; not available now | Recommended; BLOCKED |
+| B. Re-split existing cases | Cheap | Tuning on dev already exposed r3/prompts; invalid as confirmatory | Rejected |
+| C. Separate structured-only reserved diagnostic beside original held-out | Available now, zero gold-ID overlap | Exercises statistics more than passage ranking; no unseen-document claim | Draft prepared; owner choice needed |
+
+**Artifacts:** `docs/experiments/m7-heldout-v2-design.md`, 60 draft cases in `experiments/gold/heldout_v2_draft.jsonl` (all draft, no human review, blind to outputs), schema, evidence audit, components and `experiments/heldout-v2/FREEZE.md` with gold SHA and run commands. `agent-exp` and `eval` gained `--gold PATH`. No model call, build or index was run. Acceptance rule is fixed in the freeze file before any generation.
+
+**Reversibility:** remove the v2 files and `--gold` option; original gold and results are untouched. **Owner decision pending:** approve new untouched sources for A, or accept C as a separately labelled diagnostic.
+

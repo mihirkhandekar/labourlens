@@ -4,7 +4,7 @@ import {chapter, section, grid, stat, callout, evi, dataTable} from './ui.js';
 const TOOLS = ['get_statistic', 'list_datasets', 'describe_dataset', 'get_dimension_values', 'latest_value', 'compare_periods', 'series_summary', 'get_revisions', 'get_provenance'];
 const CHECKS = {
   'Timeout refusal': ['Slow server', 'A call that exceeds the 1.5 second limit times out.'],
-  'Unavailable refusal': ['Server dies mid-call', 'Reported as unavailable, never as "no data".'],
+  'Unavailable refusal': ['Server dies mid-call', 'Reported as unavailable. It is not returned as "no data".'],
   'Version refusal': ['Unexpected version', 'A server that reports another protocol version is refused.'],
   'Schema refusal': ['Broken output schema', 'A result that breaks its own schema is refused.'],
   'Size refusal': ['400 KB response', 'Refused by the response-size cap.'],
@@ -15,12 +15,12 @@ function diagramFigure() {
   const boxes = [
     {id: 'agent', title: 'Agent', sub: 'LangGraph, read-only', text: 'Calls statistics directly by default. A setting routes get_series through the MCP client.'},
     {id: 'client', title: 'MCP client', sub: 'treats the server as untrusted', text: 'Allow-listed launch, minimal environment, name and version checks, tool allow-list, input schemas, deadlines, size caps, typed result validation, and quarantine of instruction-like content.'},
-    {id: 'server', title: 'MCP server', sub: '9 tools, 2 resources, 1 prompt', text: 'labourlens-stats. Serves statistics and catalogue metadata only. It never serves MOM text. Default transport is stdio; an optional loopback HTTP transport needs a bearer token.'},
-    {id: 'store', title: 'Validated statistics', sub: 'observations and catalogue', text: 'The same validated observation table the agent uses. Every row carries an observation id.'}
+    {id: 'server', title: 'MCP server', sub: '9 tools, 2 resources, 1 prompt', text: 'labourlens-stats. Serves statistics and catalogue metadata only. MOM report text is excluded. Default transport is stdio; an optional loopback HTTP transport needs a bearer token.'},
+    {id: 'store', title: 'Validated statistics', sub: 'observations and catalogue', text: 'The same validated observation table the agent uses. Rows carry observation identifiers.'}
   ];
   return figure({
-    id: 'fig-mcp', title: 'Tools, resources and the trust boundary', wide: true,
-    takeaway: 'The agent, the client and the data are ours. The server is treated as untrusted, so the client checks every response before the agent sees it.',
+    id: 'fig-mcp', title: `A client treats the ${TOOLS.length}-tool MCP server as untrusted and validates every result`, wide: true,
+    takeaway: '',
     summary: `Four boxes in a row: ${boxes.map(b => `${b.title} (${b.sub})`).join(', ')}. A dashed trust boundary sits between the client and the server.`,
     source: {data: 'docs/architecture.md › 5. MCP trust boundary (no report.json field)', files: ['src/labourlens/mcp/server.py', 'src/labourlens/mcp/client.py']},
     draw: (host, c) => {
@@ -89,10 +89,11 @@ function checkCards(m) {
 
 function latencyFigures(m) {
   const mcp = m.section('mcp'), rows = mcp.rows || [], x = mcp.metrics || {};
+  const p50 = rows.find(r => r.metric === 'latency_p50_ms') || rows[0] || {};
   const names = {latency_p50_ms: 'Median per call', latency_p95_ms: 'Slowest 5% of calls'};
   const lat = figure({
-    id: 'fig-mcp-latency', title: 'Direct call against MCP, latency per call',
-    takeaway: rows.length ? `A warm MCP session is slower per call: ${rows[0].mcp} ms against ${rows[0].direct} ms at the median. The first connection also costs ${fmt.num(x.connection_seconds, 2)} s once. In return the data sits behind a typed, discoverable interface.` : 'No latency rows recorded.',
+    id: 'fig-mcp-latency', title: rows.length ? `MCP took ${p50.mcp} ms at the median per call against ${p50.direct} ms direct` : 'Direct call against MCP, latency per call',
+    takeaway: rows.length ? `Connecting once costs ${fmt.num(x.connection_seconds, 2)} s. I kept direct calls as the agent default.` : 'No latency rows recorded.',
     summary: rows.map(r => `${names[r.metric] || r.metric}: direct ${r.direct} ms, MCP ${r.mcp} ms`).join('. '),
     source: {data: 'report.json › mcp.rows[*].{direct,mcp} · mcp.metrics.connection_seconds', files: ['docs/mcp-demo-transcript.md §17']},
     note: 'Warm-session timings exclude the one-off connection (spawn, initialise, discovery).',
@@ -104,8 +105,8 @@ function latencyFigures(m) {
   });
   const same = x.identical_datasets, refused = x.matching_refusals, diff = x.different_outputs, total = x.compared_datasets;
   const parity = figure({
-    id: 'fig-mcp-parity', title: `Same answer either way: ${total} datasets compared`,
-    takeaway: `Of ${total} datasets, ${same} returned identical rows by both routes, ${refused} were refused identically as over-large queries, and ${diff} differed.`,
+    id: 'fig-mcp-parity', title: `MCP output differed from direct calls on ${diff} of ${total} datasets`,
+    takeaway: `${same} identical, ${refused} refused identically as over-large queries.`,
     summary: `${same} identical, ${refused} refused by both, ${diff} different, of ${total}.`,
     source: {data: 'report.json › mcp.metrics.{identical_datasets,matching_refusals,different_outputs,compared_datasets}', files: ['docs/mcp-demo-transcript.md §17']},
     table: () => ({caption: 'Direct against MCP outputs', columns: ['Outcome', 'Datasets'], rows: [['Identical rows', same], ['Both refused', refused], ['Different output', diff]]}),
@@ -116,7 +117,7 @@ function latencyFigures(m) {
 
 function httpTable() {
   const wrap = el('div', 'pr-http pr-reveal');
-  wrap.append(el('h5', 'pr-mini-title', 'Loopback HTTP transport: what was tried'));
+  wrap.append(el('h5', 'pr-mini-title', 'Loopback HTTP transport: 7 hardening attempts'));
   wrap.append(dataTable('Hardening checks, from the saved transcript', ['Attempt', 'Result'], [
     ['Request with no token', 'HTTP 401'], ['Request with a wrong token', 'HTTP 401'], ['Valid token, hostile Host header', 'HTTP 421'], ['Valid token, hostile browser Origin', 'HTTP 403'],
     ['Start bound to 0.0.0.0', 'Refused to start (exit 2)'], ['Start with a 5-character token', 'Refused to start (exit 2)'], ['Client pointed at a non-loopback URL', 'Refused: not_allowed']
@@ -126,11 +127,18 @@ function httpTable() {
 }
 
 export function renderMcp(m, ctx) {
-  const ch = chapter({
-    id: 'mcp', no: 7, eyebrow: 'MCP', title: 'The same statistics, behind a protocol boundary',
-    lede: 'A Model Context Protocol server exposes the validated statistics as read-only tools and resources. A separate client treats it as untrusted. The agent can use either the direct route or this one.'
-  });
   const mcp = m.section('mcp'), x = mcp.metrics || {};
+  const p50 = (mcp.rows || []).find(r => r.metric === 'latency_p50_ms');
+  const ch = chapter({
+    id: 'mcp', no: 7, eyebrow: 'MCP',
+    title: p50 && x.compared_datasets != null ? `MCP output differed from direct calls on ${x.different_outputs} of ${x.compared_datasets} datasets, at ${p50.mcp} ms against ${p50.direct} ms per median call` : 'MCP server and client against direct calls',
+    bullets: [
+      `Server: ${TOOLS.length} read-only tools, 2 resources, 1 prompt. Statistics and catalogue only; no MOM report text.`,
+      `Client: treats the server as untrusted; ${(mcp.checks || []).length} scripted failure behaviours observed.`,
+      'Comparison: the same queries over the direct route and over MCP. Direct is the agent default.',
+      'Limit: a protocol demo on the cases tried, not an audit.'
+    ]
+  });
   const stats = el('div', 'pr-stats');
   stats.append(
     stat({value: TOOLS.length, label: 'Read-only tools', note: 'Plus two resources and one prompt', src: 'docs/architecture.md › 5 · src/labourlens/mcp/server.py'}),
@@ -138,13 +146,13 @@ export function renderMcp(m, ctx) {
     stat({value: x.different_outputs, label: 'Different outputs, MCP against direct', note: `Of ${x.compared_datasets} datasets compared`, tone: 'brass', src: 'report.json › mcp.metrics.different_outputs'}),
     stat({value: x.connection_seconds, format: v => `${v.toFixed(2)} s`, label: 'One-off connection cost', note: 'Spawn, initialise, discovery', src: 'report.json › mcp.metrics.connection_seconds'})
   );
-  const a = section('Architecture');
+  const a = section(`${TOOLS.length} read-only tools and 2 resources behind a client that validates results`);
   a.append(stats, diagramFigure().root, catalogue());
   ch.body.append(a);
-  const b = section('What the client did when the server misbehaved', 'These are scripted runs against a deliberately hostile test server. Each is an observed protocol behaviour, not a general guarantee.');
+  const b = section(`${(mcp.checks || []).length} failure behaviours observed against a hostile test server`, ['Scripted runs, one per behaviour.', 'Each is an observed result, not a general guarantee.']);
   b.append(checkCards(m));
   ch.body.append(b);
-  const c = section('MCP against a direct call');
+  const c = section(x.compared_datasets != null ? `MCP matched direct output on ${x.compared_datasets - (x.different_outputs || 0)} of ${x.compared_datasets} datasets` : 'MCP against a direct call');
   const [lat, parity] = latencyFigures(m);
   c.append(grid('pr-split', lat.root, parity.root), httpTable());
   ch.body.append(c);

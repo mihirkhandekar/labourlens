@@ -179,8 +179,8 @@ def by_family(rows: list[dict]) -> dict:
 
 
 def run(exp: str = "agent-dev-A1", split: str = "dev", labels: list[str] | None = None, judge: bool = True,
-        rejudge_stale: bool = True) -> None:
-    cases = {c["case_id"]: c for c in ev.load_cases(split)}
+        rejudge_stale: bool = True, gold_path=None) -> None:
+    cases = {c["case_id"]: c for c in ev.load_cases(split, gold_path)}
     raw_dir = paths.DATA / "runs" / exp
     pub = paths.EXPERIMENTS / "eval" / exp
     pub.mkdir(parents=True, exist_ok=True)
@@ -208,7 +208,7 @@ def run(exp: str = "agent-dev-A1", split: str = "dev", labels: list[str] | None 
         configs = {r.get("config", "") for r in recs}
         if len(configs) != 1:
             raise ValueError(f"Mixed AgentConfig keys in {f}")
-        provenance = snapshot(next(iter(configs)), len(rows), len(cases))
+        provenance = snapshot(next(iter(configs)), len(rows), len(cases), gold_path=gold_path)
         (pub / f"{label}.metrics.json").write_text(json.dumps({"label": label, "judge": JUDGE_MODEL, "provenance": provenance,
             "metric_definitions": {"cases_with_ungrounded_numbers": "fraction of all scored cases with an ungrounded numeric warning",
                                    "answers_with_ungrounded_numbers": "legacy alias of cases_with_ungrounded_numbers; denominator is all scored cases"},

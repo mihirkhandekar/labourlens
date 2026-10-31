@@ -1,6 +1,6 @@
 {
   "schema_version": "report-1.0",
-  "generated_at": "2026-10-31T03:49:48.875456+00:00",
+  "generated_at": "2026-10-31T04:02:22.051547+00:00",
   "summary": {
     "title": "LabourLens research workbench",
     "scope": [
@@ -59480,6 +59480,402 @@
       "data/export/quality.json"
     ]
   },
+  "work": {
+    "decisions": [
+      {
+        "id": "D-000",
+        "title": "Domain, scope and LangGraph architecture",
+        "status": "",
+        "date": "30 Oct 2026",
+        "alternatives": "",
+        "summary": ""
+      },
+      {
+        "id": "D-001",
+        "title": "Repository is private, shared with reviewers; designed as if it could become public",
+        "status": "",
+        "date": "30 Oct 2026",
+        "alternatives": "public GitHub; private repo; emailed zip.",
+        "summary": "Why: MOM's report PDFs are all-rights-reserved (VERIFIED FACT: notice text read in all four PDFs), so they stay out of Git under every option"
+      },
+      {
+        "id": "D-002",
+        "title": "Two kinds of documents: published and private",
+        "status": "",
+        "date": "30 Oct 2026",
+        "alternatives": "",
+        "summary": "Why: the owner needs interview-prep and scratch research that reviewers should not see, and the assessment asks for specific public deliverables"
+      },
+      {
+        "id": "D-003",
+        "title": "Expand the structured data beyond the four approved datasets",
+        "status": "",
+        "date": "30 Oct 2026",
+        "alternatives": "",
+        "summary": "Owner request (30 Oct 2026): add more structured data to make the project more impressive, including the good-to-haves, and implement them."
+      },
+      {
+        "id": "D-004",
+        "title": "Commit raw dataset CSVs to the private repo",
+        "status": "",
+        "date": "",
+        "alternatives": "",
+        "summary": "PROPOSAL: yes, with the Open Data Licence attribution notice"
+      },
+      {
+        "id": "D-005",
+        "title": "Approve \"Implement Milestone 1\"",
+        "status": "",
+        "date": "30 Oct 2026",
+        "alternatives": "",
+        "summary": ""
+      },
+      {
+        "id": "D-006",
+        "title": "Expand the unstructured corpus beyond the five approved MOM documents",
+        "status": "",
+        "date": "30 Oct 2026",
+        "alternatives": "",
+        "summary": "Owner question (30 Oct 2026): are there more unstructured reports, since RAG needs enough text to be interesting, and the agent must be good."
+      },
+      {
+        "id": "D-007",
+        "title": "UI, deployment and authentication",
+        "status": "",
+        "date": "30 Oct 2026",
+        "alternatives": "",
+        "summary": "Owner request (30 Oct 2026): think about deploying the UI, the interface, and authentication; use kpi-dashboard-design for dashboards; impress with data, design and visualisations."
+      },
+      {
+        "id": "D-008",
+        "title": "What \"a good agent\" means here",
+        "status": "",
+        "date": "",
+        "alternatives": "",
+        "summary": "PROPOSAL (no code before M4): the agent is judged by the evaluation, not by features"
+      },
+      {
+        "id": "D-009",
+        "title": "How documents are stored for RAG in this project",
+        "status": "",
+        "date": "",
+        "alternatives": "",
+        "summary": ""
+      },
+      {
+        "id": "D-010",
+        "title": "Presentation is an interactive report page",
+        "status": "",
+        "date": "30 Oct 2026",
+        "alternatives": "",
+        "summary": ""
+      },
+      {
+        "id": "D-011",
+        "title": "Human feedback loop in the interface",
+        "status": "PROPOSAL",
+        "date": "",
+        "alternatives": "",
+        "summary": ""
+      },
+      {
+        "id": "D-012",
+        "title": "Persist the BM25 index on disk",
+        "status": "DECISION",
+        "date": "30 Oct 2026",
+        "alternatives": "",
+        "summary": "The M2 keyword index is built once and persisted under data/index/, with a hash of the passage corpus and parser version in its name"
+      },
+      {
+        "id": "D-013",
+        "title": "Managed PostgreSQL for the hosted demo",
+        "status": "DECISION",
+        "date": "30 Oct 2026",
+        "alternatives": "",
+        "summary": "Owner preference: use a managed Postgres at the M7 hosted demo to show infrastructure skills"
+      },
+      {
+        "id": "D-014",
+        "title": "DigitalOcean as cloud provider",
+        "status": "DECISION",
+        "date": "30 Oct 2026",
+        "alternatives": "not chosen: other providers (no account preference stated).",
+        "summary": "The M7 hosted demo uses DigitalOcean Managed PostgreSQL (D-013)"
+      },
+      {
+        "id": "D-015",
+        "title": "Chunking for the retrieval baseline",
+        "status": "DECISION",
+        "date": "30 Oct 2026",
+        "alternatives": "",
+        "summary": "Option B: merge adjacent ok passages under the same section heading into chunks of about 120 to 200 words with overlap; tableunreliable and garbled blocks are excluded from the numeric-answer path"
+      },
+      {
+        "id": "D-016",
+        "title": "Experiment policy: compare options that can change outcomes",
+        "status": "DECISION",
+        "date": "30 Oct 2026",
+        "alternatives": "",
+        "summary": "Where credible options could produce different quality, cost or latency, compare them under a controlled setup and report the results in the evaluation report, for M2 and later milestones"
+      },
+      {
+        "id": "D-017",
+        "title": "Gold set authoring and review",
+        "status": "DECISION",
+        "date": "30 Oct 2026",
+        "alternatives": "",
+        "summary": "Option A: the assistant drafts about 50 questions with candidate evidence for the development and held-out splits, and the owner reviews and corrects every one"
+      },
+      {
+        "id": "D-018",
+        "title": "M2 experiment protocol and what is not locked",
+        "status": "DECISION",
+        "date": "30 Oct 2026",
+        "alternatives": "",
+        "summary": ""
+      },
+      {
+        "id": "D-019",
+        "title": "Corpus expansion: options A and B, plus about 20 quarterly datasets",
+        "status": "DECISION",
+        "date": "30 Oct 2026",
+        "alternatives": "",
+        "summary": "Scope change to ADR-001/D-006, approved by the owner: (A) fill the in-scope hole with the six missing MOM Labour Market Reports for 1Q 2024 to 2Q 2025 and their advance and final press releases; (B) add context document…"
+      },
+      {
+        "id": "D-020",
+        "title": "Cap corpus expansion at D-019; prioritise missing requirements",
+        "status": "DECISION",
+        "date": "30 Oct 2026",
+        "alternatives": "",
+        "summary": "No further corpus, dataset or baseline-experiment expansion beyond the D-019 batches (30 documents, about 20 datasets)"
+      },
+      {
+        "id": "D-021",
+        "title": "Hosted OpenAI embeddings for dense retrieval",
+        "status": "DECISION",
+        "date": "30 Oct 2026",
+        "alternatives": "",
+        "summary": "Dense retrieval uses a hosted OpenAI embedding model"
+      },
+      {
+        "id": "D-022",
+        "title": "Model selection by experiment on our test set",
+        "status": "DECISION",
+        "date": "30 Oct 2026",
+        "alternatives": "",
+        "summary": "Owner confirmed sending MOM passages to the OpenAI API is acceptable (resolves the D-021 risk; the OpenAI data-use terms are still unverified)"
+      },
+      {
+        "id": "D-023",
+        "title": "M3 retrieval findings",
+        "status": "MEASURED",
+        "date": "30 Oct 2026",
+        "alternatives": "",
+        "summary": "Dense and hybrid beat BM25 on dev (MRR 0.31 to 0.43 to 0.53; hybrid-RRF on merge200 reaches hit@10 0.79)"
+      },
+      {
+        "id": "D-024",
+        "title": "Answer format: claim-level citations with verbatim quotes",
+        "status": "DECISION",
+        "date": "30 Oct 2026",
+        "alternatives": "",
+        "summary": "Each answer is a structured object: status (answered, abstained, clarify, refused), summary, claims[] (each with text and citations[]), caveats[], clarificationquestion, reason"
+      },
+      {
+        "id": "D-025",
+        "title": "M3 answer-generation findings",
+        "status": "MEASURED",
+        "date": "30 Oct 2026",
+        "alternatives": "",
+        "summary": "Retrieval, not the model, limits quality: gold passage in context in 58% of cases at k=5, 69% at k=8; oracle evidence lifts every model"
+      },
+      {
+        "id": "D-026",
+        "title": "Abstention policy: prefer declining to a wrong answer",
+        "status": "DECISION",
+        "date": "30 Oct 2026",
+        "alternatives": "",
+        "summary": "When evidence is missing or the question is ambiguous, the system should abstain or ask for clarification rather than answer"
+      },
+      {
+        "id": "D-027",
+        "title": "M4 agent design as built",
+        "status": "DECISION",
+        "date": "30 Oct 2026",
+        "alternatives": "",
+        "summary": "LangGraph StateGraph with the seven ADR-002 nodes; tools searchreports, getseries, calculatechange (the other two candidate tools dropped); bounds 2 rounds, 6 calls, 10 s per call, one retry, one repair"
+      },
+      {
+        "id": "D-028",
+        "title": "MCP server, client trust boundary and threat controls",
+        "status": "DECISION",
+        "date": "30 Oct 2026",
+        "alternatives": "rejected: HTTP transport with OAuth (more surface, no benefit for a local demo), a hand-rolled JSON-RPC server (the SDK gives the protocol for free and is what a reviewer expects), serving report text over MCP (rights, D-001).",
+        "summary": "Built: official mcp SDK 2.3.0 server over stdio with one read-only tool (getstatistic), resources labourlens://sources and labourlens://source/{id} (catalogue metadata only, no MOM text), and one prompt"
+      },
+      {
+        "id": "D-029",
+        "title": "M6 retrieval improvements: query-metadata filter and LLM rerank",
+        "status": "MEASURED",
+        "date": "30 Oct 2026",
+        "alternatives": "",
+        "summary": "Current MEASURED result — gold v3.2 scope correction: PYTHONHASHSEED=0 uv run labourlens retrieval-exp2 reran on 128 answerable dev text cases after D-031, gold SHA-256 647b26a2f0faa86be30ad897840bc1887b54f55c27268d1415…"
+      },
+      {
+        "id": "D-030",
+        "title": "Default agent retrieval after end-to-end dev comparison",
+        "status": "DECISION / MEASURED",
+        "date": "30 Oct 2026",
+        "alternatives": "",
+        "summary": "DECISION: use r3 period/release filtering plus reranking as the agent default"
+      },
+      {
+        "id": "D-031",
+        "title": "Supported analysis period is a hard scope",
+        "status": "DECISION",
+        "date": "30 Oct 2026",
+        "alternatives": "",
+        "summary": "The supported analysis period is 1Q 2024 to 2Q 2026 inclusive"
+      },
+      {
+        "id": "D-032",
+        "title": "plannerv2 tested, not adopted",
+        "status": "DECISION / MEASURED",
+        "date": "30 Oct 2026",
+        "alternatives": "",
+        "summary": "Historical v3.2 boundary: original numbers below remain audit history; D-036 records v3.5 A5 .911/.916 versus A3 .903/.903, still no demonstrated benefit or adoption."
+      },
+      {
+        "id": "D-033",
+        "title": "Held-out executed; R3 gain inconclusive",
+        "status": "DECISION / MEASURED",
+        "date": "31 Oct 2026",
+        "alternatives": "",
+        "summary": "Historical result boundary: D-033 records original v3.2 scoring/freeze; D-034 records v3.3 sensitivity and D-035 v3.4 sensitivity"
+      },
+      {
+        "id": "D-034",
+        "title": "HO-029 post-run gold adjudication",
+        "status": "DECISION / MEASURED",
+        "date": "31 Oct 2026",
+        "alternatives": "",
+        "summary": "DECISION / approval: on 31 Oct 2026, the owner replied “Okay” to the recommendation to correct HO-029 from refuse to ignoreinjectionandanswer, add public Q1 2026 source evidence/reference facts, and disclose the change…"
+      },
+      {
+        "id": "D-035",
+        "title": "Three post-run gold corrections and sensitivity",
+        "status": "DECISION / MEASURED",
+        "date": "31 Oct 2026",
+        "alternatives": "",
+        "summary": "Historical v3.4 boundary: hashes/counts/review status/scores here describe that version"
+      },
+      {
+        "id": "D-036",
+        "title": "Owner per-card review and v3.5 adjudication",
+        "status": "DECISION",
+        "date": "31 Oct 2026",
+        "alternatives": "",
+        "summary": "DECISION / approval: on 31 Oct 2026, the owner explicitly confirmed “Yes I confirm”: HO-022 clarify → answer; DEV-018 refuse → clarify"
+      }
+    ],
+    "milestones": [
+      {
+        "id": "M1.0",
+        "name": "Repo hygiene: .gitignore, private/public doc split, handoff docs",
+        "status": "done"
+      },
+      {
+        "id": "M1.1",
+        "name": "Verify sources, rights, schemas; freeze manifest",
+        "status": "done"
+      },
+      {
+        "id": "M1.2",
+        "name": "Models, manifest, acquisition with throttle and hashes",
+        "status": "done"
+      },
+      {
+        "id": "M1.3",
+        "name": "Dataset normalizers, Parquet, DuckDB read layer",
+        "status": "done"
+      },
+      {
+        "id": "M1.4",
+        "name": "PDF and HTML passage extraction with quality flags",
+        "status": "done"
+      },
+      {
+        "id": "M1.5",
+        "name": "Quality report, advance/final/dataset reconciliation",
+        "status": "done"
+      },
+      {
+        "id": "M1.6",
+        "name": "Clean-room run, data sheet, study note, commit proposal",
+        "status": "historical execution recorded; 30 source cards now decided; rights/basis gaps remain"
+      },
+      {
+        "id": "M2",
+        "name": "BM25 baseline and gold",
+        "status": "implemented; 45 owner-reviewed gold cards, 223 drafts; historical held-out freeze/execution recorded separately"
+      },
+      {
+        "id": "M3",
+        "name": "Dense/hybrid retrieval and cited generation",
+        "status": "implemented; dev comparisons recorded"
+      },
+      {
+        "id": "M4",
+        "name": "Bounded research agent and deterministic tools",
+        "status": "implemented; dev results recorded"
+      },
+      {
+        "id": "M5",
+        "name": "MCP and responsible-AI controls",
+        "status": "implemented; final corrected-fixture paired r3 threat runs recorded; planted-figure and subtle-instruction failures remain"
+      },
+      {
+        "id": "M6.1",
+        "name": "Evaluation harness and dev comparisons",
+        "status": "A1–A5 saved outputs rescored against v3.5 using --no-judge; no new model calls; prior v3.2 history preserved"
+      },
+      {
+        "id": "M6.2",
+        "name": "Gold and owner adjudication",
+        "status": "v3.5: 268 cases, 237 dev/31 held-out, 45 reviewed/223 drafts; HO-022 answer and DEV-018 clarify confirmed by chat (D-036); all evidence IDs retained"
+      },
+      {
+        "id": "M6.3",
+        "name": "Answer-review sample",
+        "status": "40 per-card owner verdicts complete: 25 correct, six partly correct, nine incorrect; not a blind population estimate or independent inter-rater evidence"
+      },
+      {
+        "id": "M6.4",
+        "name": "Freeze protocol and held-out evaluation",
+        "status": "original v3.2 generation preserved; v3.3/v3.4 sensitivities historical; HO-022 owner label changed post-run; v3.5 saved-output rescoring and stale-judgment refresh complete, paired gains still inconc…"
+      },
+      {
+        "id": "M7.1",
+        "name": "Report application, live research and audit/feedback",
+        "status": "implementation exists; current checkout not reverified in this refresh"
+      },
+      {
+        "id": "M7.2",
+        "name": "Deployment setup",
+        "status": "files and instructions exist; deployment not established by these files"
+      },
+      {
+        "id": "M7.3",
+        "name": "Written submission and demo materials",
+        "status": "documentation refresh in progress; final completeness review pending"
+      }
+    ],
+    "provenance": [
+      "docs/decisions.md",
+      "docs/progress.md"
+    ]
+  },
   "limitations": [
     "Model outputs are not published.",
     "Report passages are not published.",
@@ -59489,7 +59885,7 @@
     "The population basis of the dataset employment series is unverified."
   ],
   "provenance": {
-    "commit": "456ffa9b44c998dd348413fbaacaa288ceda744f",
+    "commit": "f3e947bcb435358a20f3b61ec46dac3f59d51b50",
     "artifacts": [
       {
         "path": "data/export/sources.json",
@@ -60105,6 +60501,16 @@
         "path": "experiments/runs/web-live-smoke.trace.json",
         "status": "available",
         "sha256": "b6207bf4aab049fac5e62f23feffe60e35b3a4138dbaa4dab8e4017d8faddf58"
+      },
+      {
+        "path": "docs/decisions.md",
+        "status": "available",
+        "sha256": "a7f2d43f4aea8829f7e10f204ccc46f0b7ef97723ae22c2c681fd8c7e5d7db40"
+      },
+      {
+        "path": "docs/progress.md",
+        "status": "available",
+        "sha256": "cd3cbffd2489f878442ea94c69d6ae4b9a3482f306a8ecd60a5afb88a8eff2c7"
       }
     ],
     "policy": "Committed artifacts only; numeric fields only."

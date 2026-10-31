@@ -1,0 +1,2080 @@
+{
+  "version": "3.6",
+  "change": "evidence-id migration only",
+  "before_gold_sha256": "aac4b405b51c7cebf019c3b3629509ecb711be32fb830a8e78c4c7b902219e09",
+  "after_gold_sha256": "6169a9deca78cb5908c584bdf7d17b1c8dd9a15ff7840b3752f3bbb4febb2f9b",
+  "non_id_fields_sha256": "552a4687878d336580292a77b2438e62a75145c5d82116cd4db93a5bebf2d15e",
+  "missing_ids": [
+    {
+      "old_passage_id": "mom-2024-q1-final-release:s01:i003:b463ca65",
+      "new_passage_ids": [
+        "mom-2024-q1-final-release:s02:i003:b463ca65"
+      ],
+      "references": [
+        {
+          "case_id": "DEV-501",
+          "field": "evidence_text"
+        },
+        {
+          "case_id": "DEV-202",
+          "field": "context_only_evidence_text"
+        }
+      ],
+      "old_text_sha256": "b463ca6519a62905de355fc03222ba01530749b79ca5992c327e42ed9e4d38ef",
+      "new_text_sha256": [
+        "b463ca6519a62905de355fc03222ba01530749b79ca5992c327e42ed9e4d38ef"
+      ],
+      "exact_joined_text": true,
+      "old_word_count": 157,
+      "new_word_count": 157,
+      "old_word_overlap": 157,
+      "removed_nonsemantic_tokens": [],
+      "status": "verified_text_overlap_not_human_review"
+    },
+    {
+      "old_passage_id": "mom-2024-q1-final-release:s01:i007:dd6f2d09",
+      "new_passage_ids": [
+        "mom-2024-q1-final-release:s03:i003:dd6f2d09"
+      ],
+      "references": [
+        {
+          "case_id": "DEV-201",
+          "field": "evidence_text"
+        }
+      ],
+      "old_text_sha256": "dd6f2d09a041053ac074ff2abb3b5f4825ef9902eed71c28596145161934ed8c",
+      "new_text_sha256": [
+        "dd6f2d09a041053ac074ff2abb3b5f4825ef9902eed71c28596145161934ed8c"
+      ],
+      "exact_joined_text": true,
+      "old_word_count": 16,
+      "new_word_count": 16,
+      "old_word_overlap": 16,
+      "removed_nonsemantic_tokens": [],
+      "status": "verified_text_overlap_not_human_review"
+    },
+    {
+      "old_passage_id": "mom-2024-q1-final-release:s01:i011:0bc09e03",
+      "new_passage_ids": [
+        "mom-2024-q1-final-release:s04:i001:0bc09e03"
+      ],
+      "references": [
+        {
+          "case_id": "DEV-326",
+          "field": "evidence_text"
+        }
+      ],
+      "old_text_sha256": "0bc09e030e0b53319a92e7fced6d32e3d68cb7fb3244cd46b975370f2bdf05fc",
+      "new_text_sha256": [
+        "0bc09e030e0b53319a92e7fced6d32e3d68cb7fb3244cd46b975370f2bdf05fc"
+      ],
+      "exact_joined_text": true,
+      "old_word_count": 70,
+      "new_word_count": 70,
+      "old_word_overlap": 70,
+      "removed_nonsemantic_tokens": [],
+      "status": "verified_text_overlap_not_human_review"
+    },
+    {
+      "old_passage_id": "mom-2024-q1-final-release:s01:i013:567c4460",
+      "new_passage_ids": [
+        "mom-2024-q1-final-release:s05:i001:567c4460"
+      ],
+      "references": [
+        {
+          "case_id": "DEV-301",
+          "field": "evidence_text"
+        }
+      ],
+      "old_text_sha256": "567c4460f84cdf618f21fd6175a52d332a1c2216858dda825b11ce292b48d93c",
+      "new_text_sha256": [
+        "567c4460f84cdf618f21fd6175a52d332a1c2216858dda825b11ce292b48d93c"
+      ],
+      "exact_joined_text": true,
+      "old_word_count": 89,
+      "new_word_count": 89,
+      "old_word_overlap": 89,
+      "removed_nonsemantic_tokens": [],
+      "status": "verified_text_overlap_not_human_review"
+    },
+    {
+      "old_passage_id": "mom-2024-q1-final-release:s01:i015:66871b58",
+      "new_passage_ids": [
+        "mom-2024-q1-final-release:s05:i003:5f81a2f1",
+        "mom-2024-q1-final-release:s05:i004:01b56c0a"
+      ],
+      "references": [
+        {
+          "case_id": "DEV-307",
+          "field": "evidence_text"
+        }
+      ],
+      "old_text_sha256": "66871b58cab7a302f29f503c955aeaa4cc87fe76ddff4e2ecd38dfebc8e59cc2",
+      "new_text_sha256": [
+        "5f81a2f14892ea1db9c2e97c4dac9575d98f7b5323f03a02afac37a3837c66ae",
+        "01b56c0a0a85ca7610f9f313b4f7f26d3a5504066271536d911f9adb37273bb7"
+      ],
+      "exact_joined_text": true,
+      "old_word_count": 78,
+      "new_word_count": 78,
+      "old_word_overlap": 78,
+      "removed_nonsemantic_tokens": [],
+      "status": "verified_text_overlap_not_human_review"
+    },
+    {
+      "old_passage_id": "mom-2024-q3-advance:s05:i001:6f5c6a06",
+      "new_passage_ids": [
+        "mom-2024-q3-advance:s06:i001:6f5c6a06"
+      ],
+      "references": [
+        {
+          "case_id": "DEV-212",
+          "field": "evidence_text"
+        }
+      ],
+      "old_text_sha256": "6f5c6a067c74be28440292fcbee7f6432f70ca751db1f67841466d47eaa4785a",
+      "new_text_sha256": [
+        "6f5c6a067c74be28440292fcbee7f6432f70ca751db1f67841466d47eaa4785a"
+      ],
+      "exact_joined_text": true,
+      "old_word_count": 83,
+      "new_word_count": 83,
+      "old_word_overlap": 83,
+      "removed_nonsemantic_tokens": [],
+      "status": "verified_text_overlap_not_human_review"
+    },
+    {
+      "old_passage_id": "mom-2024-q3-advance:s06:i006:4a27f455",
+      "new_passage_ids": [
+        "mom-2024-q3-advance:s07:i006:4a27f455"
+      ],
+      "references": [
+        {
+          "case_id": "DEV-210",
+          "field": "evidence_text"
+        }
+      ],
+      "old_text_sha256": "4a27f45513437ccf17e7abc503d0096b4208b23990be197f8e210d55cbbefce9",
+      "new_text_sha256": [
+        "4a27f45513437ccf17e7abc503d0096b4208b23990be197f8e210d55cbbefce9"
+      ],
+      "exact_joined_text": true,
+      "old_word_count": 48,
+      "new_word_count": 48,
+      "old_word_overlap": 48,
+      "removed_nonsemantic_tokens": [],
+      "status": "verified_text_overlap_not_human_review"
+    },
+    {
+      "old_passage_id": "mom-2024-q3-final-release:s01:i003:e7354cad",
+      "new_passage_ids": [
+        "mom-2024-q3-final-release:s02:i003:e7354cad"
+      ],
+      "references": [
+        {
+          "case_id": "DEV-314",
+          "field": "evidence_text"
+        },
+        {
+          "case_id": "DEV-209",
+          "field": "evidence_text"
+        }
+      ],
+      "old_text_sha256": "e7354cad9c1a8c719bca0769acff1c72ffc1bffbc48558c8c5b22da45e63efdc",
+      "new_text_sha256": [
+        "e7354cad9c1a8c719bca0769acff1c72ffc1bffbc48558c8c5b22da45e63efdc"
+      ],
+      "exact_joined_text": true,
+      "old_word_count": 89,
+      "new_word_count": 89,
+      "old_word_overlap": 89,
+      "removed_nonsemantic_tokens": [],
+      "status": "verified_text_overlap_not_human_review"
+    },
+    {
+      "old_passage_id": "mom-2024-q3-final-release:s01:i010:a3b96c55",
+      "new_passage_ids": [
+        "mom-2024-q3-final-release:s04:i006:a3b96c55"
+      ],
+      "references": [
+        {
+          "case_id": "DEV-514",
+          "field": "evidence_text"
+        },
+        {
+          "case_id": "DEV-211",
+          "field": "evidence_text"
+        }
+      ],
+      "old_text_sha256": "a3b96c55ab6289874ee165b4f6082961440b29b75aaf59a806dc020df5177d57",
+      "new_text_sha256": [
+        "a3b96c55ab6289874ee165b4f6082961440b29b75aaf59a806dc020df5177d57"
+      ],
+      "exact_joined_text": true,
+      "old_word_count": 50,
+      "new_word_count": 50,
+      "old_word_overlap": 50,
+      "removed_nonsemantic_tokens": [],
+      "status": "verified_text_overlap_not_human_review"
+    },
+    {
+      "old_passage_id": "mom-2024-q3-final-release:s01:i012:adea6048",
+      "new_passage_ids": [
+        "mom-2024-q3-final-release:s05:i001:adea6048"
+      ],
+      "references": [
+        {
+          "case_id": "DEV-503",
+          "field": "evidence_text"
+        }
+      ],
+      "old_text_sha256": "adea60482405c6c88f2eadec850cc9db8eaf2b87b643f69cf636752678e5f1bd",
+      "new_text_sha256": [
+        "adea60482405c6c88f2eadec850cc9db8eaf2b87b643f69cf636752678e5f1bd"
+      ],
+      "exact_joined_text": true,
+      "old_word_count": 64,
+      "new_word_count": 64,
+      "old_word_overlap": 64,
+      "removed_nonsemantic_tokens": [],
+      "status": "verified_text_overlap_not_human_review"
+    },
+    {
+      "old_passage_id": "mom-2024-q3-final-release:s01:i016:5de77f22",
+      "new_passage_ids": [
+        "mom-2024-q3-final-release:s05:i005:5de77f22"
+      ],
+      "references": [
+        {
+          "case_id": "DEV-330",
+          "field": "evidence_text"
+        }
+      ],
+      "old_text_sha256": "5de77f22ce90a0f88cccddc7b892c0fa0dd75b4d4dd2704866472f18d1ad75b3",
+      "new_text_sha256": [
+        "5de77f22ce90a0f88cccddc7b892c0fa0dd75b4d4dd2704866472f18d1ad75b3"
+      ],
+      "exact_joined_text": true,
+      "old_word_count": 55,
+      "new_word_count": 55,
+      "old_word_overlap": 55,
+      "removed_nonsemantic_tokens": [],
+      "status": "verified_text_overlap_not_human_review"
+    },
+    {
+      "old_passage_id": "mom-2024-q3-final-release:s01:i017:307edb1c",
+      "new_passage_ids": [
+        "mom-2024-q3-final-release:s05:i006:307edb1c"
+      ],
+      "references": [
+        {
+          "case_id": "DEV-317",
+          "field": "evidence_text"
+        }
+      ],
+      "old_text_sha256": "307edb1cc844a863c447f908f24112dce4260cb60341009b7e9347c656dd6bc5",
+      "new_text_sha256": [
+        "307edb1cc844a863c447f908f24112dce4260cb60341009b7e9347c656dd6bc5"
+      ],
+      "exact_joined_text": true,
+      "old_word_count": 69,
+      "new_word_count": 69,
+      "old_word_overlap": 69,
+      "removed_nonsemantic_tokens": [],
+      "status": "verified_text_overlap_not_human_review"
+    },
+    {
+      "old_passage_id": "mom-2024-q3-final:p037:b027:49f8f6dd",
+      "new_passage_ids": [
+        "mom-2024-q3-final:p037:b027:1db7abe7"
+      ],
+      "references": [
+        {
+          "case_id": "HO-003",
+          "field": "evidence_text"
+        }
+      ],
+      "old_text_sha256": "49f8f6ddb379acea8b4f6fb4cef60b2376109a0231d756edcf5fb2f05bb41dda",
+      "new_text_sha256": [
+        "1db7abe703900e5f1d8dce20dd46930724f650736c905d120365bb2280a5059f"
+      ],
+      "exact_joined_text": false,
+      "old_word_count": 104,
+      "new_word_count": 103,
+      "old_word_overlap": 103,
+      "removed_nonsemantic_tokens": [
+        [
+          "a12"
+        ]
+      ],
+      "status": "verified_text_overlap_not_human_review"
+    },
+    {
+      "old_passage_id": "mom-2024-q4-advance:s04:i001:3884d30d",
+      "new_passage_ids": [
+        "mom-2024-q4-advance:s05:i001:3884d30d"
+      ],
+      "references": [
+        {
+          "case_id": "DEV-216",
+          "field": "evidence_text"
+        }
+      ],
+      "old_text_sha256": "3884d30d03512cb0538a3bc2b15b7d93d5efc99b14e5414a0d86c22a28859eca",
+      "new_text_sha256": [
+        "3884d30d03512cb0538a3bc2b15b7d93d5efc99b14e5414a0d86c22a28859eca"
+      ],
+      "exact_joined_text": true,
+      "old_word_count": 88,
+      "new_word_count": 88,
+      "old_word_overlap": 88,
+      "removed_nonsemantic_tokens": [],
+      "status": "verified_text_overlap_not_human_review"
+    },
+    {
+      "old_passage_id": "mom-2024-q4-advance:s04:i002:ad98cd85",
+      "new_passage_ids": [
+        "mom-2024-q4-advance:s05:i002:ad98cd85"
+      ],
+      "references": [
+        {
+          "case_id": "DEV-214",
+          "field": "evidence_text"
+        }
+      ],
+      "old_text_sha256": "ad98cd853dcdb2a42582ef096aa4ed2a8f1eb42563634af210683f2bb007f9df",
+      "new_text_sha256": [
+        "ad98cd853dcdb2a42582ef096aa4ed2a8f1eb42563634af210683f2bb007f9df"
+      ],
+      "exact_joined_text": true,
+      "old_word_count": 100,
+      "new_word_count": 100,
+      "old_word_overlap": 100,
+      "removed_nonsemantic_tokens": [],
+      "status": "verified_text_overlap_not_human_review"
+    },
+    {
+      "old_passage_id": "mom-2024-q4-final-release:s01:i008:7990024f",
+      "new_passage_ids": [
+        "mom-2024-q4-final-release:s02:i008:7990024f"
+      ],
+      "references": [
+        {
+          "case_id": "DEV-213",
+          "field": "evidence_text"
+        }
+      ],
+      "old_text_sha256": "7990024f9d72470033e7badbde070e43d651c873b86ff719f91ff761ae89ac2e",
+      "new_text_sha256": [
+        "7990024f9d72470033e7badbde070e43d651c873b86ff719f91ff761ae89ac2e"
+      ],
+      "exact_joined_text": true,
+      "old_word_count": 73,
+      "new_word_count": 73,
+      "old_word_overlap": 73,
+      "removed_nonsemantic_tokens": [],
+      "status": "verified_text_overlap_not_human_review"
+    },
+    {
+      "old_passage_id": "mom-2024-q4-final-release:s02:i001:8dffa418",
+      "new_passage_ids": [
+        "mom-2024-q4-final-release:s03:i001:8dffa418"
+      ],
+      "references": [
+        {
+          "case_id": "DEV-515",
+          "field": "evidence_text"
+        },
+        {
+          "case_id": "DEV-327",
+          "field": "evidence_text"
+        }
+      ],
+      "old_text_sha256": "8dffa418ba01b88f31b74da3486ab3946e4ad00c3b25551bf8aafa7cf06fad06",
+      "new_text_sha256": [
+        "8dffa418ba01b88f31b74da3486ab3946e4ad00c3b25551bf8aafa7cf06fad06"
+      ],
+      "exact_joined_text": true,
+      "old_word_count": 38,
+      "new_word_count": 38,
+      "old_word_overlap": 38,
+      "removed_nonsemantic_tokens": [],
+      "status": "verified_text_overlap_not_human_review"
+    },
+    {
+      "old_passage_id": "mom-2024-q4-final-release:s02:i004:7ac8298c",
+      "new_passage_ids": [
+        "mom-2024-q4-final-release:s03:i004:7ac8298c"
+      ],
+      "references": [
+        {
+          "case_id": "DEV-504",
+          "field": "evidence_text"
+        },
+        {
+          "case_id": "DEV-303",
+          "field": "evidence_text"
+        },
+        {
+          "case_id": "DEV-318",
+          "field": "evidence_text"
+        }
+      ],
+      "old_text_sha256": "7ac8298cee26e93be880a7f65f993a1678513db468df3c0fe9a6291312cd09c1",
+      "new_text_sha256": [
+        "7ac8298cee26e93be880a7f65f993a1678513db468df3c0fe9a6291312cd09c1"
+      ],
+      "exact_joined_text": true,
+      "old_word_count": 78,
+      "new_word_count": 78,
+      "old_word_overlap": 78,
+      "removed_nonsemantic_tokens": [],
+      "status": "verified_text_overlap_not_human_review"
+    },
+    {
+      "old_passage_id": "mom-2024-q4-final-release:s02:i006:84708b24",
+      "new_passage_ids": [
+        "mom-2024-q4-final-release:s03:i006:84708b24"
+      ],
+      "references": [
+        {
+          "case_id": "DEV-215",
+          "field": "evidence_text"
+        }
+      ],
+      "old_text_sha256": "84708b2430c3fd813f21fbfd463066238cdbd27b1fb56db2e57e65b12d630b55",
+      "new_text_sha256": [
+        "84708b2430c3fd813f21fbfd463066238cdbd27b1fb56db2e57e65b12d630b55"
+      ],
+      "exact_joined_text": true,
+      "old_word_count": 30,
+      "new_word_count": 30,
+      "old_word_overlap": 30,
+      "removed_nonsemantic_tokens": [],
+      "status": "verified_text_overlap_not_human_review"
+    },
+    {
+      "old_passage_id": "mom-2024-q4-final-release:s03:i001:796888ef",
+      "new_passage_ids": [
+        "mom-2024-q4-final-release:s04:i001:796888ef"
+      ],
+      "references": [
+        {
+          "case_id": "DEV-330",
+          "field": "evidence_text"
+        },
+        {
+          "case_id": "DEV-332",
+          "field": "evidence_text"
+        }
+      ],
+      "old_text_sha256": "796888ef08e192b1d7db18edb344a6c66427b8e976eb6b3f8b31371c8e3c6962",
+      "new_text_sha256": [
+        "796888ef08e192b1d7db18edb344a6c66427b8e976eb6b3f8b31371c8e3c6962"
+      ],
+      "exact_joined_text": true,
+      "old_word_count": 80,
+      "new_word_count": 80,
+      "old_word_overlap": 80,
+      "removed_nonsemantic_tokens": [],
+      "status": "verified_text_overlap_not_human_review"
+    },
+    {
+      "old_passage_id": "mom-2025-q1-final-release:s01:i001:b0363360",
+      "new_passage_ids": [
+        "mom-2025-q1-final-release:s02:i001:b0363360"
+      ],
+      "references": [
+        {
+          "case_id": "DEV-331",
+          "field": "evidence_text"
+        }
+      ],
+      "old_text_sha256": "b03633601e1d6b951b5e40f86669120bc1e401ddf01d7e865d277dcb8e1aa6ae",
+      "new_text_sha256": [
+        "b03633601e1d6b951b5e40f86669120bc1e401ddf01d7e865d277dcb8e1aa6ae"
+      ],
+      "exact_joined_text": true,
+      "old_word_count": 65,
+      "new_word_count": 65,
+      "old_word_overlap": 65,
+      "removed_nonsemantic_tokens": [],
+      "status": "verified_text_overlap_not_human_review"
+    },
+    {
+      "old_passage_id": "mom-2025-q1-final-release:s01:i004:aa31236a",
+      "new_passage_ids": [
+        "mom-2025-q1-final-release:s02:i004:aa31236a"
+      ],
+      "references": [
+        {
+          "case_id": "DEV-219",
+          "field": "evidence_text"
+        }
+      ],
+      "old_text_sha256": "aa31236a3a4009a293f21eb275946d231f7c73a944f461505d5eee42d480dffc",
+      "new_text_sha256": [
+        "aa31236a3a4009a293f21eb275946d231f7c73a944f461505d5eee42d480dffc"
+      ],
+      "exact_joined_text": true,
+      "old_word_count": 47,
+      "new_word_count": 47,
+      "old_word_overlap": 47,
+      "removed_nonsemantic_tokens": [],
+      "status": "verified_text_overlap_not_human_review"
+    },
+    {
+      "old_passage_id": "mom-2025-q1-final-release:s01:i005:e7a4c903",
+      "new_passage_ids": [
+        "mom-2025-q1-final-release:s02:i005:e7a4c903"
+      ],
+      "references": [
+        {
+          "case_id": "DEV-315",
+          "field": "evidence_text"
+        },
+        {
+          "case_id": "DEV-217",
+          "field": "evidence_text"
+        }
+      ],
+      "old_text_sha256": "e7a4c903f3954e411366a86b278b0dcbb66d4df477ae44106d7fd14d0af9304e",
+      "new_text_sha256": [
+        "e7a4c903f3954e411366a86b278b0dcbb66d4df477ae44106d7fd14d0af9304e"
+      ],
+      "exact_joined_text": true,
+      "old_word_count": 83,
+      "new_word_count": 83,
+      "old_word_overlap": 83,
+      "removed_nonsemantic_tokens": [],
+      "status": "verified_text_overlap_not_human_review"
+    },
+    {
+      "old_passage_id": "mom-2025-q1-final-release:s01:i006:9cf7838a",
+      "new_passage_ids": [
+        "mom-2025-q1-final-release:s02:i006:9cf7838a"
+      ],
+      "references": [
+        {
+          "case_id": "DEV-505",
+          "field": "evidence_text"
+        },
+        {
+          "case_id": "DEV-304",
+          "field": "evidence_text"
+        }
+      ],
+      "old_text_sha256": "9cf7838ab02d8ed7b900b0da4fe5a73abd664360a70ad627f3dfe1b61fd47abc",
+      "new_text_sha256": [
+        "9cf7838ab02d8ed7b900b0da4fe5a73abd664360a70ad627f3dfe1b61fd47abc"
+      ],
+      "exact_joined_text": true,
+      "old_word_count": 126,
+      "new_word_count": 126,
+      "old_word_overlap": 126,
+      "removed_nonsemantic_tokens": [],
+      "status": "verified_text_overlap_not_human_review"
+    },
+    {
+      "old_passage_id": "mom-2025-q1-final-release:s02:i002:de8ee350",
+      "new_passage_ids": [
+        "mom-2025-q1-final-release:s03:i002:de8ee350"
+      ],
+      "references": [
+        {
+          "case_id": "DEV-217",
+          "field": "evidence_text"
+        }
+      ],
+      "old_text_sha256": "de8ee35052a85b16dcb214a59fdd84e2fdfef2bdff92cce16098966935e15ecb",
+      "new_text_sha256": [
+        "de8ee35052a85b16dcb214a59fdd84e2fdfef2bdff92cce16098966935e15ecb"
+      ],
+      "exact_joined_text": true,
+      "old_word_count": 135,
+      "new_word_count": 135,
+      "old_word_overlap": 135,
+      "removed_nonsemantic_tokens": [],
+      "status": "verified_text_overlap_not_human_review"
+    },
+    {
+      "old_passage_id": "mom-2025-q2-advance:s03:i003:6ab22584",
+      "new_passage_ids": [
+        "mom-2025-q2-advance:s04:i003:6ab22584"
+      ],
+      "references": [
+        {
+          "case_id": "DEV-220",
+          "field": "evidence_text"
+        }
+      ],
+      "old_text_sha256": "6ab22584f60079e3a2892e92973ad5c2df712875abdba6ba21c934a466e8c289",
+      "new_text_sha256": [
+        "6ab22584f60079e3a2892e92973ad5c2df712875abdba6ba21c934a466e8c289"
+      ],
+      "exact_joined_text": true,
+      "old_word_count": 18,
+      "new_word_count": 18,
+      "old_word_overlap": 18,
+      "removed_nonsemantic_tokens": [],
+      "status": "verified_text_overlap_not_human_review"
+    },
+    {
+      "old_passage_id": "mom-2025-q2-advance:s06:i001:cb4f8369",
+      "new_passage_ids": [
+        "mom-2025-q2-advance:s07:i001:cb4f8369"
+      ],
+      "references": [
+        {
+          "case_id": "DEV-222",
+          "field": "evidence_text"
+        }
+      ],
+      "old_text_sha256": "cb4f8369b60e9bcc7ccc2d162cdfa95e1ed306f29afcdebdf5b420edf987721a",
+      "new_text_sha256": [
+        "cb4f8369b60e9bcc7ccc2d162cdfa95e1ed306f29afcdebdf5b420edf987721a"
+      ],
+      "exact_joined_text": true,
+      "old_word_count": 118,
+      "new_word_count": 118,
+      "old_word_overlap": 118,
+      "removed_nonsemantic_tokens": [],
+      "status": "verified_text_overlap_not_human_review"
+    },
+    {
+      "old_passage_id": "mom-2025-q2-final-release:s01:i004:1b27cae6",
+      "new_passage_ids": [
+        "mom-2025-q2-final-release:s02:i004:1b27cae6"
+      ],
+      "references": [
+        {
+          "case_id": "DEV-223",
+          "field": "evidence_text"
+        }
+      ],
+      "old_text_sha256": "1b27cae603188cb1fdbdd0b9671a0aebd2378e45e26b107cd7b2201fd1344a9e",
+      "new_text_sha256": [
+        "1b27cae603188cb1fdbdd0b9671a0aebd2378e45e26b107cd7b2201fd1344a9e"
+      ],
+      "exact_joined_text": true,
+      "old_word_count": 61,
+      "new_word_count": 61,
+      "old_word_overlap": 61,
+      "removed_nonsemantic_tokens": [],
+      "status": "verified_text_overlap_not_human_review"
+    },
+    {
+      "old_passage_id": "mom-2025-q2-final-release:s01:i005:86179eaa",
+      "new_passage_ids": [
+        "mom-2025-q2-final-release:s02:i005:86179eaa"
+      ],
+      "references": [
+        {
+          "case_id": "DEV-506",
+          "field": "evidence_text"
+        },
+        {
+          "case_id": "DEV-305",
+          "field": "evidence_text"
+        },
+        {
+          "case_id": "DEV-309",
+          "field": "evidence_text"
+        },
+        {
+          "case_id": "DEV-221",
+          "field": "evidence_text"
+        }
+      ],
+      "old_text_sha256": "86179eaaf5cbee940ab800bdb440e40a66e520bd8254a4b255f86092cf1f1ea6",
+      "new_text_sha256": [
+        "86179eaaf5cbee940ab800bdb440e40a66e520bd8254a4b255f86092cf1f1ea6"
+      ],
+      "exact_joined_text": true,
+      "old_word_count": 81,
+      "new_word_count": 81,
+      "old_word_overlap": 81,
+      "removed_nonsemantic_tokens": [],
+      "status": "verified_text_overlap_not_human_review"
+    },
+    {
+      "old_passage_id": "mom-2025-q2-final:p043:b027:868e815f",
+      "new_passage_ids": [
+        "mom-2025-q2-final:p043:b027:da7ea854"
+      ],
+      "references": [
+        {
+          "case_id": "HO-003",
+          "field": "evidence_text"
+        }
+      ],
+      "old_text_sha256": "868e815f4b64a90db162ebde689f7f25ace81077767471c80599358c6a81b536",
+      "new_text_sha256": [
+        "da7ea8544fd3800b01f7af7b6d6f2af3c9ed1ad0bcc27fb1e533f8219f99eaf8"
+      ],
+      "exact_joined_text": false,
+      "old_word_count": 105,
+      "new_word_count": 104,
+      "old_word_overlap": 104,
+      "removed_nonsemantic_tokens": [
+        [
+          "a12"
+        ]
+      ],
+      "status": "verified_text_overlap_not_human_review"
+    },
+    {
+      "old_passage_id": "mom-2025-q3-advance:s02:i002:6c4338fb",
+      "new_passage_ids": [
+        "mom-2025-q3-advance:s03:i002:6c4338fb"
+      ],
+      "references": [
+        {
+          "case_id": "HO-017",
+          "field": "evidence_text"
+        }
+      ],
+      "old_text_sha256": "6c4338fbf73150d3ec8467180ef254bac91a16aeb36683cc0babb1bcbd466692",
+      "new_text_sha256": [
+        "6c4338fbf73150d3ec8467180ef254bac91a16aeb36683cc0babb1bcbd466692"
+      ],
+      "exact_joined_text": true,
+      "old_word_count": 37,
+      "new_word_count": 37,
+      "old_word_overlap": 37,
+      "removed_nonsemantic_tokens": [],
+      "status": "verified_text_overlap_not_human_review"
+    },
+    {
+      "old_passage_id": "mom-2025-q3-advance:s02:i003:8c8a9b26",
+      "new_passage_ids": [
+        "mom-2025-q3-advance:s03:i003:8c8a9b26"
+      ],
+      "references": [
+        {
+          "case_id": "HO-012",
+          "field": "evidence_text"
+        },
+        {
+          "case_id": "DEV-224",
+          "field": "evidence_text"
+        }
+      ],
+      "old_text_sha256": "8c8a9b261ec0c7cb798b285441a95082bc461c35f1bce90014401f4cce73e6ca",
+      "new_text_sha256": [
+        "8c8a9b261ec0c7cb798b285441a95082bc461c35f1bce90014401f4cce73e6ca"
+      ],
+      "exact_joined_text": true,
+      "old_word_count": 58,
+      "new_word_count": 58,
+      "old_word_overlap": 58,
+      "removed_nonsemantic_tokens": [],
+      "status": "verified_text_overlap_not_human_review"
+    },
+    {
+      "old_passage_id": "mom-2025-q3-advance:s02:i004:bfea3fb7",
+      "new_passage_ids": [
+        "mom-2025-q3-advance:s03:i004:bfea3fb7"
+      ],
+      "references": [
+        {
+          "case_id": "HO-012",
+          "field": "evidence_text"
+        }
+      ],
+      "old_text_sha256": "bfea3fb7dc924575ad2f505fa258ddc046f9b3be0c7e7dae0dba4750ed460fa7",
+      "new_text_sha256": [
+        "bfea3fb7dc924575ad2f505fa258ddc046f9b3be0c7e7dae0dba4750ed460fa7"
+      ],
+      "exact_joined_text": true,
+      "old_word_count": 26,
+      "new_word_count": 26,
+      "old_word_overlap": 26,
+      "removed_nonsemantic_tokens": [],
+      "status": "verified_text_overlap_not_human_review"
+    },
+    {
+      "old_passage_id": "mom-2025-q3-advance:s04:i001:224a41e2",
+      "new_passage_ids": [
+        "mom-2025-q3-advance:s05:i001:224a41e2"
+      ],
+      "references": [
+        {
+          "case_id": "DEV-029",
+          "field": "evidence_text"
+        }
+      ],
+      "old_text_sha256": "224a41e223c24b95db5dd33f1681175a9513105bb07d8153426f2cadbf992d25",
+      "new_text_sha256": [
+        "224a41e223c24b95db5dd33f1681175a9513105bb07d8153426f2cadbf992d25"
+      ],
+      "exact_joined_text": true,
+      "old_word_count": 47,
+      "new_word_count": 47,
+      "old_word_overlap": 47,
+      "removed_nonsemantic_tokens": [],
+      "status": "verified_text_overlap_not_human_review"
+    },
+    {
+      "old_passage_id": "mom-2025-q3-advance:s05:i001:fb30808d",
+      "new_passage_ids": [
+        "mom-2025-q3-advance:s06:i001:fb30808d"
+      ],
+      "references": [
+        {
+          "case_id": "DEV-025",
+          "field": "evidence_text"
+        }
+      ],
+      "old_text_sha256": "fb30808d54c4b34941186eea40ab6dc6c85330b5be510b459c936d5dbf8f88ef",
+      "new_text_sha256": [
+        "fb30808d54c4b34941186eea40ab6dc6c85330b5be510b459c936d5dbf8f88ef"
+      ],
+      "exact_joined_text": true,
+      "old_word_count": 63,
+      "new_word_count": 63,
+      "old_word_overlap": 63,
+      "removed_nonsemantic_tokens": [],
+      "status": "verified_text_overlap_not_human_review"
+    },
+    {
+      "old_passage_id": "mom-2025-q3-final:p045:b028:49f8f6dd",
+      "new_passage_ids": [
+        "mom-2025-q3-final:p045:b028:1db7abe7"
+      ],
+      "references": [
+        {
+          "case_id": "HO-003",
+          "field": "evidence_text"
+        }
+      ],
+      "old_text_sha256": "49f8f6ddb379acea8b4f6fb4cef60b2376109a0231d756edcf5fb2f05bb41dda",
+      "new_text_sha256": [
+        "1db7abe703900e5f1d8dce20dd46930724f650736c905d120365bb2280a5059f"
+      ],
+      "exact_joined_text": false,
+      "old_word_count": 104,
+      "new_word_count": 103,
+      "old_word_overlap": 103,
+      "removed_nonsemantic_tokens": [
+        [
+          "a12"
+        ]
+      ],
+      "status": "verified_text_overlap_not_human_review"
+    },
+    {
+      "old_passage_id": "mom-2025-q4-final-release:s01:i002:257c8baa",
+      "new_passage_ids": [
+        "mom-2025-q4-final-release:s02:i002:257c8baa"
+      ],
+      "references": [
+        {
+          "case_id": "DEV-012",
+          "field": "evidence_text"
+        },
+        {
+          "case_id": "HO-028",
+          "field": "evidence_text"
+        },
+        {
+          "case_id": "DEV-334",
+          "field": "evidence_text"
+        }
+      ],
+      "old_text_sha256": "257c8baa6d5a0932333d9ad41e96fca1c51c8e6830e464ac04044f95d8591f8d",
+      "new_text_sha256": [
+        "257c8baa6d5a0932333d9ad41e96fca1c51c8e6830e464ac04044f95d8591f8d"
+      ],
+      "exact_joined_text": true,
+      "old_word_count": 91,
+      "new_word_count": 91,
+      "old_word_overlap": 91,
+      "removed_nonsemantic_tokens": [],
+      "status": "verified_text_overlap_not_human_review"
+    },
+    {
+      "old_passage_id": "mom-2025-q4-final-release:s01:i004:6b5d0787",
+      "new_passage_ids": [
+        "mom-2025-q4-final-release:s02:i004:6b5d0787"
+      ],
+      "references": [
+        {
+          "case_id": "DEV-010",
+          "field": "evidence_text"
+        },
+        {
+          "case_id": "HO-004",
+          "field": "evidence_text"
+        },
+        {
+          "case_id": "DEV-328",
+          "field": "evidence_text"
+        },
+        {
+          "case_id": "DEV-329",
+          "field": "evidence_text"
+        }
+      ],
+      "old_text_sha256": "6b5d0787848bb54fac68e235ba84b16a94fabc0c639339971837b4b1cb611a2e",
+      "new_text_sha256": [
+        "6b5d0787848bb54fac68e235ba84b16a94fabc0c639339971837b4b1cb611a2e"
+      ],
+      "exact_joined_text": true,
+      "old_word_count": 53,
+      "new_word_count": 53,
+      "old_word_overlap": 53,
+      "removed_nonsemantic_tokens": [],
+      "status": "verified_text_overlap_not_human_review"
+    },
+    {
+      "old_passage_id": "mom-2025-q4-final-release:s01:i005:9425eacc",
+      "new_passage_ids": [
+        "mom-2025-q4-final-release:s02:i005:9425eacc"
+      ],
+      "references": [
+        {
+          "case_id": "HO-013",
+          "field": "evidence_text"
+        },
+        {
+          "case_id": "DEV-030",
+          "field": "evidence_text"
+        },
+        {
+          "case_id": "DEV-525",
+          "field": "evidence_text"
+        },
+        {
+          "case_id": "DEV-321",
+          "field": "evidence_text"
+        }
+      ],
+      "old_text_sha256": "9425eacc9106071564e57e13223e10b52a11cfe06158930465d8b132d57a404a",
+      "new_text_sha256": [
+        "9425eacc9106071564e57e13223e10b52a11cfe06158930465d8b132d57a404a"
+      ],
+      "exact_joined_text": true,
+      "old_word_count": 73,
+      "new_word_count": 73,
+      "old_word_overlap": 73,
+      "removed_nonsemantic_tokens": [],
+      "status": "verified_text_overlap_not_human_review"
+    },
+    {
+      "old_passage_id": "mom-2025-q4-final-release:s04:i002:b6860fc7",
+      "new_passage_ids": [
+        "mom-2025-q4-final-release:s05:i002:b6860fc7"
+      ],
+      "references": [
+        {
+          "case_id": "DEV-334",
+          "field": "evidence_text"
+        }
+      ],
+      "old_text_sha256": "b6860fc776adf80a6f4720cdabb6e1e590850763f1c338511850b0aba613bd4c",
+      "new_text_sha256": [
+        "b6860fc776adf80a6f4720cdabb6e1e590850763f1c338511850b0aba613bd4c"
+      ],
+      "exact_joined_text": true,
+      "old_word_count": 27,
+      "new_word_count": 27,
+      "old_word_overlap": 27,
+      "removed_nonsemantic_tokens": [],
+      "status": "verified_text_overlap_not_human_review"
+    },
+    {
+      "old_passage_id": "mom-2026-q1-advance:s01:i001:9d4ca111",
+      "new_passage_ids": [
+        "mom-2026-q1-advance:s02:i001:9d4ca111"
+      ],
+      "references": [
+        {
+          "case_id": "DEV-034",
+          "field": "context_only_evidence_text"
+        }
+      ],
+      "old_text_sha256": "9d4ca111ccda31a677c6577a0bbb8b36d211597b88ac2e6e016452e7f4c43bf2",
+      "new_text_sha256": [
+        "9d4ca111ccda31a677c6577a0bbb8b36d211597b88ac2e6e016452e7f4c43bf2"
+      ],
+      "exact_joined_text": true,
+      "old_word_count": 46,
+      "new_word_count": 46,
+      "old_word_overlap": 46,
+      "removed_nonsemantic_tokens": [],
+      "status": "verified_text_overlap_not_human_review"
+    },
+    {
+      "old_passage_id": "mom-2026-q1-advance:s01:i003:3cd3fd75",
+      "new_passage_ids": [
+        "mom-2026-q1-advance:s04:i001:3cd3fd75"
+      ],
+      "references": [
+        {
+          "case_id": "HO-018",
+          "field": "evidence_text"
+        },
+        {
+          "case_id": "HO-024",
+          "field": "evidence_text"
+        }
+      ],
+      "old_text_sha256": "3cd3fd75c88dd0c06110ee1b4d09357766bebfbb0522857787a8eda1ed54643c",
+      "new_text_sha256": [
+        "3cd3fd75c88dd0c06110ee1b4d09357766bebfbb0522857787a8eda1ed54643c"
+      ],
+      "exact_joined_text": true,
+      "old_word_count": 84,
+      "new_word_count": 84,
+      "old_word_overlap": 84,
+      "removed_nonsemantic_tokens": [],
+      "status": "verified_text_overlap_not_human_review"
+    },
+    {
+      "old_passage_id": "mom-2026-q1-advance:s01:i006:8af92b1e",
+      "new_passage_ids": [
+        "mom-2026-q1-advance:s05:i001:8af92b1e"
+      ],
+      "references": [
+        {
+          "case_id": "DEV-324",
+          "field": "evidence_text"
+        }
+      ],
+      "old_text_sha256": "8af92b1e1364f7e1ddb4af41a6b4440305fb46f903985559a05e061cfa5442de",
+      "new_text_sha256": [
+        "8af92b1e1364f7e1ddb4af41a6b4440305fb46f903985559a05e061cfa5442de"
+      ],
+      "exact_joined_text": true,
+      "old_word_count": 36,
+      "new_word_count": 36,
+      "old_word_overlap": 36,
+      "removed_nonsemantic_tokens": [],
+      "status": "verified_text_overlap_not_human_review"
+    },
+    {
+      "old_passage_id": "mom-2026-q1-advance:s01:i008:937f6d9f",
+      "new_passage_ids": [
+        "mom-2026-q1-advance:s05:i003:937f6d9f"
+      ],
+      "references": [
+        {
+          "case_id": "DEV-322",
+          "field": "evidence_text"
+        }
+      ],
+      "old_text_sha256": "937f6d9f1f2f83ffe37f72842ba60f7222a334e36fe26520f85f107e561c0f46",
+      "new_text_sha256": [
+        "937f6d9f1f2f83ffe37f72842ba60f7222a334e36fe26520f85f107e561c0f46"
+      ],
+      "exact_joined_text": true,
+      "old_word_count": 57,
+      "new_word_count": 57,
+      "old_word_overlap": 57,
+      "removed_nonsemantic_tokens": [],
+      "status": "verified_text_overlap_not_human_review"
+    },
+    {
+      "old_passage_id": "mom-2026-q1-advance:s01:i009:76a4418c",
+      "new_passage_ids": [
+        "mom-2026-q1-advance:s06:i001:76a4418c"
+      ],
+      "references": [
+        {
+          "case_id": "DEV-231",
+          "field": "evidence_text"
+        }
+      ],
+      "old_text_sha256": "76a4418c04e190284f9f98aa1f640d6838c6a337e93d80fe9f303fe1d1a11da0",
+      "new_text_sha256": [
+        "76a4418c04e190284f9f98aa1f640d6838c6a337e93d80fe9f303fe1d1a11da0"
+      ],
+      "exact_joined_text": true,
+      "old_word_count": 113,
+      "new_word_count": 113,
+      "old_word_overlap": 113,
+      "removed_nonsemantic_tokens": [],
+      "status": "verified_text_overlap_not_human_review"
+    },
+    {
+      "old_passage_id": "mom-2026-q1-final-release:s01:i001:059b7175",
+      "new_passage_ids": [
+        "mom-2026-q1-final-release:s02:i001:f5dd961b"
+      ],
+      "references": [
+        {
+          "case_id": "HO-018",
+          "field": "evidence_text"
+        },
+        {
+          "case_id": "HO-024",
+          "field": "evidence_text"
+        },
+        {
+          "case_id": "HO-029",
+          "field": "evidence_text"
+        },
+        {
+          "case_id": "DEV-023",
+          "field": "evidence_text"
+        },
+        {
+          "case_id": "DEV-034",
+          "field": "context_only_evidence_text"
+        },
+        {
+          "case_id": "DEV-312",
+          "field": "evidence_text"
+        },
+        {
+          "case_id": "DEV-335",
+          "field": "evidence_text"
+        }
+      ],
+      "old_text_sha256": "059b7175b1454ed3e4f92eb1fc25c308021668eebe6a898851899d37298c7797",
+      "new_text_sha256": [
+        "f5dd961bd9ff954ebcdab1702c5c6399d009352fc16597a1e9f1aefdcb857a04"
+      ],
+      "exact_joined_text": false,
+      "old_word_count": 88,
+      "new_word_count": 86,
+      "old_word_overlap": 86,
+      "removed_nonsemantic_tokens": [
+        [
+          "main",
+          "findings"
+        ]
+      ],
+      "status": "verified_text_overlap_not_human_review"
+    },
+    {
+      "old_passage_id": "mom-2026-q1-final-release:s01:i002:f7f19d3b",
+      "new_passage_ids": [
+        "mom-2026-q1-final-release:s02:i002:4e215cac",
+        "mom-2026-q1-final-release:s02:i003:0febd041",
+        "mom-2026-q1-final-release:s02:i004:093e8a1d",
+        "mom-2026-q1-final-release:s03:i001:61eb87e9",
+        "mom-2026-q1-final-release:s04:i001:f04e8d77"
+      ],
+      "references": [
+        {
+          "case_id": "HO-021",
+          "field": "evidence_text"
+        },
+        {
+          "case_id": "HO-029",
+          "field": "evidence_text"
+        },
+        {
+          "case_id": "DEV-026",
+          "field": "evidence_text"
+        },
+        {
+          "case_id": "DEV-306",
+          "field": "evidence_text"
+        },
+        {
+          "case_id": "DEV-322",
+          "field": "evidence_text"
+        },
+        {
+          "case_id": "DEV-324",
+          "field": "evidence_text"
+        }
+      ],
+      "old_text_sha256": "f7f19d3b4e9249d75f821d524a355a12d07b2e33bc14ba31145c134cdb4d811f",
+      "new_text_sha256": [
+        "4e215cac6456995a7d10fea6331caf15b5d39a22c5d88000d15ad56f49e5eb37",
+        "0febd04151a5d614a78eb3a96d6dd108ff1e0245f317921dd96b53ca1af1c252",
+        "093e8a1d86911148a650d490b30b108725142dbf0eecd4b26dd34abf8b3fb611",
+        "61eb87e982bb66c39c5cde01c87e9536fb8e8eed4f13769d32a7d4f7c3388be7",
+        "f04e8d77a08142b5a179d3a4070647326f7b10c00d8b75a01f28f55a402e0b79"
+      ],
+      "exact_joined_text": false,
+      "old_word_count": 290,
+      "new_word_count": 286,
+      "old_word_overlap": 286,
+      "removed_nonsemantic_tokens": [
+        [
+          "labour",
+          "market",
+          "outlook"
+        ],
+        [
+          "conclusion"
+        ]
+      ],
+      "status": "verified_text_overlap_not_human_review"
+    },
+    {
+      "old_passage_id": "mom-2026-q1-final-release:s02:i002:2dbb0760",
+      "new_passage_ids": [
+        "mom-2026-q1-final-release:s05:i003:2dbb0760"
+      ],
+      "references": [
+        {
+          "case_id": "DEV-335",
+          "field": "evidence_text"
+        }
+      ],
+      "old_text_sha256": "2dbb076009785cd9e51c82d29943cca8377886a43cd821349e5008491ad566c5",
+      "new_text_sha256": [
+        "2dbb076009785cd9e51c82d29943cca8377886a43cd821349e5008491ad566c5"
+      ],
+      "exact_joined_text": true,
+      "old_word_count": 26,
+      "new_word_count": 26,
+      "old_word_overlap": 26,
+      "removed_nonsemantic_tokens": [],
+      "status": "verified_text_overlap_not_human_review"
+    },
+    {
+      "old_passage_id": "mom-2026-q1-final:p040:b029:49f8f6dd",
+      "new_passage_ids": [
+        "mom-2026-q1-final:p040:b029:1db7abe7"
+      ],
+      "references": [
+        {
+          "case_id": "HO-003",
+          "field": "evidence_text"
+        }
+      ],
+      "old_text_sha256": "49f8f6ddb379acea8b4f6fb4cef60b2376109a0231d756edcf5fb2f05bb41dda",
+      "new_text_sha256": [
+        "1db7abe703900e5f1d8dce20dd46930724f650736c905d120365bb2280a5059f"
+      ],
+      "exact_joined_text": false,
+      "old_word_count": 104,
+      "new_word_count": 103,
+      "old_word_overlap": 103,
+      "removed_nonsemantic_tokens": [
+        [
+          "a12"
+        ]
+      ],
+      "status": "verified_text_overlap_not_human_review"
+    },
+    {
+      "old_passage_id": "mom-2026-q2-advance:s01:i001:a424084c",
+      "new_passage_ids": [
+        "mom-2026-q2-advance:s02:i001:a424084c"
+      ],
+      "references": [
+        {
+          "case_id": "DEV-011",
+          "field": "evidence_text"
+        },
+        {
+          "case_id": "HO-020",
+          "field": "evidence_text"
+        }
+      ],
+      "old_text_sha256": "a424084c5557a49b91c4a60166a4b3df611dbf21edf454402d3f6c789109233b",
+      "new_text_sha256": [
+        "a424084c5557a49b91c4a60166a4b3df611dbf21edf454402d3f6c789109233b"
+      ],
+      "exact_joined_text": true,
+      "old_word_count": 67,
+      "new_word_count": 67,
+      "old_word_overlap": 67,
+      "removed_nonsemantic_tokens": [],
+      "status": "verified_text_overlap_not_human_review"
+    },
+    {
+      "old_passage_id": "mom-2026-q2-advance:s01:i004:d1aca6dd",
+      "new_passage_ids": [
+        "mom-2026-q2-advance:s04:i002:d1aca6dd"
+      ],
+      "references": [
+        {
+          "case_id": "DEV-234",
+          "field": "evidence_text"
+        }
+      ],
+      "old_text_sha256": "d1aca6dd7305159af7169c1cd2f67646ac620383df1db83f96454e4e58cded4f",
+      "new_text_sha256": [
+        "d1aca6dd7305159af7169c1cd2f67646ac620383df1db83f96454e4e58cded4f"
+      ],
+      "exact_joined_text": true,
+      "old_word_count": 56,
+      "new_word_count": 56,
+      "old_word_overlap": 56,
+      "removed_nonsemantic_tokens": [],
+      "status": "verified_text_overlap_not_human_review"
+    },
+    {
+      "old_passage_id": "mom-2026-q2-advance:s01:i006:389a7c6f",
+      "new_passage_ids": [
+        "mom-2026-q2-advance:s05:i001:389a7c6f"
+      ],
+      "references": [
+        {
+          "case_id": "DEV-323",
+          "field": "evidence_text"
+        }
+      ],
+      "old_text_sha256": "389a7c6f30e2f3980ca82bdb7a9fd70b6762ee91611328d565a1f76903503b0b",
+      "new_text_sha256": [
+        "389a7c6f30e2f3980ca82bdb7a9fd70b6762ee91611328d565a1f76903503b0b"
+      ],
+      "exact_joined_text": true,
+      "old_word_count": 32,
+      "new_word_count": 32,
+      "old_word_overlap": 32,
+      "removed_nonsemantic_tokens": [],
+      "status": "verified_text_overlap_not_human_review"
+    },
+    {
+      "old_passage_id": "mom-2026-q2-advance:s01:i008:86484167",
+      "new_passage_ids": [
+        "mom-2026-q2-advance:s06:i001:86484167"
+      ],
+      "references": [
+        {
+          "case_id": "HO-019",
+          "field": "evidence_text"
+        }
+      ],
+      "old_text_sha256": "86484167dc539afcaab3d275e02889309b533dc5d4722700d06641ea673c715f",
+      "new_text_sha256": [
+        "86484167dc539afcaab3d275e02889309b533dc5d4722700d06641ea673c715f"
+      ],
+      "exact_joined_text": true,
+      "old_word_count": 61,
+      "new_word_count": 61,
+      "old_word_overlap": 61,
+      "removed_nonsemantic_tokens": [],
+      "status": "verified_text_overlap_not_human_review"
+    },
+    {
+      "old_passage_id": "mom-2026-q2-advance:s01:i009:ddaf1f87",
+      "new_passage_ids": [
+        "mom-2026-q2-advance:s07:i001:ddaf1f87"
+      ],
+      "references": [
+        {
+          "case_id": "DEV-233",
+          "field": "evidence_text"
+        }
+      ],
+      "old_text_sha256": "ddaf1f873b097e60cc29d54e35a42676d869a4579c10137c445c051fd57d53ce",
+      "new_text_sha256": [
+        "ddaf1f873b097e60cc29d54e35a42676d869a4579c10137c445c051fd57d53ce"
+      ],
+      "exact_joined_text": true,
+      "old_word_count": 101,
+      "new_word_count": 101,
+      "old_word_overlap": 101,
+      "removed_nonsemantic_tokens": [],
+      "status": "verified_text_overlap_not_human_review"
+    },
+    {
+      "old_passage_id": "mom-2026-q2-final-release:s01:i001:98b26ad8",
+      "new_passage_ids": [
+        "mom-2026-q2-final-release:s02:i001:98b26ad8"
+      ],
+      "references": [
+        {
+          "case_id": "DEV-011",
+          "field": "evidence_text"
+        },
+        {
+          "case_id": "HO-016",
+          "field": "evidence_text"
+        },
+        {
+          "case_id": "HO-020",
+          "field": "evidence_text"
+        },
+        {
+          "case_id": "DEV-313",
+          "field": "evidence_text"
+        }
+      ],
+      "old_text_sha256": "98b26ad8307d11c5de44330b41ba88089a8a7d0aa2ef19fd2f1d3d0c6080a3d4",
+      "new_text_sha256": [
+        "98b26ad8307d11c5de44330b41ba88089a8a7d0aa2ef19fd2f1d3d0c6080a3d4"
+      ],
+      "exact_joined_text": true,
+      "old_word_count": 110,
+      "new_word_count": 110,
+      "old_word_overlap": 110,
+      "removed_nonsemantic_tokens": [],
+      "status": "verified_text_overlap_not_human_review"
+    },
+    {
+      "old_passage_id": "mom-2026-q2-final-release:s01:i002:cf323120",
+      "new_passage_ids": [
+        "mom-2026-q2-final-release:s02:i002:cf323120"
+      ],
+      "references": [
+        {
+          "case_id": "DEV-008",
+          "field": "evidence_text"
+        },
+        {
+          "case_id": "DEV-013",
+          "field": "evidence_text"
+        },
+        {
+          "case_id": "HO-021",
+          "field": "evidence_text"
+        },
+        {
+          "case_id": "HO-022",
+          "field": "evidence_text"
+        },
+        {
+          "case_id": "DEV-323",
+          "field": "evidence_text"
+        }
+      ],
+      "old_text_sha256": "cf3231203b2358cf8c545f3c6d3fb5d862740607e7efb7b2796264506aba0f0e",
+      "new_text_sha256": [
+        "cf3231203b2358cf8c545f3c6d3fb5d862740607e7efb7b2796264506aba0f0e"
+      ],
+      "exact_joined_text": true,
+      "old_word_count": 40,
+      "new_word_count": 40,
+      "old_word_overlap": 40,
+      "removed_nonsemantic_tokens": [],
+      "status": "verified_text_overlap_not_human_review"
+    },
+    {
+      "old_passage_id": "mom-2026-q2-final-release:s01:i003:1d7fc2bc",
+      "new_passage_ids": [
+        "mom-2026-q2-final-release:s02:i003:1d7fc2bc"
+      ],
+      "references": [
+        {
+          "case_id": "DEV-004",
+          "field": "evidence_text"
+        },
+        {
+          "case_id": "DEV-008",
+          "field": "evidence_text"
+        },
+        {
+          "case_id": "DEV-009",
+          "field": "evidence_text"
+        },
+        {
+          "case_id": "DEV-014",
+          "field": "evidence_text"
+        },
+        {
+          "case_id": "DEV-017",
+          "field": "evidence_text"
+        },
+        {
+          "case_id": "HO-015",
+          "field": "evidence_text"
+        },
+        {
+          "case_id": "HO-019",
+          "field": "evidence_text"
+        },
+        {
+          "case_id": "HO-023",
+          "field": "evidence_text"
+        },
+        {
+          "case_id": "DEV-026",
+          "field": "evidence_text"
+        },
+        {
+          "case_id": "DEV-431",
+          "field": "evidence_text"
+        },
+        {
+          "case_id": "DEV-310",
+          "field": "evidence_text"
+        },
+        {
+          "case_id": "DEV-319",
+          "field": "evidence_text"
+        },
+        {
+          "case_id": "DEV-320",
+          "field": "evidence_text"
+        }
+      ],
+      "old_text_sha256": "1d7fc2bc514c59cb1dba1a51ef4de5eee8907bd45c004b313799e0d064b4eeba",
+      "new_text_sha256": [
+        "1d7fc2bc514c59cb1dba1a51ef4de5eee8907bd45c004b313799e0d064b4eeba"
+      ],
+      "exact_joined_text": true,
+      "old_word_count": 103,
+      "new_word_count": 103,
+      "old_word_overlap": 103,
+      "removed_nonsemantic_tokens": [],
+      "status": "verified_text_overlap_not_human_review"
+    },
+    {
+      "old_passage_id": "mom-2026-q2-final-release:s01:i004:d20bfa82",
+      "new_passage_ids": [
+        "mom-2026-q2-final-release:s02:i004:d20bfa82"
+      ],
+      "references": [
+        {
+          "case_id": "DEV-001",
+          "field": "evidence_text"
+        },
+        {
+          "case_id": "DEV-006",
+          "field": "evidence_text"
+        },
+        {
+          "case_id": "HO-014",
+          "field": "evidence_text"
+        },
+        {
+          "case_id": "HO-027",
+          "field": "context_only_evidence_text"
+        },
+        {
+          "case_id": "DEV-316",
+          "field": "evidence_text"
+        }
+      ],
+      "old_text_sha256": "d20bfa82de192c8ddf5d9d3e8ddb114daf3d6656112199b172dc1d5e48354491",
+      "new_text_sha256": [
+        "d20bfa82de192c8ddf5d9d3e8ddb114daf3d6656112199b172dc1d5e48354491"
+      ],
+      "exact_joined_text": true,
+      "old_word_count": 101,
+      "new_word_count": 101,
+      "old_word_overlap": 101,
+      "removed_nonsemantic_tokens": [],
+      "status": "verified_text_overlap_not_human_review"
+    },
+    {
+      "old_passage_id": "mom-2026-q2-final:p040:b028:868e815f",
+      "new_passage_ids": [
+        "mom-2026-q2-final:p040:b028:da7ea854"
+      ],
+      "references": [
+        {
+          "case_id": "HO-003",
+          "field": "evidence_text"
+        }
+      ],
+      "old_text_sha256": "868e815f4b64a90db162ebde689f7f25ace81077767471c80599358c6a81b536",
+      "new_text_sha256": [
+        "da7ea8544fd3800b01f7af7b6d6f2af3c9ed1ad0bcc27fb1e533f8219f99eaf8"
+      ],
+      "exact_joined_text": false,
+      "old_word_count": 105,
+      "new_word_count": 104,
+      "old_word_overlap": 104,
+      "removed_nonsemantic_tokens": [
+        [
+          "a12"
+        ]
+      ],
+      "status": "verified_text_overlap_not_human_review"
+    },
+    {
+      "old_passage_id": "mom-wage-practices2024-release:s04:i001:13fff465",
+      "new_passage_ids": [
+        "mom-wage-practices2024-release:s05:i001:13fff465"
+      ],
+      "references": [
+        {
+          "case_id": "DEV-609",
+          "field": "evidence_text"
+        }
+      ],
+      "old_text_sha256": "13fff46551e81d91a387e436a2aa7fb0b248fa06ba50aa69589407347cdd2f64",
+      "new_text_sha256": [
+        "13fff46551e81d91a387e436a2aa7fb0b248fa06ba50aa69589407347cdd2f64"
+      ],
+      "exact_joined_text": true,
+      "old_word_count": 107,
+      "new_word_count": 107,
+      "old_word_overlap": 107,
+      "removed_nonsemantic_tokens": [],
+      "status": "verified_text_overlap_not_human_review"
+    },
+    {
+      "old_passage_id": "mom-wage-practices2024-release:s06:i007:88cc27e8",
+      "new_passage_ids": [
+        "mom-wage-practices2024-release:s07:i007:88cc27e8"
+      ],
+      "references": [
+        {
+          "case_id": "DEV-002",
+          "field": "evidence_text"
+        }
+      ],
+      "old_text_sha256": "88cc27e81cca93a5ebfcefaf79de061bf86c47f367e5223066413038bef8dab8",
+      "new_text_sha256": [
+        "88cc27e81cca93a5ebfcefaf79de061bf86c47f367e5223066413038bef8dab8"
+      ],
+      "exact_joined_text": true,
+      "old_word_count": 8,
+      "new_word_count": 8,
+      "old_word_overlap": 8,
+      "removed_nonsemantic_tokens": [],
+      "status": "verified_text_overlap_not_human_review"
+    }
+  ],
+  "surviving_metadata_changes": [
+    {
+      "passage_id": "mom-2023-q1-final:p012:b016:efc7b4fd",
+      "changed_fields": [
+        "section_heading"
+      ]
+    },
+    {
+      "passage_id": "mom-2023-q1-final:p015:b012:db7697c3",
+      "changed_fields": [
+        "section_heading"
+      ]
+    },
+    {
+      "passage_id": "mom-2023-q1-final:p047:b013:88cc27e8",
+      "changed_fields": [
+        "printed_page_label"
+      ]
+    },
+    {
+      "passage_id": "mom-2023-q2-final:p008:b001:49687607",
+      "changed_fields": [
+        "section_heading"
+      ]
+    },
+    {
+      "passage_id": "mom-2023-q2-final:p012:b005:efc7b4fd",
+      "changed_fields": [
+        "section_heading"
+      ]
+    },
+    {
+      "passage_id": "mom-2023-q2-final:p048:b014:88cc27e8",
+      "changed_fields": [
+        "printed_page_label"
+      ]
+    },
+    {
+      "passage_id": "mom-2023-q3-final:p007:b006:c0331bb1",
+      "changed_fields": [
+        "section_heading"
+      ]
+    },
+    {
+      "passage_id": "mom-2023-q3-final:p012:b007:efc7b4fd",
+      "changed_fields": [
+        "section_heading"
+      ]
+    },
+    {
+      "passage_id": "mom-2023-q3-final:p048:b014:88cc27e8",
+      "changed_fields": [
+        "printed_page_label"
+      ]
+    },
+    {
+      "passage_id": "mom-2023-q4-final:p007:b026:4079df04",
+      "changed_fields": [
+        "section_heading",
+        "quality_note",
+        "context_required"
+      ]
+    },
+    {
+      "passage_id": "mom-2023-q4-final:p012:b005:efc7b4fd",
+      "changed_fields": [
+        "section_heading"
+      ]
+    },
+    {
+      "passage_id": "mom-2023-q4-final:p061:b014:88cc27e8",
+      "changed_fields": [
+        "printed_page_label"
+      ]
+    },
+    {
+      "passage_id": "mom-2024-q1-final:p006:b021:9de9b4fb",
+      "changed_fields": [
+        "section_heading"
+      ]
+    },
+    {
+      "passage_id": "mom-2024-q1-final:p007:b011:12ff959a",
+      "changed_fields": [
+        "section_heading"
+      ]
+    },
+    {
+      "passage_id": "mom-2024-q1-final:p012:b018:efc7b4fd",
+      "changed_fields": [
+        "section_heading"
+      ]
+    },
+    {
+      "passage_id": "mom-2024-q1-final:p048:b014:88cc27e8",
+      "changed_fields": [
+        "printed_page_label"
+      ]
+    },
+    {
+      "passage_id": "mom-2024-q2-final:p013:b016:efc7b4fd",
+      "changed_fields": [
+        "section_heading"
+      ]
+    },
+    {
+      "passage_id": "mom-2024-q2-final:p049:b014:88cc27e8",
+      "changed_fields": [
+        "printed_page_label"
+      ]
+    },
+    {
+      "passage_id": "mom-2024-q3-final:p013:b016:efc7b4fd",
+      "changed_fields": [
+        "section_heading"
+      ]
+    },
+    {
+      "passage_id": "mom-2024-q3-final:p049:b014:88cc27e8",
+      "changed_fields": [
+        "printed_page_label"
+      ]
+    },
+    {
+      "passage_id": "mom-2024-q4-final:p011:b015:efc7b4fd",
+      "changed_fields": [
+        "section_heading"
+      ]
+    },
+    {
+      "passage_id": "mom-2024-q4-final:p051:b014:88cc27e8",
+      "changed_fields": [
+        "printed_page_label"
+      ]
+    },
+    {
+      "passage_id": "mom-2025-q1-final:p007:b019:6f6f0736",
+      "changed_fields": [
+        "section_heading"
+      ]
+    },
+    {
+      "passage_id": "mom-2025-q1-final:p011:b013:efc7b4fd",
+      "changed_fields": [
+        "section_heading"
+      ]
+    },
+    {
+      "passage_id": "mom-2025-q1-final:p049:b014:88cc27e8",
+      "changed_fields": [
+        "printed_page_label"
+      ]
+    },
+    {
+      "passage_id": "mom-2025-q2-final:p007:b017:8be1139a",
+      "changed_fields": [
+        "section_heading"
+      ]
+    },
+    {
+      "passage_id": "mom-2025-q2-final:p017:b014:efc7b4fd",
+      "changed_fields": [
+        "section_heading"
+      ]
+    },
+    {
+      "passage_id": "mom-2025-q2-final:p055:b014:88cc27e8",
+      "changed_fields": [
+        "printed_page_label"
+      ]
+    },
+    {
+      "passage_id": "mom-2025-q3-final:p006:b031:c7518141",
+      "changed_fields": [
+        "section_heading"
+      ]
+    },
+    {
+      "passage_id": "mom-2025-q3-final:p007:b023:ca8f6f8b",
+      "changed_fields": [
+        "section_heading"
+      ]
+    },
+    {
+      "passage_id": "mom-2025-q3-final:p014:b015:efc7b4fd",
+      "changed_fields": [
+        "section_heading"
+      ]
+    },
+    {
+      "passage_id": "mom-2025-q3-final:p059:b004:88cc27e8",
+      "changed_fields": [
+        "printed_page_label"
+      ]
+    },
+    {
+      "passage_id": "mom-2025-q4-final:p007:b014:637704e4",
+      "changed_fields": [
+        "section_heading"
+      ]
+    },
+    {
+      "passage_id": "mom-2025-q4-final:p007:b016:539f5b7e",
+      "changed_fields": [
+        "section_heading"
+      ]
+    },
+    {
+      "passage_id": "mom-2025-q4-final:p013:b015:efc7b4fd",
+      "changed_fields": [
+        "section_heading"
+      ]
+    },
+    {
+      "passage_id": "mom-2025-q4-final:p014:b012:f9481c30",
+      "changed_fields": [
+        "section_heading"
+      ]
+    },
+    {
+      "passage_id": "mom-2025-q4-final:p018:b017:63ca921a",
+      "changed_fields": [
+        "section_heading",
+        "quality_note",
+        "context_required"
+      ]
+    },
+    {
+      "passage_id": "mom-2025-q4-final:p022:b027:06fba174",
+      "changed_fields": [
+        "section_heading",
+        "quality_note",
+        "context_required"
+      ]
+    },
+    {
+      "passage_id": "mom-2025-q4-final:p059:b004:88cc27e8",
+      "changed_fields": [
+        "printed_page_label"
+      ]
+    },
+    {
+      "passage_id": "mom-2026-q1-final:p007:b024:7163d242",
+      "changed_fields": [
+        "section_heading",
+        "quality_note",
+        "context_required"
+      ]
+    },
+    {
+      "passage_id": "mom-2026-q1-final:p022:b020:7059aed2",
+      "changed_fields": [
+        "section_heading",
+        "quality_note",
+        "context_required"
+      ]
+    },
+    {
+      "passage_id": "mom-2026-q1-final:p053:b011:0dbdeda2",
+      "changed_fields": [
+        "printed_page_label"
+      ]
+    },
+    {
+      "passage_id": "mom-2026-q1-final:p053:b015:6f82d55d",
+      "changed_fields": [
+        "printed_page_label"
+      ]
+    },
+    {
+      "passage_id": "mom-2026-q1-final:p054:b004:88cc27e8",
+      "changed_fields": [
+        "printed_page_label"
+      ]
+    },
+    {
+      "passage_id": "mom-2026-q1-final:p054:b006:84ddf2d9",
+      "changed_fields": [
+        "printed_page_label"
+      ]
+    },
+    {
+      "passage_id": "mom-2026-q2-final:p006:b072:c7c4db54",
+      "changed_fields": [
+        "section_heading"
+      ]
+    },
+    {
+      "passage_id": "mom-2026-q2-final:p007:b018:413e4014",
+      "changed_fields": [
+        "section_heading"
+      ]
+    },
+    {
+      "passage_id": "mom-2026-q2-final:p007:b029:d1fa8b62",
+      "changed_fields": [
+        "section_heading"
+      ]
+    },
+    {
+      "passage_id": "mom-2026-q2-final:p014:b013:efc7b4fd",
+      "changed_fields": [
+        "section_heading"
+      ]
+    },
+    {
+      "passage_id": "mom-2026-q2-final:p053:b015:85d629c9",
+      "changed_fields": [
+        "printed_page_label"
+      ]
+    },
+    {
+      "passage_id": "mom-2026-q2-final:p054:b004:88cc27e8",
+      "changed_fields": [
+        "printed_page_label"
+      ]
+    },
+    {
+      "passage_id": "mom-2026-q2-final:p055:b005:611009ca",
+      "changed_fields": [
+        "printed_page_label"
+      ]
+    },
+    {
+      "passage_id": "mom-jv2025:p020:b017:5f8de557",
+      "changed_fields": [
+        "section_heading",
+        "quality_note",
+        "context_required"
+      ]
+    },
+    {
+      "passage_id": "mom-lf2024-coverage-methodology:p003:b016:b0e602ee",
+      "changed_fields": [
+        "section_heading"
+      ]
+    },
+    {
+      "passage_id": "mom-lf2025-survey-findings:p018:b000:7a395929",
+      "changed_fields": [
+        "section_heading"
+      ]
+    },
+    {
+      "passage_id": "mom-lf2025-survey-findings:p019:b002:8926e4a5",
+      "changed_fields": [
+        "section_heading"
+      ]
+    },
+    {
+      "passage_id": "mom-lf2025-survey-findings:p021:b000:61079f8a",
+      "changed_fields": [
+        "section_heading"
+      ]
+    },
+    {
+      "passage_id": "mom-lf2025-survey-findings:p033:b000:379f0248",
+      "changed_fields": [
+        "section_heading"
+      ]
+    },
+    {
+      "passage_id": "mom-lf2025-survey-findings:p034:b000:ccf78c77",
+      "changed_fields": [
+        "section_heading"
+      ]
+    },
+    {
+      "passage_id": "mom-lf2025-survey-findings:p035:b000:aa2ba4f1",
+      "changed_fields": [
+        "section_heading"
+      ]
+    },
+    {
+      "passage_id": "mom-lf2025-survey-findings:p035:b004:2c045bbf",
+      "changed_fields": [
+        "section_heading",
+        "quality_note",
+        "context_required"
+      ]
+    },
+    {
+      "passage_id": "mom-lf2025-survey-findings:p061:b000:8558b6a8",
+      "changed_fields": [
+        "section_heading"
+      ]
+    },
+    {
+      "passage_id": "mom-lf2025-survey-findings:p061:b004:c8c38bb8",
+      "changed_fields": [
+        "section_heading"
+      ]
+    },
+    {
+      "passage_id": "mom-lf2025-survey-findings:p078:b000:13df0bd0",
+      "changed_fields": [
+        "section_heading"
+      ]
+    },
+    {
+      "passage_id": "mom-wage-practices2024:p008:b016:051d0c3b",
+      "changed_fields": [
+        "section_heading"
+      ]
+    },
+    {
+      "passage_id": "mom-wage-practices2024:p009:b017:ea4b7ee5",
+      "changed_fields": [
+        "section_heading"
+      ]
+    },
+    {
+      "passage_id": "mom-wage-practices2024:p011:b004:c72670f0",
+      "changed_fields": [
+        "section_heading"
+      ]
+    }
+  ],
+  "unmapped_ids": [],
+  "baseline": "frozen corpus v1 / extract-0.1",
+  "corpus": "extract-0.2 / corpus v2",
+  "cases_changed": 96,
+  "supplemental_ids_outside_branch_two_field_scan": [
+    {
+      "old_passage_id": "mom-2026-q2-advance:s01:i003:d9fc23dd",
+      "new_passage_ids": [
+        "mom-2026-q2-advance:s04:i001:d9fc23dd"
+      ],
+      "field": "partial_evidence_text",
+      "cases": [
+        "DEV-011"
+      ],
+      "exact_normalized_text": true
+    },
+    {
+      "old_passage_id": "mom-2026-q1-advance:s01:i004:d371c7f2",
+      "new_passage_ids": [
+        "mom-2026-q1-advance:s04:i002:d371c7f2"
+      ],
+      "field": "partial_evidence_text",
+      "cases": [
+        "DEV-023"
+      ],
+      "exact_normalized_text": true
+    },
+    {
+      "old_passage_id": "mom-2026-q1-final-release:s01:i001:059b7175",
+      "new_passage_ids": [
+        "mom-2026-q1-final-release:s02:i001:f5dd961b"
+      ],
+      "field": "partial_evidence_text",
+      "cases": [
+        "HO-016"
+      ],
+      "exact_normalized_text": false
+    }
+  ]
+}

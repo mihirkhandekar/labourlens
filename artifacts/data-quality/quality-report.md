@@ -248,15 +248,15 @@ Summary: {'pass': 248, 'warn': 7}
 | pass | `industry.children_sum_to_parent_within_rounding` | checked=69, skipped_due_to_dash_cells=31, max_abs_diff=20, exceeded=[] |
 | pass | `derived.retrenchment_parts_equal_total` | in-scope quarters=10, max \|perm+term-total\|=10.0 persons (source rounds to 10) |
 | warn | `derived.vacancy_ratio_recomputed_vs_published` | in-scope quarters=10, max abs diff=0.6651, mean=0.5956000000000001 (different surveys; a gap is expected, a large one would signal a definition problem) |
-| pass | `passages.ids_unique` | 13484 passages |
+| pass | `passages.ids_unique` | 15915 passages |
 | pass | `passages.non_empty_text` |  |
 | pass | `passages.pdf_have_page_numbers` | bad=[] |
 | pass | `passages.html_have_section_locator` | bad=[] |
 | pass | `passages.every_document_extracted` | not extracted: [] |
 | pass | `passages.html_date_matches_catalog` | mismatched publication dates: [] |
-| pass | `passages.quality_flag_distribution` | {'table_unreliable': 7055, 'ok': 6360, 'garbled': 69} |
+| pass | `passages.quality_flag_distribution` | {'ok': 8614, 'table_unreliable': 7055, 'garbled': 246} |
 | pass | `passages.low_yield_documents` | documents with fewer than 0.5 passages per page (text may be in images/tables): [] |
-| pass | `security.no_instruction_like_text_in_sources` | scanned 13484 passages and 147 distinct text values; hits=0 [] |
+| pass | `security.no_instruction_like_text_in_sources` | scanned 15915 passages and 147 distinct text values; hits=0 [] |
 | pass | `packaging.no_pdf_visible_to_git` | visible PDFs: [] |
 | pass | `packaging.private_paths_ignored` | visible private paths: [] |
 | pass | `packaging.snapshots_only_open_licence_csv_and_metadata` | unexpected: [] |

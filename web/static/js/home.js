@@ -38,7 +38,7 @@ function inkField(scope) {
 
 function heroHeadline() {
   const h = el('h1', 'hero-title');
-  const words = ['Every', 'figure,', '*traced*', 'to', 'its', 'source.'];
+  const words = ['LabourLens'];
   words.forEach((w, i) => {
     const emphasised = w.startsWith('*');
     const outer = el('span', 'w'); const inner = el('span', `wi${emphasised ? ' em' : ''}`, w.replaceAll('*', ''));
@@ -58,31 +58,39 @@ export function renderHome(root, report, {go, tryQuestion}) {
   const copy = el('div', 'hero-copy');
   const chips = el('ul', 'hero-chips'); chips.setAttribute('aria-label', 'Service status');
   const chip = (key, text, tone = '') => { const li = el('li'); const p = el('span', 'pill'); const d = el('span', `dot ${tone}`); const t = el('span', '', text); add(p, d, t); li.append(p); chips.append(li); refs[key] = {dot: d, text: t}; };
-  chip('report', report ? `Report built ${formatDate(report.generated_at) || 'from committed artifacts'}` : 'Report unavailable', report ? 'ok' : 'bad');
+  chip('report', report ? `Built ${formatDate(report.generated_at) || 'from committed artifacts'}` : 'Report unavailable', report ? 'ok' : 'bad');
   chip('demo', 'Checking live demo');
   chip('service', 'Checking service');
-  add(copy, el('p', 'eyebrow', 'Singapore labour-market research'), heroHeadline(),
-    el('p', 'lead', 'LabourLens answers questions about Singapore unemployment, vacancies and retrenchments. Each claim cites the statistic or the MOM report passage behind it, and the arithmetic runs in code.'),
-    add(el('div', 'hero-cta'), cta('Open the workbench', '#workbench', 'btn btn-primary', 'arrow-ur'), cta('Read the presentation', '#presentation', 'btn', 'arrow-r')), chips);
+  add(copy, el('p', 'eyebrow', 'GenAI Engineer assessment'), heroHeadline(),
+    el('p', 'lead', 'Cited answers to questions about Singapore unemployment, vacancies and retrenchments, Q1 2024 to Q2 2026.'),
+    add(el('ul', 'pr-list'), el('li', '', 'Data: four MOM datasets from data.gov.sg, MOM labour-market reports'), el('li', '', 'Limits: gold labels are mostly AI drafts; held-out gain not demonstrated; one threat case (T-I06) open')),
+    add(el('div', 'hero-cta'), cta('Open the workbench', '/workbench', 'btn btn-primary', 'arrow-ur'), cta('Read the write-up', '#presentation', 'btn', 'arrow-r')), chips);
   wrap.append(copy);
 
   const cards = Array.isArray(report?.summary?.cards) ? report.summary.cards : [];
   const seriesById = new Map((Array.isArray(report?.charts) ? report.charts : []).map(c => [c.id, c]));
   if (cards.length) wrap.append(specimen(cards, seriesById));
-  else wrap.append(add(el('div', 'bezel hero-specimen'), add(el('div', 'bezel-core'), el('p', 'eyebrow', 'Report data'), el('p', 'muted', 'The report file did not load, so no figures are shown. The workbench still works.'))));
+  else wrap.append(add(el('div', 'bezel hero-specimen'), add(el('div', 'bezel-core'), el('p', 'eyebrow', 'Report data'), el('p', 'muted', 'report.json did not load. No figures are shown. The workbench is unaffected.'))));
   hero.append(wrap);
   const foot = el('div', 'container hero-foot');
-  add(foot, el('span', 'scroll-cue'), el('span', 'small muted', scope ? `Answers cover ${scope[0]} to ${scope[1]}. Missing quarters stay missing.` : 'Answers cover a fixed range of quarters.'));
+  add(foot, el('span', 'scroll-cue'), el('span', 'small muted', scope ? `Analysis period ${scope[0]} to ${scope[1]}. Coverage varies by dataset.` : 'Fixed range of quarters.'));
   hero.append(foot);
   root.append(hero);
+  const contents = el('nav', 'container'); contents.setAttribute('aria-label', 'Contents');
+  contents.append(el('h2', '', 'Contents'));
+  const chapters = el('ul', 'meta-list');
+  [['scope', 'Scope'], ['data', 'Data'], ['retrieval', 'Retrieval'], ['agent', 'Agent workflow'], ['evaluation', 'Evaluation'], ['safety', 'Threat tests'], ['mcp', 'MCP'], ['limits', 'Review and limits'], ['next', 'Next experiments']].forEach(([id, label]) => {
+    const item = el('li'); const link = el('a', '', label); link.href = `#presentation/pr-${id}`; item.append(link); chapters.append(item);
+  });
+  contents.append(chapters); root.append(contents);
 
   // ---------- how it works ----------
-  const how = section('how', 'How an answer is made', 'Four steps, each one checkable.', 'The agent is bounded: fixed limits on rounds, tool calls and time. Tools are read-only. Retrieved text is treated as data, never as instructions.');
+  const how = section('how', 'Method', 'One bounded agent answers each question with three read-only tools', 'Limits: 6 tool calls, 2 evidence rounds, 1 repair. Retrieved text is treated as untrusted input.');
   const steps = [
-    ['01', 'search', 'You ask', 'Ask in plain English. If the question can be read more than one way, the agent asks which you mean.', 'span-5'],
-    ['02', 'route', 'Read-only tools', 'The agent can call three tools: search report passages, get a statistical series, calculate a change. It cannot write anything or browse the web.', 'span-7'],
-    ['03', 'calc', 'Code does the arithmetic', 'A change between periods is computed from validated observations. The model never does the sum.', 'span-7'],
-    ['04', 'check', 'A validated answer', 'The answer must match a schema. Each claim lists its evidence. When the evidence is not there, the agent abstains.', 'span-5']
+    ['01', 'search', 'Question', 'Ambiguous period or definition: the agent asks for clarification.', 'span-5'],
+    ['02', 'route', 'Tools', 'Search report passages; get a statistical series; calculate a change. No write access, no web access.', 'span-7'],
+    ['03', 'calc', 'Calculation', 'Changes are computed in code from validated observations, in decimal arithmetic.', 'span-7'],
+    ['04', 'check', 'Validation', 'Schema and citation checks. They confirm a quote exists, not that it supports the claim.', 'span-5']
   ];
   const bento = el('div', 'bento stagger');
   steps.forEach(([n, ic, title, body, span]) => {
@@ -94,18 +102,18 @@ export function renderHome(root, report, {go, tryQuestion}) {
   root.append(how.node);
 
   // ---------- outcomes ----------
-  const outcomes = section('outcomes', 'Four possible outcomes', 'Not every question gets an answer.', 'The status badge is never colour alone. It always carries an icon and a label.');
+  const outcomes = section('outcomes', 'Statuses', 'The agent returns one of four statuses', 'Operational failures are reported separately from these.');
   const oc = el('div', 'outcome-grid stagger');
   const list = [
-    ['answered', 'check', 'Answered', 'The evidence supports an answer. Each claim lists its citations.', FAMILIES[0].questions[0]],
-    ['abstained', 'minus', 'Abstained', 'The evidence does not cover the question. The agent says so and gives no figure.', FAMILIES[4].questions[1]],
-    ['clarify', 'help', 'Needs clarification', 'The question can be read more than one way. The agent asks which one you mean.', FAMILIES[4].questions[0]],
-    ['refused', 'shield', 'Refused', 'The request asks for something outside the tool’s job, such as changing a published figure.', FAMILIES[5].questions[0]]
+    ['answered', 'check', 'Answered', 'Answer with citations. Check the cited excerpts before using it.', FAMILIES[0].questions[0]],
+    ['abstained', 'minus', 'Abstained', 'Evidence does not cover the question. No figure is given.', FAMILIES[4].questions[1]],
+    ['clarify', 'help', 'Needs clarification', 'The question has more than one reading. The agent asks which is meant.', FAMILIES[4].questions[0]],
+    ['refused', 'shield', 'Refused', 'Request outside the tool’s scope, such as changing a published figure.', FAMILIES[5].questions[0]]
   ];
   list.forEach(([status, ic, label, body, example]) => {
     const b = el('article', 'bezel reveal'); const c = el('div', 'bezel-core outcome');
     const badge = el('span', `badge ${status}`); add(badge, icon(ic), el('span', '', label));
-    const tryBtn = button('Try an example', () => tryQuestion(example), 'btn small plain', 'arrow-ur');
+    const tryBtn = button('Open an example', () => tryQuestion(example), 'btn small plain', 'arrow-ur');
     add(c, badge, el('p', '', body), tryBtn); b.append(c); oc.append(b);
   });
   outcomes.body.append(oc);
@@ -125,13 +133,13 @@ export function renderHome(root, report, {go, tryQuestion}) {
   const close = el('section', 'section closing');
   const cw = el('div', 'container');
   const b = el('div', 'bezel ink reveal'); const c = el('div', 'bezel-core close-core');
-  add(c, el('h2', '', 'Ask a question and check the sources.'), el('p', '', 'The workbench shows the answer, every citation and every tool call. Open the presentation for the method and the evaluation results.'),
-    add(el('div', 'hero-cta'), cta('Open the workbench', '#workbench', 'btn btn-light', 'arrow-ur'), cta('Read the presentation', '#presentation', 'btn btn-ghost-light', 'arrow-r')));
+  add(c, el('h2', '', 'Write-up and demo'), el('p', '', 'Write-up: nine chapters, each figure drawn from report.json. Workbench: live questions when the demo is enabled.'),
+    add(el('div', 'hero-cta'), cta('Open the workbench', '/workbench', 'btn btn-light', 'arrow-ur'), cta('Read the write-up', '#presentation', 'btn btn-ghost-light', 'arrow-r')));
   b.append(c); cw.append(b); close.append(cw); root.append(close);
 
   return {
     setDemo: ({known, text, enabled, authenticated}) => { if (!refs.demo) return; refs.demo.text.textContent = known ? text : 'Checking live demo'; refs.demo.dot.className = `dot ${!known ? '' : !enabled ? 'warn' : 'ok pulse'}`; },
-    setService: (ok, version) => { if (!refs.service) return; refs.service.text.textContent = ok ? `Service healthy${version ? `, v${version}` : ''}` : 'Service unreachable'; refs.service.dot.className = `dot ${ok ? 'ok' : 'bad'}`; },
+    setService: (ok, version) => { if (!refs.service) return; refs.service.text.title = version ? `Service version: ${version}` : ''; refs.service.text.textContent = ok ? `Service running${version ? ` · ${version.slice(0, 7)}` : ''}` : 'Service unreachable'; refs.service.dot.className = `dot ${ok ? 'ok' : 'bad'}`; },
     go
   };
 }
@@ -150,7 +158,7 @@ function specimen(cards, seriesById) {
   const holder = el('div', 'bezel hero-specimen'); const core = el('div', 'bezel-core specimen');
   holder.append(core);
   const head = el('div', 'spec-head');
-  add(head, el('span', 'eyebrow', `Latest quarter · ${cards[0].period}`), el('span', 'small muted', 'From the committed report'));
+  add(head, el('span', 'eyebrow', `Latest quarter · ${cards[0].period}`), el('span', 'small muted', 'Source: report.json'));
   const readout = el('div', 'spec-readout'); readout.setAttribute('aria-live', 'polite');
   const chartSlot = el('div', 'spec-chart');
   const tiles = el('ul', 'tiles');
@@ -189,7 +197,7 @@ function tileValue(card) {
 }
 
 function explorer(charts) {
-  const s = section('series', 'Series explorer', 'Quarterly series from the report.', 'Pick one or more. Series on different units cannot share a chart. Population and adjustment differ between series, so check the chips before comparing.');
+  const s = section('series', 'Data', 'Unemployment, vacancies and retrenchments by quarter', 'Series with different units cannot share a chart. Check population and adjustment before comparing.');
   const box = el('div', 'bezel reveal'); const core = el('div', 'bezel-core explorer');
   const picker = el('div', 'picker'); picker.setAttribute('role', 'group'); picker.setAttribute('aria-label', 'Series');
   const slot = el('div', 'explorer-chart');
@@ -228,7 +236,7 @@ function explorer(charts) {
 
 function sources(report) {
   const rows = report.sources.rows;
-  const s = section('sources-overview', 'Where the data comes from', 'Every source is recorded with its release status.', 'Advance and final releases stay apart. A figure is never silently mixed across them.');
+  const s = section('sources-overview', 'Sources', `${rows.length} source records, each with release stage and licence status`, 'Advance and final releases are separate records.');
   const tally = key => rows.reduce((m, r) => m.set(r[key] ?? null, (m.get(r[key] ?? null) ?? 0) + 1), new Map());
   const stage = [...tally('release_stage')].sort((a, b) => b[1] - a[1]);
   const publishers = [...tally('publisher')].sort((a, b) => b[1] - a[1]);
@@ -248,24 +256,24 @@ function sources(report) {
   const side = el('div', 'bezel soft reveal span-5'); const sc = el('div', 'bezel-core');
   const pubList = el('ul', 'kv-list');
   publishers.forEach(([k, n]) => pubList.append(add(el('li'), el('span', '', k ?? 'Not recorded'), el('strong', 'num', String(n)))));
-  add(sc, el('p', 'eyebrow', 'Publisher'), pubList, el('p', 'small muted', `A licence is recorded for ${licensed} of ${total} records. The rest are MOM reports and release pages with no open licence recorded. This site shows no report text beyond short excerpts that the live agent cites.`));
+  add(sc, el('p', 'eyebrow', 'Publisher'), pubList, el('p', 'small muted', `Licence recorded for ${licensed} of ${total} records. The rest are MOM reports and release pages with no open licence recorded. This site shows only short excerpts cited by the live agent.`));
   side.append(sc);
   const note = el('div', 'bezel reveal span-12'); const nc = el('div', 'bezel-core note-row');
-  add(nc, icon('database', 'lg'), el('p', '', 'Statistics come from MOM and the Singapore Department of Statistics through data.gov.sg, under the Singapore Open Data Licence. The reports are published by the Ministry of Manpower.'), cta('Provenance in the presentation', '#presentation', 'btn small plain', 'arrow-r'));
+  add(nc, icon('database', 'lg'), el('p', '', 'Statistics: MOM and the Singapore Department of Statistics via data.gov.sg, Singapore Open Data Licence. Reports: Ministry of Manpower.'), cta('Read the data chapter', '#presentation/pr-data', 'btn small plain', 'arrow-r'));
   note.append(nc);
   bento.append(big, side, note); s.body.append(bento);
   return s;
 }
 
 function limits(report) {
-  const s = section('limits', 'What this does not establish', 'Read these before relying on a result.', null);
+  const s = section('limits', 'Limits', 'Six limits on what these results show', null);
   const items = [
-    'Gold labels are AI drafts, with only partial human review.',
-    'The held-out set has 31 cases, and the gain over the baseline is inconclusive.',
-    'One security case, T-I06 (a planted figure), still fails.',
-    'The injection scanner misses paraphrased attacks.',
-    'Some extracted report passages carry extraction defects.',
-    `Answers cover ${report?.summary?.scope?.join(' to ') ?? 'a fixed range of quarters'} only. There are no forecasts and no causal claims.`
+    'Gold labels are mostly AI drafts; 45 of 268 cases are owner-reviewed.',
+    'Held-out set: 31 cases. The gain over the baseline is not demonstrated.',
+    'Threat case T-I06 (a planted false figure) is still accepted. The cross-check is proposed, not built.',
+    'The injection scanner missed paraphrased attacks.',
+    'Some extracted report passages have extraction defects.',
+    `Analysis period ${report?.summary?.scope?.join(' to ') ?? 'fixed'} only. No forecasts, no causal claims.`
   ];
   const ol = el('ol', 'limit-list stagger');
   items.forEach((t, i) => ol.append(add(el('li', 'reveal'), el('span', 'limit-n mono', String(i + 1).padStart(2, '0')), el('p', '', t))));
@@ -273,7 +281,7 @@ function limits(report) {
   const more = [...(report?.evaluation?.limitations ?? []), ...(report?.answers?.limitations ?? []), ...(report?.mcp?.limitations ?? []), ...(report?.limitations ?? [])]
     .filter((t, i, a) => typeof t === 'string' && a.indexOf(t) === i);
   if (more.length) {
-    const d = el('details', 'more-limits reveal'); d.append(el('summary', '', `More limits recorded in the report (${more.length})`));
+    const d = el('details', 'more-limits reveal'); d.append(el('summary', '', `Additional limitations in the report (${more.length})`));
     const ul = el('ul'); more.forEach(t => ul.append(el('li', '', t))); d.append(ul); s.body.append(d);
   }
   return s;

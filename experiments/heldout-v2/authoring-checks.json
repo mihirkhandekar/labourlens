@@ -1,0 +1,14 @@
+{
+  "cases": 60,
+  "all_draft": true,
+  "all_ids_exist": true,
+  "old_gold_id_overlap": [],
+  "old_gold_or_observed_dev_dataset_period_overlap": [],
+  "all_subject_evidence_in_scope": true,
+  "gold_sha256": "7a8aee1f145f8c7490dccee2f0b75a8395cf373cbff7eaaa97aa94aede1cd427",
+  "system_calls": 0,
+  "source": "data/processed/observations.parquet",
+  "observations_sha256": "69ae768749cef6f2705dafbcf5ad9470b27e83eb7352a07a65afaed7d8c929dc",
+  "new_passage_count": 15915,
+  "extraction_agent_confirmation": "ExtractionMerge confirmed offline rebuild and ID migration complete before passages were read. No new document sources."
+}

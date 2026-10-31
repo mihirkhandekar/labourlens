@@ -66,7 +66,7 @@ class _Artifacts:
     def __init__(self, root: Path):
         self.root = root
         self.commit = self._git("rev-parse", "HEAD").decode().strip()
-        listed = self._git("ls-files", "-z", "--", "data/export", "experiments", "docs/mcp-demo-transcript.md", "data/manifests")
+        listed = self._git("ls-files", "-z", "--", "data/export", "experiments", "docs/mcp-demo-transcript.md", "docs/decisions.md", "docs/progress.md", "data/manifests")
         self.paths = sorted(path for path in listed.decode().split("\0") if path and self._allowed(path))
         self.provenance: dict[str, dict] = {}
         self.cache: dict[str, object] = {}
@@ -95,7 +95,7 @@ class _Artifacts:
         return (
             (p.parent.as_posix() == "data/export" and p.suffix == ".json")
             or (path.startswith("experiments/") and p.suffix in {".json", ".jsonl", ".md"})
-            or path == "docs/mcp-demo-transcript.md"
+            or path in {"docs/mcp-demo-transcript.md", "docs/decisions.md", "docs/progress.md"}
             or re.fullmatch(r"experiments/heldout/paired(?:-v3\.[234])?\.txt", path) is not None
             or (path.startswith("data/manifests/") and p.suffix in {".json", ".jsonl"})
         )
@@ -487,6 +487,42 @@ def _paired(artifacts: _Artifacts) -> list[dict]:
     return entries
 
 
+_DECISION = re.compile(r"^### (D-\d{3}) \u2014 (.+)$", re.M)
+_DATE = re.compile(r"(\d{1,2} (?:Oct|Nov) 2026)")
+_MILESTONE = re.compile(r"^\| (M\d(?:\.\d)?) \| ([^|]+) \| ([^|]+) \|", re.M)
+
+
+def _plain(text: str, limit: int) -> str:
+    text = re.sub(r"[`*_]|\[([^\]]*)\]\([^)]*\)", lambda m: m.group(1) or "", text)
+    text = " ".join(text.split())
+    sentence = re.split(r"(?<=[a-z0-9)])\.\s", text, maxsplit=1)[0]
+    return sentence if len(sentence) <= limit else sentence[: limit - 1].rstrip() + "\u2026"
+
+
+def _work(artifacts: _Artifacts) -> dict:
+    """Decision log and milestone table, from our own docs: headings and first sentences only."""
+    decisions, milestones, paths = [], [], []
+    text = artifacts.load("docs/decisions.md")
+    if isinstance(text, str):
+        paths.append("docs/decisions.md")
+        matches = list(_DECISION.finditer(text))
+        for i, m in enumerate(matches):
+            body = text[m.end(): matches[i + 1].start() if i + 1 < len(matches) else len(text)].strip()
+            title = m.group(2)
+            status = re.search(r"\(([A-Z][A-Z /]+)", title)
+            date = _DATE.search(title) or _DATE.search(body[:400])
+            clean = re.sub(r"\s*\([^)]*\)\s*$", "", title)
+            decisions.append({"id": m.group(1), "title": _plain(clean, 140), "status": status.group(1).strip() if status else "",
+                              "date": date.group(1) if date else "",
+                              "alternatives": _plain(next((ln.split("Alternatives", 1)[1].lstrip(":* ") for ln in body.splitlines() if "Alternatives" in ln), ""), 260),
+                              "summary": _plain(next((ln for ln in body.splitlines() if len(_plain(ln, 400)) > 50), ""), 220)})
+    progress = artifacts.load("docs/progress.md")
+    if isinstance(progress, str):
+        paths.append("docs/progress.md")
+        milestones = [{"id": m.group(1), "name": _plain(m.group(2), 90), "status": _plain(m.group(3), 200)} for m in _MILESTONE.finditer(progress)]
+    return {"decisions": decisions, "milestones": milestones, "provenance": paths}
+
+
 def build_report(root: Path) -> dict:
     artifacts = _Artifacts(root)
     sources = _sources(artifacts)
@@ -525,6 +561,7 @@ def build_report(root: Path) -> dict:
                                errors={"scope": "agent score records", "counts": errors, "provenance": trace_paths}, paired=paired,
                                limitations=["Generation used AI-drafted gold before owner review; post-run owner review covers selected cards, not the entire gold set.", "Forty-five gold cards are owner reviewed; the remaining 223 remain draft.", "Current v3.5 and historical paired intervals include zero; the comparison is inconclusive under the registered rule.", "Gold v3.5 changes HO-022 after held-out execution; rescoring is post-run adjudication, not a fresh frozen-gold experiment.", "AI-assisted per-card owner decisions are not blinded independent annotation or inter-rater evidence.", "Metric definitions differ between evaluation stages."]),
         "quality": _section("Validation outcomes, including warnings.", quality_rows, [quality_path], metrics=_numeric(quality_data.get("summary", {}))),
+        "work": _work(artifacts),
         "limitations": ["Model outputs are not published.", "Report passages are not published.", "Missing artifacts are marked missing.", "Only committed artifacts supply measurements.", "Series definitions are kept separate.", "The population basis of the dataset employment series is unverified."],
         "provenance": {"commit": artifacts.commit, "artifacts": list(artifacts.provenance.values()),
                        "policy": "Committed artifacts only; numeric fields only."},

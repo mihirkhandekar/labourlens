@@ -15,6 +15,8 @@ One bounded LangGraph agent reads both through three read-only tools. Code does 
 
 The README (`README.md`) lists the current data counts. The data sheet (`docs/data-sheet.md`) records sources, licences and checks.
 
+**Corpus version boundary (D-037, 31 Oct 2026).** Current local passages use `extract-0.2`: 15,915 passages and 1,732 `merge200` chunks. The same raw snapshots produced byte-identical passage/Parquet outputs in two offline builds. PDF parsing uses page-local layout headings, control detection, footer provenance and explicit context-required fragments; HTML parsing stays article-bounded. Context deduplication is limited to identical normalized text within one source snapshot. Gold v3.6 migrates evidence IDs only, with a per-case hash/overlap audit. Existing results remain **frozen corpus v1**. The premerge code tag is `corpus-v1-frozen`; private premerge stores are retained separately. Dense embeddings are content/model-keyed, so unchanged inputs reuse cached vectors even when passage IDs move; 776 unique chunk inputs need new vectors before corpus-v2 dense serving/evaluation. See `docs/experiments/m7-corpus-v2-runbook.md`.
+
 ## 2. Component diagram
 
 ```mermaid
@@ -76,6 +78,13 @@ flowchart TB
 8. **Answer.** `answer/context.py` renders items and notes into the prompt. The model returns a structured answer with claim-level citations, each with a verbatim quote (`answer/schema.py`).
 9. **Validate.** `answer/validate.py` rejects an answer when a cited label is not in the context, a quote is not verbatim in the cited item, a quote exceeds 40 words, a flagged item is cited or the status contradicts the content. One repair attempt follows. Numbers in a claim that do not appear in the cited text are reported as ungrounded.
 10. **Finalize.** The output guard in `security/guards.py` blocks answers that contain a known secret or system-prompt text. The page shows the answer, the evidence behind each citation and the tool timeline.
+
+### Browser pages and public API
+
+`GET /` serves `web/index.html` for the report/presentation; `GET /workbench` and `GET /workbench.html` both serve `web/workbench.html`. These static pages are public even when live research is disabled. All use the same security-header middleware, self-hosted assets and CSP (`script-src 'self'; style-src 'self'`); opening a page does not invoke research.
+
+The workbench uses the existing authenticated `POST /api/ask`, session/status and feedback endpoints, not a new retrieval or audit endpoint. Its public result projects observation values and definition fields (`unit`, `indicator_id`, `population`, `adjustment`, `dimension`, `period`, plus available `missing_reason` and `source_locator`) only from stored observation records. Non-finite observation values become `null`. Optional `usage.prompt_tokens` and `usage.completion_tokens` come from recorded usage, not estimates. Calculation cards identify derived evidence as `calculated`, omit the dataset publication date and use input labels/periods only when present in deterministic calculation text; their source URL still identifies the underlying dataset. Calculation values/units are not guessed. Report text remains limited to bounded, verified cited quotes; full passages, hidden reasoning and private audit records are not exposed.
+
 
 ## 4. The agent graph
 
@@ -148,7 +157,7 @@ The evaluation branch consumes saved runs rather than changing live answers. Dev
 | Security | `src/labourlens/security/guards.py`, `threat_suite.py` | Injection and output guards, adversarial suite |
 | Evaluation | `src/labourlens/evaluation/harness.py` | Metrics from saved raw runs |
 | Audit | `src/labourlens/audit/log.py` | Run, feedback and event logs |
-| Web | `src/labourlens/report/app.py`, `serve.py`, `build.py`, `audit.py`; `web/index.html`, `web/static/` | FastAPI server, report builder; single-page front end with three views (Overview, Presentation, Workbench), self-hosted fonts and no inline script or style |
+| Web | `src/labourlens/report/app.py`, `serve.py`, `build.py`, `audit.py`; `web/index.html`, `web/workbench.html`, `web/static/` | FastAPI server and report builder; report/presentation page plus a separate research workbench, self-hosted fonts and no inline script or style |
 | Prompts | `prompts/planner_v1.md`, `answer_v1.md` to `answer_v4.md`, `answer_naive.md`, `repair_v1.md`, `judge_v1.md` | Versioned prompts with matching `_user.md` templates |
 | Tests | `tests/data/`, `tests/retrieval/`, `tests/mcp/`, `tests/web/`, `tests/test_security.py`, `tests/test_audit_and_notes.py` | Unit, integration, protocol and adversarial tests |
 | Gold set | `experiments/gold/draft_cases.jsonl`, `CHANGELOG.md`, `ai-review/`, `ai-review-2/` | Evaluation cases and their review history |

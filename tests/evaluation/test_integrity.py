@@ -44,7 +44,7 @@ def test_review_metadata_does_not_change_judge_inputs(pair, source):
 
 
 def test_evaluation_report_records_owner_assisted_count(monkeypatch, tmp_path, capsys):
-    monkeypatch.setattr(h.ev, "load_cases", lambda split: [
+    monkeypatch.setattr(h.ev, "load_cases", lambda split, path=None: [
         {"case_id": "DEV-001", "review_status": "owner_reviewed"},
         {"case_id": "DEV-002", "review_status": "draft"},
     ])
@@ -131,3 +131,23 @@ def test_provenance_fingerprints():
     assert all(p["prompt_sha256"].values())
     assert len(p["gold_sha256"]) == len(p["price_table_sha256"]) == 64
     assert p["git_head"]
+
+
+def test_snapshot_uses_separate_gold(tmp_path):
+    gold = tmp_path / "heldout_v2.jsonl"
+    gold.write_text('{"case_id":"HO-V2-001"}\n')
+    result = snapshot("planner_v1|answer_v3", 1, 1, gold_path=gold)
+    assert result["gold_sha256"] == hashlib.sha256(gold.read_bytes()).hexdigest()
+
+
+@pytest.mark.parametrize("command", ["agent-exp", "eval"])
+def test_cli_routes_separate_gold(command, tmp_path, monkeypatch):
+    from labourlens import cli
+    from labourlens.agent import experiments
+
+    gold = tmp_path / "heldout_v2.jsonl"
+    received = {}
+    target = experiments if command == "agent-exp" else h
+    monkeypatch.setattr(target, "run", lambda *args, **kwargs: received.update(kwargs))
+    assert cli.main([command, "--gold", str(gold), "--split", "heldout"]) == 0
+    assert received["gold_path"] == gold

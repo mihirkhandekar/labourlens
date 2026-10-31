@@ -1,0 +1,626 @@
+[
+  {
+    "component": 1,
+    "case_ids": [
+      "HO-V2-001",
+      "HO-V2-021"
+    ],
+    "evidence_groups": [
+      [
+        "dataset",
+        "citizen_unemployment_rate",
+        "2024-Q1"
+      ],
+      [
+        "dataset",
+        "citizen_unemployment_rate",
+        "2024-Q3"
+      ]
+    ],
+    "empty_evidence_boundary_case": false
+  },
+  {
+    "component": 2,
+    "case_ids": [
+      "HO-V2-002",
+      "HO-V2-022"
+    ],
+    "evidence_groups": [
+      [
+        "dataset",
+        "citizen_unemployment_rate",
+        "2025-Q2"
+      ],
+      [
+        "dataset",
+        "citizen_unemployment_rate",
+        "2025-Q4"
+      ]
+    ],
+    "empty_evidence_boundary_case": false
+  },
+  {
+    "component": 3,
+    "case_ids": [
+      "HO-V2-003",
+      "HO-V2-009",
+      "HO-V2-023",
+      "HO-V2-028",
+      "HO-V2-037",
+      "HO-V2-043",
+      "HO-V2-052"
+    ],
+    "evidence_groups": [
+      [
+        "dataset",
+        "job_vacancy_count",
+        "2024-Q1"
+      ],
+      [
+        "dataset",
+        "job_vacancy_rate",
+        "2024-Q1"
+      ],
+      [
+        "dataset",
+        "job_vacancy_rate",
+        "2024-Q4"
+      ],
+      [
+        "dataset",
+        "resignation_rate",
+        "2024-Q1"
+      ],
+      [
+        "dataset",
+        "resignation_rate",
+        "2025-Q1"
+      ]
+    ],
+    "empty_evidence_boundary_case": false
+  },
+  {
+    "component": 4,
+    "case_ids": [
+      "HO-V2-004"
+    ],
+    "evidence_groups": [
+      [
+        "dataset",
+        "job_vacancy_rate",
+        "2024-Q2"
+      ]
+    ],
+    "empty_evidence_boundary_case": false
+  },
+  {
+    "component": 5,
+    "case_ids": [
+      "HO-V2-005",
+      "HO-V2-025",
+      "HO-V2-029",
+      "HO-V2-041"
+    ],
+    "evidence_groups": [
+      [
+        "dataset",
+        "job_vacancies_by_occupation",
+        "2024-Q2"
+      ],
+      [
+        "dataset",
+        "job_vacancies_by_occupation",
+        "2026-Q1"
+      ],
+      [
+        "dataset",
+        "resignation_rate_by_occupation",
+        "2024-Q2"
+      ],
+      [
+        "dataset",
+        "resignation_rate_by_occupation",
+        "2025-Q2"
+      ]
+    ],
+    "empty_evidence_boundary_case": false
+  },
+  {
+    "component": 6,
+    "case_ids": [
+      "HO-V2-006",
+      "HO-V2-026"
+    ],
+    "evidence_groups": [
+      [
+        "dataset",
+        "job_vacancy_rate_by_occupation",
+        "2024-Q1"
+      ],
+      [
+        "dataset",
+        "job_vacancy_rate_by_occupation",
+        "2026-Q2"
+      ]
+    ],
+    "empty_evidence_boundary_case": false
+  },
+  {
+    "component": 7,
+    "case_ids": [
+      "HO-V2-007",
+      "HO-V2-027",
+      "HO-V2-042"
+    ],
+    "evidence_groups": [
+      [
+        "dataset",
+        "recruitment_rate_by_occupation",
+        "2025-Q3"
+      ],
+      [
+        "dataset",
+        "recruitment_rate_by_occupation",
+        "2026-Q2"
+      ],
+      [
+        "dataset",
+        "resignation_rate_by_occupation",
+        "2025-Q3"
+      ]
+    ],
+    "empty_evidence_boundary_case": false
+  },
+  {
+    "component": 8,
+    "case_ids": [
+      "HO-V2-008"
+    ],
+    "evidence_groups": [
+      [
+        "dataset",
+        "reentry_12m",
+        "2024-Q1"
+      ]
+    ],
+    "empty_evidence_boundary_case": false
+  },
+  {
+    "component": 9,
+    "case_ids": [
+      "HO-V2-010",
+      "HO-V2-039"
+    ],
+    "evidence_groups": [
+      [
+        "dataset",
+        "resignation_rate_by_occupation",
+        "2024-Q3"
+      ],
+      [
+        "dataset",
+        "retrenched_by_occupation",
+        "2024-Q3"
+      ]
+    ],
+    "empty_evidence_boundary_case": false
+  },
+  {
+    "component": 10,
+    "case_ids": [
+      "HO-V2-011"
+    ],
+    "evidence_groups": [
+      [
+        "dataset",
+        "retrenched_by_occupation",
+        "2024-Q4"
+      ]
+    ],
+    "empty_evidence_boundary_case": false
+  },
+  {
+    "component": 11,
+    "case_ids": [
+      "HO-V2-012",
+      "HO-V2-031",
+      "HO-V2-032",
+      "HO-V2-044"
+    ],
+    "evidence_groups": [
+      [
+        "dataset",
+        "retrenched_permanent",
+        "2025-Q3"
+      ],
+      [
+        "dataset",
+        "retrenched_permanent",
+        "2025-Q4"
+      ],
+      [
+        "dataset",
+        "retrenched_term_contract",
+        "2024-Q4"
+      ],
+      [
+        "dataset",
+        "retrenched_term_contract",
+        "2025-Q4"
+      ]
+    ],
+    "empty_evidence_boundary_case": false
+  },
+  {
+    "component": 12,
+    "case_ids": [
+      "HO-V2-013"
+    ],
+    "evidence_groups": [
+      [
+        "dataset",
+        "retrenched_term_contract",
+        "2025-Q2"
+      ]
+    ],
+    "empty_evidence_boundary_case": false
+  },
+  {
+    "component": 13,
+    "case_ids": [
+      "HO-V2-014",
+      "HO-V2-033"
+    ],
+    "evidence_groups": [
+      [
+        "dataset",
+        "retrenched_permanent_by_occupation",
+        "2024-Q1"
+      ],
+      [
+        "dataset",
+        "retrenched_permanent_by_occupation",
+        "2026-Q2"
+      ]
+    ],
+    "empty_evidence_boundary_case": false
+  },
+  {
+    "component": 14,
+    "case_ids": [
+      "HO-V2-015"
+    ],
+    "evidence_groups": [
+      [
+        "dataset",
+        "retrenched_term_contract_by_occupation",
+        "2024-Q4"
+      ]
+    ],
+    "empty_evidence_boundary_case": false
+  },
+  {
+    "component": 15,
+    "case_ids": [
+      "HO-V2-016",
+      "HO-V2-035",
+      "HO-V2-038"
+    ],
+    "evidence_groups": [
+      [
+        "dataset",
+        "unemployed_citizens",
+        "2024-Q1"
+      ],
+      [
+        "dataset",
+        "unemployed_citizens",
+        "2025-Q4"
+      ],
+      [
+        "dataset",
+        "unemployed_overall",
+        "2024-Q1"
+      ]
+    ],
+    "empty_evidence_boundary_case": false
+  },
+  {
+    "component": 16,
+    "case_ids": [
+      "HO-V2-017"
+    ],
+    "evidence_groups": [
+      [
+        "dataset",
+        "unemployed_overall",
+        "2024-Q4"
+      ]
+    ],
+    "empty_evidence_boundary_case": false
+  },
+  {
+    "component": 17,
+    "case_ids": [
+      "HO-V2-018"
+    ],
+    "evidence_groups": [
+      [
+        "dataset",
+        "unemployed_residents",
+        "2026-Q2"
+      ]
+    ],
+    "empty_evidence_boundary_case": false
+  },
+  {
+    "component": 18,
+    "case_ids": [
+      "HO-V2-019"
+    ],
+    "evidence_groups": [
+      [
+        "dataset",
+        "job_vacancies_by_industry",
+        "2024-Q3"
+      ]
+    ],
+    "empty_evidence_boundary_case": false
+  },
+  {
+    "component": 19,
+    "case_ids": [
+      "HO-V2-020"
+    ],
+    "evidence_groups": [
+      [
+        "dataset",
+        "recruitment_rate_by_industry",
+        "2026-Q1"
+      ]
+    ],
+    "empty_evidence_boundary_case": false
+  },
+  {
+    "component": 20,
+    "case_ids": [
+      "HO-V2-024",
+      "HO-V2-047"
+    ],
+    "evidence_groups": [
+      [
+        "dataset",
+        "job_vacancies_by_occupation",
+        "2024-Q1"
+      ],
+      [
+        "dataset",
+        "job_vacancies_by_occupation",
+        "2024-Q4"
+      ]
+    ],
+    "empty_evidence_boundary_case": false
+  },
+  {
+    "component": 21,
+    "case_ids": [
+      "HO-V2-030"
+    ],
+    "evidence_groups": [
+      [
+        "dataset",
+        "retrenched_by_occupation",
+        "2024-Q1"
+      ],
+      [
+        "dataset",
+        "retrenched_by_occupation",
+        "2025-Q4"
+      ]
+    ],
+    "empty_evidence_boundary_case": false
+  },
+  {
+    "component": 22,
+    "case_ids": [
+      "HO-V2-034"
+    ],
+    "evidence_groups": [
+      [
+        "dataset",
+        "retrenched_term_contract_by_occupation",
+        "2024-Q2"
+      ],
+      [
+        "dataset",
+        "retrenched_term_contract_by_occupation",
+        "2026-Q2"
+      ]
+    ],
+    "empty_evidence_boundary_case": false
+  },
+  {
+    "component": 23,
+    "case_ids": [
+      "HO-V2-036",
+      "HO-V2-054"
+    ],
+    "evidence_groups": [
+      [
+        "dataset",
+        "reentry_12m",
+        "2025-Q3"
+      ],
+      [
+        "dataset",
+        "reentry_12m",
+        "2025-Q4"
+      ]
+    ],
+    "empty_evidence_boundary_case": false
+  },
+  {
+    "component": 24,
+    "case_ids": [
+      "HO-V2-040"
+    ],
+    "evidence_groups": [
+      [
+        "dataset",
+        "retrenched_permanent",
+        "2024-Q1"
+      ],
+      [
+        "dataset",
+        "retrenched_term_contract",
+        "2024-Q1"
+      ]
+    ],
+    "empty_evidence_boundary_case": false
+  },
+  {
+    "component": 25,
+    "case_ids": [
+      "HO-V2-045"
+    ],
+    "evidence_groups": [
+      [
+        "dataset",
+        "job_vacancy_rate",
+        "2024-Q3"
+      ]
+    ],
+    "empty_evidence_boundary_case": false
+  },
+  {
+    "component": 26,
+    "case_ids": [
+      "HO-V2-046"
+    ],
+    "evidence_groups": [
+      [
+        "dataset",
+        "retrenched_term_contract",
+        "2025-Q1"
+      ]
+    ],
+    "empty_evidence_boundary_case": false
+  },
+  {
+    "component": 27,
+    "case_ids": [
+      "HO-V2-048",
+      "HO-V2-053"
+    ],
+    "evidence_groups": [
+      [
+        "dataset",
+        "resignation_rate",
+        "2024-Q4"
+      ]
+    ],
+    "empty_evidence_boundary_case": false
+  },
+  {
+    "component": 28,
+    "case_ids": [
+      "HO-V2-049"
+    ],
+    "evidence_groups": [
+      [
+        "dataset",
+        "citizen_unemployment_rate",
+        "2024-Q2"
+      ]
+    ],
+    "empty_evidence_boundary_case": false
+  },
+  {
+    "component": 29,
+    "case_ids": [
+      "HO-V2-050"
+    ],
+    "evidence_groups": [],
+    "empty_evidence_boundary_case": true
+  },
+  {
+    "component": 30,
+    "case_ids": [
+      "HO-V2-051"
+    ],
+    "evidence_groups": [],
+    "empty_evidence_boundary_case": true
+  },
+  {
+    "component": 31,
+    "case_ids": [
+      "HO-V2-055"
+    ],
+    "evidence_groups": [
+      [
+        "dataset",
+        "job_vacancy_rate",
+        "2025-Q2"
+      ]
+    ],
+    "empty_evidence_boundary_case": false
+  },
+  {
+    "component": 32,
+    "case_ids": [
+      "HO-V2-056"
+    ],
+    "evidence_groups": [
+      [
+        "dataset",
+        "retrenched_term_contract",
+        "2024-Q3"
+      ]
+    ],
+    "empty_evidence_boundary_case": false
+  },
+  {
+    "component": 33,
+    "case_ids": [
+      "HO-V2-057"
+    ],
+    "evidence_groups": [
+      [
+        "dataset",
+        "unemployed_residents",
+        "2024-Q3"
+      ]
+    ],
+    "empty_evidence_boundary_case": false
+  },
+  {
+    "component": 34,
+    "case_ids": [
+      "HO-V2-058"
+    ],
+    "evidence_groups": [
+      [
+        "dataset",
+        "resignation_rate_by_occupation",
+        "2026-Q2"
+      ]
+    ],
+    "empty_evidence_boundary_case": false
+  },
+  {
+    "component": 35,
+    "case_ids": [
+      "HO-V2-059"
+    ],
+    "evidence_groups": [],
+    "empty_evidence_boundary_case": true
+  },
+  {
+    "component": 36,
+    "case_ids": [
+      "HO-V2-060"
+    ],
+    "evidence_groups": [],
+    "empty_evidence_boundary_case": true
+  }
+]

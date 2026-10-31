@@ -519,3 +519,85 @@ def test_public_result_projects_only_verified_data_and_bounded_cited_quotes(monk
     assert "result" not in trace[0]["detail"]
     assert "private-planner-note" not in json.dumps(trace)
     assert "private-tool-result" not in json.dumps(trace)
+
+
+def test_workbench_routes_are_public_static_pages_with_index_security(settings):
+    from labourlens import paths
+
+    settings.demo_enabled = False
+
+    def forbidden(*args):
+        pytest.fail("Static page request loaded or invoked research")
+
+    async def scenario():
+        async with client_for(settings, runner=forbidden, shared_factory=forbidden) as (_, client):
+            index = await client.get("/")
+            expected = (paths.ROOT / "web" / "workbench.html").read_bytes()
+            headers = ("content-security-policy", "x-content-type-options", "referrer-policy", "x-frame-options", "permissions-policy")
+            for route in ("/workbench", "/workbench.html"):
+                response = await client.get(route)
+                assert response.status_code == 200
+                assert response.content == expected
+                assert response.headers["content-type"].startswith("text/html")
+                for header in headers:
+                    assert response.headers[header] == index.headers[header]
+                assert "set-cookie" not in response.headers
+            assert (await client.post("/api/ask", json={"question": QUESTION})).status_code == 503
+
+    asyncio.run(scenario())
+
+
+def test_public_result_projects_observation_definitions_and_usage_without_private_fields(monkeypatch):
+    from labourlens.data import catalog
+
+    monkeypatch.setattr(catalog, "sources", lambda: {})
+    record = {
+        "observation_id": "fixture-obs", "source_id": "fixture-source", "period": "2026-Q2",
+        "value": 2.75, "unit": "percent", "indicator_id": "fixture-rate", "population": "resident",
+        "adjustment": "seasonally_adjusted", "dimension": "", "source_locator": "row=3;col=rate",
+        "missing_reason": None, "raw_value": "private raw cell", "snapshot_id": "private-snapshot",
+    }
+    shared = SimpleNamespace(obs=pd.DataFrame([record]), passages_by_id={})
+    raw = agent_result()
+    raw["evidence"] = [{"label": "O1", "id": "fixture-obs", "source_id": "fixture-source"}]
+    raw["usage"]["hidden_reasoning"] = "private reasoning"
+    result = public_result(raw, shared)
+    card = result["evidence"][0]
+    for key in ("period", "value", "unit", "indicator_id", "population", "adjustment", "dimension", "source_locator"):
+        assert card[key] == record[key]
+    assert "raw_value" not in card
+    assert "snapshot_id" not in card
+    assert result["usage"] == {"cost_usd": 0.01, "seconds": 0.01, "prompt_tokens": 10, "completion_tokens": 5}
+    assert "private reasoning" not in json.dumps(result)
+    raw["usage"] = {}
+    assert public_result(raw, shared)["usage"] == {"cost_usd": 0, "seconds": 0.01}
+    shared.obs.loc[0, "value"] = float("nan")
+    assert public_result(raw, shared)["evidence"][0]["value"] is None
+
+
+@pytest.mark.parametrize("calculation_text, locator", [
+    ("Calculated difference of fixture-rate (all; resident, seasonally_adjusted) from 2026-Q1 to 2026-Q2: 2.75 - 2.5 = 0.25 percentage_points. Inputs O1 (2026-Q1) and O2 (2026-Q2).", "O1 (2026-Q1) → O2 (2026-Q2)"),
+    ("", ""),
+])
+def test_public_result_calculation_metadata_is_not_dataset_release(monkeypatch, calculation_text, locator):
+    from labourlens.data import catalog
+
+    monkeypatch.setattr(catalog, "sources", lambda: {"datasets": [{
+        "source_id": "fixture-source", "title": "Synthetic quarterly fixture", "publisher": "Test publisher",
+        "publication_date": "2026-09-01", "release_stage": "dataset_snapshot",
+        "canonical_url": "https://example.org/statistics",
+    }]})
+    raw = agent_result()
+    raw["evidence"] = [{"label": "C1", "id": "calc:fixture", "source_id": "fixture-source"}]
+    raw["evidence_text"] = {"C1": calculation_text}
+    result = public_result(raw, SimpleNamespace(obs=pd.DataFrame(), passages_by_id={}))
+    card = result["evidence"][0]
+    assert card["kind"] == "calculation"
+    assert card["source_title"] == "Calculation on Synthetic quarterly fixture"
+    assert card["release_stage"] == "calculated"
+    assert card["date"] == ""
+    assert card["locator"] == locator
+    assert card["url"] == "https://example.org/statistics"
+    assert "value" not in card
+    assert "unit" not in card
+    assert "evidence_text" not in result

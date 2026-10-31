@@ -1,0 +1,14 @@
+{
+  "model": "text-embedding-3-large",
+  "chunks": 1732,
+  "corpus_hash": "794cf9c9814d1f451803adb7de81a829ebda0d708cb98d9a268e7c2fdc0063e0",
+  "unique_chunk_inputs": 1282,
+  "cached_unique_inputs": 506,
+  "new_vectors": 776,
+  "new_input_token_upper_bound_utf8_bytes": 749719,
+  "usd_per_million": 0.13,
+  "cost_upper_bound_usd": 0.09746347,
+  "exact_tokens_status": "cl100k_base local token count; no API request; actual bill uses API usage",
+  "new_input_tokens": 176211,
+  "estimated_usd": 0.02290743
+}

@@ -155,6 +155,20 @@ def public_result(raw: dict, shared) -> dict:
         # A report excerpt must be both cited and an actual substring of fetched evidence.
         text = str(raw.get("evidence_text", {}).get(label, ""))
         card["quotes"] = [q for q in quotes[label] if q and q in text]
+        if record is not None:
+            for key in ("unit", "indicator_id", "population", "adjustment", "dimension", "period", "missing_reason", "source_locator"):
+                if key in record and isinstance(record[key], str):
+                    card[key] = record[key]
+            value = record.get("value")
+            card["value"] = float(value) if value is not None and math.isfinite(float(value)) else None
+        elif label.startswith("C") and eid.startswith("calc:"):
+            # Derived evidence is not a publisher release. Only project input locators
+            # actually present in the deterministic calculation's own evidence text.
+            card.update(source_title=f"Calculation on {source.get('title', sid)}", date="", release_stage="calculated", locator="")
+            inputs = re.search(r"\bInputs (O\d+) \((\d{4}-Q[1-4])\) and (O\d+) \((\d{4}-Q[1-4])\)\.$", text)
+            if inputs:
+                a, period_a, b, period_b = inputs.groups()
+                card["locator"] = f"{a} ({period_a}) → {b} ({period_b})"
         evidence.append(card)
         if record is not None and label.startswith("O"):
             val = record.get("value")
@@ -163,8 +177,12 @@ def public_result(raw: dict, shared) -> dict:
                 series[key].append({"period": record["period"], "value": float(val), "observation_id": eid})
     chart = {"series": [{"source_id": k[0], "label": " / ".join(str(v) for v in k[1:5] if v), "unit": k[5], "points": sorted(v, key=lambda p: p["period"])} for k, v in series.items()]}
     trace = [{"node": e.get("node", ""), "event": e.get("event", ""), "detail": {k: v for k, v in e.get("detail", {}).items() if k in {"tool", "args", "new_items", "seconds", "round", "n_calls", "observations", "passages", "calculations", "error_kind", "calls_used", "data_quality_notes"}}} for e in raw.get("trace", [])]
-    return {"run_id": raw.get("run_id", ""), "answer": answer, "evidence": evidence, "chart": chart, "trace": trace,
-            "usage": {"cost_usd": raw.get("usage", {}).get("cost_usd", 0), "seconds": raw.get("seconds", 0)}}
+    usage = {"cost_usd": raw.get("usage", {}).get("cost_usd", 0), "seconds": raw.get("seconds", 0)}
+    for key in ("prompt_tokens", "completion_tokens"):
+        value = raw.get("usage", {}).get(key)
+        if isinstance(value, int) and not isinstance(value, bool) and value >= 0:
+            usage[key] = value
+    return {"run_id": raw.get("run_id", ""), "answer": answer, "evidence": evidence, "chart": chart, "trace": trace, "usage": usage}
 
 def create_app(settings: Settings | None = None, runner=None, shared_factory=None):
     cfg = settings or Settings.from_env()
@@ -426,4 +444,8 @@ def create_app(settings: Settings | None = None, runner=None, shared_factory=Non
     @app.get("/")
     async def index():
         return FileResponse(root / "index.html")
+    @app.get("/workbench")
+    @app.get("/workbench.html")
+    async def workbench():
+        return FileResponse(root / "workbench.html")
     return app

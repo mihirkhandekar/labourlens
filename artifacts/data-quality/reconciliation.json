@@ -4,8 +4,8 @@
   "quarters": [
     {
       "advance": {
-        "locator": "section: Main Findings 3, item 2",
-        "passage_id": "mom-2025-q3-advance:s02:i002:6c4338fb",
+        "locator": "section: Main Findings, item 2",
+        "passage_id": "mom-2025-q3-advance:s03:i002:6c4338fb",
         "publication_date": "2025-10-30",
         "release_stage": "advance",
         "value": 24800
@@ -44,7 +44,7 @@
       },
       "final": {
         "locator": "section: Main Findings, item 2",
-        "passage_id": "mom-2025-q4-final-release:s01:i002:257c8baa",
+        "passage_id": "mom-2025-q4-final-release:s02:i002:257c8baa",
         "publication_date": "2026-03-20",
         "release_stage": "final",
         "value": 17700
@@ -54,8 +54,8 @@
     },
     {
       "advance": {
-        "locator": "section: Labour Market Advance Release – First Quarter 2026, item 3",
-        "passage_id": "mom-2026-q1-advance:s01:i003:3cd3fd75",
+        "locator": "section: Total employment continued to grow for the 18th consecutive quarter, item 1",
+        "passage_id": "mom-2026-q1-advance:s04:i001:3cd3fd75",
         "publication_date": "2026-04-30",
         "release_stage": "advance",
         "value": 5000
@@ -68,8 +68,8 @@
         "value": 13000
       },
       "final": {
-        "locator": "section: Labour Market Report 1Q 2026, item 1",
-        "passage_id": "mom-2026-q1-final-release:s01:i001:059b7175",
+        "locator": "section: Main Findings, item 1",
+        "passage_id": "mom-2026-q1-final-release:s02:i001:f5dd961b",
         "publication_date": "2026-06-15",
         "release_stage": "final",
         "value": 9400
@@ -79,8 +79,8 @@
     },
     {
       "advance": {
-        "locator": "section: Labour Market Advance Release – Second Quarter 2026, item 1",
-        "passage_id": "mom-2026-q2-advance:s01:i001:a424084c",
+        "locator": "section: Overview, item 1",
+        "passage_id": "mom-2026-q2-advance:s02:i001:a424084c",
         "publication_date": "2026-07-31",
         "release_stage": "advance",
         "value": 10700
@@ -93,8 +93,8 @@
         "value": 14700
       },
       "final": {
-        "locator": "section: Labour Market Report - Second Quarter 2026, item 1",
-        "passage_id": "mom-2026-q2-final-release:s01:i001:98b26ad8",
+        "locator": "section: Main Findings, item 1",
+        "passage_id": "mom-2026-q2-final-release:s02:i001:98b26ad8",
         "publication_date": "2026-09-21",
         "release_stage": "final",
         "value": 11400

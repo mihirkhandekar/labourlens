@@ -75,3 +75,21 @@ def test_committed_report_carries_ladder_and_paired():
     assert current["gold_version"] == "v3.5" and current["n"] == 31
     assert current["models"]["gpt-6-luna"]["ci95"][0] == 0.0
     assert current["models"]["gpt-5.6-luna"]["ci95"][0] < 0
+
+
+def test_work_section_parses_decisions_and_milestones():
+    from labourlens.report.build import _work
+
+    decisions = (
+        "### D-016 \u2014 Experiment policy (DECISION, owner, 30 Oct 2026)\n"
+        "**Label.** Compare options under a controlled setup, one factor at a time. More text.\n\n"
+        "### D-017 \u2014 Gold set\nShort.\n**Alternatives:** none chosen; keep the draft.\n"
+    )
+    progress = "| M2 | BM25 baseline and gold | implemented; dev recorded | `src/x` |\n| not a row | x |\n"
+    out = _work(SyntheticArtifacts({"docs/decisions.md": decisions, "docs/progress.md": progress}))
+    assert [d["id"] for d in out["decisions"]] == ["D-016", "D-017"]
+    assert out["decisions"][0]["date"] == "30 Oct 2026" and out["decisions"][0]["status"] == "DECISION"
+    assert out["decisions"][0]["title"] == "Experiment policy"
+    assert out["decisions"][1]["alternatives"].startswith("none chosen")
+    assert out["milestones"] == [{"id": "M2", "name": "BM25 baseline and gold", "status": "implemented; dev recorded"}]
+    assert _Artifacts._allowed("docs/decisions.md") and not _Artifacts._allowed("docs/data-sheet.md")

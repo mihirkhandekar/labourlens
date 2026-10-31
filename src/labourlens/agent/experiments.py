@@ -139,15 +139,15 @@ COLS = ["valid_rate", "behavior_accuracy", "over_abstention_rate", "false_answer
 
 
 def run(split: str = "dev", pairs: list[str] | None = None, answer_prompt: str = "answer_v3", tag: str = "A1",
-        retrieval: str = "hybrid", planner_prompt: str = "planner_v1") -> None:
-    cases = ev.load_cases(split)
+        retrieval: str = "hybrid", planner_prompt: str = "planner_v1", gold_path=None) -> None:
+    cases = ev.load_cases(split, gold_path)
     shared = Shared()
     exp = f"agent-{split}-{tag}"
     rows = {}
     for label in pairs or MODEL_PAIRS:
         pm, am = MODEL_PAIRS[label]
         cfg = AgentConfig(planner_model=pm, answer_model=am, answer_prompt=answer_prompt, retrieval=retrieval, planner_prompt=planner_prompt)
-        provenance = snapshot(cfg.key(), len(cases), len(cases))
+        provenance = snapshot(cfg.key(), len(cases), len(cases), gold_path=gold_path)
         print(f"[agent] {label} on {len(cases)} cases", flush=True)
         with ThreadPoolExecutor(WORKERS) as ex:
             results = list(ex.map(lambda c: (c, run_agent(c["question"], shared, cfg)), cases))

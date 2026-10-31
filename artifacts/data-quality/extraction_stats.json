@@ -1,61 +1,61 @@
 [
   {
-    "body_font_size_median": 8.04,
-    "dropped_short_blocks": 559,
+    "body_font_size_median": 9.48,
+    "dropped_short_blocks": 592,
     "flags": {
       "empty": 0,
-      "garbled": 0,
+      "garbled": 1,
       "multicolumn_uncertain": 0,
-      "ok": 364,
+      "ok": 585,
       "table_unreliable": 525
     },
     "pages": 64,
-    "passages": 889,
+    "passages": 1111,
     "source_id": "mom-2025-q3-final",
     "status": "ok"
   },
   {
-    "body_font_size_median": 7.98,
-    "dropped_short_blocks": 621,
+    "body_font_size_median": 9.48,
+    "dropped_short_blocks": 665,
     "flags": {
       "empty": 0,
-      "garbled": 5,
+      "garbled": 17,
       "multicolumn_uncertain": 0,
-      "ok": 423,
+      "ok": 631,
       "table_unreliable": 635
     },
     "pages": 64,
-    "passages": 1063,
+    "passages": 1283,
     "source_id": "mom-2025-q4-final",
     "status": "ok"
   },
   {
-    "body_font_size_median": 8.04,
-    "dropped_short_blocks": 522,
+    "body_font_size_median": 9.48,
+    "dropped_short_blocks": 558,
     "flags": {
       "empty": 0,
-      "garbled": 5,
+      "garbled": 17,
       "multicolumn_uncertain": 0,
-      "ok": 336,
+      "ok": 524,
       "table_unreliable": 527
     },
     "pages": 59,
-    "passages": 868,
+    "passages": 1068,
     "source_id": "mom-2026-q1-final",
     "status": "ok"
   },
   {
-    "body_font_size_median": 8.64,
-    "dropped_short_blocks": 491,
+    "body_font_size_median": 9.48,
+    "dropped_short_blocks": 535,
     "flags": {
       "empty": 0,
-      "garbled": 5,
+      "garbled": 17,
       "multicolumn_uncertain": 0,
-      "ok": 355,
+      "ok": 517,
       "table_unreliable": 546
     },
     "pages": 59,
-    "passages": 906,
+    "passages": 1080,
     "source_id": "mom-2026-q2-final",
     "status": "ok"
   },
@@ -63,7 +63,8 @@
     "catalog_publication_date": "2026-07-31",
     "date_matches_catalog": true,
     "page_first_date": "2026-07-31",
-    "passages": 18,
+    "passages": 19,
+    "rights_notices": [],
     "source_id": "mom-2026-q2-advance",
     "status": "ok"
   },
@@ -71,22 +72,23 @@
     "catalog_publication_date": "2026-09-21",
     "date_matches_catalog": true,
     "page_first_date": "2026-09-21",
-    "passages": 12,
+    "passages": 16,
+    "rights_notices": [],
     "source_id": "mom-2026-q2-final-release",
     "status": "ok"
   },
   {
-    "body_font_size_median": 10.5,
-    "dropped_short_blocks": 274,
+    "body_font_size_median": 10.98,
+    "dropped_short_blocks": 284,
     "flags": {
       "empty": 0,
       "garbled": 0,
       "multicolumn_uncertain": 0,
-      "ok": 198,
+      "ok": 250,
       "table_unreliable": 0
     },
     "pages": 80,
-    "passages": 198,
+    "passages": 250,
     "source_id": "mom-lf2025-survey-findings",
     "status": "ok"
   },
@@ -107,7 +109,7 @@
   },
   {
     "body_font_size_median": 10.5,
-    "dropped_short_blocks": 61,
+    "dropped_short_blocks": 62,
     "flags": {
       "empty": 0,
       "garbled": 0,
@@ -139,7 +141,8 @@
     "catalog_publication_date": "2025-10-30",
     "date_matches_catalog": true,
     "page_first_date": "2025-10-30",
-    "passages": 25,
+    "passages": 21,
+    "rights_notices": [],
     "source_id": "mom-2025-q3-advance",
     "status": "ok"
   },
@@ -148,6 +151,7 @@
     "date_matches_catalog": true,
     "page_first_date": "2025-12-11",
     "passages": 18,
+    "rights_notices": [],
     "source_id": "mom-2025-q3-final-release",
     "status": "ok"
   },
@@ -156,6 +160,7 @@
     "date_matches_catalog": true,
     "page_first_date": "2026-01-29",
     "passages": 23,
+    "rights_notices": [],
     "source_id": "mom-2025-q4-advance",
     "status": "ok"
   },
@@ -163,7 +168,8 @@
     "catalog_publication_date": "2026-03-20",
     "date_matches_catalog": true,
     "page_first_date": "2026-03-20",
-    "passages": 20,
+    "passages": 17,
+    "rights_notices": [],
     "source_id": "mom-2025-q4-final-release",
     "status": "ok"
   },
@@ -171,7 +177,8 @@
     "catalog_publication_date": "2026-04-30",
     "date_matches_catalog": true,
     "page_first_date": "2026-04-30",
-    "passages": 19,
+    "passages": 22,
+    "rights_notices": [],
     "source_id": "mom-2026-q1-advance",
     "status": "ok"
   },
@@ -179,157 +186,158 @@
     "catalog_publication_date": "2026-06-15",
     "date_matches_catalog": true,
     "page_first_date": "2026-06-15",
-    "passages": 8,
+    "passages": 16,
+    "rights_notices": [],
     "source_id": "mom-2026-q1-final-release",
     "status": "ok"
   },
   {
-    "body_font_size_median": 7.56,
-    "dropped_short_blocks": 522,
+    "body_font_size_median": 9.48,
+    "dropped_short_blocks": 531,
     "flags": {
       "empty": 0,
-      "garbled": 9,
+      "garbled": 41,
       "multicolumn_uncertain": 0,
-      "ok": 326,
+      "ok": 350,
       "table_unreliable": 431
     },
     "pages": 53,
-    "passages": 766,
+    "passages": 822,
     "source_id": "mom-2023-q1-final",
     "status": "ok"
   },
   {
-    "body_font_size_median": 7.51,
-    "dropped_short_blocks": 406,
+    "body_font_size_median": 9.48,
+    "dropped_short_blocks": 420,
     "flags": {
       "empty": 0,
-      "garbled": 5,
+      "garbled": 17,
       "multicolumn_uncertain": 0,
-      "ok": 347,
+      "ok": 395,
       "table_unreliable": 415
     },
     "pages": 54,
-    "passages": 767,
+    "passages": 827,
     "source_id": "mom-2023-q2-final",
     "status": "ok"
   },
   {
-    "body_font_size_median": 7.56,
-    "dropped_short_blocks": 441,
+    "body_font_size_median": 9.48,
+    "dropped_short_blocks": 448,
     "flags": {
       "empty": 0,
-      "garbled": 5,
+      "garbled": 17,
       "multicolumn_uncertain": 0,
-      "ok": 323,
+      "ok": 364,
       "table_unreliable": 417
     },
     "pages": 54,
-    "passages": 745,
+    "passages": 798,
     "source_id": "mom-2023-q3-final",
     "status": "ok"
   },
   {
-    "body_font_size_median": 7.5,
-    "dropped_short_blocks": 509,
+    "body_font_size_median": 9.48,
+    "dropped_short_blocks": 556,
     "flags": {
       "empty": 0,
-      "garbled": 5,
+      "garbled": 17,
       "multicolumn_uncertain": 0,
-      "ok": 430,
+      "ok": 565,
       "table_unreliable": 492
     },
     "pages": 67,
-    "passages": 927,
+    "passages": 1074,
     "source_id": "mom-2023-q4-final",
     "status": "ok"
   },
   {
-    "body_font_size_median": 7.56,
-    "dropped_short_blocks": 442,
+    "body_font_size_median": 9.48,
+    "dropped_short_blocks": 482,
     "flags": {
       "empty": 0,
-      "garbled": 5,
+      "garbled": 17,
       "multicolumn_uncertain": 0,
-      "ok": 288,
+      "ok": 398,
       "table_unreliable": 427
     },
     "pages": 54,
-    "passages": 720,
+    "passages": 842,
     "source_id": "mom-2024-q1-final",
     "status": "ok"
   },
   {
-    "body_font_size_median": 8.46,
-    "dropped_short_blocks": 482,
+    "body_font_size_median": 9.48,
+    "dropped_short_blocks": 478,
     "flags": {
       "empty": 0,
-      "garbled": 5,
+      "garbled": 17,
       "multicolumn_uncertain": 0,
-      "ok": 371,
+      "ok": 481,
       "table_unreliable": 511
     },
     "pages": 55,
-    "passages": 887,
+    "passages": 1009,
     "source_id": "mom-2024-q2-final",
     "status": "ok"
   },
   {
-    "body_font_size_median": 8.04,
-    "dropped_short_blocks": 485,
+    "body_font_size_median": 9.48,
+    "dropped_short_blocks": 521,
     "flags": {
       "empty": 0,
-      "garbled": 5,
+      "garbled": 17,
       "multicolumn_uncertain": 0,
-      "ok": 335,
+      "ok": 463,
       "table_unreliable": 505
     },
     "pages": 55,
-    "passages": 845,
+    "passages": 985,
     "source_id": "mom-2024-q3-final",
     "status": "ok"
   },
   {
-    "body_font_size_median": 8.04,
-    "dropped_short_blocks": 515,
+    "body_font_size_median": 9.48,
+    "dropped_short_blocks": 528,
     "flags": {
       "empty": 0,
-      "garbled": 5,
+      "garbled": 17,
       "multicolumn_uncertain": 0,
-      "ok": 384,
+      "ok": 502,
       "table_unreliable": 601
     },
     "pages": 57,
-    "passages": 990,
+    "passages": 1120,
     "source_id": "mom-2024-q4-final",
     "status": "ok"
   },
   {
-    "body_font_size_median": 8.16,
-    "dropped_short_blocks": 467,
+    "body_font_size_median": 9.48,
+    "dropped_short_blocks": 511,
     "flags": {
       "empty": 0,
-      "garbled": 5,
+      "garbled": 17,
       "multicolumn_uncertain": 0,
-      "ok": 327,
+      "ok": 473,
       "table_unreliable": 468
     },
     "pages": 55,
-    "passages": 800,
+    "passages": 958,
     "source_id": "mom-2025-q1-final",
     "status": "ok"
   },
   {
-    "body_font_size_median": 8.25,
-    "dropped_short_blocks": 488,
+    "body_font_size_median": 9.48,
+    "dropped_short_blocks": 507,
     "flags": {
       "empty": 0,
-      "garbled": 5,
+      "garbled": 17,
       "multicolumn_uncertain": 0,
-      "ok": 377,
+      "ok": 567,
       "table_unreliable": 485
     },
     "pages": 61,
-    "passages": 867,
+    "passages": 1069,
     "source_id": "mom-2025-q2-final",
     "status": "ok"
   },
@@ -338,6 +346,7 @@
     "date_matches_catalog": true,
     "page_first_date": "2024-04-30",
     "passages": 21,
+    "rights_notices": [],
     "source_id": "mom-2024-q1-advance",
     "status": "ok"
   },
@@ -345,7 +354,8 @@
     "catalog_publication_date": "2024-06-20",
     "date_matches_catalog": true,
     "page_first_date": "2024-06-20",
-    "passages": 31,
+    "passages": 35,
+    "rights_notices": [],
     "source_id": "mom-2024-q1-final-release",
     "status": "ok"
   },
@@ -354,6 +364,7 @@
     "date_matches_catalog": true,
     "page_first_date": "2024-07-31",
     "passages": 24,
+    "rights_notices": [],
     "source_id": "mom-2024-q2-advance",
     "status": "ok"
   },
@@ -362,6 +373,7 @@
     "date_matches_catalog": true,
     "page_first_date": "2024-09-17",
     "passages": 37,
+    "rights_notices": [],
     "source_id": "mom-2024-q2-final-release",
     "status": "ok"
   },
@@ -370,6 +382,7 @@
     "date_matches_catalog": true,
     "page_first_date": "2024-10-29",
     "passages": 22,
+    "rights_notices": [],
     "source_id": "mom-2024-q3-advance",
     "status": "ok"
   },
@@ -378,6 +391,7 @@
     "date_matches_catalog": true,
     "page_first_date": "2024-12-09",
     "passages": 26,
+    "rights_notices": [],
     "source_id": "mom-2024-q3-final-release",
     "status": "ok"
   },
@@ -386,6 +400,7 @@
     "date_matches_catalog": true,
     "page_first_date": "2025-01-27",
     "passages": 29,
+    "rights_notices": [],
     "source_id": "mom-2024-q4-advance",
     "status": "ok"
   },
@@ -393,7 +408,8 @@
     "catalog_publication_date": "2025-03-19",
     "date_matches_catalog": true,
     "page_first_date": "2025-03-19",
-    "passages": 32,
+    "passages": 29,
+    "rights_notices": [],
     "source_id": "mom-2024-q4-final-release",
     "status": "ok"
   },
@@ -402,6 +418,7 @@
     "date_matches_catalog": true,
     "page_first_date": "2025-04-28",
     "passages": 24,
+    "rights_notices": [],
     "source_id": "mom-2025-q1-advance",
     "status": "ok"
   },
@@ -409,7 +426,8 @@
     "catalog_publication_date": "2025-06-27",
     "date_matches_catalog": true,
     "page_first_date": "2025-06-27",
-    "passages": 23,
+    "passages": 19,
+    "rights_notices": [],
     "source_id": "mom-2025-q1-final-release",
     "status": "ok"
   },
@@ -417,7 +435,8 @@
     "catalog_publication_date": "2025-07-30",
     "date_matches_catalog": true,
     "page_first_date": "2025-07-30",
-    "passages": 26,
+    "passages": 22,
+    "rights_notices": [],
     "source_id": "mom-2025-q2-advance",
     "status": "ok"
   },
@@ -425,22 +444,23 @@
     "catalog_publication_date": "2025-09-17",
     "date_matches_catalog": true,
     "page_first_date": "2025-09-17",
-    "passages": 25,
+    "passages": 22,
+    "rights_notices": [],
     "source_id": "mom-2025-q2-final-release",
     "status": "ok"
   },
   {
-    "body_font_size_median": 7.92,
-    "dropped_short_blocks": 58,
+    "body_font_size_median": 11.04,
+    "dropped_short_blocks": 211,
     "flags": {
       "empty": 0,
       "garbled": 0,
       "multicolumn_uncertain": 0,
-      "ok": 117,
+      "ok": 436,
       "table_unreliable": 4
     },
     "pages": 34,
-    "passages": 121,
+    "passages": 440,
     "source_id": "mom-jv2025",
     "status": "ok"
   },
@@ -448,22 +468,23 @@
     "catalog_publication_date": "2026-03-20",
     "date_matches_catalog": true,
     "page_first_date": "2026-03-20",
-    "passages": 38,
+    "passages": 35,
+    "rights_notices": [],
     "source_id": "mom-jv2025-release",
     "status": "ok"
   },
   {
-    "body_font_size_median": 11.04,
-    "dropped_short_blocks": 240,
+    "body_font_size_median": 11.0,
+    "dropped_short_blocks": 202,
     "flags": {
       "empty": 0,
       "garbled": 0,
       "multicolumn_uncertain": 0,
-      "ok": 141,
+      "ok": 150,
       "table_unreliable": 46
     },
     "pages": 33,
-    "passages": 187,
+    "passages": 196,
     "source_id": "mom-wage-practices2024",
     "status": "ok"
   },
@@ -472,26 +493,27 @@
     "date_matches_catalog": true,
     "page_first_date": "2025-05-28",
     "passages": 26,
+    "rights_notices": [],
     "source_id": "mom-wage-practices2024-release",
     "status": "ok"
   },
   {
-    "body_font_size_median": 10.56,
-    "dropped_short_blocks": 114,
+    "body_font_size_median": 11.04,
+    "dropped_short_blocks": 120,
     "flags": {
       "empty": 0,
       "garbled": 0,
       "multicolumn_uncertain": 0,
-      "ok": 161,
+      "ok": 210,
       "table_unreliable": 0
     },
     "pages": 73,
-    "passages": 161,
+    "passages": 210,
     "source_id": "mom-lf2024-survey-findings",
     "status": "ok"
   },
   {
-    "body_font_size_median": 9.12,
+    "body_font_size_median": 10.56,
     "dropped_short_blocks": 1,
     "flags": {
       "empty": 0,
@@ -507,7 +529,7 @@
   },
   {
     "body_font_size_median": 10.56,
-    "dropped_short_blocks": 61,
+    "dropped_short_blocks": 63,
     "flags": {
       "empty": 0,
       "garbled": 0,

@@ -1,6 +1,6 @@
 # LabourLens data sheet
 
-Snapshot date: **2026-10-30**; manifest generated **2026-10-30T02:44:54+00:00**. Analysis window: **2024-Q1 to 2026-Q2** (answer scope). Earlier history is context only, not an answerable earlier subject period (D-031). Inventory below is read from `data/manifests/manifest.json`, `data/processed/observations.parquet` and saved `artifacts/data-quality/` artifacts; it is not a fresh ingestion or test run.
+Snapshot date: **2026-10-30**; manifest generated **2026-10-30T02:44:54+00:00**. Analysis window: **2024-Q1 to 2026-Q2** (answer scope). Earlier history is context only, not an answerable earlier subject period (D-031). **MEASURED RESULT (31 Oct):** corpus v2 was rebuilt twice offline from the existing immutable raw files with `extract-0.2`; 49 passage/Parquet files were byte-identical across builds (`artifacts/data-quality/determinism-v2.json`). No network refetch or raw-source change.
 
 **Attribution.** Contains information from data.gov.sg datasets published by the Ministry of Manpower and the Singapore Department of Statistics, accessed 2026-10-30 and made available under the [Singapore Open Data Licence v1.0](https://developers.data.gov.sg/open-data-licence). Not endorsed by any agency. MOM reports and releases are cited and linked, not redistributed.
 
@@ -9,7 +9,7 @@ Snapshot date: **2026-10-30**; manifest generated **2026-10-30T02:44:54+00:00**.
 |---|---|
 | Sources | 79: 33 statistical datasets and 46 documents |
 | Statistical datasets | 33 (4 core, 29 supporting), 43,662 normalised observations, 3,790 in answer scope |
-| Documents | 46: 24 PDFs and 22 HTML releases; 13,484 extracted passages |
+| Documents | 46: 24 PDFs and 22 HTML releases; 15,915 extracted passages (corpus v2) |
 | Rights | 33 verified open-licensed datasets; 24 all-rights-reserved PDFs; 22 rights-unresolved HTML releases |
 | Quality checks | Current saved build: 255 checks, **248 pass, 7 warnings, 0 failures** |
 | Spot-check by a human | **Not yet done.** Sheets in `docs/human-review/` |
@@ -66,14 +66,14 @@ Every source has a manifest entry: original URL, publisher, title, publication a
 
 **Not computed.** Retrenchments per 1,000 employees: no verified denominator dataset.
 
-**PDF extraction flags.** Across the saved extraction records, 7,055 PDF blocks are `table_unreliable`, 5,833 are `ok`, and 69 are `garbled`. HTML passages do not use that PDF flag count. Flagged tables are not a reliable numerical answer source; use compatible validated dataset records. Garbled blocks are excluded from retrieval.
+**PDF extraction flags.** Across the rebuilt extraction records, 7,055 PDF blocks are `table_unreliable`, 8,091 are `ok`, and 246 are `garbled`. Including HTML gives 8,614 `ok` passages. The 57 previously control-bearing `ok` blocks are now flagged, not repaired by guessing. Conservative layout headings retain narrative; footers become printed labels; note fragments retain explicit adjacency/context requirements. Article-bounded HTML preserves revision evidence while keeping rights notices in local metadata. Same-source duplicates collapse only during context assembly. Flagged tables are not a reliable numerical answer source; use compatible validated dataset records.
 
-**Low-yield PDF.** The Labour Force 2025 survey-findings PDF yields 198 passages over 80 pages in the saved extraction statistics. Image-heavy content is a possible explanation, not a verified diagnosis or a current quality-report warning.
+**Low-yield PDF.** The Labour Force 2025 survey-findings PDF yields 250 passages over 80 pages after extraction corrections (198 on frozen corpus v1). Image-heavy content is a possible explanation, not a verified diagnosis.
 
 ## 6. Quality checks and known warnings
-The current saved `artifacts/data-quality/validation.json` and `quality-report.md` agree: **255 checks = 248 passes + 7 warnings + 0 failures**. The earlier 254-check total omitted `security.no_instruction_like_text_in_sources`, now emitted by `check_injection` in `src/labourlens/data/validate.py` and included by `run_all`. Its saved result scanned 13,484 passages and 147 distinct statistical text values, with zero heuristic hits. This is an added ingestion check, not an extra source or evidence of complete injection resistance; the heuristic can miss paraphrases. The previous committed report had 247 passes and the same seven warnings.
+The rebuilt `artifacts/data-quality/validation.json` and `quality-report.md` agree: **255 checks = 248 passes + 7 warnings + 0 failures**. The ingestion heuristic scanned 15,915 passages and 147 distinct statistical text values with zero hits. This is not evidence of complete injection resistance; the heuristic can miss paraphrases. Frozen corpus v1 had 13,484 passages; its retrieval/answer results must not be attributed to corpus v2. D-037 and `docs/experiments/m7-corpus-v2-runbook.md` record preservation, migration and separately labelled reruns.
 
-Checks cover manifest integrity, schemas, periods, duplicates, ranges, hierarchy sums, extraction, dates, instruction-like source content, reconciliation and packaging. Warnings are unresolved rights for 22 HTML sources; undefined dash markers in five tables (47 retrenchment-industry, 50 permanent-industry, 288 term-contract-industry, 3 term-contract-occupation and 28 short-workweek/temporary-layoff-industry in-scope cells); and the recomputed vacancy ratio discrepancy. These are saved build observations, not a fresh build, test run or evidence of human verification.
+Checks cover manifest integrity, schemas, periods, duplicates, ranges, hierarchy sums, extraction, dates, instruction-like source content, reconciliation and packaging. Warnings are unresolved rights for 22 HTML sources; undefined dash markers in five tables (47 retrenchment-industry, 50 permanent-industry, 288 term-contract-industry, 3 term-contract-occupation and 28 short-workweek/temporary-layoff-industry in-scope cells); and the recomputed vacancy ratio discrepancy. These are observed offline-build results, not proof of human verification.
 
 ## 7. Limits
 - Extraction quality for tables is not reliable; numbers come from datasets, text supplies explanation.

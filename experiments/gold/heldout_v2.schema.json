@@ -1,0 +1,262 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://labourlens.local/schemas/heldout-v2-draft.schema.json",
+  "title": "LabourLens blind-authored heldout v2 draft case",
+  "type": "object",
+  "required": [
+    "case_id",
+    "split",
+    "family",
+    "question",
+    "expected_behavior",
+    "evidence_text",
+    "evidence_data",
+    "reference_facts",
+    "calculation",
+    "abstain_reason",
+    "adversarial",
+    "difficulty_note",
+    "drafted_by",
+    "reviewed_by",
+    "review_status"
+  ],
+  "properties": {
+    "case_id": {
+      "type": "string",
+      "pattern": "^HO-V2-[0-9]{3}$"
+    },
+    "split": {
+      "const": "heldout"
+    },
+    "family": {
+      "enum": [
+        "factual_lookup",
+        "numerical_comparison",
+        "cross_source_synthesis",
+        "revision_conflict",
+        "ambiguity_insufficient_causal",
+        "adversarial"
+      ]
+    },
+    "question": {
+      "type": "string",
+      "minLength": 1
+    },
+    "expected_behavior": {
+      "enum": [
+        "answer",
+        "abstain",
+        "refuse",
+        "clarify",
+        "ignore_injection_and_answer"
+      ]
+    },
+    "evidence_text": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "source_id",
+          "passage_ids",
+          "locator",
+          "primary",
+          "why"
+        ],
+        "properties": {
+          "source_id": {
+            "type": "string"
+          },
+          "passage_ids": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "minItems": 1
+          },
+          "locator": {
+            "type": "string"
+          },
+          "primary": {
+            "type": "boolean"
+          },
+          "why": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "evidence_data": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "source_id",
+          "period",
+          "dimension",
+          "observation_ids"
+        ],
+        "properties": {
+          "source_id": {
+            "type": "string"
+          },
+          "period": {
+            "type": "string",
+            "pattern": "^(202[45]-Q[1-4]|2026-Q[12])$"
+          },
+          "dimension": {
+            "type": "string"
+          },
+          "observation_ids": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "reference_facts": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "calculation": {
+      "anyOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "object",
+          "required": [
+            "formula",
+            "inputs",
+            "expected_value",
+            "unit"
+          ],
+          "properties": {
+            "formula": {
+              "type": "string"
+            },
+            "inputs": {
+              "oneOf": [
+                {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "number"
+                  }
+                }
+              ]
+            },
+            "expected_value": {
+              "type": "number"
+            },
+            "unit": {
+              "type": "string"
+            }
+          }
+        }
+      ]
+    },
+    "abstain_reason": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "adversarial": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "required": [
+        "type",
+        "fixture_needed"
+      ],
+      "properties": {
+        "type": {
+          "type": "string"
+        },
+        "fixture_needed": {
+          "type": "string"
+        }
+      }
+    },
+    "difficulty_note": {
+      "type": "string"
+    },
+    "drafted_by": {
+      "type": "string"
+    },
+    "reviewed_by": {
+      "type": "null"
+    },
+    "review_status": {
+      "const": "draft"
+    }
+  },
+  "not": {
+    "required": [
+      "owner_review"
+    ]
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "expected_behavior": {
+            "enum": [
+              "abstain",
+              "clarify"
+            ]
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "abstain_reason": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "expected_behavior": {
+            "enum": [
+              "answer",
+              "ignore_injection_and_answer"
+            ]
+          }
+        }
+      },
+      "then": {
+        "anyOf": [
+          {
+            "properties": {
+              "evidence_text": {
+                "minItems": 1
+              }
+            }
+          },
+          {
+            "properties": {
+              "evidence_data": {
+                "minItems": 1
+              }
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

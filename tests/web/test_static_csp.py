@@ -7,6 +7,8 @@ CSSOM (`node.style.setProperty(...)`) is allowed and is how the charts position 
 import re
 from pathlib import Path
 
+import pytest
+
 WEB = Path(__file__).resolve().parents[2] / "web"
 SCRIPTS = sorted((WEB / "static").rglob("*.js"))
 
@@ -24,8 +26,9 @@ FORBIDDEN_IN_JS = {
 }
 
 
-def test_index_html_has_no_inline_script_style_or_handlers():
-    html = (WEB / "index.html").read_text()
+@pytest.mark.parametrize("page", ["index.html", "workbench.html"])
+def test_html_has_no_inline_script_style_or_handlers(page):
+    html = (WEB / page).read_text()
     assert not re.search(r"<style\b", html, re.I)
     assert not re.search(r"\sstyle\s*=", html, re.I)
     assert not re.search(r"\son[a-z]+\s*=", html, re.I)
@@ -33,6 +36,14 @@ def test_index_html_has_no_inline_script_style_or_handlers():
         assert re.search(r"\bsrc\s*=", tag), f"inline script: {tag}"
     for body in re.findall(r"<script\b[^>]*>(.*?)</script>", html, re.I | re.S):
         assert not body.strip(), "inline script body"
+    for target in re.findall(r"\b(?:src|href)\s*=\s*['\"]([^'\"]+)", html, re.I):
+        if target.startswith(("#", "https://", "mailto:")):
+            continue
+        if target in ("/", "/workbench", "/workbench.html"):
+            continue
+        assert not target.startswith("//"), f"{page}: external resource {target}"
+        local = target.split("?", 1)[0].split("#", 1)[0].lstrip("/")
+        assert (WEB / local).is_file(), f"{page}: missing local resource {target}"
 
 
 def test_static_scripts_exist():

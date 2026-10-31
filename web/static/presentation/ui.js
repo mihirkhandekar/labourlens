@@ -3,7 +3,8 @@ import {el, svgEl, countUp, fmt, finite} from '../charts.js';
 
 export const append = (parent, ...children) => { children.filter(Boolean).forEach(child => parent.append(child)); return parent; };
 
-export function chapter({id, no, title, lede, eyebrow}) {
+/** A chapter opens with an action title (one sentence stating the finding) and 2 to 4 terse bullets. */
+export function chapter({id, no, title, bullets, eyebrow}) {
   const root = el('section', 'pr-chapter');
   root.id = `pr-${id}`;
   root.dataset.chapter = id;
@@ -15,18 +16,26 @@ export function chapter({id, no, title, lede, eyebrow}) {
   const heading = el('h3', 'pr-chapter-title', title);
   heading.id = `pr-${id}-title`;
   root.setAttribute('aria-labelledby', heading.id);
-  append(text, tag, heading, lede ? el('p', 'pr-lede', lede) : null);
+  append(text, tag, heading, Array.isArray(bullets) && bullets.length ? bulletList(bullets, 'pr-list pr-lede') : null);
   append(head, number, text);
   const body = el('div', 'pr-chapter-body');
   root.append(head, body);
   return {root, body, head};
 }
 
+function bulletList(items, cls) {
+  const ul = el('ul', cls);
+  items.forEach(text => ul.append(el('li', '', text)));
+  return ul;
+}
+
+/** A block under a chapter. `title` is an action title; `intro` is an optional array of terse bullets or one short line. */
 export function section(title, intro) {
   const root = el('div', 'pr-block');
   const head = el('div', 'pr-block-head pr-reveal');
   head.append(el('h4', 'pr-block-title', title));
-  if (intro) head.append(el('p', 'pr-block-intro', intro));
+  if (Array.isArray(intro) && intro.length) head.append(bulletList(intro, 'pr-list pr-block-intro'));
+  else if (intro) head.append(el('p', 'pr-block-intro', intro));
   root.append(head);
   return root;
 }

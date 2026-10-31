@@ -49,7 +49,7 @@ class AgentConfig:
 
     def key(self) -> str:
         base = f"planner={self.planner_model}|answer={self.answer_model}|{self.planner_prompt}|{self.answer_prompt}"
-        return base if self.retrieval == "hybrid" else f"{base}|retrieval={self.retrieval}"
+        return base if self.retrieval == 'hybrid' else f'{base}|retrieval={self.retrieval}'
 
 
 def _nullable(t: str) -> dict:
@@ -98,6 +98,7 @@ class State(TypedDict, total=False):
     errors: list[str]
     outcome: str
     usage: dict
+    source_conflicts: list[dict]
     trace: Annotated[list[dict], operator.add]
 
 
@@ -235,9 +236,13 @@ def build_graph(shared: Shared, tools: Tools, cfg: AgentConfig):
         if not tools.items and s.get("tool_ops_failures", 0) > 0:
             return {"outcome": "operational_failure", "errors": ["operational failure: evidence tools unavailable"],
                     "trace": _ev("assess_evidence", "operational_failure")}
+        from labourlens.answer import crosscheck
+
+        enabled = os.environ.get("LABOURLENS_GUARDS") != "off" and os.environ.get("LABOURLENS_CROSSCHECK") != "off"
+        conflicts = crosscheck.annotate(tools) if enabled else []
         n = {k: sum(1 for i in tools.items if i.label[0] == k) for k in "POC"}
-        return {"trace": _ev("assess_evidence", "evidence_ready" if tools.items else "no_evidence", passages=n["P"], observations=n["O"], calculations=n["C"], data_quality_notes=list(tools.notes),
-                             unresolved_tool_errors=len(s.get("tool_errors") or []))}
+        return {"source_conflicts": conflicts, "trace": _ev("assess_evidence", "evidence_ready" if tools.items else "no_evidence", passages=n["P"], observations=n["O"], calculations=n["C"], data_quality_notes=list(tools.notes),
+                             crosscheck_enabled=enabled, source_conflicts=conflicts, unresolved_tool_errors=len(s.get("tool_errors") or []))}
 
     def after_assess(s: State):
         return "finalize" if s.get("outcome") == "operational_failure" else "generate_answer"
@@ -265,10 +270,20 @@ def build_graph(shared: Shared, tools: Tools, cfg: AgentConfig):
         if s.get("answer"):
             from labourlens.answer.schema import Answer
 
-            rep = validate.check(Answer.model_validate(s["answer"]), tools.items)
+            from labourlens.answer import crosscheck
+
+            original = Answer.model_validate(s["answer"])
+            enabled = os.environ.get("LABOURLENS_GUARDS") != "off" and os.environ.get("LABOURLENS_CROSSCHECK") != "off"
+            conflicts = crosscheck.annotate(tools, original) if enabled else []
+            checked = crosscheck.enforce(original, tools.items, conflicts)
+            rep = validate.check(checked, tools.items)
+            extra["answer"] = checked.model_dump()
             errs = rep.errors
-            extra = {"cited_ids": rep.cited_passage_ids, "ungrounded_numbers": rep.ungrounded_numbers}
+            extra.update({"cited_ids": rep.cited_passage_ids, "ungrounded_numbers": rep.ungrounded_numbers, "source_conflicts": conflicts})
+        checked_answer = extra.pop("answer", None)
         update = {"errors": errs, "trace": _ev("validate_answer", "valid" if not errs else "invalid", attempt=s.get("attempts"), n_errors=len(errs), **extra)}
+        if checked_answer is not None:
+            update["answer"] = checked_answer
         if errs and s.get("attempts", 0) < 2:
             update["messages"] = s["messages"] + [{"role": "user", "content": (PROMPTS / "repair_v1.md").read_text().format(errors="\n".join(f"- {e}" for e in errs))}]
         return update
@@ -320,6 +335,7 @@ def run_agent(question: str, shared: Shared, cfg: AgentConfig = AgentConfig(), s
     cited = next((e["detail"].get("cited_ids", []) for e in reversed(final["trace"]) if e["node"] == "validate_answer"), [])
     res = {"run_id": run_id, "question": question, "config": cfg.key(), "outcome": final["outcome"], "answer": final.get("answer"),
            "errors": final.get("errors") or [], "rounds": final.get("round", 0), "tool_calls": final.get("calls_used", 0),
+           "crosscheck_enabled": os.environ.get("LABOURLENS_GUARDS") != "off" and os.environ.get("LABOURLENS_CROSSCHECK") != "off",
            "evidence": [{"label": i.label, "id": i.passage_id, "source_id": i.source_id} for i in tools.items],
            "evidence_text": {i.label: i.text for i in tools.items}, "cited_ids": cited, "usage": u,
            "seconds": round(time.perf_counter() - t0, 2), "trace": final["trace"]}

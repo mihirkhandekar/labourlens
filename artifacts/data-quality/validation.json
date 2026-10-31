@@ -1211,7 +1211,7 @@
       "status": "warn"
     },
     {
-      "detail": "13484 passages",
+      "detail": "15915 passages",
       "name": "passages.ids_unique",
       "status": "pass"
     },
@@ -1241,7 +1241,7 @@
       "status": "pass"
     },
     {
-      "detail": "{'table_unreliable': 7055, 'ok': 6360, 'garbled': 69}",
+      "detail": "{'ok': 8614, 'table_unreliable': 7055, 'garbled': 246}",
       "name": "passages.quality_flag_distribution",
       "status": "pass"
     },
@@ -1251,7 +1251,7 @@
       "status": "pass"
     },
     {
-      "detail": "scanned 13484 passages and 147 distinct text values; hits=0 []",
+      "detail": "scanned 15915 passages and 147 distinct text values; hits=0 []",
       "name": "security.no_instruction_like_text_in_sources",
       "status": "pass"
     },

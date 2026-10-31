@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import argparse
 import sys
+from pathlib import Path
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -36,6 +37,7 @@ def main(argv: list[str] | None = None) -> int:
     ax.add_argument("--models", nargs="*", help="restrict to these models")
     ag = sub.add_parser("agent-exp", help="run the end-to-end agent experiment (calls the OpenAI API)")
     ag.add_argument("--split", default="dev", choices=["dev", "heldout"])
+    ag.add_argument("--gold", type=Path, help="separate gold JSONL; recorded in generation provenance")
     ag.add_argument("--pairs", nargs="*")
     ag.add_argument("--answer-prompt", default="answer_v3")
     ag.add_argument("--tag", default="A1")
@@ -46,10 +48,12 @@ def main(argv: list[str] | None = None) -> int:
     th.add_argument("--ablation", choices=["naive"], help="run with every defence off, as a baseline")
     th.add_argument("--rescore", action="store_true", help="recompute verdicts from saved raw runs, no API calls")
     th.add_argument("--only", help="a category or case id")
+    th.add_argument("--experiment", help="new post-fix experiment id; required for generation (frozen results cannot be overwritten)")
     sub.add_parser("mcp-demo", help="run the scripted MCP client demo and write docs/mcp-demo-transcript.md")
     ev_ = sub.add_parser("eval", help="metrics from saved raw agent runs; judged measures call the OpenAI API")
     ev_.add_argument("--exp", default="agent-dev-A1")
     ev_.add_argument("--split", default="dev")
+    ev_.add_argument("--gold", type=Path, help="same gold JSONL used for generation")
     ev_.add_argument("--labels", nargs="*")
     ev_.add_argument("--no-judge", action="store_true")
     ev_.add_argument("--rejudge-stale", action=argparse.BooleanOptionalAction, default=True,
@@ -73,7 +77,6 @@ def main(argv: list[str] | None = None) -> int:
 
     args = p.parse_args(argv)
     if args.cmd in ("review-pack", "review-ingest"):
-        from pathlib import Path
         from labourlens.review.pack import build_pack, ingest_review
 
         try:
@@ -128,12 +131,12 @@ def main(argv: list[str] | None = None) -> int:
     if args.cmd == "agent-exp":
         from labourlens.agent import experiments as agx
 
-        agx.run(args.split, args.pairs, args.answer_prompt, args.tag, args.retrieval, args.planner_prompt)
+        agx.run(args.split, args.pairs, args.answer_prompt, args.tag, args.retrieval, args.planner_prompt, gold_path=args.gold)
         return 0
     if args.cmd == "threat-test":
         from labourlens.security import threat_suite
 
-        threat_suite.rescore() if args.rescore else threat_suite.run(args.models, args.only, args.ablation)
+        threat_suite.rescore() if args.rescore else threat_suite.run(args.models, args.only, args.ablation, args.experiment)
         return 0
     if args.cmd == "mcp-demo":
         from labourlens.mcp import demo
@@ -143,7 +146,7 @@ def main(argv: list[str] | None = None) -> int:
     if args.cmd == "eval":
         from labourlens.evaluation import harness
 
-        harness.run(args.exp, args.split, args.labels, not args.no_judge, rejudge_stale=args.rejudge_stale)
+        harness.run(args.exp, args.split, args.labels, not args.no_judge, rejudge_stale=args.rejudge_stale, gold_path=args.gold)
         return 0
     if args.cmd in ("audit-report", "audit-show", "audit-prune"):
         from labourlens.audit import log as al

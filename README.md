@@ -18,7 +18,7 @@ The live agent currently defaults to **A3-style R3 retrieval, `planner_v1`, `ans
 |---|---|
 | Statistical sources | 33 datasets in the [source manifest](data/manifests/manifest.json) |
 | Document sources | 46 documents: 24 PDFs and 22 HTML releases in the [source manifest](data/manifests/manifest.json) |
-| Extracted passages | 13,484 in the [quality report](artifacts/data-quality/quality-report.md) |
+| Extracted passages | 15,915 on corpus v2 (`extract-0.2`), rebuilt offline; old evaluation results remain **frozen corpus v1** ([migration/runbook](docs/experiments/m7-corpus-v2-runbook.md)) |
 | Structured observations | 43,662 total; 3,790 in scope ([corpus expansion log](docs/progress.md), [runtime data inventory](docs/deploy.md#6-runtime-data)) |
 | Data-quality checks | 248 passes and 7 warnings in the saved [quality report](artifacts/data-quality/quality-report.md); these are build checks, not a current test-suite result |
 | EDA | Findings and figures in [EDA findings](artifacts/data-quality/eda-findings.md) |

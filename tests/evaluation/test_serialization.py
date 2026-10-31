@@ -12,7 +12,7 @@ def test_run_writes_fingerprints_and_scored_population(tmp_path, monkeypatch):
            "config": "planner=model|answer=model|planner_v2|answer_v3|retrieval=r3"}
     (raw / "model.jsonl").write_text(json.dumps(rec) + "\n")
     monkeypatch.setattr(h, "paths", SimpleNamespace(DATA=data, EXPERIMENTS=experiments, ROOT=h.paths.ROOT))
-    monkeypatch.setattr(h.ev, "load_cases", lambda split: [
+    monkeypatch.setattr(h.ev, "load_cases", lambda split, path=None: [
         {"case_id": "current", "question": "question", "reference_facts": [], "expected_behavior": "abstain"},
         {"case_id": "not-run", "question": "other", "reference_facts": [], "expected_behavior": "abstain"}])
     monkeypatch.setattr(h, "case_metrics", lambda *args: {"case_id": "current"})
@@ -32,7 +32,7 @@ def test_agent_summary_uses_actual_configuration(tmp_path, monkeypatch):
 
     data, experiments = tmp_path / "data", tmp_path / "experiments"
     monkeypatch.setattr(agx, "paths", SimpleNamespace(DATA=data, EXPERIMENTS=experiments))
-    monkeypatch.setattr(agx.ev, "load_cases", lambda split: [{"case_id": "case", "question": "question"}])
+    monkeypatch.setattr(agx.ev, "load_cases", lambda split, path=None: [{"case_id": "case", "question": "question"}])
     monkeypatch.setattr(agx, "Shared", lambda: None)
     monkeypatch.setattr(agx, "run_agent", lambda q, shared, cfg: {"config": cfg.key()})
     monkeypatch.setattr(agx, "score_run", lambda c, r: {"case_id": c["case_id"]})

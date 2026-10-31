@@ -1,0 +1,72 @@
+{
+  "price_table": "specs/prices.yaml",
+  "basis": "frozen corpus v1 saved usage; estimates for new runs, not new measurements",
+  "rows": [
+    {
+      "frozen_exp": "agent-dev-A3",
+      "model": "gpt-6-luna",
+      "n": 237,
+      "prompt_tokens": 3636917,
+      "completion_tokens": 279449,
+      "planner_answer_usd": 0.5034162,
+      "rerank_saved_usage_usd": 0.185149,
+      "generation_plus_rerank_usd": 0.688565,
+      "judge_saved_usd": 0.2442
+    },
+    {
+      "frozen_exp": "agent-dev-A3",
+      "model": "gpt-5.6-luna",
+      "n": 237,
+      "prompt_tokens": 3795513,
+      "completion_tokens": 253205,
+      "planner_answer_usd": 1.0629486000000001,
+      "rerank_saved_usage_usd": 0.193357,
+      "generation_plus_rerank_usd": 1.256306,
+      "judge_saved_usd": 0.2592
+    },
+    {
+      "frozen_exp": "agent-heldout-H-r3",
+      "model": "gpt-6-luna",
+      "n": 31,
+      "prompt_tokens": 423559,
+      "completion_tokens": 34911,
+      "planner_answer_usd": 0.0598114,
+      "rerank_saved_usage_usd": 0.020658,
+      "generation_plus_rerank_usd": 0.080469,
+      "judge_saved_usd": 0.0283
+    },
+    {
+      "frozen_exp": "agent-heldout-H-r3",
+      "model": "gpt-5.6-luna",
+      "n": 31,
+      "prompt_tokens": 447326,
+      "completion_tokens": 34700,
+      "planner_answer_usd": 0.1311052,
+      "rerank_saved_usage_usd": 0.022701,
+      "generation_plus_rerank_usd": 0.153806,
+      "judge_saved_usd": 0.0298
+    },
+    {
+      "frozen_exp": "agent-heldout-H-hybrid",
+      "model": "gpt-6-luna",
+      "n": 31,
+      "prompt_tokens": 253768,
+      "completion_tokens": 26278,
+      "planner_answer_usd": 0.0385158,
+      "rerank_saved_usage_usd": 0,
+      "generation_plus_rerank_usd": 0.038516,
+      "judge_saved_usd": 0.0236
+    },
+    {
+      "frozen_exp": "agent-heldout-H-hybrid",
+      "model": "gpt-5.6-luna",
+      "n": 31,
+      "prompt_tokens": 282590,
+      "completion_tokens": 22870,
+      "planner_answer_usd": 0.083962,
+      "rerank_saved_usage_usd": 0,
+      "generation_plus_rerank_usd": 0.083962,
+      "judge_saved_usd": 0.0228
+    }
+  ]
+}

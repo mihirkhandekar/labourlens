@@ -17,8 +17,8 @@ function methodFigure(m) {
   });
   const best = rows.reduce((a, r) => r.hit10 > a.hit10 ? r : a, rows[0]);
   return figure({
-    id: 'fig-methods', title: 'BM25, dense and hybrid on the early development set',
-    takeaway: `Hybrid with merge200 chunks has the best hit@10 (${fmt.pct(best.hit10)}). BM25 alone reaches ${fmt.pct(rows[3].hit10)} on the same chunks. With ${rows[0].n} cases, one case is ${(100 / CASES).toFixed(1)} points.`,
+    id: 'fig-methods', title: `${best.label} on ${best.sub} had the best hit@10 (${fmt.pct(best.hit10)}) on ${rows[0].n} early development cases`,
+    takeaway: `BM25 alone reaches ${fmt.pct(rows[3].hit10)} on the same chunks. One case is ${(100 / CASES).toFixed(1)} points.`,
     summary: rows.map(r => `${r.label} ${r.sub}: hit@5 ${fmt.pct(r.hit5)}, hit@10 ${fmt.pct(r.hit10)}, MRR ${fmt.num(r.mrr, 3)}`).join('. '),
     source: {data: 'report.json › retrieval.rows[dev-dense-E6/*].metrics.{hit@5,hit@10,mrr}', files: ['experiments/runs/dev-dense-E6/*.metrics.json']},
     note: `n=${rows[0].n} text cases. Small set: treat gaps of one or two cases as noise.`,
@@ -36,8 +36,8 @@ function embeddingFigure(m) {
   const rows = items.map(([name, label, cls]) => { const x = m.retrievalRow('dev-dense-E5', name)?.metrics || {}; return {label, cls, hit5: x['hit@5'], mrr: x.mrr, hit10: x['hit@10']}; });
   const top = rows.reduce((a, r) => r.hit5 > a.hit5 ? r : a, rows[0]);
   return figure({
-    id: 'fig-embeddings', title: 'Dense retrieval: three embedding models',
-    takeaway: `${top.label} has the highest hit@5 here (${fmt.pct(top.hit5)}). The spread among the three embedding models is a few cases out of ${CASES}, so no model is declared best. The runtime uses text-embedding-3-large.`,
+    id: 'fig-embeddings', title: `${top.label} had the highest hit@5 (${fmt.pct(top.hit5)}) across BM25 and three embedding models on ${CASES} cases`,
+    takeaway: `The spread among the three embedding models is a few cases, so I named no best model. The runtime uses text-embedding-3-large.`,
     summary: rows.map(r => `${r.label}: hit@5 ${fmt.pct(r.hit5)}, MRR ${fmt.num(r.mrr, 3)}`).join('. '),
     source: {data: 'report.json › retrieval.rows[dev-dense-E5/*].metrics.{hit@5,mrr}', files: ['experiments/runs/dev-dense-E5/*.metrics.json']},
     table: () => ({caption: 'Embedding comparison, merge120 chunks', columns: ['Model', 'hit@5', 'hit@10', 'MRR'], rows: rows.map(r => [r.label, r.hit5, r.hit10, r.mrr])}),
@@ -71,8 +71,8 @@ function ablationFigure(m) {
   const drop = flat.reduce((a, r) => r.delta < a.delta ? r : a, flat[0]), gain = flat.reduce((a, r) => r.delta > a.delta ? r : a, flat[0]);
   flat.forEach(r => { r.hl = r === gain || r === drop; r.cls = r === drop ? 'c4' : 'c1'; });
   return figure({
-    id: 'fig-ablation', title: 'What moved hit@10 for BM25', wide: true,
-    takeaway: `Against the merge120 baseline (${fmt.pct(base)}), the largest fall is ${drop.label.toLowerCase()} (${fmt.signed(drop.delta)} cases) and the largest rise is ${gain.label.toLowerCase()} (${fmt.signed(gain.delta)} cases). Single settings rarely move more than a case or two.`,
+    id: 'fig-ablation', title: `BM25 settings moved hit@10 by ${fmt.signed(drop.delta)} to ${fmt.signed(gain.delta)} cases against merge120 (${fmt.pct(base)}) on ${CASES} cases`, wide: true,
+    takeaway: `Largest fall: ${drop.label.toLowerCase()}. Largest rise: ${gain.label.toLowerCase()}. One or two cases is noise.`,
     summary: flat.map(r => `${r.label}: hit@10 ${fmt.pct(r.value)}, ${fmt.signed(r.delta)} cases`).join('. '),
     source: {data: 'report.json › retrieval.rows[dev-E1..E4/*].metrics.hit@10', files: ['experiments/runs/dev-E1-chunking', 'dev-E2-tokenisation', 'dev-E3-bm25-params', 'dev-E4-combined']},
     note: `n=${CASES} cases. The brass dashed line is the baseline.`,
@@ -110,12 +110,12 @@ function ladderFigure(m) {
   const sync = () => {
     const k = state.k;
     fig.setTakeaway(k === 8
-      ? `Filtering by period and release, then reranking, lifts hit@8 from ${fmt.pct(L.R0['hit@8'])} to ${fmt.pct(best.value)} (${fmt.pts(best.diff)}, 95% CI ${fmt.pts(best.diffCi[0])} to ${fmt.pts(best.diffCi[1])}). Each step alone gives less.`
+      ? `R3 minus R0: ${fmt.pts(best.diff)} (95% CI ${fmt.pts(best.diffCi[0])} to ${fmt.pts(best.diffCi[1])}). Each step alone gives less.`
       : `At hit@${k}, the baseline reaches ${fmt.pct(at(main[0], k))} and filter then rerank ${fmt.pct(at(best, k))}. Intervals are recorded for hit@8 only, so none are drawn here.`);
     fig.setSummary(all.map(r => `${r.id} ${r.label}: hit@${k} ${fmt.pct(at(r, k))}`).join('. '));
   };
   const fig = figure({
-    id: 'fig-ladder', title: 'Retrieval ladder on 128 development cases', wide: true, controls,
+    id: 'fig-ladder', title: `Filtering then reranking (R3) raised hit@8 from ${fmt.pct(L.R0['hit@8'])} to ${fmt.pct(best.value)} on ${m.ladder.n_cases} development cases`, wide: true, controls,
     takeaway: '', summary: '',
     source: {data: 'report.json › retrieval.ladder.configs[R0..R3].{hit@3,hit@5,hit@8,hit@10,hit@8_ci95,mrr@10}', files: ['experiments/runs/dev-R-summary.json']},
     note: `hit@k: a gold passage is inside the top k chunks. n=${m.ladder.n_cases} answerable development cases. Whiskers are 95% bootstrap intervals (hit@8 only). Labels are AI-drafted and an LLM also does the reranking, so R2 and R3 may be optimistic.`,
@@ -141,8 +141,8 @@ function sliderFigure(m) {
   const apply = () => { if (stage) stage.style.setProperty('--mix', String(+slider.value / 100)); };
   slider.addEventListener('input', apply);
   const fig = figure({
-    id: 'fig-rank-shift', title: 'Where the first relevant chunk lands: before and after',
-    takeaway: `With the hybrid baseline ${before[0]} of ${before.reduce((a, b) => a + b, 0)} cases have a relevant chunk at rank 1 and ${before[10]} have none in the top 10. After filter then rerank it is ${after[0]} at rank 1 and ${after[10]} with none.`,
+    id: 'fig-rank-shift', title: `R3 puts the first relevant chunk at rank 1 in ${after[0]} of ${after.reduce((a, b) => a + b, 0)} cases, up from ${before[0]} with R0`,
+    takeaway: `No relevant chunk in the top 10: ${before[10]} cases with R0, ${after[10]} with R3.`,
     summary: `Rank of the first relevant chunk, counts of cases. Baseline: ${cats.map((k, i) => `${k}: ${before[i]}`).join(', ')}. Filter then rerank: ${cats.map((k, i) => `${k}: ${after[i]}`).join(', ')}.`,
     source: {data: 'report.json › retrieval.ladder.first_relevant_rank_histogram[R0, R3]', files: ['experiments/runs/dev-R-summary.json']},
     note: 'Counts of the 128 development cases. "None" means no relevant chunk in the top 10. Drag the slider to fade the after state (green) in over the before state (grey).',
@@ -178,8 +178,8 @@ function familyHeat(m) {
   }));
   const rev = L.R3?.['by_family_hit@8']?.revision_conflict, rev0 = L.R0?.['by_family_hit@8']?.revision_conflict;
   return figure({
-    id: 'fig-retrieval-family', title: 'hit@8 by question family',
-    takeaway: rev && rev0 ? `Revision-conflict questions gain most: ${fmt.pct(rev0['hit@8'], 1)} at baseline to ${fmt.pct(rev['hit@8'], 1)} with R3. These need the right release, so a metadata filter matters most there. Strata are small (n shown in each cell).` : 'Per-family hit@8.',
+    id: 'fig-retrieval-family', title: rev && rev0 ? `Revision-conflict questions gained most: hit@8 rose from ${fmt.pct(rev0['hit@8'], 1)} to ${fmt.pct(rev['hit@8'], 1)} with R3` : 'hit@8 by question family',
+    takeaway: 'Strata are small; n is in each cell.',
     summary: rows.map(r => `${r.label}: ${r.cells.map((c, i) => `${cols[i]} ${c ? fmt.pct(c.value) : 'n/a'}`).join(', ')}`).join('. '),
     source: {data: 'report.json › retrieval.ladder.configs[*].by_family_hit@8', files: ['experiments/runs/dev-R-summary.json']},
     table: () => ({caption: 'hit@8 by family', columns: ['Family', ...cols], rows: rows.map(r => [r.label, ...r.cells.map(c => c ? `${c.value} (n=${c.n})` : '')])}),
@@ -199,8 +199,8 @@ function hintFigure(m) {
   });
   const h = rows[0].points, nh = rows[1].points;
   return figure({
-    id: 'fig-hint', title: 'The filter helps when the question names a period',
-    takeaway: `When a question names a period or release, hit@8 goes from ${fmt.pct(h[0].value)} (R0) to ${fmt.pct(h[3].value)} (R3). When it does not, the baseline is already ${fmt.pct(nh[0].value)} and the filter has nothing to act on.`,
+    id: 'fig-hint', title: `With a period or release named, hit@8 rose from ${fmt.pct(h[0].value)} to ${fmt.pct(h[3].value)}; without one the baseline was already ${fmt.pct(nh[0].value)}`,
+    takeaway: 'With no period named, the filter has nothing to act on.',
     summary: rows.map(r => `${r.label} (${r.sub}): ${r.points.map(p => `${p.label} ${fmt.pct(p.value)}`).join(', ')}`).join('. '),
     source: {data: 'report.json › retrieval.ladder.configs[*].by_hint_hit@8', files: ['experiments/runs/dev-R-summary.json']},
     table: () => ({caption: 'hit@8 by hint', columns: ['Group', ...ids], rows: rows.map(r => [`${r.label} (${r.sub})`, ...r.points.map(p => p.value)])}),
@@ -209,12 +209,18 @@ function hintFigure(m) {
 }
 
 export function renderRetrieval(m, ctx) {
-  const ch = chapter({
-    id: 'retrieval', no: 3, eyebrow: 'Retrieval', title: 'Getting the right passage in front of the model',
-    lede: 'Near-duplicate quarters and releases make report search hard: the text for 2025-Q3 looks a lot like the text for 2025-Q4. Four experiments show what helps and what does not.'
-  });
   const L = m.ladder?.configs;
-  const intro = section('From keyword search to filtered, reranked search');
+  const ch = chapter({
+    id: 'retrieval', no: 3, eyebrow: 'Retrieval',
+    title: L ? `Metadata filtering then reranking (R3) raised hit@8 from ${fmt.pct(L.R0['hit@8'])} to ${fmt.pct(L.R3['hit@8'])} on ${m.ladder.n_cases} development cases` : 'Retrieval experiments',
+    bullets: [
+      'Compared R0 hybrid (BM25 + dense, rank fusion), R1a hard period and release filter, R1b soft boost, R2 LLM rerank, R3 filter then rerank.',
+      `Metric: hit@8 with 95% bootstrap intervals. Hybrid was chosen as baseline from ${CASES} earlier cases.`,
+      'Caveat: a hard period filter can exclude the right document when a later release restates an earlier quarter.',
+      'Caveat: an LLM reranks and an LLM drafted the labels, so R2 and R3 may be optimistic.'
+    ]
+  });
+  const intro = section(L ? `R3 gained ${fmt.pts(L.R3['hit@8_diff_vs_R0'])} hit@8 over R0 (95% CI ${fmt.pts(L.R3['hit@8_diff_ci95']?.[0])} to ${fmt.pts(L.R3['hit@8_diff_ci95']?.[1])}); R1a, R1b and R2 each gained less` : 'Retrieval ladder');
   if (L) {
     const stats = el('div', 'pr-stats');
     stats.append(
@@ -233,19 +239,19 @@ export function renderRetrieval(m, ctx) {
   if (fam || hint) intro.append(grid('pr-split', fam?.root, hint?.root));
   ch.body.append(intro);
 
-  const earlier = section('The earlier, smaller comparisons', `Before the larger set existed, ${CASES} development cases compared BM25, dense and hybrid retrieval, then tuned BM25. They are noisy, and they are shown because they explain why the baseline is hybrid.`);
+  const earlier = section(`I chose the hybrid baseline from ${CASES} early cases, where gaps were a few cases`, ['Methods, embedding models and BM25 settings compared on hit@5 and hit@10.', 'Noisy: one case is about 4.2 points.']);
   earlier.append(grid('pr-split', methodFigure(m).root, embeddingFigure(m).root));
   earlier.append(ablationFigure(m).root);
   ch.body.append(earlier);
 
   ch.body.append(callout({
-    tone: 'warn', title: 'How far to trust these numbers',
+    tone: 'warn', title: 'Retrieval evaluation limits',
     items: [
       'Most gold labels are AI drafts. These results use gold v3.2; 45 of 268 cases are owner-reviewed in v3.5 and a rescore is pending (chapter 8).',
       'An LLM reranks and an LLM drafted the labels, so R2 and R3 may look better than they are.',
-      'A hard period filter can exclude the right document when a later release restates an earlier quarter. That blind spot is documented.',
-      'The development set was inspected many times. It is not an unbiased estimate of performance on new questions.',
-      'There is no retrieval-only measurement on the held-out set. Held-out compares r3 with hybrid end to end, on 31 cases, and the gain is inconclusive (chapter 5).'
+      'A hard period filter can exclude the right document when a later release restates an earlier quarter. Documented, not fixed.',
+      'The development set was inspected many times, so it is not an unbiased estimate for new questions.',
+      'No retrieval-only measurement on the held-out set. Held-out compares r3 with hybrid end to end on 31 cases; the gain is inconclusive (chapter 5).'
     ],
     src: 'docs/evaluation-report.md › Expanded retrieval study · docs/experiments/m6-retrieval-improvements.md'
   }));

@@ -4,6 +4,7 @@ import {chapter, section, grid, callout, chips, evi, selectField, toggle} from '
 const POP = {resident: 'resident', overall: 'overall', citizen: 'citizen', establishments: 'establishments', unverified_basis: 'basis unverified', not_applicable: 'no population'};
 const ADJ = {seasonally_adjusted: 'seasonally adjusted', not_adjusted: 'not adjusted', not_applicable: 'no adjustment', unspecified: 'adjustment not stated'};
 const pctText = v => `${v.toFixed(1)}%`;
+const setTitle = (fig, text) => { const h = fig.root.querySelector('.pr-fig-title'); if (h) h.textContent = text; };
 
 function definitionChips(m, entries) {
   const palette = ['c1', 'c3', 'c5', 'c6'];
@@ -25,8 +26,8 @@ function sourceFigures(m) {
     {label: 'Redistribution', segments: [seg(redistribution, 'commit_raw', 'May be committed', 'c1'), seg(redistribution, 'local_only', 'Kept local', 'c6')]}
   ];
   return figure({
-    id: 'fig-sources', title: `${rows.length} sources, four ways`,
-    takeaway: `Every source is one row with a publisher, date, release stage, licence, hash and snapshot id. ${rights.verified_open_licence || 0} are open data; ${rights.verified_all_rights_reserved || 0} reports are all rights reserved and stay out of Git; ${rights.unresolved || 0} release pages have unresolved rights.`,
+    id: 'fig-sources', title: `${rows.length} source records: ${rights.verified_open_licence || 0} open licence, ${rights.verified_all_rights_reserved || 0} all rights reserved, ${rights.unresolved || 0} unresolved`,
+    takeaway: `All-rights-reserved reports stay out of Git. Unresolved rights are on release pages.`,
     summary: model.map(row => `${row.label}: ${row.segments.map(s => `${s.label} ${s.value}`).join(', ')}`).join('. '),
     source: {data: 'report.json › sources.rows[*].{type,rights_status,release_stage,redistribution}', files: ['data/export/sources.json']},
     table: () => ({caption: 'Sources grouped by attribute', columns: ['Grouping', 'Value', 'Sources'], rows: model.flatMap(row => row.segments.map(s => [row.label, s.label, s.value]))}),
@@ -56,7 +57,7 @@ function provenanceChain(m) {
   });
   const wrap = el('div', 'pr-chain-wrap pr-reveal');
   wrap.append(el('h5', 'pr-mini-title', `Trace one number: ${card.label}, ${fmt.quarter(card.period)}`), ol,
-    el('p', 'pr-small', 'The same chain exists for every observation. Pasting the observation id into the trace command returns the raw cell. The hash proves the file did not change after download.'),
+    el('p', 'pr-small', 'The trace command looks up the raw cell from an observation id. A matching hash confirms the snapshot is the recorded download.'),
     evi('report.json › summary.cards[unemployment_resident_sa] · sources.rows[resident_unemployment_rate]'));
   return wrap;
 }
@@ -66,39 +67,43 @@ function qualityFigure(m) {
   const pass = q.metrics?.pass, warn = q.metrics?.warn;
   const warnings = (q.rows || []).filter(r => r.status === 'warn');
   const fig = figure({
-    id: 'fig-quality', title: 'Validation checks',
-    takeaway: `${fmt.int(pass)} checks passed and ${fmt.int(warn)} raised warnings. The warnings are published, not hidden.`,
+    id: 'fig-quality', title: `${fmt.int(pass)} of ${fmt.int((pass || 0) + (warn || 0))} validation checks passed; ${fmt.int(warn)} raised warnings`,
+    takeaway: '',
     summary: `${pass} pass, ${warn} warn. No failing check is recorded in the report.`,
     source: {data: 'report.json › quality.metrics · quality.rows', files: ['data/export/quality.json']},
     table: () => ({caption: 'Validation outcomes', columns: ['Outcome', 'Checks'], rows: [['Pass', pass], ['Warn', warn]]}),
     draw: (host, c) => shareBars(host, c, {rows: [{label: `${(pass || 0) + (warn || 0)} checks`, segments: [{key: 'p', label: 'Pass', value: pass || 0, cls: 'c1'}, {key: 'w', label: 'Warn', value: warn || 0, cls: 'c2'}]}], label: 'Validation outcomes', rowH: 56})
   });
   const wrap = el('div', 'pr-warnings pr-reveal');
-  wrap.append(el('h5', 'pr-mini-title', 'Warnings raised'));
+  wrap.append(el('h5', 'pr-mini-title', 'Warnings'));
   const ul = el('ul', 'pr-warn-list');
   warnings.forEach(w => { const li = el('li'); li.append(el('code', 'pr-path', w.id)); ul.append(li); });
-  wrap.append(ul, el('p', 'pr-small', 'The vacancy ratio recomputed from counts differs from the published ratio by up to 0.67 because the two come from different surveys. It is a warning, not an error.'), evi('docs/data-sheet.md › section 5'));
+  wrap.append(ul, el('p', 'pr-small', 'Vacancy ratio recomputed from counts differs from the published ratio by up to 0.67; the two come from different surveys. Warning, not error.'), evi('docs/data-sheet.md › section 5'));
   return grid('pr-split', fig.root, wrap);
 }
 
 export function renderData(m, ctx) {
+  const qm0 = m.section('quality').metrics || {};
   const ch = chapter({
-    id: 'data', no: 2, eyebrow: 'The data', title: 'Two kinds of source, kept apart',
-    lede: 'Statistics come from data.gov.sg datasets. Reports come from MOM. Both are stored as immutable, hashed snapshots, and every observation keeps its population, adjustment, unit and release stage.'
+    id: 'data', no: 2, eyebrow: 'The data',
+    title: `${m.sources.length} source records, ${fmt.int(qm0.pass)} of ${fmt.int((qm0.pass || 0) + (qm0.warn || 0))} validation checks passed, ${fmt.int(qm0.warn)} warnings`,
+    bullets: ['Statistics: data.gov.sg datasets. Reports: MOM.', 'Hashed snapshots; population, adjustment, unit and release status kept in observation metadata.', 'Charts redraw on a selectable window of quarters.']
   });
 
-  const prov = section('Provenance, licences and checks');
+  const srcRows = m.sources;
+  const nCommit = srcRows.filter(r => r.redistribution === 'commit_raw').length;
+  const prov = section(`Only ${nCommit} of ${srcRows.length} source records may be committed to Git`, ['Each record carries publisher, date, rights status, release stage and a snapshot hash.']);
   prov.append(grid('pr-split is-wide-left', sourceFigures(m).root, provenanceChain(m)));
   prov.append(qualityFigure(m));
   prov.append(callout({
-    tone: 'note', title: 'Rights, in plain terms',
-    items: ['Statistical datasets carry the Singapore Open Data Licence. Attribution is kept and no agency endorsement is implied.', 'MOM report PDFs carry a copyright notice that reserves rights. They and their text stay local and out of Git.', `Release pages with unresolved rights are listed as unresolved rather than assumed open.`],
+    tone: 'note', title: 'Reuse and redistribution',
+    items: ['Statistical datasets: Singapore Open Data Licence. Attribution kept; no agency endorsement implied.', 'MOM report PDFs: copyright notice reserves rights. PDFs and their text stay local, out of Git.', 'Release pages with unresolved rights are listed as unresolved.'],
     src: 'docs/system-card.md › Data and rights · docs/data-sheet.md'
   }));
   ch.body.append(prov);
 
   // ---------- EDA ----------
-  const eda = section('Exploring the series', 'Four views of the quarterly data. Choose a window; each chart redraws on the same quarters. Series never share an axis unless they share a unit and definition.');
+  const eda = section(`Quarterly series over ${m.periods().length} quarters, with a selectable window`, ['Each chart redraws on the same quarters.', 'Units and statistical definitions are labelled on every chart.']);
   const periods = m.periods();
   const state = {from: 0, to: periods.length - 1, nsa: true};
   const options = periods.map((p, i) => ({value: String(i), label: fmt.quarter(p)}));
@@ -218,29 +223,36 @@ export function renderData(m, ctx) {
     stamp.textContent = `Showing ${fmt.quarter(w[0])} to ${fmt.quarter(w[w.length - 1])} (${w.length} quarters).`;
     // takeaways computed from the visible window
     const g = gap();
-    fUnemp.setTakeaway(g && state.nsa
-      ? `Adjusted rates sit in a narrow band. The unadjusted resident rate swings further: ${pctText(g.n)} against ${pctText(g.v)} in ${fmt.quarter(w[g.i])}. Mixing the two would invent movement.`
-      : 'Adjusted resident, overall and citizen rates move in a narrow band. Switch the unadjusted series on to see the seasonal swing.');
+    const adj = ['unemployment_resident_sa', 'unemployment_overall_sa', 'unemployment_citizen_sa'].flatMap(id => slice(id)).filter(finite);
+    setTitle(fUnemp, g && state.nsa
+      ? `The unadjusted resident rate reached ${pctText(g.n)} against ${pctText(g.v)} adjusted in ${fmt.quarter(w[g.i])}`
+      : adj.length ? `Adjusted unemployment rates ranged from ${pctText(Math.min(...adj))} to ${pctText(Math.max(...adj))} over ${w.length} quarters` : 'Unemployment rates: no observations in this window');
+    fUnemp.setTakeaway('Do not mix adjusted and unadjusted rates.');
     fUnemp.setSummary(`Unemployment rates, ${fmt.quarter(w[0])} to ${fmt.quarter(w[w.length - 1])}. ${unempSeries().map(s => `${s.label}: ${s.values.filter(finite).map(pctText).join(', ')}`).join('. ')}.`);
     const ratio = slice('vacancy_ratio').filter(finite);
-    fRatio.setTakeaway(ratio.length ? `The ratio ranges from ${Math.min(...ratio).toFixed(2)} to ${Math.max(...ratio).toFixed(2)} vacancies per unemployed person. It is a ratio, not a rate.` : 'No observations in this window.');
+    setTitle(fRatio, ratio.length ? `Vacancies per unemployed person ranged from ${Math.min(...ratio).toFixed(2)} to ${Math.max(...ratio).toFixed(2)} over ${ratio.length} quarters` : 'Vacancies per unemployed person: no observations in this window');
+    fRatio.setTakeaway('');
     fRatio.setSummary(`Vacancies per unemployed person: ${ratio.join(', ')}.`);
     const vac = slice('job_vacancies').filter(finite);
-    fVac.setTakeaway(vac.length ? `Job vacancies run from ${fmt.int(Math.min(...vac))} to ${fmt.int(Math.max(...vac))} in this window.` : 'No observations in this window.');
+    setTitle(fVac, vac.length ? `Job vacancies ranged from ${fmt.int(Math.min(...vac))} to ${fmt.int(Math.max(...vac))} over ${vac.length} quarters` : 'Job vacancies: no observations in this window');
+    fVac.setTakeaway('');
     fVac.setSummary(`Job vacancies: ${vac.map(fmt.int).join(', ')}.`);
     const total = slice('retrenchments');
     const top = total.reduce((a, v, i) => finite(v) && (a < 0 || v > total[a]) ? i : a, -1);
     const termShare = Math.max(0, ...slice('retrenched_term_contract').map((v, i) => finite(v) && finite(total[i]) && total[i] > 0 ? v / total[i] : 0));
-    fRetr.setTakeaway(top >= 0 ? `Retrenchments peak at ${fmt.int(total[top])} persons in ${fmt.quarter(w[top])}. Term-contract cases are at most ${(100 * termShare).toFixed(1)}% of any total in this window.` : 'No observations in this window.');
+    setTitle(fRetr, top >= 0 ? `Retrenchments peaked at ${fmt.int(total[top])} persons in ${fmt.quarter(w[top])}; term contracts were at most ${(100 * termShare).toFixed(1)}% of a quarter` : 'Retrenched employees: no observations in this window');
+    fRetr.setTakeaway('');
     fRetr.setSummary(`Retrenched employees: ${total.filter(finite).map(fmt.int).join(', ')} persons.`);
     const rv = visibleRec();
     if (rv.length) {
       const big = rv.reduce((a, r) => Math.abs(r.final_minus_advance) > Math.abs(a.final_minus_advance) ? r : a, rv[0]);
       const gaps = rv.map(r => r.dataset_minus_final);
-      fRev.setTakeaway(`For ${fmt.quarter(big.period)} the advance release said ${fmt.int(big.advance.value)} and the final report said ${fmt.int(big.final.value)}. The sector dataset total is ${fmt.int(Math.min(...gaps))} to ${fmt.int(Math.max(...gaps))} persons above the final figure in the quarters shown. These are different releases and bases; they are not merged.`);
+      setTitle(fRev, `${fmt.quarter(big.period)} employment change: advance release ${fmt.int(big.advance.value)}, final report ${fmt.int(big.final.value)}`);
+      fRev.setTakeaway(`Sector dataset total minus final: ${fmt.signed(Math.min(...gaps))} to ${fmt.signed(Math.max(...gaps))} persons in the quarters shown. Different releases and bases; not merged.`);
       fRev.setSummary(rv.map(r => `${fmt.quarter(r.period)}: advance ${r.advance.value}, final ${r.final.value}, dataset ${r.dataset_total.value}`).join('. '));
     } else {
-      fRev.setTakeaway('Reports with an advance and a final figure cover 2025-Q3 to 2026-Q2. Widen the window to see them.');
+      setTitle(fRev, 'Advance and final employment-change figures exist for 2025-Q3 to 2026-Q2 only');
+      fRev.setTakeaway('Widen the window to see them.');
       fRev.setSummary('No revision data in this window.');
     }
     [fUnemp, fRatio, fVac, fRetr, fRev].forEach(f => f.redraw());
@@ -257,11 +269,15 @@ export function renderData(m, ctx) {
   const retr = m.values('retrenchments', periods), retrTop = retr.reduce((a, v, i) => finite(v) && (a < 0 || v > retr[a]) ? i : a, -1);
   const gaps = rec.map(r => r.dataset_minus_final);
   const findings = el('ol', 'pr-findings pr-reveal');
+  const revAbs = rec.map(r => Math.abs(r.final_minus_advance));
+  const retrPeak = retrTop >= 0 ? `${fmt.int(retr[retrTop])} persons in ${fmt.quarter(periods[retrTop])}` : '';
+  const resRange = resident.length ? `${pctText(Math.min(...resident))} and ${pctText(Math.max(...resident))}` : '';
+  const gapRange = rec.length ? `${fmt.int(Math.min(...gaps))} to ${fmt.int(Math.max(...gaps))} persons across ${rec.length} quarters` : '';
   [
-    ['Adjusted and unadjusted rates are different series.', `Resident unemployment, seasonally adjusted, stays between ${pctText(Math.min(...resident))} and ${pctText(Math.max(...resident))}. The unadjusted resident rate ranges from ${pctText(Math.min(...nsa))} to ${pctText(Math.max(...nsa))}. The system never mixes them.`, 'report.json › charts[unemployment_resident_sa, unemployment_resident_nsa]'],
-    [retrTop === retr.length - 1 ? 'Retrenchments are at the top of the window.' : 'Retrenchments peaked before the end of the window.', retrTop >= 0 ? `The highest of ${periods.length} quarters is ${fmt.int(retr[retrTop])} persons in ${fmt.quarter(periods[retrTop])}. Resident unemployment, adjusted, stayed between ${pctText(Math.min(...resident))} and ${pctText(Math.max(...resident))} over the same period. The data do not show why, and the system does not infer a cause.` : 'Not recorded.', 'report.json › charts[retrenchments] · eda.rows[retrenchments]'],
-    ['Advance and final figures differ.', rec.length ? `The final report differs from the advance release by ${fmt.int(Math.min(...rec.map(r => Math.abs(r.final_minus_advance))))} to ${fmt.int(Math.max(...rec.map(r => Math.abs(r.final_minus_advance))))} persons across ${rec.length} quarters. Answers must name the vintage they use.` : 'Not recorded.', 'report.json › reconciliation.rows'],
-    [gaps.every(g => g > 0) ? 'The sector dataset total is higher than MOM\u2019s final figure.' : 'The sector dataset total differs from MOM\u2019s final figure.', rec.length ? `By ${fmt.int(Math.min(...gaps))} to ${fmt.int(Math.max(...gaps))} persons across the ${rec.length} quarters checked. MOM\u2019s headline excludes migrant domestic workers; the dataset\u2019s basis is unverified. That this explains the gap is an inference, not a verified fact.` : 'Not recorded.', 'report.json › reconciliation.rows[*].dataset_minus_final · docs/data-sheet.md']
+    [resident.length && nsa.length ? `Adjusted resident unemployment stayed between ${resRange}; the unadjusted rate ranged from ${pctText(Math.min(...nsa))} to ${pctText(Math.max(...nsa))}` : 'Adjusted and unadjusted rates are different series', 'Stored under separate series identifiers.', 'report.json › charts[unemployment_resident_sa, unemployment_resident_nsa]'],
+    [retrTop >= 0 ? `Retrenchments peaked at ${retrPeak}, the highest of ${periods.length} quarters` : 'Retrenchment peak not recorded', retrTop >= 0 ? `Adjusted resident unemployment stayed between ${resRange} over the same period. The data do not show why; I infer no cause.` : 'Not recorded.', 'report.json › charts[retrenchments] · eda.rows[retrenchments]'],
+    [rec.length ? `Final figures differ from advance releases by ${fmt.int(Math.min(...revAbs))} to ${fmt.int(Math.max(...revAbs))} persons across ${rec.length} quarters` : 'Advance and final figures differ', rec.length ? 'Answers name the vintage they use.' : 'Not recorded.', 'report.json › reconciliation.rows'],
+    [rec.length ? `The sector dataset total ${gaps.every(g => g > 0) ? 'is above' : 'differs from'} MOM\u2019s final figure by ${gapRange}` : 'Sector dataset total and MOM final figure differ', rec.length ? 'MOM\u2019s headline excludes migrant domestic workers; the dataset\u2019s basis is unverified. That this explains the gap is an inference, not a verified fact.' : 'Not recorded.', 'report.json › reconciliation.rows[*].dataset_minus_final · docs/data-sheet.md']
   ].forEach(([title, text, src]) => {
     const li = el('li', 'pr-finding');
     li.append(el('strong', '', title), el('span', '', text), evi(src));
@@ -271,10 +287,10 @@ export function renderData(m, ctx) {
   findBlock.append(el('h5', 'pr-mini-title', 'Four findings'), findings);
   eda.append(findBlock);
 
-  // Series atlas
+  // Series catalogue
   const edaRows = m.section('eda').rows || [];
   const atlas = el('div', 'pr-atlas pr-reveal');
-  atlas.append(el('h5', 'pr-mini-title', 'Series atlas'), el('p', 'pr-small', `${m.section('eda').summary} All ${edaRows.length} validated series, first to last observation.`));
+  atlas.append(el('h5', 'pr-mini-title', 'Series catalogue'), el('p', 'pr-small', `${m.section('eda').summary} ${edaRows.length} validated series, with their recorded observation ranges.`));
   const cells = el('ul', 'pr-atlas-grid');
   edaRows.forEach(row => {
     const chart = m.charts[row.id];

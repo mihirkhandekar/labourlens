@@ -1,17 +1,18 @@
-// LabourLens shell: floating nav, routing between Overview, Presentation and Workbench, theme,
+// LabourLens shell: floating nav, routing between Overview and Presentation (the Workbench is its own page, /workbench), theme,
 // reveal observer, keyboard shortcuts and boot. The Presentation view is owned by evaluation.js:
 //   export function renderPresentation(rootEl, report)
 // rootEl is an empty <div id="presentation-root" class="presentation">; report is the parsed
 // report.json, or null when it could not be loaded. The shell calls it once, on first visit.
 import {el, add, icon} from './js/dom.js';
-import {mountWorkbench} from './js/workbench.js';
 import {renderHome} from './js/home.js';
 
 const VIEWS = [
   ['overview', 'Overview', 'Overview'],
-  ['presentation', 'Presentation', 'Presentation'],
-  ['workbench', 'Workbench', 'Workbench']
+  ['presentation', 'Presentation', 'Presentation']
 ];
+const EXTERNAL = [['/workbench', 'Workbench']];
+// Old deep link: /#workbench opens the standalone page.
+if (location.hash === '#workbench') location.replace('/workbench');
 const root = document.querySelector('#app');
 let report = null;
 let home = null;
@@ -19,7 +20,6 @@ let lastMode = {known: false, text: 'Checking demo', enabled: false, authenticat
 let currentView = '';
 let presentationState = 'idle';
 let firstRoute = true;
-let workbench = null;
 
 // ---------- theme ----------
 const media = matchMedia('(prefers-color-scheme: dark)');
@@ -64,6 +64,7 @@ add(brand, brandMark(), el('span', 'brand-name', 'LabourLens'));
 const links = el('ul', 'nav-links');
 const navLinks = new Map();
 VIEWS.forEach(([id, label]) => { const li = el('li'); const a = el('a', 'nav-link', label); a.href = `#${id}`; navLinks.set(id, a); li.append(a); links.append(li); });
+EXTERNAL.forEach(([href, label]) => { const li = el('li'); const a = el('a', 'nav-link', label); a.href = href; li.append(a); links.append(li); });
 const navChip = el('span', 'pill nav-chip'); const navDot = el('span', 'dot'); const navChipText = el('span', '', 'Checking demo'); add(navChip, navDot, navChipText);
 const themeBtn = themeButton(); themeButtons.push(themeBtn);
 const helpBtn = el('button', 'icon-btn help-btn'); helpBtn.type = 'button'; helpBtn.setAttribute('aria-label', 'Keyboard shortcuts'); helpBtn.append(icon('keyboard'));
@@ -79,9 +80,14 @@ VIEWS.forEach(([id, label], i) => {
   const inner = el('span', 'mi'); add(inner, el('span', 'mn mono', String(i + 1).padStart(2, '0')), el('span', 'ml', label));
   const maskEl = el('span', 'mask'); maskEl.append(inner); a.append(maskEl); menuNav.append(a);
 });
+EXTERNAL.forEach(([href, label], i) => {
+  const a = el('a', 'menu-link'); a.href = href; a.tabIndex = -1;
+  const inner = el('span', 'mi'); add(inner, el('span', 'mn mono', String(VIEWS.length + i + 1).padStart(2, '0')), el('span', 'ml', label));
+  const maskEl = el('span', 'mask'); maskEl.append(inner); a.append(maskEl); menuNav.append(a);
+});
 const menuFoot = el('div', 'menu-foot');
 const menuTheme = themeButton(); themeButtons.push(menuTheme); menuTheme.tabIndex = -1;
-add(menuFoot, el('p', 'small muted', 'Singapore labour-market research assistant'), menuTheme);
+add(menuFoot, el('p', 'small muted', 'GenAI Engineer assessment submission'), menuTheme);
 add(menu, menuNav, menuFoot);
 
 // ---------- views ----------
@@ -91,16 +97,15 @@ VIEWS.forEach(([id, label]) => { const v = el('div', `view view-${id}`); v.id = 
 const overviewRoot = viewEls.get('overview');
 const presentationRoot = el('div', 'presentation'); presentationRoot.id = 'presentation-root';
 viewEls.get('presentation').append(presentationRoot);
-const workbenchRoot = viewEls.get('workbench');
 
 const footer = el('footer', 'site-footer');
 const fc = el('div', 'container footer-grid');
-add(fc, add(el('div', 'footer-brand'), brandMark(), el('p', 'brand-name', 'LabourLens'), el('p', 'small muted', 'A research assistant for Singapore labour-market statistics and MOM reports. A prototype, not an official source.')),
-  add(el('div', 'footer-col'), el('h2', 'footer-h', 'Pages'), (() => { const ul = el('ul'); VIEWS.forEach(([id, label]) => { const li = el('li'); const a = el('a', '', label); a.href = `#${id}`; li.append(a); ul.append(li); }); return ul; })()),
+add(fc, add(el('div', 'footer-brand'), brandMark(), el('p', 'brand-name', 'LabourLens'), el('p', 'small muted', 'GenAI Engineer assessment submission. A research prototype using Singapore statistics and MOM reports; not an official source.')),
+  add(el('div', 'footer-col'), el('h2', 'footer-h', 'Pages'), (() => { const ul = el('ul'); VIEWS.forEach(([id, label]) => { const li = el('li'); const a = el('a', '', label); a.href = `#${id}`; li.append(a); ul.append(li); }); EXTERNAL.forEach(([href, label]) => { const li = el('li'); const a = el('a', '', label); a.href = href; li.append(a); ul.append(li); }); return ul; })()),
   add(el('div', 'footer-col'), el('h2', 'footer-h', 'Data and rights'), el('p', 'small', 'Statistics: Ministry of Manpower and Singapore Department of Statistics via data.gov.sg, under the Singapore Open Data Licence. The licence conditions include attribution and no implied endorsement.'),
     el('p', 'small muted', 'MOM reports remain the Ministry’s. This site shows no report text beyond short excerpts the live agent cites. Fonts: Fraunces, Geist and Geist Mono, SIL OFL 1.1.')));
 const help = el('dialog', 'modal'); help.setAttribute('aria-labelledby', 'help-title');
-const helpRows = [['/', 'Ask a question: open the workbench and focus the composer'], ['Ctrl or ⌘ + Enter', 'Send the question'], ['1  2  3', 'Overview, Presentation, Workbench'], ['T', 'Switch light and dark theme'], ['P', 'Presenter mode: larger type'], ['Arrow keys', 'Move along a chart when it has focus'], ['Esc', 'Close the evidence drawer, menu or this list'], ['?', 'Open this list']];
+const helpRows = [['/', 'Open the workbench page'], ['1  2  3', 'Overview, Presentation, Workbench'], ['T', 'Switch light and dark theme'], ['P', 'Presenter mode: larger type'], ['Arrow keys', 'Move along a chart when it has focus'], ['Esc', 'Close the evidence drawer, menu or this list'], ['?', 'Open this list']];
 const helpList = el('dl', 'shortcut-list');
 helpRows.forEach(([k, d]) => { const dt = el('dt'); k.split(' ').filter(Boolean).forEach(part => dt.append(part === '+' || part === 'or' ? document.createTextNode(` ${part} `) : el('span', 'kbd', part))); helpList.append(dt, el('dd', '', d)); });
 const helpClose = el('button', 'icon-btn'); helpClose.type = 'button'; helpClose.setAttribute('aria-label', 'Close'); helpClose.append(icon('x'));
@@ -181,7 +186,7 @@ async function route() {
   viewEls.forEach((node, id) => { node.hidden = id !== view; if (id === view && changed) { node.classList.remove('enter'); void node.offsetWidth; node.classList.add('enter'); } });
   navLinks.forEach((a, id) => { if (id === view) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current'); });
   const label = VIEWS.find(([id]) => id === view)[2];
-  document.title = view === 'overview' ? 'LabourLens | Singapore labour-market research' : `LabourLens | ${label}`;
+  document.title = view === 'overview' ? 'LabourLens | GenAI Engineer assessment' : `LabourLens | ${label}`;
   live.textContent = `${label} page`;
   if (view === 'presentation') await ensurePresentation();
   observeReveals(viewEls.get(view));
@@ -201,9 +206,10 @@ document.addEventListener('keydown', event => {
   if (document.querySelector('dialog[open]')) return;
   const key = event.key;
   if (key === 'Escape' && menu.classList.contains('open')) { setMenu(false); return; }
-  if (key === '/') { event.preventDefault(); location.hash = '#workbench'; route().then(() => workbench?.focusComposer()); }
+  if (key === '/') { event.preventDefault(); location.href = '/workbench'; }
   else if (key === '?') { event.preventDefault(); help.showModal(); }
-  else if (key === '1' || key === '2' || key === '3') { location.hash = `#${VIEWS[Number(key) - 1][0]}`; }
+  else if (key === '1' || key === '2') { location.hash = `#${VIEWS[Number(key) - 1][0]}`; }
+  else if (key === '3') location.href = '/workbench';
   else if (key.toLowerCase() === 't') toggleTheme();
   else if (key.toLowerCase() === 'p') { const on = document.documentElement.dataset.presenter !== 'on'; document.documentElement.dataset.presenter = on ? 'on' : 'off'; live.textContent = on ? 'Presenter mode on' : 'Presenter mode off'; }
 });
@@ -215,7 +221,10 @@ function setMode(mode) {
   navDot.className = `dot ${!mode.known ? '' : !mode.enabled ? 'warn' : mode.authenticated ? 'ok pulse' : 'warn'}`;
   home?.setDemo(mode);
 }
-workbench = mountWorkbench(workbenchRoot, {onMode: setMode});
+fetch('/api/status', {credentials: 'same-origin'}).then(r => r.json()).then(d => {
+  const enabled = Boolean(d.enabled), authenticated = Boolean(d.authenticated);
+  setMode({known: true, enabled, authenticated, text: !enabled ? 'Report only' : authenticated ? 'Live demo, signed in' : 'Live demo, signed out'});
+}).catch(() => setMode({known: true, enabled: false, authenticated: false, text: 'Status unavailable'}));
 
 async function loadReport() {
   try {
@@ -240,7 +249,7 @@ async function checkService() {
 await loadReport();
 home = renderHome(overviewRoot, report, {
   go: id => { location.hash = `#${id}`; },
-  tryQuestion: text => { workbench.prefill(text); location.hash = '#workbench'; route().then(() => workbench.focusComposer()); }
+  tryQuestion: text => { location.href = `/workbench?question=${encodeURIComponent(text)}`; }
 });
 home.setDemo(lastMode);
 checkService();

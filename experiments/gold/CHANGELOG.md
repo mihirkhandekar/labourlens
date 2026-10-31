@@ -1,5 +1,13 @@
 # Gold set change log (AI pre-review fixes)
 
+## v3.6 — extraction evidence-ID migration only (31 Oct 2026)
+
+**DECISION:** Owner approved adopting `extraction-fixes` and separately labelled evaluation (D-037). Replace 61 absent passage IDs in 96 existing cases using the source-local mapping in `docs/experiments/m7-extraction-fixes.md`. Both `evidence_text` and `context_only_evidence_text` are covered. Three executable `partial_evidence_text` references outside the branch note's two-field scan (DEV-011, DEV-023, HO-016) were also migrated and are listed separately in the audit; no other gold field changes: questions, behaviours, facts, calculations, splits, evidence primary flags, existing locators and review provenance are preserved exactly. Counts remain 268 cases (237 dev / 31 held-out), 45 owner-reviewed and 223 draft; this mechanical migration is not additional human review.
+
+**VERIFIED FACT:** `evidence-migration-v3.6.json` records all 61 old-to-new mappings, every affected case/field, text hashes and overlap counts. Fifty-four mappings preserve exact joined text; seven remove only an appendix footer or semantic section-heading tokens now represented by metadata. All replacement sets retain the narrative tokens; no unmapped ID remains. The audit also records 67 surviving IDs with changed metadata: the original branch's 66 plus the HO-023 cohort-definition passage added in D-035 (printed-page label).
+
+Before SHA-256: `aac4b405b51c7cebf019c3b3629509ecb711be32fb830a8e78c4c7b902219e09`. After SHA-256: `6169a9deca78cb5908c584bdf7d17b1c8dd9a15ff7840b3752f3bbb4febb2f9b`. The audit's non-ID-field digest is identical before and after. Frozen results and `experiments/heldout/FREEZE.md` remain **frozen corpus v1**, not measurements on this corpus/gold.
+
 Applied by agent `GoldFixer` to `experiments/gold/draft_cases.jsonl` from four AI reviews in `experiments/gold/ai-review/` (`base`, `a`, `b`, `c`). Label-correctness fixes made before any held-out run; split and id of every case unchanged. All cases still `review_status: draft`, `reviewed_by: null`. Every case now carries `ai_review` = "pre-reviewed by claude-agent reviewers (see experiments/gold/ai-review)". This is NOT human review. Every added passage/observation id exists (validator) and its text was read. Reference facts and new text are paraphrased (7-word overlap check against passage text clean, apart from dataset category labels in DEV-132/DEV-135 that pre-date this pass).
 
 Reviewer tags: base = ReviewGoldBase, a = ReviewGoldA, b = ReviewGoldB, c = ReviewGoldC. "alternative evidence" = extra `evidence_text` entries with `primary: false` (any one suffices).
