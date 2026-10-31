@@ -1,0 +1,778 @@
+{
+  "schema_version": 1,
+  "kind": "heldout_v2_review",
+  "pack_id": "4116915e4f5802aa",
+  "gold_sha256": "698940357c090c4beed4ba6532f66967dc7175297a3d1ffcd5fd6325e128fb70",
+  "reviewer_name": "Mihir",
+  "exported_at": "2026-10-31T13:19:56.904Z",
+  "ai_files_sha256": {
+    "A": "4872af4b086aeb1a5f2b9ae71deef6005a50585e9a8ad2c6d14f47a213c710ca",
+    "B": "b310aa1758c20e98f4df7f7fc15579f9e4ba3f4d1d197661089c2b08aee60cf4",
+    "C": "670573893e9df03ba2fbce1ba2eddc667c407ff192c088e9874ddcdcf33890c4"
+  },
+  "results": [
+    {
+      "case_id": "HO-V2-001",
+      "decision": "approve",
+      "proposed_behavior": "",
+      "reason": "",
+      "comment": "",
+      "mti_choice": "",
+      "decision_source": "agreed_with_ai_suggestion",
+      "ai_basis": {
+        "consensus": "unanimous approve",
+        "class": "unanimous",
+        "votes": {
+          "A": "approve",
+          "B": "approve",
+          "C": "approve"
+        }
+      },
+      "timestamp": "2026-10-31T13:17:35.611Z"
+    },
+    {
+      "case_id": "HO-V2-002",
+      "decision": "approve",
+      "proposed_behavior": "",
+      "reason": "",
+      "comment": "",
+      "mti_choice": "",
+      "decision_source": "agreed_with_ai_suggestion",
+      "ai_basis": {
+        "consensus": "unanimous approve",
+        "class": "unanimous",
+        "votes": {
+          "A": "approve",
+          "B": "approve",
+          "C": "approve"
+        }
+      },
+      "timestamp": "2026-10-31T13:17:40.211Z"
+    },
+    {
+      "case_id": "HO-V2-003",
+      "decision": "approve",
+      "proposed_behavior": "",
+      "reason": "",
+      "comment": "",
+      "mti_choice": "",
+      "decision_source": "agreed_with_ai_suggestion",
+      "ai_basis": {
+        "consensus": "unanimous approve",
+        "class": "unanimous",
+        "votes": {
+          "A": "approve",
+          "B": "approve",
+          "C": "approve"
+        }
+      },
+      "timestamp": "2026-10-31T13:17:43.710Z"
+    },
+    {
+      "case_id": "HO-V2-004",
+      "decision": "approve",
+      "proposed_behavior": "",
+      "reason": "",
+      "comment": "",
+      "mti_choice": "",
+      "decision_source": "agreed_with_ai_suggestion",
+      "ai_basis": {
+        "consensus": "unanimous approve",
+        "class": "unanimous",
+        "votes": {
+          "A": "approve",
+          "B": "approve",
+          "C": "approve"
+        }
+      },
+      "timestamp": "2026-10-31T13:17:52.789Z"
+    },
+    {
+      "case_id": "HO-V2-005",
+      "decision": "approve",
+      "proposed_behavior": "",
+      "reason": "",
+      "comment": "",
+      "mti_choice": "",
+      "decision_source": "owner_manual",
+      "ai_basis": {},
+      "timestamp": "2026-10-31T13:18:02.298Z"
+    },
+    {
+      "case_id": "HO-V2-006",
+      "decision": "approve",
+      "proposed_behavior": "",
+      "reason": "",
+      "comment": "",
+      "mti_choice": "",
+      "decision_source": "owner_manual",
+      "ai_basis": {},
+      "timestamp": "2026-10-31T13:18:05.580Z"
+    },
+    {
+      "case_id": "HO-V2-007",
+      "decision": "approve",
+      "proposed_behavior": "",
+      "reason": "",
+      "comment": "",
+      "mti_choice": "",
+      "decision_source": "owner_manual",
+      "ai_basis": {},
+      "timestamp": "2026-10-31T13:18:07.869Z"
+    },
+    {
+      "case_id": "HO-V2-008",
+      "decision": "approve",
+      "proposed_behavior": "",
+      "reason": "",
+      "comment": "",
+      "mti_choice": "",
+      "decision_source": "owner_manual",
+      "ai_basis": {},
+      "timestamp": "2026-10-31T13:18:11.524Z"
+    },
+    {
+      "case_id": "HO-V2-009",
+      "decision": "approve",
+      "proposed_behavior": "",
+      "reason": "",
+      "comment": "",
+      "mti_choice": "",
+      "decision_source": "owner_manual",
+      "ai_basis": {},
+      "timestamp": "2026-10-31T13:18:14.028Z"
+    },
+    {
+      "case_id": "HO-V2-010",
+      "decision": "approve",
+      "proposed_behavior": "",
+      "reason": "",
+      "comment": "",
+      "mti_choice": "",
+      "decision_source": "owner_manual",
+      "ai_basis": {},
+      "timestamp": "2026-10-31T13:18:15.023Z"
+    },
+    {
+      "case_id": "HO-V2-011",
+      "decision": "approve",
+      "proposed_behavior": "",
+      "reason": "",
+      "comment": "",
+      "mti_choice": "",
+      "decision_source": "owner_manual",
+      "ai_basis": {},
+      "timestamp": "2026-10-31T13:18:17.083Z"
+    },
+    {
+      "case_id": "HO-V2-012",
+      "decision": "approve",
+      "proposed_behavior": "",
+      "reason": "",
+      "comment": "",
+      "mti_choice": "",
+      "decision_source": "owner_manual",
+      "ai_basis": {},
+      "timestamp": "2026-10-31T13:18:17.977Z"
+    },
+    {
+      "case_id": "HO-V2-013",
+      "decision": "approve",
+      "proposed_behavior": "",
+      "reason": "",
+      "comment": "",
+      "mti_choice": "",
+      "decision_source": "owner_manual",
+      "ai_basis": {},
+      "timestamp": "2026-10-31T13:18:18.550Z"
+    },
+    {
+      "case_id": "HO-V2-014",
+      "decision": "approve",
+      "proposed_behavior": "",
+      "reason": "",
+      "comment": "",
+      "mti_choice": "",
+      "decision_source": "owner_manual",
+      "ai_basis": {},
+      "timestamp": "2026-10-31T13:18:19.087Z"
+    },
+    {
+      "case_id": "HO-V2-015",
+      "decision": "approve",
+      "proposed_behavior": "",
+      "reason": "",
+      "comment": "",
+      "mti_choice": "",
+      "decision_source": "owner_manual",
+      "ai_basis": {},
+      "timestamp": "2026-10-31T13:18:19.537Z"
+    },
+    {
+      "case_id": "HO-V2-016",
+      "decision": "approve",
+      "proposed_behavior": "",
+      "reason": "",
+      "comment": "",
+      "mti_choice": "",
+      "decision_source": "owner_manual",
+      "ai_basis": {},
+      "timestamp": "2026-10-31T13:18:21.077Z"
+    },
+    {
+      "case_id": "HO-V2-017",
+      "decision": "approve",
+      "proposed_behavior": "",
+      "reason": "",
+      "comment": "",
+      "mti_choice": "",
+      "decision_source": "owner_manual",
+      "ai_basis": {},
+      "timestamp": "2026-10-31T13:18:22.985Z"
+    },
+    {
+      "case_id": "HO-V2-018",
+      "decision": "approve",
+      "proposed_behavior": "",
+      "reason": "",
+      "comment": "",
+      "mti_choice": "",
+      "decision_source": "owner_manual",
+      "ai_basis": {},
+      "timestamp": "2026-10-31T13:18:27.611Z"
+    },
+    {
+      "case_id": "HO-V2-019",
+      "decision": "approve",
+      "proposed_behavior": "",
+      "reason": "",
+      "comment": "",
+      "mti_choice": "",
+      "decision_source": "owner_manual",
+      "ai_basis": {},
+      "timestamp": "2026-10-31T13:18:28.894Z"
+    },
+    {
+      "case_id": "HO-V2-020",
+      "decision": "approve",
+      "proposed_behavior": "",
+      "reason": "",
+      "comment": "",
+      "mti_choice": "keep_answerable",
+      "decision_source": "owner_manual",
+      "ai_basis": {},
+      "timestamp": "2026-10-31T13:19:53.778Z"
+    },
+    {
+      "case_id": "HO-V2-021",
+      "decision": "approve",
+      "proposed_behavior": "",
+      "reason": "",
+      "comment": "",
+      "mti_choice": "keep_answerable",
+      "decision_source": "owner_manual",
+      "ai_basis": {},
+      "timestamp": "2026-10-31T13:19:54.387Z"
+    },
+    {
+      "case_id": "HO-V2-022",
+      "decision": "approve",
+      "proposed_behavior": "",
+      "reason": "",
+      "comment": "",
+      "mti_choice": "keep_answerable",
+      "decision_source": "owner_manual",
+      "ai_basis": {},
+      "timestamp": "2026-10-31T13:19:54.787Z"
+    },
+    {
+      "case_id": "HO-V2-023",
+      "decision": "approve",
+      "proposed_behavior": "",
+      "reason": "",
+      "comment": "",
+      "mti_choice": "",
+      "decision_source": "owner_manual",
+      "ai_basis": {},
+      "timestamp": "2026-10-31T13:18:30.619Z"
+    },
+    {
+      "case_id": "HO-V2-024",
+      "decision": "approve",
+      "proposed_behavior": "",
+      "reason": "",
+      "comment": "",
+      "mti_choice": "",
+      "decision_source": "owner_manual",
+      "ai_basis": {},
+      "timestamp": "2026-10-31T13:18:55.089Z"
+    },
+    {
+      "case_id": "HO-V2-025",
+      "decision": "approve",
+      "proposed_behavior": "",
+      "reason": "",
+      "comment": "",
+      "mti_choice": "",
+      "decision_source": "owner_manual",
+      "ai_basis": {},
+      "timestamp": "2026-10-31T13:18:56.085Z"
+    },
+    {
+      "case_id": "HO-V2-026",
+      "decision": "approve",
+      "proposed_behavior": "",
+      "reason": "",
+      "comment": "",
+      "mti_choice": "",
+      "decision_source": "owner_manual",
+      "ai_basis": {},
+      "timestamp": "2026-10-31T13:18:56.494Z"
+    },
+    {
+      "case_id": "HO-V2-027",
+      "decision": "approve",
+      "proposed_behavior": "",
+      "reason": "",
+      "comment": "",
+      "mti_choice": "",
+      "decision_source": "owner_manual",
+      "ai_basis": {},
+      "timestamp": "2026-10-31T13:18:56.849Z"
+    },
+    {
+      "case_id": "HO-V2-028",
+      "decision": "approve",
+      "proposed_behavior": "",
+      "reason": "",
+      "comment": "",
+      "mti_choice": "",
+      "decision_source": "owner_manual",
+      "ai_basis": {},
+      "timestamp": "2026-10-31T13:18:57.217Z"
+    },
+    {
+      "case_id": "HO-V2-029",
+      "decision": "approve",
+      "proposed_behavior": "",
+      "reason": "",
+      "comment": "",
+      "mti_choice": "",
+      "decision_source": "owner_manual",
+      "ai_basis": {},
+      "timestamp": "2026-10-31T13:18:57.553Z"
+    },
+    {
+      "case_id": "HO-V2-030",
+      "decision": "approve",
+      "proposed_behavior": "",
+      "reason": "",
+      "comment": "",
+      "mti_choice": "",
+      "decision_source": "owner_manual",
+      "ai_basis": {},
+      "timestamp": "2026-10-31T13:18:58.955Z"
+    },
+    {
+      "case_id": "HO-V2-031",
+      "decision": "approve",
+      "proposed_behavior": "",
+      "reason": "",
+      "comment": "",
+      "mti_choice": "",
+      "decision_source": "owner_manual",
+      "ai_basis": {},
+      "timestamp": "2026-10-31T13:19:00.384Z"
+    },
+    {
+      "case_id": "HO-V2-032",
+      "decision": "approve",
+      "proposed_behavior": "",
+      "reason": "",
+      "comment": "",
+      "mti_choice": "",
+      "decision_source": "owner_manual",
+      "ai_basis": {},
+      "timestamp": "2026-10-31T13:19:00.967Z"
+    },
+    {
+      "case_id": "HO-V2-033",
+      "decision": "approve",
+      "proposed_behavior": "",
+      "reason": "",
+      "comment": "",
+      "mti_choice": "",
+      "decision_source": "owner_manual",
+      "ai_basis": {},
+      "timestamp": "2026-10-31T13:19:01.351Z"
+    },
+    {
+      "case_id": "HO-V2-034",
+      "decision": "approve",
+      "proposed_behavior": "",
+      "reason": "",
+      "comment": "",
+      "mti_choice": "",
+      "decision_source": "owner_manual",
+      "ai_basis": {},
+      "timestamp": "2026-10-31T13:19:01.700Z"
+    },
+    {
+      "case_id": "HO-V2-035",
+      "decision": "approve",
+      "proposed_behavior": "",
+      "reason": "",
+      "comment": "",
+      "mti_choice": "",
+      "decision_source": "owner_manual",
+      "ai_basis": {},
+      "timestamp": "2026-10-31T13:19:02.020Z"
+    },
+    {
+      "case_id": "HO-V2-036",
+      "decision": "approve",
+      "proposed_behavior": "",
+      "reason": "",
+      "comment": "",
+      "mti_choice": "",
+      "decision_source": "owner_manual",
+      "ai_basis": {},
+      "timestamp": "2026-10-31T13:19:02.316Z"
+    },
+    {
+      "case_id": "HO-V2-037",
+      "decision": "approve",
+      "proposed_behavior": "",
+      "reason": "",
+      "comment": "",
+      "mti_choice": "",
+      "decision_source": "owner_manual",
+      "ai_basis": {},
+      "timestamp": "2026-10-31T13:19:03.150Z"
+    },
+    {
+      "case_id": "HO-V2-038",
+      "decision": "approve",
+      "proposed_behavior": "",
+      "reason": "",
+      "comment": "",
+      "mti_choice": "",
+      "decision_source": "owner_manual",
+      "ai_basis": {},
+      "timestamp": "2026-10-31T13:19:03.988Z"
+    },
+    {
+      "case_id": "HO-V2-039",
+      "decision": "approve",
+      "proposed_behavior": "",
+      "reason": "",
+      "comment": "",
+      "mti_choice": "",
+      "decision_source": "owner_manual",
+      "ai_basis": {},
+      "timestamp": "2026-10-31T13:19:05.062Z"
+    },
+    {
+      "case_id": "HO-V2-040",
+      "decision": "approve",
+      "proposed_behavior": "",
+      "reason": "",
+      "comment": "",
+      "mti_choice": "",
+      "decision_source": "owner_manual",
+      "ai_basis": {},
+      "timestamp": "2026-10-31T13:19:05.863Z"
+    },
+    {
+      "case_id": "HO-V2-041",
+      "decision": "approve",
+      "proposed_behavior": "",
+      "reason": "",
+      "comment": "",
+      "mti_choice": "",
+      "decision_source": "owner_manual",
+      "ai_basis": {},
+      "timestamp": "2026-10-31T13:19:06.311Z"
+    },
+    {
+      "case_id": "HO-V2-042",
+      "decision": "approve",
+      "proposed_behavior": "",
+      "reason": "",
+      "comment": "",
+      "mti_choice": "",
+      "decision_source": "owner_manual",
+      "ai_basis": {},
+      "timestamp": "2026-10-31T13:19:06.758Z"
+    },
+    {
+      "case_id": "HO-V2-043",
+      "decision": "approve",
+      "proposed_behavior": "",
+      "reason": "",
+      "comment": "",
+      "mti_choice": "",
+      "decision_source": "owner_manual",
+      "ai_basis": {},
+      "timestamp": "2026-10-31T13:19:53.295Z"
+    },
+    {
+      "case_id": "HO-V2-044",
+      "decision": "approve",
+      "proposed_behavior": "",
+      "reason": "",
+      "comment": "",
+      "mti_choice": "",
+      "decision_source": "owner_manual",
+      "ai_basis": {},
+      "timestamp": "2026-10-31T13:19:07.228Z"
+    },
+    {
+      "case_id": "HO-V2-045",
+      "decision": "approve",
+      "proposed_behavior": "",
+      "reason": "",
+      "comment": "",
+      "mti_choice": "",
+      "decision_source": "owner_manual",
+      "ai_basis": {},
+      "timestamp": "2026-10-31T13:19:08.701Z"
+    },
+    {
+      "case_id": "HO-V2-046",
+      "decision": "approve",
+      "proposed_behavior": "",
+      "reason": "",
+      "comment": "",
+      "mti_choice": "",
+      "decision_source": "owner_manual",
+      "ai_basis": {},
+      "timestamp": "2026-10-31T13:19:09.633Z"
+    },
+    {
+      "case_id": "HO-V2-047",
+      "decision": "approve",
+      "proposed_behavior": "",
+      "reason": "",
+      "comment": "",
+      "mti_choice": "",
+      "decision_source": "owner_manual",
+      "ai_basis": {},
+      "timestamp": "2026-10-31T13:19:11.088Z"
+    },
+    {
+      "case_id": "HO-V2-048",
+      "decision": "approve",
+      "proposed_behavior": "",
+      "reason": "",
+      "comment": "",
+      "mti_choice": "",
+      "decision_source": "owner_manual",
+      "ai_basis": {},
+      "timestamp": "2026-10-31T13:19:11.480Z"
+    },
+    {
+      "case_id": "HO-V2-049",
+      "decision": "approve",
+      "proposed_behavior": "",
+      "reason": "",
+      "comment": "",
+      "mti_choice": "",
+      "decision_source": "owner_manual",
+      "ai_basis": {},
+      "timestamp": "2026-10-31T13:19:12.203Z"
+    },
+    {
+      "case_id": "HO-V2-050",
+      "decision": "approve",
+      "proposed_behavior": "",
+      "reason": "",
+      "comment": "",
+      "mti_choice": "",
+      "decision_source": "owner_manual",
+      "ai_basis": {},
+      "timestamp": "2026-10-31T13:19:13.040Z"
+    },
+    {
+      "case_id": "HO-V2-051",
+      "decision": "approve",
+      "proposed_behavior": "",
+      "reason": "",
+      "comment": "",
+      "mti_choice": "",
+      "decision_source": "owner_manual",
+      "ai_basis": {},
+      "timestamp": "2026-10-31T13:19:13.428Z"
+    },
+    {
+      "case_id": "HO-V2-052",
+      "decision": "approve",
+      "proposed_behavior": "",
+      "reason": "",
+      "comment": "",
+      "mti_choice": "",
+      "decision_source": "agreed_with_ai_suggestion",
+      "ai_basis": {
+        "consensus": "unanimous approve",
+        "class": "unanimous",
+        "votes": {
+          "A": "approve",
+          "B": "approve",
+          "C": "approve"
+        }
+      },
+      "timestamp": "2026-10-31T13:17:02.305Z"
+    },
+    {
+      "case_id": "HO-V2-053",
+      "decision": "approve",
+      "proposed_behavior": "",
+      "reason": "",
+      "comment": "",
+      "mti_choice": "",
+      "decision_source": "agreed_with_ai_suggestion",
+      "ai_basis": {
+        "consensus": "unanimous approve",
+        "class": "unanimous",
+        "votes": {
+          "A": "approve",
+          "B": "approve",
+          "C": "approve"
+        }
+      },
+      "timestamp": "2026-10-31T13:17:16.728Z"
+    },
+    {
+      "case_id": "HO-V2-054",
+      "decision": "approve",
+      "proposed_behavior": "",
+      "reason": "",
+      "comment": "",
+      "mti_choice": "",
+      "decision_source": "owner_manual",
+      "ai_basis": {},
+      "timestamp": "2026-10-31T13:19:13.793Z"
+    },
+    {
+      "case_id": "HO-V2-055",
+      "decision": "approve",
+      "proposed_behavior": "",
+      "reason": "",
+      "comment": "",
+      "mti_choice": "",
+      "decision_source": "owner_manual",
+      "ai_basis": {},
+      "timestamp": "2026-10-31T13:19:25.158Z"
+    },
+    {
+      "case_id": "HO-V2-056",
+      "decision": "approve",
+      "proposed_behavior": "",
+      "reason": "",
+      "comment": "",
+      "mti_choice": "",
+      "decision_source": "owner_manual",
+      "ai_basis": {},
+      "timestamp": "2026-10-31T13:19:28.269Z"
+    },
+    {
+      "case_id": "HO-V2-057",
+      "decision": "approve",
+      "proposed_behavior": "",
+      "reason": "",
+      "comment": "",
+      "mti_choice": "",
+      "decision_source": "owner_manual",
+      "ai_basis": {},
+      "timestamp": "2026-10-31T13:19:30.036Z"
+    },
+    {
+      "case_id": "HO-V2-058",
+      "decision": "approve",
+      "proposed_behavior": "",
+      "reason": "",
+      "comment": "",
+      "mti_choice": "",
+      "decision_source": "owner_manual",
+      "ai_basis": {},
+      "timestamp": "2026-10-31T13:19:31.323Z"
+    },
+    {
+      "case_id": "HO-V2-059",
+      "decision": "approve",
+      "proposed_behavior": "",
+      "reason": "",
+      "comment": "",
+      "mti_choice": "",
+      "decision_source": "owner_manual",
+      "ai_basis": {},
+      "timestamp": "2026-10-31T13:19:31.692Z"
+    },
+    {
+      "case_id": "HO-V2-060",
+      "decision": "approve",
+      "proposed_behavior": "",
+      "reason": "",
+      "comment": "",
+      "mti_choice": "",
+      "decision_source": "owner_manual",
+      "ai_basis": {},
+      "timestamp": "2026-10-31T13:19:32.001Z"
+    },
+    {
+      "case_id": "HO-V2-061",
+      "decision": "approve",
+      "proposed_behavior": "",
+      "reason": "",
+      "comment": "",
+      "mti_choice": "",
+      "decision_source": "owner_manual",
+      "ai_basis": {},
+      "timestamp": "2026-10-31T13:19:32.387Z"
+    },
+    {
+      "case_id": "HO-V2-062",
+      "decision": "approve",
+      "proposed_behavior": "",
+      "reason": "",
+      "comment": "",
+      "mti_choice": "",
+      "decision_source": "owner_manual",
+      "ai_basis": {},
+      "timestamp": "2026-10-31T13:19:32.777Z"
+    },
+    {
+      "case_id": "HO-V2-063",
+      "decision": "approve",
+      "proposed_behavior": "",
+      "reason": "",
+      "comment": "",
+      "mti_choice": "",
+      "decision_source": "owner_manual",
+      "ai_basis": {},
+      "timestamp": "2026-10-31T13:19:33.178Z"
+    },
+    {
+      "case_id": "HO-V2-064",
+      "decision": "approve",
+      "proposed_behavior": "",
+      "reason": "",
+      "comment": "",
+      "mti_choice": "",
+      "decision_source": "owner_manual",
+      "ai_basis": {},
+      "timestamp": "2026-10-31T13:19:33.554Z"
+    },
+    {
+      "case_id": "HO-V2-065",
+      "decision": "approve",
+      "proposed_behavior": "",
+      "reason": "",
+      "comment": "",
+      "mti_choice": "",
+      "decision_source": "owner_manual",
+      "ai_basis": {},
+      "timestamp": "2026-10-31T13:19:41.970Z"
+    }
+  ]
+}

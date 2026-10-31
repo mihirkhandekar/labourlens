@@ -81,3 +81,30 @@ Saved original-held-out mean generation cost per case (USD): r3 0.00193 and 0.00
 
 ## Known leakage that remains
 Same system prompts, tools, reranker model and prompt, embedding model, planner and agent code as dev; same publishers and series families; the wage-practices 2025 report is the sibling edition of a 2024 report used in dev (only 2025 figures are asked); the MTI feature article studies firm AI use in a window ending 2024; question styles resemble dev. These cases test fresh evidence, not a fresh system.
+
+## SIGNED approval block (held-out v2, gold v1)
+
+**SIGNED by the owner (Mihir) on 2026-10-31T13:19:56.904Z: approved by owner via export `a428db90a4f42a5f88e32de80d4e1dca76f16f6a48718674d67996a59da4e3e1`.** This block supersedes the draft hash listed above; the draft file is unchanged.
+
+- **Frozen gold:** `experiments/gold/heldout_v2_v1.jsonl`, 65 cases, SHA-256 `e3d16597d542d33d106b4e9291aa3b92ca5fcdf19aa4d3c2b3319c0543efa542`.
+- **Derived from draft:** `experiments/gold/heldout_v2_draft.jsonl` SHA-256 `698940357c090c4beed4ba6532f66967dc7175297a3d1ffcd5fd6325e128fb70`.
+- **Owner changes:** approved unchanged 65; relabelled 0 (none); dropped 0 (none).
+- **Who decided what:** 59 cards by the owner’s own click, 6 cards by the owner agreeing with an AI suggestion (owner decisions, per-card agreement with AI, not independent inter-rater evidence). The three AI reviewers are one model family, so their agreement is not independent human review.
+- **Owner’s own decisions that matched the AI consensus:** 56 of 59 (cards agreed with the AI are excluded).
+- **AI review files (SHA-256):** A `4872af4b086aeb1a5f2b9ae71deef6005a50585e9a8ad2c6d14f47a213c710ca`, B `b310aa1758c20e98f4df7f7fc15579f9e4ba3f4d1d197661089c2b08aee60cf4`, C `670573893e9df03ba2fbce1ba2eddc667c407ff192c088e9874ddcdcf33890c4`.
+- **Distribution:** families {"adversarial": 8, "ambiguity_insufficient_causal": 10, "cross_source_synthesis": 8, "factual_lookup": 22, "numerical_comparison": 14, "revision_conflict": 3}; behaviours {"abstain": 8, "answer": 44, "clarify": 4, "ignore_injection_and_answer": 4, "refuse": 5}; independent evidence groups 22; non-answer cases 21.
+- **Code:** git HEAD `ea2525da3ff2acff84582ac86d20b4be4a9b0ed5`; uncommitted changes to tracked files at signing: no.
+- **Corpus:** passage fingerprint `c7ec1f684e7edfe34e36e21865e88b6b88e42bea674b4a6c3e4a243fa11e99f4` (16419 passages); observations `bb5d14d8df1c5eaaa8e18a8979dab4b6eb40eaf4059002f4884b04975165b7d3`; manifest `55ad2b5160585ccf632bbbd3ad7706f79a60774dbd8b69c87e3de5f38b58144d`.
+- **Prompts and prices:** `planner_v1` `df68ef8e5e287d1a0b1f71d938e85ec25b4f03eeec501bc439a3a77aec2482dc`; `planner_v1_user` `e59f408b00f5a99e0fb867c635a84d2d77947171620ab035f6067a3cdfb8136f`; `answer_v3` `e854b64c72116c4c175082e70f39c312ed94b1f37778e7daf3f9a51de1bac350`; `answer_v3_user` `c4f4ef05d7d1b87fca94bee65cbf2a38999c181dc2e92bced9cdf8ef92b006e7`; `rerank_v1` `e45ed816ccefd679d046cf9bcbd4dad92ba27b20cfc5f45b900063b84784793a`; `judge_v1` `85f3529fca32faec681b3d4b1e6899b8620c383ed2aa54bc423241e2b7f4a10f`; `specs/prices.yaml` `634b32441c3495b4c3ec13efa3af1e9cc99e5c7523eac3a15a5c238c3acaeb5c`.
+- **Environment recorded at signing:** `LABOURLENS_CROSSCHECK=(unset: guard on)`, `LABOURLENS_GUARDS=(unset)`. Run both arms with the same setting.
+- **Cost quote (inference from saved usage, not a cap):** about $0.94.
+- **Commands, in order (paid APIs):**
+```
+uv run labourlens agent-exp --split heldout --gold experiments/gold/heldout_v2_v1.jsonl --tag V2-r3 --retrieval r3 --pairs gpt-6-luna gpt-5.6-luna
+uv run labourlens agent-exp --split heldout --gold experiments/gold/heldout_v2_v1.jsonl --tag V2-hybrid --retrieval hybrid --pairs gpt-6-luna gpt-5.6-luna
+uv run labourlens eval --exp agent-heldout-V2-r3 --split heldout --gold experiments/gold/heldout_v2_v1.jsonl
+uv run labourlens eval --exp agent-heldout-V2-hybrid --split heldout --gold experiments/gold/heldout_v2_v1.jsonl
+uv run labourlens paired --gold experiments/gold/heldout_v2_v1.jsonl --candidate agent-heldout-V2-r3 --baseline agent-heldout-V2-hybrid --models gpt-6-luna gpt-5.6-luna --out experiments/heldout-v2/paired.json
+```
+
+- **Note at signing:** manifest.json (55ad2b516058…) differs from the hash in the FREEZE.md draft. Passages and observations are unchanged, so this does not block signing; the signed block records the current hash. Check `git diff` of data/manifests/manifest.json if you want to know why (for example rights metadata).
