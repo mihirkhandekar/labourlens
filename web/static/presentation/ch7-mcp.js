@@ -59,7 +59,7 @@ function diagramFigure() {
 }
 
 function catalogue() {
-  const wrap = el('div', 'pr-mcp-cat pr-reveal');
+  const wrap = el('div', 'pr-mcp-cat');
   const mk = (title, entries, cls) => {
     const col = el('div', 'pr-mcp-col');
     col.append(el('h5', 'pr-mini-title', title));
@@ -78,7 +78,7 @@ function checkCards(m) {
   const wrap = el('div', 'pr-checks');
   checks.forEach(check => {
     const [title, text] = CHECKS[check.label] || [check.label, ''];
-    const card = el('article', 'pr-check pr-reveal');
+    const card = el('article', 'pr-check');
     const head = el('header', 'pr-check-head');
     head.append(el('strong', '', title), el('span', `pr-status is-${check.status === 'observed' ? 'ok' : 'warn'}`, check.status));
     card.append(head, el('p', '', text), evi(`report.json › mcp.checks[${check.label}] · docs/mcp-demo-transcript.md`));
@@ -116,7 +116,7 @@ function latencyFigures(m) {
 }
 
 function httpTable() {
-  const wrap = el('div', 'pr-http pr-reveal');
+  const wrap = el('div', 'pr-http');
   wrap.append(el('h5', 'pr-mini-title', 'Loopback HTTP transport: 7 hardening attempts'));
   wrap.append(dataTable('Hardening checks, from the saved transcript', ['Attempt', 'Result'], [
     ['Request with no token', 'HTTP 401'], ['Request with a wrong token', 'HTTP 401'], ['Valid token, hostile Host header', 'HTTP 421'], ['Valid token, hostile browser Origin', 'HTTP 403'],
@@ -130,7 +130,7 @@ export function renderMcp(m, ctx) {
   const mcp = m.section('mcp'), x = mcp.metrics || {};
   const p50 = (mcp.rows || []).find(r => r.metric === 'latency_p50_ms');
   const ch = chapter({
-    id: 'mcp', no: 7, eyebrow: 'MCP',
+    id: 'mcp',
     title: p50 && x.compared_datasets != null ? `MCP output differed from direct calls on ${x.different_outputs} of ${x.compared_datasets} datasets, at ${p50.mcp} ms against ${p50.direct} ms per median call` : 'MCP server and client against direct calls',
     bullets: [
       `Server: ${TOOLS.length} read-only tools, 2 resources, 1 prompt. Statistics and catalogue only; no MOM report text.`,

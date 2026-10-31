@@ -161,7 +161,7 @@ function costLatencyFigures(m) {
   const runs = runQuantiles(m);
   if (!runs.length) return [];
   const a3 = runs.find(r => r.step === 'A3' && r.model === 'gpt-6-luna'), a1 = runs.find(r => r.step === 'A1' && r.model === 'gpt-6-luna');
-  const rowsFor = (key, fmtv) => runs.map(r => ({label: `${r.step} \u00b7 ${r.model}`, q: r[key], hl: r === a3, cls: MODEL_CLS[r.model] || 'c6', lines: [`${r.step}, ${r.model}`, `Median ${fmtv(r[key].p50)}`, `Middle half ${fmtv(r[key].p25)} to ${fmtv(r[key].p75)}`, `5th to 95th percentile ${fmtv(r[key].p5)} to ${fmtv(r[key].p95)}`, `Slowest or costliest ${fmtv(r[key].max)}`, `${r[key].n} cases`]}));
+  const rowsFor = (key, fmtv) => runs.map(r => ({label: `${r.step}, ${r.model}`, q: r[key], hl: r === a3, cls: MODEL_CLS[r.model] || 'c6', lines: [`${r.step}, ${r.model}`, `Median ${fmtv(r[key].p50)}`, `Middle half ${fmtv(r[key].p25)} to ${fmtv(r[key].p75)}`, `5th to 95th percentile ${fmtv(r[key].p5)} to ${fmtv(r[key].p95)}`, `Slowest or costliest ${fmtv(r[key].max)}`, `${r[key].n} cases`]}));
   const secFmt = v => `${v.toFixed(1)} s`, costFmt = v => `$${v.toFixed(4)}`;
   const pairs = ['A1', 'A2', 'A3', 'A4', 'A5'].map(s => [runs.find(r => r.step === s && r.model === 'gpt-5.6-luna'), runs.find(r => r.step === s && r.model === 'gpt-6-luna')]).filter(([a, b]) => a && b);
   const pricier = pairs.length > 0 && pairs.every(([a, b]) => a.cost.p50 > b.cost.p50);
@@ -211,7 +211,7 @@ function modelFigures(m) {
     takeaway: 'The spread between models is smaller than this gap.',
     summary: gap.map(g => `${g.r.name}: retrieved ${fmt.pct(g.r.g1.behavior_accuracy)}, oracle ${fmt.pct(g.r.x.behavior_accuracy)}`).join('. '),
     source: {data: 'report.json › answers.rows[answer-dev-G0|G1/*].metrics.behavior_accuracy', files: ['experiments/runs/answer-dev-G0-SUMMARY.md', 'experiments/runs/answer-dev-G1-SUMMARY.md']},
-    note: '30 development cases, answer-only study. This study motivated the retrieval work in chapter 3.',
+    note: '30 development cases, answer-only study. This study motivated the retrieval work in the Retrieval section.',
     table: () => ({caption: 'Behaviour accuracy: retrieved vs oracle evidence', columns: ['Model', 'Retrieved (G1)', 'Oracle (G0)', 'Gain'], rows: gap.map(g => [g.r.name, g.r.g1.behavior_accuracy, g.r.x.behavior_accuracy, +g.d.toFixed(3)])}),
     draw: (host, c) => dumbbell(host, c, {
       rows: gap.map(g => ({label: g.r.name, points: [{key: 'g1', label: 'Retrieved', value: g.r.g1.behavior_accuracy, cls: 'c6'}, {key: 'g0', label: 'Oracle evidence', value: g.r.x.behavior_accuracy, cls: 'brass'}], lines: [g.r.name, `Retrieved: ${fmt.pct(g.r.g1.behavior_accuracy)}`, `Oracle evidence: ${fmt.pct(g.r.x.behavior_accuracy)}`, `Gain: ${fmt.pts(g.d)}`]})),
@@ -257,12 +257,12 @@ function regressionSection(m) {
       const [a, x, y] = [r.a3, r.x1, r.x2].map(row => metricOf(row?.metrics?.[key]));
       const ov = intervalsOverlap(a, y);
       if (ov === false) moved.push(`${label.toLowerCase()} (${r.name})`);
-      rows.push([`${label} · ${r.name}`, withInterval(a), r.x1 ? withInterval(x) : 'not run', withInterval(y), ov === null ? 'no interval' : ov ? 'overlap' : 'do not overlap']);
+      rows.push([`${label}, ${r.name}`, withInterval(a), r.x1 ? withInterval(x) : 'not run', withInterval(y), ov === null ? 'no interval' : ov ? 'overlap' : 'do not overlap']);
     });
     const p95 = (row, k) => (row ? fmt.seconds(row.metrics?.[k]) : 'not run');
-    rows.push([`95th percentile latency · ${r.name}`, p95(r.a3, 'latency_p95_s'), p95(r.x1, 'latency_p95_s'), p95(r.x2, 'latency_p95_s'), 'no interval']);
+    rows.push([`95th percentile latency, ${r.name}`, p95(r.a3, 'latency_p95_s'), p95(r.x1, 'latency_p95_s'), p95(r.x2, 'latency_p95_s'), 'no interval']);
     const cost = row => (row ? fmt.money(row.metrics?.cost_per_case_usd) : 'not run');
-    rows.push([`Generation cost per case · ${r.name}`, cost(r.a3), cost(r.x1), cost(r.x2), 'no interval']);
+    rows.push([`Generation cost per case, ${r.name}`, cost(r.a3), cost(r.x1), cost(r.x2), 'no interval']);
   });
   const sec = section('X2 regression check: development results on corpus v3 with the 14 runtime changes', ['Not an ablation. Corpus, runtime fixes, cross-check and gold version all changed together.']);
   sec.append(callout({tone: 'warn', title: 'What X2 is', items: [
@@ -281,7 +281,7 @@ function regressionSection(m) {
 export function renderEvaluation(m, ctx) {
   const a3 = m.evalRow('dev-A3', 'gpt-6-luna'), r3 = m.heldRow('r3', 'gpt-6-luna');
   const ch = chapter({
-    id: 'evaluation', no: 5, eyebrow: 'Answers and evaluation',
+    id: 'evaluation',
     title: a3 && r3 ? `gpt-6-luna scores ${fmt.pct(metricOf(a3.metrics.behaviour_accuracy).rate)} behaviour accuracy on ${fmt.int(a3.metrics.n_cases)} development cases and ${fmt.pct(metricOf(r3.metrics.behaviour_accuracy).rate)} on ${fmt.int(r3.metrics.n_cases)} held-out cases` : 'Answer evaluation',
     bullets: [
       'Gold set: 268 cases, 237 development and 31 held out.',

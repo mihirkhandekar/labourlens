@@ -1,54 +1,55 @@
-/* LabourLens design tokens. Archetype: Editorial Luxury (warm paper, ink, deep green, brass).
-   Both the workbench (app) and the presentation use these. Do not hard-code colours elsewhere. */
+/* LabourLens design tokens, shared by the overview, the workbench and the presentation.
+   One typeface (Geist), one accent (green), neutral cool greys, one 12px radius. Dark is the default theme;
+   the toggle sets data-theme="light" (theme.css). Do not hard-code colours elsewhere. */
 :root {
-  color-scheme: light dark;
-  --font-display: "Fraunces", "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+  color-scheme: dark;
+  --font-display: "Geist", "Avenir Next", "Segoe UI", system-ui, sans-serif;
   --font-sans: "Geist", "Avenir Next", "Segoe UI", system-ui, sans-serif;
   --font-mono: "Geist Mono", ui-monospace, "SF Mono", Menlo, monospace;
 
-  --paper: #fbf8f2;
-  --paper-2: #f3eee4;
-  --paper-3: #e9e2d3;
-  --surface: #fffdf9;
-  --ink: #14201c;
-  --ink-2: #39463f;
-  --muted: #68746d;
-  --line: rgba(20, 32, 28, 0.12);
-  --line-strong: rgba(20, 32, 28, 0.24);
-  --accent: #0f5c4d;
-  --accent-ink: #f6fbf8;
-  --accent-soft: #d9ebe3;
-  --brass: #b07a2a;
-  --brass-soft: #f1e3c8;
-  --ok: #2e7d5b;
-  --warn: #b07a2a;
-  --bad: #a63d2f;
-  --bad-soft: #f4dad4;
-  --info: #2d5f8a;
+  --paper: #0c0f10;
+  --paper-2: #14181a;
+  --paper-3: #1d2326;
+  --surface: #101416;
+  --ink: #eceff1;
+  --ink-2: #c4cbd0;
+  --muted: #919ca3;
+  --line: rgba(236, 239, 241, 0.12);
+  --line-strong: rgba(236, 239, 241, 0.28);
+  --accent: #4cc9a0;
+  --accent-ink: #06130e;
+  --accent-soft: #15332b;
+  --brass: var(--accent);
+  --brass-soft: var(--accent-soft);
+  --ok: #4cc9a0;
+  --warn: #e0a94f;
+  --bad: #ee8777;
+  --bad-soft: #3a1f1b;
+  --info: #86b3e6;
 
-  /* chart series, colour-blind aware order */
-  --c1: #0f5c4d;
-  --c2: #b07a2a;
-  --c3: #2d5f8a;
-  --c4: #a63d2f;
-  --c5: #6a5a8c;
-  --c6: #7b8b83;
+  /* chart series: data colours only */
+  --c1: #4cc9a0;
+  --c2: #e0a94f;
+  --c3: #86b3e6;
+  --c4: #ee8777;
+  --c5: #a3b6c9;
+  --c6: #8d989f;
 
-  --shadow-soft: 0 1px 1px rgba(20, 32, 28, 0.04), 0 18px 48px -24px rgba(20, 32, 28, 0.22);
-  --shadow-lift: 0 2px 2px rgba(20, 32, 28, 0.05), 0 32px 80px -32px rgba(20, 32, 28, 0.32);
-  --inner-hi: inset 0 1px 0 rgba(255, 255, 255, 0.7);
+  --shadow-soft: none;
+  --shadow-lift: none;
+  --inner-hi: none;
 
-  --r-xs: 8px;
-  --r-sm: 14px;
-  --r-md: 22px;
-  --r-lg: 32px;
-  --r-pill: 999px;
-  --bezel: 6px;
+  --r-xs: 12px;
+  --r-sm: 12px;
+  --r-md: 12px;
+  --r-lg: 12px;
+  --r-pill: 12px;
+  --bezel: 0px;
 
-  --ease: cubic-bezier(0.32, 0.72, 0, 1);
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
   --dur-1: 180ms;
-  --dur-2: 420ms;
-  --dur-3: 800ms;
+  --dur-2: 360ms;
+  --dur-3: 600ms;
 
   --space-1: 4px;
   --space-2: 8px;
@@ -60,39 +61,6 @@
   --space-8: 120px;
 
   --measure: 66ch;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --paper: #0f1512;
-    --paper-2: #151d19;
-    --paper-3: #1c2621;
-    --surface: #18211d;
-    --ink: #eef2ee;
-    --ink-2: #c7d1ca;
-    --muted: #8fa097;
-    --line: rgba(238, 242, 238, 0.12);
-    --line-strong: rgba(238, 242, 238, 0.26);
-    --accent: #5fc2a6;
-    --accent-ink: #07130f;
-    --accent-soft: #1c3a31;
-    --brass: #d9a54f;
-    --brass-soft: #3a2f1a;
-    --ok: #6fcf9f;
-    --warn: #d9a54f;
-    --bad: #e8806f;
-    --bad-soft: #3d1f1a;
-    --info: #7fb2e0;
-    --c1: #5fc2a6;
-    --c2: #d9a54f;
-    --c3: #7fb2e0;
-    --c4: #e8806f;
-    --c5: #a898d4;
-    --c6: #8fa097;
-    --shadow-soft: 0 1px 1px rgba(0, 0, 0, 0.3), 0 18px 48px -24px rgba(0, 0, 0, 0.7);
-    --shadow-lift: 0 2px 2px rgba(0, 0, 0, 0.35), 0 32px 80px -32px rgba(0, 0, 0, 0.8);
-    --inner-hi: inset 0 1px 0 rgba(255, 255, 255, 0.06);
-  }
 }
 
 @media (prefers-reduced-motion: reduce) {

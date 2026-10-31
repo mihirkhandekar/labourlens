@@ -6,14 +6,14 @@ const header = el('header', 'nav-wrap');
 const nav = el('nav', 'nav'); nav.setAttribute('aria-label', 'Primary');
 const brand = el('a', 'brand brand-name', 'LabourLens'); brand.href = '/';
 const links = el('ul', 'nav-links');
-for (const [name, href] of [['Overview', '/'], ['Presentation', '/#presentation'], ['Workbench', '/workbench']]) {
+for (const [name, href] of [['Overview', '/'], ['Presentation', '/deck'], ['Workbench', '/workbench']]) {
   const a = el('a', 'nav-link', name); a.href = href;
   if (href === '/workbench') a.setAttribute('aria-current', 'page');
   links.append(add(el('li'), a));
 }
 const chip = el('span', 'pill nav-chip', 'Checking demo');
 const theme = el('button', 'icon-btn theme-toggle'); theme.type = 'button'; theme.append(icon('sun', 'sun'), icon('moon', 'moon'));
-function themeLabel() { const dark = document.documentElement.dataset.theme ? document.documentElement.dataset.theme === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches; theme.setAttribute('aria-label', dark ? 'Switch to light theme' : 'Switch to dark theme'); return dark; }
+function themeLabel() { const dark = document.documentElement.dataset.theme !== 'light'; theme.setAttribute('aria-label', dark ? 'Switch to light theme' : 'Switch to dark theme'); return dark; }
 function toggleTheme() { const next = themeLabel() ? 'light' : 'dark'; document.documentElement.dataset.theme = next; try { localStorage.setItem('labourlens-theme', next); } catch {} themeLabel(); }
 theme.addEventListener('click', toggleTheme); themeLabel();
 const burger = el('button', 'burger'); burger.type = 'button'; burger.setAttribute('aria-label', 'Open menu'); burger.setAttribute('aria-expanded', 'false'); burger.setAttribute('aria-controls', 'page-menu');
@@ -21,9 +21,9 @@ burger.append(el('span', 'bar'), el('span', 'bar'), el('span', 'bar'));
 add(nav, brand, links, add(el('div', 'nav-tools'), chip, theme, burger)); header.append(nav);
 const menu = el('div', 'menu'); menu.id = 'page-menu'; menu.setAttribute('aria-hidden', 'true');
 const menuNav = el('nav', 'menu-nav'); menuNav.setAttribute('aria-label', 'Menu');
-for (const [i, [name, href]] of [['Overview', '/'], ['Presentation', '/#presentation'], ['Workbench', '/workbench']].entries()) {
+for (const [name, href] of [['Overview', '/'], ['Presentation', '/deck'], ['Workbench', '/workbench']]) {
   const a = el('a', 'menu-link'); a.href = href; a.tabIndex = -1;
-  add(a, add(el('span', 'mask'), add(el('span', 'mi'), el('span', 'mn mono', String(i + 1).padStart(2, '0')), el('span', 'ml', name)))); menuNav.append(a);
+  add(a, add(el('span', 'mask'), add(el('span', 'mi'), el('span', 'ml', name)))); menuNav.append(a);
 }
 menu.append(menuNav);
 const main = el('main', 'view-workbench standalone-workbench'); main.id = 'main'; main.tabIndex = -1;

@@ -1,6 +1,6 @@
 # Innovation assessment
 
-**What this covers.** A forward plan for turning LabourLens into a secure government research capability, written by the author with AI assistance. Measured results are marked **MEASURED**; everything else is a **PROPOSAL** and has not been built. Full methods, intervals and caveats are in the [evaluation report](evaluation-report.md). Registered results come from corpus v1 and v2. Corpus v3 has two measured evaluations (a development regression check and a threat run) and no held-out or evidence-disjoint evaluation (see the corpus-versions statement in the [README](../README.md#corpus-versions)). The gold set is mostly AI-drafted (45 of 268 cases owner-reviewed), so every accuracy figure is an agreement figure, not validated accuracy.
+**What this covers.** A forward plan for turning LabourLens into a secure government research capability, written by the author with AI assistance. Measured results are marked **MEASURED**; everything else is a **PROPOSAL** and has not been built. Full methods, intervals and caveats are in the [evaluation report](evaluation-report.md). Registered results come from corpus v1 and v2. Corpus v3 has three measured evaluations (a development regression check, a threat run and held-out v2, the first evidence-disjoint-source evaluation); see the corpus-versions statement in the [README](../README.md#corpus-versions). The gold set is mostly AI-drafted (45 of 268 cases owner-reviewed), so every accuracy figure is an agreement figure, not validated accuracy.
 
 ## 1. Improve retrieval and answer quality
 
@@ -8,7 +8,7 @@
 
 On the 31 held-out cases the same change gave 0.871 versus 0.710 for `gpt-6-luna`; the paired gain of 0.161 has an interval of [0.000, 0.323], so it is **not demonstrated**. The held-out questions share evidence with development, so this tests new questions, not new facts. Repairing known extraction defects (corpus v2) changed nothing measurable.
 
-**PROPOSAL.** Run the 65-case held-out v2 set, written on sources no earlier case cites, once and unchanged. It is a draft and has not been run.
+**MEASURED (31 Oct 2026).** The 65-case held-out v2 set, written on sources no earlier case cites, was run once and unchanged ([result](experiments/m7-heldout-v2-result.md)). The pre-registered rule is met for the primary model; the effect is three cases; I would not call it a confirmed gain; the second model shows none. Both arms score about 0.71 to 0.75, mostly held back by a tool coverage gap on arithmetic over report figures. **PROPOSAL.** Close that gap as a new experiment with a new id, then test it on a fresh set, because the held-out v2 questions are now known.
 
 ## 2. Detect changing data, models and user needs
 

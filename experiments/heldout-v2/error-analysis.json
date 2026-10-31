@@ -1,0 +1,117 @@
+{
+ "experiment": "heldout-v2",
+ "gold_sha256": "e3d16597d542d33d106b4e9291aa3b92ca5fcdf19aa4d3c2b3319c0543efa542",
+ "primary_arm": "r3",
+ "primary_model": "gpt-6-luna",
+ "derivation": "Counted by the evaluation owner from the committed case records and the private raw runs (data/runs/agent-heldout-V2-*): ids and counts only, no source text. Classes assigned by reading each failing case trace and stated reason. Nothing was rerun and no tool, prompt or label was changed.",
+ "n_cases": 65,
+ "n_mismatches_primary_r3": 16,
+ "classes": [
+  {
+   "class": "tool_gap_text_figure_arithmetic",
+   "count": 8,
+   "case_ids": [
+    "HO-V2-029",
+    "HO-V2-030",
+    "HO-V2-031",
+    "HO-V2-032",
+    "HO-V2-033",
+    "HO-V2-034",
+    "HO-V2-035",
+    "HO-V2-036"
+   ]
+  },
+  {
+   "class": "tool_gap_dataset_dimension_label_and_round_budget",
+   "count": 3,
+   "case_ids": [
+    "HO-V2-025",
+    "HO-V2-026",
+    "HO-V2-027"
+   ]
+  },
+  {
+   "class": "retrieval_miss_both_arms",
+   "count": 1,
+   "case_ids": [
+    "HO-V2-011"
+   ]
+  },
+  {
+   "class": "model_reasoning_false_premise",
+   "count": 1,
+   "case_ids": [
+    "HO-V2-022"
+   ]
+  },
+  {
+   "class": "answer_status_choice_non_answer",
+   "count": 3,
+   "case_ids": [
+    "HO-V2-050",
+    "HO-V2-051",
+    "HO-V2-063"
+   ]
+  },
+  {
+   "class": "scorer_penalised_correct_answer",
+   "count": 0,
+   "case_ids": []
+  },
+  {
+   "class": "gold_label_judged_wrong",
+   "count": 0,
+   "case_ids": []
+  }
+ ],
+ "over_abstentions_primary_r3": 13,
+ "numerical_over_abstentions_primary_r3": 11,
+ "gold_passage_in_agent_evidence": {
+  "r3": {
+   "hit": 33,
+   "of": 34
+  },
+  "hybrid": {
+   "hit": 31,
+   "of": 34
+  }
+ },
+ "mismatches_shared_by_both_arms": 16,
+ "discordant_primary": [
+  {
+   "case_id": "HO-V2-021",
+   "family": "factual_lookup",
+   "source_group": "mti_ai_feature",
+   "r3_correct": true,
+   "hybrid_correct": false,
+   "hybrid_tool_calls": 0,
+   "r3_tool_calls": 2,
+   "decided_before_retrieval_in_hybrid_arm": true
+  },
+  {
+   "case_id": "HO-V2-048",
+   "family": "ambiguity_insufficient_causal",
+   "source_group": "wage_reports_pair",
+   "r3_correct": true,
+   "hybrid_correct": false,
+   "hybrid_tool_calls": 2,
+   "r3_tool_calls": 2,
+   "decided_before_retrieval_in_hybrid_arm": false
+  },
+  {
+   "case_id": "HO-V2-049",
+   "family": "ambiguity_insufficient_causal",
+   "source_group": "dataset_ulc",
+   "r3_correct": true,
+   "hybrid_correct": false,
+   "hybrid_tool_calls": 0,
+   "r3_tool_calls": 2,
+   "decided_before_retrieval_in_hybrid_arm": true
+  }
+ ],
+ "top_follow_up": [
+  "src/labourlens/agent/tools.py Tools.calculate_change accepts only observation labels; prompts/answer_v3.md requires a calculation item for any difference",
+  "src/labourlens/agent/tools.py StatsData.catalogue_text and StatsData.query: dimension labels need an exact case-insensitive match; src/labourlens/agent/graph.py MAX_ROUNDS = 2"
+ ],
+ "follow_up_status": "not done; a fix and rerun would be a new experiment with a new id outside the frozen protocol"
+}

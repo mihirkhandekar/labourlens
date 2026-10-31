@@ -1,6 +1,4 @@
-// Evaluation views. renderPresentation is the long-form report; renderEvaluation and renderSecurity
-// are the compact panels kept for the workbench. Both read only the curated report.json projection.
-import {mountPresentation} from './presentation/index.js';
+// Compact evaluation and security panels for the workbench. They read only the curated report.json projection.
 // Offline presentation only: render the builder's curated numeric projection.
 const node = (tag, className, text) => {
   const result = document.createElement(tag);
@@ -44,7 +42,7 @@ function rateBar(label, measurement, adverse = false, unit = 'cases') {
   const ci = validCI(measurement.ci95) ? measurement.ci95 : null;
   const n = finite(measurement.n) ? `n=${number(measurement.n)} ${unit}` : 'n not recorded';
   const direction = adverse ? 'Lower is better' : 'Higher is better';
-  const uncertainty = ci ? `95% CI ${percent(ci[0])}–${percent(ci[1])}` : '95% CI not recorded';
+  const uncertainty = ci ? `95% CI ${percent(ci[0])}-${percent(ci[1])}` : '95% CI not recorded';
   if (finite(measurement.rate) && measurement.rate >= 0 && measurement.rate <= 1) {
     const color = adverse ? '#a04732' : '#146b69';
     const x = value => 10 + value * 300;
@@ -160,7 +158,7 @@ export function evaluationNotices(report) {
   const snapshotCurrent = rowsOf(report?.evaluation).filter(row => !isLabelledRun(row)).length > 0 && rowsOf(report?.evaluation).filter(row => !isLabelledRun(row)).every(usesGoldV35);
   notice(panel, `Completed evaluation covers 268 cases: 237 development and 31 held-out. A1/A2 used 235 development cases; A3/A4/A5 used 237. Held-out H-r3/H-hybrid includes only the registered gpt-6-luna and gpt-5.6-luna runs with planner_v1 and answer_v3. Current rescoring uses owner-reviewed gold v3.5, not the original generation-time v3.2 freeze. ${snapshotCurrent ? 'The plotted snapshot records gold v3.5 scoring fingerprints.' : 'The static page is awaiting a regenerated snapshot: historical development plots use gold v3.2 and historical held-out plots use gold v3.4. The completed v3.5 results are disclosed below, not substituted into historical bars.'} AI judge${judges.length ? ': ' + judges.join(', ') : ''}.`);
   notice(panel, 'owner review complete 31 Oct 2026: 125 cards decided by the owner (30 own verdicts, 95 by agreeing per card with AI suggestions or the three-pass AI tie-break), not independent inter-rater evidence. The cards comprise 45 gold cases, 40 answers, 30 source checks and 10 decisions. Of 268 gold cases, 45 are owner-reviewed and 223 remain AI-drafted. The owner answer verdicts are 25 correct, 6 partly correct and 9 incorrect; source checks are 19 matches and 11 minor issues. These selected-card decisions are not population accuracy or blind independent review. Sources: docs/human-review/owner-review-summary.md and experiments/gold/CHANGELOG.md.');
-  notice(panel, 'Gold v3.5 incorporates two owner-approved label changes confirmed in chat on 31 Oct 2026: HO-022 clarify → answer and DEV-018 refuse → clarify. The private export proposed DEV-018 refuse → refuse, a no-op that contradicts the explicit chat confirmation; chat takes precedence. Every evidence ID is preserved. Development A1–A5 v3.5 rescoring is complete using existing outputs with --no-judge, without new generation or paid judge calls. Held-out v3.5 rescoring is complete for all four registered configurations; stale judge entries were rejudged against the current gold without new generation. HO-022 was changed after the held-out run; all four configurations gain 1/31 in behaviour accuracy relative to v3.4. This is post-run owner adjudication, not a fresh held-out experiment. The owner must commit the resulting artifacts and rebuild the report to update any historical static snapshot.');
+  notice(panel, 'Gold v3.5 incorporates two owner-approved label changes confirmed in chat on 31 Oct 2026: HO-022 clarify → answer and DEV-018 refuse → clarify. The private export proposed DEV-018 refuse → refuse, a no-op that contradicts the explicit chat confirmation; chat takes precedence. Every evidence ID is preserved. Development A1-A5 v3.5 rescoring is complete using existing outputs with --no-judge, without new generation or paid judge calls. Held-out v3.5 rescoring is complete for all four registered configurations; stale judge entries were rejudged against the current gold without new generation. HO-022 was changed after the held-out run; all four configurations gain 1/31 in behaviour accuracy relative to v3.4. This is post-run owner adjudication, not a fresh held-out experiment. The owner must commit the resulting artifacts and rebuild the report to update any historical static snapshot.');
   notice(panel, 'D-031 checks the pre-2024 boundary: earlier reports may supply context, but a request for an answer outside the supported analysis period must abstain.');
   notice(panel, 'Post-run gold adjudications: on 31 Oct 2026, after held-out execution and before human review, the owner approved HO-029 from refuse to ignore_injection_and_answer (v3.3). The mixed request must decline secret disclosure while answering the public Q1 2026 component; source passages and reference facts were added. In v3.4, three further post-run edits were approved: HO-027 changes from ignore_injection_and_answer to clarify because its question omits the year; the question is unchanged and prior facts/evidence are context only, not an answer target. HO-023 adds the non-primary cohort-definition passage mom-2026-q2-final:p053:b015:85d629c9. HO-004 marks its truncated PDF passage non-primary; the complete release remains primary. Existing outputs were re-scored without new generation or AI judge calls. This is post-run adjudication, not a pristine frozen-gold estimate. The original run and experiments/heldout/FREEZE.md remain unchanged. Sources: experiments/gold/draft_cases.jsonl, experiments/gold/CHANGELOG.md and experiments/gold/independent-ai-review-2.md.');
   notice(panel, 'Held-out behaviour accuracy, gold v3.2 → v3.3 → v3.4 → v3.5 (n=31 each): r3 / gpt-6-luna 0.839 → 0.839 → 0.839 → 0.871; r3 / gpt-5.6-luna 0.871 → 0.839 → 0.806 → 0.839; hybrid / gpt-6-luna 0.677 → 0.677 → 0.677 → 0.710; hybrid / gpt-5.6-luna 0.742 → 0.710 → 0.710 → 0.742. The three v3.4 post-run edits lower or leave scores unchanged: HO-027 lowers r3 / gpt-5.6-luna behaviour accuracy by 1/31; the evidence edits leave behaviour accuracy unchanged. The later v3.5 HO-022 label change raises every configuration by 1/31. These are not cosmetic label updates. Current v3.5 behaviour 95% intervals, in the same order: [0.742, 0.968], [0.710, 0.968], [0.548, 0.839], [0.581, 0.903]. Historical v3.4 intervals: [0.710, 0.968], [0.677, 0.935], [0.516, 0.839], [0.548, 0.871]. Current sources: experiments/eval/agent-heldout-H-r3/ and experiments/eval/agent-heldout-H-hybrid/ (*.metrics.json); gold SHA-256 aac4b405b51c7cebf019c3b3629509ecb711be32fb830a8e78c4c7b902219e09. Historical sensitivity is preserved in docs/evaluation-report.md; no separate v3.2 metric JSON snapshot is claimed.');
@@ -228,7 +226,7 @@ export function renderEvaluation(panel, report) {
     'Cases with ungrounded numbers: fraction of all scored cases with an ungrounded numeric warning. answers_with_ungrounded_numbers is a legacy alias with the same all-scored-case denominator, not an answered-case rate.',
     'Intervals are recorded case-bootstrap 95% intervals. Small strata and overlapping intervals do not support a claim that one configuration is better.',
     'Generation cost per case and judge cost per run are recorded separately. Missing costs and latency percentiles are left blank.',
-    'Bars use a 0–100% scale. Dots mark rates and whiskers mark 95% intervals. Denominators differ by metric (cases, claims, reference facts). Scalar metrics have no interval.'
+    'Bars use a 0-100% scale. Dots mark rates and whiskers mark 95% intervals. Denominators differ by metric (cases, claims, reference facts). Scalar metrics have no interval.'
   ].forEach(text => list.append(node('li', '', text)));
   definitions.append(list);
   panel.append(definitions, node('h3', '', 'Results by research family'), familyTable(rows));
@@ -302,9 +300,4 @@ export function renderComparison(panel, report, key) {
     grid.append(card);
   });
   panel.append(grid);
-}
-
-// Long-form presentation. `root` is an empty element; `report` is the parsed report.json or null.
-export function renderPresentation(root, report) {
-  mountPresentation(root, report, {disclosures: evaluationNotices(report)});
 }

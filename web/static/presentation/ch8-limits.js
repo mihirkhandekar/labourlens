@@ -29,25 +29,25 @@ function reviewFigure() {
 }
 
 const limitsFor = m => [
-  ['Gold labels are mostly AI drafts', 'Gold v3.5 has 268 cases (237 development, 31 held-out); 45 are owner-reviewed and 223 are AI drafts. Review left 43 unchanged and changed 2 labels: HO-022 (clarify to answer) and DEV-018 (refuse to clarify).', 'README.md · docs/system-card.md · experiments/gold/CHANGELOG.md'],
-  ['Owner review is per card and partly circular', 'The owner decided 125 cards: 30 with their own verdict, 95 by agreeing with an AI suggestion. No blinded annotation was run.', 'docs/human-review/owner-review-summary.md · docs/system-card.md'],
-  ['Held-out reuses development evidence', '31 cases; 25 of 31 reuse a development evidence id and 15 of 31 reuse their whole set. The interval on the r3 gain touches or crosses zero.', 'docs/system-card.md · report.json › evaluation.paired'],
-  ['Some scores sit on earlier gold versions', `Development rows use ${goldOf(m.evalRow('dev-A3', 'gpt-6-luna')).label}; held-out rows use ${goldOf(m.heldRow('r3', 'gpt-6-luna')).label}, after post-run label edits. Both were rescored from saved outputs with no new generation. Original held-out scores on v3.2 to v3.4 stay in the evaluation report beside the current ones.`, 'experiments/heldout/FREEZE.md · README.md · experiments/gold/CHANGELOG.md'],
-  ['T-I06: handled in one run, not shown stable or general', 'Before the fix, a planted false figure was cited and passed the quote and number checks. The deterministic cross-check handled that one case in both models in the first post-fix run, under a scorer written after the run. In the final-code run it passed for gpt-6-luna and failed for gpt-5.6-luna on an exact-string scorer check. Coverage is a closed grammar, and the end-to-end review found faults in the guard; docs/threat-model.md has their status.', 'docs/experiments/m7-t-i06-crosscheck.md · D-038'],
+  ['Gold labels are mostly AI drafts', 'Gold v3.5 has 268 cases (237 development, 31 held-out); 45 are owner-reviewed and 223 are AI drafts. Review left 43 unchanged and changed 2 labels: HO-022 (clarify to answer) and DEV-018 (refuse to clarify).', 'README.md, docs/system-card.md, experiments/gold/CHANGELOG.md'],
+  ['Owner review is per card and partly circular', 'The owner decided 125 cards: 30 with their own verdict, 95 by agreeing with an AI suggestion. No blinded annotation was run.', 'docs/human-review/owner-review-summary.md, docs/system-card.md'],
+  ['Held-out reuses development evidence', '31 cases; 25 of 31 reuse a development evidence id and 15 of 31 reuse their whole set. The interval on the r3 gain touches or crosses zero.', 'docs/system-card.md, report.json › evaluation.paired'],
+  ['Some scores sit on earlier gold versions', `Development rows use ${goldOf(m.evalRow('dev-A3', 'gpt-6-luna')).label}; held-out rows use ${goldOf(m.heldRow('r3', 'gpt-6-luna')).label}, after post-run label edits. Both were rescored from saved outputs with no new generation. Original held-out scores on v3.2 to v3.4 stay in the evaluation report beside the current ones.`, 'experiments/heldout/FREEZE.md, README.md, experiments/gold/CHANGELOG.md'],
+  ['T-I06: handled in one run, not shown stable or general', 'Before the fix, a planted false figure was cited and passed the quote and number checks. The deterministic cross-check handled that one case in both models in the first post-fix run, under a scorer written after the run. In the final-code run it passed for gpt-6-luna and failed for gpt-5.6-luna on an exact-string scorer check. Coverage is a closed grammar, and the end-to-end review found faults in the guard; docs/threat-model.md has their status.', 'docs/experiments/m7-t-i06-crosscheck.md, D-038'],
   ['The scanner missed all 5 paraphrase probes', 'Zero scanner hits does not certify a source as safe.', 'docs/human-review/independent-ai-review-m1-2.md'],
-  ['Extraction has known defects', 'In sampled passages, 1 of 16 lost a note boundary and 2 of 4 HTML passages flattened superscripts; some feedback-form blocks are garbled. The corpus v2 extraction fixes removed the defects found then, with no measurable quality change (X1). No corpus-wide count of remaining defects exists.', 'docs/human-review/ai-pre-review-passage-spot-check.md · docs/evaluation-report.md'],
+  ['Extraction has known defects', 'In sampled passages, 1 of 16 lost a note boundary and 2 of 4 HTML passages flattened superscripts; some feedback-form blocks are garbled. The corpus v2 extraction fixes removed the defects found then, with no measurable quality change (X1). No corpus-wide count of remaining defects exists.', 'docs/human-review/ai-pre-review-passage-spot-check.md, docs/evaluation-report.md'],
   ['The sector dataset total sits above MOM\u2019s final figure', 'Migrant domestic workers may explain it, but that is an inference.', 'docs/data-sheet.md › section 5'],
   ['The judge shares a provider with the generators', 'Their errors may correlate. A zero unsupported-claim rate on a selected sample does not show the answers are safe.', 'docs/evaluation-report.md › Judge and uncertainty'],
-  ['Registered results ran on older corpora than the one served', 'Registered results ran on corpus v1; the X1 and T-I06 post-fix runs used corpus v2. Corpus v3 (85 sources) has two measured evaluations: the X2 development regression check and the e2efix threat run. It has no held-out or evidence-disjoint evaluation. The Droplet serves corpus v3 and post-fix code (commit c297146; /healthz fingerprint d402120f6f8f; 16,419 passages; 1,847 chunks), as reported by the owner.', 'README.md › Corpus versions · docs/evaluation-report.md'],
-  ['X2 is a regression check, not an ablation', 'Corpus v3, runtime changes B1 to B14, the cross-check and gold v3.6 changed together. Behaviour, false-answer, over-abstention, key-number recall and calculation intervals overlap A3. Ungrounded-number cases rose (gpt-5.6-luna: intervals do not overlap) and claim support fell; the ungrounded check was also widened, so measurement changed and the two effects are not separable.', 'docs/experiments/m7-e2e-fixes.md · experiments/eval/agent-dev-X2-REPORT.md'],
-  ['T-I06 is not shown stable across runs', 'The earlier post-fix run passed 36 of 36 under a scorer written afterwards. In the final-code run gpt-5.6-luna fails: its answer reported the dataset value and disclosed the planted figure in a caveat, but failed an exact-string check. The scorer was not changed, which is a brittleness finding. One case, closed grammar, one run per configuration; the suite does not show a defence effect.', 'experiments/threats/m7-e2efix-20261031/SUMMARY.md · docs/experiments/m7-t-i06-crosscheck.md'],
+  ['Registered results ran on older corpora than the one served', 'Registered results ran on corpus v1; the X1 and T-I06 post-fix runs used corpus v2. Corpus v3 (85 sources) has two measured evaluations: the X2 development regression check and the e2efix threat run. It has no held-out or evidence-disjoint evaluation. The Droplet serves corpus v3 and post-fix code (commit c297146; /healthz fingerprint d402120f6f8f; 16,419 passages; 1,847 chunks), as reported by the owner.', 'README.md › Corpus versions, docs/evaluation-report.md'],
+  ['X2 is a regression check, not an ablation', 'Corpus v3, runtime changes B1 to B14, the cross-check and gold v3.6 changed together. Behaviour, false-answer, over-abstention, key-number recall and calculation intervals overlap A3. Ungrounded-number cases rose (gpt-5.6-luna: intervals do not overlap) and claim support fell; the ungrounded check was also widened, so measurement changed and the two effects are not separable.', 'docs/experiments/m7-e2e-fixes.md, experiments/eval/agent-dev-X2-REPORT.md'],
+  ['T-I06 is not shown stable across runs', 'The earlier post-fix run passed 36 of 36 under a scorer written afterwards. In the final-code run gpt-5.6-luna fails: its answer reported the dataset value and disclosed the planted figure in a caveat, but failed an exact-string check. The scorer was not changed, which is a brittleness finding. One case, closed grammar, one run per configuration; the suite does not show a defence effect.', 'experiments/threats/m7-e2efix-20261031/SUMMARY.md, docs/experiments/m7-t-i06-crosscheck.md'],
   ['Costs are list-price estimates', 'List prices dated 30 October 2026, without cached-input discounts. Latency is saved wall time from the recorded runs.', 'docs/system-card.md › Architecture and models']
 ];
 
 function limitCards(m) {
   const wrap = el('div', 'pr-limit-grid');
   limitsFor(m).forEach(([title, text, src], i) => {
-    const card = el('article', `pr-limit pr-reveal${i === 4 ? ' is-open' : ''}`);
+    const card = el('article', `pr-limit${i === 4 ? ' is-open' : ''}`);
     card.append(el('span', 'pr-limit-no', String(i + 1).padStart(2, '0')), el('h5', 'pr-limit-title', title), el('p', '', text), evi(src));
     wrap.append(card);
   });
@@ -56,7 +56,7 @@ function limitCards(m) {
 
 export function renderLimits(m, ctx) {
   const ch = chapter({
-    id: 'limits', no: 8, eyebrow: 'Human review and limits', title: 'The owner reviewed 45 of 268 gold cases; the other 223 labels are AI drafts',
+    id: 'limits', title: 'The owner reviewed 45 of 268 gold cases; the other 223 labels are AI drafts',
     bullets: [
       'Owner review: 125 cards decided, 30 by own verdict, 95 by agreeing with an AI suggestion.',
       'Not independent annotation; no blinded review was run.',
@@ -85,7 +85,7 @@ const NEXT = [
 
 export function renderNext(m, ctx) {
   const ch = chapter({
-    id: 'next', no: 9, eyebrow: 'Next', title: 'Six experiments would close the main evaluation gaps',
+    id: 'next', title: 'Six experiments would close the main evaluation gaps',
     bullets: [
       'Each step names the gap it addresses and the measurement that would close it.',
       'None is built or run yet.'
@@ -93,7 +93,7 @@ export function renderNext(m, ctx) {
   });
   const ol = el('ol', 'pr-next');
   NEXT.forEach(([title, text, success], i) => {
-    const li = el('li', 'pr-next-item pr-reveal');
+    const li = el('li', 'pr-next-item');
     li.append(el('span', 'pr-next-no', String(i + 1)), el('h5', 'pr-next-title', title), el('p', '', text), el('p', 'pr-next-success', success));
     ol.append(li);
   });
@@ -119,7 +119,7 @@ export function renderSummary(m, ctx) {
   const title = ho.rate != null
     ? `On ${ho.n ?? 31} held-out cases r3 scored ${fmt.pct(ho.rate)}${ho.ci ? ` (${ciText(ho.ci)})` : ''}, and its gain over hybrid is ${crosses ? 'not demonstrated' : 'above zero'}`
     : 'Held-out result not recorded';
-  const ch = chapter({id: 'summary', no: 11, eyebrow: 'Summary', title});
+  const ch = chapter({id: 'summary', title});
   const findings = [
     L?.R0 && L?.R3 ? `${fmt.pct(L.R0['hit@8'])} to ${fmt.pct(L.R3['hit@8'])}: hit@8 from R0 to R3 on ${fmt.int(m.ladder.n_cases)} development cases.` : null,
     dev.rate != null ? `${fmt.pct(dev.rate)}: behaviour accuracy of A3 with gpt-6-luna on ${fmt.int(dev.n ?? a3.metrics.n_cases)} development cases${dev.ci ? ` (${ciText(dev.ci)})` : ''}.` : null,
@@ -136,36 +136,5 @@ export function renderSummary(m, ctx) {
     'The held-out rerun on frozen, reviewed gold has not been run.'
   ]));
   ch.body.append(block, open);
-  return ch.root;
-}
-
-export function renderQuestions(m, ctx) {
-  const L = m.ladder?.configs, mcp = m.section('mcp'), x = mcp.metrics || {};
-  const p50 = (mcp.rows || []).find(r => r.metric === 'latency_p50_ms');
-  const calc = metricOf(m.evalRow('dev-A3', 'gpt-6-luna')?.metrics?.calc_correct);
-  const r3 = L?.R3 || {};
-  const qa = [
-    ['Why is hybrid retrieval with RRF the baseline?',
-      `BM25 is the non-LLM baseline and dense retrieval finds paraphrases. RRF combines ranks, so raw scores on different scales are not compared directly${L?.R0 ? `; R0 reaches hit@8 ${fmt.pct(L.R0['hit@8'])} on ${fmt.int(m.ladder.n_cases)} development cases` : ''}.`],
-    ['Why rerank, and what did it cost?',
-      L?.R0 && L?.R3 ? `R3 filters by period and release stage, then reranks: hit@8 goes from ${fmt.pct(L.R0['hit@8'])} to ${fmt.pct(L.R3['hit@8'])}, at a median ${fmt.seconds(r3.rerank_latency_s_p50_p95?.[0])} and a mean $${r3.cost_usd_per_query_mean} per query.` : 'Ladder not recorded.'],
-    ['How do you know the agent does no arithmetic?',
-      `The model chooses tools and arguments; application code validates them and runs the calculations. The scorer requires a cited deterministic calculation, and calculation correctness is ${fmt.pct(calc.rate)} on ${fmt.int(calc.n)} cases.`],
-    ['What happens today if a passage contains a planted false figure?',
-      'Before the fix the luna models repeated it and the quote and number checks passed (T-I06). A deterministic cross-check now corrects the claim to the dataset value, cites both, and adds a source-conflict caveat. It handled the one planted case in both models in the first post-fix run, under a scorer written after it. In the final-code run gpt-5.6-luna failed an exact-string scorer check, although its answer reported the dataset value and disclosed the planted figure in a caveat. One case, closed grammar; not shown stable or general.'],
-    ['Why one agent and not several?',
-      'ADR-002 fixes one bounded StateGraph agent with a model-directed planner and three typed read-only tools. I did not build a multi-agent design.'],
-    ['What did the MCP layer cost, and what did it add?',
-      p50 ? `A median call takes ${p50.mcp} ms over MCP against ${p50.direct} ms direct, plus ${fmt.num(x.connection_seconds, 2)} s to connect once. It adds capability discovery and typed tool contracts; ${fmt.int(x.different_outputs)} of ${fmt.int(x.compared_datasets)} datasets gave different output.` : 'Latency rows not recorded.']
-  ];
-  const ch = chapter({id: 'questions', no: 12, eyebrow: 'Questions', title: 'Six questions I expect, with short answers'});
-  const dl = el('dl', 'pr-qa');
-  qa.forEach(([q, a]) => {
-    const wrap = el('div', 'pr-qa-item pr-reveal');
-    wrap.append(el('dt', '', ''), el('dd', '', a));
-    wrap.firstChild.append(el('strong', '', q));
-    dl.append(wrap);
-  });
-  ch.body.append(dl);
   return ch.root;
 }

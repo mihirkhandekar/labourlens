@@ -278,7 +278,7 @@ def test_evaluation_copy_distinguishes_owner_review_from_historical_scores():
         "private export proposed DEV-018 refuse → refuse",
         "chat takes precedence",
         "Every evidence ID is preserved",
-        "Development A1–A5 v3.5 rescoring is complete",
+        "Development A1-A5 v3.5 rescoring is complete",
         "commit the resulting artifacts and rebuild the report",
         "Held-out v3.5 rescoring is complete for all four registered configurations",
         "stale judge entries were rejudged against the current gold without new generation",
@@ -488,7 +488,7 @@ def test_site_reports_x2_and_e2efix_with_required_labels():
         "for gpt-5.6-luna the X2 and A3 intervals do not overlap",
         "change in measurement as well as possibly in behaviour",
         "no held-out or evidence-disjoint evaluation",
-        "corpus v3 · gold v3.6",
+        "corpus v3, gold v3.6",
     ):
         assert text in evaluation
     safety = _site_text("evaluation.js", "presentation/ch6-safety.js")
@@ -507,7 +507,7 @@ def test_site_reports_x2_and_e2efix_with_required_labels():
 
 
 def test_site_states_current_serving_fact_and_drops_stale_corpus_claims():
-    text = _site_text("presentation/ch-work.js", "presentation/ch8-limits.js", "presentation/index.js", "js/home.js")
+    text = _site_text("presentation/ch-work.js", "presentation/ch8-limits.js", "presentation/slides.js", "js/home.js")
     for stale in ("No experiment has run on v3", "no experiment has run on it", "No experiment has run on v3.", "no experiment has run on v3"):
         assert stale not in text
     for fact in ("c297146", "d402120f6f8f", "16,419 passages", "1,847 chunks"):
@@ -516,6 +516,144 @@ def test_site_states_current_serving_fact_and_drops_stale_corpus_claims():
 
 
 def test_site_does_not_hand_type_stale_nearest_rank_p95_values():
-    text = _site_text("evaluation.js", "presentation/ch5-evaluation.js", "presentation/ch-work.js", "presentation/index.js")
+    text = _site_text("evaluation.js", "presentation/ch5-evaluation.js", "presentation/ch-work.js", "presentation/slides.js")
     for stale in ("35.6 s", "34.4 s", "37.5 s", "26.6 s", "43.3 s"):
         assert stale not in text
+
+
+# ---- held-out v2 (signed, corpus v3): separately keyed, never mixed into the registered rows ----
+
+_V2_PAIRED = "experiments/heldout-v2/paired.json"
+_V2_ERRORS = "experiments/heldout-v2/error-analysis.json"
+
+
+@pytest.mark.parametrize("path", [
+    _V2_PAIRED, _V2_ERRORS,
+    "experiments/eval/agent-heldout-V2-r3/gpt-6-luna.metrics.json",
+    "experiments/eval/agent-heldout-V2-hybrid/gpt-5.6-luna.cases.jsonl",
+])
+def test_heldout_v2_artifacts_are_allowlisted(path):
+    assert _Artifacts._allowed(path)
+
+
+@pytest.mark.parametrize("path", [
+    "experiments/heldout-v2/owner-review-export.json",
+    "experiments/heldout-v2/FREEZE.md",
+    "experiments/heldout-v2/evidence-audit-v3.json",
+    "experiments/eval/agent-heldout-V2-r3/gpt-6-luna.judgements.json",
+    "experiments/eval/agent-heldout-V2-r3/gpt-4.1-mini.metrics.json",
+    "experiments/eval/agent-heldout-V2-r3-REPORT.md",
+    "experiments/runs/agent-heldout-V2-r3/gpt-6-luna.scores.jsonl",
+])
+def test_heldout_v2_review_exports_judgements_extras_and_raw_stay_private(path):
+    assert not _Artifacts._allowed(path)
+
+
+def _v2_metrics(arm, model, rate, false_answers):
+    return {
+        "label": model, "judge": "gpt-6.1-terra",
+        "provenance": {"gold_sha256": "e3d16597d542d33d106b4e9291aa3b92ca5fcdf19aa4d3c2b3319c0543efa542", "eligible_n": 65, "available_n": 65,
+                       "git_head": "89c51d755c4753e3d52efc3c2c1185700cccaeb1", "raw_answer": "PRIVATE"},
+        "metrics": {"n_cases": 65, "behaviour_accuracy": {"rate": rate, "ci95": [rate - 0.1, rate + 0.1], "n": 65},
+                    "false_answer_rate": {"rate": false_answers / 65, "ci95": [0.0, 0.05], "n": 60}, "cost_per_case_usd": 0.003,
+                    "latency_p50_s": 10.0, "latency_p95_s": 20.0, "secret": "PRIVATE_TEXT"},
+        "by_family": {"numerical_comparison": {"n": 14, "behaviour_accuracy": 0.214, "over_abstain": 11, "false_answer": 0}},
+    }
+
+
+def _v2_files():
+    files = {
+        _V2_PAIRED: {
+            "gold": "experiments/gold/heldout_v2_v1.jsonl",
+            "per_model": {
+                "gpt-6-luna": {"n_gold_cases": 65, "complete": True, "missing": {"candidate": [], "baseline": []},
+                               "behaviour_accuracy": {"candidate": 0.7538, "baseline": 0.7077}, "paired_difference": 0.0462,
+                               "better": 3, "worse": 0, "mcnemar_exact_p": 0.25, "case_bootstrap_interval": [0.0154, 0.0923],
+                               "component_bootstrap_interval": [0.0114, 0.102], "n_components": 39, "n_evidence_components": 22,
+                               "guardrails": {"false_answers": {"candidate": 0, "baseline": 1}},
+                               "by_family_descriptive": {"factual_lookup": {"n": 22, "better": 1, "worse": 0}},
+                               "sensitivity_descriptive": {"without_mti_ai_feature_group": {"n": 60, "paired_difference": 0.0333,
+                                                                                             "case_bootstrap_interval": [0.0, 0.0667]}},
+                               "conditions": {"case_bootstrap_lower_above_zero": True, "no_added_false_answers": True},
+                               "demonstrated_gain": True},
+                "gpt-5.6-luna": {"n_gold_cases": 65, "paired_difference": 0.0, "better": 2, "worse": 2, "mcnemar_exact_p": 1.0,
+                                 "case_bootstrap_interval": [-0.0462, 0.0462], "conditions": {"case_bootstrap_lower_above_zero": False},
+                                 "demonstrated_gain": False},
+            },
+            "decision": {"demonstrated_gain_primary": True, "primary_model": "gpt-6-luna", "replication_models": {"gpt-5.6-luna": False},
+                         "statement": "R3 gain demonstrated for the primary model gpt-6-luna under the preregistered rule."},
+        },
+        _V2_ERRORS: {
+            "n_cases": 65, "n_mismatches_primary_r3": 16, "over_abstentions_primary_r3": 13, "numerical_over_abstentions_primary_r3": 11,
+            "mismatches_shared_by_both_arms": 16,
+            "classes": [{"class": "tool_gap_text_figure_arithmetic", "count": 8, "case_ids": ["HO-V2-029", "HO-V2-030"]},
+                        {"class": "scorer_penalised_correct_answer", "count": 0, "case_ids": []}],
+            "gold_passage_in_agent_evidence": {"r3": {"hit": 33, "of": 34}, "hybrid": {"hit": 31, "of": 34}},
+            "discordant_primary": [{"case_id": "HO-V2-021", "family": "factual_lookup", "source_group": "mti_ai_feature", "r3_correct": True,
+                                    "hybrid_correct": False, "hybrid_tool_calls": 0, "r3_tool_calls": 2,
+                                    "decided_before_retrieval_in_hybrid_arm": True, "note": "PRIVATE_NOTE"}],
+        },
+    }
+    for arm in ("r3", "hybrid"):
+        for model, rate in (("gpt-6-luna", 0.754 if arm == "r3" else 0.708), ("gpt-5.6-luna", 0.723)):
+            files[f"experiments/eval/agent-heldout-V2-{arm}/{model}.metrics.json"] = _v2_metrics(arm, model, rate, 0 if arm == "r3" else 1)
+    return files
+
+
+def test_heldout_v2_section_is_separate_labelled_and_carries_the_rule_result():
+    from labourlens.report.build import _heldout_v2
+
+    section = _heldout_v2(SyntheticArtifacts(_v2_files()))
+    assert section["experiment"] == "heldout-v2" and section["corpus_version"] == "v3"
+    assert section["preregistered"] is True and section["pooled_with_registered_heldout"] is False
+    assert section["decision"]["demonstrated_gain_primary"] is True and section["primary_model"] == "gpt-6-luna"
+    assert section["decision"]["replication_models"] == {"gpt-5.6-luna": False}
+    assert [(row["arm"], row["model"]) for row in section["arms"]] == [
+        ("r3", "gpt-6-luna"), ("r3", "gpt-5.6-luna"), ("hybrid", "gpt-6-luna"), ("hybrid", "gpt-5.6-luna")]
+    primary = section["paired"]["gpt-6-luna"]
+    assert primary["paired_difference"] == 0.0462 and primary["better"] == 3 and primary["worse"] == 0
+    assert primary["mcnemar_exact_p"] == 0.25 and primary["case_bootstrap_interval"][0] > 0
+    assert primary["sensitivity_descriptive"]["without_mti_ai_feature_group"]["case_bootstrap_interval"][0] == 0.0
+    assert section["paired"]["gpt-5.6-luna"]["paired_difference"] == 0.0
+    assert section["condition_flags"]["gpt-6-luna"]["no_added_false_answers"] is True
+    assert section["condition_flags"]["gpt-5.6-luna"]["case_bootstrap_lower_above_zero"] is False
+
+
+def test_heldout_v2_error_analysis_keeps_ids_and_counts_only():
+    from labourlens.report.build import _heldout_v2
+
+    section = _heldout_v2(SyntheticArtifacts(_v2_files()))
+    errors = section["error_analysis"]
+    assert errors["n_mismatches_primary_r3"] == 16 and errors["numerical_over_abstentions_primary_r3"] == 11
+    assert errors["gold_passage_in_agent_evidence"] == {"r3": {"hit": 33, "of": 34}, "hybrid": {"hit": 31, "of": 34}}
+    assert errors["classes"][0] == {"class": "tool_gap_text_figure_arithmetic", "count": 8, "case_ids": ["HO-V2-029", "HO-V2-030"]}
+    discordant = errors["discordant_primary"][0]
+    assert discordant["decided_before_retrieval_in_hybrid_arm"] is True and "note" not in discordant
+    assert "outside the frozen protocol" in errors["follow_up_status"]
+    text = json.dumps(section)
+    assert "PRIVATE" not in text
+
+
+def test_heldout_v2_rows_never_enter_the_registered_evaluation_rows():
+    files = _v2_files()
+    rows, paths = _experiments(SyntheticArtifacts(files), "experiments/eval/")
+    assert not any("agent-heldout-V2-" in row["id"] for row in rows)
+    assert not any("agent-heldout-V2-" in path for path in paths)
+
+
+def test_heldout_v2_section_is_absent_without_the_paired_artifact():
+    from labourlens.report.build import _heldout_v2
+
+    files = _v2_files()
+    del files[_V2_PAIRED]
+    assert _heldout_v2(SyntheticArtifacts(files)) is None
+
+
+def test_committed_report_carries_heldout_v2_beside_the_registered_heldout():
+    repo = Path(__file__).resolve().parents[2]
+    report = json.loads((repo / "web/static/data/report.json").read_text())
+    section = report["evaluation"]["heldout_v2"]
+    assert section["decision"]["demonstrated_gain_primary"] is True
+    assert section["paired"]["gpt-6-luna"]["better"] == 3 and section["paired"]["gpt-5.6-luna"]["paired_difference"] == 0.0
+    assert not any("agent-heldout-V2-" in row["id"] for row in report["evaluation"]["rows"])
+    assert report["evaluation"]["paired"][0]["gold_version"] == "v3.5" and report["evaluation"]["paired"][0]["n"] == 31

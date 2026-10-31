@@ -190,7 +190,7 @@ function toolCards(m) {
   ];
   const wrap = el('div', 'pr-tools');
   tools.forEach(([name, label, text]) => {
-    const card = el('article', 'pr-tool pr-reveal');
+    const card = el('article', 'pr-tool');
     const head = el('header', 'pr-tool-head');
     head.append(el('code', 'pr-tool-name', name), el('span', 'pr-pill-label', 'read-only'));
     card.append(head, el('p', 'pr-tool-text', text));
@@ -235,7 +235,7 @@ function boundsFigures(m) {
 export function renderAgent(m, ctx) {
   const b = boundsFigures(m);
   const ch = chapter({
-    id: 'agent', no: 4, eyebrow: 'The agent',
+    id: 'agent',
     title: b ? `I used one bounded agent (6 tool calls, 2 rounds, 1 repair); ${fmt.int(b.total)} recorded cases peaked at ${b.maxCalls} calls and ${b.maxRounds} rounds` : 'I used one bounded agent: 6 tool calls, 2 rounds, 1 repair',
     bullets: [
       'LangGraph state graph with seven nodes and three read-only tools. Code does the arithmetic.',

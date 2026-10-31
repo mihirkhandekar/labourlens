@@ -4,7 +4,7 @@
 
 **Where things are.** Report: `/` and its ten chapters plus Summary and Questions (`/#presentation`). Live workbench: **`/workbench`** (its own page; sign in with an access code). Live site: <https://labourlens.navig.me>, or `http://127.0.0.1:8000` locally. The Droplet serves corpus v3 and the post-fix code (commit `c297146`, `/healthz` fingerprint `d402120f6f8f`; owner-supplied, check `/healthz` before the talk). A local checkout with the full corpus serves the same corpus. Use one environment for the whole talk.
 
-**Review boundary.** Owner review is complete: 125 cards decided (30 own verdicts, 95 agreeing with an AI suggestion), not independent inter-rater evidence. Gold has 268 cases, 45 owner-reviewed and 223 AI drafts. Registered results ran on corpus v1; X1 ran on v2. Corpus v3 has two measured evaluations (the X2 development regression check and the `m7-e2efix-20261031` threat run) and no held-out or evidence-disjoint evaluation. Say this once, early.
+**Review boundary.** Owner review is complete: 125 cards decided (30 own verdicts, 95 agreeing with an AI suggestion), not independent inter-rater evidence. Gold has 268 cases, 45 owner-reviewed and 223 AI drafts. Registered results ran on corpus v1; X1 ran on v2. Corpus v3 has three measured evaluations: the X2 development regression check, the `m7-e2efix-20261031` threat run and held-out v2 (65 cases, the first evidence-disjoint-source evaluation, only partly independent). For held-out v2 say: the pre-registered rule is met for the primary model; the effect is three cases; I would not call it a confirmed gain; the second model shows none. Say this once, early.
 
 ## Preflight (before the timed session)
 
@@ -31,7 +31,7 @@
 | 11:00–13:00 | **8, 9, 10 MCP** | 8 (1:00): transcript §1, §2, then the recorded agent answer. 9 (0:30): §3 and §4. 10 (0:30): §5 and §6. | State "recorded protocol execution, inspected live" first. Details below. |
 | 13:00–15:00 | Evaluation and error analysis | `/#presentation/pr-evaluation` (chapter 5). Speak the five numbers below only. | Descriptive, not significant; AI-drafted gold; held-out shares evidence. |
 | 15:00–17:00 | Threat limits and privacy | Chapter 6 and `experiments/threats/SUMMARY.md`. | Defended 35/36, mini 34/36; no measurable defence effect for luna6. The planted-figure result is below. |
-| 17:00–19:00 | Design discussion: models, trade-offs, safety, cost, next steps | Chapters 3 and 4 (retrieval and agent choices), chapter 9 (next steps), the cost ledger in chapter 10. | Why `gpt-6-luna` with reranking: accuracy gain for 5 s more latency and about $0.0008 more per case. Cost figures are list-price estimates. Next steps: held-out v2, cross-check recall, independent review. |
+| 17:00–19:00 | Design discussion: models, trade-offs, safety, cost, next steps | Chapters 3 and 4 (retrieval and agent choices), chapter 9 (next steps), the cost ledger in chapter 10. | Why `gpt-6-luna` with reranking: accuracy gain for 5 s more latency and about $0.0008 more per case. Cost figures are list-price estimates. Next steps: fix the arithmetic-on-report-figures tool gap as a new experiment, cross-check recall, independent review. |
 | 19:00–20:00 | Innovation and wrap-up | `docs/innovation.md`. | Two priorities with acceptance targets; separate implemented controls from proposals. |
 
 There is no slack in the 20 minutes. If a live answer fails, use its fallback below and cut the evaluation block to three numbers; do not run over.

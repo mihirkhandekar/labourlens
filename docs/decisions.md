@@ -470,3 +470,30 @@ p95 values are the nearest-rank figures in the metrics files (D-043). Cost is th
 **Serving state (owner-supplied, not file-verifiable).** The Droplet serves corpus v3 and post-fix commit `c297146`; `/healthz` fingerprint `d402120f6f8f`, 16,419 passages, 1,847 chunks. Corpus v3 therefore has two measured evaluations and the served system is the one measured, with no held-out or evidence-disjoint evaluation. Frozen v1 and v2 results are retained.
 
 **Reversibility.** Documentation only; no raw output, gold file or scorer was changed. Reworking the T-I06 scorer and re-running is an open owner decision.
+
+### D-045 — Held-out v2 result and interpretation (MEASURED / DECISION, 31 Oct 2026)
+
+**Context.** The signed 65-case held-out v2 set (D-039, D-042, `experiments/heldout-v2/FREEZE.md`) was run once per arm on corpus v3: retrieval `r3` against `hybrid`, `planner_v1`, `answer_v3`, cross-check on, code `89c51d7`. Full numbers, tables and error analysis: `docs/experiments/m7-heldout-v2-result.md`. Sources: `experiments/heldout-v2/paired.json`, `experiments/eval/agent-heldout-V2-{r3,hybrid}/`. This entry supersedes the D-044 statements that held-out v2 was unrun and that corpus v3 had no evidence-disjoint evaluation; D-044 itself is unchanged as a dated record.
+
+**MEASURED RESULT.** Primary model `gpt-6-luna`: r3 0.754 (49 of 65) versus hybrid 0.708 (46 of 65), paired difference +0.046, 3 cases better and 0 worse, case-bootstrap 90% interval [0.015, 0.092], component-bootstrap interval [0.011, 0.102], McNemar exact p = 0.25. False answers: r3 0, hybrid 1. All D-042 conditions hold and `paired.json` records `demonstrated_gain_primary: true`. Replication model `gpt-5.6-luna`: 0.723 versus 0.723, 2 better and 2 worse; not replicated. Without the five `mti_ai_feature` cases (n=60) the primary lower bound is 0.0 and the rule would not be met.
+
+**DECISION: verdict wording.** "The pre-registered rule is met for the primary model; the effect is three cases; I would not call it a confirmed gain; the second model shows none."
+
+| Alternative wording | Benefit | Downside | Disposition |
+|---|---|---|---|
+| "R3 gain demonstrated" (the `paired.json` string) | Matches the registered rule text literally | Overstates three discordant cases, one model, and a bound that fails without one question group | Quoted only as the file's recorded output |
+| "Confirmed gain" | Short | Not supported: no second-model replication, McNemar p = 0.25, one run per arm | Rejected |
+| "Not demonstrated" | Consistent with the original 31-case held-out | Contradicts the pre-registered rule, which is met | Rejected for v2; the original result stays as registered |
+| Rule met, effect three cases, not called confirmed, second model none | States the rule outcome and its limits together | Longer | **Chosen** |
+
+**What it shows.** On sources no earlier case cites, the pre-registered conditions are satisfied for the primary model, with no added false answers.
+
+**What it does not show.** A reliable gain. The effect is three cases. Two of the three (HO-V2-021, 049) were first-step planner decisions in the hybrid arm made before any retrieval, so they likely reflect sampling rather than retrieval (inference from traces and graph code). The second model shows no difference. The MTI-free sensitivity fails the rule. One run per arm. The set is only partly independent (same system, prompts, tools and question styles; AI-drafted gold approved unchanged by the owner, 59 own clicks and 6 agreeing with an AI suggestion). The registered original 31-case held-out result (`experiments/heldout/paired.txt`) stays "not demonstrated" and is not altered or pooled with v2.
+
+**Error-analysis finding.** Both arms are low in absolute terms (about 0.71 to 0.75). Of 16 primary r3 mismatches, 11 are numerical comparisons: 8 need a difference between two report figures that no tool accepts, and 3 hit a dataset dimension-label mismatch plus the two-round budget. Gold passages were in the evidence for 33 of 34 answerable text cases with r3 and 31 of 34 with hybrid, so retrieval was not the main limit. `numerical_comparison` is 0.214 in all four arms. No scorer problem or wrong gold label was identified. No tool, prompt or label was changed.
+
+**Top follow-up (not done).** Fix text-figure arithmetic in `Tools.calculate_change` and `answer_v3`, and dimension discovery plus the round budget, as a **new experiment with a new id** outside the frozen v2 protocol. The v2 questions are now known, so a held-out claim for any fixed system needs a fresh set and its own pre-registration. The v2 result must not be re-scored or edited.
+
+**Cost.** About $1.04 by my sums from per-case metrics (generation about $0.87, judging about $0.17); the signed quote was about $0.94. These are not recorded totals.
+
+**Reversibility.** None needed: this is a measurement. No gold, scorer, prompt or code was changed. Registered original held-out results, D-033 and D-042 are untouched.

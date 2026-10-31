@@ -1,6 +1,6 @@
 # M7 — Evidence-disjoint held-out v2 (design A on corpus v3)
 
-**31 October 2026. Status: 65 blind-authored draft cases written against corpus v3; preregistration drafted in `experiments/heldout-v2/FREEZE.md`; no system run, no scoring, no output seen for any of these cases.** The cases are AI-drafted and `draft`; owner review is outstanding and is a precondition for a freeze.
+**31 October 2026. Status: run once on corpus v3 (65 cases, owner-approved gold, signed in `experiments/heldout-v2/FREEZE.md`). The pre-registered rule is met for the primary model; the effect is three cases; I would not call it a confirmed gain; the second model shows none. Result and error analysis: [`m7-heldout-v2-result.md`](m7-heldout-v2-result.md), D-045.** The sections below are the design as written before the run.
 
 ## 1. Why a new set (VERIFIED FACT)
 
@@ -63,14 +63,14 @@ Comparison and exact commands: `experiments/heldout-v2/FREEZE.md`. In short, one
 
 **Power, simulated (MEASURED RESULT; `experiments/heldout-v2/power.py`, output `power.txt`, seed 20261101).** Paired outcomes were simulated on the real structure (65 cases, 39 components, 34 report-text answerable cases, 17 non-answer cases) with R3 worse on 4% of cases and better on (effect + 4)%, with and without clustering and with flips confined to the report-text cases; the two models are treated as independent, which real ones are not. For true paired effects of +5, +10 and +16 points, revision 1 passes 1.5-2.6%, 11-19% and 31-53% of the time. Revision 2 passes 21-24%, 45-54% and 68-84%. At zero true effect revision 2 passes 3.0-5.2% of the time against about 0% for revision 1: **the adopted rule is weaker and more likely to pass by chance**, at its intended 5% one-sided level. Letting either model pass would give 6-10% false positives and was rejected; a conjunction over both models would lose most of the power. The original held-out gains were +10 and +16 points, so a true gain of that size is now demonstrated roughly half the time or better, not rarely, and still not reliably at +5. Strata of 8 are descriptive only. Fourteen dataset-only answerable cases and the 17 non-answer cases are mostly insensitive to retrieval and dilute the contrast; the report-text-only sensitivity is reported alongside but cannot replace the registered rule.
 
-Cost, inferred from saved usage: about $0.82 for generation plus judging of 65 cases across both models and both arms (`FREEZE.md`). No API call has been made.
+Cost, inferred from saved usage: about $0.82 for generation plus judging of 65 cases across both models and both arms (`FREEZE.md`) when written; the signed quote was about $0.94. The run has since been made (see the status line).
 
 ## 6. What this does not do
 
 It does not make the system independent of the evaluation design, does not validate the revision family, does not test indirect injection, and does not promote the structured-only cases. It supplies fresh evidence and a rule that cannot be tuned after seeing results.
 
-## Open owner decisions
+## Owner decisions (resolved before the run)
 
-1. Review the 65 draft cases (or authorise an unreviewed run).
-2. Rule on the five AI-article cases under D-031.
-3. Approve the preregistered rule and fingerprints in `experiments/heldout-v2/FREEZE.md`, then authorise the paid run.
+1. The 65 cases were reviewed by the owner (59 cards by own click, 6 agreeing with an AI suggestion) and approved unchanged.
+2. The five AI-article cases were kept as `answer` (D-031); the MTI-free sensitivity is in the result report.
+3. The rule and fingerprints in `experiments/heldout-v2/FREEZE.md` were signed and the paid run was authorised and executed.

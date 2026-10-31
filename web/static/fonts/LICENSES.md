@@ -1,14 +1,13 @@
 # Font licences
 
-All three families are licensed under the SIL Open Font License 1.1 and are self-hosted here. Files are the Latin subset woff2 builds published by Fontsource (npm packages `@fontsource-variable/fraunces`, `@fontsource-variable/geist`, `@fontsource-variable/geist-mono`).
+Both families are licensed under the SIL Open Font License 1.1 and are self-hosted here. Files are the Latin subset woff2 builds published by Fontsource (npm packages `@fontsource-variable/geist` and `@fontsource-variable/geist-mono`).
 
 | File | Family | Copyright |
 |---|---|---|
-| `Fraunces-opsz.woff2`, `Fraunces-Italic.woff2` | Fraunces (variable: opsz, wght) | Copyright 2020 The Fraunces Project Authors (github.com/undercasetype/Fraunces) |
 | `Geist.woff2` | Geist (variable: wght) | Copyright 2024 The Geist Project Authors (github.com/vercel/geist-font) |
 | `GeistMono.woff2` | Geist Mono (variable: wght) | Copyright 2024 The Geist Project Authors (github.com/vercel/geist-font) |
 
-The OFL 1.1 text is reproduced below, as published with the Fraunces package. Geist and Geist Mono use the same licence text with their own copyright lines.
+The OFL 1.1 text is reproduced below, as published with the font packages. Geist and Geist Mono each carry their own copyright line above.
 
 SIL OPEN FONT LICENSE Version 1.1 - 26 February 2007
 -----------------------------------------------------------

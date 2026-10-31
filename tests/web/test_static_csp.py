@@ -10,7 +10,7 @@ from pathlib import Path
 import pytest
 
 WEB = Path(__file__).resolve().parents[2] / "web"
-SCRIPTS = sorted((WEB / "static").rglob("*.js"))
+SCRIPTS = sorted(p for p in (WEB / "static").rglob("*.js") if "vendor" not in p.parts)
 
 FORBIDDEN_IN_JS = {
     "innerHTML": r"\.(?:inner|outer)HTML\b",

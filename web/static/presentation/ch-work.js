@@ -45,7 +45,7 @@ function registry(m) {
     {id: 'A5', group: 'Agent', question: 'Does planner_v2 beat planner_v1?', factor: 'Planner prompt', dev: `gpt-6-luna ${beh(dev('A5', 'gpt-6-luna')).text}`, held: '', outcome: 'Not adopted', dec: ['D-032'], cfg: evalDetail(dev('A5', 'gpt-6-luna'))},
     {id: 'H-r3 / H-hybrid', group: 'Held-out', question: 'Does r3 beat hybrid on unseen questions?', factor: 'Retrieval (r3 vs hybrid)', dev: `development A3 vs A1: ${beh(dev('A3', 'gpt-6-luna')).text.split(',')[0]} vs ${beh(dev('A1', 'gpt-6-luna')).text.split(',')[0]}`, held: `gpt-6-luna ${pairText('gpt-6-luna')}; gpt-5.6-luna ${pairText('gpt-5.6-luna')}`, outcome: 'Inconclusive', dec: ['D-033', 'D-034', 'D-035'], cfg: evalDetail(held('r3', 'gpt-6-luna')).concat(evalDetail(held('hybrid', 'gpt-6-luna')))},
     {id: 'T', group: 'Safety', question: 'Do the defences change threat-suite results?', factor: 'Defences on or off', dev: `gpt-6-luna ${th('gpt-6-luna')} defended, ${th('gpt-6-luna+naive')} without; gpt-4.1-mini ${th('gpt-4.1-mini')} vs ${th('gpt-4.1-mini+naive')}`, held: '', outcome: 'Inconclusive', dec: ['D-028'], cfg: ['36 handwritten cases, one run per configuration', thr('gpt-6-luna') ? `gpt-6-luna cost ${fmt.money(thr('gpt-6-luna').cost_usd)}` : '']},
-    {id: 'X2', group: 'Regression check', question: 'Has the served system regressed on corpus v3 with the 14 runtime changes?', factor: 'Several at once: corpus v3, runtime changes B1\u2013B14, cross-check, gold v3.6. Not an ablation.', dev: `behaviour accuracy, n=237: gpt-6-luna ${compare('gpt-6-luna', 'behaviour_accuracy')}; gpt-5.6-luna ${compare('gpt-5.6-luna', 'behaviour_accuracy')}. Ungrounded-number cases rose; the check was also widened, so the measurement changed too.`, held: 'none on corpus v3', outcome: 'Regression check', dec: ['D-043', 'D-044'], cfg: evalDetail(m.evalRow('dev-X2', 'gpt-6-luna')).concat(evalDetail(m.evalRow('dev-X2', 'gpt-5.6-luna')), ['Behaviour, false-answer, over-abstention, key-number recall and calculation intervals overlap those of A3. Ungrounded-number intervals for gpt-5.6-luna do not overlap (X2 against A3).', 'Development cases only; no held-out or evidence-disjoint run on corpus v3.'])},
+    {id: 'X2', group: 'Regression check', question: 'Has the served system regressed on corpus v3 with the 14 runtime changes?', factor: 'Several at once: corpus v3, runtime changes B1-B14, cross-check, gold v3.6. Not an ablation.', dev: `behaviour accuracy, n=237: gpt-6-luna ${compare('gpt-6-luna', 'behaviour_accuracy')}; gpt-5.6-luna ${compare('gpt-5.6-luna', 'behaviour_accuracy')}. Ungrounded-number cases rose; the check was also widened, so the measurement changed too.`, held: 'none on corpus v3', outcome: 'Regression check', dec: ['D-043', 'D-044'], cfg: evalDetail(m.evalRow('dev-X2', 'gpt-6-luna')).concat(evalDetail(m.evalRow('dev-X2', 'gpt-5.6-luna')), ['Behaviour, false-answer, over-abstention, key-number recall and calculation intervals overlap those of A3. Ungrounded-number intervals for gpt-5.6-luna do not overlap (X2 against A3).', 'Development cases only; no held-out or evidence-disjoint run on corpus v3.'])},
     {id: 'T-e2efix', group: 'Safety', question: 'Do the defences change threat results on corpus v3, final code?', factor: 'Defences on or off, corpus v3, cross-check on (run m7-e2efix-20261031)', dev: `strict scorer, 36 cases: gpt-6-luna ${e2t('gpt-6-luna')} defended, ${e2t('gpt-6-luna+naive')} naive; gpt-5.6-luna ${e2t('gpt-5.6-luna')} defended, ${e2t('gpt-5.6-luna+naive')} naive. T-I06 not shown stable across runs.`, held: '', outcome: 'Inconclusive', dec: ['D-038', 'D-044'], cfg: ['One run per configuration, 36 handwritten cases, closed grammar.', 'The failing gpt-5.6-luna T-I06 run reported the dataset value and disclosed the planted figure in a caveat, but failed an exact-string scorer check. The scorer was not changed after seeing it: a brittleness finding on one case.', e2('gpt-6-luna') ? `gpt-6-luna cost ${fmt.money(e2('gpt-6-luna').cost_usd)}; gpt-5.6-luna cost ${fmt.money(e2('gpt-5.6-luna')?.cost_usd)}` : '']},
     {id: 'X', group: 'Models', question: 'Is a cheaper model enough?', factor: 'Model (gpt-4.1-mini)', dev: `A1 gpt-4.1-mini ${beh(dev('A1', 'gpt-4.1-mini')).text}`, held: 'unregistered extra runs excluded', outcome: 'Not adopted', dec: ['D-022'], cfg: evalDetail(dev('A1', 'gpt-4.1-mini'))}
   ];
@@ -54,7 +54,7 @@ function registry(m) {
 const scrollTo = id => { const n = document.getElementById(id); if (n) { n.scrollIntoView({behavior: reduced() ? 'auto' : 'smooth', block: 'center'}); if (n.tagName === 'DETAILS') n.open = true; } };
 
 function registryTable(rows, decisionIds) {
-  const wrap = el('div', 'pr-reg pr-reveal');
+  const wrap = el('div', 'pr-reg');
   const state = {key: 'id', dir: 1};
   const cols = [['id', 'ID'], ['question', 'Question'], ['factor', 'One factor changed'], ['dev', 'Development result'], ['held', 'Held-out'], ['outcome', 'Decision'], ['dec', 'Decision id']];
   const scroll = el('div', 'pr-table-scroll');
@@ -91,13 +91,13 @@ function registryTable(rows, decisionIds) {
 
 function decisionLog(m, rows) {
   const items = m.section('work').decisions || [];
-  const wrap = el('div', 'pr-declog pr-reveal');
+  const wrap = el('div', 'pr-declog');
   const search = el('input', 'pr-search'); search.type = 'search'; search.placeholder = 'Search decisions'; search.setAttribute('aria-label', 'Search decisions by id, title or text');
   const count = el('p', 'pr-small', `${items.length} decisions`);
   const list = el('div', 'pr-declist');
   const nodes = items.map(d => {
     const det = el('details', 'pr-dec'); det.id = `pr-work-dec-${d.id}`;
-    const sum = el('summary'); sum.append(el('span', 'pr-dec-id', d.id), el('span', 'pr-dec-title', d.title), el('span', 'pr-dec-meta', [d.date, d.status].filter(Boolean).join(' \u00b7 ')));
+    const sum = el('summary'); sum.append(el('span', 'pr-dec-id', d.id), el('span', 'pr-dec-title', d.title), el('span', 'pr-dec-meta', [d.date, d.status].filter(Boolean).join(', ')));
     const linked = rows.filter(r => r.dec.includes(d.id));
     det.append(sum, el('p', 'pr-small', d.summary || 'See docs/decisions.md.'), el('p', 'pr-small', d.alternatives ? `Alternatives: ${d.alternatives}` : 'Alternatives: not summarised here; see docs/decisions.md.'));
     if (linked.length) det.append(el('p', 'pr-small', `Experiments: ${linked.map(r => r.id).join(', ')}`));
@@ -112,7 +112,7 @@ function decisionLog(m, rows) {
 
 function timeline(m) {
   const ms = m.section('work').milestones || [], dates = (m.section('work').decisions || []).map(d => d.date).filter(Boolean);
-  const ol = el('ol', 'pr-timeline pr-reveal');
+  const ol = el('ol', 'pr-timeline');
   ms.forEach(x => { const li = el('li', 'pr-tl-item'); li.append(el('span', 'pr-tl-id', x.id), el('strong', '', x.name), el('span', 'pr-small', x.status)); ol.append(li); });
   const wrap = el('div');
   wrap.append(ol, el('p', 'pr-small', `The progress table has no per-milestone dates. Decisions are dated ${dates[0]} to ${dates[dates.length - 1]}.`), evi('report.json \u203a work.milestones \u00b7 docs/progress.md'));
@@ -123,16 +123,16 @@ function failures(m) {
   const dec = id => (m.section('work').decisions || []).find(d => d.id === id);
   const a3 = m.evalRow('dev-A3', 'gpt-6-luna');
   const fixed = [
-    ['Stale judge cache', 'Cached judgments were keyed by case id and survived gold changes (DEV-034, DEV-202, DEV-626).', 'Cache now keyed by a fingerprint of question, facts, expected behaviour, answer, cited evidence, judge and prompt. A1\u2013A5 were rejudged.', 'Fixed', 'docs/evaluation-report.md'],
+    ['Stale judge cache', 'Cached judgments were keyed by case id and survived gold changes (DEV-034, DEV-202, DEV-626).', 'Cache now keyed by a fingerprint of question, facts, expected behaviour, answer, cited evidence, judge and prompt. A1-A5 were rejudged.', 'Fixed', 'docs/evaluation-report.md'],
     ['Calculation scorer too strict', 'The first replacement scorer over-constrained prose and units and misparsed a negated formula.', `Corrected before publishing. Only calc_correct changed. A3 gpt-6-luna now ${metricOf(a3?.metrics?.calc_correct).rate !== null ? pct(metricOf(a3.metrics.calc_correct).rate) : 'not recorded'} on ${metricOf(a3?.metrics?.calc_correct).n ?? '?'} cases, replacing an earlier 87.5%.`, 'Fixed', 'docs/evaluation-report.md'],
     ['Threat fixture passed vacuously under r3', 'An earlier r3 fixture omitted candidate lists, so indirect-injection passes were invalid.', 'Rerun on the corrected fixture; every poisoned passage reached evidence and none was left unexercised. The rerun supersedes the earlier results.', 'Fixed', 'experiments/threats/SUMMARY.md'],
-    ['Gold edits after the held-out run', 'Four post-run label or evidence edits (HO-029, HO-027, HO-023, HO-004).', 'Scores moved down or stayed flat; the original freeze is preserved. Table below.', 'Disclosed', 'docs/evaluation-report.md \u00b7 experiments/gold/CHANGELOG.md'],
+    ['Gold edits after the held-out run', 'Four post-run label or evidence edits (HO-029, HO-027, HO-023, HO-004).', 'Scores moved down or stayed flat; the original freeze is preserved. Table below.', 'Disclosed', 'docs/evaluation-report.md, experiments/gold/CHANGELOG.md'],
     ['Extraction defects', 'Review found control-bearing blocks, lost note boundaries and flattened superscripts.', dec('D-037') ? `${dec('D-037').title}. Corpus-v2 is evaluated separately from the frozen runs.` : 'Corrections sit on a separate branch and are not evaluated.', dec('D-037') ? 'Decided' : 'Open', 'docs/human-review/ai-pre-review-passage-spot-check.md'],
     ['T-I06: planted false figure', 'A false figure planted in a passage was cited and passed the quote and number checks in all five configurations.', 'Deterministic cross-check (D-038). First post-fix run, 36 cases, one run per configuration: strict scorer 35/36 for both defended models (the caveat quotes the planted figure); refined scorer 36/36, written after seeing the run. Final-code run m7-e2efix-20261031 (corpus v3): gpt-6-luna 36/36 strict, gpt-5.6-luna 35/36 under both scorers, naive 35/36 for both models. T-I06 is not shown stable across runs. The failing gpt-5.6-luna run reported the dataset value and disclosed the planted figure in a caveat, but failed an exact-string scorer check; the scorer was not changed, which is a brittleness finding. One case, closed grammar.', 'Handled once, post hoc', 'docs/system-card.md'],
   ];
   const wrap = el('div', 'pr-limit-grid');
   fixed.forEach(([title, what, fix, status, src], i) => {
-    const c = el('article', `pr-limit pr-reveal${status === 'Open' || status === 'Handled once, post hoc' ? ' is-open' : ''}`);
+    const c = el('article', `pr-limit${status === 'Open' || status === 'Handled once, post hoc' ? ' is-open' : ''}`);
     c.append(el('span', 'pr-limit-no', status), el('h5', 'pr-limit-title', title), el('p', '', what), el('p', '', fix), evi(src));
     wrap.append(c);
   });
@@ -141,7 +141,7 @@ function failures(m) {
   out.append(wrap, el('h5', 'pr-mini-title', 'Held-out behaviour accuracy by gold version'), dataTable('n=31 cases per row', ['Run', 'v3.2 (as run)', 'v3.3', 'v3.4', 'v3.5 (current)'], table));
   const pe = m.paired;
   if (pe.length) out.append(dataTable('Paired difference, r3 minus hybrid, by gold version', ['Version', 'gpt-6-luna', 'gpt-5.6-luna'], pe.map(e => [e.gold_version, ...['gpt-6-luna', 'gpt-5.6-luna'].map(n => `${fmt.pts(e.models[n].diff)} [${fmt.pts(e.models[n].ci95[0])}, ${fmt.pts(e.models[n].ci95[1])}]`)])));
-  out.append(el('p', 'pr-small', 'Gold v3.5 applies HO-022 and DEV-018. Development runs A1\u2013A5 and the four registered held-out arms were rescored on v3.5 from saved outputs, with no new answer generation. v3.6 migrates evidence ids for corpus v2 only.'), evi('report.json \u203a evaluation.paired \u00b7 docs/evaluation-report.md \u00b7 README.md'));
+  out.append(el('p', 'pr-small', 'Gold v3.5 applies HO-022 and DEV-018. Development runs A1-A5 and the four registered held-out arms were rescored on v3.5 from saved outputs, with no new answer generation. v3.6 migrates evidence ids for corpus v2 only.'), evi('report.json \u203a evaluation.paired \u00b7 docs/evaluation-report.md \u00b7 README.md'));
   return out;
 }
 
@@ -153,7 +153,7 @@ function reviewProcess() {
     ['Tie-break', 'Where earlier AI passes disagreed, a third AI pass broke the tie. 28 owner agreements followed that tie-break.'],
     ['Owner review', '125 cards decided per card: 30 own verdicts, 95 agreed with an AI suggestion (67 with earlier passes, 28 with the tie-break).']
   ];
-  const ol = el('ol', 'pr-pipeline pr-reveal');
+  const ol = el('ol', 'pr-pipeline');
   steps.forEach(([t, x], i) => { const li = el('li', 'pr-pipe-step'); li.append(el('span', 'pr-pipe-no', String(i + 1)), el('strong', '', t), el('span', '', x)); ol.append(li); });
   const wrap = el('div');
   wrap.append(ol, grid('pr-split', callout({tone: 'note', title: 'What it shows', items: ['17 manual answer verdicts agree with the independent AI review (17 of 17).', '45 gold cards reviewed: 43 unchanged, 2 label changes (HO-022, DEV-018).', '30 source cards: 19 match, 11 minor differences.']}),
@@ -166,12 +166,12 @@ function ledger(m) {
   const ev = m.rows('evaluation');
   const gen = rows => sum(rows.map(r => r.metrics.cost_per_case_usd * r.metrics.n_cases));
   const entries = [
-    ['Agent development runs A1\u2013A5, X1, X2 (generation)', gen(ev.filter(r => r.split !== 'heldout'))],
+    ['Agent development runs A1-A5, X1, X2 (generation)', gen(ev.filter(r => r.split !== 'heldout'))],
     ['Agent held-out runs (generation)', gen(ev.filter(r => r.split === 'heldout'))],
     ['AI judge, all agent runs', sum(ev.map(r => r.metrics.judge_cost_total_usd))],
     ['Threat suite, five configurations', sum(m.rows('security').map(r => r.metrics.cost_usd))],
     ['Threat suite, e2efix run (four configurations)', sum(m.e2efixThreats.map(r => r.metrics.cost_usd))],
-    ['Answer-only studies G0\u2013G4', sum(m.rows('answers').map(r => r.metrics.cost_per_case_usd * r.metrics.n))],
+    ['Answer-only studies G0-G4', sum(m.rows('answers').map(r => r.metrics.cost_per_case_usd * r.metrics.n))],
     ['Rerank experiments R2 and R3', sum(['R2', 'R3'].map(k => m.ladder?.configs?.[k]?.cost_usd_total))]
   ].filter(e => e[1] > 0);
   const total = sum(entries.map(e => e[1]));
@@ -192,14 +192,14 @@ export function renderWork(m, ctx) {
   const decisions = (m.section('work').decisions || []).length;
   const count = test => rows.filter(r => test(r.outcome)).length;
   const adopted = count(o => o.startsWith('Adopted')), notAdopted = count(o => o === 'Not adopted'), inconclusive = count(o => o === 'Inconclusive');
-  const ch = chapter({id: 'work', no: 10, eyebrow: 'Work log', title: `${rows.length} experiment groups: ${adopted} adopted, ${notAdopted} not adopted, ${inconclusive} inconclusive, ${count(o => o === 'Regression check')} regression check`,
+  const ch = chapter({id: 'work', title: `${rows.length} experiment groups: ${adopted} adopted, ${notAdopted} not adopted, ${inconclusive} inconclusive, ${count(o => o === 'Regression check')} regression check`,
     bullets: ['One factor changed per run, except X2, which is a regression check; configurations chosen on development cases only.', `${decisions} logged decisions, including null results.`, 'Results come from report.json; decision wording follows the decision log.']});
   const stats = el('div', 'pr-stats');
   stats.append(stat({value: decisions, label: 'Decisions', note: 'From D-000', src: 'report.json \u203a work.decisions'}),
     stat({value: rows.length, label: 'Experiment groups', note: 'Retrieval, agent, held-out, safety, models', src: 'report.json \u203a evaluation, retrieval, security'}),
     stat({value: notAdopted, label: 'Not adopted', note: 'Retained in the log', src: 'registry in ch-work.js'}),
     stat({value: inconclusive, label: 'Inconclusive', tone: 'warn', src: 'registry in ch-work.js'}));
-  ch.body.append(callout({tone: 'warn', title: 'Corpus versions', items: ['Registered results (A1\u2013A5, held-out, pre-guard threat suites) ran on corpus v1, 13,484 passages. The frozen v1 and v2 results are retained.', 'The X1 extraction experiments and the T-I06 post-fix run used corpus v2, 15,915 passages.', 'Corpus v3 (85 sources, 52,020 observations, 16,419 passages) has two measured evaluations: the X2 development regression check and the e2efix threat run. It has no held-out or evidence-disjoint evaluation yet.', 'The Droplet serves corpus v3 and post-fix code (commit c297146; /healthz fingerprint d402120f6f8f; 16,419 passages; 1,847 chunks), as reported by the owner.'], src: 'README.md \u203a Corpus versions \u00b7 docs/evaluation-report.md'}));
+  ch.body.append(callout({tone: 'warn', title: 'Corpus versions', items: ['Registered results (A1-A5, held-out, pre-guard threat suites) ran on corpus v1, 13,484 passages. The frozen v1 and v2 results are retained.', 'The X1 extraction experiments and the T-I06 post-fix run used corpus v2, 15,915 passages.', 'Corpus v3 (85 sources, 52,020 observations, 16,419 passages) has two measured evaluations: the X2 development regression check and the e2efix threat run. It has no held-out or evidence-disjoint evaluation yet.', 'The Droplet serves corpus v3 and post-fix code (commit c297146; /healthz fingerprint d402120f6f8f; 16,419 passages; 1,847 chunks), as reported by the owner.'], src: 'README.md \u203a Corpus versions \u00b7 docs/evaluation-report.md'}));
   ch.body.append(stats);
   const s1 = section('Milestones recorded in the progress log'); s1.append(timeline(m)); ch.body.append(s1);
   const s2 = section(`${rows.length} experiment groups; one factor changed in each, except the X2 regression check`, ['Sort by any column. Open a row for its configuration.']); s2.append(registryTable(rows, ids)); ch.body.append(s2);

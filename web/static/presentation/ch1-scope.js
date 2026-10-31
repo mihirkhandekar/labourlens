@@ -55,7 +55,7 @@ export function renderScope(m, ctx) {
   const nQ = m.periods().length;
   const nDocs = (m.section('sources').metrics?.by_type?.report_pdf || 0) + (m.section('sources').metrics?.by_type?.release_html || 0);
   const ch = chapter({
-    id: 'scope', no: 1, eyebrow: 'Scope',
+    id: 'scope',
     title: `The analysis window is ${nQ} quarters, ${fmt.quarter(m.scope[0])} to ${fmt.quarter(m.scope[1])}, over four datasets and ${nDocs} MOM documents`,
     bullets: ['Users: policy researchers comparing statistics with MOM commentary.', 'Output: cited answer, clarification, abstention or refusal.', 'The evaluation measures where that behaviour fails.']
   });
@@ -89,7 +89,7 @@ export function renderScope(m, ctx) {
     const unit = UNIT_TEXT[card.unit] || card.unit;
     kpis.append(stat({
       value: card.value, format: cardFormat(card), label: card.label,
-      note: `${changeText(card)}. ${card.population === 'not_applicable' ? '' : `${card.population} · `}${ADJ_TEXT[card.adjustment] || card.adjustment} · ${unit}`,
+      note: `${changeText(card)}. ${card.population === 'not_applicable' ? '' : `${card.population}, `}${ADJ_TEXT[card.adjustment] || card.adjustment}, ${unit}`,
       src: `report.json › summary.cards[${card.card_id}] · observation ${card.observation_id}`
     }));
   });
@@ -115,7 +115,7 @@ export function renderScope(m, ctx) {
       valueText: r => String(r.value), label: 'Cases per family', axisTitle: 'Cases'
     })
   });
-  const outcomes = el('div', 'pr-outcomes pr-reveal');
+  const outcomes = el('div', 'pr-outcomes');
   outcomes.append(el('h5', 'pr-mini-title', 'Four outcomes'));
   [['Answered', 'Cited claims, plus a calculation where needed.'], ['Abstained', 'Evidence does not support an answer.'], ['Clarify', 'Series or period left open by the question.'], ['Refused', 'Request is out of bounds.']].forEach(([name, text]) => {
     const row = el('div', 'pr-outcome');

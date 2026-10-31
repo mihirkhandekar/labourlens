@@ -1,23 +1,18 @@
 // Small DOM builders shared by the presentation chapters. Text only: never HTML strings.
-import {el, svgEl, countUp, fmt, finite} from '../charts.js';
+import {el, svgEl, finite, fmt, reduced} from '../charts.js';
 
 export const append = (parent, ...children) => { children.filter(Boolean).forEach(child => parent.append(child)); return parent; };
 
 /** A chapter opens with an action title (one sentence stating the finding) and 2 to 4 terse bullets. */
-export function chapter({id, no, title, bullets, eyebrow}) {
+export function chapter({id, title, bullets}) {
   const root = el('section', 'pr-chapter');
   root.id = `pr-${id}`;
   root.dataset.chapter = id;
-  const head = el('header', 'pr-chapter-head pr-reveal');
-  const number = el('span', 'pr-chapter-no', String(no).padStart(2, '0'));
-  number.setAttribute('aria-hidden', 'true');
-  const text = el('div', 'pr-chapter-text');
-  const tag = el('p', 'eyebrow', eyebrow || `Chapter ${no}`);
+  const head = el('header', 'pr-chapter-head');
   const heading = el('h3', 'pr-chapter-title', title);
   heading.id = `pr-${id}-title`;
   root.setAttribute('aria-labelledby', heading.id);
-  append(text, tag, heading, Array.isArray(bullets) && bullets.length ? bulletList(bullets, 'pr-list pr-lede') : null);
-  append(head, number, text);
+  append(head, heading, Array.isArray(bullets) && bullets.length ? bulletList(bullets, 'pr-list pr-lede') : null);
   const body = el('div', 'pr-chapter-body');
   root.append(head, body);
   return {root, body, head};
@@ -32,7 +27,7 @@ function bulletList(items, cls) {
 /** A block under a chapter. `title` is an action title; `intro` is an optional array of terse bullets or one short line. */
 export function section(title, intro) {
   const root = el('div', 'pr-block');
-  const head = el('div', 'pr-block-head pr-reveal');
+  const head = el('div', 'pr-block-head');
   head.append(el('h4', 'pr-block-title', title));
   if (Array.isArray(intro) && intro.length) head.append(bulletList(intro, 'pr-list pr-block-intro'));
   else if (intro) head.append(el('p', 'pr-block-intro', intro));
@@ -44,10 +39,25 @@ export function evi(path) {
   return el('span', 'pr-evi', path);
 }
 
+/** Returns a function that counts the number up from zero once, or sets the final text under reduced motion. */
+export function countRunner(node, value, format, duration = 900) {
+  node.textContent = format(value);
+  return () => {
+    if (reduced() || !finite(value)) { node.textContent = format(value); return; }
+    const start = performance.now();
+    const step = now => {
+      const t = Math.min(1, (now - start) / duration);
+      node.textContent = t < 1 ? format(value * (1 - (1 - t) ** 3)) : format(value);
+      if (t < 1) requestAnimationFrame(step);
+    };
+    requestAnimationFrame(step);
+  };
+}
+
 export function stat({value, format = fmt.int, label, note, src, tone, big}) {
-  const root = el('div', `pr-stat pr-reveal${tone ? ` is-${tone}` : ''}${big ? ' is-big' : ''}`);
+  const root = el('div', `pr-stat${tone ? ` is-${tone}` : ''}${big ? ' is-big' : ''}`);
   const number = el('div', 'pr-stat-value num');
-  countUp(number, value, format);
+  number._run = countRunner(number, value, format);
   root.append(number, el('div', 'pr-stat-label', label));
   if (note) root.append(el('p', 'pr-stat-note', note));
   if (src) root.append(evi(src));
@@ -55,7 +65,7 @@ export function stat({value, format = fmt.int, label, note, src, tone, big}) {
 }
 
 export function textStat({text, label, note, src, tone}) {
-  const root = el('div', `pr-stat pr-reveal${tone ? ` is-${tone}` : ''}`);
+  const root = el('div', `pr-stat${tone ? ` is-${tone}` : ''}`);
   root.append(el('div', 'pr-stat-value num', text), el('div', 'pr-stat-label', label));
   if (note) root.append(el('p', 'pr-stat-note', note));
   if (src) root.append(evi(src));
@@ -63,7 +73,7 @@ export function textStat({text, label, note, src, tone}) {
 }
 
 export function bezel(...children) {
-  const outer = el('div', 'bezel pr-bezel pr-reveal');
+  const outer = el('div', 'bezel pr-bezel');
   const core = el('div', 'bezel-core');
   append(core, ...children);
   outer.append(core);
@@ -77,7 +87,7 @@ export function grid(cls, ...children) {
 }
 
 export function callout({tone = 'note', title, text, items, src}) {
-  const root = el('aside', `pr-callout is-${tone} pr-reveal`);
+  const root = el('aside', `pr-callout is-${tone}`);
   const rule = el('span', 'pr-callout-rule');
   rule.setAttribute('aria-hidden', 'true');
   const body = el('div', 'pr-callout-body');

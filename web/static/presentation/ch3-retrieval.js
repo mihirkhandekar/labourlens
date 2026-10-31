@@ -211,7 +211,7 @@ function hintFigure(m) {
 export function renderRetrieval(m, ctx) {
   const L = m.ladder?.configs;
   const ch = chapter({
-    id: 'retrieval', no: 3, eyebrow: 'Retrieval',
+    id: 'retrieval',
     title: L ? `Metadata filtering then reranking (R3) raised hit@8 from ${fmt.pct(L.R0['hit@8'])} to ${fmt.pct(L.R3['hit@8'])} on ${m.ladder.n_cases} development cases` : 'Retrieval experiments',
     bullets: [
       'Compared R0 hybrid (BM25 + dense, rank fusion), R1a hard period and release filter, R1b soft boost, R2 LLM rerank, R3 filter then rerank.',
@@ -247,11 +247,11 @@ export function renderRetrieval(m, ctx) {
   ch.body.append(callout({
     tone: 'warn', title: 'Retrieval evaluation limits',
     items: [
-      'Most gold labels are AI drafts; 45 of 268 cases are owner-reviewed. The ladder above ran on corpus v1. A corpus v2 rerun (X1) found no measurable change (chapter 10). The X2 regression check on corpus v3 did not rerun the ladder.',
+      'Most gold labels are AI drafts; 45 of 268 cases are owner-reviewed. The ladder above ran on corpus v1. A corpus v2 rerun (X1) found no measurable change. The X2 regression check on corpus v3 did not rerun the ladder.',
       'An LLM reranks and an LLM drafted the labels, so R2 and R3 may look better than they are.',
       'A hard period filter can exclude the right document when a later release restates an earlier quarter. Documented, not fixed.',
       'The development set was inspected many times, so it is not an unbiased estimate for new questions.',
-      'No retrieval-only measurement on the held-out set. Held-out compares r3 with hybrid end to end on 31 cases; the gain is inconclusive (chapter 5).'
+      'No retrieval-only measurement on the held-out set. Held-out compares r3 with hybrid end to end on 31 cases; the gain is inconclusive (see Evaluation).'
     ],
     src: 'docs/evaluation-report.md › Expanded retrieval study · docs/experiments/m6-retrieval-improvements.md'
   }));

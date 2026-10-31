@@ -23,7 +23,7 @@ from pathlib import Path
 from urllib.parse import urlparse
 
 from fastapi import FastAPI, HTTPException, Request
-from fastapi.responses import FileResponse, JSONResponse
+from fastapi.responses import FileResponse, JSONResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 
 from labourlens import paths
@@ -517,6 +517,13 @@ def create_app(settings: Settings | None = None, runner=None, shared_factory=Non
     @app.get("/")
     async def index():
         return FileResponse(root / "index.html")
+    @app.get("/deck")
+    @app.get("/deck.html")
+    async def deck():
+        return FileResponse(root / "deck.html")
+    @app.get("/presentation")
+    async def presentation():
+        return RedirectResponse("/deck", status_code=307)
     @app.get("/workbench")
     @app.get("/workbench.html")
     async def workbench():

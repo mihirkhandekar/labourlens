@@ -108,3 +108,13 @@ uv run labourlens paired --gold experiments/gold/heldout_v2_v1.jsonl --candidate
 ```
 
 - **Note at signing:** manifest.json (55ad2b516058…) differs from the hash in the FREEZE.md draft. Passages and observations are unchanged, so this does not block signing; the signed block records the current hash. Check `git diff` of data/manifests/manifest.json if you want to know why (for example rights metadata).
+
+## RESULT (31 Oct 2026, added after the run; nothing above this section was changed)
+
+One run per arm, corpus v3, code `89c51d7`, using the signed commands above. Outputs: `experiments/heldout-v2/paired.json`, `experiments/eval/agent-heldout-V2-{r3,hybrid}/`. Full report: `docs/experiments/m7-heldout-v2-result.md`; decision: D-045.
+
+- **Primary model `gpt-6-luna`:** r3 0.754 versus hybrid 0.708, paired +0.046, 3 better and 0 worse, case interval [0.015, 0.092], component interval [0.011, 0.102], 22 evidence components, false answers r3 0 and hybrid 1. Every registered condition holds; `paired.json` records `demonstrated_gain_primary: true`.
+- **Replication `gpt-5.6-luna`:** 0.723 versus 0.723; not replicated. It never gated the verdict.
+- **Verdict:** the pre-registered rule is met for the primary model; the effect is three cases; I would not call it a confirmed gain; the second model shows none.
+- **Caveats:** McNemar exact p = 0.25; without the five `mti_ai_feature` cases the lower bound is 0.0; two of the three discordant cases were hybrid first-step planner decisions before any retrieval (inference); one run per arm; the set is only partly independent (see "Known leakage that remains").
+- Both arms are low in absolute accuracy, mostly from a tool coverage gap, not retrieval. The registered original held-out result is unchanged and not pooled with this set.

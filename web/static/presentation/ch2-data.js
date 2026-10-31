@@ -10,7 +10,7 @@ function definitionChips(m, entries) {
   const palette = ['c1', 'c3', 'c5', 'c6'];
   return chips(entries.map(entry => Array.isArray(entry) ? entry : [entry, null]).filter(([id]) => m.charts[id]).map(([id, label], i) => {
     const chart = m.charts[id];
-    return {label: `${label || chart.title}: ${POP[chart.population] || chart.population} · ${ADJ[chart.adjustment] || chart.adjustment} · ${chart.unit}`, cls: `f-${palette[i % 4]}`};
+    return {label: `${label || chart.title}: ${POP[chart.population] || chart.population}, ${ADJ[chart.adjustment] || chart.adjustment}, ${chart.unit}`, cls: `f-${palette[i % 4]}`};
   }));
 }
 
@@ -55,7 +55,7 @@ function provenanceChain(m) {
     if (i < steps.length - 1) li.append(el('i', 'pr-chain-arrow'));
     ol.append(li);
   });
-  const wrap = el('div', 'pr-chain-wrap pr-reveal');
+  const wrap = el('div', 'pr-chain-wrap');
   wrap.append(el('h5', 'pr-mini-title', `Trace one number: ${card.label}, ${fmt.quarter(card.period)}`), ol,
     el('p', 'pr-small', 'The trace command looks up the raw cell from an observation id. A matching hash confirms the snapshot is the recorded download.'),
     evi('report.json › summary.cards[unemployment_resident_sa] · sources.rows[resident_unemployment_rate]'));
@@ -74,7 +74,7 @@ function qualityFigure(m) {
     table: () => ({caption: 'Validation outcomes', columns: ['Outcome', 'Checks'], rows: [['Pass', pass], ['Warn', warn]]}),
     draw: (host, c) => shareBars(host, c, {rows: [{label: `${(pass || 0) + (warn || 0)} checks`, segments: [{key: 'p', label: 'Pass', value: pass || 0, cls: 'c1'}, {key: 'w', label: 'Warn', value: warn || 0, cls: 'c2'}]}], label: 'Validation outcomes', rowH: 56})
   });
-  const wrap = el('div', 'pr-warnings pr-reveal');
+  const wrap = el('div', 'pr-warnings');
   wrap.append(el('h5', 'pr-mini-title', 'Warnings'));
   const ul = el('ul', 'pr-warn-list');
   warnings.forEach(w => { const li = el('li'); li.append(el('code', 'pr-path', w.id)); ul.append(li); });
@@ -85,7 +85,7 @@ function qualityFigure(m) {
 export function renderData(m, ctx) {
   const qm0 = m.section('quality').metrics || {};
   const ch = chapter({
-    id: 'data', no: 2, eyebrow: 'The data',
+    id: 'data',
     title: `${m.sources.length} source records, ${fmt.int(qm0.pass)} of ${fmt.int((qm0.pass || 0) + (qm0.warn || 0))} validation checks passed, ${fmt.int(qm0.warn)} warnings`,
     bullets: ['Statistics: data.gov.sg datasets. Reports: MOM.', 'Hashed snapshots; population, adjustment, unit and release status kept in observation metadata.', 'Charts redraw on a selectable window of quarters.']
   });
@@ -110,7 +110,7 @@ export function renderData(m, ctx) {
   const fromField = selectField('From', options, '0', v => { state.from = Math.min(+v, state.to); fromField.select.value = String(state.from); refresh(); });
   const toField = selectField('To', options, String(periods.length - 1), v => { state.to = Math.max(+v, state.from); toField.select.value = String(state.to); refresh(); });
   const nsaToggle = toggle('Show unadjusted series', true, on => { state.nsa = on; refresh(); });
-  const bar = el('div', 'pr-controls pr-reveal');
+  const bar = el('div', 'pr-controls');
   bar.setAttribute('role', 'group');
   bar.setAttribute('aria-label', 'Window for the charts below');
   bar.append(fromField.root, toField.root, nsaToggle);
@@ -268,16 +268,16 @@ export function renderData(m, ctx) {
   const resident = m.values('unemployment_resident_sa', periods).filter(finite), nsa = m.values('unemployment_resident_nsa', periods).filter(finite);
   const retr = m.values('retrenchments', periods), retrTop = retr.reduce((a, v, i) => finite(v) && (a < 0 || v > retr[a]) ? i : a, -1);
   const gaps = rec.map(r => r.dataset_minus_final);
-  const findings = el('ol', 'pr-findings pr-reveal');
+  const findings = el('ol', 'pr-findings');
   const revAbs = rec.map(r => Math.abs(r.final_minus_advance));
   const retrPeak = retrTop >= 0 ? `${fmt.int(retr[retrTop])} persons in ${fmt.quarter(periods[retrTop])}` : '';
   const resRange = resident.length ? `${pctText(Math.min(...resident))} and ${pctText(Math.max(...resident))}` : '';
   const gapRange = rec.length ? `${fmt.int(Math.min(...gaps))} to ${fmt.int(Math.max(...gaps))} persons across ${rec.length} quarters` : '';
   [
     [resident.length && nsa.length ? `Adjusted resident unemployment stayed between ${resRange}; the unadjusted rate ranged from ${pctText(Math.min(...nsa))} to ${pctText(Math.max(...nsa))}` : 'Adjusted and unadjusted rates are different series', 'Stored under separate series identifiers.', 'report.json › charts[unemployment_resident_sa, unemployment_resident_nsa]'],
-    [retrTop >= 0 ? `Retrenchments peaked at ${retrPeak}, the highest of ${periods.length} quarters` : 'Retrenchment peak not recorded', retrTop >= 0 ? `Adjusted resident unemployment stayed between ${resRange} over the same period. The data do not show why; I infer no cause.` : 'Not recorded.', 'report.json › charts[retrenchments] · eda.rows[retrenchments]'],
+    [retrTop >= 0 ? `Retrenchments peaked at ${retrPeak}, the highest of ${periods.length} quarters` : 'Retrenchment peak not recorded', retrTop >= 0 ? `Adjusted resident unemployment stayed between ${resRange} over the same period. The data do not show why; I infer no cause.` : 'Not recorded.', 'report.json › charts[retrenchments], eda.rows[retrenchments]'],
     [rec.length ? `Final figures differ from advance releases by ${fmt.int(Math.min(...revAbs))} to ${fmt.int(Math.max(...revAbs))} persons across ${rec.length} quarters` : 'Advance and final figures differ', rec.length ? 'Answers name the vintage they use.' : 'Not recorded.', 'report.json › reconciliation.rows'],
-    [rec.length ? `The sector dataset total ${gaps.every(g => g > 0) ? 'is above' : 'differs from'} MOM\u2019s final figure by ${gapRange}` : 'Sector dataset total and MOM final figure differ', rec.length ? 'MOM\u2019s headline excludes migrant domestic workers; the dataset\u2019s basis is unverified. That this explains the gap is an inference, not a verified fact.' : 'Not recorded.', 'report.json › reconciliation.rows[*].dataset_minus_final · docs/data-sheet.md']
+    [rec.length ? `The sector dataset total ${gaps.every(g => g > 0) ? 'is above' : 'differs from'} MOM\u2019s final figure by ${gapRange}` : 'Sector dataset total and MOM final figure differ', rec.length ? 'MOM\u2019s headline excludes migrant domestic workers; the dataset\u2019s basis is unverified. That this explains the gap is an inference, not a verified fact.' : 'Not recorded.', 'report.json › reconciliation.rows[*].dataset_minus_final, docs/data-sheet.md']
   ].forEach(([title, text, src]) => {
     const li = el('li', 'pr-finding');
     li.append(el('strong', '', title), el('span', '', text), evi(src));
@@ -289,7 +289,7 @@ export function renderData(m, ctx) {
 
   // Series catalogue
   const edaRows = m.section('eda').rows || [];
-  const atlas = el('div', 'pr-atlas pr-reveal');
+  const atlas = el('div', 'pr-atlas');
   atlas.append(el('h5', 'pr-mini-title', 'Series catalogue'), el('p', 'pr-small', `${m.section('eda').summary} ${edaRows.length} validated series, with their recorded observation ranges.`));
   const cells = el('ul', 'pr-atlas-grid');
   edaRows.forEach(row => {
@@ -298,8 +298,8 @@ export function renderData(m, ctx) {
     const value = v => row.unit === 'percent' ? `${v.toFixed(1)}%` : row.unit === 'ratio' ? v.toFixed(2) : fmt.int(v);
     const li = el('li', 'pr-atlas-cell');
     li.append(el('span', 'pr-atlas-name', row.label), sparkline((chart?.points || []).map(p => p.value), {width: 132, height: 36}));
-    li.append(el('span', 'pr-atlas-val num', `${value(row.start)} \u2192 ${value(row.end)}`), el('span', 'pr-atlas-sub', `${fmt.signed(row.change, digits)}${row.unit === 'percent' ? ' pts' : ''} · range ${value(row.minimum)} to ${value(row.maximum)}`));
-    li.append(el('span', 'pr-atlas-def', `${POP[chart?.population] || ''} · ${ADJ[chart?.adjustment] || ''} · ${row.unit}`));
+    li.append(el('span', 'pr-atlas-val num', `${value(row.start)} \u2192 ${value(row.end)}`), el('span', 'pr-atlas-sub', `${fmt.signed(row.change, digits)}${row.unit === 'percent' ? ' pts' : ''}, range ${value(row.minimum)} to ${value(row.maximum)}`));
+    li.append(el('span', 'pr-atlas-def', `${POP[chart?.population] || ''}, ${ADJ[chart?.adjustment] || ''}, ${row.unit}`));
     cells.append(li);
   });
   atlas.append(cells, evi('report.json › eda.rows[*] · charts[*].points'));

@@ -69,25 +69,6 @@ export function whenVisible(node, callback) {
   callbacks.set(node, callback);
   observer.observe(node);
 }
-export function revealAll(root) {
-  root.querySelectorAll('.pr-reveal').forEach(node => node.classList.add('is-in'));
-}
-export function countUp(node, value, format, duration = 1100) {
-  const final = format(value);
-  node.textContent = final;
-  if (reduced() || !finite(value)) return;
-  whenVisible(node, () => {
-    const start = performance.now();
-    const step = now => {
-      const t = Math.min(1, (now - start) / duration);
-      const eased = 1 - (1 - t) ** 3;
-      node.textContent = t < 1 ? format(value * eased) : final;
-      if (t < 1) requestAnimationFrame(step);
-    };
-    node.textContent = format(0);
-    requestAnimationFrame(step);
-  });
-}
 
 /* ---------- tooltips and keyboard navigation ---------- */
 export function interactive(svg, ctx, items, {label = 'Chart values. Use the arrow keys to move between points.', cols = 0} = {}) {
@@ -142,7 +123,7 @@ export function interactive(svg, ctx, items, {label = 'Chart values. Use the arr
 let figureCounter = 0;
 export function figure(options) {
   const id = options.id || `pr-fig-${++figureCounter}`;
-  const root = el('figure', 'pr-fig pr-reveal');
+  const root = el('figure', 'pr-fig');
   root.id = id;
   if (options.wide) root.classList.add('is-wide');
   const head = el('header', 'pr-fig-head');

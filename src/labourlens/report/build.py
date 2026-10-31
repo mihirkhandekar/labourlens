@@ -30,6 +30,9 @@ _LABELS = {
 }
 
 
+_HELDOUT_V2_PAIRED = "experiments/heldout-v2/paired.json"
+_HELDOUT_V2_ERRORS = "experiments/heldout-v2/error-analysis.json"
+_HELDOUT_V2_FILES = {_HELDOUT_V2_PAIRED, _HELDOUT_V2_ERRORS}
 _E2EFIX_DIR = "experiments/threats/m7-e2efix-20261031/"
 _E2EFIX_EXPERIMENT = "m7-e2efix-20261031"
 
@@ -100,8 +103,14 @@ class _Artifacts:
                 r"experiments/eval/agent-(?:heldout-H|heldout-X|dev-X[12])(?:-(?:r3|hybrid))?/gpt-(?:6|5\.6)-luna\.(?:metrics\.json|cases\.jsonl)",
                 path,
             ) if re.search(r"/agent-dev-X[12]/", path) or re.search(r"/agent-heldout-(?:H|X)-(?:r3|hybrid)/", path) else None
+            # Signed held-out v2 (corpus v3): registered luna models only; kept out of the registered rows (see _heldout_v2).
+            if heldout is None:
+                heldout = re.fullmatch(r"experiments/eval/agent-heldout-V2-(?:r3|hybrid)/gpt-(?:6|5\.6)-luna\.(?:metrics\.json|cases\.jsonl)", path)
             if not (development or heldout):
                 return False
+        if path.startswith("experiments/heldout-v2/") and path not in _HELDOUT_V2_FILES:
+            # Held-out v2: the paired result and the id-only error analysis; review exports and audits stay out.
+            return False
         if path.startswith("experiments/runs/agent-"):
             if not re.fullmatch(r"experiments/runs/agent-dev-A[1-5]/[^/]+", path):
                 return False
@@ -155,6 +164,8 @@ def _experiments(artifacts: _Artifacts, prefix: str) -> tuple[list, list]:
     rows, paths = [], []
     for path in artifacts.paths:
         if path.startswith(prefix) and path.endswith(".metrics.json"):
+            if prefix == "experiments/eval/" and "/agent-heldout-V2-" in path:
+                continue  # reported only in the separately keyed evaluation.heldout_v2 section
             data = artifacts.mapping(path)
             metrics = _numeric(data.get("metrics", data))
             if not metrics:
@@ -554,6 +565,17 @@ def _plain(text: str, limit: int) -> str:
     return sentence if len(sentence) <= limit else sentence[: limit - 1].rstrip() + "\u2026"
 
 
+def _no_dashes(value: object) -> object:
+    """Em and en dashes in text lifted from the docs become a comma or a hyphen in the published report."""
+    if isinstance(value, str):
+        return value.replace(" \u2014 ", ", ").replace("\u2014", ", ").replace("\u2013", "-")
+    if isinstance(value, list):
+        return [_no_dashes(item) for item in value]
+    if isinstance(value, dict):
+        return {key: _no_dashes(item) for key, item in value.items()}
+    return value
+
+
 def _work(artifacts: _Artifacts) -> dict:
     """Decision log and milestone table, from our own docs: headings and first sentences only."""
     decisions, milestones, paths = [], [], []
@@ -593,6 +615,79 @@ def _e2efix(rows: list) -> dict:
             "provenance": sorted({path for row in rows for path in row["provenance"]})}
 
 
+_V2_ARMS = ("r3", "hybrid")
+_V2_MODELS = ("gpt-6-luna", "gpt-5.6-luna")
+
+
+def _heldout_v2(artifacts: _Artifacts) -> dict | None:
+    """Signed held-out v2 (corpus v3, gold v3-frozen 65 cases): both arms, the paired result under the preregistered rule,
+    per-family tables, the rule's condition flags and the id-only error analysis. Separate from the registered v1 held-out."""
+    paired_raw = artifacts.mapping(_HELDOUT_V2_PAIRED)
+    if not paired_raw.get("per_model"):
+        return None
+    arms, paths = [], [_HELDOUT_V2_PAIRED]
+    for arm in _V2_ARMS:
+        for model in _V2_MODELS:
+            path = f"experiments/eval/agent-heldout-V2-{arm}/{model}.metrics.json"
+            data = artifacts.mapping(path)
+            metrics = _numeric(data.get("metrics", {}))
+            if not metrics:
+                continue
+            row = {"id": path.removesuffix(".metrics.json"), "arm": arm, "model": model, "metrics": metrics,
+                   "strata": _numeric(data.get("by_family", {})), "provenance": [path]}
+            source = data.get("provenance", {})
+            if isinstance(source, dict):
+                fingerprint = _selected(source, ("eligible_n", "available_n"))
+                for key in ("gold_sha256", "git_head", "price_table_sha256"):
+                    value = source.get(key)
+                    if isinstance(value, str) and re.fullmatch(r"[0-9a-f]{40}|[0-9a-f]{64}", value):
+                        fingerprint[key] = value
+                if fingerprint:
+                    row["scoring_provenance"] = fingerprint
+            arms.append(row)
+            paths.append(path)
+    models = {}
+    for model in _V2_MODELS:
+        entry = paired_raw["per_model"].get(model)
+        if isinstance(entry, dict):
+            models[model] = _numeric({key: value for key, value in entry.items() if key not in {"missing", "unexpected"}})
+    decision = paired_raw.get("decision", {})
+    errors_raw = artifacts.mapping(_HELDOUT_V2_ERRORS)
+    classes = []
+    for item in errors_raw.get("classes", []):
+        if isinstance(item, dict) and _label(item.get("class")) and _number(item.get("count")):
+            classes.append({"class": item["class"], "count": item["count"],
+                            "case_ids": [case for case in item.get("case_ids", []) if _label(case)]})
+    discordant = []
+    for item in errors_raw.get("discordant_primary", []):
+        if isinstance(item, dict) and _label(item.get("case_id")):
+            discordant.append({**_selected(item, ("r3_correct", "hybrid_correct", "hybrid_tool_calls", "r3_tool_calls", "decided_before_retrieval_in_hybrid_arm")),
+                               **{key: item[key] for key in ("case_id", "family", "source_group") if _label(item.get(key))}})
+    if errors_raw:
+        paths.append(_HELDOUT_V2_ERRORS)
+    return {
+        "experiment": "heldout-v2", "corpus_version": "v3", "preregistered": True, "crosscheck": True, "pooled_with_registered_heldout": False,
+        "gold_sha256": "e3d16597d542d33d106b4e9291aa3b92ca5fcdf19aa4d3c2b3319c0543efa542",
+        "primary_model": decision.get("primary_model") if _label(decision.get("primary_model")) else None,
+        "decision": {"demonstrated_gain_primary": decision.get("demonstrated_gain_primary") is True,
+                     "replication_models": {key: value is True for key, value in (decision.get("replication_models") or {}).items() if _label(key)}},
+        "verdict": "The pre-registered rule is met for the primary model; the effect is three cases; I would not call it a confirmed gain; the second model shows none.",
+        "arms": arms, "paired": models,
+        "condition_flags": {model: entry.get("conditions", {}) for model, entry in models.items()},
+        "error_analysis": {
+            **_selected(errors_raw, ("n_cases", "n_mismatches_primary_r3", "over_abstentions_primary_r3", "numerical_over_abstentions_primary_r3", "mismatches_shared_by_both_arms")),
+            "classes": classes, "gold_passage_in_agent_evidence": _numeric(errors_raw.get("gold_passage_in_agent_evidence", {})),
+            "discordant_primary": discordant,
+            "follow_up_status": "not done; a fix and rerun would be a new experiment with a new id outside the frozen protocol"},
+        "limitations": ["One run per arm and sampled models.", "The effect is three discordant cases for the primary model; McNemar exact p is above 0.05.",
+                        "Two of the three were first-step planner decisions in the hybrid arm, made before any retrieval.",
+                        "Without the five MTI cases the case-bootstrap lower bound is not above zero.", "The second model shows no difference.",
+                        "Absolute accuracy is low in both arms mainly because of a tool coverage gap, not retrieval.",
+                        "Fresh evidence but the same system; gold is AI-drafted and owner-approved.", "Not pooled with the registered 31-case held-out, which remains not demonstrated."],
+        "provenance": sorted(set(paths)),
+    }
+
+
 def build_report(root: Path) -> dict:
     artifacts = _Artifacts(root)
     sources = _sources(artifacts)
@@ -615,6 +710,7 @@ def build_report(root: Path) -> dict:
     postfix_rows, postfix_paths = _experiments(artifacts, "experiments/threats/m7-ti06-postfix-20261031/runs/")
     e2efix_rows, e2efix_paths = _experiments(artifacts, _E2EFIX_DIR + "runs/")
     x2_rows = [row for row in eval_rows if row.get("corpus_version") == "v3"]
+    v2_held = _heldout_v2(artifacts)
     trace, trace_paths, errors = _agent_trace(artifacts)
     quality_path = "data/export/quality.json"
     quality_data = artifacts.mapping(quality_path)
@@ -634,8 +730,8 @@ def build_report(root: Path) -> dict:
         "mcp": mcp,
         "reconciliation": reconciliation,
         "security": _section("Threat-suite measurements. They do not guarantee security. `postfix` and `e2efix` are separate labelled runs; neither replaces the registered rows.", security_rows, security_paths + postfix_paths + e2efix_paths, postfix=postfix_rows, e2efix=_e2efix(e2efix_rows)),
-        "evaluation": _section("Development A1–A5 and registered held-out H-r3/H-hybrid luna runs. Measurements retain their recorded gold versions. Owner review complete 31 Oct 2026: 125 cards decided by the owner (30 own verdicts, 95 by agreeing per card with AI suggestions or the three-pass AI tie-break), not independent inter-rater evidence. Gold v3.5 development and all four registered held-out rescoring runs are complete on existing generated outputs; held-out stale judge entries were rejudged. `paired` holds the registered corpus-v1 comparison, current first, with v3.2–v3.4 history; `corpus_v2_diagnostic` is a separate extraction-only diagnostic; `dev_x2_regression_check` labels the corpus-v3 dev X2 rows (a regression check, not an ablation).", eval_rows, eval_paths + [path for entry in paired + ([paired_v2] if paired_v2 else []) for path in entry["provenance"]],
-                               errors={"scope": "rescored case records (experiments/eval, gold as recorded in each metrics file)", "counts": errors, "provenance": trace_paths}, paired=paired, corpus_v2_diagnostic=paired_v2, dev_x2_regression_check=_x2_check(x2_rows),
+        "evaluation": _section("Development A1–A5 and registered held-out H-r3/H-hybrid luna runs. Measurements retain their recorded gold versions. Owner review complete 31 Oct 2026: 125 cards decided by the owner (30 own verdicts, 95 by agreeing per card with AI suggestions or the three-pass AI tie-break), not independent inter-rater evidence. Gold v3.5 development and all four registered held-out rescoring runs are complete on existing generated outputs; held-out stale judge entries were rejudged. `paired` holds the registered corpus-v1 comparison, current first, with v3.2–v3.4 history; `corpus_v2_diagnostic` is a separate extraction-only diagnostic; `dev_x2_regression_check` labels the corpus-v3 dev X2 rows (a regression check, not an ablation). `heldout_v2` is the signed held-out v2 run on corpus v3, reported separately and never pooled with the registered held-out.", eval_rows, eval_paths + [path for entry in paired + ([paired_v2] if paired_v2 else []) for path in entry["provenance"]] + list((v2_held or {}).get("provenance", [])),
+                               errors={"scope": "rescored case records (experiments/eval, gold as recorded in each metrics file)", "counts": errors, "provenance": trace_paths}, paired=paired, corpus_v2_diagnostic=paired_v2, dev_x2_regression_check=_x2_check(x2_rows), heldout_v2=v2_held,
                                limitations=["Generation used AI-drafted gold before owner review; post-run owner review covers selected cards, not the entire gold set.", "Forty-five gold cards are owner reviewed; the remaining 223 remain draft.", "Current v3.5 and historical paired intervals include zero; the comparison is inconclusive under the registered rule.", "Gold v3.5 changes HO-022 after held-out execution; rescoring is post-run adjudication, not a fresh frozen-gold experiment.", "AI-assisted per-card owner decisions are not blinded independent annotation or inter-rater evidence.", "Metric definitions differ between evaluation stages.", "Dev X2 (corpus v3, gold v3.6, crosscheck on, 14 runtime changes) is a regression check of the served system, not an ablation: several factors changed at once, and the ungrounded-number check was widened, so that metric is not comparable with A3 or X1."]),
         "quality": _section("Validation outcomes, including warnings.", quality_rows, [quality_path], metrics=_numeric(quality_data.get("summary", {}))),
         "work": _work(artifacts),
@@ -649,7 +745,7 @@ def run(root: Path | str | None = None, output: Path | str | None = None) -> int
     """Write the static report without downloads, model calls, or pipelines."""
     repository = Path(root) if root is not None else Path(__file__).resolve().parents[3]
     destination = Path(output) if output is not None else repository / "web/static/data/report.json"
-    report = build_report(repository)
+    report = _no_dashes(build_report(repository))
     destination.parent.mkdir(parents=True, exist_ok=True)
     destination.write_text(json.dumps(report, indent=2, ensure_ascii=False, allow_nan=False) + "\n", encoding="utf-8")
     print(f"Report written: {destination}")
