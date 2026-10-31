@@ -72,6 +72,6 @@ def test_committed_report_carries_ladder_and_paired():
     report = json.loads((REPO / "web/static/data/report.json").read_text())
     assert set(report["retrieval"]["ladder"]["configs"]) >= {"R0", "R1a", "R1b", "R2", "R3"}
     current = report["evaluation"]["paired"][0]
-    assert current["gold_version"] == "v3.4" and current["n"] == 31
+    assert current["gold_version"] == "v3.5" and current["n"] == 31
     assert current["models"]["gpt-6-luna"]["ci95"][0] == 0.0
     assert current["models"]["gpt-5.6-luna"]["ci95"][0] < 0

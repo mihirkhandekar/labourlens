@@ -1,6 +1,6 @@
 {
   "schema_version": "report-1.0",
-  "generated_at": "2026-10-31T02:54:30.033917+00:00",
+  "generated_at": "2026-10-31T03:49:48.875456+00:00",
   "summary": {
     "title": "LabourLens research workbench",
     "scope": [
@@ -56318,7 +56318,7 @@
   },
   "evaluation": {
     "status": "available",
-    "summary": "Development comparisons A1–A5 and registered held-out H-r3/H-hybrid luna runs. Gold v3.2: 237 development and 31 held-out cases; AI-drafted, not human reviewed.",
+    "summary": "Development A1–A5 and registered held-out H-r3/H-hybrid luna runs. Measurements retain their recorded gold versions. Owner review complete 31 Oct 2026: 125 cards decided by the owner (30 own verdicts, 95 by agreeing per card with AI suggestions or the three-pass AI tie-break), not independent inter-rater evidence. Gold v3.5 development and all four registered held-out rescoring runs are complete on existing generated outputs; held-out stale judge entries were rejudged. Paired v3.2/v3.3/v3.4 history is retained beside v3.5.",
     "metrics": {},
     "rows": [
       {
@@ -56326,10 +56326,10 @@
         "metrics": {
           "n_cases": 235,
           "behaviour_accuracy": {
-            "rate": 0.762,
+            "rate": 0.757,
             "ci95": [
-              0.706,
-              0.817
+              0.702,
+              0.813
             ],
             "n": 235
           },
@@ -56446,7 +56446,7 @@
         "strata": {
           "adversarial": {
             "n": 35,
-            "behaviour_accuracy": 0.886,
+            "behaviour_accuracy": 0.857,
             "false_answer": 0,
             "over_abstain": 4,
             "unsupported_claims": 0,
@@ -56497,8 +56497,8 @@
         "scoring_provenance": {
           "eligible_n": 235,
           "available_n": 237,
-          "gold_sha256": "647b26a2f0faa86be30ad897840bc1887b54f55c27268d141565b94cb22998e8",
-          "git_head": "617d168b8badd9db775acd1bfd12f4e26d736ddb",
+          "gold_sha256": "aac4b405b51c7cebf019c3b3629509ecb711be32fb830a8e78c4c7b902219e09",
+          "git_head": "310be48078f8cc57c85fd1f9b92da56c46797193",
           "price_table_sha256": "634b32441c3495b4c3ec13efa3af1e9cc99e5c7523eac3a15a5c238c3acaeb5c",
           "prompt_sha256": {
             "planner": "df68ef8e5e287d1a0b1f71d938e85ec25b4f03eeec501bc439a3a77aec2482dc",
@@ -56519,10 +56519,10 @@
         "metrics": {
           "n_cases": 235,
           "behaviour_accuracy": {
-            "rate": 0.804,
+            "rate": 0.8,
             "ci95": [
-              0.753,
-              0.855
+              0.749,
+              0.851
             ],
             "n": 235
           },
@@ -56639,7 +56639,7 @@
         "strata": {
           "adversarial": {
             "n": 35,
-            "behaviour_accuracy": 0.971,
+            "behaviour_accuracy": 0.943,
             "false_answer": 1,
             "over_abstain": 0,
             "unsupported_claims": 0,
@@ -56690,8 +56690,8 @@
         "scoring_provenance": {
           "eligible_n": 235,
           "available_n": 237,
-          "gold_sha256": "647b26a2f0faa86be30ad897840bc1887b54f55c27268d141565b94cb22998e8",
-          "git_head": "617d168b8badd9db775acd1bfd12f4e26d736ddb",
+          "gold_sha256": "aac4b405b51c7cebf019c3b3629509ecb711be32fb830a8e78c4c7b902219e09",
+          "git_head": "310be48078f8cc57c85fd1f9b92da56c46797193",
           "price_table_sha256": "634b32441c3495b4c3ec13efa3af1e9cc99e5c7523eac3a15a5c238c3acaeb5c",
           "prompt_sha256": {
             "planner": "df68ef8e5e287d1a0b1f71d938e85ec25b4f03eeec501bc439a3a77aec2482dc",
@@ -56883,8 +56883,8 @@
         "scoring_provenance": {
           "eligible_n": 235,
           "available_n": 237,
-          "gold_sha256": "647b26a2f0faa86be30ad897840bc1887b54f55c27268d141565b94cb22998e8",
-          "git_head": "617d168b8badd9db775acd1bfd12f4e26d736ddb",
+          "gold_sha256": "aac4b405b51c7cebf019c3b3629509ecb711be32fb830a8e78c4c7b902219e09",
+          "git_head": "310be48078f8cc57c85fd1f9b92da56c46797193",
           "price_table_sha256": "634b32441c3495b4c3ec13efa3af1e9cc99e5c7523eac3a15a5c238c3acaeb5c",
           "prompt_sha256": {
             "planner": "df68ef8e5e287d1a0b1f71d938e85ec25b4f03eeec501bc439a3a77aec2482dc",
@@ -56905,10 +56905,10 @@
         "metrics": {
           "n_cases": 235,
           "behaviour_accuracy": {
-            "rate": 0.8,
+            "rate": 0.796,
             "ci95": [
-              0.749,
-              0.851
+              0.745,
+              0.847
             ],
             "n": 235
           },
@@ -57025,7 +57025,7 @@
         "strata": {
           "adversarial": {
             "n": 35,
-            "behaviour_accuracy": 0.971,
+            "behaviour_accuracy": 0.943,
             "false_answer": 1,
             "over_abstain": 0,
             "unsupported_claims": 0,
@@ -57076,8 +57076,8 @@
         "scoring_provenance": {
           "eligible_n": 235,
           "available_n": 237,
-          "gold_sha256": "647b26a2f0faa86be30ad897840bc1887b54f55c27268d141565b94cb22998e8",
-          "git_head": "617d168b8badd9db775acd1bfd12f4e26d736ddb",
+          "gold_sha256": "aac4b405b51c7cebf019c3b3629509ecb711be32fb830a8e78c4c7b902219e09",
+          "git_head": "310be48078f8cc57c85fd1f9b92da56c46797193",
           "price_table_sha256": "634b32441c3495b4c3ec13efa3af1e9cc99e5c7523eac3a15a5c238c3acaeb5c",
           "prompt_sha256": {
             "planner": "df68ef8e5e287d1a0b1f71d938e85ec25b4f03eeec501bc439a3a77aec2482dc",
@@ -57269,8 +57269,8 @@
         "scoring_provenance": {
           "eligible_n": 235,
           "available_n": 237,
-          "gold_sha256": "647b26a2f0faa86be30ad897840bc1887b54f55c27268d141565b94cb22998e8",
-          "git_head": "617d168b8badd9db775acd1bfd12f4e26d736ddb",
+          "gold_sha256": "aac4b405b51c7cebf019c3b3629509ecb711be32fb830a8e78c4c7b902219e09",
+          "git_head": "310be48078f8cc57c85fd1f9b92da56c46797193",
           "price_table_sha256": "634b32441c3495b4c3ec13efa3af1e9cc99e5c7523eac3a15a5c238c3acaeb5c",
           "prompt_sha256": {
             "planner": "df68ef8e5e287d1a0b1f71d938e85ec25b4f03eeec501bc439a3a77aec2482dc",
@@ -57462,8 +57462,8 @@
         "scoring_provenance": {
           "eligible_n": 237,
           "available_n": 237,
-          "gold_sha256": "647b26a2f0faa86be30ad897840bc1887b54f55c27268d141565b94cb22998e8",
-          "git_head": "617d168b8badd9db775acd1bfd12f4e26d736ddb",
+          "gold_sha256": "aac4b405b51c7cebf019c3b3629509ecb711be32fb830a8e78c4c7b902219e09",
+          "git_head": "310be48078f8cc57c85fd1f9b92da56c46797193",
           "price_table_sha256": "634b32441c3495b4c3ec13efa3af1e9cc99e5c7523eac3a15a5c238c3acaeb5c",
           "prompt_sha256": {
             "planner": "df68ef8e5e287d1a0b1f71d938e85ec25b4f03eeec501bc439a3a77aec2482dc",
@@ -57655,8 +57655,8 @@
         "scoring_provenance": {
           "eligible_n": 237,
           "available_n": 237,
-          "gold_sha256": "647b26a2f0faa86be30ad897840bc1887b54f55c27268d141565b94cb22998e8",
-          "git_head": "617d168b8badd9db775acd1bfd12f4e26d736ddb",
+          "gold_sha256": "aac4b405b51c7cebf019c3b3629509ecb711be32fb830a8e78c4c7b902219e09",
+          "git_head": "310be48078f8cc57c85fd1f9b92da56c46797193",
           "price_table_sha256": "634b32441c3495b4c3ec13efa3af1e9cc99e5c7523eac3a15a5c238c3acaeb5c",
           "prompt_sha256": {
             "planner": "df68ef8e5e287d1a0b1f71d938e85ec25b4f03eeec501bc439a3a77aec2482dc",
@@ -57677,10 +57677,10 @@
         "metrics": {
           "n_cases": 237,
           "behaviour_accuracy": {
-            "rate": 0.911,
+            "rate": 0.907,
             "ci95": [
-              0.878,
-              0.945
+              0.869,
+              0.941
             ],
             "n": 237
           },
@@ -57797,7 +57797,7 @@
         "strata": {
           "adversarial": {
             "n": 35,
-            "behaviour_accuracy": 0.971,
+            "behaviour_accuracy": 0.943,
             "false_answer": 1,
             "over_abstain": 0,
             "unsupported_claims": 0,
@@ -57848,8 +57848,8 @@
         "scoring_provenance": {
           "eligible_n": 237,
           "available_n": 237,
-          "gold_sha256": "647b26a2f0faa86be30ad897840bc1887b54f55c27268d141565b94cb22998e8",
-          "git_head": "617d168b8badd9db775acd1bfd12f4e26d736ddb",
+          "gold_sha256": "aac4b405b51c7cebf019c3b3629509ecb711be32fb830a8e78c4c7b902219e09",
+          "git_head": "310be48078f8cc57c85fd1f9b92da56c46797193",
           "price_table_sha256": "634b32441c3495b4c3ec13efa3af1e9cc99e5c7523eac3a15a5c238c3acaeb5c",
           "prompt_sha256": {
             "planner": "df68ef8e5e287d1a0b1f71d938e85ec25b4f03eeec501bc439a3a77aec2482dc",
@@ -58041,8 +58041,8 @@
         "scoring_provenance": {
           "eligible_n": 237,
           "available_n": 237,
-          "gold_sha256": "647b26a2f0faa86be30ad897840bc1887b54f55c27268d141565b94cb22998e8",
-          "git_head": "617d168b8badd9db775acd1bfd12f4e26d736ddb",
+          "gold_sha256": "aac4b405b51c7cebf019c3b3629509ecb711be32fb830a8e78c4c7b902219e09",
+          "git_head": "310be48078f8cc57c85fd1f9b92da56c46797193",
           "price_table_sha256": "634b32441c3495b4c3ec13efa3af1e9cc99e5c7523eac3a15a5c238c3acaeb5c",
           "prompt_sha256": {
             "planner": "df68ef8e5e287d1a0b1f71d938e85ec25b4f03eeec501bc439a3a77aec2482dc",
@@ -58063,10 +58063,10 @@
         "metrics": {
           "n_cases": 237,
           "behaviour_accuracy": {
-            "rate": 0.911,
+            "rate": 0.916,
             "ci95": [
-              0.873,
-              0.945
+              0.878,
+              0.949
             ],
             "n": 237
           },
@@ -58183,7 +58183,7 @@
         "strata": {
           "adversarial": {
             "n": 35,
-            "behaviour_accuracy": 0.943,
+            "behaviour_accuracy": 0.971,
             "false_answer": 1,
             "over_abstain": 0,
             "unsupported_claims": 0,
@@ -58234,8 +58234,8 @@
         "scoring_provenance": {
           "eligible_n": 237,
           "available_n": 237,
-          "gold_sha256": "647b26a2f0faa86be30ad897840bc1887b54f55c27268d141565b94cb22998e8",
-          "git_head": "617d168b8badd9db775acd1bfd12f4e26d736ddb",
+          "gold_sha256": "aac4b405b51c7cebf019c3b3629509ecb711be32fb830a8e78c4c7b902219e09",
+          "git_head": "310be48078f8cc57c85fd1f9b92da56c46797193",
           "price_table_sha256": "634b32441c3495b4c3ec13efa3af1e9cc99e5c7523eac3a15a5c238c3acaeb5c",
           "prompt_sha256": {
             "planner": "9fe27b42c8b02e215b341af33601752309e7563ecfd6dd3ec8b0746bcd7e833d",
@@ -58256,10 +58256,10 @@
         "metrics": {
           "n_cases": 237,
           "behaviour_accuracy": {
-            "rate": 0.907,
+            "rate": 0.911,
             "ci95": [
-              0.869,
-              0.941
+              0.873,
+              0.945
             ],
             "n": 237
           },
@@ -58376,7 +58376,7 @@
         "strata": {
           "adversarial": {
             "n": 35,
-            "behaviour_accuracy": 0.943,
+            "behaviour_accuracy": 0.971,
             "false_answer": 1,
             "over_abstain": 0,
             "unsupported_claims": 0,
@@ -58427,8 +58427,8 @@
         "scoring_provenance": {
           "eligible_n": 237,
           "available_n": 237,
-          "gold_sha256": "647b26a2f0faa86be30ad897840bc1887b54f55c27268d141565b94cb22998e8",
-          "git_head": "617d168b8badd9db775acd1bfd12f4e26d736ddb",
+          "gold_sha256": "aac4b405b51c7cebf019c3b3629509ecb711be32fb830a8e78c4c7b902219e09",
+          "git_head": "310be48078f8cc57c85fd1f9b92da56c46797193",
           "price_table_sha256": "634b32441c3495b4c3ec13efa3af1e9cc99e5c7523eac3a15a5c238c3acaeb5c",
           "prompt_sha256": {
             "planner": "9fe27b42c8b02e215b341af33601752309e7563ecfd6dd3ec8b0746bcd7e833d",
@@ -58449,18 +58449,18 @@
         "metrics": {
           "n_cases": 31,
           "behaviour_accuracy": {
-            "rate": 0.71,
+            "rate": 0.742,
             "ci95": [
-              0.548,
-              0.871
+              0.581,
+              0.903
             ],
             "n": 31
           },
           "false_answer_rate": {
-            "rate": 0.04,
+            "rate": 0.0,
             "ci95": [
               0.0,
-              0.12
+              0.0
             ],
             "n": 25
           },
@@ -58473,12 +58473,12 @@
             "n": 31
           },
           "key_number_recall": {
-            "rate": 0.626,
+            "rate": 0.646,
             "ci95": [
-              0.426,
-              0.82
+              0.46,
+              0.828
             ],
-            "n": 18
+            "n": 19
           },
           "calc_correct": {
             "rate": 0.8,
@@ -58540,12 +58540,12 @@
             "n": 18
           },
           "fact_coverage": {
-            "rate": 0.55,
+            "rate": 0.524,
             "ci95": [
-              0.333,
-              0.75
+              0.316,
+              0.727
             ],
-            "n": 20,
+            "n": 21,
             "n_cases": 18
           },
           "answers_contradicting_a_reference_fact": {
@@ -58577,8 +58577,8 @@
           },
           "ambiguity_insufficient_causal": {
             "n": 6,
-            "behaviour_accuracy": 0.667,
-            "false_answer": 1,
+            "behaviour_accuracy": 0.833,
+            "false_answer": 0,
             "over_abstain": 0,
             "unsupported_claims": 0,
             "contradicted_facts": 0
@@ -58620,8 +58620,8 @@
         "scoring_provenance": {
           "eligible_n": 31,
           "available_n": 31,
-          "gold_sha256": "050bb40b4863cf3a00682da0edc305dc4d9c7de1c35b3098989e8afdd50899b9",
-          "git_head": "86feee4ace18ec3dd73012937c3b3e24f4c36f8b",
+          "gold_sha256": "aac4b405b51c7cebf019c3b3629509ecb711be32fb830a8e78c4c7b902219e09",
+          "git_head": "310be48078f8cc57c85fd1f9b92da56c46797193",
           "price_table_sha256": "634b32441c3495b4c3ec13efa3af1e9cc99e5c7523eac3a15a5c238c3acaeb5c",
           "prompt_sha256": {
             "planner": "df68ef8e5e287d1a0b1f71d938e85ec25b4f03eeec501bc439a3a77aec2482dc",
@@ -58634,7 +58634,7 @@
         },
         "judge": "gpt-6.1-terra",
         "denominators": {
-          "fact_coverage": 20
+          "fact_coverage": 21
         }
       },
       {
@@ -58642,18 +58642,18 @@
         "metrics": {
           "n_cases": 31,
           "behaviour_accuracy": {
-            "rate": 0.677,
+            "rate": 0.71,
             "ci95": [
-              0.516,
+              0.548,
               0.839
             ],
             "n": 31
           },
           "false_answer_rate": {
-            "rate": 0.042,
+            "rate": 0.0,
             "ci95": [
               0.0,
-              0.125
+              0.0
             ],
             "n": 24
           },
@@ -58666,12 +58666,12 @@
             "n": 31
           },
           "key_number_recall": {
-            "rate": 0.626,
+            "rate": 0.646,
             "ci95": [
-              0.452,
-              0.8
+              0.47,
+              0.811
             ],
-            "n": 18
+            "n": 19
           },
           "calc_correct": {
             "rate": 0.8,
@@ -58733,12 +58733,12 @@
             "n": 17
           },
           "fact_coverage": {
-            "rate": 0.571,
+            "rate": 0.591,
             "ci95": [
-              0.4,
-              0.789
+              0.412,
+              0.81
             ],
-            "n": 21,
+            "n": 22,
             "n_cases": 17
           },
           "answers_contradicting_a_reference_fact": {
@@ -58770,8 +58770,8 @@
           },
           "ambiguity_insufficient_causal": {
             "n": 6,
-            "behaviour_accuracy": 0.667,
-            "false_answer": 1,
+            "behaviour_accuracy": 0.833,
+            "false_answer": 0,
             "over_abstain": 0,
             "unsupported_claims": 0,
             "contradicted_facts": 0
@@ -58813,8 +58813,8 @@
         "scoring_provenance": {
           "eligible_n": 31,
           "available_n": 31,
-          "gold_sha256": "050bb40b4863cf3a00682da0edc305dc4d9c7de1c35b3098989e8afdd50899b9",
-          "git_head": "86feee4ace18ec3dd73012937c3b3e24f4c36f8b",
+          "gold_sha256": "aac4b405b51c7cebf019c3b3629509ecb711be32fb830a8e78c4c7b902219e09",
+          "git_head": "310be48078f8cc57c85fd1f9b92da56c46797193",
           "price_table_sha256": "634b32441c3495b4c3ec13efa3af1e9cc99e5c7523eac3a15a5c238c3acaeb5c",
           "prompt_sha256": {
             "planner": "df68ef8e5e287d1a0b1f71d938e85ec25b4f03eeec501bc439a3a77aec2482dc",
@@ -58827,7 +58827,7 @@
         },
         "judge": "gpt-6.1-terra",
         "denominators": {
-          "fact_coverage": 21
+          "fact_coverage": 22
         }
       },
       {
@@ -58835,18 +58835,18 @@
         "metrics": {
           "n_cases": 31,
           "behaviour_accuracy": {
-            "rate": 0.806,
+            "rate": 0.839,
             "ci95": [
-              0.677,
-              0.935
+              0.71,
+              0.968
             ],
             "n": 31
           },
           "false_answer_rate": {
-            "rate": 0.103,
+            "rate": 0.069,
             "ci95": [
               0.0,
-              0.207
+              0.172
             ],
             "n": 29
           },
@@ -58859,12 +58859,12 @@
             "n": 31
           },
           "key_number_recall": {
-            "rate": 0.822,
+            "rate": 0.832,
             "ci95": [
-              0.656,
-              0.963
+              0.674,
+              0.965
             ],
-            "n": 18
+            "n": 19
           },
           "calc_correct": {
             "rate": 0.8,
@@ -58926,12 +58926,12 @@
             "n": 24
           },
           "fact_coverage": {
-            "rate": 0.76,
+            "rate": 0.769,
             "ci95": [
-              0.6,
-              0.913
+              0.609,
+              0.917
             ],
-            "n": 25,
+            "n": 26,
             "n_cases": 23
           },
           "answers_contradicting_a_reference_fact": {
@@ -58945,7 +58945,7 @@
           "latency_p50_s": 17.3,
           "latency_p95_s": 36.1,
           "cost_per_case_usd": 0.00343,
-          "judge_cost_total_usd": 0.0294
+          "judge_cost_total_usd": 0.0298
         },
         "provenance": [
           "experiments/eval/agent-heldout-H-r3/gpt-5.6-luna.metrics.json",
@@ -58963,8 +58963,8 @@
           },
           "ambiguity_insufficient_causal": {
             "n": 6,
-            "behaviour_accuracy": 0.5,
-            "false_answer": 2,
+            "behaviour_accuracy": 0.667,
+            "false_answer": 1,
             "over_abstain": 0,
             "unsupported_claims": 0,
             "contradicted_facts": 1
@@ -59006,8 +59006,8 @@
         "scoring_provenance": {
           "eligible_n": 31,
           "available_n": 31,
-          "gold_sha256": "050bb40b4863cf3a00682da0edc305dc4d9c7de1c35b3098989e8afdd50899b9",
-          "git_head": "86feee4ace18ec3dd73012937c3b3e24f4c36f8b",
+          "gold_sha256": "aac4b405b51c7cebf019c3b3629509ecb711be32fb830a8e78c4c7b902219e09",
+          "git_head": "310be48078f8cc57c85fd1f9b92da56c46797193",
           "price_table_sha256": "634b32441c3495b4c3ec13efa3af1e9cc99e5c7523eac3a15a5c238c3acaeb5c",
           "prompt_sha256": {
             "planner": "df68ef8e5e287d1a0b1f71d938e85ec25b4f03eeec501bc439a3a77aec2482dc",
@@ -59020,7 +59020,7 @@
         },
         "judge": "gpt-6.1-terra",
         "denominators": {
-          "fact_coverage": 25
+          "fact_coverage": 26
         }
       },
       {
@@ -59028,18 +59028,18 @@
         "metrics": {
           "n_cases": 31,
           "behaviour_accuracy": {
-            "rate": 0.839,
+            "rate": 0.871,
             "ci95": [
-              0.71,
+              0.742,
               0.968
             ],
             "n": 31
           },
           "false_answer_rate": {
-            "rate": 0.034,
+            "rate": 0.0,
             "ci95": [
               0.0,
-              0.103
+              0.0
             ],
             "n": 29
           },
@@ -59052,12 +59052,12 @@
             "n": 31
           },
           "key_number_recall": {
-            "rate": 0.756,
+            "rate": 0.768,
             "ci95": [
-              0.591,
-              0.894
+              0.605,
+              0.909
             ],
-            "n": 18
+            "n": 19
           },
           "calc_correct": {
             "rate": 0.8,
@@ -59093,9 +59093,9 @@
           },
           "claims_judged": 39,
           "claim_supported_rate": {
-            "rate": 0.897,
+            "rate": 0.872,
             "ci95": [
-              0.778,
+              0.725,
               1.0
             ],
             "n": 39,
@@ -59119,12 +59119,12 @@
             "n": 22
           },
           "fact_coverage": {
-            "rate": 0.667,
+            "rate": 0.68,
             "ci95": [
-              0.458,
-              0.833
+              0.5,
+              0.846
             ],
-            "n": 24,
+            "n": 25,
             "n_cases": 22
           },
           "answers_contradicting_a_reference_fact": {
@@ -59138,7 +59138,7 @@
           "latency_p50_s": 14.0,
           "latency_p95_s": 26.6,
           "cost_per_case_usd": 0.00193,
-          "judge_cost_total_usd": 0.0273
+          "judge_cost_total_usd": 0.0283
         },
         "provenance": [
           "experiments/eval/agent-heldout-H-r3/gpt-6-luna.metrics.json",
@@ -59156,8 +59156,8 @@
           },
           "ambiguity_insufficient_causal": {
             "n": 6,
-            "behaviour_accuracy": 0.667,
-            "false_answer": 1,
+            "behaviour_accuracy": 0.833,
+            "false_answer": 0,
             "over_abstain": 0,
             "unsupported_claims": 0,
             "contradicted_facts": 0
@@ -59199,8 +59199,8 @@
         "scoring_provenance": {
           "eligible_n": 31,
           "available_n": 31,
-          "gold_sha256": "050bb40b4863cf3a00682da0edc305dc4d9c7de1c35b3098989e8afdd50899b9",
-          "git_head": "86feee4ace18ec3dd73012937c3b3e24f4c36f8b",
+          "gold_sha256": "aac4b405b51c7cebf019c3b3629509ecb711be32fb830a8e78c4c7b902219e09",
+          "git_head": "310be48078f8cc57c85fd1f9b92da56c46797193",
           "price_table_sha256": "634b32441c3495b4c3ec13efa3af1e9cc99e5c7523eac3a15a5c238c3acaeb5c",
           "prompt_sha256": {
             "planner": "df68ef8e5e287d1a0b1f71d938e85ec25b4f03eeec501bc439a3a77aec2482dc",
@@ -59213,7 +59213,7 @@
         },
         "judge": "gpt-6.1-terra",
         "denominators": {
-          "fact_coverage": 24
+          "fact_coverage": 25
         }
       }
     ],
@@ -59250,6 +59250,7 @@
       "experiments/eval/agent-heldout-H-r3/gpt-6-luna.metrics.json",
       "experiments/heldout/paired-v3.2.txt",
       "experiments/heldout/paired-v3.3.txt",
+      "experiments/heldout/paired-v3.4.txt",
       "experiments/heldout/paired.txt"
     ],
     "errors": {
@@ -59277,7 +59278,7 @@
     },
     "paired": [
       {
-        "gold_version": "v3.4",
+        "gold_version": "v3.5",
         "n": 31,
         "resamples": 10000,
         "seed": 20261030,
@@ -59303,6 +59304,35 @@
         },
         "provenance": [
           "experiments/heldout/paired.txt"
+        ]
+      },
+      {
+        "gold_version": "v3.4",
+        "n": 31,
+        "resamples": 10000,
+        "seed": 20261030,
+        "models": {
+          "gpt-6-luna": {
+            "diff": 0.161,
+            "ci95": [
+              0.0,
+              0.323
+            ],
+            "better": 6,
+            "worse": 1
+          },
+          "gpt-5.6-luna": {
+            "diff": 0.097,
+            "ci95": [
+              -0.032,
+              0.226
+            ],
+            "better": 4,
+            "worse": 1
+          }
+        },
+        "provenance": [
+          "experiments/heldout/paired-v3.4.txt"
         ]
       },
       {
@@ -59365,9 +59395,11 @@
       }
     ],
     "limitations": [
-      "Held-out evaluation used unreviewed AI-drafted gold, not human-validated labels.",
-      "Paired held-out intervals include zero; retain r3 provisionally, not as a proven winner.",
-      "AI judgments are not human review.",
+      "Generation used AI-drafted gold before owner review; post-run owner review covers selected cards, not the entire gold set.",
+      "Forty-five gold cards are owner reviewed; the remaining 223 remain draft.",
+      "Current v3.5 and historical paired intervals include zero; the comparison is inconclusive under the registered rule.",
+      "Gold v3.5 changes HO-022 after held-out execution; rescoring is post-run adjudication, not a fresh frozen-gold experiment.",
+      "AI-assisted per-card owner decisions are not blinded independent annotation or inter-rater evidence.",
       "Metric definitions differ between evaluation stages."
     ]
   },
@@ -59457,7 +59489,7 @@
     "The population basis of the dataset employment series is unverified."
   ],
   "provenance": {
-    "commit": "310be48078f8cc57c85fd1f9b92da56c46797193",
+    "commit": "456ffa9b44c998dd348413fbaacaa288ceda744f",
     "artifacts": [
       {
         "path": "data/export/sources.json",
@@ -59631,6 +59663,11 @@
       },
       {
         "path": "experiments/heldout/paired.txt",
+        "status": "available",
+        "sha256": "b247d170e90881a4be1aa0d80eda08b4fdbb6ae3a08100e4876e9ea6b44bd3a1"
+      },
+      {
+        "path": "experiments/heldout/paired-v3.4.txt",
         "status": "available",
         "sha256": "186ca0be421312a0480b3a6782ada822587d144d22e9ad407e6c1649f8e44824"
       },
@@ -59827,27 +59864,27 @@
       {
         "path": "experiments/eval/agent-dev-A1/gpt-4.1-mini.metrics.json",
         "status": "available",
-        "sha256": "5fa18c4eee35a5819537576c151b04ea20a84d4a81a88da62ebc6fd337a49851"
+        "sha256": "a55c47a2b070dcaa17d8c6eb885ca7af2846d3101d5ca5d86e8b55faa505ea49"
       },
       {
         "path": "experiments/eval/agent-dev-A1/gpt-4.1-mini.cases.jsonl",
         "status": "available",
-        "sha256": "be003cafe4af22588ced20d963f37aa077284db9265126c14b129d331a23c4a8"
+        "sha256": "11a0660a196b1497a99482d87f1add48198e401af630eb9ad78c08949c4817a7"
       },
       {
         "path": "experiments/eval/agent-dev-A1/gpt-5.6-luna.metrics.json",
         "status": "available",
-        "sha256": "660c6ee0a963d84a8e41514310eaa406f4d89841d44829c3cf97a2fe8190511e"
+        "sha256": "f6a24e2a6bb44071e80affd58c90cb7a7412780b73afe7603aaf7f2c17b28928"
       },
       {
         "path": "experiments/eval/agent-dev-A1/gpt-5.6-luna.cases.jsonl",
         "status": "available",
-        "sha256": "ec37bdc795ef18069caec49415d01e5306cb020d9671ddf3d36bde997ad29764"
+        "sha256": "fb5df76dc42142d36b201bb33736df46f9f6e472f8f728ae575d5a807b12aba3"
       },
       {
         "path": "experiments/eval/agent-dev-A1/gpt-6-luna.metrics.json",
         "status": "available",
-        "sha256": "d80aad4fe7e7fd0a41612c38a300718d0a71a613c276aa50fc7f742494f50e8f"
+        "sha256": "906066b9c8141dc06cc39e7db54ae70bb6c78bf8adb4775fb7717dada9872a72"
       },
       {
         "path": "experiments/eval/agent-dev-A1/gpt-6-luna.cases.jsonl",
@@ -59857,17 +59894,17 @@
       {
         "path": "experiments/eval/agent-dev-A2/gpt-5.6-luna.metrics.json",
         "status": "available",
-        "sha256": "afb25e6784403bac4fe152a6cc46288d7566d9f79b32dc6a9f85eb6c53b5f4c6"
+        "sha256": "1f9306b9789059d2c6493f1d9292599693cf5a8312d7bb6bb83fcdaa126723a5"
       },
       {
         "path": "experiments/eval/agent-dev-A2/gpt-5.6-luna.cases.jsonl",
         "status": "available",
-        "sha256": "b47f7930488b057430c7c5917752ff69a474bcc4f74926df3e9bdbb5b86a3178"
+        "sha256": "e51b228625347e67674b3e69848c26609869b63f47d574f89af2c11abb14ddb5"
       },
       {
         "path": "experiments/eval/agent-dev-A2/gpt-6-luna.metrics.json",
         "status": "available",
-        "sha256": "2d515ea32457e753a5e695e372a6f64b7b1249bf990f2611d2673af33019b7ba"
+        "sha256": "3388f9c0901bd8cd9ddd22b4fff89595edcf7f3f537bae26c9c3f239f6f88537"
       },
       {
         "path": "experiments/eval/agent-dev-A2/gpt-6-luna.cases.jsonl",
@@ -59877,7 +59914,7 @@
       {
         "path": "experiments/eval/agent-dev-A3/gpt-5.6-luna.metrics.json",
         "status": "available",
-        "sha256": "0bf1aff7efbf652af0ef020939c35a0b703bb47f0c022eb7d4c97903e05a17d1"
+        "sha256": "03f0a802b78297833691bfb8ead456a75e9a7162cec0795ab9c7d92dd17e2907"
       },
       {
         "path": "experiments/eval/agent-dev-A3/gpt-5.6-luna.cases.jsonl",
@@ -59887,7 +59924,7 @@
       {
         "path": "experiments/eval/agent-dev-A3/gpt-6-luna.metrics.json",
         "status": "available",
-        "sha256": "d334f90d7a312237dda162189557426fd52363691f55d56cca810bb31875574a"
+        "sha256": "91c2db0317ab9f5913d65c474463cee0636eb552692e4b7a45516adbed91c42a"
       },
       {
         "path": "experiments/eval/agent-dev-A3/gpt-6-luna.cases.jsonl",
@@ -59897,17 +59934,17 @@
       {
         "path": "experiments/eval/agent-dev-A4/gpt-5.6-luna.metrics.json",
         "status": "available",
-        "sha256": "04b4f008f77f897780b5b8fb8c15856e5f06ee4026dfae0c1c1c19f82d4a016b"
+        "sha256": "f83c9237e0e02a8ede6ecad1f6003716ed196751d2bc5b456549f1662a46aaa2"
       },
       {
         "path": "experiments/eval/agent-dev-A4/gpt-5.6-luna.cases.jsonl",
         "status": "available",
-        "sha256": "59a7770df6929d59d6e42fc1fc9bdf5d604cb30e63f523587f4afa71f35a3928"
+        "sha256": "91aa3fec1f2c6d99606493b7a2ef08cee95b96d7465a6af5adad16cdf235d3cd"
       },
       {
         "path": "experiments/eval/agent-dev-A4/gpt-6-luna.metrics.json",
         "status": "available",
-        "sha256": "d52aa77abcf79aab0bc71c75ec86e8779d0c393cc0757f9fca5dc36bb077c483"
+        "sha256": "9ae5c96a9e200462afb4ecf993b0edb09c46de0ce92c8a8608edcec890e6c932"
       },
       {
         "path": "experiments/eval/agent-dev-A4/gpt-6-luna.cases.jsonl",
@@ -59917,62 +59954,62 @@
       {
         "path": "experiments/eval/agent-dev-A5/gpt-5.6-luna.metrics.json",
         "status": "available",
-        "sha256": "31d4a67c1282cde2e101d5198107b36db0ee2baad7fdedc034df7747124d5e2e"
+        "sha256": "760b3e29c35601240a35da4fe80859cb8157a974f3c75b41ebb003e8d8f00d70"
       },
       {
         "path": "experiments/eval/agent-dev-A5/gpt-5.6-luna.cases.jsonl",
         "status": "available",
-        "sha256": "126cbc0412f52cb398d1a2f9503debf6dac2247eb263fcbad0b028586136fa3d"
+        "sha256": "132453f2d34864acf3bbb24cbd02571d3b34591e8157ead4f9eb6243ddf49be3"
       },
       {
         "path": "experiments/eval/agent-dev-A5/gpt-6-luna.metrics.json",
         "status": "available",
-        "sha256": "d1afce68d0d9bdb0a628bd0b715a5d4d2a103fd123a5677765aab9ed4660c205"
+        "sha256": "f78b1744c4f0afc3936165d3324a174e7272b6cc9dbc1cde8e876136924a64b3"
       },
       {
         "path": "experiments/eval/agent-dev-A5/gpt-6-luna.cases.jsonl",
         "status": "available",
-        "sha256": "a6a0a869bf2efb4f321cae07d58970011b19f30d09bf83c597b0bbd435c165c9"
+        "sha256": "1aa90e79e63ef2aa79f0d6963aacbb6a1c18418b8d175a910285fb57d08907c6"
       },
       {
         "path": "experiments/eval/agent-heldout-H-hybrid/gpt-5.6-luna.metrics.json",
         "status": "available",
-        "sha256": "4708aa3370af112200e1514a738c9e98f4401fa5f2160a270da451007ddb5f90"
+        "sha256": "fcced021b72770b440b93a7a4370a9ec43f4a44afee4668dd4a61cc42ee39b33"
       },
       {
         "path": "experiments/eval/agent-heldout-H-hybrid/gpt-5.6-luna.cases.jsonl",
         "status": "available",
-        "sha256": "b41d2fd01468287f86a7a52808635f0d11841cc965c98cc1e9cf6ad456c78ed0"
+        "sha256": "bb7f89c52a3624ebca9606bac881d2bbd4868df6a45e86fe0be8b0c21be550f6"
       },
       {
         "path": "experiments/eval/agent-heldout-H-hybrid/gpt-6-luna.metrics.json",
         "status": "available",
-        "sha256": "1bce5e528b6aec70977e3f629b4fea80e1357c0669326854ea5420fefcc51c3a"
+        "sha256": "45118bea52fe209fd5c4d3a834726170379b65a9fee5d30188f0215214fc4248"
       },
       {
         "path": "experiments/eval/agent-heldout-H-hybrid/gpt-6-luna.cases.jsonl",
         "status": "available",
-        "sha256": "4e76b8d8172cd175389c0f89e178721529ed88bc101b7ca93a89829ff8a65b22"
+        "sha256": "58cad3fd99379d2e1cad9b10a170fe880f300d6fb6e9b754744d44d3c75f8c87"
       },
       {
         "path": "experiments/eval/agent-heldout-H-r3/gpt-5.6-luna.metrics.json",
         "status": "available",
-        "sha256": "e053988103e81a12c8d46d6091d193509a811c71378a49abab4f1549171d3a65"
+        "sha256": "7ea0bfdf1fb41002eab3f71bab47139e7993af2650f690451621c28a881fb511"
       },
       {
         "path": "experiments/eval/agent-heldout-H-r3/gpt-5.6-luna.cases.jsonl",
         "status": "available",
-        "sha256": "c09d2899a5cf6c9c16578e3475c3485c7f9d4904e399bc41812488b20ae4e4fb"
+        "sha256": "468f63af6208df9d2c50539c0b20644d1739360368b91447610a3444ccec7988"
       },
       {
         "path": "experiments/eval/agent-heldout-H-r3/gpt-6-luna.metrics.json",
         "status": "available",
-        "sha256": "bab9ba3837cb5738692bb8d1e7f530a1d6d79e1fca97f7dffa71c1ce3905d06e"
+        "sha256": "218cb1ac0224cc331dad1edebd92efd3ac3b04462fdd826bed5312d1fd932876"
       },
       {
         "path": "experiments/eval/agent-heldout-H-r3/gpt-6-luna.cases.jsonl",
         "status": "available",
-        "sha256": "4c5d6be76e1b82e27937eb55effae5103ab9cc1b21857ef456129bc05069191b"
+        "sha256": "985363dc3434d049c3b713fbf44aa93c87434e0a6e638cbc4dd70a889a444ee6"
       },
       {
         "path": "experiments/threats/runs/gpt-4.1-mini+naive.metrics.json",
