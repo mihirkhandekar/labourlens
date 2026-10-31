@@ -24,16 +24,24 @@ class ContextPassage:
 
 
 def build_context(chunks: list[Chunk], passages_by_id: dict[str, dict], first_ids: list[str] | None = None) -> list[ContextPassage]:
-    """Passages of the retrieved chunks in rank order, de-duplicated by passage id. `first_ids` puts given passages first
-    (used only by the oracle-evidence experiment, which isolates generation from retrieval)."""
+    """Ranked evidence, deduplicated within a source snapshot by normalized text.
+
+    Every citation target remains in the passage store. Independent releases and revisions
+    are never collapsed, even when wording matches. Oracle `first_ids` still take priority.
+    """
     order = list(first_ids or []) + [pid for c in chunks for pid in c.source_passage_ids]
     out: list[ContextPassage] = []
     seen: set[str] = set()
+    seen_text: set[tuple[str, str, str]] = set()
     for pid in order:
         if pid in seen or pid not in passages_by_id:
             continue
         seen.add(pid)
         p = passages_by_id[pid]
+        key = (p["source_id"], p.get("snapshot_id", ""), " ".join(p["text"].split()))
+        if key in seen_text:
+            continue
+        seen_text.add(key)
         out.append(ContextPassage(f"P{len(out) + 1}", pid, p["source_id"], p["document_title"], p["publication_date"],
                                   p["release_stage"], p["locator"], p["text"]))
     return out

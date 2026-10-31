@@ -18,7 +18,7 @@ from pydantic import BaseModel, ConfigDict, Field
 
 SCHEMA_VERSION = "m1.1"
 TRANSFORMATION_VERSION = "norm-0.1"
-PARSER_VERSION = "extract-0.1"
+PARSER_VERSION = "extract-0.2"
 
 SourceType = Literal["dataset_csv", "report_pdf", "release_html"]
 ReleaseStage = Literal["advance", "final", "dataset_snapshot", "annual", "not_applicable"]
@@ -111,6 +111,11 @@ class DocumentPassage(_Frozen):
     extraction_method: str
     quality_flag: QualityFlag = "ok"
     quality_note: str = ""
+    raw_text_sha256: str | None = None
+    transformations: tuple[str, ...] = ()
+    source_block_indices: tuple[int, ...] = ()
+    context_required: bool = False
+    dup_group: str | None = None
     locator: str  # human-readable: "p.12" or "section: Main Findings, para 3"
     parser_version: str = PARSER_VERSION
     rights_status: RightsStatus = "unresolved"

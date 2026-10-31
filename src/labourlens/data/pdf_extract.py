@@ -30,6 +30,20 @@ _STOP = set(
     "employment total quarter increase decrease rose fell grew labour market".split()
 )
 _ROMAN = re.compile(r"^(?=[ivxlc]+$)[ivxlc]{1,6}$", re.I)
+_PAGE_LABEL = re.compile(r"(?:\d{1,3}|A\d{1,3}|[ivxlc]{1,6})", re.I)
+
+
+def has_controls(text: str) -> bool:
+    return any((ord(c) < 32 and c not in "\n\r\t") or 127 <= ord(c) <= 159 for c in text)
+
+
+def _clean_controls(text: str) -> tuple[str, tuple[str, ...]]:
+    # A single trailing glyph is removable only when the remaining prose is legible.
+    if text.endswith("\x01") and not has_controls(text[:-1]):
+        rest = text[:-1].rstrip()
+        if len(rest.split()) >= 4 and not looks_garbled(rest)[0]:
+            return rest, ("strip_trailing_u0001",)
+    return text, ()
 
 
 @dataclass
@@ -54,6 +68,8 @@ def looks_garbled(text: str) -> tuple[bool, str]:
     glossaries have none and would be flagged falsely.
     """
     t = text.strip()
+    if has_controls(text):
+        return True, "C0/C1 control characters; wording not decoded"
     if len(t) < 60:
         return False, ""
     weird = sum(1 for c in t if not (c.isalnum() or c.isspace() or c in ".,;:%()'\"/&-+$–—’‘“”•·°@?!"))
@@ -87,15 +103,15 @@ def _page_blocks(page: pymupdf.Page, page_no: int) -> list[_Block]:
         bold = False
         for ln in b["lines"]:
             spans = ln["spans"]
-            lt = "".join(s["text"] for s in spans).strip()
+            lt = "".join(s["text"] for s in spans).strip(" \t\r\n")
             if lt:
                 lines.append(lt)
             for s in spans:
-                if s["text"].strip():
+                if s["text"].strip(" \t\r\n"):
                     sizes.append(s["size"])
                     if s["flags"] & 16 or "bold" in s["font"].lower():
                         bold = True
-        text = re.sub(r"[ \t]+", " ", "\n".join(lines)).strip()
+        text = re.sub(r"[ \t]+", " ", "\n".join(lines)).strip(" \t\r\n")
         if not text:
             continue
         blocks.append(_Block(page_no, 0, tuple(round(v, 1) for v in b["bbox"]), text, max(sizes or [0]), bold))
@@ -123,48 +139,80 @@ def _reading_order(blocks: list[_Block], width: float) -> list[_Block]:
 
 
 def _printed_label(page: pymupdf.Page, blocks: list[_Block]) -> str | None:
-    h = page.rect.height
     for b in reversed(blocks):
-        if b.bbox[1] > h * 0.90 and len(b.text) <= 6:
-            t = b.text.strip()
-            if re.fullmatch(r"\d{1,3}", t) or _ROMAN.match(t):
-                return t
+        last = b.text.splitlines()[-1].strip()
+        appendix = re.fullmatch(r"A\d{1,3}", last, re.I)
+        if appendix and b.bbox[3] > page.rect.height * 0.86:
+            return last
+        if b.bbox[1] > page.rect.height * 0.90 and len(b.text) <= 6 and _PAGE_LABEL.fullmatch(last):
+            return last
     return None
+
+
+def _is_heading(b: _Block, body: float, previous: _Block | None) -> bool:
+    text = b.text.strip()
+    semantic = re.sub(r"^\d+(?:\.\d+)*[.)]?\s+", "", text)
+    if (len(text) >= 120 or "\n" in text or _PAGE_LABEL.fullmatch(text)
+            or re.search(r"[.!?;,:]", semantic) or has_controls(text) or looks_tabular(text)):
+        return False
+    gap = b.bbox[1] - previous.bbox[3] if previous else b.bbox[1]
+    # Body-sized bold labels need separation; large titles must actually exceed the page body.
+    return (b.max_size >= body * 1.15 and (gap >= 4 or b.bbox[1] < 100)
+            or b.bold and b.max_size >= body and gap >= 4)
 
 
 def extract_pdf(path: Path, *, source_id: str, snapshot_id: str, original_url: str, title: str,
                 publication_date: str | None, release_stage: str, rights_status: str,
                 commit_text: bool) -> tuple[list[DocumentPassage], dict]:
     doc = pymupdf.open(path)
-    all_blocks: list[tuple[_Block, str | None]] = []
+    all_blocks: list[tuple[_Block, str | None, float, _Block | None, list[_Block]]] = []
     for pno, page in enumerate(doc, start=1):
         blocks = _page_blocks(page, pno)
         label = _printed_label(page, blocks)
+        prose = [b for b in blocks if len(b.text) >= 40 and not looks_tabular(b.text)]
+        sizes = [b.max_size for b in prose for _ in range(max(1, len(b.text) // 40))]
+        body = statistics.median(sizes) if sizes else 10.0
+        previous = None
         for b in blocks:
-            all_blocks.append((b, label))
-    sizes = [b.max_size for b, _ in all_blocks if len(b.text) > 120]
-    body = statistics.median(sizes) if sizes else 10.0
+            all_blocks.append((b, label, body, previous, blocks))
+            previous = b
 
     passages: list[DocumentPassage] = []
     heading = ""
     dropped_short = 0
     flags = {"ok": 0, "garbled": 0, "table_unreliable": 0, "multicolumn_uncertain": 0, "empty": 0}
-    for b, label in all_blocks:
-        is_heading = len(b.text) < 120 and "\n" not in b.text.strip() and (b.max_size >= body * 1.15 or (b.bold and b.max_size >= body))
-        if is_heading and not looks_tabular(b.text):
-            heading = re.sub(r"\s+", " ", b.text).strip()
+    for b, label, body, previous, page_blocks in all_blocks:
+        raw_hash = sha256_hex(b.text.encode())
+        text, transformations = _clean_controls(b.text)
+        if label and text.splitlines()[-1].strip() == label:
+            text = "\n".join(text.splitlines()[:-1]).rstrip()
+            transformations += ("remove_printed_page_footer",)
+        if not text:
             continue
-        if len(b.text) < MIN_PASSAGE_CHARS:
+        candidate = _Block(b.page, b.index, b.bbox, text, b.max_size, b.bold)
+        if _is_heading(candidate, body, previous):
+            heading = re.sub(r"\s+", " ", text).strip()
+            continue
+        if len(text) < MIN_PASSAGE_CHARS and not has_controls(text):
             dropped_short += 1
             continue
-        garbled, why = looks_garbled(b.text)
+        garbled, why = looks_garbled(text)
         flag, note = "ok", ""
         if garbled:
             flag, note = "garbled", why
-        elif looks_tabular(b.text):
+        elif looks_tabular(text):
             flag, note = "table_unreliable", "numeric-dense block; do not use for numerical answers"
+        # Adjacent small-font note blocks can start/end inside a numbered note. Preserve
+        # the original target and geometry, explicitly require its linked neighbours.
+        neighbours = [x.index for x in page_blocks if x.index != b.index
+                      and abs(x.index - b.index) == 1 and abs(x.max_size - b.max_size) < 0.2
+                      and min(abs(x.bbox[1] - b.bbox[3]), abs(b.bbox[1] - x.bbox[3])) < 12]
+        fragment = bool(neighbours and b.max_size <= 9 and not looks_tabular(text)
+                        and (re.search(r"\(\d+\)", text) or not text[0].isupper()))
+        if fragment:
+            note = (note + "; " if note else "") + "note fragment; requires adjacent source blocks"
         flags[flag] += 1
-        text_hash = sha256_hex(b.text.encode())
+        text_hash = sha256_hex(text.encode())
         pid = f"{source_id}:p{b.page:03d}:b{b.index:03d}:{text_hash[:8]}"
         passages.append(
             DocumentPassage(
@@ -180,11 +228,16 @@ def extract_pdf(path: Path, *, source_id: str, snapshot_id: str, original_url: s
                 section_heading=heading,
                 block_index=b.index,
                 bbox=b.bbox,
-                text=b.text,
+                text=text,
                 text_sha256=text_hash,
                 extraction_method=EXTRACTION_METHOD,
                 quality_flag=flag,  # type: ignore[arg-type]
                 quality_note=note,
+                raw_text_sha256=raw_hash,
+                transformations=transformations,
+                source_block_indices=(b.index, *neighbours) if fragment else (b.index,),
+                context_required=fragment,
+                dup_group=sha256_hex(" ".join(text.split()).encode()),
                 locator=f"p.{b.page}" + (f" (printed {label})" if label else ""),
                 parser_version=PARSER_VERSION,
                 rights_status=rights_status,  # type: ignore[arg-type]
