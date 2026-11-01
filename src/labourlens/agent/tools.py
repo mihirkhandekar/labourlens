@@ -1,8 +1,11 @@
 """Typed, read-only agent tools (ADR-002 item 4, approved set of three): search_reports, get_series, calculate_change.
+An optional fourth tool, calculate_from_text_values (tool set "v2", D-046), does the same exact arithmetic on figures that
+appear in report passages.
 
 Every tool validates its arguments, returns evidence items with provenance, and never raises for bad input: it returns a
 ToolResult with an error kind the graph can route on. Arithmetic is deterministic (Decimal). calculate_change only accepts
-observation labels that get_series returned in the same run, so a model cannot calculate on a number it invented.
+observation labels that get_series returned in the same run, so a model cannot calculate on a number it invented;
+calculate_from_text_values only accepts a figure that is verifiably present in the cited passage text of the same run.
 """
 
 from __future__ import annotations
@@ -10,6 +13,7 @@ from __future__ import annotations
 import hashlib
 import re
 import time
+import unicodedata
 from dataclasses import dataclass, field
 from decimal import ROUND_HALF_UP, Decimal
 
@@ -29,6 +33,15 @@ MAX_K = 10
 MAX_ROWS = 40
 ADJUSTMENTS = ("seasonally_adjusted", "not_adjusted", "unspecified", "not_applicable")
 CHANGE_KINDS = ("difference", "percent_change")
+TOOL_SETS = ("base", "v2")
+TEXT_UNITS = ("percent", "persons", "dollars", "ratio", "vacancies")
+TEXT_CALC_ARGS = ("passage_a", "value_a", "unit_a", "basis_a", "period_a", "passage_b", "value_b", "unit_b", "basis_b", "period_b", "kind")
+TEXT_CALC_REQUIRED = ("passage_a", "value_a", "unit_a", "basis_a", "period_a", "passage_b", "value_b", "unit_b", "basis_b", "period_b")
+_FREE = re.compile(r"^[\w\s,.;:()/%'\-]+$")
+_VALUE = re.compile(r"^-?\d+(?:\.\d+)?$")
+_NUMBER_IN_TEXT = re.compile(r"\d{1,3}(?:,\d{3})+(?:\.\d+)?|\d+(?:\.\d+)?")
+_UNKNOWN_DIMENSION = re.compile(r"^dimension '.*' not found in ")
+MAX_SNIPPETS = 5
 
 
 class TransientToolError(Exception):
@@ -125,6 +138,48 @@ class Shared:
         return self.stats.catalogue_text()
 
 
+def is_unknown_dimension(res: ToolResult | None) -> bool:
+    """True for the get_series error 'dimension ... not found in ...' from either statistics backend (direct or MCP)."""
+    return res is not None and not res.ok and res.error_kind == "not_found" and bool(_UNKNOWN_DIMENSION.match(res.message or ""))
+
+
+def _signed_numbers(text: str) -> set[Decimal]:
+    """Every number in `text` as a Decimal, thousands separators removed. A minus sign counts only when it directly precedes
+    the digits and follows a space, an opening bracket or the start of the text (so 2024-2025 is not read as -2025)."""
+    t = unicodedata.normalize("NFKC", text)
+    out: set[Decimal] = set()
+    for m in _NUMBER_IN_TEXT.finditer(t):
+        s = m.start()
+        if s and t[s - 1] in ".,0123456789":
+            continue  # tail of a longer token such as 1.2.3
+        v = Decimal(m.group().replace(",", ""))
+        negative = s >= 1 and t[s - 1] in "-\u2212\u2013" and (s == 1 or t[s - 2].isspace() or t[s - 2] == "(")
+        out.add(-v if negative else v)
+    return out
+
+
+def figure_snippets(text: str, limit: int = MAX_SNIPPETS, before: int = 7, after: int = 4) -> list[str]:
+    """Short word windows around the figures of a passage (decimals, comma-grouped numbers, integers of 100 or more, or any
+    number followed by %). Shown to the planner of tool set v2 so it can pick a figure for calculate_from_text_values; the
+    tool re-checks every chosen value against the full passage, so a snippet is a convenience, never a trust boundary."""
+    words = sanitize_text(" ".join(text.split())).split(" ")
+    out: list[str] = []
+    last = -1
+    for i, w in enumerate(words):
+        if len(out) >= limit:
+            break
+        m = re.fullmatch(r"(\d{1,3}(?:,\d{3})+(?:\.\d+)?|\d+(?:\.\d+)?)(%?)", w.strip("()[]\"';:,").rstrip("."))
+        if not m or i <= last:
+            continue
+        num, pct = m.groups()
+        if not (pct or "." in num or "," in num or int(num) >= 100) or (re.fullmatch(r"(19|20)\d\d", num) and not pct):
+            continue
+        lo, hi = max(0, i - before), min(len(words), i + after + 1)
+        out.append(" ".join(words[lo:hi]))
+        last = hi - 1
+    return out
+
+
 def _fmt(value: float, unit: str) -> str:
     v = Decimal(str(round(value, 6))).normalize()
     s = f"{v:,.2f}".rstrip("0").rstrip(".") if v != v.to_integral() else f"{int(v):,}"
@@ -164,6 +219,7 @@ class Tools:
         if self.retrieval not in ("hybrid", "r3", "r3w"):
             raise ValueError("retrieval must be hybrid, r3 or r3w")
         self.question, self.tool_timeout_s = question, tool_timeout_s
+        self.tool_set = "base"  # "v2" enables calculate_from_text_values and the actionable unknown-dimension error (set by build_graph)
         self.items: list[ContextPassage] = []
         self._ids: set[str] = set()
         self._obs: dict[str, dict] = {}  # label -> observation facts, for calculate_change
@@ -323,7 +379,7 @@ class Tools:
         backend = self.sh.stats_backend or self.sh.stats
         rows, err = backend.query(source_id, period_from, period_to, dimension, adjustment, indicator_id)
         if err is not None:
-            return err
+            return self._dimension_help(err, source_id, dimension, adjustment, indicator_id) if self.tool_set == "v2" and is_unknown_dimension(err) else err
         new = []
         for r in rows:
             text = (f"{r['title']} | {r['indicator_id']} | {r['dimension'] or 'all'} | {r['period']} | "
@@ -341,6 +397,27 @@ class Tools:
         self._coverage_notes(rows, period_from, period_to, quarantined)
         shown = f"{len(new)} new observations: " + ", ".join(f"{i.label}={self._obs[i.label]['period']}" for i in new[:20])
         return ToolResult(True, new, shown + (f" ({quarantined} quarantined by the MCP client)" if quarantined else ""))
+
+    def _dimension_help(self, err: ToolResult, source_id: str, dimension: str, adjustment: str | None, indicator_id: str | None) -> ToolResult:
+        """Replace the unknown-dimension error by one that lists the valid labels of that series, closest first. The labels come
+        from the local read-only observations table, so the list is complete even when the statistics backend truncates messages."""
+        import difflib
+
+        o = self.sh.obs
+        g = o[o.source_id == source_id]
+        if indicator_id:
+            g = g[g.indicator_id == indicator_id]
+        if adjustment:
+            g = g[g.adjustment == adjustment]
+        names = sorted({n for n in g.dimension if n})
+        if not names:
+            return ToolResult(False, message=f"dimension {dimension!r} not found in {source_id}: this series has no dimension values; leave dimension null.", error_kind="not_found")
+        by_fold = {n.casefold(): n for n in names}
+        close = [by_fold[c] for c in difflib.get_close_matches(dimension.casefold(), list(by_fold), n=5, cutoff=0.4)]
+        listing = f"closest: {close}; " if close else ""
+        msg = (f"dimension {dimension!r} not found in {source_id}. Retry get_series with exactly one of the {len(names)} valid labels "
+               f"(case-insensitive): {listing}all: {names[:80]}. This retry does not use up an evidence round.")
+        return ToolResult(False, message=msg[:1800], error_kind="not_found")
 
     # ---- calculate_change -----------------------------------------------------------------------------------------
     def calculate_change(self, obs_a: str, obs_b: str, kind: str = "difference") -> ToolResult:
@@ -364,6 +441,56 @@ class Tools:
         text = (f"Calculated {kind.replace('_', ' ')} of {a['indicator_id']} ({a['dimension'] or 'all'}; {a['population']}, {a['adjustment']}) "
                 f"from {a['period']} to {b['period']}: {formula} = {shown} {unit}. Inputs {obs_a} ({a['period']}) and {obs_b} ({b['period']}).")
         it = self._add("C", cid, a["source_id"], f"Calculation on {self.sh.titles[a['source_id']]}", None, "calculated", f"{obs_a},{obs_b}", text)
+        if it is None:
+            return ToolResult(True, message="this calculation was already done")
+        return ToolResult(True, [it], f"{it.label} = {shown} {unit}")
+
+    # ---- calculate_from_text_values (tool set v2) -----------------------------------------------------------------
+    def calculate_from_text_values(self, passage_a: str, value_a: str, unit_a: str, basis_a: str, period_a: str,
+                                   passage_b: str, value_b: str, unit_b: str, basis_b: str, period_b: str,
+                                   kind: str = "difference") -> ToolResult:
+        """Exact change from figure A (the earlier or base one) to figure B, both read from report passages of this run.
+
+        Each value must be the figure as a plain number (`2.9`, `-0.3`, `1,250`; no unit, no words) and must occur in the
+        text of the cited passage (label P1, P2, ...) after normalisation (thousands separators, trailing zeros). Units and
+        bases must be identical. The model never supplies a result: it is computed by compute_change, the function that
+        also serves calculate_change, so rounding (half-up, 2 places) and unit labels (percentage points for percent) match."""
+        if kind not in CHANGE_KINDS:
+            return ToolResult(False, message=f"kind must be one of {CHANGE_KINDS}", error_kind="invalid_arguments")
+        legs = []
+        for side, passage, value, unit, basis, period in (("a", passage_a, value_a, unit_a, basis_a, period_a), ("b", passage_b, value_b, unit_b, basis_b, period_b)):
+            item = next((i for i in self.items if i.label == passage and i.label[0] == "P"), None)
+            if item is None:
+                return ToolResult(False, message=f"passage_{side} {passage!r} must be a passage label (P1, P2, ...) returned by search_reports in this run", error_kind="invalid_arguments")
+            if item.flags:
+                return ToolResult(False, message=f"passage {passage} is flagged as containing instructions and cannot be used as a source of figures", error_kind="invalid_arguments")
+            if unit not in TEXT_UNITS:
+                return ToolResult(False, message=f"unit_{side} must be one of {TEXT_UNITS}", error_kind="invalid_arguments")
+            text_value = str(value).strip().replace(",", "").replace("\u2212", "-")
+            if not _VALUE.match(text_value):
+                return ToolResult(False, message=f"value_{side} must be one plain number such as 2.9 or 1250 (no unit, no words)", error_kind="invalid_arguments")
+            basis, period = " ".join(str(basis or "").split()), " ".join(str(period or "").split())
+            if not 1 <= len(basis) <= 120 or not _FREE.match(basis) or not 1 <= len(period) <= 40 or not _FREE.match(period):
+                return ToolResult(False, message=f"basis_{side} (1 to 120 characters) and period_{side} (1 to 40 characters) must be short plain descriptions", error_kind="invalid_arguments")
+            number = Decimal(text_value)
+            if number not in _signed_numbers(item.text):
+                return ToolResult(False, message=f"value_{side} {text_value} does not appear in passage {passage}; copy the figure exactly as the passage prints it", error_kind="invalid_arguments")
+            legs.append((item, number, unit, basis, period))
+        (ia, va, ua, ba, pa), (ib, vb, ub, bb, pb) = legs
+        if ua != ub:
+            return ToolResult(False, message=f"unit_a ({ua}) and unit_b ({ub}) differ; a change is only defined between figures in the same unit", error_kind="invalid_arguments")
+        if re.sub(r"\W+", " ", ba).strip().casefold() != re.sub(r"\W+", " ", bb).strip().casefold():
+            return ToolResult(False, message="basis_a and basis_b differ; a change is only defined between figures of the same measure, population and adjustment. Use identical wording for both", error_kind="invalid_arguments")
+        if (ia.passage_id, va) == (ib.passage_id, vb) and pa.casefold() == pb.casefold():
+            return ToolResult(False, message="both figures are the same figure from the same passage", error_kind="invalid_arguments")
+        try:
+            res, shown, unit, formula = compute_change(str(va), str(vb), kind, ua)
+        except ZeroDivisionError:
+            return ToolResult(False, message="percent change from zero is undefined", error_kind="invalid_arguments")
+        cid = "calc:" + hashlib.sha256(f"text|{ia.passage_id}|{va}|{ib.passage_id}|{vb}|{kind}".encode()).hexdigest()[:12]
+        text = (f"Calculated {kind.replace('_', ' ')} of {ba} from report figures: {formula} = {shown} {unit}. "
+                f"Inputs {ia.label} ({_fmt(float(va), ua)}, {pa}; {ia.source_id}, {ia.stage}) and {ib.label} ({_fmt(float(vb), ua)}, {pb}; {ib.source_id}, {ib.stage}).")
+        it = self._add("C", cid, ia.source_id, f"Calculation on {ia.title}", None, "calculated", f"{ia.label},{ib.label}", text)
         if it is None:
             return ToolResult(True, message="this calculation was already done")
         return ToolResult(True, [it], f"{it.label} = {shown} {unit}")

@@ -432,7 +432,7 @@ def _agent_trace(artifacts: _Artifacts) -> tuple[list, list, dict]:
                 if _label(record.get(key)):
                     row[key] = record[key]
             # Counts and tool names only: never call arguments or results.
-            row["tools_used"] = [tool for tool in record.get("tools_used", []) if tool in {"get_series", "get_statistic", "search_reports", "calculate", "calculate_change", "get_source", "compare_periods"}]
+            row["tools_used"] = [tool for tool in record.get("tools_used", []) if tool in {"get_series", "get_statistic", "search_reports", "calculate", "calculate_change", "calculate_from_text_values", "get_source", "compare_periods"}]
             trace.append(row)
             for key, source in (("tool_errors", "tool_errors"), ("operational_failure", "operational_failure"), ("n_ungrounded_numbers", "ungrounded_numbers")):
                 value = now.get(source)

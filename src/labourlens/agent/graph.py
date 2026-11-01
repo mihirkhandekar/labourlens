@@ -24,7 +24,8 @@ from typing import Annotated, TypedDict
 from langgraph.graph import END, START, StateGraph
 
 from labourlens import paths, prices
-from labourlens.agent.tools import Shared, ToolResult, Tools, TransientToolError
+from labourlens.agent.tools import (TEXT_CALC_ARGS, TEXT_CALC_REQUIRED, TEXT_UNITS, TOOL_SETS, Shared, ToolResult, Tools, TransientToolError,
+                                    figure_snippets, is_unknown_dimension)
 from labourlens.answer import context as cx
 from labourlens.answer import llm, validate
 from labourlens.answer.pipeline import PROMPTS, _parse, load_prompt
@@ -32,6 +33,10 @@ from labourlens.mcp.redact import redact, secret_values
 from labourlens.security.guards import injection_flags, scan_output
 
 MAX_ROUNDS, MAX_CALLS, MAX_CALLS_PER_ROUND, TOOL_TIMEOUT_S, MAX_QUESTION_CHARS = 2, 6, 3, 10.0, 1000
+# Tool set v2 (D-046): one extra evidence round is granted, once per run, after an unknown-dimension error, so the corrected retry
+# does not consume the round a later calculation needs. The call budget (MAX_CALLS) is unchanged.
+BONUS_ROUNDS = 1
+V2_PROMPTS = ("planner_v3", "answer_v5")
 
 
 @dataclass(frozen=True)
@@ -42,6 +47,9 @@ class AgentConfig:
     answer_prompt: str = "answer_v3"
     tool_timeout_s: float = TOOL_TIMEOUT_S
     retrieval: str = "r3"  # D-030: period/release filter then rerank; "hybrid" is the earlier default, kept for comparison
+    # "base" is every earlier experiment, byte for byte. "v2" (D-046) adds calculate_from_text_values, an actionable unknown-dimension
+    # error with one bonus round, and passage figure snippets in the planner's evidence list. It needs planner_v3 and answer_v5.
+    tool_set: str = "base"
     # Total wall-clock budget for the planner and answer LLM calls of one run (None = unbounded, as in the evaluated runs).
     # The web app sets it so an abandoned run releases its slot; it is not part of key() and changes no model setting.
     run_deadline_s: float | None = None
@@ -49,17 +57,22 @@ class AgentConfig:
     def __post_init__(self) -> None:
         if self.retrieval not in ("hybrid", "r3", "r3w"):
             raise ValueError("retrieval must be hybrid, r3 or r3w")
+        if self.tool_set not in TOOL_SETS:
+            raise ValueError(f"tool_set must be one of {TOOL_SETS}")
+        if (self.tool_set == "v2") != (self.planner_prompt == V2_PROMPTS[0] and self.answer_prompt == V2_PROMPTS[1]):
+            raise ValueError("tool_set v2 and the prompts planner_v3 + answer_v5 go together: use both or neither")
 
     def key(self) -> str:
         base = f"planner={self.planner_model}|answer={self.answer_model}|{self.planner_prompt}|{self.answer_prompt}"
-        return base if self.retrieval == 'hybrid' else f'{base}|retrieval={self.retrieval}'
+        base = base if self.retrieval == 'hybrid' else f'{base}|retrieval={self.retrieval}'
+        return base if self.tool_set == "base" else f"{base}|tools={self.tool_set}"
 
 
 def _nullable(t: str) -> dict:
     return {"type": [t, "null"]}
 
 
-def plan_schema(shared: Shared) -> dict:
+def plan_schema(shared: Shared, tool_set: str = "base") -> dict:
     """Planner output schema. source_id, indicator_id, adjustment and kind are enums built from the catalogue, so the model
     cannot invent them (it did, and one model looped on a long made-up indicator_id until truncated). The tools still
     validate every argument; the enum is a convenience for the model, not the safety boundary."""
@@ -68,7 +81,7 @@ def plan_schema(shared: Shared) -> dict:
 
     from labourlens.agent.tools import ADJUSTMENTS, CHANGE_KINDS
 
-    return {
+    base = {
         "type": "object", "additionalProperties": False, "required": ["decision", "note", "calls"],
         "properties": {
             "decision": {"type": "string", "enum": ["gather", "finish"]},
@@ -81,11 +94,20 @@ def plan_schema(shared: Shared) -> dict:
                                "period_from": _nullable("string"), "period_to": _nullable("string"), "dimension": _nullable("string"),
                                "adjustment": enum(ADJUSTMENTS), "indicator_id": enum(set(shared.obs.indicator_id)), "obs_a": _nullable("string"),
                                "obs_b": _nullable("string"), "kind": enum(CHANGE_KINDS)}}}}}
+    if tool_set == "v2":
+        item = base["properties"]["calls"]["items"]
+        item["properties"]["tool"]["enum"].append("calculate_from_text_values")
+        for side in "ab":
+            item["properties"].update({f"passage_{side}": _nullable("string"), f"value_{side}": _nullable("string"), f"unit_{side}": enum(TEXT_UNITS),
+                                       f"basis_{side}": _nullable("string"), f"period_{side}": _nullable("string")})
+        item["required"] = item["required"] + [a for a in TEXT_CALC_ARGS if a != "kind"]
+    return base
 
 
 ARGS = {"search_reports": ("query", "k"), "get_series": ("source_id", "period_from", "period_to", "dimension", "adjustment", "indicator_id"),
-        "calculate_change": ("obs_a", "obs_b", "kind")}
-REQUIRED = {"search_reports": ("query",), "get_series": ("source_id", "period_from", "period_to"), "calculate_change": ("obs_a", "obs_b")}
+        "calculate_change": ("obs_a", "obs_b", "kind"), "calculate_from_text_values": TEXT_CALC_ARGS}
+REQUIRED = {"search_reports": ("query",), "get_series": ("source_id", "period_from", "period_to"), "calculate_change": ("obs_a", "obs_b"),
+            "calculate_from_text_values": TEXT_CALC_REQUIRED}
 
 
 class State(TypedDict, total=False):
@@ -93,6 +115,7 @@ class State(TypedDict, total=False):
     round: int
     calls_used: int
     planned: list[dict]
+    bonus_rounds: int
     tool_errors: list[str]
     tool_ops_failures: int
     messages: list[dict]
@@ -120,12 +143,12 @@ def _usage(state: State, model: str, r: llm.LLMResult) -> dict:
 
 
 def build_graph(shared: Shared, tools: Tools, cfg: AgentConfig):
-    tools.retrieval, tools.tool_timeout_s = cfg.retrieval, cfg.tool_timeout_s
+    tools.retrieval, tools.tool_timeout_s, tools.tool_set = cfg.retrieval, cfg.tool_timeout_s, cfg.tool_set
     planner_sys, planner_user, _ = load_prompt(cfg.planner_prompt)
     planner_sys = planner_sys.format(catalogue=shared.catalogue_text())
     answer_sys, answer_user, _ = load_prompt(cfg.answer_prompt)
     pool = ThreadPoolExecutor(max_workers=2)
-    schema = plan_schema(shared)
+    schema = plan_schema(shared) if cfg.tool_set == "base" else plan_schema(shared, cfg.tool_set)
     clock = {"start": None}
 
     def llm_budget() -> float | None:
@@ -160,11 +183,15 @@ def build_graph(shared: Shared, tools: Tools, cfg: AgentConfig):
         for it in tools.items:
             # passages: label and source only (no text); statistics and calculations are our own computed lines
             lines.append(f"{it.label}: {it.text}" if it.label[0] in "OC" else f"{it.label}: passage from {it.source_id} ({it.stage}), {it.locator}")
+            if cfg.tool_set == "v2" and it.label[0] == "P" and not it.flags:
+                # Tool set v2: a few short word windows around the figures, so the planner can choose inputs for calculate_from_text_values.
+                # Untrusted text; the tool re-checks every chosen value against the full passage. Flagged passages never get snippets.
+                lines += [f'  figure: "{snippet}"' for snippet in figure_snippets(it.text)]
         return "\n".join(lines)
 
     def plan_research(s: State):
         rnd, used = s.get("round", 0), s.get("calls_used", 0)
-        if rnd >= MAX_ROUNDS or used >= MAX_CALLS:
+        if rnd >= MAX_ROUNDS + s.get("bonus_rounds", 0) or used >= MAX_CALLS:
             return {"planned": [], "trace": _ev("plan_research", "budget_exhausted", round=rnd, calls_used=used)}
         user = planner_user.format(question=s["question"], round=rnd + 1, calls_used=used, evidence=evidence_summary(),
                                    errors="\n".join(s.get("tool_errors") or []) or "(none)")
@@ -197,6 +224,8 @@ def build_graph(shared: Shared, tools: Tools, cfg: AgentConfig):
 
     def _run_one(call: dict) -> tuple[ToolResult | None, str | None]:
         name = call["tool"]
+        if name == "calculate_from_text_values" and cfg.tool_set != "v2":
+            return ToolResult(False, message="tool not available", error_kind="invalid_arguments"), None
         missing = [a for a in REQUIRED[name] if call.get(a) in (None, "")]
         if missing:
             return ToolResult(False, message=f"missing required argument(s): {missing}", error_kind="invalid_arguments"), None
@@ -225,7 +254,7 @@ def build_graph(shared: Shared, tools: Tools, cfg: AgentConfig):
         return None, "unreachable"
 
     def execute_tool(s: State):
-        events, errors, ops = [], [], s.get("tool_ops_failures", 0)
+        events, errors, ops, bonus = [], [], s.get("tool_ops_failures", 0), 0
         usage = dict(s.get("usage") or {})
         for call in s["planned"]:
             t0 = time.perf_counter()
@@ -246,11 +275,15 @@ def build_graph(shared: Shared, tools: Tools, cfg: AgentConfig):
             else:
                 errors.append(f"{call['tool']}({args}): {res.error_kind}: {res.message}")
                 events += _ev("execute_tool", "error", tool=call["tool"], args=args, error_kind=res.error_kind, message=res.message[:300], seconds=dt)
+                if cfg.tool_set == "v2" and is_unknown_dimension(res) and not s.get("bonus_rounds"):
+                    bonus = BONUS_ROUNDS
+                    events += _ev("execute_tool", "bonus_round_granted", reason="unknown_dimension", rounds_allowed=MAX_ROUNDS + bonus)
         return {"round": s.get("round", 0) + 1, "calls_used": s.get("calls_used", 0) + len(s["planned"]), "tool_errors": errors,
-                "tool_ops_failures": ops, "trace": events, **({"usage": usage} if usage else {})}
+                "tool_ops_failures": ops, "trace": events, **({"usage": usage} if usage else {}),
+                **({"bonus_rounds": bonus} if bonus else {})}
 
     def after_execute(s: State):
-        return "plan_research" if s["round"] < MAX_ROUNDS and s["calls_used"] < MAX_CALLS else "assess_evidence"
+        return "plan_research" if s["round"] < MAX_ROUNDS + s.get("bonus_rounds", 0) and s["calls_used"] < MAX_CALLS else "assess_evidence"
 
     def assess_evidence(s: State):
         if not tools.items and s.get("tool_ops_failures", 0) > 0:

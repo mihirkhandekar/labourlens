@@ -149,7 +149,7 @@ def existing_outputs(exp: str, labels: list[str]) -> list:
 
 
 def run(split: str = "dev", pairs: list[str] | None = None, answer_prompt: str = "answer_v3", tag: str = "A1",
-        retrieval: str = "hybrid", planner_prompt: str = "planner_v1", gold_path=None, force: bool = False) -> None:
+        retrieval: str = "hybrid", planner_prompt: str = "planner_v1", gold_path=None, force: bool = False, tool_set: str = "base") -> None:
     cases = ev.load_cases(split, gold_path)
     shared = Shared()
     exp = f"agent-{split}-{tag}"
@@ -159,7 +159,7 @@ def run(split: str = "dev", pairs: list[str] | None = None, answer_prompt: str =
     rows = {}
     for label in pairs or MODEL_PAIRS:
         pm, am = MODEL_PAIRS[label]
-        cfg = AgentConfig(planner_model=pm, answer_model=am, answer_prompt=answer_prompt, retrieval=retrieval, planner_prompt=planner_prompt)
+        cfg = AgentConfig(planner_model=pm, answer_model=am, answer_prompt=answer_prompt, retrieval=retrieval, planner_prompt=planner_prompt, tool_set=tool_set)
         provenance = snapshot(cfg.key(), len(cases), len(cases), gold_path=gold_path)
         print(f"[agent] {label} on {len(cases)} cases", flush=True)
         with ThreadPoolExecutor(WORKERS) as ex:

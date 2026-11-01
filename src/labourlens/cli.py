@@ -53,6 +53,7 @@ def main(argv: list[str] | None = None) -> int:
     ag.add_argument("--force", action="store_true", help="overwrite existing raw runs and scores for this experiment id (destroys frozen evidence)")
     ag.add_argument("--planner-prompt", default="planner_v1")
     ag.add_argument("--retrieval", choices=["hybrid", "r3", "r3w"], default="hybrid")
+    ag.add_argument("--tool-set", choices=["base", "v2"], default="base", help="v2 (D-046) needs --planner-prompt planner_v3 --answer-prompt answer_v5")
     th = sub.add_parser("threat-test", help="run the adversarial threat suite through the agent (calls the OpenAI API)")
     th.add_argument("--models", nargs="*")
     th.add_argument("--ablation", choices=["naive"], help="run with every defence off, as a baseline")
@@ -176,7 +177,7 @@ def main(argv: list[str] | None = None) -> int:
     if args.cmd == "agent-exp":
         from labourlens.agent import experiments as agx
 
-        agx.run(args.split, args.pairs, args.answer_prompt, args.tag, args.retrieval, args.planner_prompt, gold_path=args.gold, force=args.force)
+        agx.run(args.split, args.pairs, args.answer_prompt, args.tag, args.retrieval, args.planner_prompt, gold_path=args.gold, force=args.force, tool_set=args.tool_set)
         return 0
     if args.cmd == "threat-test":
         from labourlens.security import threat_suite

@@ -497,3 +497,29 @@ p95 values are the nearest-rank figures in the metrics files (D-043). Cost is th
 **Cost.** About $1.04 by my sums from per-case metrics (generation about $0.87, judging about $0.17); the signed quote was about $0.94. These are not recorded totals.
 
 **Reversibility.** None needed: this is a measurement. No gold, scorer, prompt or code was changed. Registered original held-out results, D-033 and D-042 are untouched.
+
+### D-046 - Tool set v2: arithmetic on report figures and dimension recovery (PROPOSAL / IMPLEMENTED, NOT RUN, 1 Nov 2026)
+
+**Status labels.** IMPLEMENTED and unit-tested (726 passed, 56 deselected with `-m 'not corpus'`; 3 passed with `-m corpus -k agent`). **Not run with any model:** no behavioural claim is made. Full design, pre-declared criteria and commands: `docs/experiments/m7-tool-fix.md`.
+
+**Context.** D-045 attributes 11 of 16 primary `r3` mismatches in held-out v2 to a tool coverage gap: 8 cases need a difference between two figures printed in report text (`calculate_change` takes only observation labels, and the answer prompt forbids hand arithmetic), and 3 cases lose the round budget to a wrong dataset dimension label (`MAX_ROUNDS = 2`). D-045 named a new experiment with a new id as the follow-up; this is it. The design used the class names in `error-analysis.json` and the tool code only (D-016); no v2 gold, raw run or case text was read.
+
+| Option | Benefit | Downside | Disposition |
+|---|---|---|---|
+| A. Let the answer model do the arithmetic from report figures | Zero code | Breaks the deterministic-numbers rule and the grounding check; unverifiable | Rejected |
+| B. New deterministic tool on figures tied to passage ids, values verified against the passage text, mixed units and bases refused, same `compute_change` | Keeps arithmetic exact and auditable; reuses citations and number grounding; small | Planner needs to see figure snippets; basis equality is only as good as the planner's wording | **Chosen** |
+| C. Extract figures automatically from passages and compute without the planner | No planner choice to go wrong | A parser for report prose is a new, untested component and a larger change | Rejected for now |
+| D. Raise `MAX_ROUNDS` to 3 for everything | One line | Changes every run, costs more, shifts all earlier comparisons | Rejected |
+| E. Actionable unknown-dimension error plus one bonus round for that error class only | Targets the diagnosed failure; call budget unchanged | Bundled with B in one experiment | **Chosen** |
+
+**DECISION.** Add `calculate_from_text_values` and the dimension recovery behind a new `AgentConfig.tool_set = "v2"` (default `"base"`), with new prompt files `planner_v3`/`planner_v3_user`/`answer_v5`/`answer_v5_user` as minimal diffs of `planner_v1` and `answer_v3`; the pair and the tool set are required together. Existing prompts, schema, config keys and runs are unchanged and regression-tested. The MCP server is unchanged (it has no access to report text). The served system and the web app keep `tool_set="base"` until a result is reviewed.
+
+**One factor (D-016).** The tool set, as one bundle of three coupled parts (text-figure arithmetic with the planner snippets it needs, actionable unknown-dimension error, one bonus round). Everything else is fixed against X2. The bundle cannot attribute an effect to one part.
+
+**Pre-declared plan.** X3: dev n=237, `planner_v3 answer_v5 --tool-set v2 --retrieval r3`, both models, against X2. Pass only if, per model: behaviour accuracy not below the X2 interval lower bound (at least 205/237 and 209/237); false-answer cases at most 6; no ungrounded number in any case that used the new tool, and cases with an ungrounded number at most the X2 upper bound (34 and 51 of 237); operational failures not above X2. A failed criterion means the tool set is not adopted. V2post: the same two arms (`r3`, `hybrid`) on the v2 gold under new tags, labelled **post-freeze diagnostic, not held-out** (the questions and the failure classes are known); improvement on `numerical_comparison` is reported descriptively and is expected for the 11 targeted cases by design. Neither run gates a held-out claim; a fresh set with its own pre-registration is still required for that (D-045).
+
+**Cost estimate (from saved per-case figures, not measured).** About $3.3 to $3.7 for X3 plus V2post including judging; budget about 20% more (D-044 pattern).
+
+**Limits.** Planner exposure to untrusted text grows by up to five 12-word snippets per unflagged passage; the threat suite has not been run under tool set v2 (recommended before adoption, under a new experiment id). `_calc_correct` scores only observation-based calculation gold, so text-figure calculations are judged through behaviour, key numbers and the judged measures, as in the frozen runs. One run per model and arm.
+
+**Reversibility.** Fully reversible: remove the `v2` branches, the four prompt files and the flag; default behaviour never changed.
