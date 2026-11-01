@@ -126,10 +126,11 @@ function buildSlide(spec) {
     }
     inner.append(body);
   }
-  if (spec.caption || spec.detail) {
+  const readingNote = spec.detail && !spec.detail.open && (spec.detail.label || 'How to read this') === 'How to read this';
+  if (spec.caption || (spec.detail && !readingNote)) {
     const caption = el('div', 'deck-caption');
     if (spec.caption) caption.append(el('p', 'deck-caption-text', spec.caption));
-    if (spec.detail && !spec.detail.open) {
+    if (spec.detail && !spec.detail.open && !readingNote) {
       const disclosure = el('details', 'pr-details');
       disclosure.append(el('summary', '', spec.detail.label || 'How to read this'));
       const body = el('div', 'pr-details-body');
@@ -145,6 +146,7 @@ function buildSlide(spec) {
   section.append(inner);
   const notes = el('aside', 'notes');
   (spec.notes || []).filter(Boolean).forEach(line => notes.append(el('p', '', line)));
+  if (readingNote) notes.append(el('p', '', `How to read the chart: ${spec.detail.content.replace(/\n+/g, ' ')}`));
   if (!notes.children.length) notes.append(el('p', '', spec.title));
   section.append(notes);
   return section;
