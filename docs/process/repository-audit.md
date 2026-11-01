@@ -104,7 +104,7 @@ Severity: BLOCKER, SHOULD, NICE. "Action" never alters frozen artefacts.
 | S19 | `.gitignore` | `artifacts/screenshots/` not ignored (untracked, 7 MB); `artifacts/screenshots-pending/` listed twice. | Fix. |
 | S20 | `docs/human-review/e2e-review-deliverables.md`, `site-artifact-review.md` | Link to local-only screenshot folders. | Mark "local only" or drop; if pictures help, commit three to five hand-checked images under `docs/img/`. |
 | S21 | `web/static/presentation/slides.js:133`, `docs/security-review-web.md:42` | Cite `CLAUDE.md` as if a source. | Cite ADR-001 or the rights rule instead. |
-| S22 | no `SECURITY.md`, no `.pre-commit-config.yaml`, no `Makefile`, no `.python-version`, no `tests/README.md`, no `docs/README.md`, no `docs/reproduce.md` | Harness items the reviewer expects. | Phase 3. |
+| S22 | no `SECURITY.md`, no `.pre-commit-config.yaml`, no `Makefile`, no `.python-version`, no `tests/README.md`, no `docs/README.md`, no `docs/reproduce.md` | Harness items missing at audit time. | Added later (harness). |
 | S23 | Architecture diagram | One mermaid block in `docs/architecture.md`, no rendered image. Graphviz `dot` is installed; `mmdc` is not (node and npx are present, but installing Mermaid CLI needs the network). | Render with `dot` from a DOT source kept next to the mermaid, or keep mermaid only and say so. Owner decision D6. |
 | S24 | `docs/deploy.md:123` | A v1 corpus verification (13,484 passages) next to the v3 deployment claim. | Prefix "historical, 30 Oct". |
 
@@ -151,7 +151,7 @@ The scan also skips binaries (Parquet, PNG) and files above 5 MB, and matches ex
 | Branches | `master`, `extraction-fixes` (local and remote); tag `corpus-v1-frozen` referenced by D-037. Keep. |
 | Claims of human or independent review | None found where AI review is labelled human (`README.md:22,156`, `evaluation-report.md:198,278`, `system-card.md:3`, `innovation.md:23`, D-047 state the limits). Stale 45 and 125 counts remain (B2, S8). |
 | Where approval gates are missing | S5. The record shows no approver on D-029, D-032, D-041 to D-046, D-048. |
-| Tests needing private data | 56 tests carry the `corpus` marker. Fresh-clone simulation (tracked files copied to a temp dir, no `.git`): one failure (`test_integrity.py::test_provenance_fingerprints`, `git_head` is `None`; attributed to the missing `.git`, not confirmed in a true clone) and one skip (`test_runtime_fixes.py:231`). To be settled in the Phase 3 fresh-clone proof. |
+| Tests needing private data | 56 tests carry the `corpus` marker. Fresh-clone simulation (tracked files copied to a temp dir, no `.git`): one failure (`test_integrity.py::test_provenance_fingerprints`, `git_head` is `None`; attributed to the missing `.git`, not confirmed in a true clone) and one skip (`test_runtime_fixes.py:231`). To be settled by the fresh-clone check. |
 
 ## 1C. Standard-repo checklist
 
@@ -187,93 +187,24 @@ Derived from `docs/requirements-matrix.md` (18 R-rows) and the repository. The a
 | MCP server and client demo | `src/labourlens/mcp/`, `docs/mcp-demo-transcript.md` | Present |
 | Threat tests | `docs/threat-model.md`, `experiments/threats/` | Present (T-I06 not shown stable; disclosed) |
 | Requirements traceability | `docs/requirements-matrix.md` | Present; stale ordering (S3) |
-| Fresh-clone proof | none | Missing (Phase 3) |
+| Fresh-clone proof | none | Missing at audit time |
 
 Open licence items to state in one place (currently spread across `data-sheet.md` lines 14, 72, 85, 128-129): three assumed-open datasets (B7); no dataset page was read for the licence label on the 33 "verified" datasets; 22 MOM HTML releases with unresolved rights; the MTI 2026-Q2 feature PDF notice not read; two MOM PDFs "to re-confirm on the file"; no repository licence (B1).
 
-## 2. Plan for the AI-assisted development document (Phase 2)
+## 2. Outcome (1 Nov 2026)
 
-`docs/ai-assisted-development.md`, linked from the README, built only from the record. Sections and sources:
+The findings above were worked through on the `repo-cleanup` branch. Decisions taken by the owner at the time:
 
-| Section | Source in the repository |
+| Topic | Decision |
 |---|---|
-| Operating model and gates | `CLAUDE.md` contract; gate table below |
-| Human-only decisions | scope and ADRs, rights decisions, owner gold review, held-out freeze signature (`experiments/heldout-v2/FREEZE.md:85-91`) |
-| Agent roles | roster below; nothing beyond it |
-| Controls | D-016 one-factor rule, FREEZE files, gold hash checks (`eval` and `paired` refuse a changed gold hash), rights scan, threat suite, deterministic scorers, strict export schemas, "AI review is not human review" rule |
-| Verification loops | independent PDF audits, five e2e reviews (`docs/human-review/e2e-review-summary.md`), blind multi-reviewer AI reviews: findings, fixes, deferred items |
-| Mistakes caught | post-run gold edits (D-034 to D-036, HO-022), held-out overlap (original held-out shares evidence with dev; held-out v2 was built for that), stale docs (this audit), scorer brittleness (T-I06), quote leakage (rights truncation sidecar), tool X3 criteria failing (D-048) |
-| Harness | Phase 3 outputs |
-| How I would run this differently | author's own words; to be drafted for the owner's edit |
+| Agent instruction file and initial plan | `CLAUDE.md` kept; kick-off prompt and plan moved to `docs/process/` with a historical banner; the author's own meta prompts kept local and gitignored |
+| `progress.md` | Short current-state page kept; older log moved verbatim to `docs/archive/progress-log.md` |
+| Blank review sheets | Kept, with a banner pointing at the final owner review |
+| Licence | All rights reserved, shared for review (`LICENSE`) |
+| Officer email addresses in dataset metadata | Redacted in the committed metadata files (no hash covers them) |
+| Architecture diagram | Graphviz SVG committed beside the Mermaid block |
+| Live demonstration URL | Included, without access codes |
+| Author name and email in history | Accepted; history not rewritten |
+| Demo scenario 8 | Recorded: `artifacts/mcp-agent-demo.md` |
 
-Human approval gates evidenced (from `docs/decisions.md` and `docs/progress.md`; to be re-verified line by line when the document is written):
-
-| Date | Gate |
-|---|---|
-| 30 Oct | Domain, scope, LangGraph (ADR-001, ADR-002); private repo and published/private split (D-001, D-002); data scope and six features (D-003); M1 implementation (D-005); corpus expansion (D-006, D-019, D-020); chunking, experiment policy, gold authoring (D-015 to D-017); hosted embeddings, model by experiment (D-021, D-022); answer format, abstention, tools, MCP scope (D-024, D-026 to D-028); hard period scope (D-031) |
-| 31 Oct | Label corrections (D-034 to D-036); adopt extraction fixes (D-037); T-I06 guard, held-out v2 design, labour-only sources (D-038 to D-040); held-out v2 freeze signed 13:19Z, 65 cases approved unchanged |
-| 1 Nov | Final owner review (403 own clicks); D-047 policy; four change-clicks recorded and not applied |
-
-Agent roles evidenced in the repository (no others will be named):
-
-| Role | Evidence |
-|---|---|
-| AI pre-reviewers of gold (ReviewGoldBase, A, B, C; Review2B; ReviewV3) | `experiments/gold/ai-review*/` |
-| Spot-check pre-reviewers (ReviewSpotPassage, ReviewSpotStats, ReviewSpotMeta) | `docs/human-review/ai-pre-review-*`, `ai-verification-of-pre-reviews.md` |
-| Blind independent reviewers of answers, gold, M1 sources | `independent-ai-review*.md` |
-| AI adjudicator (third pass, not blind) | `docs/human-review/ai-adjudication.md` |
-| Five end-to-end reviewers (data, runtime, evaluation, security/deploy, deliverables) | `docs/human-review/e2e-review-summary.md` |
-| Held-out v2 reviewers A, B, C | `heldout-v2-ai-review-summary.md` |
-| Fresh blind queue reviewers (Pend A/B) | `owner-review-final-summary.md`, `review-inventory.md` |
-| Gold-drafting sub-agent | `docs/progress.md` (M2 entry) |
-| Site-artifact reviewer | `docs/human-review/site-artifact-review.md` |
-
-The commit log carries no agent names, so code-writing roles cannot be itemised from it; the document will say so rather than invent them.
-
-## 3. Plan for the harness (Phase 3)
-
-All small, all verified before commit.
-
-| Item | Detail |
-|---|---|
-| `Makefile` | `setup`, `lint`, `format`, `test`, `test-corpus`, `rights-scan`, `secrets-scan`, `docs-check`, `report`, `serve`, `verify`, `clean`. `verify` = lint + `test` + `docs-check` + `rights-scan` (fails if corpus absent unless told) + `secrets-scan`, all offline. |
-| `pyproject.toml` | `[tool.ruff]` scoped to F, E9, I; register a second marker only if needed; add `ruff` to the dev group (changes `uv.lock`; needs network once, to be approved). |
-| `.python-version` | `3.12` |
-| `.pre-commit-config.yaml` | ruff, trailing whitespace, gitleaks, local rights-scan hook. `pre-commit` itself is not installed; I would write the config but cannot run it without installing. |
-| `.gitleaks.toml` | Allowlist the dataset-identifier false positives, scoped to `data/manifests/manifest_history.jsonl`. Verified by re-running gitleaks. |
-| `.github/workflows/ci.yml` | pull_request and push: `uv sync --frozen`, `make verify`, gitleaks (SHA-pinned). Deploy keeps depending on tests. |
-| `tests/README.md` | Markers, what skips without the private corpus, counts. |
-| `docs/reproduce.md` | Commands from a fresh clone to each artefact, private-corpus and API-key steps, expected output, approximate cost (from `specs/prices.yaml` and saved metrics, never invented), hash verification. |
-| Fresh-clone proof | `git clone` to a temp dir, `make setup && make verify`; record the exact summary in `docs/fresh-clone-check.md`. `uv sync` needs the package index (documented network read). |
-| Architecture image | DOT source rendered by Graphviz to SVG, committed with the mermaid (D6). |
-| `rights-scan` | `--require-corpus` flag and an explicit NOT CHECKED line (B6). |
-| `SECURITY.md` | How secrets, untrusted text and the live demo are handled; link to the threat model. |
-| `docs/README.md` | Reading order (five links first) and index. |
-| `SUBMISSION.md` | As specified in the brief. |
-
-## 4. Proposed execution order (Phase 4, branch `submission-prep`, never `master`)
-
-1. Safety: `.gitignore` fix; B6 tool fix; B7 data-sheet statement (or licence read); confirm S11 decision. No history rewrite is needed.
-2. Relocate noise with `git mv`: private material to gitignored `private/`; planning drafts to `docs/archive/`; human-review sub-folders.
-3. Staleness: B2 to B5, S1 to S10, S20 to S21, S24. After any change feeding the site, `uv run labourlens build-report` then the web tests.
-4. Harness (section 3) and `docs/ai-assisted-development.md`.
-5. README rewrite, `docs/README.md`, `LICENSE`, attribution, `SECURITY.md`.
-6. Fresh-clone proof, re-run of the 1B scans, `SUBMISSION.md`, final report.
-
-Test clean-up (S15 to S17) deletes assertions that pin wording. Each deletion keeps the behavioural assertions in the same test and is shown in the diff.
-
-## 5. Decisions needed from the owner
-
-| ID | Decision | Recommendation |
-|---|---|---|
-| D1 | Keep `CLAUDE.md`, `START_HERE_PROMPT.md`, `LABOURLENS_PROJECT_PLAN.md`, `prompts/meta/`? | Keep `CLAUDE.md` (status block updated) and move the kick-off prompt and plan to `docs/process/` with a banner. Keep `prompts/meta/` only if you are happy for it to be read; it is not read by the application. The assessment PDF stays out. |
-| D2 | `docs/progress.md`: keep a short state page and move the 291-line multi-agent log to `docs/archive/` (visible) or `private/`? | `docs/archive/`: the log is the record of gates and mistakes; hiding it conflicts with the principle. |
-| D3 | `gold-review.md` (3,075 lines of question text) and the two blank spot-check sheets: ship with a banner, or private? | Ship with a banner; they are the sheets the owner reviewed. |
-| D4 | Licence: MIT, Apache-2.0, or "all rights reserved, shared for review"? | "All rights reserved, shared for review" until you decide; the data, fonts and MOM/MTI material keep their own terms either way. |
-| D5 | Officer email addresses in dataset metadata: keep as published provenance, or redact? | Redact in metadata only after confirming no hash covers those bytes; otherwise log a decision to keep. |
-| D6 | Architecture image: Graphviz-rendered SVG from a DOT source, or mermaid only? | Graphviz SVG plus mermaid. |
-| D7 | Live demo URL in `SUBMISSION.md` and README: include (access codes sent separately)? Droplet spend cap is listed as an open blocker in `progress.md`. | Include once a provider-side spend cap is set. |
-| D8 | The name and personal Gmail author address in 90 commits and the site byline: acceptable for a shared repository? | Keep; history rewriting is not recommended. |
-| D9 | B5: record scenario 8 (needs one paid call) or state it as not recorded? | State it as not recorded. No paid call without your approval. |
-
-Approve the plan, or mark changes to it, and I will start Phase 4 on `submission-prep`.
+Status of the blockers, with evidence, is in [`../fresh-clone-check.md`](../fresh-clone-check.md) and the commit log. No frozen result, gold file, hash or experiment record was changed.

@@ -1,5 +1,7 @@
 # E2E review: evaluation integrity
 
+> AI review (not human review). State as of 31 Oct 2026, before the final owner review of 1 Nov: counts such as "45 owner-reviewed" or "125 cards" describe that day. Status of each finding: [`e2e-review-summary.md`](e2e-review-summary.md).
+
 Scope: gold v3.x and the v2 draft, harness, judge cache, scorers, paired bootstrap, freeze protocol, post-run gold edits, `experiments/` artifacts, threat suite and refined scorer, corpus v1/v2/v3 labels, fresh-checkout reproducibility.
 Method: read code, re-derived numbers from raw `data/runs/*` and committed `experiments/eval/*` with independent scripts, ran `uv run pytest -q -m 'not corpus'` (all passed, 53 s) and `gold.validate` on both gold files (0 errors). No model or network calls; no source/data/docs edited except this file.
 Tags: **[FACT]** observed in code or artifacts; **[INFERENCE]** reasoning from facts, not run.

@@ -27,5 +27,5 @@ How a new report, dataset or agency enters LabourLens, and how it is reprocessed
 | Re-evaluation on change | Re-run the evaluation set after any corpus or parser change; compare to the previous run | Catches regressions caused by data, not code |
 | Human gate for new sources | Owner approves licence and scope before a source reaches answers | Same as our approval gates |
 
-## How to explain it (interview)
+## How to explain it
 "Each source goes through the same four stages and lands in two canonical tables, observations for numbers and passages for text. Anything source-specific lives in a spec file. Every record carries its source, snapshot, parser version and rights status, so I can reprocess one source without touching the rest, and I can say what an old answer was based on. For multiple agencies the real risk is definitions, so I'd add a crosswalk and refuse to merge series that don't match."

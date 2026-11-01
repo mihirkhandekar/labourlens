@@ -43,7 +43,7 @@
 |---|---|---|
 | `docs/` | **Published** with the submission | requirements, source catalog, ADRs, decisions, data sheet, evaluation report, system card, architecture, innovation, demo script |
 | `docs/progress.md`, `docs/decisions.md`, `docs/glossary.md` | Published, but written as working logs | handoff, decision log, vocabulary |
-| `study/` | **Private to owner. Gitignored.** | interview prep, why-we-chose-this, alternatives rejected, failure postmortems, Q&A rehearsal |
+| `study/` | **Private to owner. Gitignored.** | rehearsal notes, why-we-chose-this, alternatives rejected, failure postmortems, Q&A rehearsal |
 | `private/` | **Private to owner. Gitignored.** | scratch research, raw probe output, personal review notes, anything not meant for reviewers |
 | `data/raw/` | Local only. Gitignored. | MOM PDFs and raw downloads |
 

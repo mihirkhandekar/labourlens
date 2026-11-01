@@ -1,7 +1,7 @@
 # OS / editor
 .DS_Store
 
-# Private to owner (interview prep, scratch research) — never shared with reviewers
+# Private to owner (rehearsal notes, scratch research) — never shared with reviewers
 study/
 private/
 prompts/meta/

@@ -2,6 +2,8 @@ Report of the security, privacy and deployment area of the end-to-end review (31
 
 # E2E review: security, privacy, deployment
 
+> AI review (not human review). State as of 31 Oct 2026, before the final owner review of 1 Nov: counts such as "45 owner-reviewed" or "125 cards" describe that day. Status of each finding: [`e2e-review-summary.md`](e2e-review-summary.md).
+
 **Counts:** P0 0, P1 4, P2 9.
 
 ## 1. Flow as traced

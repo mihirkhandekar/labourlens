@@ -37,3 +37,7 @@ Feedback joins to runs on `run_id`, so a thumbs-down opens the exact trace, conf
 
 ## Missing data and conflicting information (agent behaviour)
 Code, not the model, detects these and passes notes to the answer step in a non-citeable `<data_quality_notes>` block (`src/labourlens/agent/tools.py`): a period inside the requested range with no row, a null value the source marks unavailable, more than one series (population, adjustment or indicator) in one result, and advance and final releases of the same quarter in one evidence set. The `answer_v4` prompt (rule 9) tells the model never to estimate such values, to report what is missing and answer the rest, and to report conflicting versions with source and stage rather than choose silently. Operational failures (tool down, timeout) are a different class: they end in an operational-failure outcome, never in "no data". Effect on quality: see the A1 versus A2 experiment in `docs/experiments/`. The default prompt stays `answer_v3` because A1 versus A2 showed no measurable difference (D-030); the notes themselves are present in every run.
+
+## Feedback that is not built
+
+The earlier feedback design (D-011) also described per-claim and per-citation verdicts, a blind side-by-side preference and an export of preference pairs. None of these exists. The only feedback control is one thumbs-up or thumbs-down per run with tags and a comment. No reward model or fine-tuning is performed; the project calls hosted models whose weights it cannot change.

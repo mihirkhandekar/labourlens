@@ -1,6 +1,6 @@
 # How documents and data are stored
 
-Today (M1, built) and planned (later milestones, **PROPOSAL** until decided at the M2 and M3 gates, see D-009).
+Layers as built (corpus v3). Background: D-009.
 
 ## Layers
 | Layer | What | Where | In git? | Status |
@@ -9,9 +9,9 @@ Today (M1, built) and planned (later milestones, **PROPOSAL** until decided at t
 | 2. Manifest | One record per source: URL, publisher, dates, release stage, snapshot id, SHA-256, rights status | `data/manifests/manifest.json` plus append-only `manifest_history.jsonl` | Yes | Built |
 | 3. Structured observations | One row per statistic: value, unit, period, population, adjustment, missing reason, source locator | `data/processed/observations.parquet`; `quarantine.parquet`; `derived_indicators.parquet` | Yes (small, open licence) | Built |
 | 4. Passages | One record per text block with page, section, locator, quality flag, text, text hash | `data/passages/<source_id>.jsonl` | **No** (contains MOM text) | Built |
-| 5. Keyword index (BM25) | Searchable index over passages | planned `data/index/` | No (derived from MOM text) | M2, not built |
-| 6. Dense index (embeddings) | Vectors for passages; store chosen at M3 (file-based first) | planned `data/index/` | No | M3, not built |
-| 7. Answer and trace logs | Runs, tool calls, citations, feedback | planned `experiments/` and `feedback.jsonl` | Metadata yes, MOM text no | M4 to M6 |
+| 5. Keyword index (BM25) | Searchable index over passages | `data/index/bm25/` | No (derived from MOM text) | Built |
+| 6. Dense index (embeddings) | Vectors for passages (hosted OpenAI embeddings, D-021), file-based | `data/index/embeddings/` | No | Built |
+| 7. Answer and trace logs | Runs, tool calls, citations, feedback | `data/runs/` (raw run outputs, gitignored), `data/audit/` (audit log and `feedback.jsonl`, gitignored); committed scores and metrics in `experiments/` | Scores and metrics yes; raw outputs and MOM text no | Built |
 
 ## Why files and not a database server
 The corpus is small (corpus v3: 16,419 passages across 49 documents; 36 datasets, 52,020 rows; earlier corpora had 13,484 and 15,915 passages). Files in Parquet and JSONL are reproducible, diffable, easy to hash, and need no service to run. DuckDB can query the Parquet directly when needed. A database server would add setup and failure modes without helping the assessment. Revisit if the corpus grows by orders of magnitude.

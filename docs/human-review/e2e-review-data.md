@@ -1,5 +1,7 @@
 # End-to-end review: data and provenance (31 Oct 2026)
 
+> AI review (not human review). State as of 31 Oct 2026, before the final owner review of 1 Nov: counts such as "45 owner-reviewed" or "125 cards" describe that day. Status of each finding: [`e2e-review-summary.md`](e2e-review-summary.md).
+
 Scope: acquire, fetch, snapshots, manifest, adapters, validation, reconcile, extraction, passage ids, corpus v1/v2/v3, rights flags, determinism, quality checks, EDA, data sheet. Read-only review. Commands run: `uv run --offline pytest -q tests/data` (92 passed, includes corpus-marked tests), jq/python reads of `data/`, `artifacts/`, git history. No network or model calls. **[FACT]** = observed in code or artifact. **[INFERENCE]** = reasoned, not executed.
 
 ## 1. Flow as traced

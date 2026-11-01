@@ -1,6 +1,5 @@
 """Audit log, feedback log, and deterministic data-quality notes (missing data, mixed series, advance-vs-final conflict)."""
 
-import json
 
 import pandas as pd
 import pytest

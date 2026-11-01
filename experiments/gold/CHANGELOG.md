@@ -1,6 +1,6 @@
-# Gold set change log (AI pre-review fixes)
+# Gold set change log
 
-## v3.7: owner review of the cases never reviewed before (2026-11-01), post-hoc
+## v3.7: review provenance only, no label changed (2026-11-01), post-hoc
 
 **DECISION:** New file `experiments/gold/gold_v3.7.jsonl` (SHA-256 `af3ad02690ed1dabb69e2be7f7bb984f707f1352b95c8bd693d0fb51e9410d8f`); `draft_cases.jsonl` (v3.6) and every older file are untouched, and every saved run, freeze and score stays pinned to the file it used. Reviewer `Mihir`, export SHA-256 `d2905bfde5545f6d2fd5649afa5c717b06e21d453d68188fa8e90f4defd122e2`. Per-case decisions: `experiments/gold/gold_v3.7-review-log.jsonl`.
 

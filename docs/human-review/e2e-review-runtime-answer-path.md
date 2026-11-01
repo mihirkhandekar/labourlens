@@ -1,5 +1,7 @@
 # E2E review: runtime answer path (retrieval, agent, validation, MCP)
 
+> AI review (not human review). State as of 31 Oct 2026, before the final owner review of 1 Nov: counts such as "45 owner-reviewed" or "125 cards" describe that day. Status of each finding: [`e2e-review-summary.md`](e2e-review-summary.md).
+
 Reviewer scope: retrieval (BM25 / dense / hybrid / r3), chunking, embedding cache, LangGraph agent and guards, tools, deterministic calculation, T-I06 crosscheck, answer schema and validators, abstain / clarify / refuse, timeouts and retries, trace emission, MCP server and client.
 Method: code tracing, read-only Python snippets against the real local corpus (16,419 passages, 1,847 `merge200` chunks, 4,300 in-scope observations), scripted `llm.chat` doubles, and the saved runs in `data/runs/agent/`. No network or model calls were made. `pytest -q -m 'not corpus'`: **535 passed, 54 deselected** (observed). Smoke script: `/tmp/smoke_rev.py` (not committed). Labels: **[F]** fact observed, **[I]** inference.
 

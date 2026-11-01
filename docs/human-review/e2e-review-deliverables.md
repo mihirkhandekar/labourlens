@@ -1,5 +1,7 @@
 # E2E review: deliverables against the assessment PDF
 
+> AI review (not human review). State as of 31 Oct 2026, before the final owner review of 1 Nov: counts such as "45 owner-reviewed" or "125 cards" describe that day. Status of each finding: [`e2e-review-summary.md`](e2e-review-summary.md).
+
 Reviewer: independent AI pass (not human review). Date: 31 Oct 2026. Repo HEAD `f7cab82`. Scope: PDF requirements, README, architecture diagram, data sheet, evaluation report, system card, innovation note, demo script, website (report page and workbench page), study notes. No paid or network calls, no source edits. Facts are marked **F** (observed), inferences **I**.
 
 ## 1. Flow as traced

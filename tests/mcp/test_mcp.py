@@ -5,7 +5,7 @@ import json
 
 import pytest
 
-from labourlens.agent.tools import StatsData, Tools, Shared, TransientToolError
+from labourlens.agent.tools import StatsData, Tools, Shared
 from labourlens.mcp.server import ALL_TOOLS
 from labourlens.mcp.client import McpClientError, McpStatsClient, SyncStatsBackend, register_test_server
 
@@ -151,7 +151,6 @@ def test_sync_backend_drives_agent_get_series_through_mcp_and_maps_errors():
 
 
 def test_sync_backend_reports_a_crashing_server_as_an_exception_not_as_missing_data():
-    from labourlens.mcp import client as C
     name = register_test_server("evil-crash2", "crash")
     backend = SyncStatsBackend(name, call_timeout_s=2.0)
     try:

@@ -21,7 +21,7 @@ Reviewers of the GenAI Engineer assessment. They should be able to (a) follow th
 | 2. The data | KPI strip; click a KPI for series, definition, source, snapshot hash | `data/export/kpis.json`, `series.json`, `sources.json` | data M1, UI M7 |
 | 3. Three numbers, one quarter | Toggle advance / final / dataset totals; read why they differ | `reconciliation.json` | data M1, UI M7 |
 | 4. Retrenchment deep-dive | Filter by industry level; '-' shown as gap, not zero | `retrenchments_by_industry.json` | data M1, UI M7 |
-| 5. Ask the assistant | Sample questions; answer, citations, evidence drawer, tool timeline, **feedback controls** (see `docs/human-feedback-design.md`) | M3 to M5 | M7 |
+| 5. Ask the assistant | Sample questions; answer, citations, evidence drawer, tool timeline, **feedback controls** (see D-011 in the decision log) | M3 to M5 | M7 |
 | 6. How it was tested (incl. human review results and agreement) | Baseline vs improved retrieval; per-case results | M6 artifacts | M7 |
 | 7. Failure gallery | Injection, abstention, tool failure, MCP errors, real transcripts | M4, M5 | M7 |
 | 8. Data sheet and limits | Sources, rights per source, quality checks | `docs/data-sheet.md`, `quality.json` | data M1, UI M7 |

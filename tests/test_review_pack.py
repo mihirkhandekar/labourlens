@@ -1,7 +1,6 @@
 """Corpus-free pack/export checks plus explicitly marked real-corpus coverage."""
 import json
 import subprocess
-from pathlib import Path
 
 import pandas as pd
 import pytest
