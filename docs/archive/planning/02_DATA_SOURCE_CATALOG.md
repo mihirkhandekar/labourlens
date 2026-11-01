@@ -1,3 +1,5 @@
+> **Historical planning document (30 Oct 2026), written before implementation.** Statements such as "not yet approved" or "not executed" describe that date, not the current state. Current status is in [`docs/progress.md`](../../progress.md), decisions in [`docs/decisions.md`](../../decisions.md) and requirements evidence in [`docs/requirements-matrix.md`](../../requirements-matrix.md).
+
 # Source catalog and initial verification notes
 
 **Status:** planning evidence verified from publisher pages on 30 October 2026. **No dataset API extraction or PDF corpus ingestion has been executed in this planning pack.** These entries must be confirmed programmatically and captured in a machine-readable manifest during Milestone 1.

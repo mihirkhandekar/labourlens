@@ -1,3 +1,5 @@
+> **Historical process record (30 Oct 2026).** The consolidated initial plan, superseded by the decision log. Status statements in it describe that date. Current state: [`docs/progress.md`](../progress.md).
+
 # LabourLens — consolidated planning and architecture document
 
 **Prepared:** 30 October 2026  
@@ -6,19 +8,19 @@
 
 ## Contents
 
-1. Requirements and scope — `docs/01_REQUIREMENTS_AND_SCOPE.md`
-2. Official source catalog — `docs/02_DATA_SOURCE_CATALOG.md`
+1. Requirements and scope — `docs/archive/planning/01_REQUIREMENTS_AND_SCOPE.md`
+2. Official source catalog — `docs/archive/planning/02_DATA_SOURCE_CATALOG.md`
 3. Approved scope decision — `docs/decisions/ADR-001-scope.md`
 4. Approved LangGraph decision — `docs/decisions/ADR-002-langgraph.md`
-5. Milestone 1 detailed ingestion plan — `docs/03_MILESTONE_1_INGESTION_PLAN.md`
-6. Milestone roadmap — `docs/04_ROADMAP.md`
-7. Evidence and study strategy — `docs/05_EVIDENCE_AND_STUDY_PLAN.md`
+5. Milestone 1 detailed ingestion plan — `docs/archive/planning/03_MILESTONE_1_INGESTION_PLAN.md`
+6. Milestone roadmap — `docs/archive/planning/04_ROADMAP.md`
+7. Evidence and study strategy — `docs/archive/planning/05_EVIDENCE_AND_STUDY_PLAN.md`
 
 ---
 
 # Section 1 — Requirements and scope
 
-*Source within the planning pack: `docs/01_REQUIREMENTS_AND_SCOPE.md`*
+*Source within the planning pack: `docs/archive/planning/01_REQUIREMENTS_AND_SCOPE.md`*
 
 # LabourLens — requirements, scope, and success criteria
 
@@ -103,7 +105,7 @@ LabourLens is a policy intelligence research assistant for Singapore labour-mark
 
 # Section 2 — Official source catalog
 
-*Source within the planning pack: `docs/02_DATA_SOURCE_CATALOG.md`*
+*Source within the planning pack: `docs/archive/planning/02_DATA_SOURCE_CATALOG.md`*
 
 # Source catalog and initial verification notes
 
@@ -289,7 +291,7 @@ Use **LangGraph StateGraph** with one bounded, model-directed research agent and
 
 # Section 5 — Milestone 1 detailed ingestion plan
 
-*Source within the planning pack: `docs/03_MILESTONE_1_INGESTION_PLAN.md`*
+*Source within the planning pack: `docs/archive/planning/03_MILESTONE_1_INGESTION_PLAN.md`*
 
 # Milestone 1 — Government data ingestion and provenance
 
@@ -493,7 +495,7 @@ Ask the user to approve this package or request a change. **Do not start coding 
 
 # Section 6 — Milestone roadmap
 
-*Source within the planning pack: `docs/04_ROADMAP.md`*
+*Source within the planning pack: `docs/archive/planning/04_ROADMAP.md`*
 
 # LabourLens — roadmap, approval gates, and contingency plan
 
@@ -584,7 +586,7 @@ Once approved, Claude may perform implementation and tests **within the approved
 
 # Section 7 — Evidence and study strategy
 
-*Source within the planning pack: `docs/05_EVIDENCE_AND_STUDY_PLAN.md`*
+*Source within the planning pack: `docs/archive/planning/05_EVIDENCE_AND_STUDY_PLAN.md`*
 
 # Evidence ledger, evaluation design and interview learning plan
 

@@ -1,3 +1,5 @@
+> **Historical planning document (30 Oct 2026), written before implementation.** Statements such as "not yet approved" or "not executed" describe that date, not the current state. Current status is in [`docs/progress.md`](../../progress.md), decisions in [`docs/decisions.md`](../../decisions.md) and requirements evidence in [`docs/requirements-matrix.md`](../../requirements-matrix.md).
+
 # Evidence ledger, evaluation design and interview learning plan
 
 **Status:** planned process. No ingestion, tests, benchmarks or human reviews have yet been executed in this planning bundle. Never fill the following templates with invented pass/fail results.

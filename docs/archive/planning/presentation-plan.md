@@ -1,3 +1,5 @@
+> **Historical planning document (30 Oct 2026), written before implementation.** Statements such as "not yet approved" or "not executed" describe that date, not the current state. Current status is in [`docs/progress.md`](../../progress.md), decisions in [`docs/decisions.md`](../../decisions.md) and requirements evidence in [`docs/requirements-matrix.md`](../../requirements-matrix.md).
+
 # LabourLens presentation plan: interactive report page
 
 **Status:** PLAN. Decision D-010 (owner, 30 Oct 2026): the presentation is an **interactive, report-style web page** that reviewers can explore and click through themselves, in addition to the 20-minute live demo. Stack and hosting are decided at the M7 gate. Only the data export (M1) exists today.

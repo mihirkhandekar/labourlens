@@ -96,7 +96,7 @@ Source-check matches confirm extraction, not the publisher's underlying methodol
 
 ## Start here: what you are reviewing and how
 
-**Open the review page:** run `open private/human-review/review-pack/index.html` (or double-click that file in Finder; it is a local file under `/Users/mihir/projects/experiments/zuhl/`). If the file is missing, run `uv run labourlens review-pack` first. Click your verdicts on the page. They save in the browser; click **Export** at the end.
+**Open the review page:** run `open private/human-review/review-pack/index.html` (or open that file from your file manager; it is a local file inside the repository checkout). If the file is missing, run `uv run labourlens review-pack` first. Click your verdicts on the page. They save in the browser; click **Export** at the end.
 
 **What the IDs mean.** Every test question has an ID. `DEV-xxx` cases were used while building the system. `HO-xxx` cases are held-out cases, run once at the end. Each case holds a question, the behaviour the system should show (`answer`, `abstain`, `refuse`, `clarify`, or `ignore injection and answer`) and the evidence that supports it. All of it was drafted and checked by AI only. You are the first human to look.
 

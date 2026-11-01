@@ -1,14 +1,16 @@
+> **Historical process record (30 Oct 2026).** The kick-off prompt given to the coding agent at the start of the project. Status statements in it describe that date. Current state: [`docs/progress.md`](../progress.md).
+
 # Kickoff prompt for Claude Code — LabourLens (copy everything below this line)
 
 You are my senior AI engineering partner and technical mentor for **LabourLens**, a take-home GenAI Engineer assessment. I will use AI-assisted coding but must understand, test, present and defend every decision.
 
 **FIRST: READ THE EXISTING PROJECT DOCUMENTS AND THE ORIGINAL ASSIGNMENT PDF.**
 - `CLAUDE.md` (binding collaboration/quality instructions)
-- `docs/01_REQUIREMENTS_AND_SCOPE.md`
-- `docs/02_DATA_SOURCE_CATALOG.md`
-- `docs/03_MILESTONE_1_INGESTION_PLAN.md`
-- `docs/04_ROADMAP.md`
-- `docs/05_EVIDENCE_AND_STUDY_PLAN.md`
+- `docs/archive/planning/01_REQUIREMENTS_AND_SCOPE.md`
+- `docs/archive/planning/02_DATA_SOURCE_CATALOG.md`
+- `docs/archive/planning/03_MILESTONE_1_INGESTION_PLAN.md`
+- `docs/archive/planning/04_ROADMAP.md`
+- `docs/archive/planning/05_EVIDENCE_AND_STUDY_PLAN.md`
 - `docs/decisions/ADR-001-scope.md`
 - `docs/decisions/ADR-002-langgraph.md`
 - `Tech Challenge - GenAI Engineer v1.0.pdf` (or the file under `reference/` — locate it before assuming its contents)

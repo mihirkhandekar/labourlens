@@ -1,3 +1,5 @@
+> **Historical planning document (30 Oct 2026), written before implementation.** Statements such as "not yet approved" or "not executed" describe that date, not the current state. Current status is in [`docs/progress.md`](../../progress.md), decisions in [`docs/decisions.md`](../../decisions.md) and requirements evidence in [`docs/requirements-matrix.md`](../../requirements-matrix.md).
+
 # Milestone 1 — Government data ingestion and provenance
 
 **Status: PROPOSAL — HUMAN APPROVAL REQUIRED BEFORE CODING.**  

@@ -1,3 +1,5 @@
+> **Historical planning document (30 Oct 2026), written before implementation.** Statements such as "not yet approved" or "not executed" describe that date, not the current state. Current status is in [`docs/progress.md`](../../progress.md), decisions in [`docs/decisions.md`](../../decisions.md) and requirements evidence in [`docs/requirements-matrix.md`](../../requirements-matrix.md).
+
 # LabourLens — roadmap, approval gates, and contingency plan
 
 **Deadline:** Wednesday, 4 November 2026, morning Singapore time. **Planning date:** Friday, 30 October 2026. Prioritize an explainable and testable working core; do not cut required evidence artifacts silently.
