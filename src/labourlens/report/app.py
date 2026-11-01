@@ -518,7 +518,12 @@ def create_app(settings: Settings | None = None, runner=None, shared_factory=Non
                 kwargs = {"audit": context} if "audit" in parameters or any(p.kind == inspect.Parameter.VAR_KEYWORD for p in parameters.values()) else {}
                 if "history" in parameters:
                     kwargs["history"] = history
-                raw = await runner(question, app.state.shared, **kwargs) if inspect.iscoroutinefunction(runner) else await asyncio.to_thread(runner, question, app.state.shared, **kwargs)
+                from labourlens.agent.tools import CALLER_SESSION
+                token = CALLER_SESSION.set(sid)  # tags this visitor's MCP lookups; the context is copied into the worker thread by to_thread
+                try:
+                    raw = await runner(question, app.state.shared, **kwargs) if inspect.iscoroutinefunction(runner) else await asyncio.to_thread(runner, question, app.state.shared, **kwargs)
+                finally:
+                    CALLER_SESSION.reset(token)
                 if isinstance(raw.get("run_id"), str) and sid in sessions:
                     session_runs[sid].append(raw["run_id"])
                 if injected_runner:
@@ -567,7 +572,7 @@ def create_app(settings: Settings | None = None, runner=None, shared_factory=Non
         if backend is None or not cfg.mcp_enabled:
             out["message"] = "MCP is switched off in this deployment: the agent reads statistics directly from the local table."
             return out
-        out["recent_calls"] = list(backend.calls)[-20:]
+        out["recent_calls"] = [{k: v for k, v in c.items() if k != "session"} for c in list(backend.calls) if c.get("session") == sid][-20:]  # this visitor's lookups only
         out["used_by_agent"] = [TOOL_NAME]
         out["agent_tool_name"] = "get_series"
         out["not_given_to_agent"] = [t for t in ALL_TOOLS if t != TOOL_NAME]
@@ -609,7 +614,13 @@ def create_app(settings: Settings | None = None, runner=None, shared_factory=Non
         t0 = time.perf_counter()
         out = {"tool": example["tool"], "arguments": example["arguments"], "ok": True}
         try:
-            reply = await asyncio.to_thread(lambda: backend.call_tool(example["tool"], **example["arguments"]))
+            from labourlens.agent.tools import CALLER_SESSION
+
+            def run_example():
+                CALLER_SESSION.set(sid)  # to_thread runs in a copy of the context, so this does not leak
+                return backend.call_tool(example["tool"], **example["arguments"])
+
+            reply = await asyncio.to_thread(run_example)
             out["reply"] = reply.result.model_dump(mode="json")
             out["quarantined"] = reply.quarantined
         except McpClientError as e:

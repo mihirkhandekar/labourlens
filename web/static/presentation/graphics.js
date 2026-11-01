@@ -151,8 +151,11 @@ export function buildTimeline(m) {
   const head = el('tr'); ['Build', 'Passages', 'What it was for'].forEach(h => head.append(el('th', '', h))); table.append(el('thead', '', '')); table.lastChild.append(head);
   const body = el('tbody');
   builds.forEach(b => {
-    const why = b.current ? `${b.purpose} ${b.rerun || 'No result re-run.'}` : b.purpose;
-    const tr = el('tr', b.current ? 'is-current' : ''); tr.append(el('th', '', b.name), el('td', 'num', fmt.int(b.passages)), el('td', '', why)); body.append(tr);
+    const [lead] = (b.rerun || '').split(': ');
+    const why = b.current ? `${b.purpose} ${b.rerun ? `${lead}. Hover or focus for both models.` : 'No result re-run.'}` : b.purpose;
+    const tr = el('tr', b.current ? 'is-current' : ''); const cell = el('td', '', why);
+    if (b.current && b.rerun) withTip(cell, b.rerun, 'is-up');
+    tr.append(el('th', '', b.name), el('td', 'num', fmt.int(b.passages)), cell); body.append(tr);
   });
   table.append(body); wrap.append(table);
   return wrap;
@@ -460,7 +463,7 @@ export function mcpMap(m) {
     return section;
   };
   wrap.append(
-    lane('Through MCP, the live web app', [node('wrench', 'Agent', 'get_series only', 'The same planner, tools and answer step as in the direct path. Only the statistics lookup changes route; report search and the change calculation stay in the same process.'), node('shield', 'MCP client', 'checks every reply', 'Checks the server name, version and tool list; validates arguments and results against schemas; sets time and size limits; quarantines instruction-like text.', 'is-guard'), node('path', 'MCP server', '9 read-only tools', 'Tools: get_statistic, list_datasets, describe_dataset, get_dimension_values, latest_value, compare_periods, series_summary, get_revisions, get_provenance.\nResources: labourlens://sources and labourlens://source/{source_id}.\nPrompt: compare_quarters.\nThe agent is given get_statistic only. The server serves statistics and the source catalogue, never report text.'), node('database', 'Statistics', 'read-only table')], [
+    lane('Through MCP, the live web app', [node('wrench', 'Agent', 'get_series only', 'The same planner, tools and answer step as in the direct path. Only the statistics lookup changes route; report search and the change calculation stay in the same process.'), node('shield', 'MCP client', 'checks every reply', 'Checks the server name, version and tool list; validates arguments against the advertised input schemas and results against the advertised output schema and its own models; sets time and size limits; quarantines instruction-like text.', 'is-guard'), node('path', 'MCP server', '9 read-only tools', 'Tools: get_statistic, list_datasets, describe_dataset, get_dimension_values, latest_value, compare_periods, series_summary, get_revisions, get_provenance.\nResources: labourlens://sources and labourlens://source/{source_id}.\nPrompt: compare_quarters.\nThe agent is given get_statistic only. The server serves statistics and the source catalogue, never report text.'), node('database', 'Statistics', 'read-only table')], [
       ['The live web app', 'The trace of an answered question shows the transport as mcp. A setting switches the web app back to direct calls.'],
       ['Scripted demo, 17 parts', 'Discovery, a valid call, bad arguments, a slow server, instructions hidden in results, a server that dies, wrong name or version, broken schema, oversized replies, an extra tool, secrets, and a loopback HTTP transport.'],
       ['One agent question over MCP', 'One question on retrenched employees from 2025-Q4 to 2026-Q1. The agent used get_statistic only; the figures matched a direct lookup. One run, a demonstration and not an evaluation.'],
@@ -533,10 +536,11 @@ export function plantedFlow() {
 export function cardRow(items) {
   const wrap = el('div', 'g14 g15');
   if (items.length === 4) wrap.style.setProperty('grid-template-columns', 'repeat(4, minmax(0, 1fr))');
-  items.forEach(({icon, head, line}, i) => {
+  items.forEach(({icon, head, line, tip}, i) => {
     const card = el('div', 'g14-card'); card.style.setProperty('--i', String(i));
     const top = el('div', 'g12-head'); top.append(ico(icon), el('h3', '', head));
     card.append(top, el('p', '', line));
+    if (tip) withTip(card, tip, 'is-down is-wide');
     wrap.append(card);
   });
   return wrap;
@@ -730,7 +734,7 @@ export function freshQuestions(m) {
 export function reviewStreams() {
   const wrap = el('div', 'rv');
   const group = (title, items) => {
-    const g = el('section', 'rv-group'); g.append(el('h3', 'rv-title', title));
+    const g = el('div', 'rv-group'); g.append(el('h3', 'rv-title', title));
     const row = el('div', 'rv-items');
     items.forEach(([name, n, what, tipText], i) => {
       const item = el('div', 'rv-item'); item.style.setProperty('--i', String(i));
@@ -823,10 +827,28 @@ export function conceptGrid() {
 
 
 /** Three review measures. Counts come from the review inventory and the sets used in the report. */
+/** The hypotheses I tested, from the evaluation report. Plain text for a popover or the speaker notes. */
+export const HYPOTHESES = 'Five hypotheses organised the experiments. Retrieval: keyword search loses relevant passages among near-duplicate quarters and releases, so hybrid search, filtering and reranking should help. Generation: relevant evidence cuts needless abstention more than switching between nearby models. Agent: bounded tools handle numerical questions without model arithmetic. Prompt: instructions for missing or conflicting data help. Widening: relaxing a weak filtered pool reduces filter misses. Development comparisons are not described as pre-registered. Development guided my choices; the fresh questions share no source with any earlier question and were run once.';
+
+/** Responsible AI controls in plain words, mapped to what the code and records show. */
+export const RESPONSIBLE_AI = 'Least privilege: three typed read-only tools, no write, network or shell tool. Prompt injection: retrieved text is untrusted data, instruction-like content is flagged, and every claim must carry a quote found in its cited passage. Secrets: kept on the server and redacted from logs. Logging: a record per run with identifiers hashed. Data minimisation: public official data only and no personal data. Human oversight: the activity timeline shows each step, a budget reserve and kill switch cap spend, and I signed off the review items. Model insight against source fact: calculations are made in code and each figure carries its source and release stage. Permission-aware retrieval does not apply, because there are no per-user documents; MOM report text stays local and only short quoted evidence is shown.';
+
+/** Beyond behaviour accuracy: claim support, citation, fact coverage, latency, cost and the weakest question type, read from the final development run and the baseline. */
+export function contentMetricsText(m) {
+  const a3 = m.evalRow('dev-A3', 'gpt-6-luna'), a1 = m.evalRow('dev-A1', 'gpt-6-luna');
+  const x = a3?.metrics;
+  if (!x) return 'The content metrics are not available in the report data.';
+  const rate = key => (finite(x[key]?.rate) ? fmt.pct(x[key].rate) : 'not recorded');
+  const strata = Object.entries(a3.strata || {}).filter(([, v]) => finite(v.behaviour_accuracy));
+  const weak = strata.sort((p, q) => p[1].behaviour_accuracy - q[1].behaviour_accuracy)[0];
+  const base = a1?.metrics;
+  return `Beyond behaviour accuracy, on the ${fmt.int(x.n_cases)} development questions with filter then rerank: ${rate('claim_supported_rate')} of ${fmt.int(x.claims_judged)} claims were supported by their cited passage (an AI judge), the gold passage was cited in ${rate('gold_cited_any')} of answers that needed one, fact coverage was ${rate('fact_coverage')} and key-number recall ${rate('key_number_recall')}. Median ${x.latency_p50_s} s, 95th percentile ${x.latency_p95_s} s and ${fmt.money(x.cost_per_case_usd)} a question${base ? `, against ${base.latency_p50_s} s and ${fmt.money(base.cost_per_case_usd)} for the baseline` : ''}.${weak ? ` By question type: ${strata.map(([k, v]) => `${k.replace(/_/g, ' ')} ${fmt.pct(v.behaviour_accuracy)} of ${fmt.int(v.n)}`).join(', ')}.` : ''}`;
+}
+
 export function measureCards(m) {
   const dev = m.evalRow('dev-A3', 'gpt-6-luna')?.metrics?.n_cases, held = m.heldRow('r3', 'gpt-6-luna')?.metrics?.n_cases, v2 = m.section('evaluation').heldout_v2?.paired?.['gpt-6-luna']?.n_gold_cases;
   const referenceCount = finite(dev) && finite(held) ? fmt.int(dev + held) : 'not recorded';
-  return cardRow([{icon: 'stack', head: 'Reference questions', line: `${referenceCount} questions written for development and testing.`}, {icon: 'chart-line', head: 'Fresh questions', line: `${fmt.int(v2)} questions on sources no earlier question uses. Run once, never tuned on.`}, {icon: 'check-circle', head: 'Human reviewed', line: 'I signed off the labels on both sets, 40 saved answers and 30 source checks.'}]);
+  return cardRow([{icon: 'stack', head: 'Reference questions', line: `${referenceCount} questions written for development and testing.`, tip: HYPOTHESES}, {icon: 'chart-line', head: 'Fresh questions', line: `${fmt.int(v2)} questions on sources no earlier question uses. Run once, never tuned on.`}, {icon: 'check-circle', head: 'Human reviewed', line: 'I signed off the labels on both sets, 40 saved answers and 30 source checks.', tip: contentMetricsText(m)}]);
 }
 
 /** The development loop with the written guardrails around it, and three counts: the decision log (computed from the report data), five end-to-end reviewers, the rights scan result. */
@@ -844,7 +866,7 @@ export function buildProcess(decisionCount) {
     const li = el('li', 'g24-lane'); li.style.setProperty('--i', String(i)); li.append(el('strong', '', head), el('span', '', text)); lanes.append(li);
   });
   const nums = el('div', 'g24-nums');
-  [[finite(decisionCount) ? String(decisionCount) : 'many', 'decisions logged'], ['5', 'separate reviewers'], ['0', 'rights-scan hits']].forEach(([n, label]) => { const d = el('div', 'g24-num'); d.append(el('p', 'num', n), el('p', '', label)); nums.append(d); });
+  [[finite(decisionCount) ? String(decisionCount) : 'many', 'decisions logged'], ['5', 'end-to-end AI reviews'], ['0', 'rights-scan hits on my machine']].forEach(([n, label]) => { const d = el('div', 'g24-num'); d.append(el('p', 'num', n), el('p', '', label)); nums.append(d); });
   wrap.append(loop, el('div', 'g24-body', ''), nums);
   wrap.querySelector('.g24-body').append(lanes);
   return wrap;

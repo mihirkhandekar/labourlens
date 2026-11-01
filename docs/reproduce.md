@@ -14,7 +14,7 @@ make verify       # lint, offline tests, docs links, rights scan, secrets scan
 
 | Artefact | Command | Needs | Expected result | Cost |
 |---|---|---|---|---|
-| Offline test suite | `make test` | checkout only | 782 passed, 56 deselected (1 Nov 2026) | none |
+| Offline test suite | `make test` | checkout only | 1027 passed, 57 deselected (1 Nov 2026, `uv run pytest -q -m 'not corpus'`) | none |
 | Corpus tests | `make test-corpus` | private corpus | 56 tests pass | none |
 | Report data for the site | `make report` (`uv run labourlens build-report`) | checkout only | rewrites `web/static/data/report.json` from committed artefacts; the file in git is the output of this command | none |
 | Report and deck, static chapters | `make serve`, open `http://127.0.0.1:8000/` | checkout only | the ten report chapters and the deck; the live workbench needs the corpus and an API key | none |

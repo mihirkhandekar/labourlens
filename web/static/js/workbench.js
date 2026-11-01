@@ -238,7 +238,7 @@ export function mountWorkbench(root, {onMode} = {}) {
       calls.append(li);
     });
     nodes.push(mcpSection('Recent calls', calls.children.length ? calls : el('p', 'small muted', data.enabled ? 'Nothing called yet. Ask a question, or try a call below.' : 'No calls: MCP is off.'),
-      el('p', 'small muted', 'The last 20 lookups this server made, across all visitors.')));
+      el('p', 'small muted', 'The last 20 lookups made in this session.')));
     if (data.enabled && data.connected && data.examples?.length) {
       const out = el('pre', 'mcp-reply'); out.tabIndex = 0; out.setAttribute('aria-label', 'Raw reply'); out.setAttribute('aria-live', 'polite'); out.textContent = mcpReply || 'The raw reply appears here.';
       const row = el('div', 'mcp-examples');

@@ -3,9 +3,9 @@ import {chapter, section, grid, stat, callout, evi, dataTable} from './ui.js';
 
 const TOOLS = ['get_statistic', 'list_datasets', 'describe_dataset', 'get_dimension_values', 'latest_value', 'compare_periods', 'series_summary', 'get_revisions', 'get_provenance'];
 const CHECKS = {
-  'Timeout refusal': ['Slow server', 'A call that exceeds the 1.5 second limit times out.'],
+  'Timeout refusal': ['Slow server', 'A call that runs past a deliberately short limit (1.5 s in the demo; the client default is 8 s) times out.'],
   'Unavailable refusal': ['Server dies mid-call', 'Reported as unavailable. It is not returned as "no data".'],
-  'Version refusal': ['Unexpected version', 'A server that reports another protocol version is refused.'],
+  'Version refusal': ['Unexpected version', 'A server that reports an unexpected version string is refused. The protocol revision (2025-11-25) is negotiated separately.'],
   'Schema refusal': ['Broken output schema', 'A result that breaks its own schema is refused.'],
   'Size refusal': ['400 KB response', 'Refused by the response-size cap.'],
   'Secret absent': ['No inherited secrets', 'The server process starts without OPENAI_API_KEY.']
@@ -14,7 +14,7 @@ const CHECKS = {
 function diagramFigure() {
   const boxes = [
     {id: 'agent', title: 'Agent', sub: 'plans and answers', text: 'In the live app, get_series goes through the MCP client (get_statistic only). The accuracy evaluations called statistics directly.'},
-    {id: 'client', title: 'MCP client', sub: 'treats the server as untrusted', text: 'Allow-listed launch, minimal environment, name and version checks, tool allow-list, input schemas, deadlines, size caps, typed result validation, and quarantine of instruction-like content.'},
+    {id: 'client', title: 'MCP client', sub: 'treats the server as untrusted', text: 'Allow-listed launch, minimal environment, name and version checks, tool allow-list, input and output schemas, deadlines, size caps, typed result validation, and quarantine of instruction-like content.'},
     {id: 'server', title: 'MCP server', sub: '9 tools, 2 resources, 1 prompt', text: 'labourlens-stats. Serves statistics and catalogue metadata only. MOM report text is excluded. Default transport is stdio; an optional loopback HTTP transport needs a bearer token.'},
     {id: 'store', title: 'Validated statistics', sub: 'observations and catalogue', text: 'The same validated observation table the agent uses. Rows carry observation identifiers.'}
   ];

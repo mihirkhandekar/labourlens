@@ -1,6 +1,6 @@
 {
   "schema_version": "report-1.0",
-  "generated_at": "2026-11-01T14:38:23.169381+00:00",
+  "generated_at": "2026-11-01T15:20:05.653866+00:00",
   "summary": {
     "title": "LabourLens research workbench",
     "scope": [
@@ -2635,7 +2635,7 @@
         "provenance": [
           "experiments/corpus-snapshots/v3.1.json"
         ],
-        "rerun": "Re-ran the 65 fresh questions on this build: filter then rerank 73.8% against 70.8% without it; not a demonstrated gain."
+        "rerun": "Re-ran the 65 fresh questions on this build, one run per arm: filter then rerank, gpt-6-luna 73.8% against 70.8% without it (did not meet the preregistered rule); gpt-5.6-luna 76.9% against 72.3% without it (met the preregistered rule). The order of the two models flipped from the original run."
       }
     ],
     "provenance": [
@@ -57257,6 +57257,76 @@
         "T-D05"
       ]
     },
+    "context": {
+      "v1": {
+        "n": 36,
+        "conversation": {
+          "n": 30,
+          "passed": 29
+        },
+        "adversarial": {
+          "n": 6,
+          "passed": 6
+        },
+        "triggered_standalone": {
+          "n": 6,
+          "passed": 6
+        },
+        "failed_open": {
+          "n": 0
+        },
+        "cost_and_latency": {
+          "calls": 36,
+          "prompt_tokens": 28522,
+          "completion_tokens": 3269,
+          "total_cost_usd": 0.004487,
+          "mean_cost_usd": 0.000125,
+          "latency_p50_s": 1.56,
+          "latency_p95_s": 2.9
+        },
+        "passthrough": {
+          "n": 409,
+          "unchanged_without_call": 402
+        },
+        "provenance": [
+          "experiments/context/ctx-v1-luna/metrics.json"
+        ]
+      },
+      "v2": {
+        "n": 36,
+        "conversation": {
+          "n": 30,
+          "passed": 30
+        },
+        "adversarial": {
+          "n": 6,
+          "passed": 6
+        },
+        "triggered_standalone": {
+          "n": 6,
+          "passed": 6
+        },
+        "failed_open": {
+          "n": 0
+        },
+        "cost_and_latency": {
+          "calls": 36,
+          "prompt_tokens": 28738,
+          "completion_tokens": 2864,
+          "total_cost_usd": 0.004306,
+          "mean_cost_usd": 0.00012,
+          "latency_p50_s": 1.49,
+          "latency_p95_s": 2.32
+        },
+        "passthrough": {
+          "n": 409,
+          "unchanged_without_call": 402
+        },
+        "provenance": [
+          "experiments/context/ctx-v2-luna/metrics.json"
+        ]
+      }
+    },
     "corpus": {
       "label": "v3.1",
       "sources": 85,
@@ -67544,7 +67614,7 @@
     "The population basis of the dataset employment series is unverified."
   ],
   "provenance": {
-    "commit": "353aa6e565ca85869bf1f27a5546deef41d6123b",
+    "commit": "30541954c7996f11520eac17cee580f93f745baa",
     "artifacts": [
       {
         "path": "data/export/sources.json",
@@ -68435,6 +68505,16 @@
         "path": "experiments/corpus-snapshots/v3.1-diff.json",
         "status": "available",
         "sha256": "8ed1d5d8fede7ded8c23bc5e67db1e3bb3b50e03a53043dcd11ff2aa5eb37e1f"
+      },
+      {
+        "path": "experiments/context/ctx-v1-luna/metrics.json",
+        "status": "available",
+        "sha256": "0d6ec73e50fccfc5179ecaa99ae95aa00e4d395c0f4b86c375940cdcf7ba0929"
+      },
+      {
+        "path": "experiments/context/ctx-v2-luna/metrics.json",
+        "status": "available",
+        "sha256": "167fd9c42dd6802ed25c27d39d1419c9ab8183c40d9b77f694810cea103981f7"
       },
       {
         "path": "docs/decisions.md",

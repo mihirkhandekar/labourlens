@@ -21,8 +21,8 @@ HOME = (STATIC / "js" / "home.js").read_text(encoding="utf-8")
 
 REQUIRED_STEPS = {
     "about": "About me", "assignment": "The assignment", "problem": "My project", "system": "The Agentic System", "data": "The data",
-    "eda": "What the data showed", "hard": "Challenges with the data", "build": "Document build", "models": "Models", "retrieval": "Retrieval Strategies", "agent": "The agent",
-    "tools": "Tools and MCP", "safety": "Safety", "review": "Human Review of Dataset", "ops": "Agent Workbench", "process": "How I built it",
+    "eda": "What the data showed", "hard": "Challenges with the data", "build": "Document build", "retrieval": "Retrieval Strategies", "agent": "The agent",
+    "models": "Models", "tools": "Tools and MCP", "ops": "Agent Workbench", "review": "Human Review of Dataset", "safety": "Safety", "process": "How I built it",
     "limits": "Limits", "run": "Run it",
 }
 REVIEW_SENTENCE = "I signed off four separate review streams"
@@ -138,8 +138,8 @@ def test_process_section_covers_the_practices_with_sources():
     assert "section('work').decisions" in STORY, "the decision count must come from report.json"
     for stale in ("sandboxed", "explicit paths"):
         assert stale not in STORY, f"{stale}: not in the repository record"
-    order = [m.start() for m in (re.search(f"id: '{i}'", STORY) for i in ("tools", "safety", "review", "ops", "process", "limits"))]
-    assert order == sorted(order), "the process section sits after deployment and before the limits"
+    nav = list(_steps())
+    assert nav.index("process") > nav.index("safety") and nav.index("limits") > nav.index("process"), "the process section sits after the checks and before the limits"
 
 
 @pytest.mark.parametrize("path", REPORT_JS + [REPORT_CSS], ids=lambda p: p.name)

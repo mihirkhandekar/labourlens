@@ -2,17 +2,20 @@
 
 import asyncio
 import collections
+from concurrent.futures import ThreadPoolExecutor
 from types import SimpleNamespace
 
+import httpx
 import pandas as pd
 import pytest
 
+from labourlens.agent.tools import CALLER_SESSION, Tools
 from labourlens.mcp.client import McpClientError, RECENT_CALLS, SyncStatsBackend
 from labourlens.report.app import MCP_EXAMPLES
-from test_app import ACCESS_CODE, SESSION_SECRET, client_for, login, settings  # noqa: F401  (settings is a fixture)
+from test_app import ACCESS_CODE, SESSION_SECRET, agent_result, client_for, login, settings  # noqa: F401  (settings is a fixture)
 
 DESCRIBED = {
-    "server": {"name": "labourlens-stats", "version": "0.1.0", "protocol_version": "2025-06-18", "transport": "stdio"},
+    "server": {"name": "labourlens-stats", "version": "0.1.0", "protocol_version": "2025-06-18", "capabilities": ["prompts", "resources", "tools"], "transport": "stdio"},
     "tools": [{"name": "get_statistic", "title": "Get published statistic", "description": "Return rows.", "read_only": True, "in_allow_list": True,
                "input_schema": {"properties": {"source_id": {"type": "string", "enum": ["a"], "enum_count": 1}}, "required": ["source_id"]}},
               {"name": "list_datasets", "title": "List datasets", "description": "List.", "read_only": True, "in_allow_list": True, "input_schema": {"properties": {}, "required": []}}],
@@ -35,12 +38,29 @@ class FakeBackend:
         self.seen.append((tool, args))
         if tool == "get_statistic":
             raise McpClientError("invalid_arguments", self.leak or "rejected by the fake")
-        self.calls.append({"tool": tool, "arguments": args, "ms": 1.0, "ok": True, "attempt": 0, "quarantined": 0})
+        entry = {"tool": tool, "arguments": args, "ms": 1.0, "ok": True, "attempt": 0, "quarantined": 0}
+        if CALLER_SESSION.get():
+            entry["session"] = CALLER_SESSION.get()
+        self.calls.append(entry)
         return SimpleNamespace(result=SimpleNamespace(model_dump=lambda mode="json": {"dataset_count": 0} if tool == "list_datasets" else {"big": "x" * 20000}), quarantined=0)
+
+    def query(self, source_id, period_from, period_to, dimension=None, adjustment=None, indicator_id=None):
+        entry = {"tool": "get_statistic", "arguments": {"source_id": source_id}, "ms": 1.0, "ok": True, "attempt": 0, "quarantined": 0}
+        if CALLER_SESSION.get():
+            entry["session"] = CALLER_SESSION.get()
+        self.calls.append(entry)
+        return [], None
 
 
 def shared_with(backend):
     return lambda: SimpleNamespace(obs=pd.DataFrame(), passages_by_id={}, stats_backend=backend)
+
+
+def run_with_runner(settings, backend, runner, scenario):
+    async def go():
+        async with client_for(settings, runner=runner, shared_factory=shared_with(backend)) as (app, client):
+            return await scenario(app, client)
+    return asyncio.run(go())
 
 
 def run(settings, backend, scenario):
@@ -157,6 +177,44 @@ def test_recent_calls_are_bounded_and_record_arguments():
         assert backend.calls[-1]["arguments"] == {"source_id": "s", "period_from": "2024-Q1"} and backend.calls[-1]["tool"] == "get_statistic"
     finally:
         backend.close()
+
+
+def test_recorded_calls_carry_the_caller_session_tag_only_when_one_is_set():
+    backend = SyncStatsBackend()
+    try:
+        backend._record("list_datasets", {}, 0.0, True, 0)
+        token = CALLER_SESSION.set("visitor-a")
+        try:
+            backend._record("list_datasets", {}, 0.0, True, 0)
+        finally:
+            CALLER_SESSION.reset(token)
+        assert "session" not in backend.calls[0] and backend.calls[1]["session"] == "visitor-a"
+    finally:
+        backend.close()
+
+
+def test_overview_shows_each_visitor_only_their_own_calls_and_never_the_session_tag(settings):
+    backend = FakeBackend()
+    settings.session_limit = 20
+
+    def agent_runner(question, shared):  # like the agent graph: the tool runs in a pool thread that does not inherit the request context
+        tools = Tools(shared)
+        with ThreadPoolExecutor(1) as pool:
+            pool.submit(tools.get_series, "visitor_marker_" + question[:1], "2024-Q1", "2024-Q1").result()
+        return agent_result(question)
+
+    async def scenario(app, client):
+        await login(client)
+        async with httpx.AsyncClient(transport=httpx.ASGITransport(app=app), base_url="https://testserver") as other:
+            await login(other)
+            assert (await client.post("/api/mcp/try", json={"example": "list_datasets"})).status_code == 200
+            assert (await other.post("/api/ask", json={"question": "Zebra resident unemployment rate trend?"})).status_code == 200
+            mine, theirs = (await client.get("/api/mcp")).json(), (await other.get("/api/mcp")).json()
+        assert [c["tool"] for c in mine["recent_calls"]] == ["list_datasets"]
+        assert [c["arguments"] for c in theirs["recent_calls"]] == [{"source_id": "visitor_marker_Z"}]
+        assert len(backend.calls) == 2  # the operator's log is global
+        assert all("session" not in c for c in mine["recent_calls"] + theirs["recent_calls"])
+    run_with_runner(settings, backend, agent_runner, scenario)
 
 
 def test_workbench_shell_has_the_mcp_tab():

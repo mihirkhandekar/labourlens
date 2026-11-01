@@ -10,6 +10,7 @@ calculate_from_text_values only accepts a figure that is verifiably present in t
 
 from __future__ import annotations
 
+import contextvars
 import hashlib
 import re
 import time
@@ -26,6 +27,8 @@ from labourlens.security.guards import injection_flags, sanitize_text
 
 SCOPE_LO, SCOPE_HI = catalog.ANSWER_SCOPE_START, catalog.ANSWER_SCOPE_END
 MAX_NOTES = 8
+# Set by the web layer around one visitor's request so the MCP client's call log can be filtered per visitor. Never returned to a browser.
+CALLER_SESSION: contextvars.ContextVar[str | None] = contextvars.ContextVar("labourlens_caller_session", default=None)
 RELEASE_ID = re.compile(r"^mom-(\d{4})-q([1-4])-(advance|final.*)$")
 PERIOD = re.compile(r"^(\d{4})-Q([1-4])$")
 MAX_QUERY_CHARS = 300
@@ -219,6 +222,7 @@ class Tools:
         if self.retrieval not in ("hybrid", "r3", "r3w"):
             raise ValueError("retrieval must be hybrid, r3 or r3w")
         self.question, self.tool_timeout_s = question, tool_timeout_s
+        self.caller = CALLER_SESSION.get()  # visitor tag of the web request that started this run (None outside the web app); only labels MCP call-log entries
         self.tool_set = "base"  # "v2" enables calculate_from_text_values and the actionable unknown-dimension error (set by build_graph)
         self.items: list[ContextPassage] = []
         self._ids: set[str] = set()
@@ -377,7 +381,11 @@ class Tools:
     def get_series(self, source_id: str, period_from: str, period_to: str, dimension: str | None = None,
                    adjustment: str | None = None, indicator_id: str | None = None) -> ToolResult:
         backend = self.sh.stats_backend or self.sh.stats
-        rows, err = backend.query(source_id, period_from, period_to, dimension, adjustment, indicator_id)
+        token = CALLER_SESSION.set(self.caller)  # this runs in a pool thread that does not inherit the request context; re-attach the run's visitor tag
+        try:
+            rows, err = backend.query(source_id, period_from, period_to, dimension, adjustment, indicator_id)
+        finally:
+            CALLER_SESSION.reset(token)
         if err is not None:
             return self._dimension_help(err, source_id, dimension, adjustment, indicator_id) if self.tool_set == "v2" and is_unknown_dimension(err) else err
         new = []

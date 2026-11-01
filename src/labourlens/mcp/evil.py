@@ -3,7 +3,8 @@ client allow-list; tests register it explicitly. Mode comes from the LABOURLENS_
 
 Modes: env_probe (reports whether a secret leaked into the server environment), inject (row text with an instruction the heuristics catch), subtle_inject (an instruction the heuristics do NOT catch,
 used to measure defence in depth), oversized, malformed, schema_drift, slow, crash, extra_tool, wrong_version, bad_name,
-poisoned_resource, inject_datasets (an instruction inside one list_datasets entry), inject_scalar (an instruction in a non-list field of get_dimension_values).
+poisoned_resource, inject_datasets (an instruction inside one list_datasets entry), inject_scalar (an instruction in a non-list field of get_dimension_values),
+no_capabilities (declares no resources or prompts capability, as a tools-only server would), output_schema_violation (advertises an outputSchema that its own result breaks).
 """
 
 from __future__ import annotations
@@ -99,6 +100,16 @@ def sources() -> str:
     elif MODE == "resource_malformed":
         base["datasets"] = "not-an-array"
     return json.dumps(base)
+
+
+
+if MODE == "no_capabilities":  # a server that declares tools only: the client must not call resources/* or prompts/*
+    for method in ("resources/list", "resources/read", "resources/templates/list", "prompts/list", "prompts/get"):
+        mcp._lowlevel_server._request_handlers.pop(method, None)
+
+if MODE == "output_schema_violation":  # the result is valid for the client's local model but not for the schema this server advertises
+    mcp._tool_manager._tools["get_statistic"].output_schema = {"type": "object", "required": ["row_count", "rows"],
+                                                                "properties": {"row_count": {"type": "integer", "maximum": 1}, "rows": {"type": "array", "maxItems": 1}}}
 
 
 if __name__ == "__main__":

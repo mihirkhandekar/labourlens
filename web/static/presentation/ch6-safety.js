@@ -24,16 +24,16 @@ function matrixFigure(m) {
     });
     const x = row.metrics;
     cells.push({value: x.pass_rate, text: `${x.passed}/${x.n_scored}`, sub: fmt.pct(x.pass_rate), tone: x.passed < x.n_scored ? 'bad' : undefined, lines: [`${NAME[model] || model}, ${mode}`, `Passed ${x.passed} of ${x.n_scored}`, `Wilson 95% interval ${fmt.pct(x.pass_rate_ci95?.[0])} to ${fmt.pct(x.pass_rate_ci95?.[1])}`]});
-    return {label: `${NAME[model] || model}, ${mode}`, cells, row};
+    return {label: `${model}, ${mode}, earlier run`, cells, row};
   }).filter(Boolean);
   const defended = rows.filter(r => /defended/.test(r.label)), naive = rows.filter(r => /no defence/.test(r.label));
   const failOf = (row, only) => Object.entries(row.row.strata || {}).reduce((sum, [key, e]) => sum + (!only || key === only ? e.n - e.passed : 0), 0);
   const failTotal = rows.reduce((sum, r) => sum + failOf(r), 0), failIndirect = rows.reduce((sum, r) => sum + failOf(r, 'indirect_injection_passage'), 0);
-  const lunaDef = rows.find(r => r.label === 'gpt-6-luna, defended')?.row.metrics, lunaNaive = rows.find(r => r.label === 'gpt-6-luna, no defence')?.row.metrics;
-  const lunaText = lunaDef && lunaNaive ? `gpt-6-luna: ${lunaDef.passed} of ${lunaDef.n_scored} defended, ${lunaNaive.passed} of ${lunaNaive.n_scored} without.` : '';
+  const lunaDef = rows.find(r => r.label.startsWith('gpt-6-luna, defended'))?.row.metrics, lunaNaive = rows.find(r => r.label.startsWith('gpt-6-luna, no defence'))?.row.metrics;
+  const lunaText = lunaDef && lunaNaive ? `Earlier run on corpus v1, before the cross-check: gpt-6-luna ${lunaDef.passed} of ${lunaDef.n_scored} defended, ${lunaNaive.passed} of ${lunaNaive.n_scored} without. The final-code run is shown below.` : '';
   return {
     rows, fig: figure({
-      id: 'fig-threat-matrix', title: `${failIndirect} of ${failTotal} failed cases across ${rows.length} runs are poisoned-passage cases`, wide: true,
+      id: 'fig-threat-matrix', title: `Earlier runs on corpus v1: ${failIndirect} of ${failTotal} failed cases across ${rows.length} runs are poisoned-passage cases`, wide: true,
       takeaway: `Red cells contain failures. ${lunaText}`,
       summary: rows.map(r => `${r.label}: ${r.cells.map((c, i) => c ? `${cols[i].label} ${c.text}` : '').join(', ')}`).join('. '),
       source: {data: 'report.json › security.rows[*].strata and .metrics', files: ['experiments/threats/runs/*.metrics.json']},
@@ -125,10 +125,10 @@ function postfixFigure(m) {
 
 export function renderSafety(m, ctx) {
   const matrix = matrixFigure(m);
-  const luna = m.securityRow('gpt-6-luna')?.metrics, lunaNaive = m.securityRow('gpt-6-luna+naive')?.metrics;
+  const luna = m.securityRow('gpt-6-luna')?.metrics, lunaNaive = m.securityRow('gpt-6-luna+naive')?.metrics, fin = m.e2efixRow('gpt-6-luna')?.metrics;
   const ch = chapter({
     id: 'safety',
-    title: luna ? `gpt-6-luna passes ${luna.passed} of ${luna.n_scored} threat cases with defences; T-I06 is not shown stable across runs, and the scanner missed 5 of 5 paraphrase probes` : 'Threat tests and observed failures',
+    title: fin ? `In the final-code run gpt-6-luna passes ${fin.passed} of ${fin.n_scored} threat cases with defences; T-I06 is not shown stable across runs, and the scanner missed 5 of 5 paraphrase probes` : 'Threat tests and observed failures',
     bullets: [
       `Suite: ${CATEGORIES.length} categories, five configurations, one run each; handwritten cases.`,
       'Retrieved text is treated as untrusted data; tools are read-only.',
@@ -139,10 +139,10 @@ export function renderSafety(m, ctx) {
   const stats = el('div', 'pr-stats');
   if (luna) stats.append(
     stat({value: luna.n_scored, label: 'Threat cases', note: 'Six categories, handwritten', src: 'report.json › security.rows[gpt-6-luna].metrics.n_scored'}),
-    stat({value: luna.passed, label: 'Passed, gpt-6-luna defended', note: `Wilson 95% interval ${fmt.pct(luna.pass_rate_ci95[0])} to ${fmt.pct(luna.pass_rate_ci95[1])}`, tone: 'brass', src: 'report.json › security.rows[gpt-6-luna].metrics'}),
+    stat({value: luna.passed, label: 'Passed, gpt-6-luna defended (earlier run)', note: `Corpus v1; Wilson 95% interval ${fmt.pct(luna.pass_rate_ci95[0])} to ${fmt.pct(luna.pass_rate_ci95[1])}`, tone: 'brass', src: 'report.json › security.rows[gpt-6-luna].metrics'}),
     stat({value: luna.canary_leaks, label: 'Canary leaks, gpt-6-luna', note: 'Fake secrets in an answer', src: 'report.json › security.rows[gpt-6-luna].metrics.canary_leaks'})
   );
-  const s = section(luna && lunaNaive ? `Defences did not change the gpt-6-luna result: ${luna.passed} of ${luna.n_scored} defended, ${lunaNaive.passed} of ${lunaNaive.n_scored} without` : 'Threat matrix', ['Cells are passed over scored cases.', 'Poisoned passages reached the agent\u2019s evidence in these runs.']);
+  const s = section(luna && lunaNaive ? `Earlier runs on corpus v1: defences did not change the gpt-6-luna result (${luna.passed} of ${luna.n_scored} defended, ${lunaNaive.passed} of ${lunaNaive.n_scored} without)` : 'Threat matrix', ['Cells are passed over scored cases.', 'These five runs were made before the cross-check was added. The final-code run is below.']);
   s.append(stats, matrix.fig.root);
   s.append(grid('pr-split', intervalFigure(m, matrix.rows).root, canaryTable(matrix.rows)));
   ch.body.append(s);

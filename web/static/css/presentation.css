@@ -906,6 +906,7 @@ th[aria-sort="descending"] .pr-sort::after { content: " \2193"; }
 .deck-rows .deck-ico { width: 28px; height: 28px; }
 .has-tip > .deck-tip.is-table { width: max-content; max-width: 1500px; left: 0; right: auto; padding: 22px 26px; z-index: 40; }
 .has-tip > .deck-tip.is-up { top: auto; bottom: 100%; margin: 0 0 12px; }
+.has-tip > .deck-tip.is-wide { width: min(880px, 78vw); max-width: none; font-size: 20px; line-height: 1.4; }
 .has-tip > .deck-tip.is-down { top: 100%; margin: 12px 0 0; }
 .g19-row.has-rows { position: relative; cursor: help; }
 .g19-row.has-rows .g19-hard { border-bottom: 2px dotted var(--line-strong); width: fit-content; }

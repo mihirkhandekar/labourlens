@@ -493,6 +493,8 @@ def _mcp(artifacts: _Artifacts) -> dict:
 _TRIAGE = "experiments/triage/triage-v1-luna/metrics.json"
 _CORPUS_V31 = "experiments/corpus-snapshots/v3.1.json"
 _CORPUS_V31_DIFF = "experiments/corpus-snapshots/v3.1-diff.json"
+_CONTEXT_V1 = "experiments/context/ctx-v1-luna/metrics.json"
+_CONTEXT_V2 = "experiments/context/ctx-v2-luna/metrics.json"
 
 
 def _serving(artifacts: _Artifacts, sources: dict) -> dict:
@@ -521,6 +523,22 @@ def _serving(artifacts: _Artifacts, sources: dict) -> dict:
             "cost_and_latency": _numeric(triage.get("cost_and_latency")),
             "diverted_threat_cases": [case for case in triage.get("false_out_of_scope_threats", {}).get("diverted_case_ids", []) if _label(case)],
         }
+    ctx_runs = {}
+    for label, path in (("v1", _CONTEXT_V1), ("v2", _CONTEXT_V2)):
+        data = artifacts.mapping(path)
+        if data:
+            ctx_runs[label] = {
+                "n": data.get("n"),
+                "conversation": _numeric(data.get("conversation")),
+                "adversarial": _numeric(data.get("adversarial")),
+                "triggered_standalone": _numeric(data.get("triggered_standalone")),
+                "failed_open": _numeric(data.get("failed_open")),
+                "cost_and_latency": _numeric(data.get("cost_and_latency")),
+                "passthrough": {key: value for key, value in _numeric(data.get("passthrough_audit")).items() if key in {"n", "unchanged_without_call"}} if isinstance(data.get("passthrough_audit"), dict) else {},
+                "provenance": [path],
+            }
+    if ctx_runs:
+        block["context"] = ctx_runs
     if snapshot:
         parser = diff.get("parser_version", {}) if isinstance(diff.get("parser_version"), dict) else {}
         block["corpus"] = {
@@ -1005,17 +1023,31 @@ def _heldout_v31(artifacts: _Artifacts) -> dict | None:
             "provenance": sorted(set(paths))}
 
 
-def _rerun_sentence(v31: dict | None) -> str | None:
-    primary = ((v31 or {}).get("paired") or {}).get("gpt-6-luna")
+def _rerun_sentence(v31: dict | None, v2: dict | None = None) -> str | None:
+    """One plain paragraph for both models: each model's result and whether it met the preregistered rule, and a flag when the order of the two models differs from the original run."""
+    paired = (v31 or {}).get("paired") or {}
+    primary, second = paired.get("gpt-6-luna"), paired.get("gpt-5.6-luna")
     if not primary or not isinstance(primary.get("behaviour_accuracy"), dict):
         return None
-    acc, n = primary["behaviour_accuracy"], primary["n_gold_cases"]
+    n = primary["n_gold_cases"]
     right = lambda share: round(share * n) / n * 100  # the paired file rounds shares to four places; the case count is exact
-    gain = "a demonstrated gain" if (v31 or {}).get("decision", {}).get("demonstrated_gain_primary") else "not a demonstrated gain"
-    return f"Re-ran the {n} fresh questions on this build: filter then rerank {right(acc['candidate']):.1f}% against {right(acc['baseline']):.1f}% without it; {gain}."
+
+    def part(name: str, row: dict) -> str:
+        acc = row["behaviour_accuracy"]
+        verdict = "met the preregistered rule" if row.get("demonstrated_gain") else "did not meet the preregistered rule"
+        return f"{name} {right(acc['candidate']):.1f}% against {right(acc['baseline']):.1f}% without it ({verdict})"
+
+    text = f"Re-ran the {n} fresh questions on this build, one run per arm: filter then rerank, {part('gpt-6-luna', primary)}"
+    if second and isinstance(second.get("behaviour_accuracy"), dict):
+        text += f"; {part('gpt-5.6-luna', second)}"
+        old = ((v2 or {}).get("paired") or {})
+        o1, o2 = (old.get("gpt-6-luna") or {}).get("behaviour_accuracy"), (old.get("gpt-5.6-luna") or {}).get("behaviour_accuracy")
+        if isinstance(o1, dict) and isinstance(o2, dict) and (o1["candidate"] > o2["candidate"]) != (primary["behaviour_accuracy"]["candidate"] > second["behaviour_accuracy"]["candidate"]):
+            text += ". The order of the two models flipped from the original run"
+    return text + "."
 
 
-def _corpus_builds(artifacts: _Artifacts, v31: dict | None = None) -> dict:
+def _corpus_builds(artifacts: _Artifacts, v31: dict | None = None, v2: dict | None = None) -> dict:
     rows = []
     for key, name, purpose in _BUILDS:
         path = f"experiments/corpus-snapshots/{key}.json"
@@ -1026,7 +1058,7 @@ def _corpus_builds(artifacts: _Artifacts, v31: dict | None = None) -> dict:
         row = {"id": key, "name": name, "passages": passages, "documents": snapshot.get("document_files") if isinstance(snapshot.get("document_files"), int) else None,
                "purpose": purpose, "current": key == _BUILDS[-1][0], "provenance": [path]}
         if row["current"]:
-            row["rerun"] = _rerun_sentence(v31) if key == "v3.1" else None
+            row["rerun"] = _rerun_sentence(v31, v2) if key == "v3.1" else None
         rows.append(row)
     return _section("Document builds: passage counts from the committed corpus snapshots.", rows, [row["provenance"][0] for row in rows])
 
@@ -1070,7 +1102,7 @@ def build_report(root: Path) -> dict:
         "generated_at": datetime.now(timezone.utc).isoformat(),
         "summary": summary, "sources": sources, "charts": charts, "eda": _eda(charts),
         "row_excerpts": _row_excerpts(artifacts, sources, reconciliation),
-        "corpus_builds": _corpus_builds(artifacts, v31_held),
+        "corpus_builds": _corpus_builds(artifacts, v31_held, v2_held),
         "heldout_v31": v31_held,
         "retrieval": _section("Development retrieval comparisons. Configurations differ between experiments.", retrieval_rows, retrieval_paths + ladder.get("provenance", []) + ladder_v2.get("provenance", []), ladder=ladder, ladder_corpus_v2=ladder_v2),
         "answers": _section("Saved answer metrics. Model outputs are not published.", answer_rows, answer_paths,

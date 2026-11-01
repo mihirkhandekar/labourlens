@@ -145,25 +145,39 @@ def test_no_bridge_sentences_or_pills_on_faces():
 
 
 REQUIRED_TITLES = [
-    "About me", "The assignment", "My project", "The Agentic System", "Choosing the data", "What the data showed", "Challenges with the data",
-    "Success criteria and failure modes", "One current document build", "Reading the reports", "Retrieval Strategies", "Does filtering help?", "The agent loop", "Ensuring Reliable Sources",
-    "Choosing the models", "How I measured", "Human Review of Dataset", "The experiment ladder", "Why it missed", "Fixing the calculation gap",
-    "GenAI concepts in this build", "The MCP server", "Attacks and defences", "A planted wrong figure", "Agent Workbench", "How I built it", "Limits and next steps", "Summary",
+    "About me", "The assignment", "My project", "The Agentic System", "Success criteria and failure modes",
+    "Choosing the data", "What the data showed", "Retrenchments rose but the data does not say why", "Advance and final figures differ", "Challenges with the data",
+    "Reading the reports", "One current document build", "Retrieval Strategies", "Does filtering help?",
+    "The agent loop", "Choosing the models", "The MCP server", "GenAI concepts in this build",
+    "Ensuring Reliable Sources", "Agent Workbench",
+    "How I measured", "Human Review of Dataset", "The experiment ladder", "Why it missed", "Fixing the calculation gap", "Attacks and defences", "A planted wrong figure",
+    "How I built it", "Limits and next steps", "Summary",
 ]
 
 
-def test_main_deck_follows_the_assignment_and_has_short_plain_titles():
+def _flow_rows():
+    text = (STATIC / "presentation" / "slides.js").read_text(encoding="utf-8")
+    block = text.split("const FLOW = [", 1)[1].split("\n  ];", 1)[0]
+    return re.findall(r"\['([^']+)', (null|'all'|\d), '([^']+)'\]", block)
+
+
+def test_main_deck_follows_the_navigation_flow_and_has_short_plain_titles():
     main = _slides_main_section()
-    titles = []
-    for title in re.findall(r"\btitle: '([^']+)'", main):
-        if title not in titles:
-            titles.append(title)
-    position = -1
-    for wanted in REQUIRED_TITLES:
-        assert wanted in titles, wanted
-        assert titles.index(wanted) > position, f"{wanted} is out of order"
-        position = titles.index(wanted)
-    for title in titles[1:]:
+    defined = set(re.findall(r"\btitle: '([^']+)'", main))
+    rows = _flow_rows()
+    assert len(rows) == 31
+    assert [r[0] for r in rows[1:]] == REQUIRED_TITLES
+    for title, _, _ in rows:
+        assert title in defined or "Singapore AI Agent" in title, title
+    # Each slide's stage sits in the top navigation order: Sources, Processing, Retrieval, Agent, Answer, Checks.
+    stages = [int(s) for _, s, _ in rows if s.isdigit()]
+    assert stages == sorted(stages) and set(stages) == {0, 1, 2, 3, 4, 5}
+    names = ["Sources", "Processing", "Retrieval", "Agent", "Answer", "Checks"]
+    for title, stage, chapter in rows:
+        if stage.isdigit():
+            assert chapter == names[int(stage)], title
+    assert "['Sources', 'Processing', 'Retrieval', 'Agent', 'Answer', 'Checks']" in (STATIC / "presentation" / "deck.js").read_text()
+    for title in [r[0] for r in rows][1:]:
         assert len(title.split()) <= 9, title
     assert 28 <= len(re.findall(r"\badd\(\{", main)) <= 32
 
@@ -295,9 +309,9 @@ def test_threat_slide_reads_counts_from_the_report_data_and_labels_runs():
     assert "threatRuns(m)" in main and "no defence effect for the stronger models" in main
 
 
-def test_workbench_slide_names_the_two_live_only_steps():
+def test_workbench_slide_names_the_live_only_steps():
     main = _slides_main_section()
-    assert "small-talk reply and a scope check before the agent" in main and "The experiments did not use them" in main
+    assert "a small-talk reply, a scope check and a rewrite of follow-up questions" in main and "The experiments did not use them" in main
 
 
 def test_workbench_qr_has_a_quiet_zone():
@@ -317,3 +331,40 @@ def test_every_graphic_used_by_the_slides_and_report_is_imported():
         body = re.sub(r"import \{[^}]*\} from [^\n]*", "", text)
         used = {name for name in exported if re.search(rf"(?<![\w.]){name}\(", body) or re.search(rf"safe\([^)]*, {name}\)", body)}
         assert used <= imported, (path.name, sorted(used - imported))
+
+
+def test_review_slide_group_is_not_a_nested_section():
+    """A <section> inside a slide makes reveal.js treat it as a vertical stack (counter 0 / 51, Previous disabled)."""
+    graphics = (STATIC / "presentation" / "graphics.js").read_text(encoding="utf-8")
+    assert "el('section'" not in graphics
+
+
+def test_context_rewrite_is_a_third_step_with_its_measurement_read_from_the_report():
+    import json
+    report = json.loads((STATIC / "data" / "report.json").read_text(encoding="utf-8"))
+    context = report["serving"]["context"]
+    assert context["v1"]["conversation"]["passed"] == 29 and context["v2"]["conversation"]["passed"] == 30
+    assert context["v2"]["adversarial"] == {"n": 6, "passed": 6}
+    slides = (STATIC / "presentation" / "slides.js").read_text(encoding="utf-8")
+    assert "contextSentence(serving)" in slides and "Three steps run in front of the agent" in slides
+    assert "two steps" not in slides.lower()
+
+
+def test_threat_figures_in_the_report_are_labelled_by_run():
+    safety = (STATIC / "presentation" / "ch6-safety.js").read_text(encoding="utf-8")
+    assert "earlier run" in safety and "final-code run" in safety
+
+
+def test_rerun_sentence_names_both_models_and_the_order_flip():
+    import json
+    report = json.loads((STATIC / "data" / "report.json").read_text(encoding="utf-8"))
+    rerun = next(row["rerun"] for row in report["corpus_builds"]["rows"] if row.get("current"))
+    assert "gpt-6-luna" in rerun and "gpt-5.6-luna" in rerun and "did not meet" in rerun and "met the preregistered rule" in rerun
+    assert "flipped" in rerun
+
+
+def test_mcp_wording_is_exact():
+    mcp = (STATIC / "presentation" / "ch7-mcp.js").read_text(encoding="utf-8")
+    assert "another protocol version" not in mcp and "unexpected version string" in mcp and "client default is 8 s" in mcp
+    slides = (STATIC / "presentation" / "slides.js").read_text(encoding="utf-8")
+    assert "advertised input schemas" in slides and "fixed in code" in slides and "2025-11-25" in slides

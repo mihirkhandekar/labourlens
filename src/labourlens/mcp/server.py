@@ -191,10 +191,13 @@ def source_entry(source_id: str) -> str:
     raise ResourceNotFoundError(f"unknown source_id {source_id!r}")
 
 
-@mcp.prompt(name="compare_quarters", description="Ask for a like-for-like comparison of one series between two quarters.")
-def compare_quarters(source_id: str, quarter_a: str, quarter_b: str) -> str:
-    return (f"Using get_statistic on {source_id}, fetch {quarter_a} and {quarter_b} for the same series, then state the change with its unit, "
-            "population, adjustment and release stage. If the series differ in any of those, say so instead of comparing.")
+@mcp.prompt(name="compare_quarters", description="Ask for an exact like-for-like comparison of one series between two quarters, using compare_periods.")
+def compare_quarters(source_id: Annotated[SourceId, Field(description="Dataset id from list_datasets")], quarter_a: Period, quarter_b: Period) -> str:
+    # Arguments are typed like the tool inputs (enum / pattern), so a prompt argument cannot carry free text into the template.
+    return (f"Call compare_periods with source_id={source_id}, period_a={quarter_a}, period_b={quarter_b}; the server computes the exact difference, so do not "
+            "subtract the values yourself. If it refuses because the filters leave more than one series, use describe_dataset or get_dimension_values to choose "
+            "dimension, adjustment or indicator_id and call again. State the change with its unit, population, adjustment and release stage. "
+            "If the two periods differ in any of those, or have no published number, say so instead of comparing.")
 
 
 def _configure_logging() -> None:

@@ -21,6 +21,7 @@ from __future__ import annotations
 
 import asyncio
 import collections
+import contextvars
 import json
 import os
 import sys
@@ -39,11 +40,11 @@ from mcp.shared._httpx_utils import create_mcp_http_client
 from mcp.shared.exceptions import MCPError
 from pydantic import BaseModel, ValidationError
 
-from labourlens.agent.tools import ToolResult, TransientToolError
+from labourlens.agent.tools import CALLER_SESSION, ToolResult, TransientToolError
 from labourlens.mcp.http_server import MIN_TOKEN_CHARS, TOKEN_ENV, is_loopback
 from labourlens.mcp.models import (RESULT_MODELS, ComparePeriodsResult, DescribeDatasetResult, DimensionValuesResult, LatestValueResult, ListDatasetsResult,
                                    ProvenanceResult, RevisionsResult, SeriesSummaryResult)
-from labourlens.mcp.server import ALL_TOOLS, SERVER_NAME, SERVER_VERSION, TOOL_NAME
+from labourlens.mcp.server import ALL_TOOLS, SERVER_NAME, SERVER_VERSION, SOURCE_IDS, TOOL_NAME
 from labourlens.security.guards import injection_flags, sanitize_text
 
 _COMMON = {"expected_name": SERVER_NAME, "allowed_versions": {SERVER_VERSION}, "required_tools": {TOOL_NAME}, "allowed_tools": set(ALL_TOOLS)}
@@ -55,6 +56,10 @@ ALLOWED_SERVERS: dict[str, dict] = {
 CONNECT_TIMEOUT_S, CALL_TIMEOUT_S, MAX_RESPONSE_BYTES = 20.0, 8.0, 200_000
 RECENT_CALLS = 20
 CORRECTABLE = ("invalid_arguments", "not_found", "too_large")
+PROMPTS = {"compare_quarters": {"type": "object", "additionalProperties": False, "required": ["source_id", "quarter_a", "quarter_b"],
+                                 "properties": {"source_id": {"enum": list(SOURCE_IDS)}, "quarter_a": {"type": "string", "pattern": r"^\d{4}-Q[1-4]$"},
+                                                "quarter_b": {"type": "string", "pattern": r"^\d{4}-Q[1-4]$"}}}}  # prompt allow-list: name -> argument schema
+# CALLER_SESSION (defined in agent.tools) tags every call recorded while a visitor's request is running, so the workbench shows a visitor only their own calls.
 
 
 def register_test_server(name: str, mode: str) -> str:
@@ -169,6 +174,32 @@ def _check_http_url(url: str) -> None:
         raise McpClientError("not_allowed", f"refusing non-loopback host {u.hostname!r}: the bearer token is only sent to loopback servers")
 
 
+def _error_payload(res) -> dict | None:
+    """The {error_kind, message} object of a failed tool result. Prefers structuredContent; otherwise looks for a JSON object with an
+    `error_kind` inside the text blocks (the SDK wraps a ToolError message as "Error executing tool X: <message>"), without relying on a prefix."""
+    sc = getattr(res, "structured_content", None)
+    if isinstance(sc, dict) and isinstance(sc.get("error_kind"), str):
+        return sc
+    decoder = json.JSONDecoder()
+    for block in getattr(res, "content", None) or []:
+        text = getattr(block, "text", None)
+        if not isinstance(text, str):
+            continue
+        text = text[:20_000]
+        start = text.find("{")
+        for _ in range(20):
+            if start < 0:
+                break
+            try:
+                obj, _end = decoder.raw_decode(text, start)
+            except ValueError:
+                obj = None
+            if isinstance(obj, dict) and isinstance(obj.get("error_kind"), str):
+                return obj
+            start = text.find("{", start + 1)
+    return None
+
+
 class McpStatsClient:
     def __init__(self, server: str = "labourlens-stats", call_timeout_s: float = CALL_TIMEOUT_S, connect_timeout_s: float = CONNECT_TIMEOUT_S) -> None:
         if server not in ALLOWED_SERVERS:
@@ -177,6 +208,9 @@ class McpStatsClient:
         if self.spec.get("transport", "stdio") == "http":
             _check_http_url(self.spec["url"])
         self.session: ClientSession | None = None
+        self.protocol_version: str | None = None  # the version the server and client actually negotiated
+        self.capabilities: dict = {}  # server capabilities declared at initialize (empty = none declared)
+        self.output_schemas: dict[str, dict] = {}
         self.schemas: dict[str, dict] = {}
         self.ignored_tools: list[str] = []
         self.transcript: list[dict] = []  # protocol-level activity for the demo (no secrets: names, sizes, timings)
@@ -233,12 +267,17 @@ class McpStatsClient:
     async def _verify(self) -> None:
         s = self.session
         info = s.server_info
+        caps = s.server_capabilities
+        self.protocol_version = str(s.protocol_version) if s.protocol_version else None
+        self.capabilities = caps.model_dump(exclude_none=True, mode="json") if caps is not None else {}
         self.transcript.append({"step": "initialize", "server": getattr(info, "name", None), "version": getattr(info, "version", None),
-                                "protocol": s.protocol_version, "transport": self.spec.get("transport", "stdio")})
+                                "protocol": self.protocol_version, "transport": self.spec.get("transport", "stdio"), "capabilities": sorted(self.capabilities)})
         if info is None or info.name != self.spec["expected_name"]:
             raise McpClientError("not_allowed", f"unexpected server name {getattr(info, 'name', None)!r}")
         if info.version not in self.spec["allowed_versions"]:
             raise McpClientError("version_mismatch", f"server version {info.version!r} not in {sorted(self.spec['allowed_versions'])}")
+        if "tools" not in self.capabilities:
+            raise McpClientError("capability_missing", "server did not declare the tools capability")
         tools = (await s.list_tools()).tools
         names = {t.name for t in tools}
         self.transcript.append({"step": "tools/list", "tools": sorted(names)})
@@ -247,16 +286,57 @@ class McpStatsClient:
         if missing:
             raise McpClientError("capability_missing", f"missing tools {sorted(missing)}")
         self.schemas = {t.name: t.input_schema for t in tools if t.name in self.spec["allowed_tools"]}
+        self.output_schemas = {t.name: t.output_schema for t in tools if t.name in self.spec["allowed_tools"] and t.output_schema}
+
+    def has_capability(self, name: str) -> bool:
+        return name in self.capabilities
+
+    def _require(self, capability: str) -> None:
+        """Only use a server feature the server declared at initialize."""
+        if self.session is None:
+            raise McpClientError("unavailable", "not connected")
+        if not self.has_capability(capability):
+            raise McpClientError("capability_missing", f"server did not declare the {capability} capability")
 
     async def list_resources(self) -> list[str]:
+        self._require("resources")
         res = await self.session.list_resources()
         self.transcript.append({"step": "resources/list", "uris": [r.uri for r in res.resources]})
         return [r.uri for r in res.resources]
 
+    async def get_prompt(self, name: str, **args) -> dict:
+        """Fetch one allow-listed prompt template ('prompts/get'). Arguments are validated before sending; the returned text is
+        sanitised, size-capped and refused when it looks like an instruction aimed at the model beyond the template. The host decides whether to use it."""
+        self._require("prompts")
+        if name not in PROMPTS:
+            raise McpClientError("not_allowed", f"prompt {name!r} is not on the allow-list")
+        try:
+            jsonschema.validate(args, PROMPTS[name])
+        except jsonschema.ValidationError as e:
+            raise McpClientError("invalid_arguments", e.message[:200]) from e
+        try:
+            with anyio.fail_after(self.call_timeout_s):
+                out = await self.session.get_prompt(name, args)
+        except TimeoutError as e:
+            raise McpClientError("timeout", f"prompt {name}") from e
+        except MCPError as e:
+            raise McpClientError("invalid_arguments" if e.code == -32602 else "unavailable", f"prompt {name}: code {e.code}") from e
+        except Exception as e:
+            raise McpClientError("unavailable", f"getting prompt: {type(e).__name__}") from e
+        texts = [getattr(m.content, "text", None) for m in getattr(out, "messages", [])]
+        if not texts or any(not isinstance(t, str) for t in texts):
+            raise McpClientError("malformed", "prompt must contain text messages")
+        text = sanitize_text("\n".join(texts))
+        if len(text.encode()) > MAX_RESPONSE_BYTES:
+            raise McpClientError("oversized", f"prompt is {len(text)} characters")
+        if injection_flags(text):
+            raise McpClientError("quarantined", "prompt text contains instruction-like text")
+        self.transcript.append({"step": "prompts/get", "name": name, "arg_names": sorted(args), "bytes": len(text.encode())})
+        return {"name": name, "text": text}
+
     async def read_resource(self, uri: str) -> dict:
         schema = _resource_schema(uri)
-        if self.session is None:
-            raise McpClientError("unavailable", "not connected")
+        self._require("resources")
         t0 = time.perf_counter()
         try:
             with anyio.fail_after(self.call_timeout_s):
@@ -318,6 +398,12 @@ class McpStatsClient:
                 kind = "timeout"
             self.transcript.append({"step": "tools/call", "tool": tool, "arg_names": sorted(args), "outcome": kind})
             raise McpClientError(kind, tool) from e
+        except RuntimeError as e:
+            if "structured content" not in str(e):  # the SDK itself checks structuredContent against the tool's advertised outputSchema and raises this
+                self.transcript.append({"step": "tools/call", "tool": tool, "arg_names": sorted(args), "outcome": "unavailable"})
+                raise McpClientError("unavailable", type(e).__name__) from e
+            self.transcript.append({"step": "tools/call", "tool": tool, "outcome": "malformed", "seconds": round(time.perf_counter() - t0, 3)})
+            raise McpClientError("malformed", "response does not match the advertised output schema") from e
         except BaseException as e:  # closed pipe, crashed server
             self.transcript.append({"step": "tools/call", "tool": tool, "arg_names": sorted(args), "outcome": "unavailable"})
             raise McpClientError("unavailable", type(e).__name__) from e
@@ -327,21 +413,21 @@ class McpStatsClient:
             self.transcript.append({"step": "tools/call", "tool": tool, "outcome": "oversized", "bytes": len(raw)})
             raise McpClientError("oversized", f"response of {len(raw)} bytes exceeds {MAX_RESPONSE_BYTES}")
         if res.is_error:
-            text = " ".join(getattr(c, "text", "") for c in res.content)
-            try:  # the SDK prefixes anticipated ToolError messages with "Error executing tool ...: "
-                d = json.loads(text[text.index("{"):])
-                kind, msg = d.get("error_kind", "tool_error"), str(d.get("message", ""))
-            except (ValueError, AttributeError):
-                kind, msg = "tool_error", text
-            msg = sanitize_text(msg)[:600]
+            d = _error_payload(res) or {}
+            kind = d.get("error_kind") if isinstance(d.get("error_kind"), str) else "tool_error"
+            msg = d.get("message") if "message" in d else " ".join(getattr(c, "text", "") or "" for c in res.content)
+            msg = sanitize_text(str(msg))[:600]
             self.transcript.append({"step": "tools/call", "tool": tool, "arg_names": sorted(args), "outcome": f"rejected:{kind}", "seconds": round(dt, 3)})
             raise McpClientError(kind if kind in CORRECTABLE else "tool_error", msg)
         model_cls = RESULT_MODELS[tool]
+        out_schema = self.output_schemas.get(tool)
         try:
+            if out_schema is not None:  # the server's own advertised contract, then the client's typed model
+                jsonschema.validate(res.structured_content, out_schema)
             parsed = model_cls.model_validate(res.structured_content)
-        except (ValidationError, TypeError) as e:
+        except (ValidationError, TypeError, jsonschema.ValidationError, jsonschema.SchemaError) as e:
             self.transcript.append({"step": "tools/call", "tool": tool, "outcome": "malformed", "seconds": round(dt, 3)})
-            raise McpClientError("malformed", "response does not match the advertised output schema") from e
+            raise McpClientError("malformed", "response does not match the advertised output schema or the client's model") from e
         try:
             clean, quarantined = screen_result(parsed)
         except McpClientError:
@@ -456,6 +542,9 @@ class SyncStatsBackend:
                  "attempt": attempt, "quarantined": quarantined}
         if kind:
             entry["kind"] = kind
+        caller = CALLER_SESSION.get()
+        if caller:
+            entry["session"] = caller  # internal tag for per-visitor filtering; never returned by the web API
         with self._calls_lock:
             self.calls.append(entry)
 
@@ -496,12 +585,12 @@ class SyncStatsBackend:
         s = c.session
         info = s.server_info
         tools = (await s.list_tools()).tools
-        resources = (await s.list_resources()).resources
-        templates = (await s.list_resource_templates()).resource_templates
-        prompts = (await s.list_prompts()).prompts
+        resources = (await s.list_resources()).resources if c.has_capability("resources") else []
+        templates = (await s.list_resource_templates()).resource_templates if c.has_capability("resources") else []
+        prompts = (await s.list_prompts()).prompts if c.has_capability("prompts") else []
         return {
-            "server": {"name": getattr(info, "name", None), "version": getattr(info, "version", None), "protocol_version": str(s.protocol_version) if s.protocol_version else None,
-                       "transport": c.spec.get("transport", "stdio")},
+            "server": {"name": getattr(info, "name", None), "version": getattr(info, "version", None), "protocol_version": c.protocol_version,
+                       "capabilities": sorted(c.capabilities), "transport": c.spec.get("transport", "stdio")},
             "tools": [{"name": t.name, "title": getattr(t.annotations, "title", None) or getattr(t, "title", None) or t.name,
                        "description": sanitize_text(t.description or "")[:600], "read_only": bool(getattr(t.annotations, "read_only_hint", False)),
                        "in_allow_list": t.name in c.spec["allowed_tools"], "input_schema": _trim_schema(t.input_schema)} for t in tools],

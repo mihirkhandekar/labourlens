@@ -521,8 +521,10 @@ def test_site_states_current_serving_fact_and_drops_stale_corpus_claims():
     text = _site_text("presentation/ch-work.js", "presentation/ch8-limits.js", "presentation/slides.js", "js/home.js")
     for stale in ("No experiment has run on v3", "no experiment has run on it", "No experiment has run on v3.", "no experiment has run on v3"):
         assert stale not in text
-    for fact in ("c297146", "d402120f6f8f", "16,419 passages", "1,847 chunks"):
+    for fact in ("v3.1", "16,419 passages", "1,847 chunks", "/healthz shows the commit"):
         assert fact in text
+    for hard_coded in ("c297146", "d402120f6f8f"):
+        assert hard_coded not in text, "the served commit must come from /healthz, not from copy"
     assert "two measured evaluations" not in text
 
 

@@ -2,6 +2,14 @@
 // value stays missing (null) and is shown as "not recorded", never as zero.
 import {finite} from '../charts.js';
 
+/** The standalone-question rewrite check (two saved runs), as one plain sentence. Numbers come from report.json serving.context. */
+export function contextSentence(serving) {
+  const a = serving?.context?.v1, b = serving?.context?.v2;
+  if (!a?.conversation || !b?.conversation) return 'The rewrite check is not available in the report data.';
+  const cost = b.cost_and_latency || {};
+  return `Measured on its own on ${b.conversation.n} conversation cases and ${b.adversarial.n} planted-instruction histories, one gpt-6-luna call each and string checks only: ${a.conversation.passed} of ${a.conversation.n} conversation cases on the first run, then ${b.conversation.passed} of ${b.conversation.n} after I reworded the date facts, and ${b.adversarial.passed} of ${b.adversarial.n} planted instructions resisted. ${cost.calls} calls cost $${Number(cost.total_cost_usd).toFixed(4)}, median ${cost.latency_p50_s} s. This is not an independent test, because the cases guided the fix, and the accuracy of full answers after a rewrite is not measured.`;
+}
+
 export const MODELS = {'gpt-6-luna': 'gpt-6-luna', 'gpt-5.6-luna': 'gpt-5.6-luna', 'gpt-4.1-mini': 'gpt-4.1-mini'};
 export const FAMILIES = ['factual_lookup', 'numerical_comparison', 'cross_source_synthesis', 'revision_conflict', 'ambiguity_insufficient_causal', 'adversarial'];
 export const FAMILY_LABEL = {
