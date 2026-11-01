@@ -298,7 +298,7 @@ const REQUIREMENTS = [
   ['shield', 'Safety', 'Injection, privacy, least privilege', 'Safety tests; What protects it', 'Attack scanner is weak'],
   ['note', 'Concepts', 'Tokens, embeddings, agents, MCP', 'Across the talk', 'Rehearsal pending'],
   ['path', 'MCP', 'A tool, a resource, a client demo', 'The MCP server', 'Remote deployment unverified'],
-  ['arrow-counter-clockwise', 'Setup', 'Pinned, tested, documented', 'Not shown in the talk', 'Fresh-checkout run pending']
+  ['arrow-counter-clockwise', 'Setup', 'Pinned, tested, documented', 'Not shown in the talk', 'Clean-clone check recorded']
 ];
 export function requirementGrid(status = false) {
   const wrap = el('div', `g12${status ? ' is-status' : ''}`);
@@ -561,7 +561,7 @@ export function buildProcess() {
     const li = el('li', 'g24-lane'); li.style.setProperty('--i', String(i)); li.append(el('strong', '', head), el('span', '', text)); lanes.append(li);
   });
   const nums = el('div', 'g24-nums');
-  [['48', 'decisions logged'], ['5', 'independent reviewers'], ['0', 'rights-scan hits']].forEach(([n, label]) => { const d = el('div', 'g24-num'); d.append(el('p', 'num', n), el('p', '', label)); nums.append(d); });
+  [['49', 'decisions logged'], ['5', 'independent reviewers'], ['0', 'rights-scan hits']].forEach(([n, label]) => { const d = el('div', 'g24-num'); d.append(el('p', 'num', n), el('p', '', label)); nums.append(d); });
   wrap.append(loop, el('div', 'g24-body', ''), nums);
   wrap.querySelector('.g24-body').append(lanes);
   return wrap;

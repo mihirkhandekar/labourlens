@@ -1,10 +1,10 @@
-// LabourLens overview shell: floating nav, theme toggle, reveal observer and boot.
+// LabourLens report shell: floating nav, theme toggle, reveal observer and boot.
 // The presentation is its own page (/deck) and the workbench is /workbench. Old links such as
 // /#presentation and /#workbench are forwarded.
 import {el, add, icon} from './js/dom.js';
 import {renderHome} from './js/home.js';
 
-const PAGES = [['/', 'Overview'], ['/deck', 'Presentation'], ['/workbench', 'Workbench']];
+const PAGES = [['/', 'Report'], ['/deck', 'Presentation'], ['/workbench', 'Workbench']];
 if (location.hash === '#workbench') location.replace('/workbench');
 if (/^#presentation/.test(location.hash)) location.replace('/deck');
 const root = document.querySelector('#app');
@@ -71,7 +71,7 @@ const shell = el('div', 'shell');
 add(shell, header, menu, main, footer);
 root.replaceChildren(shell);
 applyThemeLabel();
-document.title = 'LabourLens';
+document.title = 'LabourLens: project report';
 
 // ---------- reveal on scroll (IntersectionObserver only) ----------
 const reveal = new IntersectionObserver(entries => {
@@ -111,8 +111,5 @@ try {
 } catch (error) {
   overviewRoot.append(add(el('p', 'error-banner'), icon('warn'), el('span', '', `${error.message} The workbench still works. No report numbers are shown.`)));
 }
-renderHome(overviewRoot, report, {
-  go: href => { location.href = href; },
-  tryQuestion: text => { location.href = `/workbench?question=${encodeURIComponent(text)}`; }
-});
+renderHome(overviewRoot, report);
 observeReveals(overviewRoot);
