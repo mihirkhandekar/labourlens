@@ -1,6 +1,6 @@
 {
   "schema_version": "report-1.0",
-  "generated_at": "2026-11-01T04:03:52.418283+00:00",
+  "generated_at": "2026-11-01T04:21:30.000349+00:00",
   "summary": {
     "title": "LabourLens research workbench",
     "scope": [
@@ -57826,7 +57826,7 @@
   },
   "evaluation": {
     "status": "available",
-    "summary": "Development A1-A5 and registered held-out H-r3/H-hybrid luna runs. Measurements retain their recorded gold versions. Owner review complete 1 Nov 2026: all 403 labelling items (268 gold cases, 65 held-out v2 cases, 40 saved answers, 30 source checks) decided card by card by the owner's own click, after AI pre-review and after the runs were scored; one reviewer, not independent inter-rater evidence. Gold v3.5 development and all four registered held-out rescoring runs are complete on existing generated outputs; held-out stale judge entries were rejudged. `paired` holds the registered corpus-v1 comparison, current first, with v3.2-v3.4 history; `corpus_v2_diagnostic` is a separate extraction-only diagnostic; `dev_x2_regression_check` labels the corpus-v3 dev X2 rows (a regression check, not an ablation). `heldout_v2` is the signed held-out v2 run on corpus v3, reported separately and never pooled with the registered held-out.",
+    "summary": "Development A1-A5 and registered held-out H-r3/H-hybrid luna runs. Measurements retain their recorded gold versions. Owner review, 1 Nov 2026: Gold labels were drafted by AI. The owner then went through them in the review interface and recorded a decision on every case, answer verdict and source check (403 items: 268 gold cases, 65 held-out v2 cases, 40 saved answers and 30 source checks). Most of these were quick confirmations of the AI-suggested label rather than independent re-derivations, so the labels are best read as AI-drafted and owner-confirmed. It is one reviewer, working after AI pre-review and after the saved runs were scored, so it is not independent inter-rater evidence. The judge is an AI (gpt-6.1-terra); behaviour status, key-number recall, calculation correctness, false-answer and over-abstention are deterministic code. Gold v3.5 development and all four registered held-out rescoring runs are complete on existing generated outputs; held-out stale judge entries were rejudged. `paired` holds the registered corpus-v1 comparison, current first, with v3.2-v3.4 history; `corpus_v2_diagnostic` is a separate extraction-only diagnostic; `dev_x2_regression_check` labels the corpus-v3 dev X2 rows (a regression check, not an ablation). Rows with `diagnostic: true` and `registered: false` (agent-heldout-X-*) are post-freeze diagnostics, not registered held-out evidence. `heldout_v2` is the signed held-out v2 run on corpus v3, reported separately and never pooled with the registered held-out.",
     "metrics": {},
     "rows": [
       {
@@ -60921,6 +60921,7 @@
           }
         },
         "split": "heldout",
+        "registered": true,
         "scoring_provenance": {
           "eligible_n": 31,
           "available_n": 31,
@@ -61115,6 +61116,7 @@
           }
         },
         "split": "heldout",
+        "registered": true,
         "scoring_provenance": {
           "eligible_n": 31,
           "available_n": 31,
@@ -61309,6 +61311,7 @@
           }
         },
         "split": "heldout",
+        "registered": true,
         "scoring_provenance": {
           "eligible_n": 31,
           "available_n": 31,
@@ -61503,6 +61506,7 @@
           }
         },
         "split": "heldout",
+        "registered": true,
         "scoring_provenance": {
           "eligible_n": 31,
           "available_n": 31,
@@ -61698,6 +61702,8 @@
           }
         },
         "split": "heldout",
+        "diagnostic": true,
+        "registered": false,
         "scoring_provenance": {
           "eligible_n": 31,
           "available_n": 31,
@@ -61893,6 +61899,8 @@
           }
         },
         "split": "heldout",
+        "diagnostic": true,
+        "registered": false,
         "scoring_provenance": {
           "eligible_n": 31,
           "available_n": 31,
@@ -62088,6 +62096,8 @@
           }
         },
         "split": "heldout",
+        "diagnostic": true,
+        "registered": false,
         "scoring_provenance": {
           "eligible_n": 31,
           "available_n": 31,
@@ -62283,6 +62293,8 @@
           }
         },
         "split": "heldout",
+        "diagnostic": true,
+        "registered": false,
         "scoring_provenance": {
           "eligible_n": 31,
           "available_n": 31,
@@ -62587,6 +62599,8 @@
       "primary_model": "gpt-6-luna",
       "decision": {
         "demonstrated_gain_primary": true,
+        "rule_output_only": true,
+        "reading": "The boolean is the D-042 rule output only, not a confirmed gain: three discordant cases, McNemar exact p 0.25, no replication on the second model.",
         "replication_models": {
           "gpt-5.6-luna": false
         }
@@ -65465,10 +65479,10 @@
       ]
     },
     "limitations": [
-      "Generation used AI-drafted gold before owner review; the owner then reviewed every gold case (one reviewer, after the runs were scored), and four change-clicks were not applied under the out-of-period policy, so labels are unchanged in gold v3.7.",
-      "All 403 labelling items were decided by one reviewer's own click: a single person's post hoc review, not independent annotation or inter-rater evidence.",
+      "Gold labels were drafted by AI. The owner then went through them in the review interface and recorded a decision on every case, answer verdict and source check (403 items: 268 gold cases, 65 held-out v2 cases, 40 saved answers and 30 source checks). Most of these were quick confirmations of the AI-suggested label rather than independent re-derivations, so the labels are best read as AI-drafted and owner-confirmed. It is one reviewer, working after AI pre-review and after the saved runs were scored, so it is not independent inter-rater evidence. Four change-clicks were not applied under the out-of-period policy (D-047), so labels are unchanged in gold v3.7.",
+      "One reviewer, after AI pre-review and after the saved runs were scored: not independent annotation or inter-rater evidence. The judge is an AI (gpt-6.1-terra); behaviour status, key-number recall, calculation correctness, false-answer and over-abstention are deterministic code, not the judge.",
       "Current v3.5 and historical paired intervals include zero; the comparison is inconclusive under the registered rule.",
-      "Gold v3.5 changes HO-022 after held-out execution; rescoring is post-run adjudication, not a fresh frozen-gold experiment.",
+      "Five held-out cases changed after the v3.2 freeze (HO-029 in v3.3; HO-027, HO-023 and HO-004 in v3.4; HO-022 in v3.5); rescoring is post-run adjudication, not a fresh frozen-gold experiment.",
       "Metric definitions differ between evaluation stages.",
       "Dev X2 (corpus v3, gold v3.6, crosscheck on, 14 runtime changes) is a regression check of the served system, not an ablation: several factors changed at once, and the ungrounded-number check was widened, so that metric is not comparable with A3 or X1."
     ]
@@ -65588,7 +65602,7 @@
         "id": "D-004",
         "title": "Commit raw dataset CSVs to the private repo",
         "status": "",
-        "date": "",
+        "date": "1 Nov 2026",
         "alternatives": "",
         "summary": "PROPOSAL: yes, with the Open Data Licence attribution notice"
       },
@@ -65628,9 +65642,9 @@
         "id": "D-009",
         "title": "How documents are stored for RAG in this project",
         "status": "",
-        "date": "",
+        "date": "1 Nov 2026",
         "alternatives": "",
-        "summary": ""
+        "summary": "Outcome (1 Nov 2026): built as described: BM25 and dense indexes are files under data/index/ (D-012, D-021); see docs/storage.md"
       },
       {
         "id": "D-010",
@@ -65646,7 +65660,7 @@
         "status": "PROPOSAL",
         "date": "",
         "alternatives": "",
-        "summary": ""
+        "summary": "Design note (since merged into docs/audit-and-logging.md)"
       },
       {
         "id": "D-012",
@@ -65919,6 +65933,30 @@
         "date": "31 Oct 2026",
         "alternatives": "",
         "summary": "MEASURED RESULT. Primary model gpt-6-luna: r3 0.754 (49 of 65) versus hybrid 0.708 (46 of 65), paired difference +0.046, 3 cases better and 0 worse, case-bootstrap 90% interval [0.015, 0.092], component-bootstrap interv…"
+      },
+      {
+        "id": "D-046",
+        "title": "Tool set v2: arithmetic on report figures and dimension recovery",
+        "status": "PROPOSAL / IMPLEMENTED",
+        "date": "1 Nov 2026",
+        "alternatives": "",
+        "summary": "| A. Let the answer model do the arithmetic from report figures | Zero code | Breaks the deterministic-numbers rule and the grounding check; unverifiable | Rejected |"
+      },
+      {
+        "id": "D-047",
+        "title": "Scope policy for out-of-period questions; four label changes not applied",
+        "status": "DECISION",
+        "date": "1 Nov 2026",
+        "alternatives": "",
+        "summary": "| A. Abstain for anything that needs figures outside Q1 2024 to Q2 2026 | Matches the approved scope; the five 2023 context cases (DEV-601 to 604, 622) stay consistent | Chosen |"
+      },
+      {
+        "id": "D-048",
+        "title": "Tool set v2 result: pre-declared dev criteria failed, not adopted",
+        "status": "MEASURED / DECISION",
+        "date": "1 Nov 2026",
+        "alternatives": "",
+        "summary": "MEASURED RESULT: criteria of D-046 section 4.1 (counts from experiments/tool-fix/criteria.json)."
       }
     ],
     "milestones": [
@@ -65955,12 +65993,12 @@
       {
         "id": "M1.6",
         "name": "Clean-room run, data sheet, study note, commit proposal",
-        "status": "historical execution recorded; all 30 source checks decided by the owner's own click (1 Nov); rights/basis gaps remain"
+        "status": "historical execution recorded; decisions recorded on all 30 source checks (1 Nov; final 18 matches / 12 minor, first export 19 / 11); rights/basis gaps remain"
       },
       {
         "id": "M2",
         "name": "BM25 baseline and gold",
-        "status": "implemented; gold v3.7 has all 268 cases owner-reviewed (own clicks, one reviewer, after the runs; labels AI-drafted first); historical held-out freeze/execution recorded separately"
+        "status": "implemented; gold v3.7 has a recorded owner decision on all 268 cases (AI-drafted and owner-confirmed; one reviewer, after the runs); historical held-out freeze/execution recorded separately"
       },
       {
         "id": "M3",
@@ -65995,7 +66033,7 @@
       {
         "id": "M6.4",
         "name": "Freeze protocol and held-out evaluation",
-        "status": "original v3.2 generation preserved; v3.3/v3.4 sensitivities historical; HO-022 owner label changed post-run; v3.5 saved-output rescoring and stale-judgment refresh complete, paired gains still inconc…"
+        "status": "original v3.2 generation preserved; v3.3/v3.4 sensitivities historical; five held-out cases changed after the freeze (HO-029 v3.3; HO-027, HO-023, HO-004 v3.4; HO-022 v3.5); v3.5 saved-output rescori…"
       },
       {
         "id": "M7.1",
@@ -66027,7 +66065,7 @@
     "The population basis of the dataset employment series is unverified."
   ],
   "provenance": {
-    "commit": "26d7eee4d097cd8e0d54f2c79e49047e61aa910c",
+    "commit": "5f0384228fb8bbdea26a2389dd655e378dbdca02",
     "artifacts": [
       {
         "path": "data/export/sources.json",
@@ -66852,12 +66890,12 @@
       {
         "path": "docs/decisions.md",
         "status": "available",
-        "sha256": "308ffedbfb1fc04f9738c4d1e9b7c7c64d3ed434263610b3121f0b43835a4fb4"
+        "sha256": "dd435429407e46bca88e2720c2bc8ba5cb81154e04c0741bd5df955ff09abd34"
       },
       {
         "path": "docs/progress.md",
         "status": "available",
-        "sha256": "2b2b7ec489dfea95c9b9c4e5dd9aec4ecda081ac8bf0db7a59ccfcddabed9411"
+        "sha256": "9feee67e83ba40858d4bbb1a2d6060da56fc2575dbb48cc3fb7109726f8d3695"
       }
     ],
     "policy": "Committed artifacts only; numeric fields only."
