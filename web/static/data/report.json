@@ -1,6 +1,6 @@
 {
   "schema_version": "report-1.0",
-  "generated_at": "2026-11-01T07:52:42.789756+00:00",
+  "generated_at": "2026-11-01T12:30:58.182557+00:00",
   "summary": {
     "title": "LabourLens research workbench",
     "scope": [
@@ -65989,6 +65989,14 @@
         "date": "1 Nov 2026",
         "alternatives": ". (A) Leave v3: zero cost, but 16 legible MTI passages stay invisible and the data sheet keeps a known false positive",
         "summary": "Rule (code in src/labourlens/data/pdfextract.py, unit tests in tests/data/testextractionfixes.py)"
+      },
+      {
+        "id": "D-053",
+        "title": "The served web app routes getseries through the local MCP server",
+        "status": "OWNER DECISION / IMPLEMENTED",
+        "date": "1 Nov 2026",
+        "alternatives": "",
+        "summary": "Served versus evaluated (cumulative, adds to D-043, D-050 and D-051)"
       }
     ],
     "milestones": [
@@ -66097,7 +66105,7 @@
     "The population basis of the dataset employment series is unverified."
   ],
   "provenance": {
-    "commit": "9dce8dc7d5f3be41bbde2a4dfb54343af15a5e4b",
+    "commit": "ff23400424b6beaa7d00e14958179329b8c4c0a9",
     "artifacts": [
       {
         "path": "data/export/sources.json",
@@ -66912,7 +66920,7 @@
       {
         "path": "docs/mcp-demo-transcript.md",
         "status": "available",
-        "sha256": "521e3622d08d83bbeced9780ab63a89208e77cacf80934f8e4dcabcac9db588a"
+        "sha256": "60b5038e7fb905733b9c12d5b16772855126b96c52ae64188c3de80b0184f9ca"
       },
       {
         "path": "experiments/runs/web-live-smoke.trace.json",
@@ -66922,12 +66930,12 @@
       {
         "path": "docs/decisions.md",
         "status": "available",
-        "sha256": "d3f53bd790db260a8f316b07afc232a1ba2acfe23e65f35ca3eb7407eabdf090"
+        "sha256": "97eb541e11b01d834dd0de722e8c1a05705ef9b0bb6e4ed518e871a7caaf0e71"
       },
       {
         "path": "docs/progress.md",
         "status": "available",
-        "sha256": "e5d12b85e99ea4c0c4f4a8ec18ff0a61c59351503c9a347a86f12f916b610508"
+        "sha256": "2d5a7ea62ce23ba09ad89d131af0e66658b9408d4f4b699b9c01373c32f8c3dd"
       }
     ],
     "policy": "Committed artifacts only; numeric fields only."
