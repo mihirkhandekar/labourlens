@@ -1,0 +1,57 @@
+// Source of docs/img/architecture.svg. Same content as the Mermaid diagram in docs/architecture.md section 2.
+// Render: dot -Tsvg docs/img/architecture.dot -o docs/img/architecture.svg
+digraph labourlens {
+  rankdir=TB; compound=true; newrank=true; nodesep=0.25; ranksep=0.4;
+  graph [fontname="Helvetica", fontsize=13, labeljust=l, style="rounded", color="#8a8f98", bgcolor="white", pad=0.2];
+  node  [fontname="Helvetica", fontsize=11, shape=box, style="rounded,filled", fillcolor="#f4f6f8", color="#5b6470"];
+  edge  [fontname="Helvetica", fontsize=9, color="#5b6470", arrowsize=0.7];
+
+  subgraph cluster_data { label="Acquisition and evidence stores";
+    SOURCE [label="Official CSV / PDF / HTML"];
+    SNAP   [label="Immutable hashed snapshots"];
+    PARSE  [label="Normalise observations /\nextract passages"];
+    SCAN   [label="Ingestion injection scan\nheuristics + review allow-list"];
+    STORE  [label="Validated observations\n+ passages", shape=cylinder];
+    INDEX  [label="BM25 + dense index", shape=cylinder];
+    SOURCE -> SNAP -> PARSE; PARSE -> SCAN; PARSE -> STORE -> INDEX;
+    SCAN -> STORE [style=dashed, label="quality report /\nreview"];
+  }
+  subgraph cluster_runtime { label="Bounded research workflow";
+    USER   [label="Research question"];
+    ADMIT  [label="Authentication +\nbudget / rate limit"];
+    INPUT  [label="Input guard\nlength checks + injection flags"];
+    PLAN   [label="Plan research"];
+    TOOLS  [label="Typed read-only tools\nsearch / series / deterministic change"];
+    ASSESS [label="Assess evidence\n+ source-conflict cross-check: annotate"];
+    ANSWER [label="Generate structured answer"];
+    VALID  [label="Quote / citation / status validator\n+ source-conflict cross-check: enforce"];
+    REDACT [label="Output blocking + redaction"];
+    OUT    [label="Cited answer + activity timeline"];
+    USER -> ADMIT -> INPUT -> PLAN -> TOOLS -> ASSESS -> ANSWER -> VALID -> REDACT -> OUT;
+    ASSESS -> PLAN   [label="bounded next round", constraint=false];
+    VALID  -> ANSWER [label="one repair", constraint=false];
+  }
+  subgraph cluster_mcp { label="Optional statistics transport";
+    CLIENT [label="MCP client\nschema checks + quarantine"];
+    SERVER [label="MCP server\n9 tools / 2 resources / 1 prompt"];
+    CLIENT -> SERVER;
+  }
+  subgraph cluster_eval { label="Offline evaluation, separate from serving";
+    GOLD    [label="Versioned gold\ndevelopment / held-out split"];
+    RUNS    [label="Saved answers + traces"];
+    HARNESS [label="Evaluation harness"];
+    DETER   [label="Deterministic metrics"];
+    JUDGE   [label="LLM judge\nsupport + fact coverage"];
+    HUMAN   [label="Owner review: 403 items, one reviewer,\nafter AI pre-review; not independent"];
+    REPORT  [label="Versioned metrics + error analysis"];
+    GOLD -> HARNESS; RUNS -> HARNESS; HARNESS -> DETER -> REPORT; HARNESS -> JUDGE -> REPORT;
+    HARNESS -> HUMAN; HUMAN -> REPORT [style=dashed, label="selected cards, not\npopulation accuracy"];
+  }
+  WEB   [label="Research workspace"];
+  AUDIT [label="Redacted audit + local traces", shape=cylinder];
+
+  INDEX -> TOOLS; STORE -> TOOLS;
+  TOOLS -> CLIENT [style=dashed, label="optional route"];
+  SERVER -> STORE;
+  OUT -> RUNS; OUT -> WEB; OUT -> AUDIT;
+}
