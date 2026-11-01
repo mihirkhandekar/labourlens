@@ -72,7 +72,7 @@ html.deck-page, .deck-page body { margin: 0; background: var(--paper); color: va
 .deck-slide.is-title .deck-title { align-self: end; font-size: 76px; line-height: 1.04; letter-spacing: -0.035em; max-width: 1240px; }
 .deck-sub { max-width: 1100px; font-size: 32px; line-height: 1.35; color: var(--ink-2); }
 .deck-slide.is-agenda, .deck-slide.is-appendix { grid-template-rows: auto 1fr; }
-.deck-agenda ul { display: grid; grid-template-columns: repeat(2, minmax(0, 520px)); gap: 20px 96px; padding: 0; list-style: none; font-size: 38px; font-weight: 500; letter-spacing: -0.015em; }
+.deck-agenda ul { display: grid; grid-template-columns: repeat(2, minmax(0, 520px)); gap: 12px 96px; padding: 0; list-style: none; font-size: 32px; font-weight: 500; letter-spacing: -0.015em; }
 .deck-agenda a { color: var(--ink); text-decoration: none; display: inline-block; padding: 4px 0; border-bottom: 2px solid transparent; transition: border-color 200ms var(--ease), color 200ms var(--ease); }
 .deck-agenda a:hover { border-color: var(--accent); color: var(--accent); }
 .deck-slide.is-appendix .deck-agenda li { font-size: 30px; font-weight: 400; color: var(--ink-2); }
@@ -96,9 +96,13 @@ html.deck-page, .deck-page body { margin: 0; background: var(--paper); color: va
 /* lists and tables shown as visuals */
 .deck-list { display: grid; gap: 14px; padding-left: 28px; font-size: 26px; color: var(--ink-2); }
 .deck-limit-rows { display: grid; gap: 0; padding: 0; list-style: none; }
-.deck-limit-rows li { display: grid; grid-template-columns: 320px minmax(0, 1fr); gap: 40px; padding: 22px 0; border-top: 1px solid var(--line); font-size: 27px; line-height: 1.35; color: var(--ink-2); }
+.deck-limit-rows li { display: grid; grid-template-columns: 420px minmax(0, 1fr); gap: 48px; padding: 24px 0; border-top: 1px solid var(--line); font-size: 31px; line-height: 1.35; color: var(--ink-2); }
 .deck-limit-rows li:first-child { border-top: 0; }
 .deck-limit-rows strong { color: var(--ink); font-weight: 600; }
+.deck-limit-rows li.is-pick strong { color: var(--accent); }
+.deck-stackv { display: grid; gap: 36px; align-content: start; }
+.deck-sowhat { max-width: 1400px; padding-left: 24px; border-left: 3px solid var(--accent); font-size: 30px; line-height: 1.35; color: var(--ink); }
+.deck-page .pr-table { font-size: 24px; } .deck-page .pr-table th, .deck-page .pr-table td { padding: 12px 18px; white-space: normal; } .deck-page .pr-table caption { font-size: 20px; }
 .deck-limits, .deck-next { display: grid; gap: 14px 64px; margin: 0; padding-left: 36px; font-size: 28px; line-height: 1.3; color: var(--ink-2); grid-template-columns: repeat(2, minmax(0, 1fr)); }
 .deck-limits li::marker, .deck-next li::marker { color: var(--accent); }
 .deck-limits li.is-open { color: var(--ink); font-weight: 600; }
@@ -573,6 +577,10 @@ th[aria-sort="descending"] .pr-sort::after { content: " \2193"; }
 .deck-limit-rows li { display: grid; grid-template-columns: 320px minmax(0, 1fr); gap: 40px; padding: 22px 0; border-top: 1px solid var(--line); font-size: 27px; line-height: 1.35; color: var(--ink-2); }
 .deck-limit-rows li:first-child { border-top: 0; }
 .deck-limit-rows strong { color: var(--ink); font-weight: 600; }
+.deck-limit-rows li.is-pick strong { color: var(--accent); }
+.deck-stackv { display: grid; gap: 36px; align-content: start; }
+.deck-sowhat { max-width: 1400px; padding-left: 24px; border-left: 3px solid var(--accent); font-size: 28px; line-height: 1.35; color: var(--ink); }
+.deck-page .pr-table { font-size: 24px; } .deck-page .pr-table th, .deck-page .pr-table td { padding: 12px 18px; white-space: normal; } .deck-page .pr-table caption { font-size: 20px; }
 .deck-limits, .deck-next { grid-template-columns: 1fr; font-size: 16px; }
   .deck-problems { font-size: 16px; } .deck-problems li { grid-template-columns: 1fr; gap: 2px; } .deck-problem-status { text-align: left; font-size: 13px; }
   .deck-two { grid-template-columns: 1fr; gap: 20px; }
@@ -603,4 +611,12 @@ th[aria-sort="descending"] .pr-sort::after { content: " \2193"; }
   .pr-grow, .pr-rise { transform: none !important; }
   html.deck-page, .deck-page body { background: var(--paper); -webkit-print-color-adjust: exact; print-color-adjust: exact; }
   .deck-scroll { overflow: visible; max-height: none; }
+}
+
+.deck-page .pr-table thead th { font-size: 20px; }
+@media (max-width: 800px) {
+  .deck-limit-rows li { grid-template-columns: 1fr; gap: 2px; padding: 14px 0; font-size: 16px; }
+  .deck-sowhat { font-size: 17px; padding-left: 14px; }
+  .deck-stackv { gap: 20px; }
+  .deck-page .pr-table { font-size: 14px; } .deck-page .pr-table th, .deck-page .pr-table td { padding: 8px 10px; } .deck-page .pr-table thead th { font-size: 12px; }
 }

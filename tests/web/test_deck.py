@@ -107,7 +107,7 @@ def test_every_slide_has_a_heading_and_speaker_notes():
     assert "el('aside', 'notes')" in builder and "if (!notes.children.length) notes.append(" in builder
     slides = (STATIC / "presentation" / "slides.js").read_text()
     specs = re.findall(r"\badd\(\{", slides)
-    assert 30 <= len(specs) <= 60, len(specs)
+    assert 45 <= len(specs) <= 75, len(specs)
     # Every declared slide supplies notes, directly or through figSlide.
     blocks = re.split(r"\badd\(\{", slides)[1:]
     for block in blocks:

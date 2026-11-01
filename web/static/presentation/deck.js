@@ -78,7 +78,7 @@ function buildSlide(spec) {
   } else if (spec.layout === 'agenda') {
     const nav = el('nav', 'deck-agenda'); nav.setAttribute('aria-label', 'Contents');
     const ol = el('ul');
-    [['scope', 'Scope'], ['data', 'Data'], ['retrieval', 'Retrieval'], ['agent', 'Agent'], ['evaluation', 'Evaluation'], ['safety', 'Safety'], ['mcp', 'MCP'], ['limits', 'Limits'], ['next', 'Next steps'], ['work', 'Work log'], ['appendix', 'Appendix']].forEach(([id, label]) => {
+    [...(spec.items || []), ['appendix', 'Appendix']].forEach(([id, label]) => {
       const li = el('li'); const a = el('a', '', label); a.href = `#/${id}`; li.append(a); ol.append(li);
     });
     nav.append(ol); inner.append(nav);
