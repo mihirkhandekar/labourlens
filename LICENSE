@@ -1,0 +1,18 @@
+Copyright (c) 2026 Mihir Khandekar. All rights reserved.
+
+This repository is shared for review and evaluation. No licence to copy, modify, redistribute or use the code,
+prompts, documents or experiment records for any other purpose is granted. Contact the author to ask.
+
+Other material keeps its own terms and is not covered by the statement above:
+
+- Statistical datasets from data.gov.sg (Ministry of Manpower and the Singapore Department of Statistics) are
+  made available under the Singapore Open Data Licence v1.0
+  (https://data.gov.sg/open-data-licence). Contains information from those datasets. Their use here does not
+  imply endorsement by the publishers. Three datasets are recorded as "licence assumed, not verified"
+  (docs/data-sheet.md, section 9).
+- Reports and releases of the Ministry of Manpower and the Ministry of Trade and Industry are the Ministries'
+  copyright. They are not distributed in this repository. Their reuse terms are recorded in
+  docs/data-sheet.md.
+- The Geist and Geist Mono fonts in web/static/fonts are licensed under the SIL Open Font License 1.1
+  (web/static/fonts/LICENSES.md). Vendored front-end libraries under web/static/vendor carry their own
+  licence files.

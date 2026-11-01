@@ -174,7 +174,6 @@ def check_gold(label: str, recs: list[dict], metrics_path, current: str | None, 
 def aggregate(rows: list[dict]) -> dict:
     answered = [r for r in rows if "claims_supported" in r]
     tot_claims = sum(r["claims_supported"] + r["claims_partial"] + r["claims_unsupported"] for r in answered)
-    facts = sum(r["facts_total"] for r in answered)
     return {
         "n_cases": len(rows),
         "behaviour_accuracy": rate_ci(rows, "behavior_ok"),

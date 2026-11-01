@@ -1,0 +1,9 @@
+title = "LabourLens gitleaks configuration"
+
+[extend]
+useDefault = true
+
+[[allowlists]]
+description = "data.gov.sg dataset identifiers (d_ followed by hex) in the manifest files look like API keys to the generic rule; they are public identifiers"
+targetRules = ["generic-api-key"]
+paths = ['''^data/manifests/manifest(_history)?\.jsonl?$''']

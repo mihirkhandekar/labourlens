@@ -12,7 +12,6 @@ from labourlens import paths
 from labourlens.retrieval import chunk as ck
 from labourlens.retrieval import evaluate as ev
 from labourlens.retrieval.bm25_index import BM25Config
-from labourlens.retrieval.tokenize import TokConfig
 
 BASE_CHUNK = ck.CONFIGS["merge120"]
 BASE_BM = BM25Config()

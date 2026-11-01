@@ -214,7 +214,7 @@ def run(split: str = "dev", rerank_on: bool = True) -> None:
     rowsets: dict[str, list[dict]] = {}
 
     def local_config(name: str, make_pool) -> None:
-        rows, lat, extra = [], [], []
+        rows, lat = [], []
         for c, hints, parse_ms, bm, de in prep:
             t0 = time.perf_counter()
             pool = make_pool(hints, bm, de)
@@ -244,7 +244,6 @@ def run(split: str = "dev", rerank_on: bool = True) -> None:
         results[name] = metrics(rowsets[name], None if name == "R0" else rowsets["R0"], lat, None, extra)
 
     total_cost = 0.0
-    r2_meta: dict[str, list] = {}
 
     def run_rerank(name: str, pool_fn) -> None:
         nonlocal total_cost

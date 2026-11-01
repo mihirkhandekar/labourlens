@@ -38,12 +38,9 @@ jobs:
       - uses: astral-sh/setup-uv@d0cc045d04ccac9d8b7881df0226f9e82c39688e # v6.8.0
       - run: uv sync --frozen
       # The suite runs against a checkout WITHOUT the gitignored corpus: no data/raw, data/passages or data/index, no network
-      # and no paid API. In such a checkout one test cannot pass, because it re-hashes the raw files listed in the manifest
-      # (tests/data/test_provenance_and_packaging.py::test_every_ok_entry_has_matching_file_hash). It runs locally only.
+      # and no paid API. Tests that need the corpus carry the `corpus` marker and are deselected here.
       - name: Tests (corpus-free)
-        run: >
-          uv run pytest -q -p no:cacheprovider -m 'not corpus'
-          --deselect tests/data/test_provenance_and_packaging.py::test_every_ok_entry_has_matching_file_hash
+        run: uv run pytest -q -p no:cacheprovider -m 'not corpus'
 
   build-push:
     needs: test
@@ -103,6 +100,7 @@ jobs:
 
   deploy:
     needs: [test, build-push]
+    if: github.ref == 'refs/heads/master'
     runs-on: ubuntu-latest
     timeout-minutes: 20
     environment: production

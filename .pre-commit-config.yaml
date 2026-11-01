@@ -1,0 +1,29 @@
+# Install with `pip install pre-commit && pre-commit install` (pre-commit is not a project dependency).
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+      - id: trailing-whitespace
+        exclude: '^(data/|experiments/|web/static/data/)'
+      - id: end-of-file-fixer
+        exclude: '^(data/|experiments/|web/static/data/)'
+      - id: check-added-large-files
+        args: ["--maxkb=2000"]
+  - repo: https://github.com/gitleaks/gitleaks
+    rev: v8.30.1
+    hooks:
+      - id: gitleaks
+        args: ["--config=.gitleaks.toml"]
+  - repo: local
+    hooks:
+      - id: ruff
+        name: ruff (correctness rules)
+        entry: uv run ruff check
+        language: system
+        types: [python]
+      - id: rights-scan
+        name: rights scan (needs the private corpus; prints NOT CHECKED without it)
+        entry: uv run labourlens rights-scan
+        language: system
+        pass_filenames: false
+        always_run: true

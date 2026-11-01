@@ -25,7 +25,10 @@ dependencies = [
 ]
 
 [dependency-groups]
-dev = ["pytest>=8"]
+dev = [
+    "pytest>=8",
+    "ruff==0.16.1",
+]
 
 [project.scripts]
 labourlens = "labourlens.cli:main"
@@ -40,3 +43,12 @@ packages = ["src/labourlens"]
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 markers = ["corpus: requires locally acquired source corpus or built data artifacts"]
+
+[tool.ruff]
+line-length = 160
+target-version = "py312"
+extend-exclude = ["data", "private", "web"]
+
+[tool.ruff.lint]
+# Correctness only: pyflakes, syntax errors, import order is not enforced (would reformat the whole repository).
+select = ["F", "E9"]

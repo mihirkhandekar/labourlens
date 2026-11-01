@@ -41,7 +41,7 @@ from pydantic import BaseModel, ValidationError
 from labourlens.agent.tools import ToolResult, TransientToolError
 from labourlens.mcp.http_server import MIN_TOKEN_CHARS, TOKEN_ENV, is_loopback
 from labourlens.mcp.models import (RESULT_MODELS, ComparePeriodsResult, DescribeDatasetResult, DimensionValuesResult, LatestValueResult, ListDatasetsResult,
-                                   ProvenanceResult, RevisionsResult, SeriesSummaryResult, StatisticResult)
+                                   ProvenanceResult, RevisionsResult, SeriesSummaryResult)
 from labourlens.mcp.server import ALL_TOOLS, SERVER_NAME, SERVER_VERSION, TOOL_NAME
 from labourlens.security.guards import injection_flags, sanitize_text
 
@@ -282,10 +282,10 @@ class McpStatsClient:
             raise McpClientError("malformed", "resource shape does not match its schema") from e
         clean = _sanitize(doc)
         quarantined = 0
-        for field, value in list(clean.items()):
+        for key, value in list(clean.items()):
             if isinstance(value, list):
-                clean[field] = [item for item in value if not _flagged(item)]
-                quarantined += len(value) - len(clean[field])
+                clean[key] = [item for item in value if not _flagged(item)]
+                quarantined += len(value) - len(clean[key])
         if _flagged(clean):
             raise McpClientError("quarantined", "resource contains instruction-like text outside a list")
         self.transcript.append({"step": "resources/read", "uri": uri, "bytes": len(text.encode()),
