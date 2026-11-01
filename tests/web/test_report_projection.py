@@ -657,3 +657,105 @@ def test_committed_report_carries_heldout_v2_beside_the_registered_heldout():
     assert section["paired"]["gpt-6-luna"]["better"] == 3 and section["paired"]["gpt-5.6-luna"]["paired_difference"] == 0.0
     assert not any("agent-heldout-V2-" in row["id"] for row in report["evaluation"]["rows"])
     assert report["evaluation"]["paired"][0]["gold_version"] == "v3.5" and report["evaluation"]["paired"][0]["n"] == 31
+
+
+# ---- tool set v2 (D-046 / D-048): dev X3 and the V2post post-freeze diagnostic, separately keyed --------------------
+
+_TF_CRITERIA = "experiments/tool-fix/criteria.json"
+_TF_PAIRED = ("experiments/heldout-v2/paired-postfix-toolset.json", "experiments/heldout-v2/paired-postfix-r3-vs-hybrid.json")
+
+
+@pytest.mark.parametrize("path", [
+    _TF_CRITERIA, *_TF_PAIRED,
+    "experiments/eval/agent-dev-X3/gpt-6-luna.metrics.json",
+    "experiments/eval/agent-dev-X3/gpt-5.6-luna.cases.jsonl",
+    "experiments/eval/agent-heldout-V2post-r3/gpt-6-luna.metrics.json",
+    "experiments/eval/agent-heldout-V2post-hybrid/gpt-5.6-luna.cases.jsonl",
+])
+def test_tool_set_v2_artifacts_are_allowlisted(path):
+    assert _Artifacts._allowed(path)
+
+
+@pytest.mark.parametrize("path", [
+    "experiments/eval/agent-dev-X3/gpt-6-luna.judgements.json",
+    "experiments/eval/agent-dev-X3/gpt-4.1-mini.metrics.json",
+    "experiments/eval/agent-dev-X3-REPORT.md",
+    "experiments/eval/agent-heldout-V2post-r3/gpt-6-luna.judgements.json",
+    "experiments/eval/agent-heldout-V2post-r3-REPORT.md",
+    "experiments/runs/agent-dev-X3/gpt-6-luna.scores.jsonl",
+    "experiments/runs/agent-heldout-V2post-r3/gpt-6-luna.scores.jsonl",
+    "experiments/heldout-v2/paired-postfix-other.json",
+])
+def test_tool_set_v2_raw_judgements_reports_and_extras_stay_private(path):
+    assert not _Artifacts._allowed(path)
+
+
+def _tf_criteria(x3_ok=True):
+    def model(passed):
+        item = {"pass": passed}
+        return {"x2": {"n": 237, "correct": 214, "false_answers": 6}, "x3": {"n": 237, "correct": 212, "false_answers": 7, "new_tool_cases": 10, "new_tool_case_ids_with_ungrounded": ["PRIVATE-ID"]},
+                "criteria": {"1_behaviour_accuracy": {"x3": 212, "pass": True}, "2_false_answers": {"x2": 6, "x3": 7, "pass": False, "threshold": "text"},
+                             "3a_ungrounded_in_new_tool_cases": {"x3": 1, "of_cases": 10, "pass": False}, "3b_cases_with_ungrounded": {"x2": 25, "x3": 27, "pass": True},
+                             "4_operational_failures": {"x2": 0, "x3": 0, "pass": True, "note": "PRIVATE_NOTE"}},
+                "all_pass": passed if x3_ok else False, "changed_cases": ["DEV-025", "<b>bad</b>"], **item}
+    return {"declared": {"min_correct": {"gpt-6-luna": 205, "gpt-5.6-luna": 209}, "max_false_answers": 6, "max_cases_with_ungrounded": {"gpt-6-luna": 34, "gpt-5.6-luna": 51}},
+            "dev": {"gpt-6-luna": model(False), "gpt-5.6-luna": model(False)},
+            "v2post": {"gpt-6-luna": {"r3": {"frozen": {"numerical_comparison_correct": 3}, "post": {"numerical_comparison_correct": 12, "new_tool_cases": 7,
+                                                                                                    "new_tool_case_ids_with_ungrounded": ["PRIVATE-ID"]}}}}}
+
+
+def _tf_files():
+    files = {_TF_CRITERIA: _tf_criteria()}
+    for model in ("gpt-6-luna", "gpt-5.6-luna"):
+        files[f"experiments/eval/agent-dev-X3/{model}.metrics.json"] = _v2_metrics("x", model, 0.895, 7)
+        for arm in ("r3", "hybrid"):
+            files[f"experiments/eval/agent-heldout-V2post-{arm}/{model}.metrics.json"] = _v2_metrics(arm, model, 0.9077, 0)
+    for path, base in zip(_TF_PAIRED, ("agent-heldout-V2-r3", "agent-heldout-V2post-hybrid")):
+        files[path] = {"candidate": "agent-heldout-V2post-r3", "baseline": base, "decision": {"statement": "R3 gain demonstrated for the primary model gpt-6-luna"},
+                       "per_model": {"gpt-6-luna": {"paired_difference": 0.1538, "better": 10, "worse": 0, "mcnemar_exact_p": 0.002, "case_bootstrap_interval": [0.0769, 0.2308],
+                                                    "missing": {"candidate": ["PRIVATE"], "baseline": []}}}}
+    return files
+
+
+def test_tool_set_v2_section_is_labelled_unadopted_and_post_freeze():
+    from labourlens.report.build import _tool_set_v2
+
+    section = _tool_set_v2(SyntheticArtifacts(_tf_files()))
+    assert section["experiment"] == "tool-set-v2" and section["adopted"] is False and section["default_tool_set_changed"] is False
+    assert section["threat_suite_run"] is False and "Not adopted" in section["verdict"]
+    assert section["dev_x3"]["all_criteria_passed"] is False
+    primary = section["dev_x3"]["criteria"]["gpt-6-luna"]
+    assert primary["criteria"]["2_false_answers"] == {"x2": 6, "x3": 7, "pass": False, "threshold": 6}
+    assert primary["criteria"]["1_behaviour_accuracy"]["threshold"] == 205 and section["dev_x3"]["criteria"]["gpt-5.6-luna"]["criteria"]["3b_cases_with_ungrounded"]["threshold"] == 51
+    assert primary["changed_cases"] == ["DEV-025"]
+    post = section["v2post"]
+    assert post["post_freeze_diagnostic"] is True and post["heldout"] is False and post["replaces_frozen_result"] is False
+    assert "optimistic by construction" in post["label"] and "not a replacement" in post["label"]
+    assert [(row["arm"], row["model"]) for row in post["rows"]] == [("r3", "gpt-6-luna"), ("r3", "gpt-5.6-luna"), ("hybrid", "gpt-6-luna"), ("hybrid", "gpt-5.6-luna")]
+    assert post["paired"]["toolset"]["baseline"] == "agent-heldout-V2-r3" and post["paired"]["r3_vs_hybrid"]["baseline"] == "agent-heldout-V2post-hybrid"
+    assert post["paired"]["toolset"]["per_model"]["gpt-6-luna"]["better"] == 10 and "missing" not in post["paired"]["toolset"]["per_model"]["gpt-6-luna"]
+    assert post["tool_use"]["gpt-6-luna"]["r3"]["post"]["new_tool_cases"] == 7
+    assert "decision" not in post["paired"]["toolset"]  # the retrieval-rule string must not be quoted as a verdict here
+    text = json.dumps(section)
+    assert "PRIVATE" not in text and "<b>" not in text and "secret" not in text.lower()
+
+
+def test_tool_set_v2_is_absent_without_the_criteria_artifact():
+    from labourlens.report.build import _tool_set_v2
+
+    files = _tf_files()
+    del files[_TF_CRITERIA]
+    assert _tool_set_v2(SyntheticArtifacts(files)) is None
+
+
+def test_tool_set_v2_rows_never_enter_registered_or_x2_rows():
+    rows, paths = _experiments(SyntheticArtifacts(_tf_files()), "experiments/eval/")
+    assert rows == [] and paths == []
+    assert not any("agent-dev-X3" in path or "V2post" in path for path in paths)
+
+
+def test_frozen_heldout_v2_section_is_unchanged_by_the_postfix_files():
+    from labourlens.report.build import _heldout_v2
+
+    files = {**_v2_files(), **_tf_files()}
+    assert _heldout_v2(SyntheticArtifacts(files)) == _heldout_v2(SyntheticArtifacts(_v2_files()))

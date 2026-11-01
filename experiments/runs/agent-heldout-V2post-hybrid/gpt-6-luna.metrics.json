@@ -1,0 +1,51 @@
+{
+ "label": "gpt-6-luna",
+ "config": "planner=gpt-6-luna|answer=gpt-6-luna|planner_v3|answer_v5|tools=v2",
+ "provenance": {
+  "gold_sha256": "e3d16597d542d33d106b4e9291aa3b92ca5fcdf19aa4d3c2b3319c0543efa542",
+  "prompt_sha256": {
+   "planner": "dd51c65e8c9ba6fd430881fcb75948d89bac711f34d86280727d1fb6df177483",
+   "answer": "0f1b421774c113d7d61d61f00bd3d5bc2a2db02032bbb0b653b24681d92f2154",
+   "judge": "85f3529fca32faec681b3d4b1e6899b8620c383ed2aa54bc423241e2b7f4a10f",
+   "rerank": "e45ed816ccefd679d046cf9bcbd4dad92ba27b20cfc5f45b900063b84784793a",
+   "planner_user": "9041644d35f67e41853acba914cbe23746c555fb1f165fa44f2de8eef9917346",
+   "answer_user": "c4f4ef05d7d1b87fca94bee65cbf2a38999c181dc2e92bced9cdf8ef92b006e7"
+  },
+  "agent_config": "planner=gpt-6-luna|answer=gpt-6-luna|planner_v3|answer_v5|tools=v2",
+  "git_head": "a97a1ca51060585d084b05190dfa34f94973ec74",
+  "price_table_sha256": "634b32441c3495b4c3ec13efa3af1e9cc99e5c7523eac3a15a5c238c3acaeb5c",
+  "eligible_n": 65,
+  "available_n": 65,
+  "fingerprint_scope": "files at scoring time; generation-time provenance only when saved in raw run"
+ },
+ "metrics": {
+  "n": 65,
+  "n_answer_cases": 48,
+  "n_nonanswer_cases": 17,
+  "valid_rate": 0.985,
+  "repair_rate": 0.2,
+  "operational_failures": 0,
+  "behavior_accuracy": 0.877,
+  "answer_case_behavior": 0.917,
+  "nonanswer_case_behavior": 0.765,
+  "over_abstention_rate": 0.083,
+  "false_answer_rate": 0.059,
+  "numbers_complete_rate": 0.792,
+  "gold_in_context_rate": 0.979,
+  "gold_cited_rate": 0.688,
+  "gold_cited_given_in_context": 0.702,
+  "key_number_recall": 0.856,
+  "answers_with_ungrounded_numbers": 0.062,
+  "latency_p50_s": 10.52,
+  "latency_max_s": 22.48,
+  "prompt_tokens_mean": 13748,
+  "completion_tokens_mean": 879,
+  "total_tokens": 950794,
+  "calc_correct_rate": 1.0,
+  "n_calc_cases": 4,
+  "tool_calls_mean": 1.82,
+  "tool_error_rate": 0.2,
+  "cost_per_case_usd": 0.00181,
+  "gold_cited_any_rate": 0.688
+ }
+}

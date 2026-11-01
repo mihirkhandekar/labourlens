@@ -502,8 +502,30 @@ Full result, rule quotation, caveats and error analysis: `docs/experiments/m7-he
 
 **Limits.** One run per arm, sampled models, 65 cases in 10 source groups and 39 components, partial independence from the development system, AI-drafted gold with owner approval, and no pooling with the earlier held-out.
 
+## Tool set v2: dev X3 and the V2post diagnostic (D-046, D-048)
+
+**Design and criteria were fixed before any run** (`docs/experiments/m7-tool-fix.md` sections 1 to 4). One factor, as a bundle: arithmetic on figures printed in reports (`calculate_from_text_values`, values checked against the cited passage, same `compute_change` rounding), an actionable unknown-dimension error and one bonus evidence round after it. New prompts `planner_v3` and `answer_v5` are minimal diffs of `planner_v1` and `answer_v3`. Everything else is held at X2: corpus v3, `r3`, cross-check on, gold v3.6 (same hash as X2), judge `gpt-6.1-terra`. One run per model.
+
+**MEASURED: dev X3 against the criteria declared in advance.**
+
+| Criterion | `gpt-6-luna` | `gpt-5.6-luna` |
+|---|---|---|
+| Behaviour correct at least 205 / 209 of 237 | 212, pass | 213, pass |
+| False-answer cases at most 6 | 7, **fail** | 7, **fail** |
+| No ungrounded number in a case that used the new tool | 1 of 10, **fail** | 3 of 18, **fail** |
+| Cases with an ungrounded number at most 34 / 51 | 27, pass | 30, pass |
+| Operational failures at most 0 | 0, pass | 1, **fail** (a provider HTTP 520 error page in one answer step; the rule had no exception for the cause) |
+
+Descriptive dev comparison with X2: behaviour .903 to .895 and .916 to .899, inside the X2 intervals; calc correct .750 to .792 (18 to 19 of 24); `numerical_comparison` 30 to 30 and 30 to 28 of 34; cost per case +5%. **The tool set shows no gain on dev and fails its own criteria, so it is not adopted**; the default tool set is unchanged. The dev set has few cases that need arithmetic on report text, so it cannot show the benefit either. The threat suite has not been run under tool set v2.
+
+**V2post: a post-freeze diagnostic, not held-out evidence, and not a replacement of the held-out v2 result above, which stands unchanged.** The 65 v2 cases were re-run with the same two arms and the same gold. The tool set was designed after the errors of these cases were analysed, so the result is optimistic by construction; the dev result above is the cleaner check. Behaviour correct of 65 (frozen to post-fix): r3 `gpt-6-luna` 49 to 59 (+0.154, 10 better, 0 worse, McNemar exact p = 0.002, case interval [0.077, 0.231]); r3 `gpt-5.6-luna` 47 to 55 (+0.123, 9 and 1, p = 0.0215, [0.046, 0.200]); hybrid `gpt-6-luna` 46 to 57; hybrid `gpt-5.6-luna` 47 to 53. `numerical_comparison` rises from 3 of 14 in every frozen arm to 12, 10 (r3) and 12, 9 (hybrid). False answers stay at 0 for r3 (frozen and post-fix) and rise from 1 to 2 for hybrid `gpt-5.6-luna`. On the 54 cases outside the 11 targeted ones, `gpt-6-luna` r3 moves 49 to 50 and `gpt-5.6-luna` r3 47 to 48. Post-fix r3 against post-fix hybrid is +0.031 for both models with intervals that include zero (3 and 1, 4 and 2 discordant cases).
+
+**Observed weakness.** `gpt-5.6-luna` often puts the text of a `figure:` snippet into `passage_a` instead of the passage label, which the tool correctly refuses (12 refused calls on dev and 7 on V2post, from private raw run records). It was not tuned; a snippet-format change would be a new experiment. Cost: 3.45 USD for the retained runs, plus about 1.5 USD (owner-reported) for a first X3 attempt that crashed in `score_run` and was discarded.
+
 ## Conclusions and remaining submission gates
 
 The dev evidence supports improved evidence acquisition as the main demonstrated intervention. It does not establish production readiness, reliable causal analysis or a final model winner. Remaining failures include planner omissions, clarification/status handling, missing calculation outputs and unsettled gold policy.
 
 The complete v3.5 held-out comparison remains inconclusive under the registered rule: one paired interval touches zero and the other spans both signs. The signed held-out v2 run meets its pre-registered rule for the primary model (+0.046, 3 cases better and none worse, p 0.25 by McNemar) but not for the replication model. I would not call that a confirmed gain, and low absolute accuracy there is mainly a tool coverage gap. The separately labelled corpus-v2 extraction experiment (X1) and the corpus-v3 regression check (X2) show no measurable quality change on the development split. Keep r3 provisional. T-I06 is **not shown stable**: the post-review threat rerun gave 36/36 and 35/36 across two models, and the failing run exposed a scorer brittleness that was recorded, not repaired. Owner review covers the 125-card pack and 45 gold records, not the full set; it used AI-assisted decisions and occurred after generation for the original sets. Preserve all scoring versions. A tool-coverage fix and a rerun on a fresh set would be a new pre-registered experiment.
+
+**Tool set v2 (D-048).** The tool set that closes the diagnosed arithmetic gap was built and measured. It failed its pre-declared dev criteria for both models and is not adopted; the held-out v2 questions, re-run as a post-freeze diagnostic, improve but are not independent evidence. Keep the default tool set until a fresh dev pass and a threat run under v2.

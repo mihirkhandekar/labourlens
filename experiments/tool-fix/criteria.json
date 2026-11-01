@@ -1,0 +1,302 @@
+{
+ "declared": {
+  "min_correct": {
+   "gpt-6-luna": 205,
+   "gpt-5.6-luna": 209
+  },
+  "max_false_answers": 6,
+  "max_cases_with_ungrounded": {
+   "gpt-6-luna": 34,
+   "gpt-5.6-luna": 51
+  },
+  "max_operational_failures": "X2 count"
+ },
+ "dev": {
+  "gpt-6-luna": {
+   "x2": {
+    "n": 237,
+    "correct": 214,
+    "false_answers": 6,
+    "over_abstentions": 6,
+    "cases_with_ungrounded": 25,
+    "operational_failures": 0,
+    "new_tool_cases": 0,
+    "new_tool_cases_with_ungrounded": 0,
+    "new_tool_case_ids_with_ungrounded": [],
+    "rounds_3_cases": 0,
+    "numerical_comparison_n": 34,
+    "numerical_comparison_correct": 30
+   },
+   "x3": {
+    "n": 237,
+    "correct": 212,
+    "false_answers": 7,
+    "over_abstentions": 8,
+    "cases_with_ungrounded": 27,
+    "operational_failures": 0,
+    "new_tool_cases": 10,
+    "new_tool_cases_with_ungrounded": 1,
+    "new_tool_case_ids_with_ungrounded": [
+     "DEV-331"
+    ],
+    "rounds_3_cases": 3,
+    "numerical_comparison_n": 34,
+    "numerical_comparison_correct": 30
+   },
+   "criteria": {
+    "1_behaviour_accuracy": {
+     "x3": 212,
+     "threshold": ">= 205",
+     "pass": true
+    },
+    "2_false_answers": {
+     "x2": 6,
+     "x3": 7,
+     "threshold": "<= 6",
+     "pass": false
+    },
+    "3a_ungrounded_in_new_tool_cases": {
+     "x3": 1,
+     "of_cases": 10,
+     "threshold": "== 0",
+     "pass": false
+    },
+    "3b_cases_with_ungrounded": {
+     "x2": 25,
+     "x3": 27,
+     "threshold": "<= 34",
+     "pass": true
+    },
+    "4_operational_failures": {
+     "x2": 0,
+     "x3": 0,
+     "threshold": "<= 0",
+     "pass": true
+    }
+   },
+   "all_pass": false,
+   "changed_cases": [
+    "DEV-025",
+    "DEV-119",
+    "DEV-127",
+    "DEV-134",
+    "DEV-313",
+    "DEV-404",
+    "DEV-406",
+    "DEV-410",
+    "DEV-513",
+    "DEV-627"
+   ]
+  },
+  "gpt-5.6-luna": {
+   "x2": {
+    "n": 237,
+    "correct": 217,
+    "false_answers": 6,
+    "over_abstentions": 5,
+    "cases_with_ungrounded": 39,
+    "operational_failures": 0,
+    "new_tool_cases": 0,
+    "new_tool_cases_with_ungrounded": 0,
+    "new_tool_case_ids_with_ungrounded": [],
+    "rounds_3_cases": 0,
+    "numerical_comparison_n": 34,
+    "numerical_comparison_correct": 30
+   },
+   "x3": {
+    "n": 237,
+    "correct": 213,
+    "false_answers": 7,
+    "over_abstentions": 8,
+    "cases_with_ungrounded": 30,
+    "operational_failures": 1,
+    "new_tool_cases": 18,
+    "new_tool_cases_with_ungrounded": 3,
+    "new_tool_case_ids_with_ungrounded": [
+     "DEV-025",
+     "DEV-226",
+     "DEV-326"
+    ],
+    "rounds_3_cases": 6,
+    "numerical_comparison_n": 34,
+    "numerical_comparison_correct": 28
+   },
+   "criteria": {
+    "1_behaviour_accuracy": {
+     "x3": 213,
+     "threshold": ">= 209",
+     "pass": true
+    },
+    "2_false_answers": {
+     "x2": 6,
+     "x3": 7,
+     "threshold": "<= 6",
+     "pass": false
+    },
+    "3a_ungrounded_in_new_tool_cases": {
+     "x3": 3,
+     "of_cases": 18,
+     "threshold": "== 0",
+     "pass": false
+    },
+    "3b_cases_with_ungrounded": {
+     "x2": 39,
+     "x3": 30,
+     "threshold": "<= 51",
+     "pass": true
+    },
+    "4_operational_failures": {
+     "x2": 0,
+     "x3": 1,
+     "threshold": "<= 0",
+     "pass": false
+    }
+   },
+   "all_pass": false,
+   "changed_cases": [
+    "DEV-009",
+    "DEV-032",
+    "DEV-121",
+    "DEV-127",
+    "DEV-134",
+    "DEV-311",
+    "DEV-312",
+    "DEV-401",
+    "DEV-404",
+    "DEV-410",
+    "DEV-528",
+    "DEV-604",
+    "DEV-624",
+    "DEV-627"
+   ]
+  }
+ },
+ "v2post": {
+  "gpt-6-luna": {
+   "r3": {
+    "frozen": {
+     "n": 65,
+     "correct": 49,
+     "false_answers": 0,
+     "over_abstentions": 13,
+     "cases_with_ungrounded": 2,
+     "operational_failures": 0,
+     "new_tool_cases": 0,
+     "new_tool_cases_with_ungrounded": 0,
+     "new_tool_case_ids_with_ungrounded": [],
+     "rounds_3_cases": 0,
+     "numerical_comparison_n": 14,
+     "numerical_comparison_correct": 3
+    },
+    "post": {
+     "n": 65,
+     "correct": 59,
+     "false_answers": 0,
+     "over_abstentions": 3,
+     "cases_with_ungrounded": 1,
+     "operational_failures": 0,
+     "new_tool_cases": 7,
+     "new_tool_cases_with_ungrounded": 0,
+     "new_tool_case_ids_with_ungrounded": [],
+     "rounds_3_cases": 3,
+     "numerical_comparison_n": 14,
+     "numerical_comparison_correct": 12
+    }
+   },
+   "hybrid": {
+    "frozen": {
+     "n": 65,
+     "correct": 46,
+     "false_answers": 1,
+     "over_abstentions": 14,
+     "cases_with_ungrounded": 2,
+     "operational_failures": 0,
+     "new_tool_cases": 0,
+     "new_tool_cases_with_ungrounded": 0,
+     "new_tool_case_ids_with_ungrounded": [],
+     "rounds_3_cases": 0,
+     "numerical_comparison_n": 14,
+     "numerical_comparison_correct": 3
+    },
+    "post": {
+     "n": 65,
+     "correct": 57,
+     "false_answers": 1,
+     "over_abstentions": 4,
+     "cases_with_ungrounded": 3,
+     "operational_failures": 0,
+     "new_tool_cases": 7,
+     "new_tool_cases_with_ungrounded": 0,
+     "new_tool_case_ids_with_ungrounded": [],
+     "rounds_3_cases": 4,
+     "numerical_comparison_n": 14,
+     "numerical_comparison_correct": 12
+    }
+   }
+  },
+  "gpt-5.6-luna": {
+   "r3": {
+    "frozen": {
+     "n": 65,
+     "correct": 47,
+     "false_answers": 0,
+     "over_abstentions": 14,
+     "cases_with_ungrounded": 5,
+     "operational_failures": 0,
+     "new_tool_cases": 0,
+     "new_tool_cases_with_ungrounded": 0,
+     "new_tool_case_ids_with_ungrounded": [],
+     "rounds_3_cases": 0,
+     "numerical_comparison_n": 14,
+     "numerical_comparison_correct": 3
+    },
+    "post": {
+     "n": 65,
+     "correct": 55,
+     "false_answers": 0,
+     "over_abstentions": 7,
+     "cases_with_ungrounded": 3,
+     "operational_failures": 0,
+     "new_tool_cases": 8,
+     "new_tool_cases_with_ungrounded": 0,
+     "new_tool_case_ids_with_ungrounded": [],
+     "rounds_3_cases": 5,
+     "numerical_comparison_n": 14,
+     "numerical_comparison_correct": 10
+    }
+   },
+   "hybrid": {
+    "frozen": {
+     "n": 65,
+     "correct": 47,
+     "false_answers": 1,
+     "over_abstentions": 14,
+     "cases_with_ungrounded": 4,
+     "operational_failures": 0,
+     "new_tool_cases": 0,
+     "new_tool_cases_with_ungrounded": 0,
+     "new_tool_case_ids_with_ungrounded": [],
+     "rounds_3_cases": 0,
+     "numerical_comparison_n": 14,
+     "numerical_comparison_correct": 3
+    },
+    "post": {
+     "n": 65,
+     "correct": 53,
+     "false_answers": 2,
+     "over_abstentions": 7,
+     "cases_with_ungrounded": 6,
+     "operational_failures": 0,
+     "new_tool_cases": 6,
+     "new_tool_cases_with_ungrounded": 1,
+     "new_tool_case_ids_with_ungrounded": [
+      "HO-V2-034"
+     ],
+     "rounds_3_cases": 6,
+     "numerical_comparison_n": 14,
+     "numerical_comparison_correct": 9
+    }
+   }
+  }
+ }
+}

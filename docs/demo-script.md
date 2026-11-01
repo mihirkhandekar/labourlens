@@ -6,6 +6,8 @@
 
 **Review boundary.** Owner review is complete: 125 cards decided (30 own verdicts, 95 agreeing with an AI suggestion), not independent inter-rater evidence. Gold has 268 cases, 45 owner-reviewed and 223 AI drafts. Registered results ran on corpus v1; X1 ran on v2. Corpus v3 has three measured evaluations: the X2 development regression check, the `m7-e2efix-20261031` threat run and held-out v2 (65 cases, the first evidence-disjoint-source evaluation, only partly independent). For held-out v2 say: the pre-registered rule is met for the primary model; the effect is three cases; I would not call it a confirmed gain; the second model shows none. Say this once, early.
 
+**Tool set v2 (say if asked about the arithmetic gap).** It was built and measured and is **not adopted**: on the development set it failed its pre-declared criteria for both models (false-answer cases 7 against 6; ungrounded numbers in cases that used the new tool). The held-out v2 improvement (`numerical_comparison` 3 to 12 of 14 for `gpt-6-luna`) is a post-freeze diagnostic on the cases that motivated it, optimistic by construction. The demo uses the default tool set; `calculate_change` in scenario 3 is unchanged.
+
 ## Preflight (before the timed session)
 
 - Environment: `uv sync --frozen`; processed observations, passages, manifest and embedding cache from `deploy/runtime-data.txt`. Do not fetch or rebuild the corpus during the talk.
@@ -31,7 +33,7 @@
 | 11:00–13:00 | **8, 9, 10 MCP** | 8 (1:00): transcript §1, §2, then the recorded agent answer. 9 (0:30): §3 and §4. 10 (0:30): §5 and §6. | State "recorded protocol execution, inspected live" first. Details below. |
 | 13:00–15:00 | Evaluation and error analysis | `/#presentation/pr-evaluation` (chapter 5). Speak the five numbers below only. | Descriptive, not significant; AI-drafted gold; held-out shares evidence. |
 | 15:00–17:00 | Threat limits and privacy | Chapter 6 and `experiments/threats/SUMMARY.md`. | Defended 35/36, mini 34/36; no measurable defence effect for luna6. The planted-figure result is below. |
-| 17:00–19:00 | Design discussion: models, trade-offs, safety, cost, next steps | Chapters 3 and 4 (retrieval and agent choices), chapter 9 (next steps), the cost ledger in chapter 10. | Why `gpt-6-luna` with reranking: accuracy gain for 5 s more latency and about $0.0008 more per case. Cost figures are list-price estimates. Next steps: fix the arithmetic-on-report-figures tool gap as a new experiment, cross-check recall, independent review. |
+| 17:00–19:00 | Design discussion: models, trade-offs, safety, cost, next steps | Chapters 3 and 4 (retrieval and agent choices), chapter 9 (next steps), the cost ledger in chapter 10. | Why `gpt-6-luna` with reranking: accuracy gain for 5 s more latency and about $0.0008 more per case. Cost figures are list-price estimates. Next steps: a second attempt at the arithmetic-on-report-figures tool (the first failed its dev criteria, D-048), cross-check recall, independent review. |
 | 19:00–20:00 | Innovation and wrap-up | `docs/innovation.md`. | Two priorities with acceptance targets; separate implemented controls from proposals. |
 
 There is no slack in the 20 minutes. If a live answer fails, use its fallback below and cut the evaluation block to three numbers; do not run over.

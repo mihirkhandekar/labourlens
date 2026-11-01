@@ -536,3 +536,36 @@ p95 values are the nearest-rank figures in the metrics files (D-043). Cost is th
 **DECISION.** Option A, on the owner's instruction ("use what you recommend"). The four change clicks are recorded as `owner_manual` with `applied: false` and policy reference D-047 in `experiments/gold/v3.7-policy-decisions.json` and the review log. Gold v3.7 differs from v3.6 only in review-provenance fields; evaluations stay scored on v3.5 and v3.6.
 
 **Limits.** The owner's first click and later policy choice differ for these four cases; both are on record. All 403 labelling items were decided by the owner's own click, after AI pre-review and after the saved runs were scored, so this is one person's review and not independent inter-rater evidence.
+
+### D-048 - Tool set v2 result: pre-declared dev criteria failed, not adopted (MEASURED / DECISION, 1 Nov 2026)
+
+**Context.** D-046 proposed tool set v2 (arithmetic on report figures, actionable dimension error, one bonus round) with criteria declared before any run. X3 (dev, n=237, corpus v3, gold v3.6, cross-check on, `planner_v3 answer_v5 --tool-set v2 --retrieval r3`, both models, one run each) and V2post (the v2 gold under new tags, arms `r3` and `hybrid`, both models) have now run. Full tables, run history and limits: `docs/experiments/m7-tool-fix.md` section 9. D-046 is unchanged as the dated pre-run record.
+
+**MEASURED RESULT: criteria of D-046 section 4.1 (counts from `experiments/tool-fix/criteria.json`).**
+
+| Criterion | `gpt-6-luna` | `gpt-5.6-luna` |
+|---|---|---|
+| 1. Behaviour correct at least 205 / 209 of 237 | 212, PASS | 213, PASS |
+| 2. False-answer cases at most 6 | 7, **FAIL** | 7, **FAIL** |
+| 3a. No ungrounded number in a case that used the new tool | 1 of 10, **FAIL** | 3 of 18, **FAIL** |
+| 3b. Cases with an ungrounded number at most 34 / 51 | 27, PASS | 30, PASS |
+| 4. Operational failures at most 0 | 0, PASS | 1 (provider HTTP 520 in the answer step), **FAIL** |
+| **Overall** | **FAIL** | **FAIL** |
+
+Dev behaviour accuracy: `gpt-6-luna` .903 to .895, `gpt-5.6-luna` .916 to .899, both inside the X2 intervals; `numerical_comparison` 30 to 30 and 30 to 28 of 34. No dev gain; the dev set has few cases that need arithmetic on report text, so it cannot show the benefit either.
+
+**MEASURED, descriptive: V2post (post-freeze diagnostic, NOT held-out, NOT a replacement of D-045).** Post-fix r3 against frozen r3, same gold: `gpt-6-luna` .754 to .908 (+0.154, 10 better, 0 worse, McNemar p = 0.002, case interval [0.077, 0.231]); `gpt-5.6-luna` .723 to .846 (+0.123, 9 and 1, p = 0.0215, [0.046, 0.200]). `numerical_comparison` 3 of 14 in every frozen arm; 12, 10 (r3) and 12, 9 (hybrid) of 14 post-fix (`gpt-6-luna`, `gpt-5.6-luna`). Over-abstentions 13 to 3 and 14 to 7 (r3). Post-fix r3 against post-fix hybrid: +0.031 for both models (3 and 1, 4 and 2 discordant), intervals include zero. The tool set was designed after these 65 cases' errors were analysed, so every V2post gain is optimistic by construction; the clean check is dev X3, which shows none.
+
+**DECISION.**
+
+| Option | Benefit | Downside | Disposition |
+|---|---|---|---|
+| Adopt tool set v2 as the default because V2post improved | Fixes the diagnosed gap in the targeted cases | Contradicts the rule declared before the run; V2post is not held-out and is optimistic by construction; dev shows no gain; threat suite not run | Rejected |
+| Relax or reinterpret the criteria after seeing the numbers (one case over on criterion 2, provider outage on criterion 4) | Would make the result look like a pass | Post-hoc; the rule had no tolerance and no exception for causes | Rejected |
+| Report the failure, keep `tool_set="base"`, keep the code and prompts as an unadopted option, require a fresh dev pass plus a threat run under v2 before any adoption | Honest, reversible, keeps the evidence | No improvement is shipped yet | **Chosen** |
+
+The default `AgentConfig.tool_set` stays `"base"`; the served system, web app, threat suite and all earlier configurations are unchanged. **Not run:** the threat suite under tool set v2 (planner exposure to figure snippets is covered only by unit tests). **Observed, not fixed:** `gpt-5.6-luna` often puts snippet text instead of the passage label into `passage_a` (12 refused calls on dev, 7 on V2post, from private raw records), which the validator correctly refuses; changing the snippet format is a new experiment.
+
+**Cost.** File-derived 3.45 USD for the retained runs (generation 2.75, judging 0.70) against the 3.3 to 3.7 estimate in D-046, plus about 1.5 USD (owner-reported) for a first X3 attempt that crashed in `score_run` on the new trace event and was discarded; fixed and re-run with `--force`. Total about 4.95 USD.
+
+**Reversibility.** Nothing to revert: results are added files; no frozen record, gold, scorer, existing prompt or default changed.

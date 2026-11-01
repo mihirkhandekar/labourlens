@@ -33,6 +33,10 @@ _LABELS = {
 _HELDOUT_V2_PAIRED = "experiments/heldout-v2/paired.json"
 _HELDOUT_V2_ERRORS = "experiments/heldout-v2/error-analysis.json"
 _HELDOUT_V2_FILES = {_HELDOUT_V2_PAIRED, _HELDOUT_V2_ERRORS}
+# Tool set v2 (D-046/D-048): separately keyed, never merged into the registered or X2 rows.
+_TOOLFIX_CRITERIA = "experiments/tool-fix/criteria.json"
+_TOOLFIX_PAIRED = {"toolset": "experiments/heldout-v2/paired-postfix-toolset.json", "r3_vs_hybrid": "experiments/heldout-v2/paired-postfix-r3-vs-hybrid.json"}
+_TOOLFIX_EVAL = re.compile(r"experiments/eval/agent-(?:dev-X3|heldout-V2post-(?:r3|hybrid))/gpt-(?:6|5\.6)-luna\.(?:metrics\.json|cases\.jsonl)")
 _E2EFIX_DIR = "experiments/threats/m7-e2efix-20261031/"
 _E2EFIX_EXPERIMENT = "m7-e2efix-20261031"
 
@@ -106,9 +110,11 @@ class _Artifacts:
             # Signed held-out v2 (corpus v3): registered luna models only; kept out of the registered rows (see _heldout_v2).
             if heldout is None:
                 heldout = re.fullmatch(r"experiments/eval/agent-heldout-V2-(?:r3|hybrid)/gpt-(?:6|5\.6)-luna\.(?:metrics\.json|cases\.jsonl)", path)
+            if heldout is None:
+                heldout = _TOOLFIX_EVAL.fullmatch(path)
             if not (development or heldout):
                 return False
-        if path.startswith("experiments/heldout-v2/") and path not in _HELDOUT_V2_FILES:
+        if path.startswith("experiments/heldout-v2/") and path not in _HELDOUT_V2_FILES | set(_TOOLFIX_PAIRED.values()):
             # Held-out v2: the paired result and the id-only error analysis; review exports and audits stay out.
             return False
         if path.startswith("experiments/runs/agent-"):
@@ -164,8 +170,8 @@ def _experiments(artifacts: _Artifacts, prefix: str) -> tuple[list, list]:
     rows, paths = [], []
     for path in artifacts.paths:
         if path.startswith(prefix) and path.endswith(".metrics.json"):
-            if prefix == "experiments/eval/" and "/agent-heldout-V2-" in path:
-                continue  # reported only in the separately keyed evaluation.heldout_v2 section
+            if prefix == "experiments/eval/" and ("/agent-heldout-V2-" in path or _TOOLFIX_EVAL.fullmatch(path)):
+                continue  # reported only in the separately keyed evaluation.heldout_v2 and evaluation.tool_set_v2 sections
             data = artifacts.mapping(path)
             metrics = _numeric(data.get("metrics", data))
             if not metrics:
@@ -688,6 +694,89 @@ def _heldout_v2(artifacts: _Artifacts) -> dict | None:
     }
 
 
+_TOOLFIX_THRESHOLD_KEYS = {"1_behaviour_accuracy": "min_correct", "3b_cases_with_ungrounded": "max_cases_with_ungrounded"}
+
+
+def _tool_set_v2(artifacts: _Artifacts) -> dict | None:
+    """Tool set v2 (D-046, result D-048): dev X3 against the pre-declared criteria, plus the V2post diagnostic on the v2 gold.
+    Separately keyed. V2post is a post-freeze diagnostic, not held-out, and does not replace the frozen held-out v2 result."""
+    raw = artifacts.mapping(_TOOLFIX_CRITERIA)
+    if not isinstance(raw.get("dev"), dict):
+        return None
+    paths = [_TOOLFIX_CRITERIA]
+    declared = raw.get("declared", {}) if isinstance(raw.get("declared"), dict) else {}
+
+    def metrics_row(path: str, **labels: str) -> dict | None:
+        data = artifacts.mapping(path)
+        metrics = _numeric(data.get("metrics", {}))
+        if not metrics:
+            return None
+        row = {"id": path.removesuffix(".metrics.json"), **labels, "metrics": metrics, "strata": _numeric(data.get("by_family", {})), "provenance": [path]}
+        source = data.get("provenance", {})
+        if isinstance(source, dict):
+            fingerprint = _selected(source, ("eligible_n", "available_n"))
+            for key in ("gold_sha256", "git_head", "price_table_sha256"):
+                value = source.get(key)
+                if isinstance(value, str) and re.fullmatch(r"[0-9a-f]{40}|[0-9a-f]{64}", value):
+                    fingerprint[key] = value
+            if fingerprint:
+                row["scoring_provenance"] = fingerprint
+        paths.append(path)
+        return row
+
+    dev_rows, criteria = [], {}
+    for model in _V2_MODELS:
+        row = metrics_row(f"experiments/eval/agent-dev-X3/{model}.metrics.json", model=model)
+        if row:
+            dev_rows.append(row)
+        entry = raw["dev"].get(model)
+        if not isinstance(entry, dict):
+            continue
+        table = {}
+        for name, item in (entry.get("criteria") or {}).items():
+            if isinstance(item, dict) and _label(name):
+                table[name] = _selected(item, ("x2", "x3", "of_cases", "pass"))
+                key = _TOOLFIX_THRESHOLD_KEYS.get(name)
+                limit = (declared.get(key) or {}).get(model) if key else None
+                if name == "2_false_answers":
+                    limit = declared.get("max_false_answers")
+                if _number(limit):
+                    table[name]["threshold"] = limit
+        criteria[model] = {"criteria": table, "all_pass": entry.get("all_pass") is True,
+                           "x2": _numeric({k: v for k, v in (entry.get("x2") or {}).items() if k != "new_tool_case_ids_with_ungrounded"}),
+                           "x3": _numeric({k: v for k, v in (entry.get("x3") or {}).items() if k != "new_tool_case_ids_with_ungrounded"}),
+                           "changed_cases": [case for case in entry.get("changed_cases", []) if _label(case)]}
+    post_rows = []
+    for arm in _V2_ARMS:
+        for model in _V2_MODELS:
+            row = metrics_row(f"experiments/eval/agent-heldout-V2post-{arm}/{model}.metrics.json", arm=arm, model=model)
+            if row:
+                post_rows.append(row)
+    paired = {}
+    for key, path in _TOOLFIX_PAIRED.items():
+        data = artifacts.mapping(path)
+        if not data.get("per_model"):
+            continue
+        paths.append(path)
+        paired[key] = {"candidate": data["candidate"] if _label(data.get("candidate")) else None, "baseline": data["baseline"] if _label(data.get("baseline")) else None,
+                       "per_model": {model: _numeric({k: v for k, v in entry.items() if k not in {"missing", "unexpected"}})
+                                     for model, entry in data["per_model"].items() if model in _V2_MODELS and isinstance(entry, dict)}}
+    tool_use = {m: {arm: _numeric({"frozen": v.get("frozen") or {}, "post": v.get("post") or {}}) for arm, v in arms.items() if isinstance(v, dict)}
+                for m, arms in (raw.get("v2post") or {}).items() if m in _V2_MODELS and isinstance(arms, dict)}
+    return {
+        "experiment": "tool-set-v2", "corpus_version": "v3", "crosscheck": True, "gold_version_dev": "v3.6",
+        "tool_set": "v2", "default_tool_set_changed": False, "adopted": False, "threat_suite_run": False,
+        "dev_x3": {"label": "Dev X3 against X2: a pre-declared regression check, one factor (the tool-set bundle).",
+                   "rows": dev_rows, "criteria": criteria, "all_criteria_passed": bool(criteria) and all(v["all_pass"] for v in criteria.values())},
+        "v2post": {"label": "Post-freeze diagnostic. Not held-out, and not a replacement of the frozen held-out v2 result (D-045). The tool set was designed after the errors of these 65 cases were analysed, so any gain here is optimistic by construction.",
+                   "post_freeze_diagnostic": True, "heldout": False, "replaces_frozen_result": False,
+                   "gold_sha256": "e3d16597d542d33d106b4e9291aa3b92ca5fcdf19aa4d3c2b3319c0543efa542",
+                   "rows": post_rows, "paired": paired, "tool_use": tool_use},
+        "verdict": "Not adopted: the pre-declared dev criteria failed for both models. The default tool set is unchanged and the threat suite has not been run under tool set v2.",
+        "provenance": sorted(set(paths)),
+    }
+
+
 def build_report(root: Path) -> dict:
     artifacts = _Artifacts(root)
     sources = _sources(artifacts)
@@ -711,6 +800,8 @@ def build_report(root: Path) -> dict:
     e2efix_rows, e2efix_paths = _experiments(artifacts, _E2EFIX_DIR + "runs/")
     x2_rows = [row for row in eval_rows if row.get("corpus_version") == "v3"]
     v2_held = _heldout_v2(artifacts)
+    tool_v2 = _tool_set_v2(artifacts)
+    eval_paths = eval_paths + list((tool_v2 or {}).get("provenance", []))
     trace, trace_paths, errors = _agent_trace(artifacts)
     quality_path = "data/export/quality.json"
     quality_data = artifacts.mapping(quality_path)
@@ -731,7 +822,7 @@ def build_report(root: Path) -> dict:
         "reconciliation": reconciliation,
         "security": _section("Threat-suite measurements. They do not guarantee security. `postfix` and `e2efix` are separate labelled runs; neither replaces the registered rows.", security_rows, security_paths + postfix_paths + e2efix_paths, postfix=postfix_rows, e2efix=_e2efix(e2efix_rows)),
         "evaluation": _section("Development A1–A5 and registered held-out H-r3/H-hybrid luna runs. Measurements retain their recorded gold versions. Owner review complete 31 Oct 2026: 125 cards decided by the owner (30 own verdicts, 95 by agreeing per card with AI suggestions or the three-pass AI tie-break), not independent inter-rater evidence. Gold v3.5 development and all four registered held-out rescoring runs are complete on existing generated outputs; held-out stale judge entries were rejudged. `paired` holds the registered corpus-v1 comparison, current first, with v3.2–v3.4 history; `corpus_v2_diagnostic` is a separate extraction-only diagnostic; `dev_x2_regression_check` labels the corpus-v3 dev X2 rows (a regression check, not an ablation). `heldout_v2` is the signed held-out v2 run on corpus v3, reported separately and never pooled with the registered held-out.", eval_rows, eval_paths + [path for entry in paired + ([paired_v2] if paired_v2 else []) for path in entry["provenance"]] + list((v2_held or {}).get("provenance", [])),
-                               errors={"scope": "rescored case records (experiments/eval, gold as recorded in each metrics file)", "counts": errors, "provenance": trace_paths}, paired=paired, corpus_v2_diagnostic=paired_v2, dev_x2_regression_check=_x2_check(x2_rows), heldout_v2=v2_held,
+                               errors={"scope": "rescored case records (experiments/eval, gold as recorded in each metrics file)", "counts": errors, "provenance": trace_paths}, paired=paired, corpus_v2_diagnostic=paired_v2, dev_x2_regression_check=_x2_check(x2_rows), heldout_v2=v2_held, tool_set_v2=tool_v2,
                                limitations=["Generation used AI-drafted gold before owner review; post-run owner review covers selected cards, not the entire gold set.", "Forty-five gold cards are owner reviewed; the remaining 223 remain draft.", "Current v3.5 and historical paired intervals include zero; the comparison is inconclusive under the registered rule.", "Gold v3.5 changes HO-022 after held-out execution; rescoring is post-run adjudication, not a fresh frozen-gold experiment.", "AI-assisted per-card owner decisions are not blinded independent annotation or inter-rater evidence.", "Metric definitions differ between evaluation stages.", "Dev X2 (corpus v3, gold v3.6, crosscheck on, 14 runtime changes) is a regression check of the served system, not an ablation: several factors changed at once, and the ungrounded-number check was widened, so that metric is not comparable with A3 or X1."]),
         "quality": _section("Validation outcomes, including warnings.", quality_rows, [quality_path], metrics=_numeric(quality_data.get("summary", {}))),
         "work": _work(artifacts),

@@ -1,6 +1,6 @@
 # M7 tool-coverage fix (tool set v2): design, pre-declared evaluation plan and commands
 
-**Status (1 Nov 2026): IMPLEMENTED AND UNIT-TESTED, NOT YET RUN.** No model, network, fetch, build or index command was run while writing this. Nothing below is a measured result about model behaviour. The only observed results are the unit-test outcomes in the last section. Decision record: D-046 in `docs/decisions.md`.
+**Status (1 Nov 2026): IMPLEMENTED, RUN, NOT ADOPTED.** Sections 1 to 8 were written before any run and are unchanged (section 8 records the pre-run test results). Section 9 holds the measured results, the criteria verdict and the decision. Decision records: D-046 (design, pre-run) and D-048 (result) in `docs/decisions.md`.
 
 This is a **new experiment outside the frozen held-out v2 protocol** (D-042, D-045). It changes no frozen file, gold label, scorer, existing prompt or earlier run record.
 
@@ -203,3 +203,107 @@ Assumption behind the "+15%" upper figure: the longer planner prompt (about 250 
 * `uv run pytest -q -m 'not corpus'`: **726 passed, 56 deselected** (65.5 s), including the 35 new tests.
 * `uv run pytest -q -m corpus -k agent`: **3 passed, 779 deselected** (`data/` is present).
 * No model, paid, build, fetch or index command was run. Behavioural claims about the agent with real models are untested until X3 and V2post are run.
+
+## 9. Results (1 Nov 2026) and decision
+
+**MEASURED RESULT, with the limits stated in section 4.3.** Sources: `experiments/eval/agent-dev-X3/`, `experiments/eval/agent-heldout-V2post-{r3,hybrid}/`, `experiments/heldout-v2/paired-postfix-toolset.json`, `experiments/heldout-v2/paired-postfix-r3-vs-hybrid.json`, and the criteria evaluation `experiments/tool-fix/criteria.py` -> `experiments/tool-fix/criteria.json` (counts and case ids from the saved score files; thresholds are the constants declared in section 4.1, not recomputed). One run per model and arm. The dev gold hash is identical for X2 and X3 (`6169a9deca78`, gold v3.6); the v2 gold hash is `e3d16597d542` for the frozen and post-fix runs.
+
+**Run history (cost note).** The first X3 attempt crashed in `score_run` on the new `bonus_round_granted` trace event, which has no `tool` field. The scoring bug was fixed and the experiment re-run with `--force`. The discarded generation cost about 1.5 USD (owner-reported; not file-verifiable). The results below are from the re-run only. The scoring fix does not touch generation: the agent-relevant code between the X2 and X3 recorded heads differs only by the tool-set files, prompts and CLI plumbing.
+
+### 9.1 Dev X3 against the pre-declared criteria (section 4.1): FAIL for both models
+
+Counts are integers from the saved score files. Thresholds were fixed before the run.
+
+| # | Criterion | `gpt-6-luna` | PASS/FAIL | `gpt-5.6-luna` | PASS/FAIL |
+|---|---|---|---|---|---|
+| 1 | Behaviour correct at least 205 / 209 of 237 (X2 lower bound) | 212 (X2: 214) | **PASS** | 213 (X2: 217) | **PASS** |
+| 2 | False-answer cases at most 6 | 7 (X2: 6) | **FAIL** | 7 (X2: 6) | **FAIL** |
+| 3a | No ungrounded number in a case that used `calculate_from_text_values` | 1 of 10 such cases (DEV-331) | **FAIL** | 3 of 18 such cases (DEV-025, 226, 326) | **FAIL** |
+| 3b | Cases with an ungrounded number at most 34 / 51 | 27 (X2: 25) | **PASS** | 30 (X2: 39) | **PASS** |
+| 4 | Operational failures at most the X2 count (0) | 0 | **PASS** | 1 (X2: 0) | **FAIL** |
+| | **All criteria** | | **FAIL** | | **FAIL** |
+
+Notes on the failures, stated without softening the rule:
+* **Criterion 2** is one case over the limit for each model. The extra answered non-answer case is DEV-627 in both models (a numerical-comparison case that X2 got right). For `gpt-6-luna` the other six recur from X2. For `gpt-5.6-luna` five recur, DEV-404 dropped out and DEV-604 was added. One case is within sampling noise, but the criterion was declared with no tolerance.
+* **Criterion 3a** is a zero-tolerance rule on a small number of cases. Whether the ungrounded numbers are the new tool's fault was not investigated per case (that would need reading model outputs; the case list is in `criteria.json`).
+* **Criterion 4** for `gpt-5.6-luna` is a single provider-side HTTP 520 error page in the answer step of DEV-026, not a tool fault, but the pre-declared rule has no exception for the cause, so it is a FAIL.
+* Criteria 1 and 3b pass for both models. The X2 intervals are wide (n=237): differences below about 10 points are noise.
+
+### 9.2 Dev X3 against X2, descriptive (not gating)
+
+| Measure | `gpt-6-luna` X2 | X3 | `gpt-5.6-luna` X2 | X3 |
+|---|---|---|---|---|
+| Behaviour accuracy | .903 [.865, .941] | .895 [.852, .932] | .916 [.878, .949] | .899 [.857, .937] |
+| Behaviour correct (of 237) | 214 | 212 | 217 | 213 |
+| False-answer cases | 6 | 7 | 6 | 7 |
+| Over-abstentions | 6 | 8 | 5 | 8 |
+| Cases with an ungrounded number | 25 (.105) | 27 (.114 [.076, .156]) | 39 (.165) | 30 (.127 [.084, .173]) |
+| Calc correct (n=24) | .750 (18) | .792 (19) | .750 (18) | .792 (19) |
+| Key-number recall | .836 | .829 | .845 | .874 |
+| Claim support | .860 | .887 | .794 | .834 |
+| Fact coverage | .719 | .734 | .745 | .802 |
+| Answers contradicting a reference fact | .023 | .023 | .017 | .011 |
+| `numerical_comparison` correct (of 34) | 30 | 30 | 30 | 28 |
+| Cases that used `calculate_from_text_values` | 0 | 10 | 0 | 18 |
+| Cases that reached a third round | 0 | 3 | 0 | 6 |
+| Median / p95 latency (s) | 14.0 / 40.9 | 13.9 / 40.8 | 13.9 / 33.8 | 13.6 / 40.2 |
+| Cost per case (USD) | .00285 | .00298 | .00463 | .00484 |
+
+The dev set shows **no behaviour gain**: both X3 point estimates are slightly below X2 and well inside X2's interval, and `numerical_comparison` is flat (`gpt-6-luna`) or two cases lower (`gpt-5.6-luna`). Per-case churn is symmetric: 4 cases gained and 6 lost for `gpt-6-luna`, 5 gained and 9 lost for `gpt-5.6-luna` (listed in `criteria.json` under `changed_cases`; most changed cases are outside `numerical_comparison`). With one run per model, sampling noise alone can produce this churn, so the churn is not attributed to the tool set. The development set contains few numerical comparisons that need arithmetic on report text (24 calculation cases, all observation-based gold), so a null result on dev does not contradict the diagnosed gap; it also means dev cannot show the benefit. Cost per case rose 5% for both models.
+
+**Tool behaviour, read from the private raw run records (not committed).** `gpt-6-luna` made 9 successful and 2 refused calls of the new tool on dev; `gpt-5.6-luna` made 8 successful and 12 refused. The refusals of `gpt-5.6-luna` are almost all the same mistake: it put the text of a `figure:` snippet into `passage_a` instead of the passage label (P1, P2, ...). That is a usability weakness of the planner snippet format as designed (not a validation failure: the tool correctly refused). It was not tuned, because tuning on this evidence would break the one-factor rule; a change of the snippet format would be a new experiment. `bonus_round_granted` events: 8 (`gpt-6-luna`) and 10 (`gpt-5.6-luna`) on dev (an event is logged per unknown-dimension error, and one run can log several in one round).
+
+### 9.3 V2post: post-freeze diagnostic on the held-out v2 gold (65 cases)
+
+**Labels, read first.** This is a **post-freeze diagnostic, NOT held-out evidence, and NOT a replacement of the frozen D-045 result**, which stands unchanged. The tool set was **designed after the errors of exactly these 65 cases were analysed** (11 of 16 mismatches were assigned to the gap it addresses), so any gain here is **optimistic by construction**. The dev X3 result in 9.1 and 9.2 is the cleaner check, and it shows no gain. The `decision` string inside the two paired JSON files applies the D-042 retrieval rule and is not a verdict on the tool set; it is not quoted here.
+
+Behaviour correct (of 65), frozen run (89c51d7, `planner_v1`, `answer_v3`) against post-fix run (`planner_v3`, `answer_v5`, tool set v2):
+
+| Arm and model | Frozen | Post-fix | Over-abstentions | False answers | Cases with ungrounded number | `numerical_comparison` (of 14) | Cases using the new tool (post) |
+|---|---|---|---|---|---|---|---|
+| r3, `gpt-6-luna` | 49 (.754) | 59 (.908) | 13 to 3 | 0 to 0 | 2 to 1 | 3 to 12 | 7 |
+| r3, `gpt-5.6-luna` | 47 (.723) | 55 (.846) | 14 to 7 | 0 to 0 | 5 to 3 | 3 to 10 | 8 |
+| hybrid, `gpt-6-luna` | 46 (.708) | 57 (.877) | 14 to 4 | 1 to 1 | 2 to 3 | 3 to 12 | 7 |
+| hybrid, `gpt-5.6-luna` | 47 (.723) | 53 (.815) | 14 to 7 | 1 to 2 | 4 to 6 | 3 to 9 | 6 |
+
+Paired, post-fix r3 against frozen r3 (`paired-postfix-toolset.json`; the two runs differ by the tool set, the two prompts and the code between the recorded heads, with the same gold):
+
+| Model | Paired difference | Better / worse | McNemar exact p | Case interval | Component interval |
+|---|---|---|---|---|---|
+| `gpt-6-luna` | +0.154 | 10 / 0 | 0.002 | [0.077, 0.231] | [0.071, 0.222] |
+| `gpt-5.6-luna` | +0.123 | 9 / 1 | 0.0215 | [0.046, 0.200] | [0.058, 0.194] |
+
+Of the 11 targeted cases (HO-V2-025 to 027, 029 to 036), the post-fix r3 arm got 9 right for `gpt-6-luna` (frozen: 0; HO-V2-027 and 029 still abstain) and 7 for `gpt-5.6-luna` (frozen: 0). On the other 54 cases `gpt-6-luna` r3 moved from 49 to 50 and `gpt-5.6-luna` r3 from 47 to 48 (2 better, 1 worse), which is the regression check on non-targeted cases. Within the targeted gain, `numerical_comparison` rises from 3 of 14 in all four frozen arms to 12, 10, 12 and 9 of 14 post-fix.
+
+Paired, post-fix r3 against post-fix hybrid (`paired-postfix-r3-vs-hybrid.json`), descriptive only:
+
+| Model | r3 | hybrid | Paired difference | Better / worse | McNemar exact p | Case interval |
+|---|---|---|---|---|---|---|
+| `gpt-6-luna` | .908 | .877 | +0.031 | 3 / 1 | 0.625 | [-0.015, 0.077] |
+| `gpt-5.6-luna` | .846 | .815 | +0.031 | 4 / 2 | 0.6875 | [-0.031, 0.092] |
+
+On the post-fix system the retrieval difference is two to three cases, and the intervals include zero for both models. This is the same direction as D-045 (r3 slightly ahead) but the registered D-042 conditions are not met here, and it is not a retest of the registered comparison.
+
+**What 9.3 shows and does not show.** It shows that the diagnosed capability gap closes for most targeted cases when the tool is available and that the non-targeted cases did not visibly regress in this one run. It does not show a general gain, a gain on unseen questions, or that each of the three bundled parts contributes. It cannot support a held-out claim: the questions and failure classes were known. Two targeted cases still abstain for `gpt-6-luna` and four for `gpt-5.6-luna`, and the `gpt-5.6-luna` refusals above are one visible cause (inferred from the refusal messages, not shown by a controlled test).
+
+### 9.4 Verdict and decision
+
+* **Pre-declared X3 criteria: FAIL for both models** (criteria 2 and 3a for both, criterion 4 additionally for `gpt-5.6-luna`). Under the rule written in section 4.1 the tool set is **not adopted** as the served default.
+* **The default `AgentConfig.tool_set` stays `"base"`.** Nothing in the web app, the threat suite or the evaluation defaults changed.
+* **Recommendation for any future adoption, not a decision to adopt:** all dev criteria must pass in a fresh run AND the threat suite (`labourlens threat-test`, new experiment id) must pass under tool set v2. The threat suite has **not** been run under v2, so planner exposure to figure snippets is untested beyond unit tests.
+* **What would be a sound next step (a new experiment, not done):** fix the snippet format so the planner cannot mistake snippet text for a passage label (for example label every snippet with its P label), keep everything else fixed, and judge it on dev against X2 with criteria declared beforehand; then a fresh evidence-disjoint held-out set, because the v2 set is spent for this purpose (D-045).
+* The frozen D-045 result, `experiments/heldout-v2/paired.json`, all earlier prompts and run records are unchanged.
+
+### 9.5 Cost of the experiment (from saved metrics; the crash figure is owner-reported)
+
+| Item | USD |
+|---|---|
+| X3 generation (237 cases): `gpt-6-luna` 0.706, `gpt-5.6-luna` 1.146 | 1.85 |
+| X3 judging: 0.237 + 0.256 | 0.49 |
+| V2post generation (4 arms of 65 cases): r3 0.208 + 0.319, hybrid 0.118 + 0.255 | 0.90 |
+| V2post judging: 0.055 + 0.048 + 0.054 + 0.053 | 0.21 |
+| **Retained runs, file-derived** | **3.45** |
+| Discarded first X3 attempt (scoring crash; owner-reported, not file-verifiable) | about 1.5 |
+| **Total including the crash** | **about 4.95** |
+
+The pre-run estimate in section 6 was 3.3 to 3.7 USD for the retained runs; the file-derived 3.45 falls inside it. The crash was not in the estimate.
