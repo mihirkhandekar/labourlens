@@ -545,3 +545,24 @@ export function measureCards(m) {
   const dev = m.evalRow('dev-A3', 'gpt-6-luna')?.metrics?.n_cases, held = m.heldRow('r3', 'gpt-6-luna')?.metrics?.n_cases, v2 = m.section('evaluation').heldout_v2?.paired?.['gpt-6-luna']?.n_gold_cases;
   return cardRow([{icon: 'stack', head: 'Three question sets', line: `${fmt.int(dev)} to tune on, ${fmt.int(held)} for testing, ${fmt.int(v2)} fresh.`}, {icon: 'chart-line', head: 'Four measures', line: 'Right passage, right response, supported claims, correct numbers.'}, {icon: 'check-circle', head: 'One reviewer', line: 'AI drafted the labels. I confirmed all 403 items. Not independent.'}]);
 }
+
+/** The development loop with the written guardrails around it, and three counts: the decision log, five end-to-end reviewers, the rights scan result. */
+export function buildProcess() {
+  const wrap = el('div', 'g24');
+  const loop = el('div', 'g24-loop');
+  ['Propose', 'Compare', 'Approve', 'Build', 'Verify', 'Record'].forEach((name, i) => {
+    if (i) { const a = el('span', 'g24-arrow'); a.append(ico('arrow-right')); loop.append(a); }
+    const step = el('div', `g24-step${name === 'Approve' ? ' is-owner' : ''}`); step.style.setProperty('--i', String(i));
+    step.append(el('p', 'g24-name', name), el('p', 'g24-who', name === 'Approve' ? 'Me' : name === 'Record' ? 'Files' : 'Agent'));
+    loop.append(step);
+  });
+  const lanes = el('ul', 'g24-lanes');
+  [['Written contract', 'Options and trade-offs first. No next phase without my approval.'], ['State in files', 'Progress log, claims and decision log, so any agent can resume.'], ['Frozen results', 'Hashes pinned. Post-freeze work gets a new experiment id.'], ['Independent review', 'Blind AI reviewers. Five end-to-end reviews found real defects.'], ['Safe by default', 'Secrets in a gitignored file. Rights scan and secret scan in CI.']].forEach(([head, text], i) => {
+    const li = el('li', 'g24-lane'); li.style.setProperty('--i', String(i)); li.append(el('strong', '', head), el('span', '', text)); lanes.append(li);
+  });
+  const nums = el('div', 'g24-nums');
+  [['48', 'decisions logged'], ['5', 'independent reviewers'], ['0', 'rights-scan hits']].forEach(([n, label]) => { const d = el('div', 'g24-num'); d.append(el('p', 'num', n), el('p', '', label)); nums.append(d); });
+  wrap.append(loop, el('div', 'g24-body', ''), nums);
+  wrap.querySelector('.g24-body').append(lanes);
+  return wrap;
+}

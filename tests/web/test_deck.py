@@ -147,7 +147,7 @@ REQUIRED_TITLES = [
     "About me", "The assignment", "Why this problem", "The task, and what I left out", "The system, end to end", "Choosing the data", "Three document builds", "Reading the reports",
     "What the data showed", "Hard parts, and what handles them", "Keyword, meaning or both?", "Does filtering help?", "The agent loop", "Every claim has a source",
     "Choosing the models", "How I measured", "Who checked the answers", "The experiment ladder", "On fresh questions, the gain was small", "Why it missed", "Fixing the calculation gap",
-    "GenAI concepts in this build", "The MCP server", "Attacks and defences", "A planted wrong figure", "The product, and how to run it", "How I worked with AI agents", "Limits, and what next", "What I covered",
+    "GenAI concepts in this build", "The MCP server", "Attacks and defences", "A planted wrong figure", "The product, and how to run it", "How I built it", "Limits, and what next", "What I covered",
 ]
 
 
@@ -172,7 +172,7 @@ def test_calculation_fix_slide_states_the_failure_and_the_graphics_exist():
     assert main.count("Fixing the calculation gap") == 1
     assert "Not adopted." in main and "optimistic" in main
     graphics = (STATIC / "presentation" / "graphics.js").read_text()
-    for name in ("threeAnswers", "twoSources", "buildTimeline", "flattening", "retrievalStaircase", "agentLoop", "evidenceTrace", "experimentStaircase", "costBars", "toolFixBars", "requirementGrid", "domainChoice", "challengeGrid", "answerCard", "aboutMe", "architectureDiagram", "taskAndLeftOut", "hardParts", "keywordVsMeaning", "modelTable", "reviewStreams", "threatPanels", "workbenchShot", "conceptGrid", "coverageMap", "measureCards", "plantedFlow"):
+    for name in ("threeAnswers", "twoSources", "buildTimeline", "flattening", "retrievalStaircase", "agentLoop", "evidenceTrace", "experimentStaircase", "costBars", "toolFixBars", "requirementGrid", "domainChoice", "challengeGrid", "answerCard", "aboutMe", "architectureDiagram", "taskAndLeftOut", "hardParts", "keywordVsMeaning", "modelTable", "reviewStreams", "threatPanels", "workbenchShot", "conceptGrid", "coverageMap", "measureCards", "plantedFlow", "buildProcess"):
         assert f"export function {name}" in graphics, name
     slides = (STATIC / "presentation" / "slides.js").read_text()
     assert "403" in main and "One reviewer" in main  # the review fact sits on the measuring slide
