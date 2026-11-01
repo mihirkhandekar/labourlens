@@ -244,7 +244,9 @@ def create_app(settings: Settings | None = None, runner=None, shared_factory=Non
     injected_runner = runner is not None
     if runner is None:
         from labourlens.agent.graph import AgentConfig, run_agent
-        runner = lambda question, shared, audit=None: run_agent(question, shared, AgentConfig(run_deadline_s=cfg.run_deadline_s), save_trace=True, audit=audit)
+        from labourlens.agent.smalltalk import run_smalltalk
+        # Small talk is answered without a model call (D-050); everything else runs the evaluated agent unchanged.
+        runner = lambda question, shared, audit=None: run_smalltalk(question, shared, audit) or run_agent(question, shared, AgentConfig(run_deadline_s=cfg.run_deadline_s), save_trace=True, audit=audit)
     if shared_factory is None:
         from labourlens.agent.tools import Shared
         shared_factory = Shared

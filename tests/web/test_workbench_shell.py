@@ -52,3 +52,26 @@ def test_workbench_has_no_unapproved_internal_copy_or_html_injection():
         assert forbidden not in SCRIPT
     assert "openai.com" not in SCRIPT
     assert "mountWorkbench" in PAGE and "Presentation" in SCRIPT
+
+
+def test_shell_keeps_page_fixed_and_scrolls_only_thread_and_panels():
+    assert "html:has(.workbench-root) { height: 100dvh; overflow: hidden; }" in CSS
+    assert "grid-template-rows: minmax(0, 1fr)" in CSS
+    assert ".wb-chat { display: flex; flex-direction: column; min-width: 0; min-height: 0; height: 100%; overflow: hidden;" in CSS
+    assert ".wb-rail { display: flex; flex-direction: column; min-width: 0; min-height: 0; height: 100%; overflow: hidden;" in CSS
+    assert ".wb-panel { flex: 1 1 0; min-height: 0; overflow-y: auto;" in CSS
+    assert ".wb-messages { position: relative; display: flex; flex: 1 1 0;" in CSS
+    assert ".wb-messages > * { flex: none; min-width: 0; }" in CSS
+    # No scrollIntoView: it can scroll the fixed page ancestors and clip the top of an answer.
+    assert "scrollIntoView({behavior" not in SCRIPT
+    assert "function revealTop" in SCRIPT and "messages.scrollTo({top: Math.max(0, offset - 12)" in SCRIPT
+
+
+def test_answer_stack_is_one_full_width_column_with_explanation_inside_the_card():
+    assert "@media (min-width: 1280px)" not in CSS
+    assert ".answer-stack > * { min-width: 0; max-width: 100%; }" in CSS
+    assert "el('details', 'explanation')" in SCRIPT
+    assert "c.append(explanation(response, events))" in SCRIPT
+    assert "stack.append(explanation" not in SCRIPT
+    assert "explanation-bezel" not in SCRIPT
+    assert "box.open" not in SCRIPT  # collapsed by default

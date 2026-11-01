@@ -120,6 +120,10 @@ Every row came from a live call; none is stored as a repo artifact yet. M1.1 mus
 
 ## Log (newest first)
 
+### 2026-11-01 — Small-talk fast path in the web app (D-050)
+
+- **IMPLEMENTED:** `src/labourlens/agent/smalltalk.py`, wired into the default web runner only (`report/app.py`). Whole-message closed-list greetings, thanks, goodbyes, identity and help questions, and punctuation-only messages return a `clarify` answer with no model call and zero cost; everything else goes to the agent unchanged. Tests in `tests/web/test_smalltalk.py`. A served-versus-evaluated difference, logged in D-050. Not measured on any model run.
+
 ### 2026-11-01 — Numbers audit: review wording and stale statements corrected (documentation only)
 
 - **VERIFIED FACT** (`docs/human-review/numbers-audit.md`, recomputed from the owner's raw exports): every performance number recomputed matches its artifact. The human-review wording did not. The review page stamps `decision_source=owner_manual` for any click or key; the pending pack has no "Manual only" control and no agree-with-AI control.

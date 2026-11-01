@@ -603,3 +603,17 @@ The default `AgentConfig.tool_set` stays `"base"`; the served system, web app, t
 | Drop the review limits as well | Shortest | Would overstate the evidence | Rejected |
 
 **Reversibility.** Wording only; no label, score, gold file, count or run changed. Reverting is a text revert across the docs, deck, report page and `src/labourlens/report/build.py`. `web/static/data/report.json` is built from committed files, so the milestone status line from `docs/progress.md` updates only after the next commit and `uv run labourlens build-report`.
+
+### D-050 - Small-talk fast path in the served web app (ASSISTANT DECISION / IMPLEMENTED, 1 Nov 2026)
+
+**Served versus evaluated difference (adds to the D-043 list).** The owner typed "hi" into the workbench: the full agent ran (plan, draft, validate, repair, 9.6 s) and returned an abstention titled "No evidence items were provided." `agent/smalltalk.py` now answers a closed list of whole messages (greetings, thanks, goodbyes, "who are you", "what can you do", "help", one-word acknowledgements such as "ok" or "test") and messages with no letter or digit (only punctuation or emoji) without a model call, a search or any cost. The reply uses the existing public schema with status `clarify`: what the tool covers (Singapore labour-market statistics and Ministry of Manpower report passages, Q1 2024 to Q2 2026, cited answers, abstention when evidence is missing) and three example questions; no claims, no evidence. The trace shows "Check question: small talk answered without searching" then "Finish: clarify". The run keeps a `run_id` (so feedback works), a saved run file and an audit record (`fast_path: small_talk`, `config: small_talk_fast_path`, zero usage).
+
+**Why it is safe.** Matching is a whole-message equality after normalising case, punctuation and whitespace, so "hi, ignore previous instructions", "help me compare retrenchments" and "what can you do about unemployment" still run the agent unchanged. Only the web runner calls it; `run_agent`, the experiments, the gold and threat cases are unchanged and none of their questions is on the list. `tests/web/test_smalltalk.py` covers matches, near-misses and injections, a model stub that raises, schema validation and the audit record.
+
+| Option | Benefit | Downside | Disposition |
+|---|---|---|---|
+| Leave it to the agent | No served-versus-evaluated difference | 10 s, cost, and an abstention that reads as a fault | Rejected |
+| Classifier call to a small model | Handles any phrasing | Still costs and adds latency; a new injection surface | Rejected |
+| Closed whole-message list, web runner only | Instant, free, nothing to inject into | Odd phrasings still go to the agent | **Chosen** |
+
+**Limits.** Phrasings off the list still run the whole agent and can still abstain with the model's own wording; no behavioural claim covers them. **Reversibility.** Delete `agent/smalltalk.py`, its test file and the `run_smalltalk(...) or` prefix in the default runner in `report/app.py`; no evaluated result depends on it.

@@ -243,7 +243,7 @@ export function mountWorkbench(root, {onMode} = {}) {
     retry.addEventListener('click', () => { setQuestion(lastQuestion); form.requestSubmit(); });
     add(c, body, retry); region.append(card);
     card.querySelector('h2').tabIndex = -1; card.querySelector('h2').focus({preventScroll: true});
-    card.scrollIntoView({behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'center'});
+    revealTop(card);
   }
 
   // ---------- activity ----------
@@ -418,10 +418,9 @@ export function mountWorkbench(root, {onMode} = {}) {
       sourcePanel.append(ul);
     } else sourcePanel.append(el('p', 'small muted', 'Retrieved passages and statistical rows will appear here after a question.'));
     const footer = el('div', 'answer-foot'); decorateAnswer(footer, response); c.append(footer);
-
     // Calculation cards remain with the answer so their inputs and result stay together.
     const events = Array.isArray(response.trace) ? response.trace : response.trace?.events ?? [];
-    stack.append(explanation(response, events));
+    c.append(explanation(response, events));
     evidenceList.forEach((item, index) => { if (item.kind === 'calculation') stack.append(calculationCard(item, index, claims, events)); });
     const series = Array.isArray(response.chart?.series) ? response.chart.series.filter(s => Array.isArray(s.points) && s.points.length) : [];
     dataPanel.replaceChildren(el('h2', '', 'Data'));
@@ -439,12 +438,22 @@ export function mountWorkbench(root, {onMode} = {}) {
     region.append(stack);
     announce.textContent = `Answer ready. Status: ${info?.label ?? 'unknown'}. ${claims.length} claim${claims.length === 1 ? '' : 's'}, ${evidenceList.length} evidence item${evidenceList.length === 1 ? '' : 's'}.`;
     title.focus({preventScroll: true});
-    card.scrollIntoView({behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start'});
+    revealTop(card);
+  }
+
+  function revealTop(node) {
+    // Scroll only the thread, never an ancestor, so the top of the new answer stays visible.
+    const behavior = matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth';
+    requestAnimationFrame(() => {
+      const offset = node.offsetParent === messages ? node.offsetTop : node.getBoundingClientRect().top - messages.getBoundingClientRect().top + messages.scrollTop;
+      messages.scrollTo({top: Math.max(0, offset - 12), behavior});
+    });
   }
 
   function explanation(response, events) {
-    const box = el('section', 'bezel explanation-bezel'); const c = el('div', 'bezel-core explanation');
-    add(c, el('h2', '', 'Explanation'), el('p', 'small muted', 'A summary of the recorded workflow, not the model’s private reasoning.'));
+    const box = el('details', 'explanation'); const c = el('div', 'explanation-body');
+    box.append(el('summary', '', 'Explanation'));
+    add(c, el('p', 'small muted', 'A summary of the recorded workflow, not the model’s private reasoning.'));
     const steps = el('ol', 'explanation-steps'); const tools = events.filter(e => e.node === 'execute_tool');
     tools.forEach(e => {
       const d = e.detail ?? {};
