@@ -12,6 +12,12 @@ def _corpus_present() -> bool:
     return paths.PASSAGES.is_dir() and any(paths.PASSAGES.glob("*.jsonl"))
 
 
+@pytest.fixture(autouse=True)
+def no_paid_calls_from_tests(monkeypatch):
+    """The web runner makes a scope-triage model call (D-051) that fails open without a key; a developer's real key must never turn a test into a paid call."""
+    monkeypatch.delenv("OPENAI_API_KEY", raising=False)
+
+
 # These modules mix protocol integration and corpus-free boundary tests.
 INDEPENDENT_MCP = {
     "test_dimension_values_cap_applies_to_the_model_contract",

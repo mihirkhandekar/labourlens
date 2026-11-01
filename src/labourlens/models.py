@@ -18,7 +18,7 @@ from pydantic import BaseModel, ConfigDict, Field
 
 SCHEMA_VERSION = "m1.1"
 TRANSFORMATION_VERSION = "norm-0.1"
-PARSER_VERSION = "extract-0.2"
+PARSER_VERSION = "extract-0.3"
 
 SourceType = Literal["dataset_csv", "report_pdf", "release_html"]
 ReleaseStage = Literal["advance", "final", "dataset_snapshot", "annual", "not_applicable"]

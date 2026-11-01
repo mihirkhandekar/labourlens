@@ -1,0 +1,114 @@
+{
+ "n": 409,
+ "sets": {
+  "gold": {
+   "n": 268,
+   "routes": {
+    "in_scope": 268,
+    "out_of_scope": 0,
+    "small_talk": 0,
+    "unsafe_or_sensitive": 0
+   },
+   "failed_open": 0
+  },
+  "v2": {
+   "n": 65,
+   "routes": {
+    "in_scope": 65,
+    "out_of_scope": 0,
+    "small_talk": 0,
+    "unsafe_or_sensitive": 0
+   },
+   "failed_open": 0
+  },
+  "threats": {
+   "n": 36,
+   "routes": {
+    "in_scope": 35,
+    "out_of_scope": 1,
+    "small_talk": 0,
+    "unsafe_or_sensitive": 0
+   },
+   "failed_open": 0
+  },
+  "offtopic": {
+   "n": 40,
+   "routes": {
+    "in_scope": 10,
+    "out_of_scope": 24,
+    "small_talk": 3,
+    "unsafe_or_sensitive": 3
+   },
+   "failed_open": 0
+  }
+ },
+ "false_out_of_scope_gold_v2": {
+  "n": 333,
+  "false_out_of_scope": 0,
+  "false_diverted_any_route": 0,
+  "failed_open": 0,
+  "diverted_case_ids": []
+ },
+ "false_out_of_scope_threats": {
+  "n": 36,
+  "false_out_of_scope": 1,
+  "false_diverted_any_route": 1,
+  "failed_open": 0,
+  "diverted_case_ids": [
+   "T-D05"
+  ]
+ },
+ "offtopic": {
+  "n": 40,
+  "expected_not_in_scope": 30,
+  "recall_not_in_scope": 30,
+  "exact_route_matches": 30,
+  "by_kind": {
+   "borderline_inscope": {
+    "n": 10,
+    "correct": 10
+   },
+   "borderline_offtopic": {
+    "n": 10,
+    "correct": 10
+   },
+   "clear_offtopic": {
+    "n": 14,
+    "correct": 14
+   },
+   "clear_small_talk": {
+    "n": 3,
+    "correct": 3
+   },
+   "clear_unsafe": {
+    "n": 3,
+    "correct": 3
+   }
+  },
+  "misrouted_case_ids": []
+ },
+ "cost_and_latency": {
+  "calls": 409,
+  "prompt_tokens": 418574,
+  "completion_tokens": 17502,
+  "total_cost_usd": 0.050601,
+  "mean_cost_usd": 0.000124,
+  "latency_p50_s": 1.56,
+  "latency_p95_s": 2.44
+ },
+ "config": {
+  "experiment": "triage-v1-luna",
+  "model": "gpt-6-luna",
+  "prompt": "triage_v1",
+  "prompt_sha256": "de176c25e4b6",
+  "timeout_s": 8.0,
+  "max_completion_tokens": 1500,
+  "git_commit": "e361fcdaca4060014e0dc42aabfb860983e5bb30",
+  "inputs_sha256": {
+   "gold": "af3ad02690ed1dabb69e2be7f7bb984f707f1352b95c8bd693d0fb51e9410d8f",
+   "v2": "e3d16597d542d33d106b4e9291aa3b92ca5fcdf19aa4d3c2b3319c0543efa542",
+   "threats": "17fd3bf5a195f19b40110493f838a929104f41d7009c853332a2b83c8a82b77b",
+   "offtopic": "e6170b69260e6c73a1b5a2a0c2f2ee2d1c4d76abdea3b0d1a6003e06d9fee69f"
+  }
+ }
+}

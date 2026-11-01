@@ -16,7 +16,7 @@
       "status": "pass"
     },
     {
-      "detail": "mismatches: []",
+      "detail": "mismatches: []; local-only, not present (not checked): []",
       "name": "manifest.raw_files_match_sha256",
       "status": "pass"
     },
@@ -1346,7 +1346,7 @@
       "status": "pass"
     },
     {
-      "detail": "{'ok': 9040, 'table_unreliable': 7093, 'garbled': 286}",
+      "detail": "{'ok': 9052, 'table_unreliable': 7121, 'garbled': 246}",
       "name": "passages.quality_flag_distribution",
       "status": "pass"
     },

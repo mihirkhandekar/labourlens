@@ -136,7 +136,17 @@ uv run pytest -q tests/data -m corpus
 
 **Rights amendment after the run (E2E review, P1-3).** The three new datasets were recorded `verified_open_licence` / `commit_raw` although their notes say the licence is only assumed. The manifest and history entries for those three were amended in place to `assumed_open_unverified` / `local_only` (hashes, snapshot ids and paths unchanged), and their snapshot directories are now gitignored. This changes the SHA-256 of `data/manifests/manifest.json` from `5bb67d4e36572d1573eb3cc6834d449fc44e053215f98e4a4895b17607e1449b` (the value frozen in `v3.json`, which is not edited) to `55ad2b5160585ccf632bbbd3ad7706f79a60774dbd8b69c87e3de5f38b58144d`. Passage, observation and chunk hashes are unaffected. To re-verify a licence, read the dataset page, add `licence_verified_on: <date>` to the dataset's entry in `specs/sources.d/heldout-v2-expansion.yaml`, and only then commit the snapshot.
 
-## Pending change: symbolic-text rule for the garbled flag (NOT applied to the corpus)
+## Applied: corpus v3.1 (symbolic-text rule for the garbled flag, D-052, 1 Nov 2026)
+
+**Status update.** Applied by owner decision. `PARSER_VERSION` is `extract-0.3`; `labourlens build` and the BM25 index were rebuilt locally (index `data/index/bm25/merge200-f3a5734cf43d-4659afc7`); two builds were byte-identical (`artifacts/data-quality/determinism-v3.1.json`). Measured diff: `experiments/corpus-snapshots/v3.1-diff.json`; fingerprint `v3.1.json` (SHA-256 of `v3.json` unchanged). The embedding step is **not run**: it needs `OPENAI_API_KEY` (10 new vectors, about 3,088 tokens, about USD 0.0004, estimate; `artifacts/data-quality/embedding-plan-v3.1.json`). The text below is the pre-application analysis; its predicted numbers (44 flag changes, 175 / 43 / 0) match the measured rebuild.
+
+Commands after the rebuild:
+```sh
+# credentialed; fills only the 10 missing vectors (content-keyed cache)
+set -a && . ./.env && set +a
+uv run python -c "from labourlens.retrieval import chunk as c, dense as d, runtime as r; ch=c.build_chunks(c.CONFIGS[r.CHUNK_CONFIG], c.load_passages()); print(d.DenseIndex(ch, d.DenseConfig(r.EMBEDDING_MODEL)).matrix.shape)"   # expect (1847, 3072)
+```
+
 
 **Problem.** `looks_garbled` counted `*`, `<`, `=`, summation signs and similar as "weird" characters, so significance legends, coefficient rows and estimating equations in the MTI feature PDF were flagged `garbled` (40 of its 218 passages, all by the symbol-ratio signal; the other 246 `garbled` passages in the corpus are real control-character debris). `garbled` passages are excluded from chunks.
 

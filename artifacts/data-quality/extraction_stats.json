@@ -588,14 +588,14 @@
     "status": "ok"
   },
   {
-    "body_font_size_median": 9.0,
+    "body_font_size_median": 7.0,
     "dropped_short_blocks": 263,
     "flags": {
       "empty": 0,
-      "garbled": 40,
+      "garbled": 0,
       "multicolumn_uncertain": 0,
-      "ok": 163,
-      "table_unreliable": 15
+      "ok": 175,
+      "table_unreliable": 43
     },
     "pages": 23,
     "passages": 218,

@@ -585,3 +585,7 @@ Each candidate has the same source ID and full text SHA-256 as the old passage. 
 - The baseline and rebuilt local corpus, plus generated quality evidence, remain available in this worktree. The main checkout and its frozen evaluation corpus remain untouched.
 - Exact text deduplication does not identify near-duplicates. Cross-source/revision duplication is deliberately preserved; it must not be interpreted as independent corroboration. Heading and note-boundary rules are conservative layout heuristics, not semantic guarantees.
 - No new retrieval/answer/agent benchmark was run. Existing frozen results are not transferable without explicit corpus/gold migration and a newly registered run. Owner approval is required before merge or any such run.
+
+## Update, 1 Nov 2026 (parser `extract-0.3`, corpus v3.1, D-052)
+
+The symbolic-text refinement of the garbled flag (statistical symbols no longer count towards the symbol ratio; starred coefficient rows count as tables) is applied. Of 286 `garbled` passages, 246 control-character cases stay `garbled`; the 40 false positives in the MTI feature article become 16 `ok` and 24 `table_unreliable`, plus 4 `ok` to `table_unreliable`. Passage ids outside that article are unchanged. Numbers: `experiments/corpus-snapshots/v3.1-diff.json`. The control-character statements above remain true.

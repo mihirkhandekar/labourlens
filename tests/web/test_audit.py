@@ -80,6 +80,8 @@ def test_default_runner_passes_context_and_writes_one_shared_run(settings, monke
             assert question == QUESTION
             assert resources is shared
             assert save_trace is True
+            triage_block = context["extra"].pop("triage")  # D-051: the scope check ran, failed open (no key in tests) and was recorded
+            assert triage_block["route"] == "in_scope" and triage_block["error"] == "LLMError"
             assert context == {"channel": "web", "session": sid, "ip": "127.0.0.1", "extra": {}}
             records = log.read_runs()
             assert len(records) == 1  # No duplicate fallback record for the real runner.

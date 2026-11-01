@@ -1,0 +1,91 @@
+{
+  "label": "v3-to-v3.1",
+  "note": "numbers only; no text. Baseline is corpus v3 (experiments/corpus-snapshots/v3.json, unchanged).",
+  "parser_version": {
+    "before": "extract-0.2",
+    "after": "extract-0.3",
+    "passage_records_with_new_version": 16419
+  },
+  "rule": "symbol-ratio signal ignores statistical symbols; looks_tabular accepts significance stars; control-character, long-token and mixed-case signals unchanged",
+  "passages": {
+    "before": 16419,
+    "after": 16419,
+    "ids_added": 0,
+    "ids_removed": 0,
+    "ids_unchanged": 16419,
+    "non_mti_ids_unchanged": 16201,
+    "non_mti_total": 16201,
+    "non_mti_records_identical_except_parser_version": 16201,
+    "non_mti_flag_changes": 0,
+    "files_total": 49,
+    "files_byte_identical_after_reverting_parser_version_only": 48,
+    "files_changed_beyond_parser_version": [
+      "mti-2026-q2-feature-ai-employment.jsonl"
+    ]
+  },
+  "quality_flags": {
+    "all_before": {
+      "garbled": 286,
+      "ok": 9040,
+      "table_unreliable": 7093
+    },
+    "all_after": {
+      "garbled": 246,
+      "ok": 9052,
+      "table_unreliable": 7121
+    },
+    "mti_before": {
+      "ok": 163,
+      "garbled": 40,
+      "table_unreliable": 15
+    },
+    "mti_after": {
+      "ok": 175,
+      "table_unreliable": 43
+    },
+    "transitions": {
+      "garbled->ok": 16,
+      "garbled->table_unreliable": 24,
+      "ok->table_unreliable": 4
+    },
+    "control_character_garbled_before": 246,
+    "control_character_garbled_after": 246,
+    "new_garbled": 0
+  },
+  "chunks": {
+    "config": "merge200",
+    "before": 1847,
+    "after": 1847,
+    "ids_removed": 4,
+    "ids_added": 4,
+    "non_mti_ids_identical": true,
+    "non_mti_chunks": 1800,
+    "mti_before": 47,
+    "mti_after": 47,
+    "chunk_corpus_sha256_before": "d684aa76e93a8c4a3821bc39891d8c5bd21a36f871819e24e9b95d6d752c305e",
+    "chunk_corpus_sha256_after": "f3a5734cf43dc93e1712a11b72d00d8eff6baa3b35556c366b8b18e1cf19c7b1"
+  },
+  "embeddings": {
+    "model": "text-embedding-3-large",
+    "cache_keys_before": 5113,
+    "unique_inputs_before": 1383,
+    "unique_inputs_after": 1383,
+    "unique_inputs_missing_from_cache_after": 10,
+    "cache_keys_no_longer_used": 3740
+  },
+  "healthz_corpus_fingerprint": {
+    "before": {
+      "passage_set_sha256": "d402120f6f8f",
+      "content_sha256": "1c0f864650f2",
+      "passages": 16419,
+      "chunks": 1847
+    },
+    "after": {
+      "passage_set_sha256": "d402120f6f8f",
+      "content_sha256": "242e2b284fbc",
+      "passages": 16419,
+      "chunks": 1847
+    }
+  },
+  "healthz_corpus_fingerprint_note": "passage_set_sha256 hashes passage ids only, so it is unchanged by a re-flag; content_sha256 (added in v3.1; also covers quality flags and chunk text hashes) changes. 'before' content_sha256 is recomputed from the saved v3 files for comparison, it was not served."
+}

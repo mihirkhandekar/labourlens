@@ -3,6 +3,7 @@
 No publisher text is committed: PDFs and CSV rows here are synthetic. Only the last test reads local build outputs (marked corpus).
 """
 import json
+import hashlib
 from datetime import date
 from types import SimpleNamespace
 
@@ -248,12 +249,20 @@ def _v3_built() -> bool:
     return mf.exists() and all(s in mf.read_text() for s in BATCH_DOCS | BATCH_DATASETS)
 
 
+def _hashes_as_extract_02() -> dict[str, str]:
+    """File hashes with only the `parser_version` value reverted to extract-0.2 (corpus v3.1 bumped the parser; v1/v2/v3 baselines predate it)."""
+    out = {}
+    for f in sorted(paths.PASSAGES.glob("*.jsonl")):
+        out[f.name] = hashlib.sha256(f.read_bytes().replace(b'"parser_version": "extract-0.3"', b'"parser_version": "extract-0.2"')).hexdigest()
+    return out
+
+
 @pytest.mark.corpus
 @pytest.mark.skipif(not _v3_built(), reason="corpus v3 sources not fetched yet")
 def test_corpus_v2_passages_and_observations_unchanged_after_v3_build():
     snaps = paths.EXPERIMENTS / "corpus-snapshots"
     v2 = json.loads((snaps / "v2.json").read_text())
-    now = fingerprint.passage_file_hashes()
+    now = _hashes_as_extract_02()
     changed = [f for f, h in v2["passage_file_sha256"].items() if now.get(f) != h]
     assert not changed, f"corpus-v2 passage files changed: {changed}"
     assert len(now) == v2["document_files"] + len(BATCH_DOCS)
@@ -261,3 +270,32 @@ def test_corpus_v2_passages_and_observations_unchanged_after_v3_build():
     cur = fingerprint.observation_hashes()
     assert {s: cur.get(s) for s in base} == base
     assert set(cur) - set(base) == BATCH_DATASETS
+
+
+@pytest.mark.corpus
+@pytest.mark.skipif(not _v3_built(), reason="corpus v3 sources not fetched yet")
+def test_corpus_v3_1_changes_only_the_mti_feature_article():
+    """Corpus v3.1 (extract-0.3, refined garbled-text rule): every passage file except the MTI feature article equals its v3 baseline once the
+    parser_version value is reverted; no passage id changes; only the 246 control-character passages stay `garbled`; no passage became garbled."""
+    snaps = paths.EXPERIMENTS / "corpus-snapshots"
+    v3 = json.loads((snaps / "v3.json").read_text())
+    now = _hashes_as_extract_02()
+    changed = sorted(f for f, h in v3["passage_file_sha256"].items() if now.get(f) != h)
+    assert changed == ["mti-2026-q2-feature-ai-employment.jsonl"], changed
+    passages = ck.load_passages()
+    assert len(passages) == v3["passages"]
+    assert {p["parser_version"] for p in passages} == {"extract-0.3"}
+    garbled = [p for p in passages if p["quality_flag"] == "garbled"]
+    assert garbled and all("control characters" in p["quality_note"] for p in garbled)
+    assert not [p for p in passages if p["source_id"] == "mti-2026-q2-feature-ai-employment" and p["quality_flag"] == "garbled"]
+    v31 = snaps / "v3.1.json"
+    if v31.exists():
+        assert json.loads(v31.read_text())["chunk_corpus_sha256"] == ck.corpus_hash(ck.build_chunks(ck.CONFIGS["merge200"], passages))
+
+
+def test_corpus_fingerprint_content_hash_sees_a_reflag_that_passage_ids_do_not():
+    from labourlens.retrieval import runtime
+
+    a = runtime.corpus_fingerprint({"p1:aa": {"quality_flag": "garbled"}}, {})
+    b = runtime.corpus_fingerprint({"p1:aa": {"quality_flag": "ok"}}, {})
+    assert a["passage_set_sha256"] == b["passage_set_sha256"] and a["content_sha256"] != b["content_sha256"]

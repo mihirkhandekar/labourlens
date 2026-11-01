@@ -1,0 +1,10 @@
+{
+  "model": "text-embedding-3-large",
+  "chunks": 1847,
+  "unique_inputs": 1383,
+  "cached": 1373,
+  "new_vectors": 10,
+  "new_input_tokens": 3088,
+  "usd_per_million": 0.13,
+  "estimated_usd": 0.00040144
+}

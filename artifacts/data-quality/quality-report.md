@@ -9,7 +9,7 @@ Summary: {'pass': 269, 'warn': 7}
 | pass | `manifest.all_sources_present` | 85 catalogued, missing=[] |
 | pass | `manifest.all_retrievals_ok` | not ok: [] |
 | pass | `manifest.required_fields_present` | incomplete: [] |
-| pass | `manifest.raw_files_match_sha256` | mismatches: [] |
+| pass | `manifest.raw_files_match_sha256` | mismatches: []; local-only, not present (not checked): [] |
 | pass | `manifest.no_signed_url_material` | found markers: [] |
 | warn | `rights.unresolved_sources_listed` | 23 sources still have unresolved rights (kept local-only): ['mom-2026-q2-advance', 'mom-2026-q2-final-release', 'mom-2025-q3-advance', 'mom-2025-q3-final-release', 'mom-2025-q4-advance', 'mom-2025-q4-final-release', 'mom-2026-q1-advance', 'mom-2026-q1-final-release', 'mom-2024-q1-advance', 'mom-2024-q1-final-release', 'mom-2024-q2-advance', 'mom-2024-q2-final-release', 'mom-2024-q3-advance', 'mom-2024-q3-final-release', 'mom-2024-q4-advance', 'mom-2024-q4-final-release', 'mom-2025-q1-advance', 'mom-2025-q1-final-release', 'mom-2025-q2-advance', 'mom-2025-q2-final-release', 'mom-jv2025-release', 'mom-wage-practices2024-release', 'mti-2026-q2-feature-ai-employment'] |
 | pass | `dataset.resident_unemployment_rate.no_quarantined_rows` | quarantined=0 |
@@ -275,7 +275,7 @@ Summary: {'pass': 269, 'warn': 7}
 | pass | `passages.html_have_section_locator` | bad=[] |
 | pass | `passages.every_document_extracted` | not extracted: [] |
 | pass | `passages.html_date_matches_catalog` | mismatched publication dates: [] |
-| pass | `passages.quality_flag_distribution` | {'ok': 9040, 'table_unreliable': 7093, 'garbled': 286} |
+| pass | `passages.quality_flag_distribution` | {'ok': 9052, 'table_unreliable': 7121, 'garbled': 246} |
 | pass | `passages.low_yield_documents` | documents with fewer than 0.5 passages per page (text may be in images/tables): [] |
 | pass | `security.no_instruction_like_text_in_sources` | scanned 16419 passages and 180 distinct text values; hits=0 [] |
 | pass | `packaging.no_pdf_visible_to_git` | visible PDFs: [] |

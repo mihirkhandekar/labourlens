@@ -69,6 +69,10 @@ def main(argv: list[str] | None = None) -> int:
     th.add_argument("--rescore", action="store_true", help="recompute verdicts from saved raw runs, no API calls")
     th.add_argument("--only", help="a category or case id")
     th.add_argument("--experiment", help="new post-fix experiment id; required for generation (frozen results cannot be overwritten)")
+    tc = sub.add_parser("triage-check", help="measure the D-051 scope-triage prompt on all gold, v2, threat and off-topic questions (calls the OpenAI API with --yes)")
+    tc.add_argument("--experiment", required=True, help="new experiment id; written to experiments/triage/<id>/ and never overwritten")
+    tc.add_argument("--yes", action="store_true", help="actually spend: without it only the plan is printed")
+    tc.add_argument("--rescore", action="store_true", help="recompute metrics from saved raw outputs, no API calls")
     sub.add_parser("mcp-demo", help="run the scripted MCP client demo and write docs/mcp-demo-transcript.md")
     sub.add_parser("mcp-agent-demo", help="one agent run with statistics fetched over MCP (paid model calls); writes artifacts/mcp-agent-demo.md")
     ev_ = sub.add_parser("eval", help="metrics from saved raw agent runs; judged measures call the OpenAI API")
@@ -206,6 +210,10 @@ def main(argv: list[str] | None = None) -> int:
 
         agx.run(args.split, args.pairs, args.answer_prompt, args.tag, args.retrieval, args.planner_prompt, gold_path=args.gold, force=args.force, tool_set=args.tool_set)
         return 0
+    if args.cmd == "triage-check":
+        from labourlens.evaluation import triage_check
+
+        return triage_check.run(args.experiment, args.yes, args.rescore)
     if args.cmd == "threat-test":
         from labourlens.security import threat_suite
 

@@ -54,12 +54,14 @@ class Settings:
     login_lock_global: int = 200       # failed codes from all addresses within 10 minutes before every invalid code is refused
     run_deadline_s: float = 80.0       # planner + answer LLM budget for one run; below request_timeout so the slot is freed
     feedback_dir: Path = field(default_factory=lambda: paths.DATA / "audit")
+    triage_enabled: bool = True        # D-051: LLM scope check in front of the agent, web app only
 
     @classmethod
     def from_env(cls):
         return cls(access_codes=tuple(c.strip() for c in os.getenv("LABOURLENS_ACCESS_CODES", "").split(",") if c.strip()),
                    session_secret=os.getenv("LABOURLENS_SESSION_SECRET", ""),
                    demo_enabled=os.getenv("LABOURLENS_DEMO_ENABLED", "true").lower() != "false",
+                   triage_enabled=os.getenv("LABOURLENS_TRIAGE", "true").lower() != "false",
                    daily_budget_usd=float(os.getenv("LABOURLENS_DAILY_BUDGET_USD", "2.0")))
 
     @property
@@ -245,8 +247,12 @@ def create_app(settings: Settings | None = None, runner=None, shared_factory=Non
     if runner is None:
         from labourlens.agent.graph import AgentConfig, run_agent
         from labourlens.agent.smalltalk import run_smalltalk
-        # Small talk is answered without a model call (D-050); everything else runs the evaluated agent unchanged.
-        runner = lambda question, shared, audit=None: run_smalltalk(question, shared, audit) or run_agent(question, shared, AgentConfig(run_deadline_s=cfg.run_deadline_s), save_trace=True, audit=audit)
+        from labourlens.agent.triage import run_with_triage
+        # Small talk is answered without a model call (D-050); a clearly off-topic message is answered after one short scope-check
+        # call (D-051, fails open); everything else runs the evaluated agent unchanged.
+        agent = lambda question, shared, audit=None: run_agent(question, shared, AgentConfig(run_deadline_s=cfg.run_deadline_s), save_trace=True, audit=audit)
+        runner = lambda question, shared, audit=None: run_smalltalk(question, shared, audit) or (
+            run_with_triage(question, shared, audit, lambda a: agent(question, shared, a)) if cfg.triage_enabled else agent(question, shared, audit))
     if shared_factory is None:
         from labourlens.agent.tools import Shared
         shared_factory = Shared

@@ -15,12 +15,24 @@ EMBEDDING_MODEL = "text-embedding-3-large"
 
 
 def corpus_fingerprint(passages_by_id: dict, chunks_by_id: dict) -> dict:
-    """Identifies the corpus a process serves. Passage ids embed a content hash, so any change to the passage set changes it."""
+    """Identifies the corpus a process serves.
+
+    `passage_set_sha256` hashes the sorted passage ids; ids embed a text hash, so it changes when passage text changes but NOT when only
+    a quality flag or the chunk text changes. `content_sha256` additionally covers each passage's quality flag and each chunk's id and
+    text hash, so a re-flag (corpus v3.1) is visible in /healthz.
+    """
     digest = hashlib.sha256()
     for pid in sorted(passages_by_id):
         digest.update(str(pid).encode())
         digest.update(b"\n")
-    return {"passage_set_sha256": digest.hexdigest()[:12], "passages": len(passages_by_id), "chunks": len(chunks_by_id)}
+    content = hashlib.sha256()
+    for pid in sorted(passages_by_id):
+        p = passages_by_id[pid]
+        content.update(f"p|{pid}|{p.get('quality_flag', '') if isinstance(p, dict) else ''}\n".encode())
+    for cid in sorted(chunks_by_id):
+        content.update(f"c|{cid}|{getattr(chunks_by_id[cid], 'text_sha256', '')}\n".encode())
+    return {"passage_set_sha256": digest.hexdigest()[:12], "content_sha256": content.hexdigest()[:12],
+            "passages": len(passages_by_id), "chunks": len(chunks_by_id)}
 
 
 def embedding_allowed() -> bool:
