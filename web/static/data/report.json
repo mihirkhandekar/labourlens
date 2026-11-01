@@ -1,6 +1,6 @@
 {
   "schema_version": "report-1.0",
-  "generated_at": "2026-11-01T15:20:05.653866+00:00",
+  "generated_at": "2026-11-01T15:23:19.498480+00:00",
   "summary": {
     "title": "LabourLens research workbench",
     "scope": [
@@ -67587,17 +67587,17 @@
       {
         "id": "M7.1",
         "name": "Report application, live research and audit/feedback",
-        "status": "implementation exists; current checkout not reverified in this refresh"
+        "status": "implemented; the web tests pass on the current checkout (count and command under Verified checks)"
       },
       {
         "id": "M7.2",
         "name": "Deployment setup",
-        "status": "files and instructions exist; deployment not established by these files"
+        "status": "deployed: the live site answers /healthz and serves corpus v3.1 (observed by the independent audit on 1 Nov 2026)"
       },
       {
         "id": "M7.3",
         "name": "Written submission and demo materials",
-        "status": "documentation refresh in progress; final completeness review pending"
+        "status": "written and refreshed after each change; the owner's final completeness review is pending"
       }
     ],
     "provenance": [
@@ -67614,7 +67614,7 @@
     "The population basis of the dataset employment series is unverified."
   ],
   "provenance": {
-    "commit": "30541954c7996f11520eac17cee580f93f745baa",
+    "commit": "57aa22e8db18444aba77da5ac60de1cf756b91f9",
     "artifacts": [
       {
         "path": "data/export/sources.json",
@@ -68519,12 +68519,12 @@
       {
         "path": "docs/decisions.md",
         "status": "available",
-        "sha256": "ff21abff71b84b6a28321bc41728d9a801c8de811b48b227a03a3af1407c5d96"
+        "sha256": "c7966e95362518f8c105a5a965db05c67f40bb7a7b3dcb2b91e9051aa547f03d"
       },
       {
         "path": "docs/progress.md",
         "status": "available",
-        "sha256": "7389b0f18f38d8e177da48424036195fbb41a0406f53213687074350938bf425"
+        "sha256": "e032a4cb28a80ccc4204d9da90d94f48a08285a355cd7ebc48a666556c43527f"
       }
     ],
     "policy": "Committed artifacts only; numeric fields only."
