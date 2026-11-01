@@ -14,7 +14,7 @@ Corpus: **v3** (manifest generated **2026-10-31T05:38:08+00:00**; rights fields 
 | Rights | 33 datasets `verified_open_licence`; **3 datasets `assumed_open_unverified`** (local-only); 26 PDFs `verified_all_rights_reserved`; 23 documents `unresolved` (22 HTML releases and the MTI feature PDF) |
 | Quality checks | Saved build: **276 checks, 269 pass, 7 warnings, 0 failures** |
 | Chunks (`merge200`, `ok` passages only) | 1,847 on corpus v3 |
-| Spot-check by a human | Updated 1 Nov 2026: the owner decided all 30 source checks (16 passage extraction, 14 statistical rows) by their own click, after AI pre-review. Agreement of those decisions with the AI suggestion was 29 of 30 (agreement, not accuracy). One reviewer, so not independent evidence. The owner accepted five disclosed frozen extraction gaps after inspecting the original pages (J10, accept_limits); the gaps were not fixed in the saved runs. Detail in `docs/human-review/owner-review-final-summary.md` |
+| Spot-check by a human | Updated 1 Nov 2026: the owner went through the 30 source checks (16 passage extraction, 14 statistical rows) in the review interface and recorded a decision on each, after AI pre-review. Most were quick confirmations of the AI-suggested label rather than independent re-derivations. Final source decisions: 18 matches and 12 minor; the first export (19 matches, 11 minor) is historical. Agreement of those decisions with the AI suggestion was 29 of 30 (agreement, not accuracy). The checks are best read as AI-drafted and owner-confirmed; one reviewer, after AI pre-review and after the saved runs were scored; not independent inter-rater evidence. The owner accepted five disclosed frozen extraction gaps after inspecting the original pages (J10, accept_limits); the gaps were not fixed in the saved runs. Detail in `docs/human-review/owner-review-final-summary.md` |
 | Historical M1 tests | 51 passed in `artifacts/tests/pytest-m1.txt`; not a current-suite result |
 
 ## Corpus version history
@@ -137,7 +137,7 @@ Coverage checked by the build (exact first periods): ULC 1980-Q1 to 2026-Q2; val
 ## 8. Limits
 - Extraction quality for tables is not reliable; numbers come from datasets, text supplies explanation.
 - Saved page-date checks cover releases; internal PDF dates and representative extraction fidelity still need human inspection.
-- Source checks: the owner decided 30 items (passage extraction and statistical rows) by their own click on 1 Nov 2026, after AI pre-review. This is one person's review, not independent verification of every value. Sheets and summaries are in `docs/human-review/`.
+- Source checks: the owner recorded decisions on 30 items (passage extraction and statistical rows) in the review interface on 1 Nov 2026, after AI pre-review (final 18 matches / 12 minor; first export 19 / 11). Most were quick confirmations of the AI-suggested label. AI-drafted and owner-confirmed; one reviewer, after AI pre-review and after the saved runs were scored; not independent inter-rater evidence. Sheets and summaries are in `docs/human-review/`.
 - Coverage is one snapshot per source, so revision tracking is baseline-only until a second fetch is made.
 - A fresh clone has the manifest, the committed dataset snapshots and the processed tables, but not the PDFs, passages, indexes or the three v3 dataset CSVs. `uv run pytest -q` skips corpus tests there; `labourlens build` stops with a message naming the absent raw file, because a rebuild needs the local corpus.
 

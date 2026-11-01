@@ -1,6 +1,6 @@
 # Passage extraction spot-check sheet (blank form)
 
-**Status: blank form, as generated on 30 Oct 2026; it holds no verdicts.** The owner decided all 30 source checks (16 passage, 14 statistical) by own click on 1 Nov 2026, after AI pre-review; one reviewer, so not independent verification. Result: `docs/human-review/owner-review-final-summary.md`. For each row open the source document at the locator and check that the extracted text matches the page (words, numbers, units, nothing from another column or page). Extracted MOM text is not committed (rights); the owner has a local reading aid in `private/review/passage-text.md`. Rows: 2 narrative + 1 table passage per report, plus 4 HTML releases.
+**Status: blank form, as generated on 30 Oct 2026; it holds no verdicts.** The owner recorded a decision on all 30 source checks (16 passage, 14 statistical) on 1 Nov 2026, after AI pre-review: AI-drafted and owner-confirmed; one reviewer, not independent inter-rater evidence. Result: `docs/human-review/owner-review-final-summary.md`. For each row open the source document at the locator and check that the extracted text matches the page (words, numbers, units, nothing from another column or page). Extracted MOM text is not committed (rights); the owner has a local reading aid in `private/review/passage-text.md`. Rows: 2 narrative + 1 table passage per report, plus 4 HTML releases.
 
 | # | Source | Locator | Flag | Passage id | Original document |
 |---|---|---|---|---|---|

@@ -6,22 +6,30 @@ LabourLens is an evidence-grounded research assistant for Singapore policy resea
 
 **Live site:** <https://labourlens.navig.me> (report and workbench). It runs on one DigitalOcean Droplet, deployed by the GitHub Actions workflow in [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml). Live research is switched on and needs an access code, which is shared privately and is not in this repository. Live answers make paid model calls; a provider-side spend cap has **not** been verified, only the application's own budget limit ([deployment](docs/deploy.md)).
 
+**At a glance**
+
+- **What it does:** answers analytical questions about the Singapore labour market from official statistics and MOM reports, with passage-level citations, deterministic arithmetic and abstention. One bounded LangGraph agent, a read-only MCP statistics server, and an evaluation harness.
+- **Results:** on 237 development questions the default configuration agrees with the gold label on 0.903 of cases (`gpt-6-luna`); on the separate 65-case held-out v2 set rerank-plus-filter retrieval beats plain hybrid by 3 cases for one model and not at all for the other, which I do not call a confirmed gain; numerical comparisons are weak (0.214) because of a tool gap; a tool set built to fix that failed its own criteria and was not adopted.
+- **Caveats:** the gold labels were AI-drafted and reviewed by one person after the runs were scored, so these are agreement figures, not validated accuracy; each configuration was run once; a clone cannot run anything that needs the private MOM and MTI text.
+
+Reviewer entry points: [`SUBMISSION.md`](SUBMISSION.md) (what to read first and how to run it), [`docs/README.md`](docs/README.md) (documentation index), [`docs/agent-logs.md`](docs/agent-logs.md) (how AI agents were used, with the approval record).
+
 ## Headline results
 
-All numbers are saved outputs, each with its source file. Behaviour accuracy means the answer's status and content agree with a gold label. The labels were drafted by AI first; the owner then reviewed all 268 cases card by card (one reviewer, after the saved runs were scored). These are agreement figures, not validated accuracy. Wilson 95% intervals in brackets.
+All numbers are saved outputs, each with its source file. Behaviour accuracy means the answer's status matches the gold label (answer, abstain, clarify or refuse); it does not check content, which other metrics cover (key-number recall, claim support, fact coverage). The labels were drafted by AI first (gold labels are AI-drafted; the judge is an AI, `gpt-6.1-terra`). Behaviour status, key-number recall, calculation correctness, false-answer and over-abstention are deterministic code, not the judge. Gold labels were drafted by AI. The owner then went through them in the review interface and recorded a decision on every case, answer verdict and source check (403 items). Most of these were quick confirmations of the AI-suggested label rather than independent re-derivations, so the labels are best read as AI-drafted and owner-confirmed. It is one reviewer, working after AI pre-review and after the saved runs were scored, so it is not independent inter-rater evidence. These are agreement figures, not validated accuracy. Intervals are 95% case-bootstrap intervals (Wilson only for the threat suite).
 
 | Question | Result | Source |
 |---|---|---|
-| Does filter plus rerank (A3) beat plain hybrid retrieval (A1) with `gpt-6-luna`? | Development behaviour 0.903 [0.865, 0.937] (n=237) versus 0.779 [0.728, 0.830] (n=235); over-abstention 3.0% versus 15.7%. Descriptive, not a paired test. | [`experiments/eval/`](experiments/eval/) |
+| Does filter plus rerank (A3) beat plain hybrid retrieval (A1) with `gpt-6-luna`? | Development behaviour 0.903 [0.865, 0.937] (n=237) versus 0.779 [0.728, 0.830] (n=235); over-abstention 0.030 [0.008, 0.051] versus 0.157 [0.111, 0.204]. Descriptive, not a paired test. | [`experiments/eval/`](experiments/eval/) |
 | Does it hold on the 31 held-out cases? | r3 0.871 [0.742, 0.968] versus hybrid 0.710 [0.548, 0.839]. Paired gain +16.1 points [0.0, 32.3]: **not demonstrated**. | [`experiments/heldout/paired.txt`](experiments/heldout/paired.txt) |
 | Does it hold on the 65-case held-out v2 set (corpus v3, sources no earlier case cites)? | `gpt-6-luna`: r3 0.754 versus hybrid 0.708, paired +0.046 (3 better, 0 worse), 90% case interval [0.015, 0.092], McNemar exact p = 0.25. The pre-registered rule is met for the primary model; the effect is three cases; I would not call it a confirmed gain; the second model shows none (`gpt-5.6-luna` 0.723 versus 0.723). Absolute accuracy is low (`numerical_comparison` 0.214), mostly from a tool coverage gap, not retrieval. A separate, additional set; not pooled with the row above. | [result](docs/experiments/m7-heldout-v2-result.md), [`experiments/heldout-v2/paired.json`](experiments/heldout-v2/paired.json) |
 | Do the extraction fixes (corpus v2) help? | No measurable change (dev 0.886 [0.844, 0.924] versus 0.903). | [evaluation report](docs/evaluation-report.md) |
 | Does the served system (corpus v3, end-to-end review fixes, cross-check on) hold up on the development set? | **MEASURED** regression check, not an ablation: several factors changed together. Behaviour `gpt-6-luna` 0.903 [0.865, 0.941], `gpt-5.6-luna` 0.916 [0.878, 0.949], both overlapping A3. Cases with an ungrounded number rose for `gpt-5.6-luna` to 0.165 [0.118, 0.215] from 0.051 [0.025, 0.080] in A3 (no overlap), and the check itself was widened in the same change. | [X2 report](experiments/eval/agent-dev-X2-REPORT.md), [evaluation report](docs/evaluation-report.md) |
 | Does an extra tool for arithmetic on report figures help (tool set v2, D-046 and D-048)? | **MEASURED, not adopted.** Dev X3 against X2 (n=237, one run per model): behaviour `gpt-6-luna` 0.903 to 0.895, `gpt-5.6-luna` 0.916 to 0.899, no gain; the criteria declared before the run **failed for both models** (false-answer cases 7 against 6, and ungrounded numbers in cases that used the new tool). On the held-out v2 questions, re-run as a **post-freeze diagnostic (not held-out, optimistic by construction, not a replacement of the held-out v2 result)**, `numerical_comparison` rose from 3 to 12 of 14 for `gpt-6-luna`. The default tool set is unchanged and the threat suite was not run under v2. | [tool-fix report](docs/experiments/m7-tool-fix.md) |
 | Threat suite, 36 hand-written cases | Pre-guard (corpus v1): defended 35/36 [0.858, 0.995] for both luna models, 34/36 for mini; the shared failure was a planted false figure (T-I06). Final-code run `m7-e2efix-20261031` (corpus v3, cross-check on, one run per configuration): `gpt-6-luna` defended 36/36 strict, `gpt-5.6-luna` 35/36 (T-I06 fails strict and the post-hoc refined scorer), naive baselines 35/36 on both. T-I06 is **not shown stable** across runs, the scorer is brittle (exact-string checks) and was not changed, and the suite shows no defence effect. | [`experiments/threats/m7-e2efix-20261031/SUMMARY.md`](experiments/threats/m7-e2efix-20261031/SUMMARY.md), [`experiments/threats/SUMMARY.md`](experiments/threats/SUMMARY.md) |
-| Human review | The owner decided all 403 labelling items (268 gold cases, 65 held-out v2 cases, 40 saved answers, 30 source checks) by own click. Labels were AI-drafted first and the review came after the saved runs were scored. One reviewer, so not inter-rater evidence. Gold v3.7 records this and changes no label or score; saved evaluations were not rescored on it. | [final owner review summary](docs/human-review/owner-review-final-summary.md) |
+| Human review | Gold labels were drafted by AI. The owner then went through them in the review interface and recorded a decision on every case, answer verdict and source check (403 items: 268 gold cases, 65 held-out v2 cases, 40 saved answers, 30 source checks). Most of these were quick confirmations of the AI-suggested label rather than independent re-derivations, so the labels are best read as AI-drafted and owner-confirmed. The strongest human evidence is the first pack (17 answer verdicts, J1 to J10, 3 gold cards), the four change-clicks, J10 and the owner's written policy decisions (D-031, D-034, D-035, D-036, D-047). It is one reviewer, working after AI pre-review and after the saved runs were scored, so it is not independent inter-rater evidence. Gold v3.7 records this and changes no label or score; saved evaluations were not rescored on it. | [final owner review summary](docs/human-review/owner-review-final-summary.md), [numbers audit](docs/human-review/numbers-audit.md) |
 
-Caveats that matter for reading the table: the original held-out set shares evidence with development; its labels changed after the run (HO-022, v3.5), and the full version history is in the [evaluation report](docs/evaluation-report.md). Held-out v2 uses sources no earlier case cites but the same system, prompts and tools, with an AI-drafted gold that the owner approved unchanged. Each configuration was run once.
+Caveats that matter for reading the table: the original held-out set shares evidence with development; five of its cases changed after the v3.2 freeze (HO-029 in v3.3; HO-027, HO-023 and HO-004 in v3.4; HO-022 in v3.5), and the full version history is in the [evaluation report](docs/evaluation-report.md). Held-out v2 uses sources no earlier case cites but the same system, prompts and tools, with an AI-drafted gold that the owner approved unchanged. Each configuration was run once.
 
 The live agent defaults to retrieval `r3`, `planner_v1`, `answer_v3` and `gpt-6-luna` ([`agent/graph.py`](src/labourlens/agent/graph.py)). That is an implementation default pending owner confirmation, not a final selection ([D-030](docs/decisions.md), D-033).
 
@@ -40,6 +48,14 @@ Three corpus states exist, and different parts of this repository belong to diff
 ## Quick start
 
 Requires Python 3.12 and [uv](https://docs.astral.sh/uv/). Run from the repository root.
+
+```bash
+make setup     # uv sync --frozen
+make verify    # lint, offline tests, docs links, rights scan (NOT CHECKED without the private corpus), secret scan
+make serve     # report and workbench page on http://127.0.0.1:8000
+```
+
+`make help` lists every target. The underlying commands, for reference:
 
 ```bash
 uv sync --frozen
@@ -100,7 +116,7 @@ To re-score a frozen run offline, pass the gold file it was scored on:
 uv run labourlens eval --exp agent-dev-A3 --no-judge --gold experiments/gold/archive/gold-v3.5.jsonl
 ```
 
-`eval` and `paired` refuse a gold file whose SHA-256 differs from the one recorded for the run unless `--allow-gold-mismatch` is given. The current gold file is v3.6 (`6169a9de…`); the published A1–A5 and held-out metrics were scored on v3.5 (`aac4b405…`), archived at `experiments/gold/archive/gold-v3.5.jsonl`. The registered held-out comparison already ran once and must not be rerun to pick a winner.
+`eval` and `paired` refuse a gold file whose SHA-256 differs from the one recorded for the run unless `--allow-gold-mismatch` is given. Scoring still reads `experiments/gold/draft_cases.jsonl` (v3.6, `6169a9de…`); `gold_v3.7.jsonl` is the review-provenance file. In `draft_cases.jsonl` 3 records are `owner_manual`, 42 `agreed_with_ai_suggestion` and 223 `draft`; only `gold_v3.7.jsonl` carries 268 `owner_manual`. The published A1–A5 and held-out metrics were scored on v3.5 (`aac4b405…`), archived at `experiments/gold/archive/gold-v3.5.jsonl`. The registered held-out comparison already ran once and must not be rerun to pick a winner.
 
 Results and their history: [evaluation report](docs/evaluation-report.md). Prompts are in [`prompts/`](prompts/).
 
@@ -119,19 +135,20 @@ The MCP server exposes read-only statistics, discovery, comparison, revision and
 | Path | Purpose |
 |---|---|
 | `src/labourlens/` | Ingestion, retrieval, answers, agent, MCP, evaluation, security, audit, web serving |
-| `tests/` | Data, retrieval, agent, MCP, audit and web tests |
+| `tests/` | Data, retrieval, agent, MCP, audit and web tests ([`tests/README.md`](tests/README.md)) |
 | `prompts/`, `specs/` | Versioned prompts; source catalogues, schemas and price assumptions |
 | `data/manifests/`, `data/snapshots/` | Provenance and immutable statistical snapshots |
 | `data/raw/`, `data/passages/`, `data/runs/` | Local only, gitignored (rights and sensitivity) |
 | `experiments/`, `artifacts/` | Gold set, saved metrics, threat results, quality reports, figures |
 | `web/`, `deploy/`, `scripts/`, `.github/` | Report and workbench front end; deployment |
-| `docs/` | Submission documents |
+| `docs/` | Documentation ([index](docs/README.md)); `docs/archive/` holds superseded planning drafts and the early progress log; `docs/process/` holds the initial plan and prompt |
+| `Makefile`, `.pre-commit-config.yaml`, `.gitleaks.toml`, `.github/workflows/ci.yml` | One entry point and the checks CI runs |
 
-## Submission documents
+## Documents
 
 | Document | What it is |
 |---|---|
-| [Architecture](docs/architecture.md) | Data flow, agent graph, guardrails, trust boundaries |
+| [Architecture](docs/architecture.md) | Data flow, agent graph, guardrails, trust boundaries; [rendered diagram](docs/img/architecture.svg) |
 | [Data sheet](docs/data-sheet.md) | Sources, licences, schema, checks, EDA findings |
 | [Evaluation report](docs/evaluation-report.md) | Design, results, error analysis, review rubric, limits |
 | [System card](docs/system-card.md) | Intended use, risks, controls |
@@ -140,10 +157,14 @@ The MCP server exposes read-only statistics, discovery, comparison, revision and
 | [Demo script](docs/demo-script.md) | 20-minute live demonstration plan |
 | [Requirements matrix](docs/requirements-matrix.md) | Assessment requirement to evidence, with honest status |
 | [Deployment](docs/deploy.md) | Droplet runbook and verified state |
-| [Decisions](docs/decisions.md), [progress](docs/progress.md) | Dated decisions; working log |
+| [Decisions](docs/decisions.md), [progress](docs/progress.md) | Dated decisions; current state and recent log |
+| [Agent logs](docs/agent-logs.md) | How AI agents were used: contract, approval gates, controls, mistakes caught |
+| [Reproduce](docs/reproduce.md), [fresh-clone check](docs/fresh-clone-check.md) | Commands to each artefact, what needs the private corpus or an API key, expected output |
+| [Review records](docs/human-review/README.md) | Owner review and AI reviews, kept separate |
+| [Security policy](SECURITY.md) | Secrets, untrusted text, rights |
 | [MCP transcript](docs/mcp-demo-transcript.md) | Protocol demonstration |
 
-Planning documents under `docs/0*.md` and `docs/presentation-plan.md` record earlier proposals; they are not evidence that anything ran.
+Planning drafts in `docs/archive/planning/` record earlier proposals; they are not evidence that anything ran.
 
 ## Rights and responsible use
 
@@ -153,7 +174,7 @@ Treat user input, retrieved passages and MCP content as untrusted data. Do not s
 
 ## Main limitations
 
-- Gold labels were AI-drafted first. The owner then decided every case by own click, but that is one reviewer working after the saved runs were scored, so it is not independent inter-rater evidence. Gold v3.7 changes only provenance fields; the saved evaluations are still scored on v3.5, v3.6 and the signed held-out v2 gold. The threat suite and the automatic judge checks are not human review.
+- Gold labels were AI-drafted first and the judge is an AI. The owner went through them in the review interface and recorded a decision on every case, answer verdict and source check (403 items). Most were quick confirmations of the AI-suggested label rather than independent re-derivations, so the labels are best read as AI-drafted and owner-confirmed. It is one reviewer, working after AI pre-review and after the saved runs were scored, so it is not independent inter-rater evidence. Gold v3.7 changes only provenance fields; the saved evaluations are still scored on v3.5, v3.6 and the signed held-out v2 gold. The four D-047 change-clicks are recorded but not applied. The threat suite and the automatic judge checks are not human review.
 - The original held-out set shares evidence with development; its gain over hybrid retrieval is not demonstrated. The separate held-out v2 set meets its pre-registered rule for the primary model on three cases, with no gain on the second model and a lower bound of 0.0 when one question group is removed; I would not call it a confirmed gain.
 - Both arms of held-out v2 score about 0.71 to 0.75, and numerical comparisons about 0.21, mostly because the tools cannot do arithmetic on figures printed in reports. A tool set v2 that adds that arithmetic was built and tested (D-046). On dev it did not pass its pre-declared criteria and was **not adopted** (D-048); the large gain on the v2 questions is a post-freeze diagnostic on cases whose errors motivated the fix, so it is optimistic by construction. Adoption would need a fresh dev pass and a threat run under v2.
 - The planted-figure guard is a closed grammar and had known faults found by the end-to-end review (see the [threat model](docs/threat-model.md)). T-I06 is one case: the post-fix runs gave 36/36 refined once and 35/36 once for `gpt-5.6-luna`, and its scorer requires exact strings, so it is brittle and was not changed after the failure was seen.
@@ -162,3 +183,7 @@ Treat user input, retrieved passages and MCP content as untrusted data. Do not s
 - PDF tables can extract poorly; report-only figures are not deterministic calculation inputs.
 - Dataset and report employment totals can differ in definition or vintage; the corpus does not explain every gap.
 - A single-process prototype with local state, not a multi-user government system; provider-side spend cap unverified.
+
+## Licence and attribution
+
+The code and documents are all rights reserved and shared for review ([`LICENSE`](LICENSE)). Statistical data: contains information from data.gov.sg datasets of the Ministry of Manpower and the Singapore Department of Statistics, under the [Singapore Open Data Licence v1.0](https://developers.data.gov.sg/open-data-licence); not endorsed by the publishers. Three datasets are recorded as licence assumed, not verified (see [data sheet, section 9](docs/data-sheet.md#9-open-licence-items-and-what-the-rights-scan-covers)). MOM and MTI reports are the Ministries' copyright and are not in this repository. Fonts are SIL OFL 1.1 ([`web/static/fonts/LICENSES.md`](web/static/fonts/LICENSES.md)).

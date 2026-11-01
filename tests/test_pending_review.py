@@ -2,7 +2,6 @@
 import hashlib
 import json
 import subprocess
-from pathlib import Path
 
 import pandas as pd
 import pymupdf
@@ -256,7 +255,7 @@ def test_final_provenance_keeps_agreed_unless_redone_manually_and_stats_use_manu
     text, wording = P.final_summary(root, st, export, 'a' * 64, cards, {'changed': [], 'dropped': []}, None, infos, False)
     assert 'agreed with AI' in text and 'excluded from every agreement statistic' in text
     assert any('agreeing with an AI suggestion' in w for w in wording)
-    assert P.wording({'gold': {'owner_manual': 5}})[0].startswith('All 5 labelling items')
+    assert P.wording({'gold': {'owner_manual': 5}})[0].startswith('Gold labels were drafted by AI.') and 'recorded a decision on every case, answer verdict and source check (5 items)' in P.wording({'gold': {'owner_manual': 5}})[0]
 
 
 def test_summary_and_inventory_do_not_quote_passages(root):

@@ -23,8 +23,7 @@ export function threeAnswers(m) {
   const row = el('div', 'g1-row');
   [['unemployment_overall_sa', 'Overall', 'seasonally adjusted'], ['unemployment_resident_sa', 'Resident', 'seasonally adjusted'], ['unemployment_resident_nsa', 'Resident', 'not adjusted']].forEach(([id, who, adj], i) => {
     const v = latest(m, id);
-    const card = el('div', 'g1-card fragment');
-    card.dataset.fragmentIndex = String(i);
+    const card = el('div', 'g1-card'); card.style.setProperty('--i', String(i));
     const num = el('div', 'deck-num num');
     if (finite(v)) num._run = countRunner(num, v, pctS); else num.textContent = 'not recorded';
     card.append(num, el('p', 'g1-who', who), el('p', 'g1-adj', adj));
@@ -59,8 +58,7 @@ export function buildTimeline() {
   const wrap = el('div', 'g3');
   const nodes = [['First build', 13484, 'Original extraction', true], ['Second build', 15915, 'Table and note fixes', false], ['Third build', 16419, 'Six new sources added', false]];
   nodes.forEach(([name, count, why, ran], i) => {
-    const n = el('div', 'g3-node fragment');
-    n.dataset.fragmentIndex = String(i);
+    const n = el('div', 'g3-node'); n.style.setProperty('--i', String(i));
     const dot = el('div', 'g3-dot'); dot.style.setProperty('--d', `${Math.round(60 + (count - 13000) / 3400 * 80)}px`);
     n.append(dot, el('p', 'g3-name', name), el('p', 'g3-count num', `${fmt.int(count)} passages`), el('p', 'g3-why', why));
     if (ran) n.append(el('p', 'g3-tag', 'Most results ran here'));
@@ -174,7 +172,8 @@ export function evidenceTrace(m) {
   const prev = previous(m, 'unemployment_resident_sa');
   const now = card.value;
   const wrap = el('ol', 'g7');
-  const step = (icon, head, body, cls = '') => { const li = el('li', `g7-step fragment ${cls}`.trim()); const t = el('div', 'g7-text'); t.append(el('p', 'g7-head', head), el('p', 'g7-body', body)); li.append(ico(icon), t); wrap.append(li); };
+  let stepNo = 0;
+  const step = (icon, head, body, cls = '') => { const li = el('li', `g7-step ${cls}`.trim()); li.style.setProperty('--i', String(stepNo++)); const t = el('div', 'g7-text'); t.append(el('p', 'g7-head', head), el('p', 'g7-body', body)); li.append(ico(icon), t); wrap.append(li); };
   step('question', 'Question', `What was resident unemployment in ${fmt.quarter(card.period)}, and how did it change?`);
   step('wrench', 'Tool call', `Get series: ${card.label.toLowerCase()}, ${fmt.quarter(card.period)}`);
   step('table', 'Row returned', `${pctS(now)}, seasonally adjusted, from ${src?.publisher || 'MOM'} via data.gov.sg`);
@@ -333,7 +332,7 @@ export function domainChoice() {
 export function challengeGrid() {
   const wrap = el('div', 'g14');
   [['Tables flattened in PDFs', 'Audited samples. Numbers were intact.'], ['Overall or resident, adjusted or not', 'Series names carry both. Ask when open.'], ['Advance and final figures differ', 'Every answer names its release.'], ['Rights limits on MOM content', 'Reports stay out of the public repository.'],
-    ['Small reference set, AI drafted', 'I reviewed every item. Intervals shown.'], ['Leakage between test sets', 'A fresh set from unseen sources.'], ['Calculation tool gap', 'Tested a fix. It failed its rule.'], ['Questions before 2024', 'It declines. Scope is fixed.']].forEach(([hard, did], i) => {
+    ['Small reference set, AI drafted', 'I confirmed the labels. Intervals shown.'], ['Leakage between test sets', 'A fresh set from unseen sources.'], ['Calculation tool gap', 'Tested a fix. It failed its rule.'], ['Questions before 2024', 'It declines. Scope is fixed.']].forEach(([hard, did], i) => {
     const card = el('div', 'g14-card'); card.style.setProperty('--i', String(i));
     card.append(el('h3', '', hard), el('p', '', did));
     wrap.append(card);
@@ -351,4 +350,198 @@ export function plantedFlow() {
     wrap.append(card);
   });
   return wrap;
+}
+
+/** A row of icon cards: [{icon, head, line}]. */
+export function cardRow(items) {
+  const wrap = el('div', 'g14 g15');
+  items.forEach(({icon, head, line}, i) => {
+    const card = el('div', 'g14-card'); card.style.setProperty('--i', String(i));
+    const top = el('div', 'g12-head'); top.append(ico(icon), el('h3', '', head));
+    card.append(top, el('p', '', line));
+    wrap.append(card);
+  });
+  return wrap;
+}
+
+/** Panels of horizontal bars, grey for the baseline and accent for the variant. panel: {title, sub, rows: [{name, note, value, max, text, kind: 'before' | 'after'}], foot: [..]}. */
+export function pairPanels(panels) {
+  const wrap = el('div', 'g9 g11');
+  panels.forEach(p => {
+    const panel = el('div', 'g9-panel'); panel.append(el('h3', '', p.title));
+    if (p.sub) panel.append(el('p', 'g11-sub', p.sub));
+    p.rows.forEach(r => {
+      const line = el('div', 'g9-row');
+      const lab = el('div', 'g9-lab'); lab.append(el('span', 'g9-name', r.name), el('span', 'g9-price', r.note));
+      const track = el('div', 'g9-track'); const bar = el('div', `g9-bar is-${r.kind}`); bar.style.setProperty('--w', `${Math.round((r.value / (r.max || 1)) * 100)}%`); track.append(bar);
+      line.append(lab, track, el('span', 'g9-val num', r.text)); panel.append(line);
+    });
+    (p.foot || []).forEach(t => panel.append(el('p', 'g11-foot', t)));
+    wrap.append(panel);
+  });
+  return wrap;
+}
+
+/** About me: the name, the one recorded fact, and what the talk covers. */
+export function aboutMe() {
+  const wrap = el('div', 'g16');
+  const left = el('div', 'g16-left'); left.append(el('p', 'g16-name', 'Mihir Khandekar'), el('p', 'g16-line', 'Recent work: AI products in HR Tech.'));
+  const list = el('ul', 'g16-list');
+  [['wrench', 'What I built'], ['chart-line', 'How I measured it'], ['warning', 'What went wrong']].forEach(([icon, text], i) => {
+    const li = el('li', 'g16-item'); li.style.setProperty('--i', String(i)); li.append(ico(icon), el('span', '', text)); list.append(li);
+  });
+  wrap.append(left, list);
+  return wrap;
+}
+
+/** The system end to end: five stages and two checks that run across them. */
+export function architectureDiagram() {
+  const wrap = el('div', 'g17');
+  const stages = [['database', 'Sources', ['Statistics from data.gov.sg', 'MOM reports, PDF and web']], ['file-text', 'Processing', ['Parse and clean', 'Split into passages', 'Validate the numbers']], ['magnifying-glass', 'Retrieval', ['Keyword and meaning', 'Filter by period', 'Rerank']], ['wrench', 'Agent', ['Plan the steps', 'Three read-only tools', 'Arithmetic in code']], ['check-circle', 'Answer', ['Every claim cited', 'Or ask, decline, refuse']]];
+  const row = el('div', 'g17-row');
+  stages.forEach(([icon, name, lines], i) => {
+    if (i) { const arrow = el('div', 'g17-arrow'); arrow.append(ico('arrow-right')); row.append(arrow); }
+    const box = el('div', 'g17-stage'); box.style.setProperty('--i', String(i));
+    const head = el('div', 'g12-head'); head.append(ico(icon), el('h3', '', name));
+    const ul = el('ul'); lines.forEach(t => ul.append(el('li', '', t)));
+    box.append(head, ul); row.append(box);
+  });
+  const bars = el('div', 'g17-bars');
+  [['shield', 'Guardrails', 'Retrieved text is data. Tools are read-only. Hard limits.'], ['chart-line', 'Evaluation', 'Reference questions, fresh sets and attack tests.']].forEach(([icon, name, text]) => {
+    const bar = el('div', 'g17-bar'); bar.append(ico(icon), el('strong', '', name), el('span', '', text)); bars.append(bar);
+  });
+  wrap.append(row, bars);
+  return wrap;
+}
+
+/** The task as set, and the sources and topics I left out, with the recorded reason. */
+export function taskAndLeftOut() {
+  const wrap = el('div', 'g18');
+  const task = el('div', 'g18-panel is-task'); task.append(el('h3', '', 'The task'));
+  const tl = el('dl', 'g18-dl');
+  [['Who asks', 'Policy researchers and analysts'], ['What they ask', 'Facts, changes, comparisons, revisions, vague and hostile questions'], ['How far', 'Q1 2024 to Q2 2026'], ['Not covered', 'Forecasts, causes, personal advice']].forEach(([k, v]) => { tl.append(el('dt', '', k), el('dd', '', v)); });
+  task.append(tl);
+  const out = el('div', 'g18-panel'); out.append(el('h3', '', 'What I left out'));
+  const ul = el('ul', 'g18-out');
+  [['Housing, cost of living', 'Confounded, or heavy index methods'], ['Foreign workforce data', 'Stale: last updated June 2024'], ['GDP revision pairs', 'Not labour evidence'], ['Other ministry pages', 'No verified report links']].forEach(([k, v]) => { const li = el('li'); li.append(el('strong', '', k), el('span', '', v)); ul.append(li); });
+  out.append(ul);
+  wrap.append(task, out);
+  return wrap;
+}
+
+/** What each finding about the data made hard, and the part of the system that handles it. */
+export function hardParts() {
+  const wrap = el('div', 'g19');
+  [['Four unemployment rates', 'Typed series, or a question back'], ['A rise with no stated cause', 'Cite MOM commentary, or decline'], ['Advance and final differ', 'Release-aware search, conflict explained'], ['Tables flattened in PDFs', 'The quote must appear in the passage'], ['Ratio does not recompute', 'Quote the published ratio'], ['Figures before 2024', 'A scope guard declines']].forEach(([hard, fix], i) => {
+    const row = el('div', 'g19-row'); row.style.setProperty('--i', String(i));
+    const arrow = el('span', 'g19-arrow'); arrow.append(ico('arrow-right'));
+    row.append(el('p', 'g19-hard', hard), arrow, el('p', 'g19-fix', fix));
+    wrap.append(row);
+  });
+  return wrap;
+}
+
+/** Early retrieval comparison on 24 development questions: keyword, meaning, both. */
+export function keywordVsMeaning(m) {
+  const hit = name => m.retrievalRow('dev-dense-E6', name)?.metrics?.['hit@10'];
+  const items = [['merge120 bm25', 'Keyword', 'plain'], ['merge120 dense', 'Meaning', 'plain'], ['merge120 hybrid-rrf', 'Both together', 'accent']].map(([k, label, kind]) => ({label, value: hit(k), kind})).filter(i => finite(i.value));
+  return items.length === 3 ? staircase(items, {domain: [0, 1]}) : null;
+}
+
+/** Models: price, quality, cost and speed in one table. Prices are list prices read on 2026-10-30. */
+export function modelTable(m) {
+  const wrap = el('div', 'g20');
+  const table = el('table', 'g20-table');
+  const head = el('tr'); ['Model', 'Price per 1M tokens', 'Right kind of response', 'Cost per question', 'Median seconds', 'Final setup, cost'].forEach(t => { const th = el('th', '', t); th.scope = 'col'; head.append(th); });
+  const thead = el('thead'); thead.append(head);
+  const tbody = el('tbody');
+  [['gpt-6-luna', '$0.10 in, $0.50 out', true], ['gpt-5.6-luna', '$0.20 in, $1.20 out', false], ['gpt-4.1-mini', '$0.40 in, $1.60 out', false]].forEach(([name, price, picked]) => {
+    const a1 = m.evalRow('dev-A1', name)?.metrics, a3 = m.evalRow('dev-A3', name)?.metrics;
+    const tr = el('tr', picked ? 'is-pick' : '');
+    const cell = text => el('td', 'num', text);
+    const th = el('th', '', name); th.scope = 'row';
+    tr.append(th, el('td', '', price), cell(a1 ? fmt.pct(metricOf(a1.behaviour_accuracy).rate) : 'n/a'), cell(a1 ? `$${a1.cost_per_case_usd.toFixed(4)}` : 'n/a'), cell(a1 ? `${a1.latency_p50_s.toFixed(1)} s` : 'n/a'), cell(a3 ? `$${a3.cost_per_case_usd.toFixed(4)}` : 'not run'));
+    tbody.append(tr);
+  });
+  table.append(thead, tbody);
+  wrap.append(table, el('p', 'g20-foot', 'Judge: gpt-6.1-terra, $1.00 in, $5.00 out. Embeddings: text-embedding-3-large, $0.13. Not run: gpt-6-astra, $10 in, $50 out.'));
+  return wrap;
+}
+
+/** Registered held-out set and the second fresh set, main model, baseline against filter then rerank. */
+export function freshQuestions(m) {
+  const hybrid = metricOf(m.heldRow('hybrid', 'gpt-6-luna')?.metrics?.behaviour_accuracy).rate, r3 = metricOf(m.heldRow('r3', 'gpt-6-luna')?.metrics?.behaviour_accuracy).rate;
+  const v2 = m.section('evaluation').heldout_v2?.paired?.['gpt-6-luna'], pair = m.paired[0]?.models?.['gpt-6-luna'];
+  if (![hybrid, r3].every(finite) || !v2) return null;
+  const row = (name, note, value, kind) => ({name, note, value, max: 1, text: fmt.pct(value), kind});
+  return pairPanels([
+    {title: '31 test questions', sub: 'Main model, right kind of response', rows: [row('Baseline search', 'before', hybrid, 'before'), row('Filter, then rerank', 'after', r3, 'after')], foot: [pair ? `Gain ${fmt.pts(pair.diff)}, interval ${fmt.pts(pair.ci95[0])} to ${fmt.pts(pair.ci95[1])}.` : '']},
+    {title: '65 fresh questions', sub: 'Main model, right kind of response', rows: [row('Baseline search', 'before', v2.behaviour_accuracy.baseline, 'before'), row('Filter, then rerank', 'after', v2.behaviour_accuracy.candidate, 'after')], foot: [`${v2.better} cases better, ${v2.worse} worse.`]}
+  ]);
+}
+
+/** The 403 labelling items by stream, as one segmented bar. Counts come from the review inventory, not the report data. */
+export function reviewStreams() {
+  const wrap = el('div', 'g21');
+  const big = el('div', 'g21-big'); big.append(el('p', 'g21-num num', '403'), el('p', 'g21-label', 'decisions recorded in the review interface'));
+  const right = el('div', 'g21-right');
+  const bar = el('div', 'g21-bar');
+  const legend = el('ul', 'g21-legend');
+  [['Reference questions', 268, 'c1'], ['Fresh-set questions', 65, 'c3'], ['Saved answers', 40, 'c2'], ['Source checks', 30, 'c5']].forEach(([name, n, cls]) => {
+    const seg = el('div', `g21-seg f-${cls}`); seg.style.setProperty('--w', String(n)); bar.append(seg);
+    const li = el('li'); const sw = el('span', `g21-sw f-${cls}`); li.append(sw, el('span', 'g21-name', name), el('span', 'g21-n num', String(n))); legend.append(li);
+  });
+  right.append(bar, legend);
+  wrap.append(big, right);
+  return wrap;
+}
+
+/** Threat results, undefended against defended, from the registered and the final runs. */
+export function threatPanels(m) {
+  const n = (reg, name) => (reg ? m.securityRow(name) : m.e2efixRow(name))?.metrics?.passed;
+  const row = (name, note, v, kind) => ({name, note, value: v, max: 36, text: `${v} of 36`, kind});
+  const pairRows = (reg, model, label) => { const a = n(reg, `${model}+naive`), b = n(reg, model); return finite(a) && finite(b) ? [row(label, 'no defences', a, 'before'), row(label, 'defences', b, 'after')] : []; };
+  const first = [...pairRows(true, 'gpt-6-luna', 'Main model'), ...pairRows(true, 'gpt-4.1-mini', 'Smaller model')];
+  const last = [...pairRows(false, 'gpt-6-luna', 'Main model'), ...pairRows(false, 'gpt-5.6-luna', 'Second model')];
+  if (!first.length || !last.length) return null;
+  return pairPanels([{title: 'First attack run', sub: '36 attack cases', rows: first, foot: ['The scanner missed all 5 paraphrased probes.']}, {title: 'Final system', sub: '36 attack cases', rows: last, foot: ['One planted false figure is still not shown stable.']}]);
+}
+
+/** A screenshot of the workbench, served from this site. */
+export function workbenchShot() {
+  const wrap = el('div', 'g22');
+  const img = el('img', 'g22-img'); img.src = '/static/presentation/workbench.png'; img.alt = 'The LabourLens workbench: a question box, example questions, session history and an activity timeline.'; img.width = 1500; img.height = 900;
+  wrap.append(img);
+  return wrap;
+}
+
+/** GenAI concepts and where this build uses each one. */
+export function conceptGrid() {
+  const wrap = el('div', 'g12 is-concepts');
+  [['stack', 'Tokens and context', 'Questions capped at 1,000 characters. Answers capped at 6,000 output tokens.'], ['database', 'Embeddings', 'text-embedding-3-large, with keyword search beside it.'], ['arrows-in-simple', 'Reranking', 'A model reorders the top 30 passages.'], ['note', 'Prompts', 'Versioned planner and answer prompts. Strict JSON output, validated.'], ['chart-line', 'Evaluators', 'Code scores numbers. An AI judge scores claim support.'], ['wrench', 'Agents', 'One bounded loop. Six tool calls at most.'], ['path', 'MCP', 'Nine read-only tools and two resources, behind a client that distrusts them.'], ['clock', 'Observability', 'A record per run: outcome, tool calls, cost and timings.']].forEach(([icon, name, text], i) => {
+    const tile = el('div', 'g12-tile'); tile.style.setProperty('--i', String(i));
+    const head = el('div', 'g12-head'); head.append(ico(icon), el('h3', '', name));
+    tile.append(head, el('p', 'g12-ask', text));
+    wrap.append(tile);
+  });
+  return wrap;
+}
+
+/** The seven assessment areas by weight, where the talk covers each, and what is still open (from the requirement matrix). */
+export function coverageMap() {
+  const wrap = el('div', 'g23');
+  [['Evaluation and error analysis', 25, 'How I measured, results, errors, review', 'One reviewer, mostly quick confirmations'], ['RAG and GenAI design', 20, 'Retrieval, citations, models', 'Quotes checked for presence, not meaning'], ['GenAI concepts and MCP', 15, 'Concepts, the MCP server', 'Rehearsal pending; the app does not route through MCP'], ['Problem framing and data', 10, 'Problem, data, what it showed', 'Rights gaps remain'], ['Agent workflow', 10, 'The loop, the calculation fix', 'Report-text arithmetic gap'], ['Responsible AI', 10, 'Attacks and defences', 'Weak scanner; one case not stable'], ['Reproducibility and communication', 10, 'The product, how to run it', 'Fresh-checkout run pending']].forEach(([area, weight, where, open], i) => {
+    const row = el('div', 'g23-row'); row.style.setProperty('--i', String(i));
+    const bar = el('div', 'g23-bar'); const fill = el('span', 'g23-fill'); fill.style.setProperty('--w', `${Math.round(weight / 25 * 100)}%`); bar.append(fill, el('span', 'g23-w num', `${weight}%`));
+    const gap = el('p', 'g23-open'); gap.append(ico('warning'), el('span', '', open));
+    row.append(el('p', 'g23-area', area), bar, el('p', 'g23-where', where), gap);
+    wrap.append(row);
+  });
+  return wrap;
+}
+
+/** Three review measures. Counts come from the review inventory and the sets used in the report. */
+export function measureCards(m) {
+  const dev = m.evalRow('dev-A3', 'gpt-6-luna')?.metrics?.n_cases, held = m.heldRow('r3', 'gpt-6-luna')?.metrics?.n_cases, v2 = m.section('evaluation').heldout_v2?.paired?.['gpt-6-luna']?.n_gold_cases;
+  return cardRow([{icon: 'stack', head: 'Three question sets', line: `${fmt.int(dev)} to tune on, ${fmt.int(held)} for testing, ${fmt.int(v2)} fresh.`}, {icon: 'chart-line', head: 'Four measures', line: 'Right passage, right response, supported claims, correct numbers.'}, {icon: 'check-circle', head: 'One reviewer', line: 'AI drafted the labels. I confirmed all 403 items. Not independent.'}]);
 }

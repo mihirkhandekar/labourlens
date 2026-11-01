@@ -2,7 +2,7 @@
 
 Status: dev only, nothing locked, held-out untouched. Gold labels are AI drafts, not reviewed by the owner. 30 in-scope dev cases: 24 expect an answer, 6 expect abstain, clarify or refuse. A single case moves a rate by 3 points (4 points on answer cases, 17 points on the six non-answer cases), so read differences under about 10 points as noise.
 
-> **Superseded 1 Nov 2026 (status of the labels).** The status line above describes the state when these runs were scored: AI-drafted labels, not reviewed. The owner has since decided every gold case card by card (gold v3.7). One reviewer, after AI pre-review, not independent inter-rater evidence. These runs were not rescored on v3.7, and v3.7 changes no score.
+> **Superseded 1 Nov 2026 (status of the labels).** The status line above describes the state when these runs were scored: AI-drafted labels, not reviewed. The owner has since gone through the gold cases in the review interface and recorded a decision on every one (gold v3.7). The labels are AI-drafted and owner-confirmed; one reviewer, after AI pre-review and after the saved runs were scored; not independent inter-rater evidence. These runs were not rescored on v3.7, and v3.7 changes no score.
 
 Code: `src/labourlens/answer/` (schema, context, validate, llm, pipeline, experiments); prompts in `prompts/` (`answer_v1*.md`, `repair_v1.md`); commands `uv run labourlens answer-exp --exp G1|G0|G3`. Tests: `tests/retrieval/test_answer_validate.py`. Decision: D-024 (claim-level citations with verbatim quotes). Raw model outputs contain MOM quotes and are kept local in `data/runs/`; committed: `experiments/runs/answer-dev-G*/` (metrics and per-case scores) and `*-SUMMARY.md`.
 

@@ -144,9 +144,10 @@ def test_no_bridge_sentences_or_pills_on_faces():
 
 
 REQUIRED_TITLES = [
-    "The assignment", "Why this problem", "The problem", "Why one number is not enough", "Choosing the data", "What the data showed",
-    "Does filtering help?", "The agent loop", "How I measured", "The experiment ladder", "Fixing the calculation gap", "Choosing the model",
-    "Safety tests", "The MCP server", "How I worked with AI agents", "Challenges", "Limits, and what next", "Requirement coverage", "Summary", "Sources",
+    "About me", "The assignment", "Why this problem", "The task, and what I left out", "The system, end to end", "Choosing the data", "Three document builds", "Reading the reports",
+    "What the data showed", "Hard parts, and what handles them", "Keyword, meaning or both?", "Does filtering help?", "The agent loop", "Every claim has a source",
+    "Choosing the models", "How I measured", "Who checked the answers", "The experiment ladder", "On fresh questions, the gain was small", "Why it missed", "Fixing the calculation gap",
+    "GenAI concepts in this build", "The MCP server", "Attacks and defences", "A planted wrong figure", "The product, and how to run it", "How I worked with AI agents", "Limits, and what next", "What I covered",
 ]
 
 
@@ -171,13 +172,23 @@ def test_calculation_fix_slide_states_the_failure_and_the_graphics_exist():
     assert main.count("Fixing the calculation gap") == 1
     assert "Not adopted." in main and "optimistic" in main
     graphics = (STATIC / "presentation" / "graphics.js").read_text()
-    for name in ("threeAnswers", "twoSources", "buildTimeline", "flattening", "retrievalStaircase", "agentLoop", "evidenceTrace", "experimentStaircase", "costBars", "toolFixBars", "requirementGrid", "domainChoice", "challengeGrid", "answerCard"):
+    for name in ("threeAnswers", "twoSources", "buildTimeline", "flattening", "retrievalStaircase", "agentLoop", "evidenceTrace", "experimentStaircase", "costBars", "toolFixBars", "requirementGrid", "domainChoice", "challengeGrid", "answerCard", "aboutMe", "architectureDiagram", "taskAndLeftOut", "hardParts", "keywordVsMeaning", "modelTable", "reviewStreams", "threatPanels", "workbenchShot", "conceptGrid", "coverageMap", "measureCards", "plantedFlow"):
         assert f"export function {name}" in graphics, name
     slides = (STATIC / "presentation" / "slides.js").read_text()
     assert "403" in main and "One reviewer" in main  # the review fact sits on the measuring slide
-    assert "OWNER TO CONFIRM" in slides
+    assert "OWNER TO CONFIRM" not in slides
     css = (STATIC / "css" / "presentation.css").read_text()
     assert re.search(r"\.deck-page \.pr-fig-title[^{]*\{[^}]*display:\s*none", css)
+    assert (STATIC / "presentation" / "workbench.png").is_file()
+    deck = (STATIC / "presentation" / "deck.js").read_text()
+    assert "deck-flow" in deck and "FLOW_STAGES" in deck
+
+
+def test_review_wording_is_plain_and_has_no_timing_claims():
+    for path in [STATIC / "presentation" / "slides.js", STATIC / "presentation" / "graphics.js", STATIC / "presentation" / "ch8-limits.js", STATIC / "presentation" / "ch-work.js"]:
+        text = path.read_text(encoding="utf-8")
+        for banned in ("card by card", "each by my own click", "own clicks", "8 s each", "0.39 s", "rubber"):
+            assert banned not in text, f"{path.name}: {banned}"
 
 
 def test_home_page_has_no_logo_or_favicon_file():

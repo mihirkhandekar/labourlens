@@ -1,6 +1,6 @@
 # Statistical spot-check sheet (blank form)
 
-**Status: blank form, as generated on 30 Oct 2026; it holds no verdicts.** The owner decided all 30 source checks (16 passage, 14 statistical) by own click on 1 Nov 2026, after AI pre-review; one reviewer, so not independent verification. Result: `docs/human-review/owner-review-final-summary.md`. Open the dataset page, find the quarter, compare with 'Our value'. Fill the table at the bottom. Rows were drawn with a fixed seed (`data/review.py`, seed 20261030): at least two per approved dataset, four from other datasets, one '-' (null) cell and one pre-scope period.
+**Status: blank form, as generated on 30 Oct 2026; it holds no verdicts.** The owner recorded a decision on all 30 source checks (16 passage, 14 statistical) on 1 Nov 2026, after AI pre-review: AI-drafted and owner-confirmed; one reviewer, not independent inter-rater evidence. Result: `docs/human-review/owner-review-final-summary.md`. Open the dataset page, find the quarter, compare with 'Our value'. Fill the table at the bottom. Rows were drawn with a fixed seed (`data/review.py`, seed 20261030): at least two per approved dataset, four from other datasets, one '-' (null) cell and one pre-scope period.
 
 | # | Dataset | Period | Dimension | Our value | Unit | Our CSV locator | Observation id | Publisher page |
 |---|---|---|---|---|---|---|---|---|

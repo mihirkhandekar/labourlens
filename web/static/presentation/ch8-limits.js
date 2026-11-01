@@ -6,31 +6,31 @@ import {goldOf, metricOf} from './model.js';
 // They are not in report.json; the evidence toggle names the files.
 function reviewFigure() {
   const rows = [
-    {label: 'Owner decisions, 403 items', sub: 'own click on each card, one reviewer', segments: [
+    {label: 'Decisions recorded, 403 items', sub: 'one reviewer, AI suggestions visible', segments: [
       {key: 'gold', label: 'Gold cases', value: 268, cls: 'c1'}, {key: 'v2', label: 'Held-out v2 cases', value: 65, cls: 'c6'}, {key: 'ans', label: 'Saved answers', value: 40, cls: 'c5'}, {key: 'src', label: 'Source checks', value: 30, cls: 'c2'}]},
     {label: 'Answer verdicts, 40 outputs', sub: 'owner', segments: [
       {key: 'c', label: 'Correct', value: 25, cls: 'c1'}, {key: 'p', label: 'Partly correct', value: 6, cls: 'c2'}, {key: 'i', label: 'Incorrect', value: 9, cls: 'c4'}]},
     {label: 'Gold cases, 268', sub: 'owner review of label, evidence, facts', segments: [
       {key: 'ok', label: 'Reviewed, label kept', value: 266, cls: 'c1'}, {key: 'dis', label: 'Label changed in v3.5', value: 2, cls: 'c2'}]},
-    {label: 'Source cards, 30', sub: 'owner', segments: [
-      {key: 'm', label: 'Match', value: 19, cls: 'c1'}, {key: 'mi', label: 'Minor difference', value: 11, cls: 'c2'}]},
+    {label: 'Source checks, 30', sub: 'owner', segments: [
+      {key: 'm', label: 'Match', value: 18, cls: 'c1'}, {key: 'mi', label: 'Minor difference', value: 12, cls: 'c2'}]},
     {label: 'Blind AI review, 40 outputs', sub: 'AI judgment, failure-enriched sample', segments: [
       {key: 'ac', label: 'AI: correct', value: 28, cls: 'c1'}, {key: 'ap', label: 'AI: partly correct', value: 6, cls: 'c2'}, {key: 'ai', label: 'AI: incorrect', value: 6, cls: 'c4'}]}
   ];
   return figure({
-    id: 'fig-review', title: 'The owner reviewed all 403 labelling items; the labels were AI drafts first', wide: true,
-    takeaway: 'Every item was decided by the owner\u2019s own click: one reviewer, after AI pre-review and after the runs were scored. That is not independent annotation.',
+    id: 'fig-review', title: 'I recorded a decision on all 403 labelling items; the labels were AI drafts first', wide: true,
+    takeaway: 'Most decisions were quick confirmations of the suggested label. One reviewer, after AI pre-review and after the runs were scored. Not independent annotation.',
     summary: rows.map(r => `${r.label}: ${r.segments.map(s => `${s.label} ${s.value}`).join(', ')}`).join('. '),
     source: {data: 'docs/human-review/owner-review-final-summary.md · docs/human-review/review-inventory.md (not in report.json)', files: ['experiments/human-review-sample/independent-ai-review-2.md']},
-    note: 'The review covers 268 gold cases, 65 held-out v2 cases, 40 saved answers and 30 source checks, not blanket source verification. Where an AI suggestion existed the owner\u2019s decision matched it in 198 of 198 gold cases, 61 of 64 held-out v2 cases, 38 of 39 answers and 29 of 30 source checks: agreement, not accuracy. Four owner change-clicks (DEV-034, DEV-202, DEV-626, DEV-627) are recorded and not applied under the out-of-period policy, so gold labels are unchanged in v3.7 (v3.6 plus review provenance). The blind AI sample was chosen to be rich in failures, so its counts are not a population accuracy estimate. No blinded annotation was run.',
+    note: 'The review covers 268 gold cases, 65 held-out v2 cases, 40 saved answers and 30 source checks, not blanket source verification. Where an AI suggestion existed my decision matched it in 198 of 198 gold cases, 61 of 64 held-out v2 cases, 38 of 39 answers and 29 of 30 source checks: agreement, not accuracy. Four change-clicks (DEV-034, DEV-202, DEV-626, DEV-627) are recorded and not applied under the out-of-period policy, so gold labels are unchanged in v3.7 (v3.6 plus review provenance). The blind AI sample was chosen to be rich in failures, so its counts are not a population accuracy estimate. No blinded annotation was run.',
     table: () => ({caption: 'Review counts', columns: ['Review', 'Group', 'Count'], rows: rows.flatMap(r => r.segments.map(s => [r.label, s.label, s.value]))}),
     draw: (host, c) => shareBars(host, c, {rows, label: 'Review counts by kind', rowH: c.compact ? 60 : 56})
   });
 }
 
 const limitsFor = m => [
-  ['Labels were AI drafts first', 'An AI drafted all 268 gold cases (237 development, 31 held-out). The owner then reviewed every case by own click, after AI pre-review and after the saved runs were scored. Two labels changed in v3.5 (HO-022 clarify to answer, DEV-018 refuse to clarify). Four later change-clicks were not applied, so labels are unchanged in v3.7.', 'docs/human-review/owner-review-final-summary.md, experiments/gold/CHANGELOG.md'],
-  ['Review is one person, after the fact', 'All 403 labelling items were decided by one reviewer\u2019s own click. This is not independent inter-rater evidence. Where an AI suggestion existed, the decision matched it in 198 of 198 gold cases. No blinded annotation was run.', 'docs/human-review/owner-review-final-summary.md, docs/human-review/review-inventory.md'],
+  ['Labels were AI drafts first', 'An AI drafted all 268 gold cases (237 development, 31 held-out). I went through them in the review interface and recorded a decision on every case, mostly quick confirmations of the suggested label, after AI pre-review and after the saved runs were scored. Two labels changed in v3.5 (HO-022 clarify to answer, DEV-018 refuse to clarify). Four later change-clicks were not applied, so labels are unchanged in v3.7.', 'docs/human-review/owner-review-final-summary.md, experiments/gold/CHANGELOG.md'],
+  ['Review is one person, after the fact', 'All 403 labelling items were decided by one reviewer. Read the labels as AI-drafted and owner-confirmed, not independently checked. Where an AI suggestion existed, the decision matched it in 198 of 198 gold cases. No blinded annotation was run.', 'docs/human-review/owner-review-final-summary.md, docs/human-review/review-inventory.md'],
   ['Held-out reuses development evidence', '31 cases; 25 of 31 reuse a development evidence id and 15 of 31 reuse their whole set. The interval on the r3 gain touches or crosses zero.', 'docs/system-card.md, report.json › evaluation.paired'],
   ['Some scores sit on earlier gold versions', `Development rows use ${goldOf(m.evalRow('dev-A3', 'gpt-6-luna')).label}; held-out rows use ${goldOf(m.heldRow('r3', 'gpt-6-luna')).label}, after post-run label edits. Both were rescored from saved outputs with no new generation. Original held-out scores on v3.2 to v3.4 stay in the evaluation report beside the current ones.`, 'experiments/heldout/FREEZE.md, README.md, experiments/gold/CHANGELOG.md'],
   ['T-I06: handled in one run, not shown stable or general', 'Before the fix, a planted false figure was cited and passed the quote and number checks. The deterministic cross-check handled that one case in both models in the first post-fix run, under a scorer written after the run. In the final-code run it passed for gpt-6-luna and failed for gpt-5.6-luna on an exact-string scorer check. Coverage is a closed grammar, and the end-to-end review found faults in the guard; docs/threat-model.md has their status.', 'docs/experiments/m7-t-i06-crosscheck.md, D-038'],
@@ -38,8 +38,8 @@ const limitsFor = m => [
   ['Extraction has known defects', 'In sampled passages, 1 of 16 lost a note boundary and 2 of 4 HTML passages flattened superscripts; some feedback-form blocks are garbled. The corpus v2 extraction fixes removed the defects found then, with no measurable quality change (X1). No corpus-wide count of remaining defects exists.', 'docs/human-review/ai-pre-review-passage-spot-check.md, docs/evaluation-report.md'],
   ['The sector dataset total sits above MOM\u2019s final figure', 'Migrant domestic workers may explain it, but that is an inference.', 'docs/data-sheet.md › section 5'],
   ['The judge shares a provider with the generators', 'Their errors may correlate. A zero unsupported-claim rate on a selected sample does not show the answers are safe.', 'docs/evaluation-report.md › Judge and uncertainty'],
-  ['Registered results ran on older corpora than the one served', 'Registered results ran on corpus v1; the X1 and T-I06 post-fix runs used corpus v2. Corpus v3 (85 sources) has two measured evaluations: the X2 development regression check and the e2efix threat run. It has no held-out or evidence-disjoint evaluation. The Droplet serves corpus v3 and post-fix code (commit c297146; /healthz fingerprint d402120f6f8f; 16,419 passages; 1,847 chunks), as reported by the owner.', 'README.md › Corpus versions, docs/evaluation-report.md'],
-  ['X2 is a regression check, not an ablation', 'Corpus v3, runtime changes B1 to B14, the cross-check and gold v3.6 changed together. Behaviour, false-answer, over-abstention, key-number recall and calculation intervals overlap A3. Ungrounded-number cases rose (gpt-5.6-luna: intervals do not overlap) and claim support fell; the ungrounded check was also widened, so measurement changed and the two effects are not separable.', 'docs/experiments/m7-e2e-fixes.md, experiments/eval/agent-dev-X2-REPORT.md'],
+  ['Registered results ran on older corpora than the one served', 'Registered results ran on corpus v1; the X1 and T-I06 post-fix runs used corpus v2. Corpus v3 (85 sources) has three measured evaluations: the X2 development regression check, the e2efix threat run and held-out v2 (65 questions, evidence-disjoint at source level only), plus the tool set v2 runs (X3 and V2post, not adopted). The Droplet serves corpus v3 and post-fix code (commit c297146; /healthz fingerprint d402120f6f8f; 16,419 passages; 1,847 chunks), as reported by the owner.', 'README.md › Corpus versions, docs/evaluation-report.md'],
+  ['X2 is a regression check, not an ablation', 'Corpus v3, runtime changes B1 to B14, the cross-check and gold v3.6 changed together. Behaviour, false-answer, over-abstention, key-number recall and calculation intervals overlap A3. Ungrounded-number cases rose (gpt-5.6-luna: intervals do not overlap); the claim-support point estimate is lower but not a demonstrated fall. The ungrounded check was also widened, so measurement changed and the two effects are not separable.', 'docs/experiments/m7-e2e-fixes.md, experiments/eval/agent-dev-X2-REPORT.md'],
   ['T-I06 is not shown stable across runs', 'The earlier post-fix run passed 36 of 36 under a scorer written afterwards. In the final-code run gpt-5.6-luna fails: its answer reported the dataset value and disclosed the planted figure in a caveat, but failed an exact-string check. The scorer was not changed, which is a brittleness finding. One case, closed grammar, one run per configuration; the suite does not show a defence effect.', 'experiments/threats/m7-e2efix-20261031/SUMMARY.md, docs/experiments/m7-t-i06-crosscheck.md'],
   ['Costs are list-price estimates', 'List prices dated 30 October 2026, without cached-input discounts. Latency is saved wall time from the recorded runs.', 'docs/system-card.md › Architecture and models']
 ];
@@ -56,9 +56,9 @@ function limitCards(m) {
 
 export function renderLimits(m, ctx) {
   const ch = chapter({
-    id: 'limits', title: 'The owner reviewed all 403 labelling items; the labels were AI drafts first',
+    id: 'limits', title: 'I recorded a decision on all 403 labelling items; the labels were AI drafts first',
     bullets: [
-      'Owner review: 403 items, each decided by own click, after AI pre-review.',
+      'Decisions on all 403 items, mostly quick confirmations, after AI pre-review.',
       'Not independent annotation; no blinded review was run.',
       `${limitsFor(m).length} limits below constrain what the results show, including the single T-I06 result and the scanner bypass.`
     ]

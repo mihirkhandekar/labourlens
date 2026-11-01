@@ -21,6 +21,10 @@ The v2 extraction rebuild was byte-identical across two offline builds. PDF pars
 
 ## 2. Component diagram
 
+Rendered image (Graphviz, source `img/architecture.dot`): ![LabourLens component diagram](img/architecture.svg)
+
+The same diagram as Mermaid, for viewers that render it:
+
 ```mermaid
 flowchart TB
   subgraph Data["Acquisition and evidence stores"]
@@ -54,7 +58,7 @@ flowchart TB
     RUNS[Saved answers + traces] --> HARNESS
     HARNESS --> DETER[Deterministic metrics]
     HARNESS --> JUDGE[LLM judge<br/>support + fact coverage]
-    HARNESS --> HUMAN[Owner review: 403 items, one reviewer<br/>after AI pre-review, not independent]
+    HARNESS --> HUMAN[Owner review: decisions recorded on 403 items, one reviewer<br/>after AI pre-review, later rounds confirmation, not independent]
     DETER --> REPORT[Versioned metrics + error analysis]
     JUDGE --> REPORT
     HUMAN -. selected-card decisions, not population accuracy .-> REPORT

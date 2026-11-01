@@ -266,13 +266,16 @@ def test_evaluation_copy_distinguishes_owner_review_from_historical_scores():
         Path(__file__).resolve().parents[2] / "web/static/evaluation.js"
     ).read_text()
     for disclosure in (
-        "owner review complete 1 Nov 2026: all 403 labelling items (268 gold cases, 65 held-out v2 cases, "
-        "40 saved answers and 30 source checks) were decided card by card by the owner\\u2019s own click, 0 by agreeing with an AI suggestion",
-        "one person\\u2019s review, made after AI pre-review and after the saved runs were scored, not independent inter-rater evidence",
-        "The gold labels were AI-drafted first",
+        "Owner review, 1 Nov 2026: Gold labels were drafted by AI. The owner then went through them in the review interface and recorded a decision on every case, answer verdict and source check (403 items: 268 gold cases, 65 held-out v2 cases, 40 saved answers and 30 source checks).",
+        "Most of these were quick confirmations of the AI-suggested label rather than independent re-derivations, so the labels are best read as AI-drafted and owner-confirmed.",
+        "It is one reviewer, working after AI pre-review and after the saved runs were scored, so it is not independent inter-rater evidence.",
+        "The judge is an AI (gpt-6.1-terra)",
+        "deterministic code, not the judge",
+        "five held-out cases changed across three versions after the v3.2 freeze",
+        "not a demonstrated fall",
         "labels are unchanged in gold v3.7",
         "25 correct, 6 partly correct and 9 incorrect",
-        "19 matches and 11 minor issues",
+        "final source checks are 18 matches and 12 minor issues (the first export had 19 and 11)",
         "HO-022 clarify → answer",
         "DEV-018 refuse → clarify",
         "private export proposed DEV-018 refuse → refuse",
@@ -302,6 +305,9 @@ def test_evaluation_copy_distinguishes_owner_review_from_historical_scores():
     ):
         assert disclosure in script
     assert "unreviewed AI gold" not in script
+    for unsupported in ("card by card", "confirmation pass", "under a second", "rapid", "about 8 s", "per card", "own click, 0 by agreeing", "Claim support fell for both", "45 owner-reviewed",
+                        "Manual only", "no held-out or evidence-disjoint evaluation", "source checks are 19 matches"):
+        assert unsupported not in script
     assert "Current v3.4" not in script
     assert "Held-out v3.5 rescoring remains pending" not in script
     assert "no held-out v3.5 scores are claimed" not in script
@@ -369,6 +375,9 @@ def test_rows_carry_explicit_corpus_version_labels():
     row = by_id[v2.removesuffix(".metrics.json")]
     assert row["corpus_version"] == "v2"
     assert row["gold_version"].startswith("v3.6")
+    assert row["diagnostic"] is True and row["registered"] is False and row["split"] == "heldout"
+    assert "diagnostic" not in by_id[v1.removesuffix(".metrics.json")]
+    assert by_id[v1.removesuffix(".metrics.json")]["registered"] is True
 
 
 def test_ladder_labels_v1_and_v2_separately():
@@ -487,10 +496,13 @@ def test_site_reports_x2_and_e2efix_with_required_labels():
         "did not move beyond overlapping intervals",
         "for gpt-5.6-luna the X2 and A3 intervals do not overlap",
         "change in measurement as well as possibly in behaviour",
-        "no held-out or evidence-disjoint evaluation",
+        "Development cases only",
         "corpus v3, gold v3.6",
+        "not a demonstrated fall",
     ):
         assert text in evaluation
+    for stale in ("no held-out or evidence-disjoint evaluation", "no held-out or evidence-disjoint run", "Claim support fell for both"):
+        assert stale not in _site_text("evaluation.js", "presentation/ch5-evaluation.js", "presentation/ch8-limits.js", "presentation/ch-work.js", "presentation/slides.js")
     safety = _site_text("evaluation.js", "presentation/ch6-safety.js")
     for text in (
         "T-I06 is not shown stable",
@@ -512,7 +524,7 @@ def test_site_states_current_serving_fact_and_drops_stale_corpus_claims():
         assert stale not in text
     for fact in ("c297146", "d402120f6f8f", "16,419 passages", "1,847 chunks"):
         assert fact in text
-    assert "two measured evaluations" in text
+    assert "two measured evaluations" not in text
 
 
 def test_site_does_not_hand_type_stale_nearest_rank_p95_values():
@@ -759,3 +771,34 @@ def test_frozen_heldout_v2_section_is_unchanged_by_the_postfix_files():
 
     files = {**_v2_files(), **_tf_files()}
     assert _heldout_v2(SyntheticArtifacts(files)) == _heldout_v2(SyntheticArtifacts(_v2_files()))
+
+
+def test_heldout_v2_decision_says_the_boolean_is_rule_output_only():
+    from labourlens.report.build import _heldout_v2
+
+    decision = _heldout_v2(SyntheticArtifacts(_v2_files()))["decision"]
+    assert decision["demonstrated_gain_primary"] is True and decision["rule_output_only"] is True
+    assert "D-042 rule output only, not a confirmed gain" in decision["reading"] and "p 0.25" in decision["reading"]
+
+
+def test_decision_log_accepts_plain_hyphen_and_em_dash_headings():
+    from labourlens.report.build import _work
+
+    decisions = (
+        "### D-045 \u2014 Held-out v2 result (MEASURED / DECISION, 31 Oct 2026)\nBody sentence long enough to be a summary line for the test.\n\n"
+        "### D-046 - Tool set v2 (PROPOSAL, 1 Nov 2026)\nBody sentence long enough to be a summary line for the test.\n\n"
+        "### D-047 - Scope policy (DECISION, owner, 1 Nov 2026)\nBody sentence long enough to be a summary line for the test.\n\n"
+        "### D-048 - Tool set v2 result (MEASURED / DECISION, 1 Nov 2026)\nBody sentence long enough to be a summary line for the test.\n"
+    )
+    progress = "| M1.0 | Repo hygiene | done | evidence |\n| M2 | BM25 baseline and gold | implemented; gold v3.7 has all 268 cases decided | evidence |\n"
+    work = _work(SyntheticArtifacts({"docs/decisions.md": decisions, "docs/progress.md": progress}))
+    assert [d["id"] for d in work["decisions"]] == ["D-045", "D-046", "D-047", "D-048"]
+    assert [m["id"] for m in work["milestones"]] == ["M1.0", "M2"]
+
+
+def test_builder_text_has_no_unsupported_review_wording():
+    source = (Path(__file__).resolve().parents[2] / "src/labourlens/report/build.py").read_text()
+    for unsupported in ("card by card", "confirmation pass", "under a second", "rapid", "about 8 s", "per card", "own click, after AI", "45 owner-reviewed", "223 drafts", "19 matches", "Manual only"):
+        assert unsupported not in source
+    assert "best read as AI-drafted and owner-confirmed" in source
+    assert "not independent inter-rater evidence" in source

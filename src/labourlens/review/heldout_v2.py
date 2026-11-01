@@ -10,7 +10,6 @@ import os
 import re
 import subprocess
 from collections import Counter
-from datetime import datetime
 from pathlib import Path
 
 from pydantic import BaseModel, ConfigDict, Field, model_validator
@@ -904,7 +903,7 @@ def signed_block(root: Path, export: V2Export, export_sha: str, draft_sha: str, 
         f'- **Owner changes:** approved unchanged {report["approved_unchanged"]}; relabelled {len(report["relabelled"])} ({", ".join(f"{i} {a}->{b}" for i, a, b in report["relabelled"]) or "none"}); dropped {len(report["dropped"])} ({", ".join(report["dropped"]) or "none"}).',
         f'- **Who decided what:** {report["sources"]["owner_manual"]} cards by the owner’s own click, {report["sources"][AI_SOURCE]} cards by the owner agreeing with an AI suggestion ({AI_NOT_INDEPENDENT}). The three AI reviewers are one model family, so their agreement is not independent human review.',
         f'- **Owner’s own decisions that matched the AI consensus:** {report["own_vs_ai"][0]} of {report["own_vs_ai"][1]} (cards agreed with the AI are excluded).',
-        *([f'- **AI review files (SHA-256):** ' + ', '.join(f'{k} `{v}`' for k, v in ai['sha256'].items()) + '.'] if ai else []),
+        *(['- **AI review files (SHA-256):** ' + ', '.join(f'{k} `{v}`' for k, v in ai['sha256'].items()) + '.'] if ai else []),
         f'- **Distribution:** families {json.dumps(report["by_family"], sort_keys=True)}; behaviours {json.dumps(report["by_behavior"], sort_keys=True)}; independent evidence groups {report["evidence_components"]}; non-answer cases {report["non_answer"]}.',
         f'- **Code:** git HEAD `{head}`; uncommitted changes to tracked files at signing: {"yes" if dirty else "no"}.',
         f'- **Corpus:** passage fingerprint `{hashes["passage_fingerprint"]}` ({count} passages); observations `{hashes.get("observations.parquet", "missing")}`; manifest `{hashes.get("manifest.json", "missing")}`.',

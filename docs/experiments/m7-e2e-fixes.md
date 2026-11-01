@@ -81,7 +81,7 @@ spend cap) and was not asked for in this pass.
 
 ## Measured regression check (X2) and threat rerun
 
-Two runs on **corpus v3** (16,419 passages, 1,847 chunks, fingerprint `d402120f6f8f`) with the final code (B1 to B14), the cross-check on, retrieval `r3`, `planner_v1`, `answer_v3`. Both were run on 31 Oct 2026. The owner reports a combined spend of about $3 for the two runs (owner-reported, not a repository figure; component costs are below).
+Two runs on **corpus v3** (16,419 passages, 1,847 chunks, fingerprint `d402120f6f8f`) with the final code (B1 to B14), the cross-check on, retrieval `r3`, `planner_v1`, `answer_v3`. Both were run on 31 Oct 2026. The owner reports a combined spend of about $3 for the two runs (owner-reported, not a repository figure and not reproducible from files; the file-derived figure is about $2.54, an estimate from per-case cost times cases plus judge totals, not an invoice; component costs are below).
 No human review was done on either run.
 
 ### X2: development set, gold v3.6, n=237, both luna models

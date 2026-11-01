@@ -99,8 +99,12 @@ This is agreement, not accuracy. Small counts: read the numbers, not the percent
 
 ## Exact wording for the report
 
-> All 403 labelling items (gold cases, held-out v2 cases, saved-answer verdicts and source checks) were reviewed card by card by the owner, each by the owner’s own decision.
-> This is one person’s review, made after AI pre-review and after the saved runs were scored; it is not independent inter-rater evidence.
+> Gold labels were drafted by AI. I then went through them in the review interface and recorded a decision on every case, answer verdict and source check (403 items). Most of these were quick confirmations of the AI-suggested label rather than independent re-derivations, so the labels are best read as AI-drafted and owner-confirmed.
+> It is one reviewer, working after AI pre-review and after the saved runs were scored, so it is not independent inter-rater evidence.
+
+**Edited 1 Nov 2026 after the numbers audit:** the wording above replaces “reviewed card by card by the owner, each by the owner’s own decision”. The review page stamps `owner_manual` for any click or key, and the pending pack had no “Manual only” or Agree control, so the label records an interface input.
+
+Final source checks: 18 matches and 12 minor differences (the first export, now historical, had 19 and 11). The 40 answer verdicts equal the independent AI review’s counts (25/6/9); the redo changed 0 of 23; agreement with the AI suggestion is 198/198 for gold, with four change-clicks, none applied (D-047). Strongest human evidence: the first pack (17 answer verdicts, J1 to J10, 3 gold cards), the four change-clicks, J10 and the owner’s written policy decisions (D-031, D-034, D-035, D-036, D-047). Read “own click” in this file as “recorded decision”. Evaluations were not rescored on v3.7; gold v3.7 is v3.6 plus provenance.
 
 ## Rescoring on gold v3.7 (separate offline step, no model calls)
 

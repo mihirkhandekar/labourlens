@@ -409,10 +409,23 @@ def _count(values) -> Counter:
     return Counter(values)
 
 
+def _gold_store_text(root: Path) -> str:
+    """Where gold review provenance lives, computed from the files: scoring still reads the v3.6 draft file; v3.7 is the provenance file."""
+    draft = rows(Path(root) / GOLD_DRAFT)
+    counts = Counter((c.get('owner_review') or {}).get('decision_source') or c.get('review_status', 'draft') for c in draft)
+    shown = ', '.join(f'{counts[k]} {k}' for k in (MANUAL, AGREED, 'draft') if counts[k])
+    v37 = Path(root) / GOLD_V37
+    v37_part = ''
+    if v37.exists():
+        c37 = Counter((c.get('owner_review') or {}).get('decision_source') or 'none' for c in rows(v37))
+        v37_part = f'`owner_review` on each record of `{GOLD_V37}` (the provenance file: {c37[MANUAL]} {MANUAL}, {c37[AGREED]} {AGREED}); '
+    return (v37_part + f'`{GOLD_DRAFT}` (v3.6, still read by scoring) shows only the earlier decisions ({shown}); '
+            'full export in the private main export')
+
+
 def inventory(root: Path, st: State) -> dict:  # State(use_overlay=True) shows the state after pending-ingest --write
     """All counts, computed from files. Returns rows plus the lists of pending ids."""
     root = st.root
-    infos = ai_infos(root, st)
     rows_: list[dict] = []
     pending: dict[str, list[str]] = {}
 
@@ -429,7 +442,7 @@ def inventory(root: Path, st: State) -> dict:  # State(use_overlay=True) shows t
         return s[MANUAL], s[AGREED], s['none']
 
     gold_files = 'private/human-review/pending-ai/Pend{A,B}{1,2,3}.jsonl (fresh blind, two per dev case); experiments/gold/ai-review/{base,a,b,c}.jsonl; experiments/gold/ai-review-2/{a,b}.jsonl; experiments/gold/ai-review-3/v3.jsonl; docs/human-review/ai-adjudication.md; private/human-review/tiebreak/'
-    gold_store = '`owner_review` on each record of `experiments/gold/draft_cases.jsonl` (reviewer, decision_source, date); full export in the private main export'
+    gold_store = _gold_store_text(root)
     m, a, n = tally(ho)
     row('Gold: original held-out cases (HO-001…031)', 'Is the expected behaviour, evidence and facts of each case right?', len(ho), m, a, 0, n, gold_files, gold_store,
         f'{m} reviewed by the owner’s own click and {a} by the owner agreeing with an AI suggestion, per card.')
@@ -441,8 +454,8 @@ def inventory(root: Path, st: State) -> dict:  # State(use_overlay=True) shows t
     uncovered = [cid for cid, i in covered.items() if i['status'] == 'none']
     coverage = Counter(len([1 for _, recs in _gold_review_files(root) for r in recs if r['case_id'] == cid]) for cid in (c['case_id'] for c in rest))
     pending['gold dev, never decided by the owner'] = [c['case_id'] for c in rest if st.gold_source(c['case_id']) is None]
-    row('Gold: remaining dev cases', 'Same question; these are the development cases the system was tuned on', len(rest), m, a, n - len(uncovered), len(uncovered), gold_files, 'nothing yet (pending-review pack)',
-        f'AI-reviewed only: {n - len(uncovered)} cases (AI reviewers per case: ' + ', '.join(f'{k}: {v}' for k, v in sorted(coverage.items())) + '). Not reviewed by the owner.')
+    row('Gold: remaining dev cases', 'Same question; these are the development cases the system was tuned on', len(rest), m, a, n - len(uncovered), len(uncovered), gold_files, gold_store if m + a else 'nothing yet (pending-review pack)',
+        (f'{m} reviewed by the owner’s own click and {a} by agreeing with an AI suggestion, per card.' if m + a == len(rest) else f'AI-reviewed only: {n - len(uncovered)} cases (AI reviewers per case: ' + ', '.join(f'{k}: {v}' for k, v in sorted(coverage.items())) + '). Not reviewed by the owner.'))
     v2 = st.v2_provenance
     m2 = sum((v or {}).get('decision_source') == MANUAL for v in v2.values())
     a2 = sum((v or {}).get('decision_source') == AGREED for v in v2.values())
@@ -503,7 +516,7 @@ def inventory_markdown(root: Path, st: State) -> str:
     inv = inventory(root, st)
     lines = ['# Review inventory', '',
              'Every review stream in the project, with counts computed from files by `uv run labourlens review-inventory`. '
-             '“Owner manual” means the owner’s own click on that card. “Agreed with AI” means the owner pressed Agree for that one card. '
+             '“Owner manual” means the review interface recorded a click on that card as `owner_manual` (the interface stamps this for any click or key; it does not show that the card was read). “Agreed with AI” means the owner pressed Agree for that one card in the first pack. '
              '“AI only” means an AI reviewed it and the owner has not decided it. “Untouched” means neither. Raw reviewer files and the owner’s export stay private.', '',
              f'Inputs: gold `{GOLD_DRAFT}` SHA-256 `{inv["gold_sha"]}`; main owner export (reviewer {inv["reviewer"]}, exported {inv["exported_at"]}) SHA-256 `{inv["main_sha"]}`; {len(inv["ai_hashes"])} AI source files hashed (listed in the pending-review export).', '',
              '| Stream | What is reviewed | Population | Owner manual | Agreed with AI | AI only | Untouched | Where the AI view comes from | Where the owner’s decisions are stored | Wording for the report |',
@@ -514,18 +527,24 @@ def inventory_markdown(root: Path, st: State) -> str:
     all_manual = total['population'] and total['manual'] == total['population']
     lines += ['', f'Labelling and verdict streams together (gold, held-out v2, saved answers, source checks): {total["population"]} items, {total["manual"]} by the owner’s own click, {total["agreed"]} by agreeing with an AI suggestion, {total["ai_only"]} AI-reviewed only, {total["untouched"]} untouched.', '',
               '## Status wording that is true today', '',
-              *([f'- All {total["population"]} labelling items were decided by the owner’s own click (pending-review export ingested). The report may say they were reviewed card by card by the owner, as one person’s review made after AI pre-review and after the runs were scored; it is not independent inter-rater evidence.']
+              *([f'- Gold labels were drafted by AI. The owner then went through them in the review interface and recorded a decision on every case, answer verdict and source check ({total["population"]} items). Most of these were quick confirmations of the AI-suggested label rather than independent re-derivations, so the labels are best read as AI-drafted and owner-confirmed. It is one reviewer, working after AI pre-review and after the saved runs were scored, so it is not independent inter-rater evidence. The page stamps `owner_manual` for any click or key; the pending pack has no Agree-with-AI control and no manual-only filter.']
                 if all_manual else
                 [f'- Do not write “all labelling was manually reviewed by the owner”. Today {total["manual"]} of {total["population"]} items were decided by the owner’s own click.',
                  f'- True: “The owner made a per-card decision on {total["manual"] + total["agreed"]} of {total["population"]} labelling items; {total["manual"]} by their own click and {total["agreed"]} by agreeing with an AI suggestion. The remaining {total["ai_only"] + total["untouched"]} were checked by AI reviewers only.”']),
               '- AI-only streams (threat suite, judge validation, audits, document reviews) are never called human review.', '',
+              '## Technical facts about the recorded decisions', '',
+              'The page records `owner_manual` for any click or key, so the label shows that the interface received an input. '
+              'Agreement with a suggestion is not accuracy. '
+              'The 40 answer verdicts equal the independent AI review’s counts (25/6/9); the redo changed 0 of 23; agreement with the AI suggestion is 198/198 for gold, with four change-clicks, none applied. '
+              'Strongest human evidence: the first pack (17 answer verdicts, J1 to J10, 3 gold cards), the four change-clicks, J10 and the owner’s written policy decisions (D-031, D-034, D-035, D-036, D-047). '
+              'Final source checks: 18 matches and 12 minor differences (the first export had 19 and 11). Not independent inter-rater evidence; evaluations were not rescored on v3.7.', '',
               '## Pending items', '']
     for name, ids in inv['pending'].items():
         lines.append(f'### {name} ({len(ids)})')
         lines.append('')
         lines.append(', '.join(ids) if ids else 'none')
         lines.append('')
-    lines += ['## How to finish', '', '1. `uv run labourlens pending-review-pack`, then open `private/human-review/pending-review/index.html` and decide the cards (turn on “Manual only” so every decision is your own click).',
+    lines += ['## How to finish', '', '1. `uv run labourlens pending-review-pack`, then open `private/human-review/pending-review/index.html` and decide the cards (every click is recorded as `owner_manual`; the pack has no “Manual only” or Agree control).',
               '2. `uv run labourlens pending-ingest --review-export <downloaded file>` (dry run), then add `--write`.', '']
     return '\n'.join(lines)
 
@@ -802,8 +821,8 @@ def wording(counts: dict[str, dict]) -> list[str]:
     agreed = sum(v.get(AGREED, 0) for v in counts.values())
     none = total - manual - agreed
     if total and manual == total:
-        return [f'All {total} labelling items (gold cases, held-out v2 cases, saved-answer verdicts and source checks) were reviewed card by card by the owner, each by the owner’s own decision.',
-                'This is one person’s review, made after AI pre-review and after the saved runs were scored; it is not independent inter-rater evidence.']
+        return [f'Gold labels were drafted by AI. The owner then went through them in the review interface and recorded a decision on every case, answer verdict and source check ({total} items). Most of these were quick confirmations of the AI-suggested label rather than independent re-derivations, so the labels are best read as AI-drafted and owner-confirmed.',
+                'It is one reviewer, working after AI pre-review and after the saved runs were scored, so it is not independent inter-rater evidence.']
     sentences = [f'The owner made a per-card decision on {manual + agreed} of {total} labelling items: {manual} by their own click and {agreed} by agreeing with an AI suggestion.']
     if none:
         sentences.append(f'The other {none} items were reviewed by AI reviewers only.')
@@ -874,7 +893,7 @@ def final_summary(root: Path, st: State, export: PendingExport, export_sha: str,
     lines += ['', '## Gold changes (post-hoc)', '', f'- Label changes: {", ".join(f"{i} {a} -> {b}" for i, a, b in report["changed"]) or "none"}.',
               f'- Cases removed: {", ".join(report["dropped"]) or "none"}.',
               f'- New file: `{GOLD_V37}`' + (f' (SHA-256 `{new_sha}`)' if new_sha else ' (not written in a dry run)') + '; older gold files are untouched.',
-              f'- Held-out v2 decisions never alter the signed v2 gold: any disagreement is listed here only: ' + (', '.join(f'{r.case_id} {r.decision}' for r in export.results if r.stream == 'v2' and r.decision != 'approve') or 'none') + '.', '',
+              '- Held-out v2 decisions never alter the signed v2 gold: any disagreement is listed here only: ' + (', '.join(f'{r.case_id} {r.decision}' for r in export.results if r.stream == 'v2' and r.decision != 'approve') or 'none') + '.', '',
               '## Agreement with the AI suggestion (owner_manual decisions only)', '', '| Stream | Own decisions with an AI suggestion | Same as the AI |', '|---|---:|---:|']
     for s in ('gold', 'v2', 'answers', 'sources'):
         a, b = agreement[s]
@@ -933,7 +952,7 @@ def pending_ingest(review_export: Path, write: bool = False, root: Path = ROOT, 
     changelog = root / CHANGELOG
     old = changelog.read_text() if changelog.exists() else '# Gold set change log\n\n'
     title, _, rest = old.partition('\n\n')
-    if f'## v3.7: owner review' not in old:
+    if '## v3.7: owner review' not in old:
         changelog.write_text(title + '\n\n' + changelog_entry(export, export_sha, report, new_sha, counts) + rest)
     j10_results = {r.case_id: r.decision for r in export.results if r.stream == 'j10'}
     (root / FINAL_PROVENANCE).write_text(json.dumps({'export_sha256': export_sha, 'gold_v3_7_sha256': new_sha, 'reviewer': export.reviewer_name, 'streams': final, 'j10': j10_results}, indent=1, sort_keys=True) + '\n')

@@ -108,7 +108,7 @@ function devHeldFigure(m) {
     takeaway: `Held-out interval ${fmt.pct(lunaH.ci[0])} to ${fmt.pct(lunaH.ci[1])} overlaps the development interval.`,
     summary: summary.join('. '),
     source: {data: 'report.json › evaluation.rows[agent-dev-A3/*, agent-heldout-H-r3|hybrid/*].metrics.behaviour_accuracy', files: ['experiments/eval/agent-dev-A3', 'experiments/eval/agent-heldout-H-r3', 'experiments/eval/agent-heldout-H-hybrid']},
-    note: `Development is scored against ${goldOf(m.evalRow('dev-A3', 'gpt-6-luna')).label}; held-out against ${goldOf(m.heldRow('r3', 'gpt-6-luna')).label}, after three owner-approved post-run edits. Held-out is question-held-out, not evidence-independent: 25 of 31 cases reuse a development evidence id.`,
+    note: `Development is scored against ${goldOf(m.evalRow('dev-A3', 'gpt-6-luna')).label}; held-out against ${goldOf(m.heldRow('r3', 'gpt-6-luna')).label}, after five post-run edits to held-out cases (HO-004, HO-022, HO-023, HO-027, HO-029). Held-out is question-held-out, not evidence-independent: 25 of 31 cases reuse a development evidence id.`,
     table: () => ({caption: 'Behaviour accuracy, development and held-out', columns: ['Run', 'Rate', 'CI low', 'CI high', 'n'], rows: rows.filter(r => !r.group).map(r => [r.label, r.value, r.ci?.[0], r.ci?.[1], r.sub])}),
     draw: (host, c) => dotPlot(host, c, {rows, domain: [0.4, 1], ticks: [0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1], label: 'Behaviour accuracy with 95% intervals', axisTitle: 'Behaviour accuracy', rowH: c.compact ? 38 : 36})
   });
@@ -273,7 +273,7 @@ function regressionSection(m) {
   sec.append(el('p', 'pr-small', moved.length
     ? `Beyond overlapping intervals against A3: ${moved.join('; ')}. For the other compared metrics the X2 and A3 intervals overlap, so no change is shown. Overlap is a conservative check, not a significance test.`
     : 'Every compared X2 interval overlaps its A3 interval, so no change is shown.'));
-  sec.append(el('p', 'pr-small', 'Cases with ungrounded numbers rose and claim support fell for both models, although only the interval for gpt-5.6-luna ungrounded numbers separates from A3. The harness check for B2 also widened the ungrounded-number check to the summary and caveats, so this is a change in measurement as well as possibly in behaviour. The two are not separable here. See docs/experiments/m7-e2e-fixes.md.'));
+  sec.append(el('p', 'pr-small', 'Cases with ungrounded numbers rose for both models, and only the interval for gpt-5.6-luna ungrounded numbers separates from A3. The claim-support point estimate is lower for both models, which is not a demonstrated fall because the intervals overlap. The harness check for B2 also widened the ungrounded-number check to the summary and caveats, so this is a change in measurement as well as possibly in behaviour. The two are not separable here. See docs/experiments/m7-e2e-fixes.md.'));
   sec.append(el('p', 'pr-small', 'Source: report.json \u203a evaluation.rows[agent-dev-A3|X1|X2/*] \u00b7 experiments/eval/agent-dev-X2/*.metrics.json'));
   return sec;
 }

@@ -59,6 +59,8 @@ function fitAll() {
   });
 }
 
+const FLOW_STAGES = ['Sources', 'Processing', 'Retrieval', 'Agent', 'Answer', 'Checks'];
+
 function buildSlide(spec) {
   const section = el('section', 'deck-section');
   if (spec.id) section.id = spec.id;
@@ -67,6 +69,13 @@ function buildSlide(spec) {
   const inner = el('div', `deck-slide is-${spec.layout}${spec.cls ? ` ${spec.cls}` : ''}${spec.warn ? ' is-warn' : ''}`);
   const heading = el(spec.layout === 'title' ? 'h1' : 'h2', 'deck-title', spec.title);
   if (spec.layout !== 'title') inner.append(heading);
+  if (spec.stage != null && spec.layout !== 'title') {
+    inner.classList.add('has-flow');
+    const nav = el('nav', 'deck-flow'); nav.setAttribute('aria-label', 'Where this slide sits in the system');
+    const ul = el('ul');
+    FLOW_STAGES.forEach((label, i) => { const li = el('li', spec.stage === 'all' || spec.stage === i ? 'is-here' : '', label); if (spec.stage === i) li.setAttribute('aria-current', 'step'); ul.append(li); });
+    nav.append(ul); inner.append(nav);
+  }
   if (spec.caption) inner.classList.add('has-caption');
   const bullets = () => {
     if (!spec.bullets?.length) return null;

@@ -54,7 +54,7 @@ Earlier work is preserved, not deleted: `experiments/gold/heldout_v2_structured_
 3. Write facts as paraphrases. Verify every figure against the passage text or parquet value in code. Recompute every calculation. Keep counts, rates, indexes, hours and percentage points separate.
 4. Apply the owner rule: answer if the specified public fact exists; abstain if the published figure is absent or the subject is out of scope; clarify if an essential parameter is missing; refuse forecasts, secrets, personal data and unsafe actions; reject an attack but answer a sufficiently specified public remainder. Do not equate "not in this corpus snapshot" with "never published".
 5. Non-answer cases keep evidence in `context_only_evidence_*` so retrieval and citation scorers never treat it as gold.
-6. Case schema: `experiments/gold/heldout_v2.schema.json` (JSON Schema 2020-12). It matches the fields of `draft_cases.jsonl` and adds `source_group`, `context_only_evidence_data` and `notes`. IDs are `HO-V2-NNN`. At design time: `review_status=draft`, `reviewed_by=null`, no `owner_review`. (Superseded 1 Nov 2026: the 65 cases were later reviewed card by card by the owner, each by the owner's own click, before the run. One reviewer, not independent inter-rater evidence.)
+6. Case schema: `experiments/gold/heldout_v2.schema.json` (JSON Schema 2020-12). It matches the fields of `draft_cases.jsonl` and adds `source_group`, `context_only_evidence_data` and `notes`. IDs are `HO-V2-NNN`. At design time: `review_status=draft`, `reviewed_by=null`, no `owner_review`. (Superseded 1 Nov 2026: before the run the owner recorded a decision on each of the 65 cases in the review interface: 59 were own decisions in the signing export and 6 agreed with an AI suggestion. The gold is AI-drafted and owner-confirmed; one reviewer, not independent inter-rater evidence.)
 7. Human review follows, question first and then sources and label, before any run. The pack tab "Held-out v2" uses the same Fast review controls as the gold tab, has no AI suggestions and cannot be endorsed. Disagreements are written to a separate proposals file and never edit gold.
 
 ## 5. Preregistered analysis and honest uncertainty
@@ -71,6 +71,6 @@ It does not make the system independent of the evaluation design, does not valid
 
 ## Owner decisions (resolved before the run)
 
-1. The 65 cases were reviewed by the owner (59 cards by own click, 6 agreeing with an AI suggestion) and approved unchanged.
+1. The owner recorded decisions on the 65 cases (59 own decisions in the signing export, 6 agreeing with an AI suggestion) and approved them unchanged.
 2. The five AI-article cases were kept as `answer` (D-031); the MTI-free sensitivity is in the result report.
 3. The rule and fingerprints in `experiments/heldout-v2/FREEZE.md` were signed and the paid run was authorised and executed.

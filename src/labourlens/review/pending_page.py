@@ -12,7 +12,7 @@ from pathlib import Path
 from labourlens.review import heldout_v2 as hv2
 from labourlens.review import pack
 from labourlens.review import pending as P
-from labourlens.review.pack import ROOT, Evidence, esc, para, rows
+from labourlens.review.pack import ROOT, Evidence, esc, para
 
 GOLD_OPTS = [{'v': 'approve', 'key': 'a', 'label': 'Approve label'}, {'v': 'change', 'key': 'c', 'label': 'Change label'}, {'v': 'reject', 'key': 'x', 'label': 'Reject case'}]
 ANSWER_OPTS = [{'v': 'correct', 'key': 'a', 'label': 'Right'}, {'v': 'partly correct', 'key': 'p', 'label': 'Partly right'}, {'v': 'incorrect', 'key': 'w', 'label': 'Wrong'}]
@@ -175,7 +175,7 @@ START = '''<section class="start" id="start"><h1>Pending review: everything you 
 <li><b>Finish.</b> Type your name, click Download, then run <code>uv run labourlens pending-ingest --review-export &lt;the downloaded file&gt;</code>. It first shows a preview; add <code>--write</code> to create gold v3.7 (a new file; nothing existing is changed).</li>
 </ol>
 <h3>What the final report will say</h3>
-<p>Every decision made here is recorded as your own manual decision. Once all pending cards are done (and the redo cards, if you choose), the report may say the cards were reviewed card by card by the owner. Cards you leave in the redo queue stay recorded as agreed with an AI suggestion, and the report says how many. This is one human reviewer, after AI pre-review and after the runs were scored: not independent inter-rater evidence.</p>
+<p>Every decision made here is recorded as <code>owner_manual</code>, for any click or key. That records that the page received an input, so the report calls these “recorded decisions”. Cards you leave in the redo queue stay recorded as agreed with an AI suggestion, and the report says how many. This is one human reviewer, after AI pre-review and after the runs were scored: not independent inter-rater evidence.</p>
 <h3>Keys</h3><p><kbd>A</kbd> approve / right / matches / accept · <kbd>C</kbd> change label · <kbd>X</kbd> reject / do not accept · <kbd>P</kbd> partly right / small difference · <kbd>W</kbd> wrong / does not match · <kbd>1</kbd>–<kbd>5</kbd> new behaviour · <kbd>Enter</kbd> next · <kbd>Backspace</kbd> previous</p>
 </section>'''
 

@@ -152,7 +152,7 @@ export function renderMcp(m, ctx) {
   const b = section(`${(mcp.checks || []).length} failure behaviours observed against a hostile test server`, ['Scripted runs, one per behaviour.', 'Each is an observed result, not a general guarantee.']);
   b.append(checkCards(m));
   ch.body.append(b);
-  const c = section(x.compared_datasets != null ? `MCP matched direct output on ${x.compared_datasets - (x.different_outputs || 0)} of ${x.compared_datasets} datasets` : 'MCP against a direct call');
+  const c = section(x.compared_datasets != null ? `MCP matched direct output on ${x.compared_datasets} datasets: ${x.identical_datasets} identical, ${x.matching_refusals} the same refusal` : 'MCP against a direct call');
   const [lat, parity] = latencyFigures(m);
   c.append(grid('pr-split', lat.root, parity.root), httpTable());
   ch.body.append(c);

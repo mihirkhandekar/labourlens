@@ -4,6 +4,8 @@ This is a rights-safe summary of owner-entered fields, not an automatic sign-off
 
 > **Superseded 1 Nov 2026.** This is the summary of the earlier pack export (31 Oct 2026). The final state is in `docs/human-review/owner-review-final-summary.md` and `docs/human-review/review-inventory.md`. In the final state all 403 labelling items (268 gold cases, 65 held-out v2 cases, 40 saved answers, 30 source checks) were decided by the owner's own click. The counts below describe the earlier export only.
 
+> **Edited 1 Nov 2026 after the numbers audit:** “decided by the owner’s own click” above records that the review page received a click or key. Gold labels were AI-drafted and owner-confirmed; most decisions were quick confirmations of the AI-suggested label, not independent re-derivations. One reviewer, after AI pre-review and after the saved runs were scored; not independent inter-rater evidence. The source-check counts below (19 matches, 11 minor) are from the first export; the final count is 18 and 12.
+
 Reviewer: Mihir
 
 Export date: 2026-10-31T03:28:14.630Z
