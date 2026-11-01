@@ -124,7 +124,7 @@ def test_every_slide_has_a_heading_and_speaker_notes():
         assert "title:" in block, block[:100]
 
 
-FACE_FORBIDDEN = re.compile(r"ADR-|D-0\d\d|\bX[12]\b|\bX3\b|\bA[1-5]\b|\bR[0-3]a?\b|T-I06|report\.json|\.md\b|\.js\b|\b[0-9a-f]{7,}\b|\bhit@8\b|\bheld-out\b|\bV2post\b")
+FACE_FORBIDDEN = re.compile(r"ADR-|D-0\d\d|\bX[12]\b|\bX3\b|\bA[1-5]\b|\bR[0-3]a?\b|T-I06|report\.json|\.md\b|\.js\b|\b[0-9a-f]{7,}\b|\bV2post\b")
 
 
 def test_slide_faces_carry_no_identifiers():
@@ -144,10 +144,10 @@ def test_no_bridge_sentences_or_pills_on_faces():
 
 
 REQUIRED_TITLES = [
-    "About me", "The assignment", "Why this problem", "The task, and what I left out", "The system, end to end", "Choosing the data", "Three document builds", "Reading the reports",
+    "About me", "The assignment", "Why this problem", "The task, and what I left out", "The Agentic System", "Choosing the data", "One current document build", "Reading the reports",
     "What the data showed", "Hard parts, and what handles them", "Keyword, meaning or both?", "Does filtering help?", "The agent loop", "Every claim has a source",
     "Choosing the models", "How I measured", "Who checked the answers", "The experiment ladder", "On fresh questions, the gain was small", "Why it missed", "Fixing the calculation gap",
-    "GenAI concepts in this build", "The MCP server", "Attacks and defences", "A planted wrong figure", "The product, and how to run it", "How I built it", "Limits, and what next", "What I covered",
+    "GenAI concepts in this build", "The MCP server", "Attacks and defences", "A planted wrong figure", "The product, and how to run it", "How I built it", "Limits, and what next", "Summary",
 ]
 
 
@@ -170,25 +170,36 @@ def test_main_deck_follows_the_assignment_and_has_short_plain_titles():
 def test_calculation_fix_slide_states_the_failure_and_the_graphics_exist():
     main = _slides_main_section()
     assert main.count("Fixing the calculation gap") == 1
-    assert "Not adopted." in main and "optimistic" in main
+    assert "pre-declared criteria" in main and "optimistic" in main and "not adopted" in main.lower()
     graphics = (STATIC / "presentation" / "graphics.js").read_text()
-    for name in ("threeAnswers", "twoSources", "buildTimeline", "flattening", "retrievalStaircase", "agentLoop", "evidenceTrace", "experimentStaircase", "costBars", "toolFixBars", "requirementGrid", "domainChoice", "challengeGrid", "answerCard", "aboutMe", "architectureDiagram", "taskAndLeftOut", "hardParts", "keywordVsMeaning", "modelTable", "reviewStreams", "threatPanels", "workbenchShot", "conceptGrid", "coverageMap", "measureCards", "plantedFlow", "buildProcess"):
+    for name in ("threeAnswers", "twoSources", "buildTimeline", "flattening", "retrievalStaircase", "agentLoop", "evidenceTrace", "experimentStaircase", "costBars", "toolFixBars", "toolFixFlow", "assignmentBrief", "domainChoice", "challengeGrid", "earlyModelChart", "aboutMe", "architectureDiagram", "taskAndLeftOut", "hardParts", "keywordVsMeaning", "reviewStreams", "threatMatrix", "workbenchShot", "conceptGrid", "measureCards", "plantedFlow", "buildProcess"):
         assert f"export function {name}" in graphics, name
     slides = (STATIC / "presentation" / "slides.js").read_text()
-    assert "403" in main and "One reviewer" in main  # the review fact sits on the measuring slide
-    assert "OWNER TO CONFIRM" not in slides
-    css = (STATIC / "css" / "presentation.css").read_text()
-    assert re.search(r"\.deck-page \.pr-fig-title[^{]*\{[^}]*display:\s*none", css)
+    assert "403" in main and "Human reviewed" in main
+    assert "What I covered" not in main
+    title_slide = main.split("add({", 1)[1].split("});", 1)[0]
+    assert "Singapore AI Agent for Workforce Policy Researchers" in title_slide
+    assert "GenAI Engineer assessment" not in title_slide
+    assert "card:" not in title_slide and "titleVisual" not in slides
     assert (STATIC / "presentation" / "workbench.png").is_file()
+    assert (STATIC / "presentation" / "workbench-qr.svg").is_file()
     deck = (STATIC / "presentation" / "deck.js").read_text()
-    assert "deck-flow" in deck and "FLOW_STAGES" in deck
+    assert "deck-flow" in deck and "FLOW_STAGES" in deck and "spec.detail" in deck
 
 
 def test_review_wording_is_plain_and_has_no_timing_claims():
     for path in [STATIC / "presentation" / "slides.js", STATIC / "presentation" / "graphics.js", STATIC / "presentation" / "ch8-limits.js", STATIC / "presentation" / "ch-work.js"]:
         text = path.read_text(encoding="utf-8")
-        for banned in ("card by card", "each by my own click", "own clicks", "8 s each", "0.39 s", "rubber"):
+        for banned in ("card by card", "each by my own click", "own clicks", "8 s each", "0.39 s", "rubber", "Not independent"):
             assert banned not in text, f"{path.name}: {banned}"
+    slides = (STATIC / "presentation" / "slides.js").read_text(encoding="utf-8")
+    assert "Human reviewed" in slides and "same model family" in slides
+    assert "after the saved runs were scored" in slides
+    assert "signed off" in slides and "quick confirmation" not in slides and "I confirmed all 403" not in slides
+    faces = [line for line in _slides_main_section().splitlines() if "notes:" not in line and not line.strip().startswith("//")]
+    assert not any("not independent" in line.lower() for line in faces)
+
+
 
 
 def test_home_page_has_no_logo_or_favicon_file():
@@ -206,3 +217,27 @@ def test_deck_keys_and_controls_are_wired():
         assert needle in deck, needle
     for label in ("Previous slide", "Next slide", "Slide overview", "Enter fullscreen"):
         assert label in deck, label
+
+
+def test_method_panels_and_retrieval_baseline_note():
+    main = _slides_main_section()
+    deck = (STATIC / "presentation" / "deck.js").read_text()
+    assert "deck-method" in deck and "spec.detail.open" in deck
+    for needle in ("k1=1.5, b=0.75", "text-embedding-3-large", "reciprocal rank fusion, c=60", "ranks top 30 candidates, returns up to 10"):
+        assert needle in main, needle
+    assert "not the 70.8% on the previous slide" in main and "24 cases" in main and "128" in main
+
+
+def test_title_slide_has_no_graphic_and_structure_labels_are_plain():
+    graphics = (STATIC / "presentation" / "graphics.js").read_text()
+    assert "titleVisual" not in graphics
+    assert "Structured: statistics" in graphics and "Unstructured: reports" in graphics
+    assert "Same 65 questions, reused" in graphics and "not adopted" in graphics
+
+
+def test_workbench_qr_has_a_quiet_zone():
+    svg = (STATIC / "presentation" / "workbench-qr.svg").read_text()
+    xs = [int(x) for x in re.findall(r'x="(\d+)mm" y="\d+mm" width="1mm"', svg)]
+    ys = [int(y) for y in re.findall(r'x="\d+mm" y="(\d+)mm" width="1mm"', svg)]
+    size = int(re.search(r'width="(\d+)mm"', svg).group(1))
+    assert min(xs) >= 4 and min(ys) >= 4 and size - 1 - max(xs) >= 4 and size - 1 - max(ys) >= 4

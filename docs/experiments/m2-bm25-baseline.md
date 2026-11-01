@@ -2,7 +2,7 @@
 
 **Status:** dev-split results only (n=24 text cases), on **unreviewed draft gold labels**. The held-out split has not been run (D-017: it is frozen after owner review). Nothing here is a final result.
 
-> **Superseded 1 Nov 2026 (status of the labels).** This run was scored on AI-drafted, unreviewed labels, as stated above. Since then the owner has gone through the gold cases in the review interface and recorded a decision on every one (gold v3.7, 268 cases). The labels are AI-drafted and owner-confirmed; one reviewer, after AI pre-review and after the saved runs were scored; not independent inter-rater evidence. These results were not rescored on v3.7, and v3.7 changes no score.
+> **Superseded 1 Nov 2026 (status of the labels).** This run was scored on AI-drafted, unreviewed labels, as stated above. Since then the owner has gone through the gold cases in the review interface and recorded a decision on every one (gold v3.7, 268 cases). The labels are AI-drafted, signed off by the owner; one reviewer, after AI pre-review and after the saved runs were scored; not independent inter-rater evidence. These results were not rescored on v3.7, and v3.7 changes no score.
 Raw outputs: `experiments/runs/dev-*/` (per-case ranked chunk ids, scores, relevance). Summary: `experiments/runs/dev-SUMMARY.md`. Reproduce: `uv run labourlens retrieval-exp --split dev`. Test output: `artifacts/tests/pytest-m2.txt`.
 
 ## What was built

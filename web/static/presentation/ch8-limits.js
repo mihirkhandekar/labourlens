@@ -6,31 +6,31 @@ import {goldOf, metricOf} from './model.js';
 // They are not in report.json; the evidence toggle names the files.
 function reviewFigure() {
   const rows = [
-    {label: 'Decisions recorded, 403 items', sub: 'one reviewer, AI suggestions visible', segments: [
-      {key: 'gold', label: 'Gold cases', value: 268, cls: 'c1'}, {key: 'v2', label: 'Held-out v2 cases', value: 65, cls: 'c6'}, {key: 'ans', label: 'Saved answers', value: 40, cls: 'c5'}, {key: 'src', label: 'Source checks', value: 30, cls: 'c2'}]},
-    {label: 'Answer verdicts, 40 outputs', sub: 'owner', segments: [
+    {label: 'Answer verdicts, 40 outputs', sub: 'human review of saved answers', segments: [
       {key: 'c', label: 'Correct', value: 25, cls: 'c1'}, {key: 'p', label: 'Partly correct', value: 6, cls: 'c2'}, {key: 'i', label: 'Incorrect', value: 9, cls: 'c4'}]},
     {label: 'Gold cases, 268', sub: 'owner review of label, evidence, facts', segments: [
       {key: 'ok', label: 'Reviewed, label kept', value: 266, cls: 'c1'}, {key: 'dis', label: 'Label changed in v3.5', value: 2, cls: 'c2'}]},
-    {label: 'Source checks, 30', sub: 'owner', segments: [
+    {label: 'Held-out v2 questions, 65', sub: 'owner review of label, evidence, facts', segments: [
+      {key: 'v2', label: 'Reviewed and signed off', value: 65, cls: 'c1'}]},
+    {label: 'Source checks, 30', sub: 'human source/data quality review', segments: [
       {key: 'm', label: 'Match', value: 18, cls: 'c1'}, {key: 'mi', label: 'Minor difference', value: 12, cls: 'c2'}]},
-    {label: 'Blind AI review, 40 outputs', sub: 'AI judgment, failure-enriched sample', segments: [
+    {label: 'AI review of 40 outputs', sub: 'blind AI judgment, failure-enriched sample', segments: [
       {key: 'ac', label: 'AI: correct', value: 28, cls: 'c1'}, {key: 'ap', label: 'AI: partly correct', value: 6, cls: 'c2'}, {key: 'ai', label: 'AI: incorrect', value: 6, cls: 'c4'}]}
   ];
   return figure({
-    id: 'fig-review', title: 'I recorded a decision on all 403 labelling items; the labels were AI drafts first', wide: true,
-    takeaway: 'Most decisions were quick confirmations of the suggested label. One reviewer, after AI pre-review and after the runs were scored. Not independent annotation.',
+    id: 'fig-review', title: 'I signed off four separate review streams; labels began as AI drafts', wide: true,
+    takeaway: 'I signed off every item after the saved runs. Labels were checked in three separate AI passes from one model family. One human reviewer; not independent inter-rater evidence.',
     summary: rows.map(r => `${r.label}: ${r.segments.map(s => `${s.label} ${s.value}`).join(', ')}`).join('. '),
     source: {data: 'docs/human-review/owner-review-final-summary.md · docs/human-review/review-inventory.md (not in report.json)', files: ['experiments/human-review-sample/independent-ai-review-2.md']},
-    note: 'The review covers 268 gold cases, 65 held-out v2 cases, 40 saved answers and 30 source checks, not blanket source verification. Where an AI suggestion existed my decision matched it in 198 of 198 gold cases, 61 of 64 held-out v2 cases, 38 of 39 answers and 29 of 30 source checks: agreement, not accuracy. Four change-clicks (DEV-034, DEV-202, DEV-626, DEV-627) are recorded and not applied under the out-of-period policy, so gold labels are unchanged in v3.7 (v3.6 plus review provenance). The blind AI sample was chosen to be rich in failures, so its counts are not a population accuracy estimate. No blinded annotation was run.',
+    note: 'These are four separate review streams, not one sum: 268 gold questions (237 development plus 31 original held-out), 65 held-out v2 questions, 40 saved system answers and 30 source checks. Only the first two are questions; 403 is the total count of items. The original 31-case test overlaps development evidence: 25/31 share at least one evidence id, and 15/31 have all evidence represented in development. The 65-case fresh set is source/evidence-disjoint from the original 268 by a pre-run audit, signed before its run and used once, not for tuning. Later diagnostic scoring reused the same 65 cases. The 40 answers are a failure-enriched sample, six per family plus four status mismatches, not 40 new questions. Source checks are not model outputs. Where an AI suggestion existed my decision matched it in 198 of 198 gold cases, 61 of 64 fresh cases, 38 of 39 answers and 29 of 30 source checks: agreement, not accuracy. I was the sole human reviewer after three separate passes from the same AI model family and after the saved runs were scored. This is not independent inter-rater evidence.',
     table: () => ({caption: 'Review counts', columns: ['Review', 'Group', 'Count'], rows: rows.flatMap(r => r.segments.map(s => [r.label, s.label, s.value]))}),
     draw: (host, c) => shareBars(host, c, {rows, label: 'Review counts by kind', rowH: c.compact ? 60 : 56})
   });
 }
 
 const limitsFor = m => [
-  ['Labels were AI drafts first', 'An AI drafted all 268 gold cases (237 development, 31 held-out). I went through them in the review interface and recorded a decision on every case, mostly quick confirmations of the suggested label, after AI pre-review and after the saved runs were scored. Two labels changed in v3.5 (HO-022 clarify to answer, DEV-018 refuse to clarify). Four later change-clicks were not applied, so labels are unchanged in v3.7.', 'docs/human-review/owner-review-final-summary.md, experiments/gold/CHANGELOG.md'],
-  ['Review is one person, after the fact', 'All 403 labelling items were decided by one reviewer. Read the labels as AI-drafted and owner-confirmed, not independently checked. Where an AI suggestion existed, the decision matched it in 198 of 198 gold cases. No blinded annotation was run.', 'docs/human-review/owner-review-final-summary.md, docs/human-review/review-inventory.md'],
+  ['Labels were AI drafts first', 'An AI drafted all 268 gold cases (237 development, 31 held-out). I went through them in the review interface and signed off on every case, after AI pre-review and after the saved runs were scored. Two labels changed in v3.5 (HO-022 clarify to answer, DEV-018 refuse to clarify). Four later change-clicks were not applied, so labels are unchanged in v3.7.', 'docs/human-review/owner-review-final-summary.md, experiments/gold/CHANGELOG.md'],
+  ['Human reviewed after the saved runs', 'I signed off every item in four separate review streams after three separate AI review passes from the same model family. One human reviewer, after the runs; this is owner sign-off, not independent inter-rater evidence. Where an AI suggestion existed, the decision matched it in 198 of 198 gold cases.', 'docs/human-review/owner-review-final-summary.md, docs/human-review/review-inventory.md'],
   ['Held-out reuses development evidence', '31 cases; 25 of 31 reuse a development evidence id and 15 of 31 reuse their whole set. The interval on the r3 gain touches or crosses zero.', 'docs/system-card.md, report.json › evaluation.paired'],
   ['Some scores sit on earlier gold versions', `Development rows use ${goldOf(m.evalRow('dev-A3', 'gpt-6-luna')).label}; held-out rows use ${goldOf(m.heldRow('r3', 'gpt-6-luna')).label}, after post-run label edits. Both were rescored from saved outputs with no new generation. Original held-out scores on v3.2 to v3.4 stay in the evaluation report beside the current ones.`, 'experiments/heldout/FREEZE.md, README.md, experiments/gold/CHANGELOG.md'],
   ['T-I06: handled in one run, not shown stable or general', 'Before the fix, a planted false figure was cited and passed the quote and number checks. The deterministic cross-check handled that one case in both models in the first post-fix run, under a scorer written after the run. In the final-code run it passed for gpt-6-luna and failed for gpt-5.6-luna on an exact-string scorer check. Coverage is a closed grammar, and the end-to-end review found faults in the guard; docs/threat-model.md has their status.', 'docs/experiments/m7-t-i06-crosscheck.md, D-038'],
@@ -56,14 +56,14 @@ function limitCards(m) {
 
 export function renderLimits(m, ctx) {
   const ch = chapter({
-    id: 'limits', title: 'I recorded a decision on all 403 labelling items; the labels were AI drafts first',
+    id: 'limits', title: 'I signed off four separate review streams; labels began as AI drafts',
     bullets: [
-      'Decisions on all 403 items, mostly quick confirmations, after AI pre-review.',
-      'Not independent annotation; no blinded review was run.',
+      'I signed off four separate review streams, drafted by AI: gold questions, held-out v2 questions, saved answers and source checks.',
+      'One human reviewer, after three AI passes from the same model family and after the runs.',
       `${limitsFor(m).length} limits below constrain what the results show, including the single T-I06 result and the scanner bypass.`
     ]
   });
-  const review = section('Owner review covers 268 gold, 65 held-out v2, 40 answer and 30 source items');
+  const review = section('Human review: 268 gold questions, 65 fresh questions, 40 answers and 30 source checks');
   review.append(reviewFigure().root);
   ch.body.append(review);
   const limits = section(`${limitsFor(m).length} limits on the conclusions`);
@@ -132,8 +132,8 @@ export function renderSummary(m, ctx) {
   const open = section('Open items');
   open.append(olist([
     'T-I06: a deterministic cross-check handled the one planted-figure case in the first post-fix run, under a scorer written after it. The final-code run on corpus v3 is 36/36 for gpt-6-luna and 35/36 for gpt-5.6-luna: not shown stable.',
-    'Gold labels were AI drafts, reviewed by one person: all 403 items, not independent.',
-    'The held-out rerun on frozen, reviewed gold has not been run.'
+    'Labels were AI drafts, confirmed by one human reviewer after the saved runs; three review passes used the same model family. This is not independent inter-rater evidence.',
+    'The original test overlaps development evidence; the later 65-case fresh set is evidence-disjoint, pre-signed and used once.'
   ]));
   ch.body.append(block, open);
   return ch.root;

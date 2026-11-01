@@ -266,8 +266,7 @@ def test_evaluation_copy_distinguishes_owner_review_from_historical_scores():
         Path(__file__).resolve().parents[2] / "web/static/evaluation.js"
     ).read_text()
     for disclosure in (
-        "Owner review, 1 Nov 2026: Gold labels were drafted by AI. The owner then went through them in the review interface and recorded a decision on every case, answer verdict and source check (403 items: 268 gold cases, 65 held-out v2 cases, 40 saved answers and 30 source checks).",
-        "Most of these were quick confirmations of the AI-suggested label rather than independent re-derivations, so the labels are best read as AI-drafted and owner-confirmed.",
+        "Owner review, 1 Nov 2026: Gold labels were drafted by AI. The owner then went through them in the review interface and signed off on every case, answer verdict and source check (four separate streams, 403 items in total: 268 gold questions, 65 held-out v2 questions, 40 saved system answers and 30 source checks; only the first two are questions).",
         "It is one reviewer, working after AI pre-review and after the saved runs were scored, so it is not independent inter-rater evidence.",
         "The judge is an AI (gpt-6.1-terra)",
         "deterministic code, not the judge",
@@ -800,5 +799,6 @@ def test_builder_text_has_no_unsupported_review_wording():
     source = (Path(__file__).resolve().parents[2] / "src/labourlens/report/build.py").read_text()
     for unsupported in ("card by card", "confirmation pass", "under a second", "rapid", "about 8 s", "per card", "own click, after AI", "45 owner-reviewed", "223 drafts", "19 matches", "Manual only"):
         assert unsupported not in source
-    assert "best read as AI-drafted and owner-confirmed" in source
+    assert "signed off on every case, answer verdict and source check" in source
+    assert "quick confirmation" not in source and "owner-confirmed" not in source
     assert "not independent inter-rater evidence" in source

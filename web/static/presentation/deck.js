@@ -76,7 +76,7 @@ function buildSlide(spec) {
     FLOW_STAGES.forEach((label, i) => { const li = el('li', spec.stage === 'all' || spec.stage === i ? 'is-here' : '', label); if (spec.stage === i) li.setAttribute('aria-current', 'step'); ul.append(li); });
     nav.append(ul); inner.append(nav);
   }
-  if (spec.caption) inner.classList.add('has-caption');
+  if (spec.caption || spec.detail) inner.classList.add('has-caption');
   const bullets = () => {
     if (!spec.bullets?.length) return null;
     const ul = el('ul', 'deck-bullets');
@@ -85,10 +85,11 @@ function buildSlide(spec) {
   };
   if (spec.layout === 'title') {
     const left = el('div', 'tl-left');
-    left.append(el('p', 'deck-wordmark', spec.wordmark), heading);
-    const by = el('div', 'tl-by'); by.append(el('p', 'tl-author', spec.author), el('p', 'tl-role', spec.role));
+    if (spec.wordmark) left.append(el('p', 'deck-wordmark', spec.wordmark));
+    left.append(heading);
+    const by = el('div', 'tl-by'); by.append(el('p', 'tl-author', spec.author)); if (spec.role) by.append(el('p', 'tl-role', spec.role));
     left.append(by);
-    inner.append(left, spec.card);
+    inner.append(left);
   } else if (spec.layout === 'agenda') {
     const nav = el('nav', 'deck-agenda'); nav.setAttribute('aria-label', 'Contents');
     const ol = el('ul');
@@ -118,9 +119,28 @@ function buildSlide(spec) {
     const list = bullets();
     if (list) body.append(list);
     body.append(visualBox(spec.visual));
+    if (spec.detail?.open) {
+      const method = el('aside', 'deck-method');
+      method.append(el('p', 'deck-method-label', spec.detail.label), el('pre', 'deck-method-code', spec.detail.content));
+      body.append(method); body.classList.add('has-method');
+    }
     inner.append(body);
   }
-  if (spec.caption) inner.append(el('p', 'deck-caption', spec.caption));
+  if (spec.caption || spec.detail) {
+    const caption = el('div', 'deck-caption');
+    if (spec.caption) caption.append(el('p', 'deck-caption-text', spec.caption));
+    if (spec.detail && !spec.detail.open) {
+      const disclosure = el('details', 'pr-details');
+      disclosure.append(el('summary', '', spec.detail.label || 'How to read this'));
+      const body = el('div', 'pr-details-body');
+      const code = el('pre', 'pr-mono-list', spec.detail.content);
+      code.style.setProperty('white-space', 'pre-wrap');
+      code.style.setProperty('overflow-wrap', 'anywhere');
+      code.style.setProperty('margin', '0');
+      body.append(code); disclosure.append(body); caption.append(disclosure);
+    }
+    inner.append(caption);
+  }
   if (spec.source) inner.append(el('p', 'deck-source', `Source: ${spec.source}`));
   section.append(inner);
   const notes = el('aside', 'notes');

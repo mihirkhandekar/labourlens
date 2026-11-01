@@ -18,14 +18,14 @@
 
 /* ---------- hero ---------- */
 .rp-hero { position: relative; z-index: 2; padding: clamp(104px, 12vw, 132px) 0 clamp(40px, 6vw, 64px); }
-.rp-hero-inner { display: grid; grid-template-columns: minmax(0, 1.45fr) minmax(0, 1fr); gap: 40px clamp(32px, 5vw, 72px); align-items: center; }
+.rp-hero-inner { display: grid; grid-template-columns: minmax(0, 1fr); align-items: center; }
 .rp-hero-copy { display: grid; gap: 20px; justify-items: start; }
 .rp-hero-title { font-size: clamp(2.1rem, 3.7vw, 3.3rem); letter-spacing: -0.035em; line-height: 1.04; max-width: 17em; }
 .rp-hero-lead { max-width: 52ch; color: var(--ink-2); font-size: clamp(1.02rem, 1.3vw, 1.18rem); line-height: 1.55; }
 .rp-byline { color: var(--ink); font-weight: 600; letter-spacing: -0.01em; }
 .rp-hero-cta { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 4px; }
-.rp-hero .rp-stage { align-self: center; }
-@media (max-width: 900px) { .rp-hero-inner { grid-template-columns: minmax(0, 1fr); } }
+.rp-repo { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; }
+.rp-repo .rp-note { margin: 0; }
 
 /* ---------- step navigator ---------- */
 .rp-body { position: relative; z-index: 2; }
@@ -42,9 +42,11 @@
   .rp-step { padding: 7px 0 7px 16px; border-bottom: 0; border-left: 2px solid var(--line); font-size: 0.9rem; line-height: 1.3; }
   .rp-step[aria-current="location"] { border-left-color: var(--accent); }
 }
+/* Avoid making the fixed desktop rail relative to the translated route view. */
+.rp.view.enter { animation: none; }
 
 /* ---------- bands ---------- */
-.rp-band { position: relative; padding-block: clamp(64px, 8vw, 124px); scroll-margin-top: 0; }
+.rp-band { position: relative; padding-block: clamp(64px, 8vw, 124px); scroll-margin-top: 64px; }
 .rp-band::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 1px; background: var(--line); }
 @media (min-width: 1200px) { .rp-band::before { left: calc(var(--rp-lead) + var(--rp-nav) + 24px); } }
 .rp-band.is-tint { background: var(--rp-tint); }
@@ -181,6 +183,8 @@
 .rp-chapter-rest, .rp-more-body, .rp-group, .rp-visual, .rp-sub, .rp .pr-details-body, .rp .pr-callout-body, .rp .pr-stat { grid-template-columns: minmax(0, 1fr); }
 .rp .pr-block, .rp .pr-fig, .rp .pr-callout, .rp .pr-details, .rp .pr-stats { min-width: 0; max-width: 100%; }
 
+.rp-canvas .ab { height: auto; }
+@media (max-width: 800px) { .rp .ab { grid-template-columns: minmax(0, 1fr); gap: 28px; } .rp .ab-row { grid-template-columns: 1fr 70px; } .rp .ab-row .g9-track { grid-column: 1 / -1; grid-row: 2; } .rp .ab-list li { grid-template-columns: 110px 1fr; font-size: 15px; } .rp .ab-col h3 { font-size: 18px; } .rp .ab-row .g9-name { font-size: 16px; } }
 /* The presentation's small-screen rules lose to its own later base rules for two grids; restate them here. */
 @media (max-width: 800px) {
   .rp .g12:not(.is-status) { grid-template-columns: 1fr 1fr; gap: 12px; }
@@ -194,5 +198,3 @@
   .rp .g15 .g14-card p { font-size: 15px; }
   .rp .g15 .g12-head .deck-ico { width: 28px; height: 28px; }
 }
-.rp-hero .rp-stage { max-width: 520px; width: 100%; justify-self: end; }
-@media (max-width: 900px) { .rp-hero .rp-stage { justify-self: start; max-width: 460px; } }

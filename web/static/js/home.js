@@ -1,7 +1,7 @@
 // The landing page is the project report: a compact hero, a step navigator and one band per step.
 // Content lives in report-story.js; numbers come from report.json only.
 import {el, add, cta} from './dom.js';
-import {buildBands, heroCard, STEPS} from './report-story.js';
+import {buildBands, STEPS} from './report-story.js';
 
 const reducedMotion = () => matchMedia('(prefers-reduced-motion: reduce)').matches;
 
@@ -11,14 +11,17 @@ export function renderHome(root, report) {
   hero.setAttribute('aria-labelledby', 'hero-title');
   const inner = el('div', 'rp-hero-inner');
   const copy = el('div', 'rp-hero-copy');
-  const title = el('h1', 'rp-hero-title', 'Singapore labour statistics, answered with a source you can check.');
+  const title = el('h1', 'rp-hero-title', 'Singapore AI Agent for Workforce Policy Researchers');
   title.id = 'hero-title';
+  const repository = cta('Repository', 'https://github.com/mihirkhandekar/labourlens', 'btn', 'arrow-ur');
+  repository.target = '_blank'; repository.rel = 'noopener noreferrer';
+  const repo = el('div', 'rp-repo');
+  repo.append(repository, el('span', 'rp-note', 'Private repository shared with reviewers.'));
   add(copy, title,
-    el('p', 'rp-hero-lead', 'A research assistant for policy analysts, built and measured end to end for a GenAI Engineer assessment. This page is the report: the system, every experiment and the limits.'),
+    el('p', 'rp-hero-lead', 'A bounded research agent for Singapore workforce policy, built around official statistics, reports and reproducible evaluation.'),
     el('p', 'rp-byline', 'Mihir Khandekar'),
-    add(el('div', 'rp-hero-cta'), cta('Open the workbench', '/workbench', 'btn btn-primary', 'arrow-ur'), cta('View the deck', '/deck', 'btn', 'arrow-r')));
+    add(el('div', 'rp-hero-cta'), cta('Open the workbench', '/workbench', 'btn btn-primary', 'arrow-ur'), cta('View the deck', '/deck', 'btn', 'arrow-r'), repo));
   inner.append(copy);
-  if (report) inner.append(heroCard(report));
   hero.append(inner);
 
   const body = el('div', 'rp-body');
@@ -51,7 +54,7 @@ function stepNav(ids) {
     links.forEach((a, key) => { if (key === id) a.setAttribute('aria-current', 'location'); else a.removeAttribute('aria-current'); });
     // On narrow screens the list scrolls sideways: keep the current step in view without moving the page.
     const a = links.get(id);
-    if (node.scrollWidth > node.clientWidth + 2) node.scrollTo({left: Math.max(0, a.offsetLeft - 24), behavior: reducedMotion() ? 'auto' : 'smooth'});
+    if (node.scrollWidth > node.clientWidth + 2) node.scrollTo({left: Math.max(0, a.offsetLeft - 2), behavior: reducedMotion() ? 'auto' : 'smooth'});
   };
 
   list.addEventListener('click', event => {

@@ -45,25 +45,26 @@ export function twoSources(m) {
     return b;
   };
   wrap.append(
-    block('table', 'Statistics', types.dataset_csv, 'snapshots', ['Unemployment rate', 'Vacancies per unemployed person', 'Retrenchments', 'Employment change by sector']),
+    block('table', 'Structured: statistics', types.dataset_csv, 'snapshots', ['Unemployment rate', 'Vacancies per unemployed person', 'Retrenchments', 'Employment change by sector', 'Transport and storage jobs']),
     el('div', 'g2-join'),
-    block('file-text', 'Reports', types.report_pdf, 'PDFs', [`${fmt.int(types.release_html)} release pages`, 'MOM labour market reports', 'Q3 2025 to Q2 2026'])
+    block('file-text', 'Unstructured: reports', types.report_pdf, 'PDFs', [`${fmt.int(types.release_html)} release pages`, 'MOM labour market reports', 'MTI AI-and-employment article'])
   );
-  wrap.querySelector('.g2-join').append(ico('arrow-right'), el('p', '', 'One answer, each part cited'));
+  wrap.querySelector('.g2-join').append(el('span', 'g2-plus', '+'));
   return wrap;
 }
 
-/** G3: the three document builds. Passage counts are recorded in the README and the decision log, not in report.json. */
+/** G3: the current document build first, then the two earlier builds in a plain table. Passage counts are recorded in the README and the decision log, not in report.json. */
 export function buildTimeline() {
-  const wrap = el('div', 'g3');
-  const nodes = [['First build', 13484, 'Original extraction', true], ['Second build', 15915, 'Table and note fixes', false], ['Third build', 16419, 'Six new sources added', false]];
-  nodes.forEach(([name, count, why, ran], i) => {
-    const n = el('div', 'g3-node'); n.style.setProperty('--i', String(i));
-    const dot = el('div', 'g3-dot'); dot.style.setProperty('--d', `${Math.round(60 + (count - 13000) / 3400 * 80)}px`);
-    n.append(dot, el('p', 'g3-name', name), el('p', 'g3-count num', `${fmt.int(count)} passages`), el('p', 'g3-why', why));
-    if (ran) n.append(el('p', 'g3-tag', 'Most results ran here'));
-    wrap.append(n);
+  const wrap = el('div', 'g3b');
+  wrap.append(el('p', 'g3b-lead', 'The system, the live site and the final held-out test all use the current document build: 85 sources, 16,419 passages. Two earlier builds are kept only so older results can be reproduced.'));
+  const table = el('table', 'g3b-table');
+  const head = el('tr'); ['Build', 'Passages', 'What it was for'].forEach(h => head.append(el('th', '', h))); table.append(el('thead', '', '')); table.lastChild.append(head);
+  const body = el('tbody');
+  [['Earlier build (v1)', 13484, 'First experiments and the original held-out test. Results frozen.'], ['Middle build (v2)', 15915, 'Extraction fixes tested alone. No measurable change.'], ['Current build (v3)', 16419, 'Adds six untouched sources, so the 65-question held-out set shares no evidence with development.']].forEach(([name, count, why], i) => {
+    const tr = el('tr', i === 2 ? 'is-current' : ''); tr.append(el('th', '', name), el('td', 'num', fmt.int(count)), el('td', '', why)); body.append(tr);
   });
+  table.append(body); wrap.append(table);
+  wrap.append(el('p', 'g3b-note', 'Which numbers come from which build: development accuracy 0.903 appears on the earlier build (first experiments) and on the current build (regression check); held-out v2 0.754 is on the current build. Do not compare numbers across builds.'));
   return wrap;
 }
 
@@ -85,7 +86,8 @@ export function flattening() {
 
 /** Bars as a staircase, in SVG. items: {label, value, ci, kind: 'accent' | 'plain' | 'hatched', tag}. */
 export function staircase(items, {domain = [0, 1], note} = {}) {
-  const W = 1500, H = 560, top = 60, bottom = 120, left = 40, gap = 36;
+  const tagged = items.some(i => i.tag);
+  const W = 1500, H = tagged ? 640 : 560, top = 60, bottom = tagged ? 200 : 120, left = 40, gap = 36;
   const bw = (W - left * 2 - gap * (items.length - 1)) / items.length;
   const svg = svgEl('svg', {viewBox: `0 0 ${W} ${H}`, class: 'g5-svg', role: 'img', focusable: 'false'});
   svg.setAttribute('aria-label', items.map(i => `${i.label}: ${fmt.pct(i.value)}`).join('. '));
@@ -229,7 +231,7 @@ export function errorBars(m) {
   return wrap;
 }
 
-/** Before and after the calculation fix. Literals: the tool-set v2 results are not in the report data; the slide notes name their source. */
+/** Before and after the calculation fix. Values are development and diagnostic results. */
 export function toolFixBars() {
   const wrap = el('div', 'g9 g11');
   const row = (name, note, value, max, text, kind) => {
@@ -239,30 +241,32 @@ export function toolFixBars() {
     line.append(lab, track, el('span', 'g9-val num', text));
     return line;
   };
-  const a = el('div', 'g9-panel'); a.append(el('h3', '', 'Practice questions'), el('p', 'g11-sub', 'Right kind of response'));
-  [['Main model', .903, .895], ['Second model', .916, .899]].forEach(([name, before, after]) => {
-    a.append(row(name, 'before', before, 1, `${(before * 100).toFixed(1)}%`, 'before'), row(name, 'with the fix', after, 1, `${(after * 100).toFixed(1)}%`, 'after'));
+  const a = el('div', 'g9-panel'); a.append(el('h3', '', 'Development cases'), el('p', 'g11-sub', 'Behaviour accuracy, n=237'));
+  [['gpt-6-luna', .903, .895], ['gpt-5.6-luna', .916, .899]].forEach(([name, before, after]) => {
+    a.append(row(name, 'before', before, 1, `${(before * 100).toFixed(1)}%`, 'before'), row(name, 'with tool bundle', after, 1, `${(after * 100).toFixed(1)}%`, 'after'));
   });
-  a.append(el('p', 'g11-foot', 'False answers: 6 before, 7 after. The test failed.'));
-  const b = el('div', 'g9-panel'); b.append(el('h3', '', 'Fresh questions'), el('p', 'g11-sub', 'Number comparisons right, of 14'));
-  b.append(row('Main model', 'before', 3, 14, '3', 'before'), row('Main model', 'with the fix', 12, 14, '12', 'after'));
-  b.append(el('p', 'g11-foot', 'Optimistic: I designed the fix on these questions.'));
+  a.append(el('p', 'g11-foot', 'False answers: 6 before, 7 after, limit 6. Criteria failed; not adopted.'));
+  const b = el('div', 'g9-panel'); b.append(el('h3', '', 'Same 65 questions, reused'), el('p', 'g11-sub', 'Correct number comparisons, of 14; not fresh'));
+  b.append(row('gpt-6-luna', 'before', 3, 14, '3', 'before'), row('gpt-6-luna', 'with tool bundle', 12, 14, '12', 'after'));
+  b.append(el('p', 'g11-foot', 'Optimistic: the fix was designed on these questions.'));
   wrap.append(a, b);
   return wrap;
 }
-
-/** Title slide: the product's answer, with its citation, from the latest figure. */
-export function answerCard(m) {
-  const card = m.cards.find(c => c.card_id === 'unemployment_resident_sa') || m.cards[0];
-  const wrap = el('div', 'tcard');
-  if (!card) return wrap;
-  const src = m.sources.find(r => r.source_id === card.source_id);
-  const head = el('div', 'tcard-head'); head.append(el('span', 'tcard-status', 'Answered'));
-  wrap.append(head,
-    el('p', 'tcard-q', `What was resident unemployment in ${fmt.quarter(card.period)}?`),
-    el('p', 'tcard-a', `${pctS(card.value)}, resident, seasonally adjusted [1]`));
-  const chip = el('p', 'tcard-cite'); chip.append(el('span', 'tcard-n', '1'), document.createTextNode(` ${src?.publisher || 'MOM'}, ${card.label}, via data.gov.sg`));
-  wrap.append(chip);
+/** The calculation fix: planner evidence, new calculator, dimension recovery and bonus round. */
+export function toolFixFlow() {
+  const wrap = el('div', 'g11');
+  wrap.style.setProperty('display', 'grid');
+  wrap.style.setProperty('grid-template-rows', 'auto minmax(0, 1fr)');
+  wrap.style.setProperty('gap', '12px');
+  wrap.style.setProperty('height', '100%');
+  const flow = el('div', 'g14 is-compact');
+  flow.style.setProperty('height', 'auto');
+  flow.style.setProperty('grid-template-columns', 'repeat(4, minmax(0, 1fr))');
+  [['Planner evidence', 'Up to five short figure snippets per passage.'], ['New calculation', 'Decimal arithmetic on two compatible figures.'], ['Dimension recovery', 'Return valid labels after a mismatch.'], ['Bonus round', 'One extra lookup after correction.']].forEach(([head, body], i) => {
+    const card = el('div', 'g14-card'); card.style.setProperty('--i', String(i));
+    card.append(el('h3', '', head), el('p', '', body)); flow.append(card);
+  });
+  wrap.append(flow, toolFixBars());
   return wrap;
 }
 
@@ -270,14 +274,14 @@ export function answerCard(m) {
 export function mcpDiagram() {
   const W = 1560, H = 300, bw = 300, bh = 130, y0 = 90;
   const svg = svgEl('svg', {viewBox: `0 0 ${W} ${H}`, class: 'g6-svg', role: 'img', focusable: 'false'});
-  svg.setAttribute('aria-label', 'Agent, MCP client, then a trust boundary, then MCP server and validated statistics.');
-  const names = [['Agent', 'plans and answers'], ['MCP client', 'checks every result'], ['MCP server', 'read-only tools'], ['Statistics', 'validated data']];
+  svg.setAttribute('aria-label', 'Host application uses an MCP client to validate calls and results from an MCP server with read-only tools and resources, backed by statistics.');
+  const names = [['Host app', 'live app: direct calls'], ['MCP client', 'checks every result'], ['MCP server', '9 tools, 2 resources'], ['Statistics', 'read-only data']];
   const gap = (W - 20 - bw * 4) / 3, xs = names.map((_, i) => 10 + i * (bw + gap));
   const defs = svgEl('defs'); const mk = svgEl('marker', {id: 'g6-arrow2', viewBox: '0 0 10 10', refX: 8, refY: 5, markerWidth: 9, markerHeight: 9, orient: 'auto'});
   mk.append(svgEl('path', {d: 'M0 0 10 5 0 10z', class: 'g6-head'})); defs.append(mk); svg.append(defs);
   for (let i = 0; i < 3; i += 1) svg.append(svgEl('line', {x1: xs[i] + bw, x2: xs[i + 1] - 4, y1: y0 + bh / 2, y2: y0 + bh / 2, class: 'g6-edge', 'marker-end': 'url(#g6-arrow2)'}));
   const bx = (xs[1] + bw + xs[2]) / 2;
-  svg.append(svgEl('line', {x1: bx, x2: bx, y1: 20, y2: H - 10, class: 'g6-edge is-loop'}), svgEl('text', {x: bx, y: 14, 'text-anchor': 'middle', class: 'g6-loop-label'}, 'The server is untrusted'));
+  svg.append(svgEl('line', {x1: bx, x2: bx, y1: 20, y2: H - 10, class: 'g6-edge is-loop'}), svgEl('text', {x: bx, y: 14, 'text-anchor': 'middle', class: 'g6-loop-label'}, 'Optional MCP trust boundary'));
   names.forEach(([a, b], i) => {
     const g = svgEl('g', {class: `g6-box${i === 1 ? ' is-guard' : ''}`}); g.style.setProperty('--i', String(i));
     g.append(svgEl('rect', {x: xs[i], y: y0, width: bw, height: bh, rx: 12}), svgEl('text', {x: xs[i] + bw / 2, y: y0 + 56, 'text-anchor': 'middle', class: 'g6-text'}, a), svgEl('text', {x: xs[i] + bw / 2, y: y0 + 96, 'text-anchor': 'middle', class: 'g5-tag'}, b));
@@ -294,24 +298,24 @@ const REQUIREMENTS = [
   ['magnifying-glass', 'Retrieval', 'Two retrievers, cited passages', 'Does filtering help?; Every claim has a source', 'Quotes not checked for meaning'],
   ['stack', 'Models', 'Two settings: quality, speed, cost', 'Choosing the model; The experiment ladder', 'Defaults await confirmation'],
   ['wrench', 'Agent', 'Tools, arithmetic in code, limits', 'The agent loop; Fixing the calculation gap', 'Report-text arithmetic gap'],
-  ['chart-line', 'Evaluation', '30+ cases, human review, errors', 'How I measured; fresh questions', 'One reviewer only'],
+  ['chart-line', 'Evaluation', '30+ cases, human review, errors', 'How I measured; fresh questions', 'One human reviewer'],
   ['shield', 'Safety', 'Injection, privacy, least privilege', 'Safety tests; What protects it', 'Attack scanner is weak'],
   ['note', 'Concepts', 'Tokens, embeddings, agents, MCP', 'Across the talk', 'Rehearsal pending'],
   ['path', 'MCP', 'A tool, a resource, a client demo', 'The MCP server', 'Remote deployment unverified'],
   ['arrow-counter-clockwise', 'Setup', 'Pinned, tested, documented', 'Not shown in the talk', 'Clean-clone check recorded']
 ];
-export function requirementGrid(status = false) {
-  const wrap = el('div', `g12${status ? ' is-status' : ''}`);
-  REQUIREMENTS.forEach(([icon, name, ask, shown, open], i) => {
-    const tile = el('div', 'g12-tile'); tile.style.setProperty('--i', String(i));
-    const head = el('div', 'g12-head'); head.append(ico(icon), el('h3', '', name));
-    tile.append(head, el('p', 'g12-ask', ask));
-    if (status) {
-      const open_ = el('p', 'g12-open'); open_.append(ico('warning'), el('span', '', open));
-      tile.append(el('p', 'g12-shown', shown), open_);
-    }
-    wrap.append(tile);
-  });
+/** The assignment as two plain columns: the problem statement in my words, and the ten asks as a ruled list. */
+export function assignmentBrief() {
+  const wrap = el('div', 'ab');
+  const statement = el('div', 'ab-col'); statement.append(el('h3', '', 'The problem statement'));
+  ['Policy researchers work with government statistics, reports and internal notes that can be incomplete, inconsistent or hard to search.',
+    'Build a GenAI assistant that answers analytical questions from supplied or public data, gives traceable evidence for each answer, and says plainly when it is uncertain.',
+    'The brief puts applied machine learning, experiments, retrieval quality, evaluation and responsible AI ahead of full-stack engineering.'].forEach(t => statement.append(el('p', 'ab-text', t)));
+  const asks = el('div', 'ab-col'); asks.append(el('h3', '', 'What it asked for'));
+  const list = el('ul', 'ab-list');
+  REQUIREMENTS.forEach(([, name, ask]) => { const li = el('li', ''); li.append(el('strong', '', name), el('span', '', ask)); list.append(li); });
+  asks.append(list);
+  wrap.append(statement, asks);
   return wrap;
 }
 
@@ -332,7 +336,7 @@ export function domainChoice() {
 export function challengeGrid() {
   const wrap = el('div', 'g14');
   [['Tables flattened in PDFs', 'Audited samples. Numbers were intact.'], ['Overall or resident, adjusted or not', 'Series names carry both. Ask when open.'], ['Advance and final figures differ', 'Every answer names its release.'], ['Rights limits on MOM content', 'Reports stay out of the public repository.'],
-    ['Small reference set, AI drafted', 'I confirmed the labels. Intervals shown.'], ['Leakage between test sets', 'A fresh set from unseen sources.'], ['Calculation tool gap', 'Tested a fix. It failed its rule.'], ['Questions before 2024', 'It declines. Scope is fixed.']].forEach(([hard, did], i) => {
+    ['Small reference set, AI drafted', 'I signed off the labels. Intervals shown.'], ['Leakage between test sets', 'A fresh set from unseen sources.'], ['Calculation tool gap', 'Tested a fix. It failed its rule.'], ['Questions before 2024', 'It declines. Scope is fixed.']].forEach(([hard, did], i) => {
     const card = el('div', 'g14-card'); card.style.setProperty('--i', String(i));
     card.append(el('h3', '', hard), el('p', '', did));
     wrap.append(card);
@@ -355,6 +359,7 @@ export function plantedFlow() {
 /** A row of icon cards: [{icon, head, line}]. */
 export function cardRow(items) {
   const wrap = el('div', 'g14 g15');
+  if (items.length === 4) wrap.style.setProperty('grid-template-columns', 'repeat(4, minmax(0, 1fr))');
   items.forEach(({icon, head, line}, i) => {
     const card = el('div', 'g14-card'); card.style.setProperty('--i', String(i));
     const top = el('div', 'g12-head'); top.append(ico(icon), el('h3', '', head));
@@ -394,10 +399,10 @@ export function aboutMe() {
   return wrap;
 }
 
-/** The system end to end: five stages and two checks that run across them. */
+/** The system and its two cross-cutting checks plus the optional MCP route. */
 export function architectureDiagram() {
   const wrap = el('div', 'g17');
-  const stages = [['database', 'Sources', ['Statistics from data.gov.sg', 'MOM reports, PDF and web']], ['file-text', 'Processing', ['Parse and clean', 'Split into passages', 'Validate the numbers']], ['magnifying-glass', 'Retrieval', ['Keyword and meaning', 'Filter by period', 'Rerank']], ['wrench', 'Agent', ['Plan the steps', 'Three read-only tools', 'Arithmetic in code']], ['check-circle', 'Answer', ['Every claim cited', 'Or ask, decline, refuse']]];
+  const stages = [['database', 'Sources', ['Quarterly statistics', 'MOM reports and an MTI article']], ['file-text', 'Processing', ['Parse and clean', 'Create passages', 'Validate observations']], ['magnifying-glass', 'Retrieval', ['BM25 and embeddings', 'Filter period/release', 'Rerank candidates']], ['wrench', 'Agent', ['Plan and assess evidence', 'Three typed tools', 'Calculate in code']], ['check-circle', 'Answer', ['Cited, validated output', 'Or clarify, decline, refuse']]];
   const row = el('div', 'g17-row');
   stages.forEach(([icon, name, lines], i) => {
     if (i) { const arrow = el('div', 'g17-arrow'); arrow.append(ico('arrow-right')); row.append(arrow); }
@@ -407,7 +412,8 @@ export function architectureDiagram() {
     box.append(head, ul); row.append(box);
   });
   const bars = el('div', 'g17-bars');
-  [['shield', 'Guardrails', 'Retrieved text is data. Tools are read-only. Hard limits.'], ['chart-line', 'Evaluation', 'Reference questions, fresh sets and attack tests.']].forEach(([icon, name, text]) => {
+  bars.style.setProperty('grid-template-columns', 'repeat(3, minmax(0, 1fr))');
+  [['shield', 'Guardrails', 'Retrieved text is untrusted. Tools are read-only; calls are bounded.'], ['chart-line', 'Evaluation', 'Development and fresh cases, human review and attack tests.'], ['path', 'MCP', 'Optional client validates server tools/resources. Web app calls the same tools directly.']].forEach(([icon, name, text]) => {
     const bar = el('div', 'g17-bar'); bar.append(ico(icon), el('strong', '', name), el('span', '', text)); bars.append(bar);
   });
   wrap.append(row, bars);
@@ -448,24 +454,32 @@ export function keywordVsMeaning(m) {
   return items.length === 3 ? staircase(items, {domain: [0, 1]}) : null;
 }
 
-/** Models: price, quality, cost and speed in one table. Prices are list prices read on 2026-10-30. */
-export function modelTable(m) {
-  const wrap = el('div', 'g20');
-  const table = el('table', 'g20-table');
-  const head = el('tr'); ['Model', 'Price per 1M tokens', 'Right kind of response', 'Cost per question', 'Median seconds', 'Final setup, cost'].forEach(t => { const th = el('th', '', t); th.scope = 'col'; head.append(th); });
-  const thead = el('thead'); thead.append(head);
-  const tbody = el('tbody');
-  [['gpt-6-luna', '$0.10 in, $0.50 out', true], ['gpt-5.6-luna', '$0.20 in, $1.20 out', false], ['gpt-4.1-mini', '$0.40 in, $1.60 out', false]].forEach(([name, price, picked]) => {
-    const a1 = m.evalRow('dev-A1', name)?.metrics, a3 = m.evalRow('dev-A3', name)?.metrics;
-    const tr = el('tr', picked ? 'is-pick' : '');
-    const cell = text => el('td', 'num', text);
-    const th = el('th', '', name); th.scope = 'row';
-    tr.append(th, el('td', '', price), cell(a1 ? fmt.pct(metricOf(a1.behaviour_accuracy).rate) : 'n/a'), cell(a1 ? `$${a1.cost_per_case_usd.toFixed(4)}` : 'n/a'), cell(a1 ? `${a1.latency_p50_s.toFixed(1)} s` : 'n/a'), cell(a3 ? `$${a3.cost_per_case_usd.toFixed(4)}` : 'not run'));
-    tbody.append(tr);
+
+/** Early answer-model screening: G1 cost per case against behaviour accuracy, n=30. */
+export function earlyModelChart() {
+  const data = [
+    ['gpt-4.1-mini', 0.00161, 0.83], ['gpt-5.4-mini', 0.00335, 0.70],
+    ['gpt-5.6-luna', 0.00113, 0.73], ['gpt-6-luna', 0.00051, 0.60],
+    ['gpt-6-sol', 0.00912, 0.60], ['gpt-6.1-terra', 0.00432, 0.57]
+  ];
+  const W = 1500, H = 600, left = 140, right = 80, top = 75, bottom = 115;
+  const svg = svgEl('svg', {viewBox: `0 0 ${W} ${H}`, class: 'g5-svg', role: 'img', focusable: 'false'});
+  svg.setAttribute('aria-label', 'Six-model exploratory chart: per-case cost on the horizontal axis and behaviour accuracy on the vertical axis, from 30 development cases.');
+  const x = cost => left + cost / 0.01 * (W - left - right);
+  const y = accuracy => top + (0.9 - accuracy) / 0.4 * (H - top - bottom);
+  svg.append(svgEl('line', {x1: left, x2: W - right, y1: H - bottom, y2: H - bottom, class: 'g5-axis'}),
+    svgEl('line', {x1: left, x2: left, y1: top, y2: H - bottom, class: 'g5-axis'}),
+    svgEl('text', {x: (left + W - right) / 2, y: H - 22, 'text-anchor': 'middle', class: 'g5-label'}, 'Cost per case (USD)'),
+    svgEl('text', {x: 24, y: 42, class: 'g5-label'}, 'Behaviour accuracy'));
+  data.forEach(([name, cost, accuracy], i) => {
+    const g = svgEl('g', {class: `g5-step${name === 'gpt-6-luna' ? ' is-accent' : ' is-plain'}`});
+    g.style.setProperty('--i', String(i));
+    g.append(svgEl('circle', {cx: x(cost), cy: y(accuracy), r: 16, class: 'g5-bar'}),
+      svgEl('text', {x: x(cost) + 22, y: y(accuracy) - 10, class: 'g5-label'}, name),
+      svgEl('text', {x: x(cost) + 22, y: y(accuracy) + 24, class: 'g5-tag'}, `${fmt.pct(accuracy)} · $${cost.toFixed(5)}`));
+    svg.append(g);
   });
-  table.append(thead, tbody);
-  wrap.append(table, el('p', 'g20-foot', 'Judge: gpt-6.1-terra, $1.00 in, $5.00 out. Embeddings: text-embedding-3-large, $0.13. Not run: gpt-6-astra, $10 in, $50 out.'));
-  return wrap;
+  return svg;
 }
 
 /** Registered held-out set and the second fresh set, main model, baseline against filter then rerank. */
@@ -475,43 +489,60 @@ export function freshQuestions(m) {
   if (![hybrid, r3].every(finite) || !v2) return null;
   const row = (name, note, value, kind) => ({name, note, value, max: 1, text: fmt.pct(value), kind});
   return pairPanels([
-    {title: '31 test questions', sub: 'Main model, right kind of response', rows: [row('Baseline search', 'before', hybrid, 'before'), row('Filter, then rerank', 'after', r3, 'after')], foot: [pair ? `Gain ${fmt.pts(pair.diff)}, interval ${fmt.pts(pair.ci95[0])} to ${fmt.pts(pair.ci95[1])}.` : '']},
-    {title: '65 fresh questions', sub: 'Main model, right kind of response', rows: [row('Baseline search', 'before', v2.behaviour_accuracy.baseline, 'before'), row('Filter, then rerank', 'after', v2.behaviour_accuracy.candidate, 'after')], foot: [`${v2.better} cases better, ${v2.worse} worse.`]}
+    {title: '31 original test questions', sub: 'Primary gpt-6-luna; behaviour accuracy', rows: [row('Baseline search', 'before', hybrid, 'before'), row('Filter, then rerank', 'after', r3, 'after')], foot: [pair ? `Gain ${fmt.pts(pair.diff)}, interval ${fmt.pts(pair.ci95[0])} to ${fmt.pts(pair.ci95[1])}.` : '']},
+    {title: '65 fresh questions', sub: 'Primary gpt-6-luna; behaviour accuracy', rows: [row('Baseline search', 'before', v2.behaviour_accuracy.baseline, 'before'), row('Filter, then rerank', 'after', v2.behaviour_accuracy.candidate, 'after')], foot: [`${v2.better} cases better, ${v2.worse} worse.`]}
   ]);
 }
 
-/** The 403 labelling items by stream, as one segmented bar. Counts come from the review inventory, not the report data. */
+/** The four separate review streams as a plain ruled list. Counts come from the review inventory, not the report data. */
 export function reviewStreams() {
-  const wrap = el('div', 'g21');
-  const big = el('div', 'g21-big'); big.append(el('p', 'g21-num num', '403'), el('p', 'g21-label', 'decisions recorded in the review interface'));
-  const right = el('div', 'g21-right');
-  const bar = el('div', 'g21-bar');
-  const legend = el('ul', 'g21-legend');
-  [['Reference questions', 268, 'c1'], ['Fresh-set questions', 65, 'c3'], ['Saved answers', 40, 'c2'], ['Source checks', 30, 'c5']].forEach(([name, n, cls]) => {
-    const seg = el('div', `g21-seg f-${cls}`); seg.style.setProperty('--w', String(n)); bar.append(seg);
-    const li = el('li'); const sw = el('span', `g21-sw f-${cls}`); li.append(sw, el('span', 'g21-name', name), el('span', 'g21-n num', String(n))); legend.append(li);
+  const wrap = el('div', 'g21 is-list');
+  const list = el('ul', 'g21-rows');
+  [['Gold questions', 268, '237 development and 31 original test; the 31 share evidence with development. Decisions: approve, change or reject.'],
+    ['Fresh-set (v2) questions', 65, 'Written on six sources no earlier question uses. Decisions: approve, change or reject.'],
+    ['Saved system answers', 40, 'Not questions. Rated right, partly right or wrong: 25, 6 and 9.'],
+    ['Source checks', 30, 'Not questions. Checked against the original pages: match, minor difference or major difference. 18 match, 12 minor.']].forEach(([name, n, what], i) => {
+    const li = el('li', 'g21-row'); li.style.setProperty('--i', String(i));
+    const head = el('div', 'g21-rowhead'); head.append(el('span', 'g21-name', name), el('span', 'g21-n num', String(n)));
+    li.append(head, el('p', 'g21-what', what)); list.append(li);
   });
-  right.append(bar, legend);
-  wrap.append(big, right);
+  wrap.append(list, el('p', 'g21-total', 'Only the first two are questions. 403 items signed off in total, in four separate streams.'));
   return wrap;
 }
 
-/** Threat results, undefended against defended, from the registered and the final runs. */
-export function threatPanels(m) {
-  const n = (reg, name) => (reg ? m.securityRow(name) : m.e2efixRow(name))?.metrics?.passed;
-  const row = (name, note, v, kind) => ({name, note, value: v, max: 36, text: `${v} of 36`, kind});
-  const pairRows = (reg, model, label) => { const a = n(reg, `${model}+naive`), b = n(reg, model); return finite(a) && finite(b) ? [row(label, 'no defences', a, 'before'), row(label, 'defences', b, 'after')] : []; };
-  const first = [...pairRows(true, 'gpt-6-luna', 'Main model'), ...pairRows(true, 'gpt-4.1-mini', 'Smaller model')];
-  const last = [...pairRows(false, 'gpt-6-luna', 'Main model'), ...pairRows(false, 'gpt-5.6-luna', 'Second model')];
-  if (!first.length || !last.length) return null;
-  return pairPanels([{title: 'First attack run', sub: '36 attack cases', rows: first, foot: ['The scanner missed all 5 paraphrased probes.']}, {title: 'Final system', sub: '36 attack cases', rows: last, foot: ['One planted false figure is still not shown stable.']}]);
+
+/** Attack category, control and result from the final 36-case threat report. */
+export function threatMatrix() {
+  const wrap = el('div', 'g14');
+  const rows = [
+    ['Question injection and secret requests', 'Input flags; secret and prompt output checks.', '6/6 direct-injection cases passed.'],
+    ['Prompt injection in a passage', 'Untrusted evidence is sanitised and cannot set instructions.', 'Primary 6/6; second model 5/6.'],
+    ['Planted false figure', 'Compare same measure, period, population and release.', 'Primary passed; second model failed once.'],
+    ['Sensitive data, credentials and PII', 'Refuse personal-data requests; no personal-data tool.', '5/5 sensitive-data cases passed.'],
+    ['Unsupported claim or causal request', 'Answer from cited evidence or decline the request.', '4/4 unsupported-claim cases passed.'],
+    ['Unsafe tool invocation', 'Typed read-only tools with argument and call caps.', '5/5 unsafe-tool cases passed.'],
+    ['Malicious or malformed MCP output', 'Allow-list, validate schemas, cap size and time.', '10/10 server-failure cases passed.'],
+    ['Paraphrased attacks', 'Heuristic input scan and untrusted-text rules.', 'Scanner missed all five paraphrased probes.']
+  ];
+  rows.forEach(([head, defence, result], i) => {
+    const card = el('div', 'g14-card'); card.style.setProperty('--i', String(i));
+    card.append(el('h3', '', head), el('p', '', defence), el('p', '', result)); wrap.append(card);
+  });
+  return wrap;
 }
 
-/** A screenshot of the workbench, served from this site. */
+/** A screenshot and scannable link to the workbench, served locally. */
 export function workbenchShot() {
   const wrap = el('div', 'g22');
+  wrap.style.setProperty('grid-template-columns', 'minmax(0, 1fr) auto');
+  wrap.style.setProperty('gap', '24px');
   const img = el('img', 'g22-img'); img.src = '/static/presentation/workbench.png'; img.alt = 'The LabourLens workbench: a question box, example questions, session history and an activity timeline.'; img.width = 1500; img.height = 900;
-  wrap.append(img);
+  const link = el('a', 'g22-link'); link.href = 'https://labourlens.navig.me/workbench'; link.setAttribute('aria-label', 'Try the workbench at labourlens.navig.me');
+  link.style.setProperty('display', 'grid'); link.style.setProperty('justify-items', 'center'); link.style.setProperty('gap', '12px');
+  link.style.setProperty('color', 'var(--accent)'); link.style.setProperty('text-decoration', 'none');
+  const qr = el('img', 'g22-qr'); qr.src = '/static/presentation/workbench-qr.svg'; qr.alt = 'QR code linking to the LabourLens workbench'; qr.width = 240; qr.height = 240;
+  link.append(qr, el('span', '', 'Try the workbench'));
+  wrap.append(img, link);
   return wrap;
 }
 
@@ -527,23 +558,12 @@ export function conceptGrid() {
   return wrap;
 }
 
-/** The seven assessment areas by weight, where the talk covers each, and what is still open (from the requirement matrix). */
-export function coverageMap() {
-  const wrap = el('div', 'g23');
-  [['Evaluation and error analysis', 25, 'How I measured, results, errors, review', 'One reviewer, mostly quick confirmations'], ['RAG and GenAI design', 20, 'Retrieval, citations, models', 'Quotes checked for presence, not meaning'], ['GenAI concepts and MCP', 15, 'Concepts, the MCP server', 'Rehearsal pending; the app does not route through MCP'], ['Problem framing and data', 10, 'Problem, data, what it showed', 'Rights gaps remain'], ['Agent workflow', 10, 'The loop, the calculation fix', 'Report-text arithmetic gap'], ['Responsible AI', 10, 'Attacks and defences', 'Weak scanner; one case not stable'], ['Reproducibility and communication', 10, 'The product, how to run it', 'Fresh-checkout run pending']].forEach(([area, weight, where, open], i) => {
-    const row = el('div', 'g23-row'); row.style.setProperty('--i', String(i));
-    const bar = el('div', 'g23-bar'); const fill = el('span', 'g23-fill'); fill.style.setProperty('--w', `${Math.round(weight / 25 * 100)}%`); bar.append(fill, el('span', 'g23-w num', `${weight}%`));
-    const gap = el('p', 'g23-open'); gap.append(ico('warning'), el('span', '', open));
-    row.append(el('p', 'g23-area', area), bar, el('p', 'g23-where', where), gap);
-    wrap.append(row);
-  });
-  return wrap;
-}
 
 /** Three review measures. Counts come from the review inventory and the sets used in the report. */
 export function measureCards(m) {
   const dev = m.evalRow('dev-A3', 'gpt-6-luna')?.metrics?.n_cases, held = m.heldRow('r3', 'gpt-6-luna')?.metrics?.n_cases, v2 = m.section('evaluation').heldout_v2?.paired?.['gpt-6-luna']?.n_gold_cases;
-  return cardRow([{icon: 'stack', head: 'Three question sets', line: `${fmt.int(dev)} to tune on, ${fmt.int(held)} for testing, ${fmt.int(v2)} fresh.`}, {icon: 'chart-line', head: 'Four measures', line: 'Right passage, right response, supported claims, correct numbers.'}, {icon: 'check-circle', head: 'One reviewer', line: 'AI drafted the labels. I confirmed all 403 items. Not independent.'}]);
+  const referenceCount = finite(dev) && finite(held) ? fmt.int(dev + held) : 'not recorded';
+  return cardRow([{icon: 'stack', head: 'Reference set', line: `${referenceCount} total: ${fmt.int(dev)} development, ${fmt.int(held)} original test.`}, {icon: 'chart-line', head: 'Fresh set', line: `${fmt.int(v2)} source- and evidence-disjoint; used once, not tuned on.`}, {icon: 'check-circle', head: 'Human reviewed', line: 'I signed off the labels on both sets, 40 saved answers and 30 source checks.'}]);
 }
 
 /** The development loop with the written guardrails around it, and three counts: the decision log, five end-to-end reviewers, the rights scan result. */

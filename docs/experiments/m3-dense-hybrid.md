@@ -2,7 +2,7 @@
 
 Status: dev only, nothing locked, held-out untouched. Gold labels are AI drafts, not yet reviewed by the owner. n=24 text-evidence cases, so one case moves a metric by 4.2 points; treat gaps under about 10 points as noise.
 
-> **Superseded 1 Nov 2026 (status of the labels).** The status line above describes the state when these runs were scored: AI-drafted labels, not yet reviewed. The owner has since gone through the gold cases in the review interface and recorded a decision on every one (gold v3.7). The labels are AI-drafted and owner-confirmed; one reviewer, after AI pre-review and after the saved runs were scored; not independent inter-rater evidence. These runs were not rescored on v3.7, and v3.7 changes no score.
+> **Superseded 1 Nov 2026 (status of the labels).** The status line above describes the state when these runs were scored: AI-drafted labels, not yet reviewed. The owner has since gone through the gold cases in the review interface and recorded a decision on every one (gold v3.7). The labels are AI-drafted, signed off by the owner; one reviewer, after AI pre-review and after the saved runs were scored; not independent inter-rater evidence. These runs were not rescored on v3.7, and v3.7 changes no score.
 
 Code: `src/labourlens/retrieval/dense.py`, `experiments_dense.py`; run with `uv run labourlens dense-exp --split dev`. Raw per-case outputs: `experiments/runs/dev-dense-E5|E6|E7/`; summary table: `experiments/runs/dev-dense-SUMMARY.md`. Tests: `tests/retrieval/test_dense.py`.
 

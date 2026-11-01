@@ -25,7 +25,7 @@ Labelling and verdict streams together (gold, held-out v2, saved answers, source
 
 ## Status wording that is true today
 
-- Gold labels were drafted by AI. The owner then went through them in the review interface and recorded a decision on every case, answer verdict and source check (403 items). Most of these were quick confirmations of the AI-suggested label rather than independent re-derivations, so the labels are best read as AI-drafted and owner-confirmed. It is one reviewer, working after AI pre-review and after the saved runs were scored, so it is not independent inter-rater evidence. The page stamps `owner_manual` for any click or key; the pending pack has no Agree-with-AI control and no manual-only filter.
+- Gold labels were drafted by AI. The owner then went through them in the review interface and signed off on every case, answer verdict and source check (four separate streams, 403 items in total: 268 gold questions, 65 held-out v2 questions, 40 saved system answers and 30 source checks; only the first two are questions). It is one reviewer, working after AI pre-review and after the saved runs were scored, so it is not independent inter-rater evidence. The page stamps `owner_manual` for any click or key; the pending pack has no Agree-with-AI control and no manual-only filter.
 - AI-only streams (threat suite, judge validation, audits, document reviews) are never called human review.
 
 ## Technical facts about the recorded decisions

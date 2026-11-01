@@ -147,17 +147,16 @@ function failures(m) {
 
 function reviewProcess() {
   const steps = [
-    ['Pre-review', 'An AI drafted 268 gold cases. Three AI pre-review passes checked label policy, evidence and partial-evidence placement.'],
-    ['Independent AI passes', 'Two blind AI reviews: a 71-case gold review (70 of 71 labels kept) and a 40-case answer review (28 correct, 6 partly, 6 incorrect).'],
+    ['AI pre-review', 'Three separate review passes came from the same model family, not three different models.'],
+    ['Blind AI checks', 'The checks covered a 71-case gold review and a failure-enriched 40-answer sample. A third pass broke ties.'],
     ['Adjudication', 'The owner decided label policy and the post-run edits (D-031, D-034, D-035) in writing.'],
-    ['Tie-break', 'Where earlier AI passes disagreed, a third AI pass broke the tie. 28 owner agreements followed that tie-break.'],
-    ['Owner review', 'Labels were drafted by AI. I went through them in the review interface and recorded a decision on every case, answer verdict and source check (403 items). Most were quick confirmations of the suggested label. One reviewer, after AI pre-review and after the runs were scored.']
+    ['Human reviewed', 'I signed off every case, answer verdict and source check, in four separate streams. This was one human reviewer, after the AI passes and saved runs; it is not inter-rater evidence.']
   ];
   const ol = el('ol', 'pr-pipeline');
   steps.forEach(([t, x], i) => { const li = el('li', 'pr-pipe-step'); li.append(el('span', 'pr-pipe-no', String(i + 1)), el('strong', '', t), el('span', '', x)); ol.append(li); });
   const wrap = el('div');
   wrap.append(ol, grid('pr-split', callout({tone: 'note', title: 'What it shows', items: ['Where an AI suggestion existed, my decision matched it in 198 of 198 gold cases, 61 of 64 held-out v2 cases, 38 of 39 answers and 29 of 30 source checks.', 'Labels are unchanged in v3.7. Four change-clicks (DEV-034, DEV-202, DEV-626, DEV-627) are recorded and not applied under the out-of-period policy.', '30 source checks: 18 match, 12 minor differences.']}),
-    callout({tone: 'warn', title: 'What it does not show', items: ['One reviewer, after the AI drafts and after the runs were scored. It is not independent inter-rater evidence.', 'Agreement with the AI suggestion is not accuracy.', 'No blinded annotation. No second independent human.']})), evi('docs/human-review/owner-review-final-summary.md \u00b7 docs/human-review/review-inventory.md'));
+    callout({tone: 'warn', title: 'What it does not show', items: ['One human reviewer confirmed AI-drafted labels after the runs; three AI review passes came from the same model family. This is not independent inter-rater evidence.', 'Agreement with the AI suggestion is not accuracy.', 'No second human reviewer or blinded human annotation.']})), evi('docs/human-review/owner-review-final-summary.md · docs/human-review/review-inventory.md'));
   return wrap;
 }
 
@@ -202,13 +201,13 @@ export function renderWork(m, ctx) {
     stat({value: rows.length, label: 'Experiment groups', note: 'Retrieval, agent, held-out, safety, models', src: 'report.json \u203a evaluation, retrieval, security'}),
     stat({value: notAdopted, label: 'Not adopted', note: 'Retained in the log', src: 'registry in ch-work.js'}),
     stat({value: inconclusive, label: 'Inconclusive', tone: 'warn', src: 'registry in ch-work.js'}));
-  ch.body.append(callout({tone: 'warn', title: 'Corpus versions', items: ['Registered results (A1-A5, held-out, pre-guard threat suites) ran on corpus v1, 13,484 passages. The frozen v1 and v2 results are retained.', 'The X1 extraction experiments and the T-I06 post-fix run used corpus v2, 15,915 passages.', 'Corpus v3 (85 sources, 52,020 observations, 16,419 passages) has three measured evaluations: the X2 development regression check, the e2efix threat run and held-out v2 (65 questions, evidence-disjoint at source level only), plus the tool set v2 runs (X3 and V2post, not adopted).', 'The Droplet serves corpus v3 and post-fix code (commit c297146; /healthz fingerprint d402120f6f8f; 16,419 passages; 1,847 chunks), as reported by the owner.'], src: 'README.md \u203a Corpus versions \u00b7 docs/evaluation-report.md'}));
+  ch.body.append(callout({tone: 'warn', title: 'Document builds', items: ['The system, the live site and the final held-out test all use the current document build (v3: 85 sources, 16,419 passages). Earlier builds are kept only so older results can be reproduced; do not compare numbers across builds.', 'Registered results (A1-A5, held-out, pre-guard threat suites) ran on corpus v1, 13,484 passages. The frozen v1 and v2 results are retained.', 'The X1 extraction experiments and the T-I06 post-fix run used corpus v2, 15,915 passages.', 'Corpus v3 (85 sources, 52,020 observations, 16,419 passages) has three measured evaluations: the X2 development regression check, the e2efix threat run and held-out v2 (65 questions, evidence-disjoint at source level only), plus the tool set v2 runs (X3 and V2post, not adopted).', 'The Droplet serves corpus v3 and post-fix code (commit c297146; /healthz fingerprint d402120f6f8f; 16,419 passages; 1,847 chunks), as reported by the owner.'], src: 'README.md \u203a Corpus versions \u00b7 docs/evaluation-report.md'}));
   ch.body.append(stats);
   const s1 = section('Milestones recorded in the progress log'); s1.append(timeline(m)); ch.body.append(s1);
   const s2 = section(`${rows.length} experiment groups; one factor changed in each, except the X2 regression check`, ['Sort by any column. Open a row for its configuration.']); s2.append(registryTable(rows, ids)); ch.body.append(s2);
   const s3 = section(`${decisions} decisions, searchable by id or text`, ['Alternatives appear only where the decision recorded them.']); s3.append(decisionLog(m, rows)); ch.body.append(s3);
   const s4 = section('Six problems found during the work; T-I06 not shown stable across runs'); s4.append(failures(m)); ch.body.append(s4);
-  const s5 = section('All 403 labelling items: one reviewer, mostly quick confirmations'); s5.append(reviewProcess()); ch.body.append(s5);
+  const s5 = section('Human review: four separate streams'); s5.append(reviewProcess()); ch.body.append(s5);
   const s6 = section('Cost: recorded spend by phase'); s6.append(ledger(m).root); ch.body.append(s6);
   return ch.root;
 }

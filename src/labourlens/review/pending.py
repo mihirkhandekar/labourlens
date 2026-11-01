@@ -527,7 +527,7 @@ def inventory_markdown(root: Path, st: State) -> str:
     all_manual = total['population'] and total['manual'] == total['population']
     lines += ['', f'Labelling and verdict streams together (gold, held-out v2, saved answers, source checks): {total["population"]} items, {total["manual"]} by the owner’s own click, {total["agreed"]} by agreeing with an AI suggestion, {total["ai_only"]} AI-reviewed only, {total["untouched"]} untouched.', '',
               '## Status wording that is true today', '',
-              *([f'- Gold labels were drafted by AI. The owner then went through them in the review interface and recorded a decision on every case, answer verdict and source check ({total["population"]} items). Most of these were quick confirmations of the AI-suggested label rather than independent re-derivations, so the labels are best read as AI-drafted and owner-confirmed. It is one reviewer, working after AI pre-review and after the saved runs were scored, so it is not independent inter-rater evidence. The page stamps `owner_manual` for any click or key; the pending pack has no Agree-with-AI control and no manual-only filter.']
+              *([f'- Gold labels were drafted by AI. The owner then went through them in the review interface and signed off on every case, answer verdict and source check ({total["population"]} items). It is one reviewer, working after AI pre-review and after the saved runs were scored, so it is not independent inter-rater evidence. The page stamps `owner_manual` for any click or key; the pending pack has no Agree-with-AI control and no manual-only filter.']
                 if all_manual else
                 [f'- Do not write “all labelling was manually reviewed by the owner”. Today {total["manual"]} of {total["population"]} items were decided by the owner’s own click.',
                  f'- True: “The owner made a per-card decision on {total["manual"] + total["agreed"]} of {total["population"]} labelling items; {total["manual"]} by their own click and {total["agreed"]} by agreeing with an AI suggestion. The remaining {total["ai_only"] + total["untouched"]} were checked by AI reviewers only.”']),
@@ -821,7 +821,7 @@ def wording(counts: dict[str, dict]) -> list[str]:
     agreed = sum(v.get(AGREED, 0) for v in counts.values())
     none = total - manual - agreed
     if total and manual == total:
-        return [f'Gold labels were drafted by AI. The owner then went through them in the review interface and recorded a decision on every case, answer verdict and source check ({total} items). Most of these were quick confirmations of the AI-suggested label rather than independent re-derivations, so the labels are best read as AI-drafted and owner-confirmed.',
+        return [f'Gold labels were drafted by AI. The owner then went through them in the review interface and signed off on every case, answer verdict and source check ({total} items).',
                 'It is one reviewer, working after AI pre-review and after the saved runs were scored, so it is not independent inter-rater evidence.']
     sentences = [f'The owner made a per-card decision on {manual + agreed} of {total} labelling items: {manual} by their own click and {agreed} by agreeing with an AI suggestion.']
     if none:

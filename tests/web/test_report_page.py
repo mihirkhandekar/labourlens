@@ -16,19 +16,16 @@ STATIC = WEB / "static"
 REPORT_JS = [STATIC / "js" / name for name in ("home.js", "report-story.js", "report-kit.js", "report-pool.js", "report-process.js")]
 REPORT_CSS = STATIC / "css" / "report.css"
 STORY = (STATIC / "js" / "report-story.js").read_text(encoding="utf-8")
+GRAPHICS = (STATIC / "presentation" / "graphics.js").read_text(encoding="utf-8")
 HOME = (STATIC / "js" / "home.js").read_text(encoding="utf-8")
 
 REQUIRED_STEPS = {
-    "about": "About me", "assignment": "The assignment", "problem": "Why this problem", "system": "The system", "data": "The data",
+    "about": "About me", "assignment": "The assignment", "problem": "Why this problem", "system": "The Agentic System", "data": "The data",
     "eda": "What the data showed", "hard": "Hard parts", "models": "Models", "retrieval": "Retrieval", "agent": "The agent",
     "tools": "Tools and MCP", "safety": "Safety", "review": "Human review", "ops": "Cost and deployment", "process": "How I built it",
-    "limits": "Limits", "coverage": "Coverage", "run": "Run it",
+    "limits": "Limits", "run": "Run it",
 }
-REVIEW_SENTENCE = (
-    "Gold labels were drafted by AI. I went through them in the review interface and recorded a decision on every case, "
-    "answer verdict and source check (403 items). Most were quick confirmations, so read the labels as AI-drafted and owner-confirmed. "
-    "One reviewer, after AI pre-review and after the runs were scored."
-)
+REVIEW_SENTENCE = "I signed off four separate review streams"
 
 
 def _steps():
@@ -60,28 +57,72 @@ def test_nav_is_text_only_with_no_numbering():
         assert key in HOME
     css = REPORT_CSS.read_text(encoding="utf-8")
     assert not re.search(r"\.rp-step[^{]*::(before|after)", css), "step links must not carry markers"
+    assert "a.offsetLeft - 2" in HOME
+    assert "scroll-margin-top: 64px" in css
+    assert ".rp.view.enter { animation: none; }" in css
 
 
-def test_hero_has_name_pitch_and_two_buttons():
+def test_hero_has_name_pitch_and_three_buttons():
     assert "Mihir Khandekar" in HOME
-    assert "Singapore labour statistics, answered with a source you can check." in HOME
+    assert "Singapore AI Agent for Workforce Policy Researchers" in HOME
+    assert "A bounded research agent for Singapore workforce policy" in HOME
+    assert "Singapore labour statistics, answered with a source you can check." not in HOME
+    assert "GenAI Engineer assessment" not in HOME
+    assert "heroCard" not in HOME
     assert "cta('Open the workbench', '/workbench'" in HOME and "cta('View the deck', '/deck'" in HOME
-    assert HOME.count("cta(") == 2
+    assert "https://github.com/mihirkhandekar/labourlens" in HOME
+    assert "Private repository shared with reviewers." in HOME
+    assert HOME.count("cta(") == 3
+    assert "repositoryButton()" in STORY
+    assert "Private repository shared with reviewers." in STORY
+
+def test_report_copy_explains_transit_system_and_sources():
+    assert "Public transport was not among the recorded alternatives" in STORY
+    assert "so I did not evaluate transit data" in STORY
+    assert "The Agentic System" in STORY
+    assert "MCP exposes read only statistics and source metadata" in STORY
+    assert "Evaluation measures retrieval, expected answer behaviour and safety on development and held-out cases" in STORY
+    assert "Structured + unstructured data" in STORY
+    assert "Statistics give the numbers and reports give the explanations" not in STORY
+    assert "One answer, each part cited" not in STORY
+    assert "Plus written deliverables" not in STORY
+    assert "Why-questions get report text or no answer" not in STORY
+    assert "docs/experiments/m7-extraction-fixes.md" in STORY
 
 
-def test_assignment_weights_are_the_seven_rubric_weights():
-    for weight, name in [("25%", "Evaluation and error analysis"), ("20%", "RAG and GenAI design"), ("15%", "GenAI concepts and MCP"),
-                         ("10%", "Problem framing and data science"), ("10%", "Agent workflow"), ("10%", "Responsible AI"),
-                         ("10%", "Reproducibility and communication")]:
-        assert f"['{weight}', '{name}']" in STORY, name
+def test_technical_panels_explain_methods_prompts_and_charts():
+    for excerpt in ("k1 1.5 and b 0.75", "text-embedding-3-large", "reciprocal rank", "top 30", "95% bootstrap intervals",
+                    "prompts/rerank_v1.md", "prompts/planner_v1.md", "calculate_from_text_values", "prompts/planner_v3.md",
+                    "prompts/answer_v5.md", "Direct prompt injection", "Poisoned report passage", "Sensitive-data requests",
+                    "Unsafe tool use", "Unsupported claims", "MCP server failure", "Wilson interval"):
+        assert excerpt in STORY, excerpt
+    assert "24 development questions and reports hit@5 and hit@10" in STORY
+    assert "128 development questions and hit@8" in STORY
+    assert "Both use corpus v1, but the case set and metric differ" in STORY
+    assert "How to read this" in STORY and "Source: report data" in STORY
 
 
 def test_review_wording_is_the_honest_wording_and_has_no_timing():
     assert REVIEW_SENTENCE in STORY
+    assert "quick confirmation" not in STORY and "owner-confirmed" not in STORY and "I confirmed all 403" not in STORY
+    for phrase in ("268 gold questions (237 development and 31 original held-out", "65 held-out v2 questions",
+                   "40 saved system answers", "30 source checks", "Only the first two are questions",
+                   "three separate AI review passes from the same model family", "A later diagnostic used those same 65, not a new set",
+                   "Human review was done by me alone", "not independent inter-rater evidence",
+                   "25 cases", "15. Their results are not independent", "signed before the run", "not for tuning"):
+        assert phrase in STORY, phrase
+    assert "One reviewer" not in STORY
+    assert "V2post" not in STORY
     text = "".join(path.read_text(encoding="utf-8") for path in REPORT_JS)
     for banned in ("card by card", "each by my own click", "own clicks", "per card", "dwell", "minutes", "seconds per item", "quick clicks"):
         assert banned not in text, banned
 
+
+def test_band_headings_do_not_expose_internal_run_labels():
+    titles = re.findall(r"id: '[a-z]+', title: '([^']+)'", STORY)
+    assert titles
+    assert not any(re.search(r"\b(?:A[1-5]|X[1-3]|R[0-3]|V2post)\b", title) for title in titles)
+    assert "coverage" not in _steps()
 
 def test_effort_was_not_varied_is_stated_plainly():
     assert "I did not vary reasoning effort." in STORY
@@ -158,3 +199,6 @@ def test_every_number_the_copy_reads_is_in_report_json():
             assert any(row["id"] == f"experiments/eval/agent-{run}/{model}" for row in report["evaluation"]["rows"]), (run, model)
     assert {"compared_datasets", "identical_datasets", "matching_refusals", "different_outputs"} <= set(report["mcp"]["metrics"])
     assert report["security"]["rows"][0]["metrics"]["n_scored"] > 0
+    final_threat = next(row for row in report['security']['e2efix']['rows'] if row['label'] == 'gpt-6-luna')['metrics']
+    assert final_threat['passed'] <= final_threat['n_scored']
+    assert set(final_threat['by_category']) == {'direct_injection', 'sensitive_data', 'unsafe_tool_use', 'unsupported_claims', 'indirect_injection_passage', 'mcp_server_failure'}
