@@ -140,3 +140,20 @@ Coverage checked by the build (exact first periods): ULC 1980-Q1 to 2026-Q2; val
 - Source checks: the owner decided 30 items (passage extraction and statistical rows) by their own click on 1 Nov 2026, after AI pre-review. This is one person's review, not independent verification of every value. Sheets and summaries are in `docs/human-review/`.
 - Coverage is one snapshot per source, so revision tracking is baseline-only until a second fetch is made.
 - A fresh clone has the manifest, the committed dataset snapshots and the processed tables, but not the PDFs, passages, indexes or the three v3 dataset CSVs. `uv run pytest -q` skips corpus tests there; `labourlens build` stops with a message naming the absent raw file, because a rebuild needs the local corpus.
+
+## 9. Open licence items and what the rights scan covers
+
+**Derived rows from the three assumed-licence datasets are committed.** `data/processed/observations.parquet` holds 8,358 normalised rows from `unit_labour_cost_index_quarterly` (4,836), `value_added_per_worker_quarterly` (3,408) and `avg_weekly_paid_hours_quarterly` (114). Only their raw CSVs are kept out of git. The parquet file's hash is pinned in the held-out v2 freeze record, so the rows were not removed. If the licence turns out not to be the Open Data Licence, the rows are the first thing to remove, with a new freeze note.
+
+Unresolved items, in one place:
+
+1. The three datasets above: licence assumed, not read from the dataset page.
+2. For the 33 datasets marked verified, the Open Data Licence text was read, but no per-dataset licence field exists in the API, so no dataset page was read for the label (section 4).
+3. 22 MOM HTML releases: rights unresolved; local-only.
+4. The MTI 2026-Q2 feature PDF: its own notice was not read; local-only.
+5. `mom-wage-practices2025` and `mom-nwc-lower-wage2025`: notice to be re-confirmed on the file; local-only.
+6. The repository licence is stated in `LICENSE`; data, fonts and MOM/MTI material keep their own terms.
+
+**Contact fields.** data.gov.sg dataset metadata lists named officer email addresses. They were replaced with `redacted@mom.gov.sg` in the committed metadata files on this branch. No hash covers those files (checked: none of their SHA-256 values appears in any tracked file), and the CSV hashes are unchanged. The generic `feedback@data.gov.sg` address is kept.
+
+**Rights-scan scope.** `labourlens rights-scan` compares tracked text files with the local MOM/MTI passages in `data/passages/`. It cannot run without them: in a clone it prints `NOT CHECKED` (and exits 2 with `--require-corpus`). It skips binary files (Parquet, PNG, fonts) and files over 5 MB, matches exact words only (a paraphrase is not detected) and does not scan paths in `specs/rights-scan-allowlist.txt`. Those paths are dataset and source records, frozen gold files and frozen run outputs; their longest matches are publisher legal notices (18 words), dataset definitions under the Open Data Licence (78 words), document titles (16 words) and, in the signed held-out v2 gold file, one 7-word survey statistic phrase. Over-long runs found in committed judge and review outputs were cut to six words after scoring; counts are in `experiments/rights-truncation-sidecar.json`, so those files are no longer byte-identical to the run that produced them.

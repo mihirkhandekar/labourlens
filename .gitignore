@@ -4,6 +4,7 @@
 # Private to owner (interview prep, scratch research) — never shared with reviewers
 study/
 private/
+prompts/meta/
 
 # Raw downloads; MOM report PDFs are all-rights-reserved (see docs/decisions.md D-001)
 data/raw/
@@ -39,3 +40,5 @@ data/snapshots/unit_labour_cost_index_quarterly/
 data/snapshots/value_added_per_worker_quarterly/
 data/snapshots/avg_weekly_paid_hours_quarterly/
 artifacts/screenshots-pending/
+
+artifacts/screenshots/

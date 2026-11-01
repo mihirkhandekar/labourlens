@@ -117,19 +117,25 @@ def scan(files: list[str], shingles: set[int], root: Path = paths.ROOT, allow: l
     return hits
 
 
-def run(passages_dir: Path | None = None, root: Path | None = None, files: list[str] | None = None) -> int:
+def run(
+    passages_dir: Path | None = None,
+    root: Path | None = None,
+    files: list[str] | None = None,
+    require_corpus: bool = False,
+) -> int:
     passages_dir = passages_dir or paths.PASSAGES
     root = root or paths.ROOT
     if not passages_dir.exists() or not any(passages_dir.glob("*.jsonl")):
-        print(f"rights-scan: {passages_dir} absent; skipped (nothing to compare against)")
-        return 0
+        print(f"rights-scan: NOT CHECKED. {passages_dir} is absent, so there is no source text to compare against.")
+        print("rights-scan: the real scan needs the private local corpus; this result is not a pass.")
+        return 2 if require_corpus else 0
     shingles = build_shingles(passages_dir)
     allow = load_allowlist() if root == paths.ROOT else load_allowlist(root / "specs" / "rights-scan-allowlist.txt")
     hits = scan(files if files is not None else tracked_files(root), shingles, root, allow)
     for h in sorted(hits, key=lambda h: (h.path, h.line)):
         print(f"{h.path}:{h.line}: verbatim run of {h.run_words} words (limit {SHINGLE - 1})")
     by_file = len({h.path for h in hits})
-    print(f"rights-scan: {len(hits)} hit(s) in {by_file} file(s); allowlisted globs: {len(allow)}")
+    print(f"rights-scan: {len(hits)} hit(s) in {by_file} file(s) with hits; allowlisted globs: {len(allow)}")
     return 1 if hits else 0
 
 

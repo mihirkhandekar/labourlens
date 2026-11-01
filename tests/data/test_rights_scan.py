@@ -41,7 +41,8 @@ def test_allowlist_and_missing_passages(tmp_path, capsys):
     (tmp_path / "specs" / "rights-scan-allowlist.txt").write_text("a.md | legal notice\n")
     assert rs.run(d, tmp_path, ["a.md"]) == 0
     assert rs.run(tmp_path / "nope", tmp_path, ["a.md"]) == 0
-    assert "skipped" in capsys.readouterr().out
+    assert "NOT CHECKED" in capsys.readouterr().out
+    assert rs.run(tmp_path / "nope", tmp_path, ["a.md"], require_corpus=True) == 2
 
 
 def test_allowlist_requires_reason(tmp_path):

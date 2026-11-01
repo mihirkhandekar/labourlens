@@ -100,7 +100,8 @@ def main(argv: list[str] | None = None) -> int:
     serve = sub.add_parser("serve", help="serve the presentation and authenticated live demo")
     serve.add_argument("--host", default="127.0.0.1")
     serve.add_argument("--port", type=int, default=8000)
-    sub.add_parser("rights-scan", help="fail if tracked files quote more than six consecutive words of any local MOM/MTI passage")
+    rs = sub.add_parser("rights-scan", help="fail if tracked files quote more than six consecutive words of any local MOM/MTI passage")
+    rs.add_argument("--require-corpus", action="store_true", help="exit 2 instead of 0 when the local passages needed for comparison are absent")
     sub.add_parser("revisions", help="report historical-value changes between dataset snapshots")
 
     t = sub.add_parser("trace", help="print provenance for an observation_id or passage_id")
@@ -275,7 +276,7 @@ def main(argv: list[str] | None = None) -> int:
     if args.cmd == "rights-scan":
         from labourlens.data import rights_scan
 
-        return rights_scan.run()
+        return rights_scan.run(require_corpus=args.require_corpus)
     if args.cmd == "revisions":
         from labourlens.data import revisions
 

@@ -10,7 +10,7 @@ experiments/gold/heldout_v2_draft.jsonl | pinned hash in FREEZE.md: section head
 experiments/eval/agent-dev-A1/gpt-5.6-luna.cases.jsonl | frozen run output referenced by report.json: one section heading
 docs/human-review/gold-review.md | generated from pinned draft_cases.jsonl: official category names in question text
 experiments/gold/archive/* | byte-exact archived gold versions with pinned hashes (same headings/category names as draft_cases.jsonl)
-experiments/gold/heldout_v2_v1.jsonl | signed frozen gold (hash in FREEZE.md): two evidence locator fields carry a 7-word section heading
+experiments/gold/heldout_v2_v1.jsonl | signed frozen gold (hash in FREEZE.md): two evidence locator fields carry a 7-word run that is a survey statistic phrase, not a section heading; kept because the file is signed and must not change
 experiments/gold/gold_v3.7.jsonl | gold v3.7 derived from pinned v3.6 (same locator headings and category names); hash recorded in CHANGELOG
 experiments/gold/gold_v3.7-review-log.jsonl | review log copies the question text and locator headings from pinned gold
 experiments/eval/agent-dev-X3/gpt-5.6-luna.cases.jsonl | frozen X3 run output: one section heading echoed by the model (same class as the A1 entry)
