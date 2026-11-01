@@ -251,7 +251,7 @@ body:has(dialog[open]) .nav-wrap { opacity: 0; pointer-events: none; transition:
 .sources > h3 { font: 600 0.7rem var(--font-mono); letter-spacing: 0; text-transform: none; color: var(--muted); }
 .drawer-label { font-weight: 600; font-size: 1rem; }
  /* Full-screen research workspace */
- .answer-region .answer-summary { font-size: clamp(1.35rem, 2.2vw, 1.8rem); max-width: none; overflow-wrap: anywhere; }
+.answer-region .answer-summary { font-size: clamp(1.05rem, 1.5vw, 1.3rem); line-height: 1.35; font-weight: 600; max-width: none; overflow-wrap: anywhere; margin: 16px 0 18px; }
  html:has(.workbench-root) { height: 100dvh; overflow: hidden; }
  body:has(.workbench-root) { height: 100dvh; min-height: 0; overflow: hidden; }
  .standalone-workbench.workbench-root { height: 100dvh; min-height: 0; max-width: none; padding: 0; overflow: hidden; }
