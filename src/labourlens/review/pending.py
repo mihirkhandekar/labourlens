@@ -61,7 +61,7 @@ J10_FINAL_OPTIONS = {'accept_limits': 'Accept the gaps, with the limits disclose
 FAMILY_ORDER = ('factual_lookup', 'numerical_comparison', 'cross_source_synthesis', 'revision_conflict', 'ambiguity_insufficient_causal', 'adversarial')
 AI_FILE_GLOBS = ('experiments/gold/ai-review*/*.jsonl', 'experiments/gold/independent-ai-review*.md', 'experiments/human-review-sample/*.md',
                  'docs/human-review/ai-adjudication.md', 'docs/human-review/ai-verification-of-pre-reviews.md',
-                 'private/human-review/tiebreak/*.jsonl', 'private/human-review/heldout-v2-ai/*.jsonl')
+                 'private/human-review/tiebreak/*.jsonl', 'private/human-review/heldout-v2-ai/*.jsonl', 'private/human-review/pending-ai/Pend*.jsonl')
 AI_DEV_NOTE = 'These AI reviews looked at an earlier draft of the case; some concerns were fixed afterwards (see the gold changelog). Check whether a concern still applies.'
 
 
@@ -177,6 +177,44 @@ def _flat(value) -> str:
     return json.dumps(value, ensure_ascii=False)
 
 
+FRESH_DIR = 'private/human-review/pending-ai'
+FRESH_LABEL = 'Fresh blind review 2026-11-01'
+FRESH_FIELDS = {'case_id', 'verdict', 'confidence', 'flags', 'reason'}
+FRESH_VERDICTS = ('approve', 'change_label', 'reject')
+
+
+def load_fresh(root: Path) -> dict[str, list[dict]]:
+    """The six fresh blind reviews (two per dev case), read strictly if present. They are AI opinion only."""
+    out: dict[str, list[dict]] = {}
+    for name in sorted(glob.glob(str(Path(root) / FRESH_DIR / 'Pend*.jsonl'))):
+        reviewer = Path(name).stem
+        for number, rec in enumerate(rows(Path(name)), 1):
+            where = f'{reviewer} line {number}'
+            if not FRESH_FIELDS <= set(rec) <= FRESH_FIELDS | {'suggested_behavior'}:
+                raise ValueError(f'{where}: unexpected fields')
+            if rec['verdict'] not in FRESH_VERDICTS or not isinstance(rec['flags'], list) or not all(isinstance(f, str) for f in rec['flags']):
+                raise ValueError(f'{where}: invalid verdict or flags')
+            if rec['verdict'] == 'change_label' and rec.get('suggested_behavior') not in BEHAVIOURS:
+                raise ValueError(f'{where}: change_label needs a valid suggested_behavior')
+            out.setdefault(rec['case_id'], []).append({**rec, 'reviewer': reviewer})
+    return out
+
+
+def fresh_view(records: list[dict]) -> dict:
+    """The net of the fresh reviewers for one case, plus the flags that need a look (anything other than 'other')."""
+    votes = [f'change to {r["suggested_behavior"]}' if r['verdict'] == 'change_label' else r['verdict'] for r in records]
+    if len(votes) == 2 and votes[0] == votes[1]:
+        net = f'both {votes[0]}' if votes[0] == 'approve' else f'both {votes[0]}'
+    elif len(votes) == 2:
+        net = 'split (' + ' / '.join(votes) + ')'
+    else:
+        net = f'{len(votes)} reviewer(s): ' + ', '.join(votes)
+    flags = sorted({f for r in records for f in r['flags'] if f != 'other'})
+    change = any(r['verdict'] != 'approve' for r in records)
+    return {'net': net, 'flags': flags, 'change': change, 'reviewers': [r['reviewer'] for r in records],
+            'votes': {r['reviewer']: v for r, v in zip(records, votes)}}
+
+
 def gold_dev_infos(root: Path, ids: list[str]) -> dict[str, dict]:
     """AI view of gold cases from the saved review files. Runs no AI. A case no file covers says so."""
     per_case: dict[str, list[dict]] = {}
@@ -196,6 +234,16 @@ def gold_dev_infos(root: Path, ids: list[str]) -> dict[str, dict]:
             confidence = r.get('confidence')
             per_case.setdefault(r['case_id'], []).append({'reviewer': label, 'verdict': verdict, 'kind': kind, 'confidence': str(confidence) if confidence is not None else '',
                                                           'reason': text or ('no issue raised' if kind == 'support' else 'see the review file')})
+    fresh = load_fresh(root)
+    for cid, records in fresh.items():
+        for r in records:
+            if r['verdict'] == 'approve':
+                kind = 'concern' if any(f != 'other' for f in r['flags']) else 'support'
+            else:
+                kind = 'dispute'
+            verdict = f'change to {r["suggested_behavior"]}' if r['verdict'] == 'change_label' else r['verdict']
+            flags = f'[flags: {", ".join(r["flags"])}] ' if r['flags'] else ''
+            per_case.setdefault(cid, []).append({'reviewer': f'{FRESH_LABEL}: {r["reviewer"]}', 'verdict': verdict, 'kind': kind, 'confidence': r['confidence'], 'reason': flags + r['reason'], 'fresh': True})
     adjudication = Path(root) / 'docs/human-review/ai-adjudication.md'
     flagged: dict[str, str] = {}
     if adjudication.exists():
@@ -215,6 +263,16 @@ def gold_dev_infos(root: Path, ids: list[str]) -> dict[str, dict]:
         shown = [{'reviewer': o['reviewer'], 'confidence': o['confidence'] or 'n/a', 'verdict': o['verdict'], 'reason': o['reason']} for o in opinions]
         if note:
             summary += ' The AI adjudication marks this case as a judgement call for you (' + note.replace('NEEDS-HUMAN-JUDGEMENT', 'owner judgement') + ').'
+        view = fresh_view(fresh[cid]) if cid in fresh else None
+        if view:
+            lead = f'{FRESH_LABEL} (two reviewers): {view["net"]}.'
+            if view['change'] or view['flags']:
+                lead += ' NOTE: ' + ('they say to change the label. ' if view['change'] else '') + ('Flags: ' + ', '.join(view['flags']) + '. ' if view['flags'] else '') + 'Look at this card first.'
+            summary = lead + ' Earlier and fresh reviews together: ' + summary
+        if view and (view['change'] or view['flags']):
+            out[cid] = make_info('disagree', summary + ' ' + AI_DEV_NOTE, opinions=shown, risk=-2 if view['change'] else -1)
+            out[cid]['fresh'] = view
+            continue
         if counts['dispute']:
             out[cid] = make_info('disagree', summary + ' ' + AI_DEV_NOTE, opinions=shown, risk=0)
         elif counts['concern'] or note:
@@ -222,6 +280,8 @@ def gold_dev_infos(root: Path, ids: list[str]) -> dict[str, dict]:
         else:
             weak = 'Only one AI reviewer looked at this case. ' if len(opinions) == 1 else ''
             out[cid] = make_info('agree', summary + ' ' + weak + 'Suggestion: the label is fine.', 'approve', basis='ai_review_files', opinions=shown, risk=2 if len(opinions) == 1 else 3)
+        if view:
+            out[cid]['fresh'] = view
     return out
 
 
@@ -348,7 +408,7 @@ def inventory(root: Path, st: State) -> dict:
         s = Counter(st.gold_source(c['case_id']) or 'none' for c in cases)
         return s[MANUAL], s[AGREED], s['none']
 
-    gold_files = 'experiments/gold/ai-review/{base,a,b,c}.jsonl; experiments/gold/ai-review-2/{a,b}.jsonl; experiments/gold/ai-review-3/v3.jsonl; docs/human-review/ai-adjudication.md; private/human-review/tiebreak/'
+    gold_files = 'private/human-review/pending-ai/Pend{A,B}{1,2,3}.jsonl (fresh blind, two per dev case); experiments/gold/ai-review/{base,a,b,c}.jsonl; experiments/gold/ai-review-2/{a,b}.jsonl; experiments/gold/ai-review-3/v3.jsonl; docs/human-review/ai-adjudication.md; private/human-review/tiebreak/'
     gold_store = '`owner_review` on each record of `experiments/gold/draft_cases.jsonl` (reviewer, decision_source, date); full export in the private main export'
     m, a, n = tally(ho)
     row('Gold: original held-out cases (HO-001…031)', 'Is the expected behaviour, evidence and facts of each case right?', len(ho), m, a, 0, n, gold_files, gold_store,
@@ -720,6 +780,19 @@ def final_summary(root: Path, st: State, export: PendingExport, export_sha: str,
         lines += ['', '### J10 extraction gaps', '', '| Item | Your decision | Reason |', '|---|---|---|']
         for r in sorted(j10, key=lambda r: r.case_id):
             lines.append(f'| {r.case_id} | {r.decision} | {pack.md_cell(r.reason) if r.reason else ""} |')
+    fresh_rows = [(cid, info['fresh']) for (stream, cid), info in sorted(infos.items()) if stream == 'gold' and info.get('fresh')]
+    if fresh_rows:
+        decided = {r.case_id: r for r in export.results if r.stream == 'gold'}
+        flagged_rows = [(cid, f) for cid, f in fresh_rows if f['change'] or f['flags']]
+        lines += ['', f'## Fresh blind AI review of the development cases ({FRESH_LABEL}): AI opinion only', '',
+                  f'Two independent AI reviewers per case looked at {len(fresh_rows)} development cases before your review. Their verdicts are AI opinion, never human review, and were shown below each card for reference only. '
+                  f'Net: ' + ', '.join(f'{k} {v}' for k, v in sorted(Counter(f['net'].split(' (')[0] for _, f in fresh_rows).items())) + '.', '',
+                  '| Case | Fresh net | Flags other than “other” | Your decision | Source |', '|---|---|---|---|---|']
+        for cid, f in flagged_rows:
+            r = decided.get(cid)
+            lines.append(f'| {cid} | {f["net"]} | {", ".join(f["flags"]) or "none"} | ' + (f'{r.decision}' + (f' to {r.proposed_behavior}' if r.proposed_behavior else '') if r else 'not decided') + f' | {r.decision_source if r else "n/a"} |')
+        if not flagged_rows:
+            lines.append('| none | | | | |')
     lines += ['', '## Gold changes (post-hoc)', '', f'- Label changes: {", ".join(f"{i} {a} -> {b}" for i, a, b in report["changed"]) or "none"}.',
               f'- Cases removed: {", ".join(report["dropped"]) or "none"}.',
               f'- New file: `{GOLD_V37}`' + (f' (SHA-256 `{new_sha}`)' if new_sha else ' (not written in a dry run)') + '; older gold files are untouched.',

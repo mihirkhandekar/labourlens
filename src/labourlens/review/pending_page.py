@@ -20,7 +20,7 @@ SOURCE_OPTS = [{'v': 'matches', 'key': 'a', 'label': 'Matches'}, {'v': 'minor', 
 J10_OPTS = [{'v': 'accept', 'key': 'a', 'label': 'Accept this limitation'}, {'v': 'not_accept', 'key': 'x', 'label': 'Do not accept'}]
 J10_FINAL_OPTS = [{'v': 'accept_limits', 'key': 'a', 'label': P.J10_FINAL_OPTIONS['accept_limits']}, {'v': 'require_fixes', 'key': 'x', 'label': P.J10_FINAL_OPTIONS['require_fixes']},
                   {'v': 'inspect_more', 'key': 'm', 'label': P.J10_FINAL_OPTIONS['inspect_more']}]
-RISK_TEXT = {0: 'AI disagrees or raised a doubt', 1: 'needs a look (AI concern or judgement call)', 2: 'one AI reviewer or none', 3: 'AI reviewers agree'}
+RISK_TEXT = {-2: 'fresh AI reviewer says change the label: look first', -1: 'fresh AI reviewers flag a problem: look first', 0: 'AI disagrees or raised a doubt', 1: 'needs a look (AI concern or judgement call)', 2: 'one AI reviewer or none', 3: 'AI reviewers agree'}
 
 
 def options_for(card: dict) -> list[dict]:

@@ -267,3 +267,68 @@ def test_summary_and_inventory_do_not_quote_passages(root):
         assert 'Synthetic wording only' not in (root / rel).read_text()
     out = P.write_inventory(root)
     assert out == root / P.INVENTORY and 'Synthetic wording only' not in out.read_text()
+
+
+# ------------------------------------------------------------------ fresh blind reviews (AI opinion only)
+
+def write_fresh(root, spec):
+    """spec: {reviewer: [(case, verdict, behaviour, flags)]}"""
+    for reviewer, items in spec.items():
+        lines = []
+        for cid, verdict, behaviour, flags in items:
+            rec = dict(case_id=cid, verdict=verdict, confidence='high', flags=flags, reason='Synthetic fresh reason.')
+            if behaviour:
+                rec['suggested_behavior'] = behaviour
+            lines.append(json.dumps(rec))
+        put(root, f'{P.FRESH_DIR}/{reviewer}.jsonl', '\n'.join(lines) + '\n')
+
+
+FRESH = {
+    'PendA1': [('DEV-001', 'approve', None, []), ('DEV-005', 'change_label', 'abstain', ['evidence_missing']), ('DEV-004', 'approve', None, ['ambiguous_question']), ('DEV-008', 'approve', None, ['other'])],
+    'PendB1': [('DEV-001', 'approve', None, ['other']), ('DEV-005', 'change_label', 'abstain', ['evidence_missing']), ('DEV-004', 'approve', None, []), ('DEV-008', 'change_label', 'answer', [])],
+}
+
+
+def test_fresh_reviews_are_added_to_the_ai_block_and_sort_first(root):
+    before = P.pack_id(root, P.State(root))
+    write_fresh(root, FRESH)
+    st = P.State(root)
+    assert P.pack_id(root, st) != before  # the new files are hashed into the pack identity
+    cards = P.plan(root, st)
+    pending = [c for c in cards if (c['stream'], c['queue']) == ('gold', 'pending')]
+    first = [c['case_id'] for c in pending[:4]]
+    assert first[:3] == ['DEV-005', 'DEV-008', 'DEV-004']  # label changes first, then flagged cards
+    assert [c['risk'] for c in pending[:3]] == [-2, -2, -1]
+    info = {c['case_id']: c['ai'] for c in pending}
+    assert 'both change to abstain' in info['DEV-005']['text'] and 'Look at this card first' in info['DEV-005']['text']
+    assert info['DEV-005']['fresh']['change'] and info['DEV-005']['fresh']['flags'] == ['evidence_missing']
+    assert 'split (approve / change to answer)' in info['DEV-008']['text'] and info['DEV-008']['fresh']['change']
+    assert info['DEV-004']['fresh']['net'] == 'both approve' and info['DEV-004']['fresh']['flags'] == ['ambiguous_question'] and info['DEV-004']['risk'] == -1
+    assert info['DEV-001']['status'] == 'agree' and 'both approve' in info['DEV-001']['text'] and info['DEV-001']['risk'] >= 2  # an 'other' flag alone does not escalate
+    assert any(o['reviewer'].startswith('Fresh blind review 2026-11-01') for o in info['DEV-001']['opinions'])
+    soup = BeautifulSoup(PP.build_pending_page(root).read_text(), 'html.parser')
+    strip = soup.select_one('article[data-key="gold:DEV-005"] .aistrip').get_text()
+    assert 'Fresh blind review 2026-11-01 (two reviewers): both change to abstain' in strip and 'fresh AI reviewer says change the label' in soup.select_one('article[data-key="gold:DEV-005"]').get_text()
+    keys = [c['data-key'] for c in soup.select('article.card')]
+    assert keys.index('gold:DEV-005') < keys.index('gold:DEV-001') and not soup.select('[data-agree]')
+
+
+def test_fresh_files_are_validated_strictly(root):
+    put(root, f'{P.FRESH_DIR}/PendA1.jsonl', json.dumps(dict(case_id='DEV-001', verdict='change_label', confidence='high', flags=[], reason='x')) + '\n')
+    with pytest.raises(ValueError, match='suggested_behavior'):
+        P.load_fresh(root)
+    put(root, f'{P.FRESH_DIR}/PendA1.jsonl', json.dumps(dict(case_id='DEV-001', verdict='approve', confidence='high', flags=[], reason='x', surprise=1)) + '\n')
+    with pytest.raises(ValueError, match='unexpected fields'):
+        P.load_fresh(root)
+
+
+def test_final_summary_lists_fresh_reviews_as_ai_opinion_only(root):
+    write_fresh(root, FRESH)
+    st, cards, data = required_results(root)
+    code, _ = P.pending_ingest(write_export(root, data), write=True, root=root)
+    assert code == 0
+    text = (root / P.FINAL_SUMMARY).read_text()
+    assert 'Fresh blind AI review of the development cases (Fresh blind review 2026-11-01): AI opinion only' in text
+    assert '| DEV-005 | both change to abstain | evidence_missing | approve | owner_manual |' in text and '| DEV-001 |' not in text.split('Fresh blind AI review')[1].split('## Gold changes')[0]
+    assert 'never human review' in text
+    # an export built before the fresh files existed is rejected (different pack identity)
