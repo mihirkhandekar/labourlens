@@ -146,7 +146,10 @@ def review_sheet() -> str:
     cases = [json.loads(line) for line in f.read_text().splitlines() if line.strip()]
     reviewed = sum(c.get("review_status") == "owner_reviewed" for c in cases)
     L = ["# Gold set review sheet", "",
-         f"**Recorded owner review: {reviewed}/{len(cases)} cases.** Per-card owner actions may agree with AI suggestions; this is not independent inter-rater evidence.",
+         f"**State of `draft_cases.jsonl` (gold v3.6, frozen): {reviewed}/{len(cases)} cases carry an owner review record.** "
+         "This sheet is the 31 Oct 2026 state. The owner later decided all 268 cases by own click (1 Nov 2026), recorded as gold v3.7 "
+         "(provenance fields only, no label changed); see `docs/human-review/owner-review-final-summary.md`. "
+         "One reviewer, after AI pre-review and after the saved runs were scored, so this is not independent inter-rater evidence.",
          "Review remaining cases in two passes to avoid anchoring on the draft (D-017):",
          "**Pass 1** (question only): is the question realistic for a policy researcher, in scope, unambiguous as intended? Note any evidence you would expect, before reading the draft.",
          "**Pass 2** (draft): open each listed source at the locator and check the draft evidence and reference facts. Then fill the row in the results table.", "",

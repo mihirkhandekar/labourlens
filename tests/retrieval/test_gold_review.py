@@ -66,8 +66,8 @@ def test_v35_review_scope_and_owner_confirmed_labels():
 
 def test_generated_review_sheet_does_not_claim_unreviewed_or_independent():
     sheet = gold.review_sheet()
-    assert "45/268 cases" in sheet
     assert "not independent inter-rater evidence" in sheet
+    assert "gold v3.7" in sheet
     assert "not reviewed by a human" not in sheet
 
 

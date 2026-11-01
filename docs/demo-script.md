@@ -4,7 +4,7 @@
 
 **Where things are.** Report: `/` and its ten chapters plus Summary and Questions (`/#presentation`). Live workbench: **`/workbench`** (its own page; sign in with an access code). Live site: <https://labourlens.navig.me>, or `http://127.0.0.1:8000` locally. The Droplet serves corpus v3 and the post-fix code (commit `c297146`, `/healthz` fingerprint `d402120f6f8f`; owner-supplied, check `/healthz` before the talk). A local checkout with the full corpus serves the same corpus. Use one environment for the whole talk.
 
-**Review boundary.** Owner review is complete: all 403 labelling items (268 gold cases, 65 held-out v2 cases, 40 saved answers, 30 source checks) were decided by the owner's own click. The labels were AI-drafted first, and the review came after the saved runs were scored. It is one reviewer, so it is not independent inter-rater evidence. Gold v3.7 records this and changes no score; the saved evaluations were not rescored on it. Registered results ran on corpus v1; X1 ran on v2. Corpus v3 has three measured evaluations: the X2 development regression check, the `m7-e2efix-20261031` threat run and held-out v2 (65 cases, the first evidence-disjoint-source evaluation, only partly independent). For held-out v2 say: the pre-registered rule is met for the primary model; the effect is three cases; I would not call it a confirmed gain; the second model shows none. Say this once, early.
+**Review boundary.** The owner recorded a decision on all 403 labelling items (268 gold cases, 65 held-out v2 cases, 40 saved answers, 30 source checks) through the review interface (own clicks, with AI suggestions visible below each card). The first pack's answer cards were read at about 8 s each; the later rounds were confirmation passes at under a second per card, so they are confirmation, not independent verification of every label. The labels were AI-drafted first and the judge is an AI; the review came after the saved runs were scored. It is one reviewer, so it is not independent inter-rater evidence. Gold v3.7 records this and changes no score; the saved evaluations were not rescored on it. Registered results ran on corpus v1; X1 ran on v2. Corpus v3 has three measured evaluations: the X2 development regression check, the `m7-e2efix-20261031` threat run and held-out v2 (65 cases, the first evidence-disjoint-source evaluation, only partly independent). For held-out v2 say: the pre-registered rule is met for the primary model; the effect is three cases; I would not call it a confirmed gain; the second model shows none. Say this once, early.
 
 **Tool set v2 (say if asked about the arithmetic gap).** It was built and measured and is **not adopted**: on the development set it failed its pre-declared criteria for both models (false-answer cases 7 against 6; ungrounded numbers in cases that used the new tool). The held-out v2 improvement (`numerical_comparison` 3 to 12 of 14 for `gpt-6-luna`) is a post-freeze diagnostic on the cases that motivated it, optimistic by construction. The demo uses the default tool set; `calculate_change` in scenario 3 is unchanged.
 
@@ -14,7 +14,7 @@
 - `build-report` reads committed artefacts only. Check that the report's source count matches the manifest (85 sources: 36 datasets, 49 documents). If a page shows a different count, open the manifest, say the page is stale and carry on.
 - Live mode needs `OPENAI_API_KEY`, `LABOURLENS_ACCESS_CODES` (each at least 16 characters), `LABOURLENS_SESSION_SECRET` (at least 32) and `LABOURLENS_DEMO_ENABLED=true`. Never project their values. Each admitted request reserves $0.05 against the application budget; a provider-side spend cap is not verified, so watch the provider dashboard. Keep room for seven questions plus one preflight question, and do not use up the per-identity allowance in rehearsal.
 - Open `/workbench`, sign in, and confirm live mode with one approved factual question. A restart revokes sessions.
-- Have ready: `docs/architecture.md`, `docs/mcp-demo-transcript.md`, `artifacts/mcp-agent-demo.md` (**to be recorded; does not exist yet**, see scenario 8), `experiments/threats/SUMMARY.md`, `experiments/eval/` metrics, `experiments/heldout/paired.txt`, and a terminal for the scenario 7 command. An MCP HTTP demonstration also needs the private bearer token; stdio does not.
+- Have ready: `docs/architecture.md`, `docs/mcp-demo-transcript.md`, `artifacts/mcp-agent-demo.md` (recorded 1 Nov 2026, see scenario 8), `experiments/threats/SUMMARY.md`, `experiments/eval/` metrics, `experiments/heldout/paired.txt`, and a terminal for the scenario 7 command. An MCP HTTP demonstration also needs the private bearer token; stdio does not.
 - Close secret-bearing terminals and unredacted trace files. In the report, `P` is presenter mode and `?` lists shortcuts.
 
 ## Timed run sheet (total 20:00)
@@ -40,7 +40,7 @@ There is no slack in the 20 minutes. If a live answer fails, use its fallback be
 
 ## Live questions and case-backed fallbacks
 
-Preparation evidence: `experiments/gold/draft_cases.jsonl` and A3 luna6 saved scores. Each example had the listed status and `behavior_ok=true` in that historical run; that does not guarantee a repeat. All 268 gold cases were reviewed by the owner after those runs; that review changed no score.
+Preparation evidence: `experiments/gold/draft_cases.jsonl` and A3 luna6 saved scores. Each example had the listed status and `behavior_ok=true` in that historical run; that does not guarantee a repeat. The owner recorded decisions on all 268 gold cases after those runs (mostly confirmation passes); that review changed no score.
 
 1. **Q1 factual (DEV-105, answered):** "What was the seasonally adjusted overall unemployment rate in Q4 2024, not the resident or citizen rate?" Inspect the observation citation. **Fallback:** show DEV-105's saved score, labelled recorded.
 2. **Q2 mixed (DEV-306, answered):** "Using the quarterly dataset and final MOM commentary, how many employees were retrenched in 2026-Q1, and what sector or workforce-adjustment context accompanied that figure?" **Fallback:** DEV-306's tool and citation fields; if one evidence type is missing live, name the synthesis failure.
@@ -55,10 +55,10 @@ Keep restricted evidence text local. The committed score files hold behaviour an
 ## Evaluation: five numbers to speak (chapter 5)
 
 1. A3 development behaviour for `gpt-6-luna`: **0.903 [0.865, 0.937]**, n=237, against A1 **0.779 [0.728, 0.830]**, n=235. Different populations, so descriptive only.
-2. Over-abstention fell from **15.7% to 3.0%**.
+2. Over-abstention fell from **15.7% [11.1%, 20.4%] to 3.0% [0.8%, 5.1%]** (descriptive, different populations).
 3. Held-out (n=31): r3 **0.871 [0.742, 0.968]** against hybrid **0.710 [0.548, 0.839]**; paired gain **+16.1 points [0.0, 32.3]**, so not demonstrated.
-4. The held-out set shares evidence with development (25 of 31 cases), and one label changed after the run.
-5. Gold labels were AI-drafted first; the owner then decided all 268 by own click. One reviewer, after the runs, so not inter-rater evidence.
+4. The held-out set shares evidence with development (25 of 31 cases), and five of its cases changed after the freeze (HO-029, HO-027, HO-023, HO-004, HO-022).
+5. Gold labels were AI-drafted first and the judge is an AI. The owner recorded a decision on all 268 by own click; the later rounds were confirmation passes at under a second per card. One reviewer, after the runs, so not inter-rater evidence.
 
 Reference only (do not speak): luna5.6 R3/hybrid 0.839/0.742; A5 does not establish benefit; the X1 corpus-v2 rerun showed no measurable change (dev 0.886 versus 0.903); the X2 regression check of the served system (corpus v3, several factors changed together) gave dev behaviour 0.903 (`gpt-6-luna`) and 0.916 (`gpt-5.6-luna`), with `gpt-5.6-luna` cases with an ungrounded number at 0.165 [0.118, 0.215] versus 0.051 [0.025, 0.080] in A3 (the check was also widened); calculation correctness 75.0% [58.3, 91.7], n=24; p95 latency values are the nearest-rank figures in the metrics files; history of gold versions is in `docs/evaluation-report.md`.
 
@@ -81,7 +81,7 @@ Open the fixture alongside: `get_series` raises `TransientToolError` once, then 
 **Scenario 8: MCP discovery, invocation and grounded incorporation.** The live web app calls the statistics tools **directly**; it does not route the agent through MCP. So the live demo cannot show scenario 8 end to end. Show it in two parts and say which is which:
 
 1. *Recorded protocol execution, inspected live:* transcript §1 (initialize and discovery: nine tools, resources including a URI template, one prompt) and §2 (a validated retrenchment call returning rows with provenance).
-2. *Recorded MCP-backed agent answer:* `artifacts/mcp-agent-demo.md`. **TO BE RECORDED: this file does not exist yet.** The parent will run one retrenchment comparison with the agent's statistics backend set to the MCP client and save the answer, its citations and the MCP calls there. Until the file exists, do not claim the incorporation step; say scenario 8 is demonstrated only up to the tool result.
+2. *Recorded MCP-backed agent answer:* `artifacts/mcp-agent-demo.md`. Recorded on 1 Nov 2026 with `uv run labourlens mcp-agent-demo` (about $0.001; re-running makes paid model calls). The agent's statistics backend is the MCP client, so its `get_series` tool is one `get_statistic` call to the stdio server. The file holds the MCP call, the structured answer with citations and a deterministic comparison with the direct lookup (both figures match). It is one question and one run, not an evaluation; the agent uses MCP for `get_series` only.
 
 Fallback: §17's paired direct versus MCP results.
 
@@ -95,4 +95,4 @@ Fallback: §17's paired direct versus MCP results.
 - **Budget, busy or rate limit:** read the message, explain admission limits, switch to recordings. Do not raise limits or show keys.
 - **Unexpected answer:** read the status, inspect evidence and tool calls, name the unmet criterion. Do not edit gold labels or call a caveated answer an abstention.
 - **Page or artefact mismatch:** stop using the stale headline and open the saved artefact. Static chapters make no live model calls.
-- **Review or generalisation question:** "The owner decided every gold case, held-out v2 case, saved answer and source check by own click. That is one reviewer, after AI pre-review and after the runs were scored, so it is not blinded or independent. The held-out comparison is inconclusive and shares evidence with development, so it supports no claim about unseen facts."
+- **Review or generalisation question:** "The owner recorded a decision on every gold case, held-out v2 case, saved answer and source check through the review interface. The first pack's answer cards were read at about 8 s each; the later rounds were confirmation passes at under a second per card. That is one reviewer, after AI pre-review and after the runs were scored, so it is not blinded or independent. The held-out comparison is inconclusive and shares evidence with development, so it supports no claim about unseen facts."

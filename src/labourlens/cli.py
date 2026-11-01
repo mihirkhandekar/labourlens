@@ -70,6 +70,7 @@ def main(argv: list[str] | None = None) -> int:
     th.add_argument("--only", help="a category or case id")
     th.add_argument("--experiment", help="new post-fix experiment id; required for generation (frozen results cannot be overwritten)")
     sub.add_parser("mcp-demo", help="run the scripted MCP client demo and write docs/mcp-demo-transcript.md")
+    sub.add_parser("mcp-agent-demo", help="one agent run with statistics fetched over MCP (paid model calls); writes artifacts/mcp-agent-demo.md")
     ev_ = sub.add_parser("eval", help="metrics from saved raw agent runs; judged measures call the OpenAI API")
     ev_.add_argument("--exp", default="agent-dev-A1")
     ev_.add_argument("--split", default="dev")
@@ -210,6 +211,10 @@ def main(argv: list[str] | None = None) -> int:
 
         threat_suite.rescore(args.experiment) if args.rescore else threat_suite.run(args.models, args.only, args.ablation, args.experiment)
         return 0
+    if args.cmd == "mcp-agent-demo":
+        from labourlens.mcp import agent_demo
+
+        return agent_demo.run()
     if args.cmd == "mcp-demo":
         from labourlens.mcp import demo
 

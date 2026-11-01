@@ -268,7 +268,7 @@ function regressionSection(m) {
   sec.append(callout({tone: 'warn', title: 'What X2 is', items: [
     'X2 reruns the 237 development cases on corpus v3 with the runtime changes B1 to B14, the cross-check on, r3, planner_v1, answer_v3 and gold v3.6.',
     'It checks that the served system has not regressed. It does not show which change caused any difference.',
-    'Development cases only. No held-out or evidence-disjoint evaluation exists on corpus v3.'], src: 'docs/experiments/m7-e2e-fixes.md \u00b7 experiments/eval/agent-dev-X2-REPORT.md'}));
+    'Development cases only. The held-out v2 run on corpus v3 is reported separately, not pooled with this table.'], src: 'docs/experiments/m7-e2e-fixes.md \u00b7 experiments/eval/agent-dev-X2-REPORT.md'}));
   sec.append(dataTable('Development, n=237 per run. A3: corpus v1, gold v3.5. X1: corpus v2. X2: corpus v3, gold v3.6. Rates with 95% bootstrap intervals; p95 is the nearest-rank value in each metrics file.', ['Metric and model', 'A3', 'X1', 'X2', 'X2 against A3 intervals'], rows));
   sec.append(el('p', 'pr-small', moved.length
     ? `Beyond overlapping intervals against A3: ${moved.join('; ')}. For the other compared metrics the X2 and A3 intervals overlap, so no change is shown. Overlap is a conservative check, not a significance test.`

@@ -1,6 +1,6 @@
 {
   "schema_version": "report-1.0",
-  "generated_at": "2026-11-01T03:37:19.531237+00:00",
+  "generated_at": "2026-11-01T04:03:52.418283+00:00",
   "summary": {
     "title": "LabourLens research workbench",
     "scope": [
@@ -65955,12 +65955,12 @@
       {
         "id": "M1.6",
         "name": "Clean-room run, data sheet, study note, commit proposal",
-        "status": "historical execution recorded; 30 source cards now decided; rights/basis gaps remain"
+        "status": "historical execution recorded; all 30 source checks decided by the owner's own click (1 Nov); rights/basis gaps remain"
       },
       {
         "id": "M2",
         "name": "BM25 baseline and gold",
-        "status": "implemented; 45 owner-reviewed gold cards, 223 drafts; historical held-out freeze/execution recorded separately"
+        "status": "implemented; gold v3.7 has all 268 cases owner-reviewed (own clicks, one reviewer, after the runs; labels AI-drafted first); historical held-out freeze/execution recorded separately"
       },
       {
         "id": "M3",
@@ -65985,7 +65985,7 @@
       {
         "id": "M6.2",
         "name": "Gold and owner adjudication",
-        "status": "v3.5: 268 cases, 237 dev/31 held-out, 45 reviewed/223 drafts; HO-022 answer and DEV-018 clarify confirmed by chat (D-036); all evidence IDs retained"
+        "status": "v3.5 (31 Oct): 268 cases, 237 dev/31 held-out; HO-022 answer and DEV-018 clarify confirmed by chat (D-036); all evidence IDs retained"
       },
       {
         "id": "M6.3",
@@ -66027,7 +66027,7 @@
     "The population basis of the dataset employment series is unverified."
   ],
   "provenance": {
-    "commit": "27f0aaf2cbe0c46d822043b313e83e8d33437969",
+    "commit": "26d7eee4d097cd8e0d54f2c79e49047e61aa910c",
     "artifacts": [
       {
         "path": "data/export/sources.json",
@@ -66852,12 +66852,12 @@
       {
         "path": "docs/decisions.md",
         "status": "available",
-        "sha256": "5b34f031ddcacdf5c6956e46d6ea532f6acc0a506b43f29265acaf45c7300496"
+        "sha256": "308ffedbfb1fc04f9738c4d1e9b7c7c64d3ed434263610b3121f0b43835a4fb4"
       },
       {
         "path": "docs/progress.md",
         "status": "available",
-        "sha256": "f3b559b43192fd368b4aaa2980ac10b6b046b755b029318dfc36d5f2a602e405"
+        "sha256": "2b2b7ec489dfea95c9b9c4e5dd9aec4ecda081ac8bf0db7a59ccfcddabed9411"
       }
     ],
     "policy": "Committed artifacts only; numeric fields only."

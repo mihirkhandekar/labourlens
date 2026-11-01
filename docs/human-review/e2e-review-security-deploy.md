@@ -1,4 +1,4 @@
-I could not write `docs/human-review/e2e-review-security-deploy.md`. I only had read, grep and glob tools. The full report is below so you can paste it into that file. I ran no shell commands, so the checks I could not do are listed under Limits. I made no network calls beyond three GETs to the live site. I quote nothing from MOM or MTI.
+Report of the security, privacy and deployment area of the end-to-end review (31 Oct 2026). The reviewer was an AI agent with read, search and glob tools only; it made three GET requests to the live site and ran no shell commands, so the checks it could not do are listed under Limits. This is AI review, not human review. Nothing from MOM or MTI is quoted. Finding status is tracked in [`e2e-review-summary.md`](e2e-review-summary.md).
 
 # E2E review: security, privacy, deployment
 
@@ -75,16 +75,10 @@ I could not write `docs/human-review/e2e-review-security-deploy.md`. I only had 
 
 ## Limits
 
-I could not run `git log -p`, so history is not cleared. Please run:
-
-- `git log --all --oneline -S'sk-proj-'`
-- `git log --all --oneline --diff-filter=A -- .env`
-
-The reflog shows one linear history of about 70 commits. My grep of `.git/index` for `.env` returned nothing, but it would also have missed `.env.example`, so treat it as inconclusive.
-
-The local `.env` holds a real OpenAI key, and my grep printed it in this session's output. If the transcript is retained, rotate it and give the server its own restricted key, as `docs/deploy.md` already advises.
-
-I did not check the DigitalOcean firewall, the GitHub `production` environment rules, or the OpenAI project spend cap. Those need the control panels.
+- Git history was not searched. The repository-wide secret search is recorded separately in [`docs/process/repository-audit.md`](../process/repository-audit.md).
+- The reviewer's search of `.git/index` for `.env` could not tell `.env` from `.env.example`, so it is inconclusive; the later history check found `.env` was never tracked.
+- A search by the reviewer displayed the contents of the local, untracked `.env` in its own session output. Nothing was committed. The key should be rotated if that transcript is retained, and the server should use its own restricted key, as `docs/deploy.md` advises.
+- Not checked, because they need the provider control panels: the DigitalOcean firewall, the GitHub `production` environment rules and the OpenAI project spend cap.
 
 ## 4. Three improvements by value for effort
 

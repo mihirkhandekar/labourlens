@@ -48,8 +48,8 @@ def _stat_rows() -> list[dict]:
 
 
 def stat_sheet() -> str:
-    lines = ["# Statistical spot-check sheet (UNREVIEWED)", "",
-             "**Status: not yet reviewed by a human.** Open the dataset page, find the quarter, compare with 'Our value'. "
+    lines = ["# Statistical spot-check sheet (blank form)", "",
+             "**Status: blank form, as generated on 30 Oct 2026; it holds no verdicts.** The owner decided all 30 source checks (16 passage, 14 statistical) by own click on 1 Nov 2026, after AI pre-review; one reviewer, so not independent verification. Result: `docs/human-review/owner-review-final-summary.md`. Open the dataset page, find the quarter, compare with 'Our value'. "
              "Fill the table at the bottom. Rows were drawn with a fixed seed (`data/review.py`, seed %d): at least two per approved dataset, "
              "four from other datasets, one '-' (null) cell and one pre-scope period." % SEED, "",
              "| # | Dataset | Period | Dimension | Our value | Unit | Our CSV locator | Observation id | Publisher page |", "|---|---|---|---|---|---|---|---|---|"]
@@ -79,8 +79,8 @@ def _passages() -> list[dict]:
 
 def passage_sheets() -> tuple[str, str]:
     ps = _passages()
-    pub = ["# Passage extraction spot-check sheet (UNREVIEWED)", "",
-           "**Status: not yet reviewed by a human.** For each row open the source document at the locator and check that the extracted text "
+    pub = ["# Passage extraction spot-check sheet (blank form)", "",
+           "**Status: blank form, as generated on 30 Oct 2026; it holds no verdicts.** The owner decided all 30 source checks (16 passage, 14 statistical) by own click on 1 Nov 2026, after AI pre-review; one reviewer, so not independent verification. Result: `docs/human-review/owner-review-final-summary.md`. For each row open the source document at the locator and check that the extracted text "
            "matches the page (words, numbers, units, nothing from another column or page). Extracted MOM text is not committed (rights); "
            "the owner has a local reading aid in `private/review/passage-text.md`. Rows: 2 narrative + 1 table passage per report, plus 4 HTML releases.", "",
            "| # | Source | Locator | Flag | Passage id | Original document |", "|---|---|---|---|---|---|"]
