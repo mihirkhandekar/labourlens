@@ -33,7 +33,11 @@ _LABELS = {
 _HELDOUT_V2_PAIRED = "experiments/heldout-v2/paired.json"
 _HELDOUT_V2_ERRORS = "experiments/heldout-v2/error-analysis.json"
 _HELDOUT_V31_PAIRED = "experiments/heldout-v2/paired-v3.1.json"
-_HELDOUT_V2_FILES = {_HELDOUT_V2_PAIRED, _HELDOUT_V2_ERRORS, _HELDOUT_V31_PAIRED}
+_FINAL_FRESH_PAIRED = "experiments/heldout-v2/paired-final.json"
+_FINAL_DEV_PAIRED = "experiments/eval/paired-dev-final.txt"
+_FINAL_REGISTERED_PAIRED = "experiments/heldout/paired-final.txt"
+_FINAL_EVAL = re.compile(r"experiments/eval/agent-(?:dev|heldout)-FIN(?:V2)?-(?:r3|hybrid)/gpt-(?:6|5\.6)-luna\.metrics\.json")
+_HELDOUT_V2_FILES = {_HELDOUT_V2_PAIRED, _HELDOUT_V2_ERRORS, _HELDOUT_V31_PAIRED, _FINAL_FRESH_PAIRED}
 # Tool set v2 (D-046/D-048): separately keyed, never merged into the registered or X2 rows.
 _TOOLFIX_CRITERIA = "experiments/tool-fix/criteria.json"
 _TOOLFIX_PAIRED = {"toolset": "experiments/heldout-v2/paired-postfix-toolset.json", "r3_vs_hybrid": "experiments/heldout-v2/paired-postfix-r3-vs-hybrid.json"}
@@ -101,6 +105,8 @@ class _Artifacts:
             return False
         # Development comparisons plus only the registered held-out models.
         # Raw held-out runs and extra/unregistered models stay private.
+        if path in {_FINAL_DEV_PAIRED}:
+            return True
         if path.startswith("experiments/eval/"):
             development = re.fullmatch(r"experiments/eval/agent-dev-A[1-5]/[^/]+", path)
             # Labelled non-registered runs (corpus v2 X1, corpus v3 X2): registered luna models only, no raw/judge files.
@@ -114,6 +120,8 @@ class _Artifacts:
             if heldout is None:
                 # Fresh-set re-run on corpus v3.1: metrics only, kept in its own section (see _heldout_v31).
                 heldout = re.fullmatch(r"experiments/eval/agent-heldout-V31-(?:r3|hybrid)/gpt-(?:6|5\.6)-luna\.metrics\.json", path)
+            if heldout is None:
+                heldout = _FINAL_EVAL.fullmatch(path)
             if heldout is None:
                 heldout = _TOOLFIX_EVAL.fullmatch(path)
             if not (development or heldout):
@@ -132,7 +140,7 @@ class _Artifacts:
             (p.parent.as_posix() == "data/export" and p.suffix == ".json")
             or (path.startswith("experiments/") and p.suffix in {".json", ".jsonl", ".md"})
             or path in {"docs/mcp-demo-transcript.md", "docs/decisions.md", "docs/progress.md"}
-            or re.fullmatch(r"experiments/heldout/paired(?:-v3\.[234]|-corpus-v2)?\.txt", path) is not None
+            or re.fullmatch(r"experiments/heldout/paired(?:-v3\.[234]|-corpus-v2|-final)?\.txt", path) is not None
             or (path.startswith("data/manifests/") and p.suffix in {".json", ".jsonl"})
         )
 
@@ -174,7 +182,7 @@ def _experiments(artifacts: _Artifacts, prefix: str) -> tuple[list, list]:
     rows, paths = [], []
     for path in artifacts.paths:
         if path.startswith(prefix) and path.endswith(".metrics.json"):
-            if prefix == "experiments/eval/" and ("/agent-heldout-V2-" in path or "/agent-heldout-V31-" in path or _TOOLFIX_EVAL.fullmatch(path)):
+            if prefix == "experiments/eval/" and ("/agent-heldout-V2-" in path or "/agent-heldout-V31-" in path or _FINAL_EVAL.fullmatch(path) or _TOOLFIX_EVAL.fullmatch(path)):
                 continue  # reported only in the separately keyed evaluation.heldout_v2 and evaluation.tool_set_v2 sections
             data = artifacts.mapping(path)
             metrics = _numeric(data.get("metrics", data))
@@ -994,7 +1002,7 @@ def _row_excerpts(artifacts: _Artifacts, sources: dict, reconciliation: dict) ->
 _BUILDS = (
     ("v1", "Build v1", "First experiments and the original test. Results frozen."),
     ("v2", "Build v2", "Extraction fixes tested alone. No measurable change."),
-    ("v3", "Build v3", "Six new sources added. Every measured result since is on this build."),
+    ("v3", "Build v3", "Six new sources added. The first fresh-question run was on this build."),
     ("v3.1", "Current build (v3.1)", "Same sources. Forty passages of one article relabelled."),
 )
 
@@ -1023,31 +1031,93 @@ def _heldout_v31(artifacts: _Artifacts) -> dict | None:
             "provenance": sorted(set(paths))}
 
 
-def _rerun_sentence(v31: dict | None, v2: dict | None = None) -> str | None:
-    """One plain paragraph for both models: each model's result and whether it met the preregistered rule, and a flag when the order of the two models differs from the original run."""
-    paired = (v31 or {}).get("paired") or {}
-    primary, second = paired.get("gpt-6-luna"), paired.get("gpt-5.6-luna")
-    if not primary or not isinstance(primary.get("behaviour_accuracy"), dict):
+# The consolidated evaluation of the final system. Splits are curated here (names, gold files); every number is read from the committed files.
+_FINAL_SPLITS = (
+    ("dev", "Development questions", "agent-dev-FIN", "gold_v3.7.jsonl", _FINAL_DEV_PAIRED, "text",
+     "These questions shaped the design, so this is a description and not a held-out test."),
+    ("registered", "Original test questions", "agent-heldout-FIN", "gold_v3.7.jsonl", _FINAL_REGISTERED_PAIRED, "text",
+     "25 of the 31 share evidence with development, so this set is only partly independent."),
+    ("fresh", "Fresh questions", "agent-heldout-FINV2", "heldout_v2_v1.jsonl", _FINAL_FRESH_PAIRED, "json",
+     "Sources no earlier question cites. The questions were already known when this run was made, so it is a re-run and not new evidence of how the system handles unseen questions."),
+)
+_FINAL_LINE = re.compile(r"^(gpt-[\w.-]+) diff (-?[\d.]+) 95% CI \[(-?[\d.]+), (-?[\d.]+)\] better (\d+) worse (\d+) r3 (\d+)/(\d+) hybrid (\d+)/(\d+)$")
+
+
+def _final_paired_text(text: object) -> dict:
+    paired: dict = {}
+    if not isinstance(text, str):
+        return paired
+    for line in text.splitlines():
+        found = _FINAL_LINE.match(line.strip())
+        if found and found.group(1) in _V2_MODELS:
+            model, diff, lo, hi, better, worse, r3_ok, n, hy_ok, n2 = found.groups()
+            paired[model] = {"n_gold_cases": int(n), "paired_difference": float(diff), "interval": [float(lo), float(hi)], "level": 0.95,
+                             "better": int(better), "worse": int(worse), "candidate_correct": int(r3_ok), "baseline_correct": int(hy_ok)}
+    return paired
+
+
+def _final_evaluation(artifacts: _Artifacts) -> dict | None:
+    """One set of headline numbers: the final system (corpus v3.1, current code), filter then rerank against hybrid, on three question sets.
+    One run per arm; older results stay in their own labelled sections."""
+    splits, paths, table = [], [], []
+    for key, label, prefix, gold, paired_path, kind, note in _FINAL_SPLITS:
+        arms = []
+        for arm in _V2_ARMS:
+            for model in _V2_MODELS:
+                path = f"experiments/eval/{prefix}-{arm}/{model}.metrics.json"
+                data = artifacts.mapping(path)
+                metrics = _numeric(data.get("metrics", {}))
+                if metrics:
+                    prov = data.get("provenance", {}) if isinstance(data.get("provenance"), dict) else {}
+                    arms.append({"id": path.removesuffix(".metrics.json"), "arm": arm, "model": model, "metrics": metrics, "strata": _numeric(data.get("by_family", {})),
+                                 "git_head": _label(prov.get("git_head"))[:7] if _label(prov.get("git_head")) else None,
+                                 "gold_sha256": _label(prov.get("gold_sha256")), "provenance": [path]})
+                    paths.append(path)
+        if not arms:
+            continue
+        raw = artifacts.load(paired_path)
+        if kind == "json":
+            per_model = (raw or {}).get("per_model", {}) if isinstance(raw, dict) else {}
+            paired = {}
+            for model, entry in per_model.items():
+                if model in _V2_MODELS and isinstance(entry, dict):
+                    clean = _numeric({k: v for k, v in entry.items() if k not in {"missing", "unexpected"}})
+                    n = clean.get("n_gold_cases")
+                    acc = clean.get("behaviour_accuracy", {})
+                    if _number(n) and isinstance(acc, dict) and _number(acc.get("candidate")) and _number(acc.get("baseline")):
+                        clean["candidate_correct"], clean["baseline_correct"] = round(acc["candidate"] * n), round(acc["baseline"] * n)  # shares are rounded to four places; the count is exact
+                    clean["interval"] = clean.get("case_bootstrap_interval")
+                    clean["level"] = clean.get("level")
+                    paired[model] = clean
+        else:
+            paired = _final_paired_text(raw)
+        paths.append(paired_path)
+        first = arms[0]
+        n = first["metrics"].get("n_cases")
+        splits.append({"id": key, "label": label, "n": n, "note": note, "arms": arms, "paired": paired, "provenance": [paired_path] + [a["provenance"][0] for a in arms]})
+        table.append({"split": key, "label": label, "n": n, "corpus": "v3.1", "code": first["git_head"], "gold_file": gold, "gold_sha256": first["gold_sha256"],
+                      "experiments": [f"{prefix}-{arm}" for arm in _V2_ARMS], "models": list(_V2_MODELS), "runs_per_arm": 1, "judge": "gpt-6.1-terra"})
+    if not splits:
         return None
-    n = primary["n_gold_cases"]
-    right = lambda share: round(share * n) / n * 100  # the paired file rounds shares to four places; the case count is exact
-
-    def part(name: str, row: dict) -> str:
-        acc = row["behaviour_accuracy"]
-        verdict = "met the preregistered rule" if row.get("demonstrated_gain") else "did not meet the preregistered rule"
-        return f"{name} {right(acc['candidate']):.1f}% against {right(acc['baseline']):.1f}% without it ({verdict})"
-
-    text = f"Re-ran the {n} fresh questions on this build, one run per arm: filter then rerank, {part('gpt-6-luna', primary)}"
-    if second and isinstance(second.get("behaviour_accuracy"), dict):
-        text += f"; {part('gpt-5.6-luna', second)}"
-        old = ((v2 or {}).get("paired") or {})
-        o1, o2 = (old.get("gpt-6-luna") or {}).get("behaviour_accuracy"), (old.get("gpt-5.6-luna") or {}).get("behaviour_accuracy")
-        if isinstance(o1, dict) and isinstance(o2, dict) and (o1["candidate"] > o2["candidate"]) != (primary["behaviour_accuracy"]["candidate"] > second["behaviour_accuracy"]["candidate"]):
-            text += ". The order of the two models flipped from the original run"
-    return text + "."
+    return {"label": "Final system, filter then rerank against hybrid, corpus v3.1. One run per arm. These are the headline numbers; earlier results are history, labelled by build.",
+            "caveat": "One run per arm cannot separate a real effect of a few points from run-to-run variation. The web-only steps (small-talk reply, scope check, follow-up rewrite) and the MCP route were not in these runs.",
+            "splits": splits, "provenance_table": table, "provenance": sorted(set(paths))}
 
 
-def _corpus_builds(artifacts: _Artifacts, v31: dict | None = None, v2: dict | None = None) -> dict:
+def _rerun_sentence(final: dict | None) -> str | None:
+    """What was measured on the current build, from the final evaluation: gpt-6-luna, filter then rerank against hybrid on each question set."""
+    parts = []
+    for split in (final or {}).get("splits", []):
+        rows = {(a["arm"], a["model"]): a["metrics"].get("behaviour_accuracy", {}).get("rate") for a in split["arms"]}
+        r3, hybrid = rows.get(("r3", "gpt-6-luna")), rows.get(("hybrid", "gpt-6-luna"))
+        if isinstance(r3, (int, float)) and isinstance(hybrid, (int, float)):
+            parts.append(f"{r3 * 100:.1f}% against {hybrid * 100:.1f}% on the {split['n']} {split['label'].lower()}")
+    if not parts:
+        return None
+    return "The final evaluation ran on this build, one run per arm. For gpt-6-luna, filter then rerank against hybrid scored " + ", ".join(parts[:-1]) + (" and " if len(parts) > 1 else "") + parts[-1] + "."
+
+
+def _corpus_builds(artifacts: _Artifacts, final: dict | None = None) -> dict:
     rows = []
     for key, name, purpose in _BUILDS:
         path = f"experiments/corpus-snapshots/{key}.json"
@@ -1058,7 +1128,7 @@ def _corpus_builds(artifacts: _Artifacts, v31: dict | None = None, v2: dict | No
         row = {"id": key, "name": name, "passages": passages, "documents": snapshot.get("document_files") if isinstance(snapshot.get("document_files"), int) else None,
                "purpose": purpose, "current": key == _BUILDS[-1][0], "provenance": [path]}
         if row["current"]:
-            row["rerun"] = _rerun_sentence(v31, v2) if key == "v3.1" else None
+            row["rerun"] = _rerun_sentence(final) if key == "v3.1" else None
         rows.append(row)
     return _section("Document builds: passage counts from the committed corpus snapshots.", rows, [row["provenance"][0] for row in rows])
 
@@ -1087,6 +1157,7 @@ def build_report(root: Path) -> dict:
     x2_rows = [row for row in eval_rows if row.get("corpus_version") == "v3"]
     v2_held = _heldout_v2(artifacts)
     v31_held = _heldout_v31(artifacts)
+    final_eval = _final_evaluation(artifacts)
     tool_v2 = _tool_set_v2(artifacts)
     eval_paths = eval_paths + list((tool_v2 or {}).get("provenance", []))
     trace, trace_paths, errors = _agent_trace(artifacts)
@@ -1102,8 +1173,9 @@ def build_report(root: Path) -> dict:
         "generated_at": datetime.now(timezone.utc).isoformat(),
         "summary": summary, "sources": sources, "charts": charts, "eda": _eda(charts),
         "row_excerpts": _row_excerpts(artifacts, sources, reconciliation),
-        "corpus_builds": _corpus_builds(artifacts, v31_held, v2_held),
+        "corpus_builds": _corpus_builds(artifacts, final_eval),
         "heldout_v31": v31_held,
+        "final_evaluation": final_eval,
         "retrieval": _section("Development retrieval comparisons. Configurations differ between experiments.", retrieval_rows, retrieval_paths + ladder.get("provenance", []) + ladder_v2.get("provenance", []), ladder=ladder, ladder_corpus_v2=ladder_v2),
         "answers": _section("Saved answer metrics. Model outputs are not published.", answer_rows, answer_paths,
                             limitations=["Costs that were not recorded are not estimated."]),

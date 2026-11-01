@@ -1,6 +1,6 @@
 # LabourLens — decision log
 
-Each entry: date, decision, alternatives, why, who approved, how reversible. Labels follow `CLAUDE.md`: **DECISION**, **PROPOSAL**, **VERIFIED FACT**, **ASSUMPTION**. ADRs in `docs/decisions/` hold the large architectural decisions; this log holds everything else. **Count:** 56 entries, D-000 to D-055 (D-007 has a second heading, "deployment notes", under the same id).
+Each entry: date, decision, alternatives, why, who approved, how reversible. Labels follow `CLAUDE.md`: **DECISION**, **PROPOSAL**, **VERIFIED FACT**, **ASSUMPTION**. ADRs in `docs/decisions/` hold the large architectural decisions; this log holds everything else. **Count:** 57 entries, D-000 to D-056 (D-007 has a second heading, "deployment notes", under the same id).
 
 **How to read approvals.** An entry that cites an owner approval names it (date, and the quoted reply or the file that holds it). An entry that names no approver had none recorded in this log when this note was written (1 Nov 2026): it is an assistant decision inside the approved experiment protocol (D-016), open to owner reversal. The signed held-out v2 freeze (`experiments/heldout-v2/FREEZE.md`, 31 Oct 2026) is the owner's approval of the 65 held-out v2 cases and of the pre-registered rule of D-042; it does not approve the later entries. The owner confirmation or rollback of D-030 is not recorded.
 
@@ -738,3 +738,31 @@ For `gpt-6-luna` the paired difference is +0.031 (3 better, 1 worse), exact McNe
 **Consequence for wording.** Slides and docs show the original run (build v3) and the re-run (build v3.1) side by side, each labelled by build. The statement "the gain is a small effect that did not replicate" now also covers the re-run: the primary model's gain was not demonstrated on the current build.
 
 **Reversibility.** Nothing registered was changed. Remove `heldout_v31` from the report builder and the V31 sentences from the docs to return to the previous wording; the experiment files can stay.
+
+### D-056 - One final evaluation as the headline; keep filter then rerank as the served default (OWNER REQUEST / MEASURED, 1 Nov 2026)
+
+**Problem.** Results came from several builds and code eras (corpus v1, v2, v3 and v3.1; the ladder, the original test, the fresh set and its v3.1 re-run), and the owner asked for one consistent set of headline numbers for the final system.
+
+**What was run.** A consolidated evaluation, corpus v3.1, code at `9f979a5` (development and registered sets) and `3054195` (fresh set); agent code unchanged between them; the web-only steps (small-talk reply, scope check, follow-up rewrite) and the MCP route are not in these runs. Gold v3.7 for development and the registered set (generation ran on v3.6; labels identical apart from provenance fields; scored with `--allow-gold-mismatch`), `heldout_v2_v1.jsonl` for the fresh set. Both models, both arms, one run per arm, judge `gpt-6.1-terra`. Ids `agent-dev-FIN-*`, `agent-heldout-FIN-*`, `agent-heldout-FINV2-*`; paired files `experiments/eval/paired-dev-final.txt`, `experiments/heldout/paired-final.txt`, `experiments/heldout-v2/paired-final.json`. Retrieval metrics were not re-run (the script would overwrite frozen results).
+
+**MEASURED RESULT (behaviour accuracy, filter then rerank against hybrid).**
+
+| Question set | `gpt-6-luna` | `gpt-5.6-luna` |
+|---|---|---|
+| Development, 237 | 0.886 against 0.844; +4.2 points [0.4, 8.4] (17 better, 7 worse) | 0.899 against 0.840; +5.9 points [1.7, 10.1] (20 better, 6 worse) |
+| Registered original test, 31 | 26 of 31 in both arms; 0.0 [-9.7, 9.7] (1 better, 1 worse) | 26 of 31 in both arms; same |
+| Fresh, 65 | 0.708 against 0.754; -4.6 points (0 better, 3 worse), McNemar p 0.25 | 0.723 against 0.723 |
+
+On the development questions filter then rerank also cuts over-abstention from 0.089 to 0.042 and from 0.093 to 0.038, with false answers about the same (0.031 against 0.037 and 0.026 against 0.033). It costs $0.00284 against $0.00172 per question for `gpt-6-luna` (about 1.7 times) and has a median of 15.1 s against 9.9 s (about 1.5 times).
+
+| Option | Benefit | Downside | Disposition |
+|---|---|---|---|
+| **Keep `r3` as the served default (chosen)** | Gain of 4 to 6 points and half the over-abstention on the development questions; fewer needless refusals for users | No gain on either held-out set; about 1.7 times the cost and 1.5 times the latency | **Chosen now.** The owner may reverse it |
+| Switch the default to `hybrid` | About 40% cheaper per question and faster; no held-out evidence that `r3` is better | About 4 to 6 points lower and about twice the over-abstention on development questions | Not chosen; stays available (`hybrid`) |
+| Route by question type | Might keep the gain where it exists | No measurement; adds complexity | Not tried |
+
+**Limits.** One run per arm cannot separate a real effect of a few points from run-to-run variation; the same fresh-question arm scored differently on three runs (V2, V31 and FINV2) by up to 4.6 points. The development questions shaped the design, so the development gain is descriptive. The fresh questions were already known, so that run is a re-run, not new held-out evidence. The earlier large gap (0.779 to 0.903 in the ladder) came from an earlier build where the hybrid baseline was weaker; later runtime fixes lifted hybrid to 0.844.
+
+**Consequence for wording.** The deck, report and docs show the final evaluation as the headline. The earlier ladder, the original held-out run, the fresh-set original run (V2) and its v3.1 re-run (V31, D-055) stay as history, labelled by build. Nothing registered was edited.
+
+**Reversibility.** Fully reversible: the default is a configuration choice (`D-030`), the evaluation files are additive, and the wording changes are in the deck, report builder and docs. **The owner may reverse the default at any time.**

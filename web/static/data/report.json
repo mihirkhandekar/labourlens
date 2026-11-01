@@ -1,6 +1,6 @@
 {
   "schema_version": "report-1.0",
-  "generated_at": "2026-11-01T15:23:19.498480+00:00",
+  "generated_at": "2026-11-01T16:47:31.889427+00:00",
   "summary": {
     "title": "LabourLens research workbench",
     "scope": [
@@ -2619,7 +2619,7 @@
         "name": "Build v3",
         "passages": 16419,
         "documents": 49,
-        "purpose": "Six new sources added. Every measured result since is on this build.",
+        "purpose": "Six new sources added. The first fresh-question run was on this build.",
         "current": false,
         "provenance": [
           "experiments/corpus-snapshots/v3.json"
@@ -2635,7 +2635,7 @@
         "provenance": [
           "experiments/corpus-snapshots/v3.1.json"
         ],
-        "rerun": "Re-ran the 65 fresh questions on this build, one run per arm: filter then rerank, gpt-6-luna 73.8% against 70.8% without it (did not meet the preregistered rule); gpt-5.6-luna 76.9% against 72.3% without it (met the preregistered rule). The order of the two models flipped from the original run."
+        "rerun": null
       }
     ],
     "provenance": [
@@ -3561,6 +3561,7 @@
       "experiments/heldout-v2/paired-v3.1.json"
     ]
   },
+  "final_evaluation": null,
   "retrieval": {
     "status": "available",
     "summary": "Development retrieval comparisons. Configurations differ between experiments.",
@@ -67614,7 +67615,7 @@
     "The population basis of the dataset employment series is unverified."
   ],
   "provenance": {
-    "commit": "57aa22e8db18444aba77da5ac60de1cf756b91f9",
+    "commit": "9f979a5d94af54e8a4b57707bac6e8b20b78fd1d",
     "artifacts": [
       {
         "path": "data/export/sources.json",
@@ -68345,6 +68346,54 @@
         "path": "experiments/eval/agent-heldout-V31-hybrid/gpt-5.6-luna.metrics.json",
         "status": "available",
         "sha256": "271d7ccc037e15e95ae062aac7492b7f26ef6d014cc0424d701e290791063e60"
+      },
+      {
+        "path": "experiments/eval/agent-dev-FIN-r3/gpt-6-luna.metrics.json",
+        "status": "unavailable"
+      },
+      {
+        "path": "experiments/eval/agent-dev-FIN-r3/gpt-5.6-luna.metrics.json",
+        "status": "unavailable"
+      },
+      {
+        "path": "experiments/eval/agent-dev-FIN-hybrid/gpt-6-luna.metrics.json",
+        "status": "unavailable"
+      },
+      {
+        "path": "experiments/eval/agent-dev-FIN-hybrid/gpt-5.6-luna.metrics.json",
+        "status": "unavailable"
+      },
+      {
+        "path": "experiments/eval/agent-heldout-FIN-r3/gpt-6-luna.metrics.json",
+        "status": "unavailable"
+      },
+      {
+        "path": "experiments/eval/agent-heldout-FIN-r3/gpt-5.6-luna.metrics.json",
+        "status": "unavailable"
+      },
+      {
+        "path": "experiments/eval/agent-heldout-FIN-hybrid/gpt-6-luna.metrics.json",
+        "status": "unavailable"
+      },
+      {
+        "path": "experiments/eval/agent-heldout-FIN-hybrid/gpt-5.6-luna.metrics.json",
+        "status": "unavailable"
+      },
+      {
+        "path": "experiments/eval/agent-heldout-FINV2-r3/gpt-6-luna.metrics.json",
+        "status": "unavailable"
+      },
+      {
+        "path": "experiments/eval/agent-heldout-FINV2-r3/gpt-5.6-luna.metrics.json",
+        "status": "unavailable"
+      },
+      {
+        "path": "experiments/eval/agent-heldout-FINV2-hybrid/gpt-6-luna.metrics.json",
+        "status": "unavailable"
+      },
+      {
+        "path": "experiments/eval/agent-heldout-FINV2-hybrid/gpt-5.6-luna.metrics.json",
+        "status": "unavailable"
       },
       {
         "path": "experiments/tool-fix/criteria.json",

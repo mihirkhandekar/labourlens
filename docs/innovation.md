@@ -4,9 +4,11 @@
 
 ## 1. Improve retrieval and answer quality
 
-**MEASURED.** Period and release filtering plus an LLM rerank (A3) lifted `gpt-6-luna` behaviour accuracy from 0.779 [0.728, 0.830] (A1, hybrid) to 0.903 [0.865, 0.937] on development cases and cut over-abstention from 0.157 to 0.030. Populations differ (235 versus 237 cases), so this is descriptive, not a paired test. On the 31 original held-out cases the paired gain, 0.161 [0.000, 0.323], is **not demonstrated**; those cases share evidence with development.
+**Final evaluation (MEASURED, D-056).** On the final system (corpus v3.1, one run per arm, `gpt-6-luna`), filter then rerank scores 0.886 against 0.844 for hybrid on the 237 development questions (+4.2 points, 95% interval [0.4, 8.4]; `gpt-5.6-luna` +5.9 points) and halves over-abstention (0.042 against 0.089). It shows **no gain on either held-out set**: 26 of 31 in both arms on the registered original test, and 0.708 against 0.754 on the 65 fresh questions (0 better, 3 worse, within noise). It costs about 1.7 times as much per question and about 1.5 times the latency. The development questions shaped the design, so the development gain is descriptive.
 
-**MEASURED.** On 65 held-out v2 cases, written on sources no earlier case cites and run once, the pre-registered rule is met for the primary model, but the effect is three cases and the second model shows none; I would not call it a confirmed gain ([result](experiments/m7-heldout-v2-result.md)). Both arms score about 0.71 to 0.75, held back by arithmetic over report figures (0.214). A tool set built to close that gap failed its pre-declared dev criteria and was not adopted (D-048). **PROPOSAL:** a second attempt with a safer snippet format, a threat run under it, and a fresh held-out set, since the v2 questions are now known.
+**History (earlier build, corpus v1).** Period and release filtering plus an LLM rerank (A3) lifted `gpt-6-luna` behaviour accuracy from 0.779 [0.728, 0.830] (A1, hybrid) to 0.903 [0.865, 0.937] on development cases and cut over-abstention from 0.157 to 0.030. Populations differ (235 versus 237 cases), so this is descriptive, not a paired test. On the 31 original held-out cases the paired gain, 0.161 [0.000, 0.323], is **not demonstrated**; those cases share evidence with development.
+
+**History (original run on corpus v3).** On 65 held-out v2 cases, written on sources no earlier case cites and run once, the pre-registered rule is met for the primary model, but the effect is three cases and the second model shows none; I would not call it a confirmed gain ([result](experiments/m7-heldout-v2-result.md)). Both arms score about 0.71 to 0.75, held back by arithmetic over report figures (0.214). A tool set built to close that gap failed its pre-declared dev criteria and was not adopted (D-048). **PROPOSAL:** a second attempt with a safer snippet format, a threat run under it, and a fresh held-out set, since the v2 questions are now known.
 
 ## 2. Detect changing data, models and user needs
 
@@ -26,7 +28,7 @@ Tools are read-only and bounded, MCP results are screened, and hostile-server fi
 
 ## 5. Latency and cost
 
-A3 buys accuracy with time and money: median 15.4 s and about $0.0021 per case against 10.7 s and $0.0014 for A1 (list-price estimates from saved usage, not a bill). **PROPOSAL:** keep embedding caches and fixed tool budgets, test filter-only routing for simple lookups as a separate factor, and watch supported-answer coverage with p95 latency and failure counts. Application budget reservations are not provider spending caps.
+On the final system filter then rerank buys development accuracy with time and money: median 15.1 s and about $0.0028 per case against 9.9 s and $0.0017 for hybrid (the earlier A3 and A1 runs: median 15.4 s and about $0.0021 against 10.7 s and $0.0014; list-price estimates from saved usage, not a bill). **PROPOSAL:** keep embedding caches and fixed tool budgets, test filter-only routing for simple lookups as a separate factor, and watch supported-answer coverage with p95 latency and failure counts. Application budget reservations are not provider spending caps.
 
 ## 6. First two priorities and acceptance targets
 

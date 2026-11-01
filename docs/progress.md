@@ -124,6 +124,12 @@ Every row came from a live call; none is stored as a repo artifact yet. M1.1 mus
 
 ## Log (newest first)
 
+### 2026-11-01 — Final evaluation wired in as the headline (D-056)
+
+- **MEASURED (paid, one run per arm, corpus v3.1):** `agent-dev-FIN-*` (237), `agent-heldout-FIN-*` (31), `agent-heldout-FINV2-*` (65). `gpt-6-luna` filter then rerank against hybrid: 0.886 against 0.844 on development (+4.2 points [0.4, 8.4]), 26 of 31 in both arms on the registered test, 0.708 against 0.754 on the fresh questions. `gpt-5.6-luna`: 0.899 against 0.840, 26 of 31 both, 0.723 both. Cost about 1.7 times, latency about 1.5 times.
+- **DONE:** `report.json` gains `final_evaluation` (build.py `_final_evaluation`, committed files only); the deck's experiment ladder slide, models caption, limits and summary, appendix E (provenance table) and the report page read it; D-056 (57 entries, D-000 to D-056), evaluation report, README, system card, innovation, SUBMISSION and demo-script updated. Earlier results are history labelled by build. Retrieval metrics not re-run.
+- **NEEDS COMMIT:** the new FIN experiment files must be committed before `build-report` can read them (it reads the commit, not the working tree).
+
 ### 2026-11-01 — Fresh questions re-run on corpus v3.1 (D-055)
 
 - **MEASURED (paid run, one per arm, current code):** `agent-heldout-V31-r3` and `agent-heldout-V31-hybrid` on the 65 fresh questions. `gpt-6-luna` r3 0.738 against hybrid 0.708, +0.031 (3 better, 1 worse), McNemar p 0.625: gain not demonstrated under the preregistered rule. `gpt-5.6-luna` 0.769 against 0.723. Original v3 run (registered): 0.754 against 0.708 and 0.723 against 0.723. Numerical comparisons still 3 of 14.

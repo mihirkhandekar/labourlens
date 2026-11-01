@@ -39,7 +39,7 @@
 | 7:00 to 8:15 | 18 | MCP: where it sits and what ran through it; open the MCP tab in the Workbench. Recorded transcript sections 1 to 6 (see MCP steps). Slide 19 only if asked about concepts. |
 | 8:15 to 8:45 | 20 | Ensuring reliable sources: one answer traced to its citation. |
 | 8:45 to 13:45 | 21, then `/workbench` | **Live demo, five minutes.** Slide 21, then the four questions below. |
-| 13:45 to 15:00 | 22, 23, 24 | Measurement and human review (signed off, AI-drafted labels, one reviewer). Experiment ladder: only filter then rerank moved accuracy; the new planner prompt was a tie. |
+| 13:45 to 15:00 | 22, 23, 24 | Measurement and human review (signed off, AI-drafted labels, one reviewer). Slide 24, the headline: on the final system filter then rerank gains 4 to 6 points on development questions, none on the held-out sets, at about 1.7 times the cost; hover a column for both models. The earlier one-change-at-a-time ladder is the row underneath. |
 | 15:00 to 16:00 | 25, 26 | Why it missed; the calculation fix: a fourth tool that failed rules I set before the run and was not adopted. |
 | 16:00 to 17:30 | 27, 28 | Attacks with and without defences; the planted false figure is not shown stable. Scenario 7: run the fixture command (see below). |
 | 17:30 to 19:00 | 29, 30 | How I built it with a coding agent under a written contract; limits and next steps. |
@@ -88,16 +88,15 @@ Spare, if time allows: calculation (DEV-004, "How many more people were laid off
 
 Gold labels were drafted by AI. I went through them in the review interface and signed off every item (four separate streams, 403 items in total: 268 reference questions, 65 fresh questions, 40 saved system answers and 30 source checks; only the first two are sets of questions). The reviewers before me were three AI passes from the same model family, so this is one human reviewer, working after AI pre-review and after the saved runs were scored. It is not independent inter-rater evidence. The judge is an AI.
 
-The 31 original test questions share evidence with development (25 of 31 share at least one evidence id), so their result is inconclusive. The 65 fresh questions are evidence-disjoint from the earlier questions, were used once and not tuned on, and showed a small gain for one model that did not appear for the other. The same 65 questions were re-run once on the current build (D-055): `gpt-6-luna` no longer met the rule (3 better, 1 worse) and `gpt-5.6-luna` did (3 better, 0 worse), so the order of the two models flipped between runs. Say it that way; do not chart it as independent confirmation.
+The 31 original test questions share evidence with development (25 of 31 share at least one evidence id), so they are only partly independent; the final run shows no difference there (26 of 31 in every arm). The 65 fresh questions are evidence-disjoint from the earlier questions and were not tuned on, but they were already known when the final run was made. In the final run `gpt-6-luna` scored slightly lower with filter then rerank (70.8% against 75.4%, within noise). Earlier fresh-question runs (D-045, D-055) scored differently again, and the order of the two models flipped between them. Say it that way: the development gain is real on the questions that shaped the design and does not show up on the held-out sets; do not chart it as independent confirmation.
 
-Six numbers to speak if asked (all descriptive):
+Numbers to speak if asked (all descriptive; the first three are the headline, from the final evaluation on corpus v3.1, one run per arm, slide 24):
 
-1. Development behaviour for `gpt-6-luna` with filter then rerank: 0.903, against 0.779 for the baseline (different sample sizes).
-2. Top-eight hit rate on 128 development questions: 57.0% for the baseline, 96.9% with filter then rerank.
-3. Over-abstention fell from 15.7% to 3.0% (descriptive).
-4. Original test (n=31): 0.871 against 0.710; paired gain 16.1 points, interval 0.0 to 32.3, so not demonstrated.
-5. Fresh set (n=65), original run on build v3: the pre-registered rule was met by three cases for the primary model.
-6. The same 65 questions re-run on build v3.1 (one run per arm, corpus and code changed together): `gpt-6-luna` 73.8% against 70.8% without filtering and reranking (rule not met); `gpt-5.6-luna` 76.9% against 72.3% (rule met, 3 better, 0 worse). The order of the two models flipped.
+1. Development questions (237), `gpt-6-luna`: filter then rerank 88.6% against 84.4% for hybrid, +4.2 points with a 95% interval of 0.4 to 8.4; `gpt-5.6-luna` 89.9% against 84.0%. Over-abstention 4.2% against 8.9%. These questions shaped the design.
+2. Original test (31) and fresh questions (65): no gain. 26 of 31 in every arm; on the fresh questions `gpt-6-luna` scored 70.8% against 75.4% (0 better, 3 worse, within noise) and `gpt-5.6-luna` 72.3% in both arms.
+3. Cost and time: about 1.7 times the cost per question ($0.00284 against $0.00172) and about 1.5 times the median latency (15.1 s against 9.9 s). One run per arm cannot separate a few points from run-to-run variation.
+4. History, earlier build: the retrieval ladder, top-eight hit rate on 128 development questions 57.0% for the baseline and 96.9% with filter then rerank (retrieval was not re-run on the current build), and development behaviour 0.903 against 0.779. The large gap came from an earlier build where hybrid was weaker; hybrid is now 0.844.
+5. History: the original held-out v2 run met its pre-registered rule by three cases for the primary model (build v3), and a v3.1 re-run did not (gpt-6-luna 73.8% against 70.8%; gpt-5.6-luna 76.9% against 72.3%, order flipped). The earlier registered test showed 87.1% against 71.0% (not demonstrated).
 
 Tool set v2 (arithmetic on report figures) was built and measured and is **not adopted**: it failed its pre-declared development criteria for both models (false-answer cases 7 against a limit of 6; ungrounded numbers where the new tool was used). Its gain on the 65 reused questions is a diagnostic on the cases that motivated it, so optimistic by construction. The demo uses the default tool set.
 

@@ -355,12 +355,33 @@ def test_threat_figures_in_the_report_are_labelled_by_run():
     assert "earlier run" in safety and "final-code run" in safety
 
 
-def test_rerun_sentence_names_both_models_and_the_order_flip():
+def test_build_row_reads_the_final_evaluation_and_the_headline_numbers_come_from_the_data():
     import json
     report = json.loads((STATIC / "data" / "report.json").read_text(encoding="utf-8"))
+    final = report["final_evaluation"]
+    assert [s["id"] for s in final["splits"]] == ["dev", "registered", "fresh"]
     rerun = next(row["rerun"] for row in report["corpus_builds"]["rows"] if row.get("current"))
-    assert "gpt-6-luna" in rerun and "gpt-5.6-luna" in rerun and "did not meet" in rerun and "met the preregistered rule" in rerun
-    assert "flipped" in rerun
+    assert "final evaluation ran on this build" in rerun and "one run per arm" in rerun
+    dev = next(s for s in final["splits"] if s["id"] == "dev")
+    r3 = next(a for a in dev["arms"] if a["arm"] == "r3" and a["model"] == "gpt-6-luna")
+    assert f"{r3['metrics']['behaviour_accuracy']['rate'] * 100:.1f}%" in rerun
+    graphics = (STATIC / "presentation" / "graphics.js").read_text(encoding="utf-8")
+    slides = (STATIC / "presentation" / "slides.js").read_text(encoding="utf-8")
+    assert "finalComparison(m)" in slides and "provenanceTable(m)" in slides
+    for name in ("finalComparison", "finalSentence", "finalFacts", "provenanceTable"):
+        assert f"export function {name}" in graphics
+
+
+def test_final_evaluation_has_both_models_both_arms_and_paired_results():
+    import json
+    final = json.loads((STATIC / "data" / "report.json").read_text(encoding="utf-8"))["final_evaluation"]
+    assert [s["n"] for s in final["splits"]] == [237, 31, 65]
+    for split in final["splits"]:
+        assert {(a["arm"], a["model"]) for a in split["arms"]} == {(a, m) for a in ("r3", "hybrid") for m in ("gpt-6-luna", "gpt-5.6-luna")}
+        assert set(split["paired"]) == {"gpt-6-luna", "gpt-5.6-luna"}
+        for entry in split["paired"].values():
+            assert entry["candidate_correct"] is not None and entry["baseline_correct"] is not None
+    assert all(row["runs_per_arm"] == 1 and row["corpus"] == "v3.1" for row in final["provenance_table"])
 
 
 def test_mcp_wording_is_exact():

@@ -2,7 +2,23 @@
 
 ## Read this first
 
-This report is long because it keeps every layer of the work. This page is the summary. Every number below has its source in the section named.
+This report is long because it keeps every layer of the work. This page is the summary. The headline is the final evaluation below; the table after it is history from earlier builds. Every number has its source in the section named.
+
+### Headline: the final evaluation (D-056, 1 Nov 2026)
+
+One consolidated run of the final system. **Setup:** corpus v3.1, the code at `9f979a5` for the development and registered sets and at `3054195` for the fresh set (agent code unchanged between them; the web-only steps, small-talk reply, scope check and follow-up rewrite, and the MCP route are **not** in these runs), gold v3.7 for development and the registered set (generation ran on gold v3.6, labels identical to v3.7 apart from provenance fields; scored with `--allow-gold-mismatch`) and `heldout_v2_v1.jsonl` for the fresh set, models `gpt-6-luna` and `gpt-5.6-luna`, `planner_v1` and `answer_v3`, judge `gpt-6.1-terra`, **one run per arm**. Arms: `r3` (period and stage filter, then rerank) against `hybrid`. Experiment ids `agent-dev-FIN-{r3,hybrid}`, `agent-heldout-FIN-{r3,hybrid}`, `agent-heldout-FINV2-{r3,hybrid}`. Scores in `experiments/eval/agent-*-FIN*/`; paired files `experiments/eval/paired-dev-final.txt`, `experiments/heldout/paired-final.txt`, `experiments/heldout-v2/paired-final.json`. The same numbers are in `report.json` under `final_evaluation`.
+
+| Question set | Model | Filter then rerank | Hybrid | Paired difference (better / worse) | False answers (r3 / hybrid) | Over-abstention (r3 / hybrid) | Cost per question (r3 / hybrid) | Median seconds (r3 / hybrid) |
+|---|---|---:|---:|---|---|---|---|---|
+| Development, 237 | `gpt-6-luna` | 0.886 | 0.844 | +4.2 points, 95% interval [0.4, 8.4] (17 / 7) | 0.031 / 0.037 | 0.042 / 0.089 | $0.00284 / $0.00172 | 15.1 / 9.9 |
+| Development, 237 | `gpt-5.6-luna` | 0.899 | 0.840 | +5.9 points [1.7, 10.1] (20 / 6) | 0.026 / 0.033 | 0.038 / 0.093 | $0.00461 / $0.00355 | 15.0 / 9.3 |
+| Registered original test, 31 | both models | 0.839 (26 of 31) | 0.839 (26 of 31) | 0.0 points [-9.7, 9.7] (1 / 1) | 0.000 to 0.036 | 0.097 | $0.00232 to $0.00438 / $0.00155 to $0.00335 | 12.3 to 16.6 / 9.8 to 10.7 |
+| Fresh, 65 | `gpt-6-luna` | 0.708 | 0.754 | -4.6 points, 90% interval [-9.2, -1.5] (0 / 3), McNemar p 0.25 | 0.000 / 0.000 | 0.246 / 0.200 | $0.00310 / $0.00171 | 16.8 / 10.5 |
+| Fresh, 65 | `gpt-5.6-luna` | 0.723 | 0.723 | 0.0 points (0 / 0) | 0.000 / 0.038 | 0.200 / 0.200 | $0.00502 / $0.00344 | 16.1 / 10.2 |
+
+**Reading.** On the final system filter then rerank gives a modest, consistent gain on the development questions (+4 to +6 points, intervals above zero), which are the questions that shaped the design, and it more than halves over-abstention. It shows **no gain on either held-out set**: none on the 31 registered questions, and a small loss for `gpt-6-luna` on the 65 fresh questions (0 better, 3 worse, within noise). It costs about 1.7 times as much per question and about 1.5 times the latency. The big earlier gap (0.779 to 0.903 in the retrieval-and-agent ladder) was measured on an earlier build where the hybrid baseline was weaker; later runtime fixes lifted hybrid to 0.844. One run per arm cannot separate a real effect of a few points from run-to-run variation: the same fresh-question arm scored differently on three runs (original V2, the v3.1 re-run V31 and FINV2), by up to 4.6 points. The two intervals on the fresh set are 90% case bootstraps; the development and registered ones are 95%. Retrieval metrics (hit@8 and similar) were **not** re-run on v3.1, because the script would overwrite frozen results; they stay labelled with their build. The origin of the earlier numbers is in the history table below.
+
+**History (earlier builds, kept and labelled, not headline numbers).**
 
 **What was measured (one run per configuration unless stated; gold labels are AI-drafted and reviewed as described in the Status paragraph above, so these are agreement figures, not validated accuracy).**
 

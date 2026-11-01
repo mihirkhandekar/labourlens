@@ -1,0 +1,190 @@
+{
+ "label": "gpt-5.6-luna",
+ "judge": "gpt-6.1-terra",
+ "provenance": {
+  "gold_sha256": "af3ad02690ed1dabb69e2be7f7bb984f707f1352b95c8bd693d0fb51e9410d8f",
+  "prompt_sha256": {
+   "planner": "df68ef8e5e287d1a0b1f71d938e85ec25b4f03eeec501bc439a3a77aec2482dc",
+   "answer": "e854b64c72116c4c175082e70f39c312ed94b1f37778e7daf3f9a51de1bac350",
+   "judge": "85f3529fca32faec681b3d4b1e6899b8620c383ed2aa54bc423241e2b7f4a10f",
+   "rerank": "e45ed816ccefd679d046cf9bcbd4dad92ba27b20cfc5f45b900063b84784793a",
+   "planner_user": "e59f408b00f5a99e0fb867c635a84d2d77947171620ab035f6067a3cdfb8136f",
+   "answer_user": "c4f4ef05d7d1b87fca94bee65cbf2a38999c181dc2e92bced9cdf8ef92b006e7"
+  },
+  "agent_config": "planner=gpt-5.6-luna|answer=gpt-5.6-luna|planner_v1|answer_v3",
+  "git_head": "9f979a5d94af54e8a4b57707bac6e8b20b78fd1d",
+  "price_table_sha256": "634b32441c3495b4c3ec13efa3af1e9cc99e5c7523eac3a15a5c238c3acaeb5c",
+  "eligible_n": 31,
+  "available_n": 31,
+  "fingerprint_scope": "files at scoring time; generation-time provenance only when saved in raw run"
+ },
+ "metric_definitions": {
+  "cases_with_ungrounded_numbers": "fraction of all scored cases with an ungrounded numeric warning",
+  "answers_with_ungrounded_numbers": "legacy alias of cases_with_ungrounded_numbers; denominator is all scored cases"
+ },
+ "metrics": {
+  "n_cases": 31,
+  "behaviour_accuracy": {
+   "rate": 0.839,
+   "ci95": [
+    0.71,
+    0.968
+   ],
+   "n": 31
+  },
+  "false_answer_rate": {
+   "rate": 0.036,
+   "ci95": [
+    0.0,
+    0.107
+   ],
+   "n": 28
+  },
+  "over_abstention_rate": {
+   "rate": 0.097,
+   "ci95": [
+    0.0,
+    0.226
+   ],
+   "n": 31
+  },
+  "key_number_recall": {
+   "rate": 0.739,
+   "ci95": [
+    0.561,
+    0.895
+   ],
+   "n": 19
+  },
+  "calc_correct": {
+   "rate": 1.0,
+   "ci95": [
+    1.0,
+    1.0
+   ],
+   "n": 5
+  },
+  "gold_cited_any": {
+   "rate": 0.448,
+   "ci95": [
+    0.276,
+    0.621
+   ],
+   "n": 29
+  },
+  "cases_with_ungrounded_numbers": {
+   "rate": 0.097,
+   "ci95": [
+    0.0,
+    0.226
+   ],
+   "n": 31
+  },
+  "answers_with_ungrounded_numbers": {
+   "rate": 0.097,
+   "ci95": [
+    0.0,
+    0.226
+   ],
+   "n": 31
+  },
+  "claims_judged": 45,
+  "claim_supported_rate": {
+   "rate": 0.756,
+   "ci95": [
+    0.565,
+    0.923
+   ],
+   "n": 45,
+   "n_cases": 22
+  },
+  "claim_unsupported_rate": {
+   "rate": 0.022,
+   "ci95": [
+    0.0,
+    0.071
+   ],
+   "n": 45,
+   "n_cases": 22
+  },
+  "answers_with_any_unsupported_claim": {
+   "rate": 0.045,
+   "ci95": [
+    0.0,
+    0.136
+   ],
+   "n": 22
+  },
+  "fact_coverage": {
+   "rate": 0.625,
+   "ci95": [
+    0.429,
+    0.81
+   ],
+   "n": 24,
+   "n_cases": 21
+  },
+  "answers_contradicting_a_reference_fact": {
+   "rate": 0.048,
+   "ci95": [
+    0.0,
+    0.143
+   ],
+   "n": 21
+  },
+  "latency_p50_s": 10.7,
+  "latency_p95_s": 17.2,
+  "cost_per_case_usd": 0.00335,
+  "judge_cost_total_usd": 0.0304
+ },
+ "by_family": {
+  "adversarial": {
+   "n": 5,
+   "behaviour_accuracy": 0.6,
+   "false_answer": 1,
+   "over_abstain": 1,
+   "unsupported_claims": 0,
+   "contradicted_facts": 0
+  },
+  "ambiguity_insufficient_causal": {
+   "n": 6,
+   "behaviour_accuracy": 0.833,
+   "false_answer": 0,
+   "over_abstain": 0,
+   "unsupported_claims": 0,
+   "contradicted_facts": 0
+  },
+  "cross_source_synthesis": {
+   "n": 5,
+   "behaviour_accuracy": 1.0,
+   "false_answer": 0,
+   "over_abstain": 0,
+   "unsupported_claims": 0,
+   "contradicted_facts": 0
+  },
+  "factual_lookup": {
+   "n": 5,
+   "behaviour_accuracy": 0.8,
+   "false_answer": 0,
+   "over_abstain": 1,
+   "unsupported_claims": 0,
+   "contradicted_facts": 0
+  },
+  "numerical_comparison": {
+   "n": 6,
+   "behaviour_accuracy": 1.0,
+   "false_answer": 0,
+   "over_abstain": 0,
+   "unsupported_claims": 0,
+   "contradicted_facts": 0
+  },
+  "revision_conflict": {
+   "n": 4,
+   "behaviour_accuracy": 0.75,
+   "false_answer": 0,
+   "over_abstain": 1,
+   "unsupported_claims": 1,
+   "contradicted_facts": 1
+  }
+ }
+}

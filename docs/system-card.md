@@ -47,7 +47,11 @@ A bounded LangGraph researcher selects read-only `search_reports`, `get_series` 
 
 Model and prompt defaults: `src/labourlens/agent/graph.py`, `src/labourlens/retrieval/rerank.py`. Prices are the repository's Standard-processing list-price assumptions dated 30 October 2026 (`specs/prices.yaml`, citing the [OpenAI pricing page](https://developers.openai.com/api/docs/pricing)). They are estimates, exclude cached-input discounts and require rechecking before future runs. D-030 records the assistant's default change, pending owner confirmation.
 
-## Current development performance (v3.5 saved-output rescoring)
+## Headline performance: the final evaluation (D-056)
+
+**MEASURED RESULT (corpus v3.1, code at `9f979a5` and `3054195`, one run per arm, judge `gpt-6.1-terra`; the web-only steps and the MCP route were not in these runs).** Filter then rerank against hybrid, behaviour accuracy: development questions (237) `gpt-6-luna` 0.886 against 0.844 (+4.2 points, 95% interval [0.4, 8.4], 17 better, 7 worse) and `gpt-5.6-luna` 0.899 against 0.840 (+5.9 [1.7, 10.1]); registered original test (31) 26 of 31 in every arm; fresh questions (65) `gpt-6-luna` 0.708 against 0.754 (0 better, 3 worse) and `gpt-5.6-luna` 0.723 against 0.723. Over-abstention on development questions 0.042 against 0.089 (`gpt-6-luna`); false answers 0.031 against 0.037; cost $0.00284 against $0.00172 per question (about 1.7 times); median 15.1 s against 9.9 s. The development gain is descriptive (those questions shaped the design); there is no held-out gain. One run per arm cannot separate a few points from run-to-run variation. The tables below are history from earlier builds, labelled by build.
+
+## Earlier development performance (history; v3.5 saved-output rescoring, corpus v1)
 
 **MEASURED RESULT:** A3 luna6, `planner_v1`/`answer_v3`/`r3`, scored against v3.5. The table is unchanged from historical v3.2 because DEV-018 does not change this arm's outcome. Source: `experiments/eval/agent-dev-A3/gpt-6-luna.metrics.json`; bootstrap 95% intervals. Five `--no-judge` rescores reused compatible caches; DEV-018 has no claim-bearing answer requiring new judgment. No new model calls.
 
@@ -71,7 +75,7 @@ The earlier [owner summary](human-review/owner-review-summary.md) (31 Oct 2026) 
 
 Current v3.5 A1/A2 n=235 and A3/A4/A5 n=237: luna6 behaviour **77.9%, 76.2%, 90.3%, 89.9%, 91.1%**; luna5.6 **80.0%, 79.6%, 90.3%, 90.7%, 91.6%**. A5 intervals are 87.3 to 94.5% and 87.8 to 94.9%, versus A3 86.5 to 93.7% and 86.1 to 94.1%. Descriptive A5 to A3 differences are +0.8/+1.3 percentage points, not demonstrated benefit or equivalence. A5 is not adopted. Historical v3.2 remains in the evaluation report; A1 to A3 differences are not paired significance across unequal case counts.
 
-## Current registered held-out performance (v3.5 saved-output rescoring)
+## Earlier registered held-out performance (history; v3.5 saved-output rescoring, corpus v1)
 
 **MEASURED RESULT (gold v3.5):** original generation used frozen, then-unreviewed v3.2 gold (`experiments/heldout/FREEZE.md`). Current metrics describe 31 identical cases per registered arm at scoring-time gold SHA-256 `aac4b405b51c7cebf019c3b3629509ecb711be32fb830a8e78c4c7b902219e09`. HO-022's signed off by the owner `answer` label was applied after held-out generation; stale judgments were refreshed, not answers regenerated. D-034/D-035's earlier post-run adjudications remain. Preserve original and all sensitivity results side by side in the [evaluation report](evaluation-report.md), not as replacement generation trials.
 

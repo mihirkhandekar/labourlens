@@ -744,7 +744,7 @@ th[aria-sort="descending"] .pr-sort::after { content: " \2193"; }
 .tm-models.is-four > :nth-child(3) { border-left: 2px solid var(--line-strong); padding-left: 20px; }
 .tm-attack { font-weight: 600; }
 .tm-res { display: flex; align-items: center; gap: 14px; min-width: 0; }
-.tm-seg { display: flex; gap: 3px; } .tm-seg i { display: block; width: 14px; height: 26px; border-radius: 4px; background: var(--accent); } .tm-res.is-without .tm-seg i.is-pass { background: var(--c6); } .tm-seg i.is-miss { background: transparent; border: 2px solid var(--warning, #e0a53a); }
+.tm-seg { display: flex; gap: 3px; } .tm-seg i { display: block; width: 14px; height: 26px; border-radius: 4px; background: var(--accent); } .tm-res.is-without .tm-seg i.is-pass { background: var(--c6); } .tm-seg i.is-miss { background: transparent; border: 2px solid var(--c2); }
 .tm-count { font-weight: 600; min-width: 48px; font-size: 22px; }
 @media (max-width: 800px) { .tm-row { grid-template-columns: 1fr; gap: 6px; font-size: 15px; } .tm-head { display: none; } .tm-seg i { width: 12px; height: 14px; } }
 /* Failure modes: what can go wrong, the control, how it was measured. */
@@ -949,7 +949,7 @@ th[aria-sort="descending"] .pr-sort::after { content: " \2193"; }
 .mc-row { position: relative; display: grid; grid-template-columns: 240px minmax(0, 1.5fr) repeat(2, minmax(0, 0.8fr)); gap: 36px; align-items: center; padding: 16px 0; border-top: 1px solid var(--line-strong); }
 .mc-legend { display: flex; flex-wrap: wrap; gap: 6px 22px; font-size: 20px; color: var(--ink-2); } .mc-key { display: inline-flex; align-items: center; gap: 8px; } .mc-key i { display: inline-block; width: 16px; height: 16px; border-radius: 4px; }
 .mc-stack { display: flex; gap: 3px; height: 38px; } .mc-seg { flex: var(--w) 1 0; display: grid; place-items: center; font-size: 22px; font-weight: 600; border-radius: 6px; min-width: 0; color: var(--accent-ink, #0b1210); }
-.mc-seg.is-right, .mc-key .is-right { background: var(--accent); } .mc-seg.is-over, .mc-key .is-over { background: var(--c6); } .mc-seg.is-false, .mc-key .is-false { background: var(--warning, #e0a53a); } .mc-seg.is-other, .mc-key .is-other { background: var(--paper-3); color: var(--ink-2); }
+.mc-seg.is-right, .mc-key .is-right { background: var(--accent); } .mc-seg.is-over, .mc-key .is-over { background: var(--c6); } .mc-seg.is-false, .mc-key .is-false { background: var(--c2); } .mc-seg.is-other, .mc-key .is-other { background: var(--paper-3); color: var(--ink-2); }
 .mc-row:not(.is-chosen) .mc-seg.is-right { background: var(--c3, var(--accent)); opacity: 0.75; }
 .g5-tag.is-yes { fill: var(--accent); font-weight: 600; } .g5-tag.is-no { fill: var(--ink-2); }
 .mm-live { display: inline-flex; align-items: center; gap: 12px; font-size: 26px; color: var(--accent); width: fit-content; border-bottom: 2px dotted var(--accent); } .mm-live .deck-ico { width: 28px; height: 28px; }
@@ -963,7 +963,7 @@ th[aria-sort="descending"] .pr-sort::after { content: " \2193"; }
 .mc-track { height: 30px; border-radius: 8px; background: var(--paper-3); overflow: hidden; }
 .mc-bar { height: 100%; width: var(--w, 0); border-radius: 8px; background: var(--c6); }
 .mc-row.is-chosen .mc-cell.is-right .mc-bar, .mc-row.is-chosen .mc-cell.is-cost .mc-bar { background: var(--accent); }
-.mc-cell.is-false .mc-bar { background: var(--warning, #e0a53a); }
+.mc-cell.is-false .mc-bar { background: var(--c2); }
 .mc-val { font-size: 28px; font-weight: 600; text-align: right; }
 .mc-row .deck-tip { left: 260px; }
 
@@ -980,3 +980,33 @@ th[aria-sort="descending"] .pr-sort::after { content: " \2193"; }
 
 .g14.is-compact { gap: 16px; } .g14.is-compact .g14-card { padding: 16px 20px; gap: 6px; } .g14.is-compact .g14-card h3 { font-size: 26px; } .g14.is-compact .g14-card p { font-size: 21px; }
 .g11 .g9-panel { align-content: start; gap: 14px; }
+
+/* The final comparison: hybrid against filter then rerank, per question set and model. Detail on hover or focus. */
+.fc { display: grid; gap: 40px; }
+.fc-cols { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 56px; }
+.fc-col { position: relative; display: grid; gap: 14px; align-content: start; padding: 4px 0; }
+.fc-title { font-size: 34px; font-weight: 600; letter-spacing: -0.01em; }
+.fc-sub { font-size: 24px; color: var(--muted); margin-top: -8px; }
+.fc-model { display: grid; gap: 8px; padding-top: 14px; border-top: 1px solid var(--line-strong); }
+.fc-name { font-size: 26px; font-weight: 600; }
+.fc-row { display: grid; grid-template-columns: 190px minmax(0, 1fr) 86px; gap: 14px; align-items: center; }
+.fc-label { font-size: 22px; color: var(--ink-2); }
+.fc-track { height: 26px; border-radius: 7px; background: var(--paper-3); overflow: hidden; }
+.fc-bar { height: 100%; width: var(--w, 0); border-radius: 7px; background: var(--c6); }
+.fc-row.is-new .fc-bar { background: var(--accent); }
+.fc-val { font-size: 26px; font-weight: 600; text-align: right; }
+.fc-diff { font-size: 24px; color: var(--ink-2); }
+.fc-diff.is-neg { color: var(--c2); } .fc-diff.is-null { color: var(--muted); }
+.fc-steps { display: grid; gap: 12px; padding-top: 22px; border-top: 1px solid var(--line-strong); }
+.fc-steps-head { font-size: 22px; color: var(--muted); }
+.fc-steps-row { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 24px; }
+.fc-step { position: relative; display: grid; gap: 2px; padding-left: 16px; border-left: 3px solid var(--line-strong); }
+.fc-step.is-adopted { border-left-color: var(--accent); }
+.fc-step-name { font-size: 24px; font-weight: 600; } .fc-step-tag { font-size: 22px; color: var(--muted); }
+.fc-col.has-tip > .deck-tip { left: 0; right: auto; top: 100%; bottom: auto; margin: 6px 0 0; }
+.fc-col.has-tip:last-child > .deck-tip { left: auto; right: 0; }
+.pv-note { margin-top: 14px; font-size: 22px; color: var(--ink-2); }
+.pv-table { width: 100%; border-collapse: collapse; font-size: 22px; }
+.pv-table th { text-align: left; color: var(--muted); font-weight: 400; padding: 8px 12px 8px 0; border-bottom: 1px solid var(--line-strong); }
+.pv-table td { padding: 12px 12px 12px 0; border-bottom: 1px solid var(--line); vertical-align: top; }
+@media (max-width: 900px) { .fc-cols, .fc-steps-row { grid-template-columns: 1fr; } .fc-row { grid-template-columns: 120px minmax(0, 1fr) 70px; } }

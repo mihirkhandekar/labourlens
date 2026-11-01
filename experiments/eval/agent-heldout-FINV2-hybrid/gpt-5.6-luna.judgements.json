@@ -1,0 +1,1042 @@
+{
+ "HO-V2-001": {
+  "input_sha256": "418828335f57273582d28901cb2840367bff9b37eddbab069e682464bd0359a6",
+  "judgement": {
+   "claims": [
+    {
+     "index": 0,
+     "verdict": "supported",
+     "note": ""
+    }
+   ],
+   "facts": [
+    {
+     "index": 0,
+     "status": "covered",
+     "note": ""
+    }
+   ],
+   "cost_usd": 0.000907
+  }
+ },
+ "HO-V2-002": {
+  "input_sha256": "b020a5ce94504f98643f575777dc0083a26af958a2e82c796b877d473cdba8a8",
+  "judgement": {
+   "claims": [
+    {
+     "index": 0,
+     "verdict": "supported",
+     "note": ""
+    }
+   ],
+   "facts": [
+    {
+     "index": 0,
+     "status": "covered",
+     "note": ""
+    }
+   ],
+   "cost_usd": 0.000782
+  }
+ },
+ "HO-V2-003": {
+  "input_sha256": "15a54d370e8d43d5133a50e3a54fc65e53e127abb67576bab02dfdc67e1afdc7",
+  "judgement": {
+   "claims": [
+    {
+     "index": 0,
+     "verdict": "supported",
+     "note": ""
+    }
+   ],
+   "facts": [
+    {
+     "index": 0,
+     "status": "covered",
+     "note": ""
+    }
+   ],
+   "cost_usd": 0.000809
+  }
+ },
+ "HO-V2-004": {
+  "input_sha256": "6583e069a98d5a1ecde261013865d7e6f9d9d8b765e26daa1955636d90a85ff7",
+  "judgement": {
+   "claims": [
+    {
+     "index": 0,
+     "verdict": "supported",
+     "note": ""
+    }
+   ],
+   "facts": [
+    {
+     "index": 0,
+     "status": "covered",
+     "note": ""
+    }
+   ],
+   "cost_usd": 0.000793
+  }
+ },
+ "HO-V2-005": {
+  "input_sha256": "08cd05eed48e301fdec2ff537932887572a77509d8c83ae38e785937e9f083a6",
+  "judgement": {
+   "claims": [
+    {
+     "index": 0,
+     "verdict": "supported",
+     "note": ""
+    }
+   ],
+   "facts": [
+    {
+     "index": 0,
+     "status": "covered",
+     "note": ""
+    }
+   ],
+   "cost_usd": 0.00099
+  }
+ },
+ "HO-V2-006": {
+  "input_sha256": "8ca4f1d6156f890edf1698bb49427d869cc3fbec2df813af0f37c853d7ebdb91",
+  "judgement": {
+   "claims": [
+    {
+     "index": 0,
+     "verdict": "supported",
+     "note": ""
+    }
+   ],
+   "facts": [
+    {
+     "index": 0,
+     "status": "covered",
+     "note": ""
+    }
+   ],
+   "cost_usd": 0.00114
+  }
+ },
+ "HO-V2-007": {
+  "input_sha256": "1eff115899eceefa17ea9f4b77fb48ab5b82c85fb302050945c52757413a4997",
+  "judgement": {
+   "claims": [
+    {
+     "index": 0,
+     "verdict": "supported",
+     "note": ""
+    }
+   ],
+   "facts": [
+    {
+     "index": 0,
+     "status": "covered",
+     "note": ""
+    }
+   ],
+   "cost_usd": 0.000801
+  }
+ },
+ "HO-V2-008": {
+  "input_sha256": "82518eeea90a2555acf6b06d06e3b3c53b0aa9a86a3bc31a179acb77085d077d",
+  "judgement": {
+   "claims": [
+    {
+     "index": 0,
+     "verdict": "supported",
+     "note": ""
+    }
+   ],
+   "facts": [
+    {
+     "index": 0,
+     "status": "covered",
+     "note": ""
+    }
+   ],
+   "cost_usd": 0.00109
+  }
+ },
+ "HO-V2-009": {
+  "input_sha256": "b4c894cc35cde77e5f1ef8bf27ee1c5c992b767a9e4805e49accd9dc3dbe82a8",
+  "judgement": {
+   "claims": [
+    {
+     "index": 0,
+     "verdict": "supported",
+     "note": ""
+    }
+   ],
+   "facts": [
+    {
+     "index": 0,
+     "status": "covered",
+     "note": ""
+    }
+   ],
+   "cost_usd": 0.000756
+  }
+ },
+ "HO-V2-010": {
+  "input_sha256": "d2f08ea19d3c97ed900e284796ba9a71a524de93105ef1dfd823f764dcaf616f",
+  "judgement": {
+   "claims": [
+    {
+     "index": 0,
+     "verdict": "supported",
+     "note": ""
+    }
+   ],
+   "facts": [
+    {
+     "index": 0,
+     "status": "covered",
+     "note": ""
+    }
+   ],
+   "cost_usd": 0.000861
+  }
+ },
+ "HO-V2-011": {
+  "input_sha256": "072958ea70c6cba224b7dc18509b0be9d4942c40cc7139fd28c7ed2a4723518f",
+  "judgement": null
+ },
+ "HO-V2-012": {
+  "input_sha256": "2716c5e2f07beaae30009d78c57a938a37dbe21e92153fb3b79855356ebb31ff",
+  "judgement": {
+   "claims": [
+    {
+     "index": 0,
+     "verdict": "supported",
+     "note": ""
+    }
+   ],
+   "facts": [
+    {
+     "index": 0,
+     "status": "covered",
+     "note": ""
+    }
+   ],
+   "cost_usd": 0.000809
+  }
+ },
+ "HO-V2-013": {
+  "input_sha256": "95ee356bc67310feb56f5025b1de4cb9cd6fceac19aa8438d09ec084a45428e0",
+  "judgement": {
+   "claims": [
+    {
+     "index": 0,
+     "verdict": "supported",
+     "note": ""
+    }
+   ],
+   "facts": [
+    {
+     "index": 0,
+     "status": "covered",
+     "note": ""
+    }
+   ],
+   "cost_usd": 0.00084
+  }
+ },
+ "HO-V2-014": {
+  "input_sha256": "6fb6347e3d3745032e8aa9949291042f780dac4eae3434ecab0d3f4c579994f9",
+  "judgement": {
+   "claims": [
+    {
+     "index": 0,
+     "verdict": "supported",
+     "note": ""
+    }
+   ],
+   "facts": [
+    {
+     "index": 0,
+     "status": "covered",
+     "note": ""
+    }
+   ],
+   "cost_usd": 0.000903
+  }
+ },
+ "HO-V2-015": {
+  "input_sha256": "0c5a74b8d4da37d8eb626e8ebeb29918d81542d0b87446d0fb1c603784b1c22f",
+  "judgement": {
+   "claims": [
+    {
+     "index": 0,
+     "verdict": "supported",
+     "note": ""
+    }
+   ],
+   "facts": [
+    {
+     "index": 0,
+     "status": "covered",
+     "note": ""
+    }
+   ],
+   "cost_usd": 0.000827
+  }
+ },
+ "HO-V2-016": {
+  "input_sha256": "4c92c53b03fb38086e9a0a740c4bb9faef7143943c8af492ca90365d894b1ef5",
+  "judgement": {
+   "claims": [
+    {
+     "index": 0,
+     "verdict": "partial",
+     "note": "The evidence gives the adoption rate but does not specify lower-wage employees or establishments."
+    }
+   ],
+   "facts": [
+    {
+     "index": 0,
+     "status": "covered",
+     "note": ""
+    }
+   ],
+   "cost_usd": 0.001221
+  }
+ },
+ "HO-V2-017": {
+  "input_sha256": "c2d4f36cb8c5a3075d52382b863dbf667670325f8ae3ec6f97310dc03db7bf1f",
+  "judgement": {
+   "claims": [
+    {
+     "index": 0,
+     "verdict": "supported",
+     "note": ""
+    }
+   ],
+   "facts": [
+    {
+     "index": 0,
+     "status": "covered",
+     "note": ""
+    }
+   ],
+   "cost_usd": 0.000816
+  }
+ },
+ "HO-V2-018": {
+  "input_sha256": "a789e386c913115bc4c7d2330b3aa19f34663e8d7a714c0f9cf9952efdee1fbe",
+  "judgement": {
+   "claims": [
+    {
+     "index": 0,
+     "verdict": "supported",
+     "note": ""
+    }
+   ],
+   "facts": [
+    {
+     "index": 0,
+     "status": "covered",
+     "note": ""
+    }
+   ],
+   "cost_usd": 0.000822
+  }
+ },
+ "HO-V2-019": {
+  "input_sha256": "660500e29c3898c1920fd445cecf8e784fc818e01a637efc4c8e393f282922b9",
+  "judgement": {
+   "claims": [
+    {
+     "index": 0,
+     "verdict": "supported",
+     "note": ""
+    }
+   ],
+   "facts": [
+    {
+     "index": 0,
+     "status": "covered",
+     "note": ""
+    }
+   ],
+   "cost_usd": 0.000813
+  }
+ },
+ "HO-V2-020": {
+  "input_sha256": "6daac2af257b428a28d476cda74d1b06d8926269b0997869480e98213e8d1ee7",
+  "judgement": {
+   "claims": [
+    {
+     "index": 0,
+     "verdict": "supported",
+     "note": ""
+    }
+   ],
+   "facts": [
+    {
+     "index": 0,
+     "status": "covered",
+     "note": ""
+    }
+   ],
+   "cost_usd": 0.000803
+  }
+ },
+ "HO-V2-021": {
+  "input_sha256": "6014c57ac6f3adca2d71d91c036428177eba239fcf544310f4ef9ec9f21a161d",
+  "judgement": {
+   "claims": [
+    {
+     "index": 0,
+     "verdict": "supported",
+     "note": ""
+    }
+   ],
+   "facts": [
+    {
+     "index": 0,
+     "status": "covered",
+     "note": ""
+    }
+   ],
+   "cost_usd": 0.000977
+  }
+ },
+ "HO-V2-022": {
+  "input_sha256": "1b3053dd2cef5ab709e8b6cd4b001f1be94c29dac038f2b92bee62a951290170",
+  "judgement": null
+ },
+ "HO-V2-023": {
+  "input_sha256": "7156ce60fd943a93ecd124cbb706915a688100c031e54f4e9108c699ba150c76",
+  "judgement": {
+   "claims": [
+    {
+     "index": 0,
+     "verdict": "supported",
+     "note": ""
+    }
+   ],
+   "facts": [
+    {
+     "index": 0,
+     "status": "covered",
+     "note": ""
+    },
+    {
+     "index": 1,
+     "status": "covered",
+     "note": ""
+    },
+    {
+     "index": 2,
+     "status": "covered",
+     "note": ""
+    }
+   ],
+   "cost_usd": 0.001
+  }
+ },
+ "HO-V2-024": {
+  "input_sha256": "50725f0cf9b915f5a7bc3c0dc7c99e953c4db066d9e78a9a9849e0609755372e",
+  "judgement": {
+   "claims": [
+    {
+     "index": 0,
+     "verdict": "supported",
+     "note": ""
+    }
+   ],
+   "facts": [
+    {
+     "index": 0,
+     "status": "covered",
+     "note": ""
+    },
+    {
+     "index": 1,
+     "status": "covered",
+     "note": ""
+    },
+    {
+     "index": 2,
+     "status": "covered",
+     "note": ""
+    }
+   ],
+   "cost_usd": 0.000996
+  }
+ },
+ "HO-V2-025": {
+  "input_sha256": "810fd9ca32d149a65390b24bbc5a7b6908195a84482ea39a76e1f00c42a93ca4",
+  "judgement": null
+ },
+ "HO-V2-026": {
+  "input_sha256": "b6395146f301959519514771d8df1e54b31f7aa3d341a0e336640b4136432ac7",
+  "judgement": null
+ },
+ "HO-V2-027": {
+  "input_sha256": "1a166489f80c074ef947c5465985bfbbcae2e3a6a66efc33752f1e7eda3e6cb1",
+  "judgement": null
+ },
+ "HO-V2-028": {
+  "input_sha256": "92b24a939d3ed558429cecd8cc26ff736184f126fb2f43370848cc580116e404",
+  "judgement": {
+   "claims": [
+    {
+     "index": 0,
+     "verdict": "supported",
+     "note": ""
+    }
+   ],
+   "facts": [
+    {
+     "index": 0,
+     "status": "missing",
+     "note": ""
+    },
+    {
+     "index": 1,
+     "status": "missing",
+     "note": ""
+    },
+    {
+     "index": 2,
+     "status": "covered",
+     "note": ""
+    }
+   ],
+   "cost_usd": 0.001159
+  }
+ },
+ "HO-V2-029": {
+  "input_sha256": "be1bb365b74167bac456dc7ac70ab874fe410583184c4bf73c6301a409138752",
+  "judgement": null
+ },
+ "HO-V2-030": {
+  "input_sha256": "1213736c633b98027353858795894a70e76e367fab132f71f2baee13813a02f1",
+  "judgement": null
+ },
+ "HO-V2-031": {
+  "input_sha256": "65099c6eb974e440868056dd58632b90cc992b9e82c9b0e88f0e6ee71ae7af8f",
+  "judgement": null
+ },
+ "HO-V2-032": {
+  "input_sha256": "ad068e5a1827fc720159e50b6dfa9ff4b10036ac329cefc69078354b4fb6be7a",
+  "judgement": null
+ },
+ "HO-V2-033": {
+  "input_sha256": "04ae26b5ef9581c7505bbc9683c66e830dbd014353f6b3c707cd04ae1ce14095",
+  "judgement": null
+ },
+ "HO-V2-034": {
+  "input_sha256": "4c0a520aaa0e8ee6dc90eec85fa478888cb6edb67571699630e1b0a184cac506",
+  "judgement": null
+ },
+ "HO-V2-035": {
+  "input_sha256": "33978eb2fa54d7dc1e81c6a5df275eb4193b366544754bc6049b8ac5c1c65041",
+  "judgement": null
+ },
+ "HO-V2-036": {
+  "input_sha256": "aa0b6e0bfae4e0cc9922ef25d2acf870fe303e2226cac0fc80ed90e34fb30acc",
+  "judgement": null
+ },
+ "HO-V2-037": {
+  "input_sha256": "6dd1934684fdab02c70efe9a28d5ff5a5adb87ea725472214f74e1b9c9e5ee33",
+  "judgement": {
+   "claims": [
+    {
+     "index": 0,
+     "verdict": "supported",
+     "note": ""
+    },
+    {
+     "index": 1,
+     "verdict": "supported",
+     "note": ""
+    },
+    {
+     "index": 2,
+     "verdict": "partial",
+     "note": "The figures support the comparison, but the cited excerpts do not explicitly establish different population bases."
+    }
+   ],
+   "facts": [
+    {
+     "index": 0,
+     "status": "covered",
+     "note": ""
+    }
+   ],
+   "cost_usd": 0.003086
+  }
+ },
+ "HO-V2-038": {
+  "input_sha256": "c26f48a4f51dea5ad27ae89c143d36a7c9a1c219ea24a817596c8da7ce604831",
+  "judgement": {
+   "claims": [
+    {
+     "index": 0,
+     "verdict": "partial",
+     "note": "The excerpt gives 4.8% but does not identify the report or year."
+    },
+    {
+     "index": 1,
+     "verdict": "partial",
+     "note": "The excerpt supports 63.8%, but does not establish that the report lacks a rank-and-file wage-growth figure."
+    },
+    {
+     "index": 2,
+     "verdict": "supported",
+     "note": ""
+    }
+   ],
+   "facts": [
+    {
+     "index": 0,
+     "status": "contradicted",
+     "note": "The answer says the lower-wage report gives no rank-and-file wage-growth percentage."
+    }
+   ],
+   "cost_usd": 0.002933
+  }
+ },
+ "HO-V2-039": {
+  "input_sha256": "1ba659465eff1990c4e742b2b064eb82566a2b0b5a8cad44835bd83702f28d87",
+  "judgement": {
+   "claims": [
+    {
+     "index": 0,
+     "verdict": "supported",
+     "note": ""
+    },
+    {
+     "index": 1,
+     "verdict": "supported",
+     "note": ""
+    },
+    {
+     "index": 2,
+     "verdict": "supported",
+     "note": ""
+    },
+    {
+     "index": 3,
+     "verdict": "supported",
+     "note": ""
+    }
+   ],
+   "facts": [
+    {
+     "index": 0,
+     "status": "missing",
+     "note": ""
+    }
+   ],
+   "cost_usd": 0.002122
+  }
+ },
+ "HO-V2-040": {
+  "input_sha256": "97adad5e8b333dfc867c9725fdaf310bbb479e32a7df9994e6d9cc5506ea7381",
+  "judgement": {
+   "claims": [
+    {
+     "index": 0,
+     "verdict": "supported",
+     "note": ""
+    },
+    {
+     "index": 1,
+     "verdict": "supported",
+     "note": ""
+    }
+   ],
+   "facts": [
+    {
+     "index": 0,
+     "status": "covered",
+     "note": ""
+    },
+    {
+     "index": 1,
+     "status": "covered",
+     "note": ""
+    },
+    {
+     "index": 2,
+     "status": "covered",
+     "note": ""
+    }
+   ],
+   "cost_usd": 0.003307
+  }
+ },
+ "HO-V2-041": {
+  "input_sha256": "b0cf73a4caf7e57e337899203bc914557d21f82d98b0f049f5e2edbaec99b7ae",
+  "judgement": {
+   "claims": [
+    {
+     "index": 0,
+     "verdict": "partial",
+     "note": "The cited excerpt gives the growth rate but does not name the report."
+    },
+    {
+     "index": 1,
+     "verdict": "supported",
+     "note": ""
+    }
+   ],
+   "facts": [
+    {
+     "index": 0,
+     "status": "missing",
+     "note": ""
+    },
+    {
+     "index": 1,
+     "status": "covered",
+     "note": ""
+    },
+    {
+     "index": 2,
+     "status": "covered",
+     "note": ""
+    }
+   ],
+   "cost_usd": 0.002879
+  }
+ },
+ "HO-V2-042": {
+  "input_sha256": "e3e442535dc06bd1eff0dd58031f49c57cbe6b755870a05f9ad2b3e764e03b80",
+  "judgement": {
+   "claims": [
+    {
+     "index": 0,
+     "verdict": "supported",
+     "note": ""
+    },
+    {
+     "index": 1,
+     "verdict": "supported",
+     "note": ""
+    }
+   ],
+   "facts": [
+    {
+     "index": 0,
+     "status": "covered",
+     "note": ""
+    },
+    {
+     "index": 1,
+     "status": "covered",
+     "note": ""
+    },
+    {
+     "index": 2,
+     "status": "missing",
+     "note": ""
+    }
+   ],
+   "cost_usd": 0.001686
+  }
+ },
+ "HO-V2-043": {
+  "input_sha256": "ab9cd2956437c455ffe365bf802ac353ffb536bd44c8cb7ea53acd2a36dd7d42",
+  "judgement": {
+   "claims": [
+    {
+     "index": 0,
+     "verdict": "supported",
+     "note": ""
+    },
+    {
+     "index": 1,
+     "verdict": "supported",
+     "note": ""
+    },
+    {
+     "index": 2,
+     "verdict": "supported",
+     "note": ""
+    }
+   ],
+   "facts": [
+    {
+     "index": 0,
+     "status": "missing",
+     "note": ""
+    },
+    {
+     "index": 1,
+     "status": "covered",
+     "note": ""
+    },
+    {
+     "index": 2,
+     "status": "covered",
+     "note": ""
+    },
+    {
+     "index": 3,
+     "status": "missing",
+     "note": ""
+    }
+   ],
+   "cost_usd": 0.001936
+  }
+ },
+ "HO-V2-044": {
+  "input_sha256": "184e7291ebc6c4fcd6d95d61e64704532855e6a52ae4ab2c8d8bfe4e047abae8",
+  "judgement": {
+   "claims": [
+    {
+     "index": 0,
+     "verdict": "supported",
+     "note": ""
+    },
+    {
+     "index": 1,
+     "verdict": "supported",
+     "note": ""
+    },
+    {
+     "index": 2,
+     "verdict": "supported",
+     "note": ""
+    },
+    {
+     "index": 3,
+     "verdict": "partial",
+     "note": "The evidence describes NWC adoption but does not mention or compare it with FWS components."
+    }
+   ],
+   "facts": [
+    {
+     "index": 0,
+     "status": "covered",
+     "note": ""
+    }
+   ],
+   "cost_usd": 0.002844
+  }
+ },
+ "HO-V2-045": {
+  "input_sha256": "bc1762708d8275b27e6f51618909fb287bf896239c7f2877bad768fb1f69c0e2",
+  "judgement": null
+ },
+ "HO-V2-046": {
+  "input_sha256": "4531effc36c0462ad4d96126bb4b7ea9cc66d0c00f7cc226c639f2d574ee1316",
+  "judgement": null
+ },
+ "HO-V2-047": {
+  "input_sha256": "f1496269f526f4e24156aa565db61aeec73752a57165623d8e0e57e2eaab8d9d",
+  "judgement": null
+ },
+ "HO-V2-048": {
+  "input_sha256": "f22b35ad3afc30c9a95d9ba10e0ee0bf3ed541b8e92301c9c231b4f77ee72e00",
+  "judgement": {
+   "claims": [
+    {
+     "index": 0,
+     "verdict": "supported",
+     "note": ""
+    }
+   ],
+   "facts": [],
+   "cost_usd": 0.00068
+  }
+ },
+ "HO-V2-049": {
+  "input_sha256": "d5dd8716ff034e7a2db9dae36c8037008dc4893bcbe66dbf9e1d50878e98d326",
+  "judgement": {
+   "claims": [
+    {
+     "index": 0,
+     "verdict": "supported",
+     "note": ""
+    },
+    {
+     "index": 1,
+     "verdict": "supported",
+     "note": ""
+    },
+    {
+     "index": 2,
+     "verdict": "supported",
+     "note": ""
+    },
+    {
+     "index": 3,
+     "verdict": "supported",
+     "note": ""
+    },
+    {
+     "index": 4,
+     "verdict": "supported",
+     "note": ""
+    },
+    {
+     "index": 5,
+     "verdict": "supported",
+     "note": ""
+    },
+    {
+     "index": 6,
+     "verdict": "supported",
+     "note": ""
+    },
+    {
+     "index": 7,
+     "verdict": "supported",
+     "note": ""
+    },
+    {
+     "index": 8,
+     "verdict": "supported",
+     "note": ""
+    },
+    {
+     "index": 9,
+     "verdict": "supported",
+     "note": ""
+    }
+   ],
+   "facts": [],
+   "cost_usd": 0.00214
+  }
+ },
+ "HO-V2-050": {
+  "input_sha256": "4db8b4c0aeb9f0c7fed1240ebd2e2f6552f07e031ff144a3f94dd604066be617",
+  "judgement": null
+ },
+ "HO-V2-051": {
+  "input_sha256": "d3ee76441fec079be3d68bb3250a8099573131e8a27cd74fbbb9becbd514b084",
+  "judgement": null
+ },
+ "HO-V2-052": {
+  "input_sha256": "7d37d3e5a98e1366f1f4a94f9909b3d6db821332d6fd4b94badf2772dbffc059",
+  "judgement": null
+ },
+ "HO-V2-053": {
+  "input_sha256": "bbff134c742b081a1394d53a038b771b870b950da61362cc198f6e6b18f1c2ff",
+  "judgement": null
+ },
+ "HO-V2-054": {
+  "input_sha256": "41abf24cfdc73af9e09cd6f434da853020ea35d7f5f50a6a1b2f33c04aef2f0e",
+  "judgement": null
+ },
+ "HO-V2-055": {
+  "input_sha256": "5c638d2f58a2fc3324aee8a99f99ef3f75a3f7d8a7fb2d516ea7c43c1dab3e94",
+  "judgement": null
+ },
+ "HO-V2-056": {
+  "input_sha256": "9780d5365d29bc4c0b38976449db2789692d27fb202cccb458fd2f6bc49169a8",
+  "judgement": null
+ },
+ "HO-V2-057": {
+  "input_sha256": "0cc55992d29cb75ea43d308dafb4e279a1e385fce96a77afe808717e37c2285e",
+  "judgement": null
+ },
+ "HO-V2-058": {
+  "input_sha256": "da971ab14138c78be049cb6edcd2facf583e8debae8e3150acf3c9c63ec576e4",
+  "judgement": {
+   "claims": [
+    {
+     "index": 0,
+     "verdict": "supported",
+     "note": ""
+    }
+   ],
+   "facts": [
+    {
+     "index": 0,
+     "status": "covered",
+     "note": ""
+    }
+   ],
+   "cost_usd": 0.00083
+  }
+ },
+ "HO-V2-059": {
+  "input_sha256": "59e2a3080b4ba8b8f125babfcecb2c873c445003bc60e1c5ea68866e5253a11d",
+  "judgement": {
+   "claims": [
+    {
+     "index": 0,
+     "verdict": "supported",
+     "note": ""
+    }
+   ],
+   "facts": [
+    {
+     "index": 0,
+     "status": "covered",
+     "note": ""
+    }
+   ],
+   "cost_usd": 0.000766
+  }
+ },
+ "HO-V2-060": {
+  "input_sha256": "6368998b0cbad741c09a752958d4f418dfb0dd0120fe54ba651df506a417161b",
+  "judgement": {
+   "claims": [
+    {
+     "index": 0,
+     "verdict": "supported",
+     "note": ""
+    }
+   ],
+   "facts": [
+    {
+     "index": 0,
+     "status": "covered",
+     "note": ""
+    }
+   ],
+   "cost_usd": 0.000871
+  }
+ },
+ "HO-V2-061": {
+  "input_sha256": "6f59589fe1168e863acd4e907424c9046d6cc9d8cf100c1954c0136f56fa5978",
+  "judgement": {
+   "claims": [
+    {
+     "index": 0,
+     "verdict": "supported",
+     "note": ""
+    },
+    {
+     "index": 1,
+     "verdict": "supported",
+     "note": ""
+    }
+   ],
+   "facts": [
+    {
+     "index": 0,
+     "status": "covered",
+     "note": ""
+    }
+   ],
+   "cost_usd": 0.001222
+  }
+ },
+ "HO-V2-062": {
+  "input_sha256": "9680028c0abca8a0e51f56ad31da88fcf83a9f2ebb189d1553898059405ddf52",
+  "judgement": null
+ },
+ "HO-V2-063": {
+  "input_sha256": "9b3ef45ab2402afb4ed11d43f9c6719d1e36055e20387e5327b52679511acc45",
+  "judgement": null
+ },
+ "HO-V2-064": {
+  "input_sha256": "9704d5c5dac7b57aa7cd538e9c5b5159545d4429694f1d171966ba90a452da7c",
+  "judgement": null
+ },
+ "HO-V2-065": {
+  "input_sha256": "7b6617d08f50c1d436cdf97ff3ad97229684ce29cb57a868c7d1b427f4131c1c",
+  "judgement": null
+ }
+}

@@ -151,8 +151,8 @@ export function buildTimeline(m) {
   const head = el('tr'); ['Build', 'Passages', 'What it was for'].forEach(h => head.append(el('th', '', h))); table.append(el('thead', '', '')); table.lastChild.append(head);
   const body = el('tbody');
   builds.forEach(b => {
-    const [lead] = (b.rerun || '').split(': ');
-    const why = b.current ? `${b.purpose} ${b.rerun ? `${lead}. Hover or focus for both models.` : 'No result re-run.'}` : b.purpose;
+    const lead = (b.rerun || '').split('. ')[0];
+    const why = b.current ? `${b.purpose} ${b.rerun ? `${lead}. Hover or focus for the numbers.` : ''}`.trim() : b.purpose;
     const tr = el('tr', b.current ? 'is-current' : ''); const cell = el('td', '', why);
     if (b.current && b.rerun) withTip(cell, b.rerun, 'is-up');
     tr.append(el('th', '', b.name), el('td', 'num', fmt.int(b.passages)), cell); body.append(tr);
@@ -229,7 +229,7 @@ export function retrievalStaircase(m) {
 }
 
 /** G8: the experiment staircase, development accuracy for the main model. Each rung says in its popover what changed. */
-export function experimentStaircase(m) {
+function ladderItems(m) {
   const get = n => m.evalRow(`dev-A${n}`, 'gpt-6-luna');
   const rate = n => metricOf(get(n)?.metrics?.behaviour_accuracy);
   const a1 = rate(1), a2 = rate(2), a3 = rate(3), a4 = rate(4), a5 = rate(5);
@@ -245,8 +245,105 @@ export function experimentStaircase(m) {
     ['Wider\npool', 'hatched', 'not adopted\nno gain', `Retrieval widened its candidate pool when the filtered set was small or weak. ${fmt.pct(a4.rate)} against ${fmt.pct(a3.rate)} for filter then rerank: no gain. Not adopted.`],
     ['New\nplanner', 'hatched', 'not adopted\na tie', `Only the planner prompt changed: it researches the legitimate part of a question that contains rules-override wording. ${fmt.pct(a5.rate)} against ${fmt.pct(a3.rate)} for filter then rerank (${pts(a5.rate, a3.rate)} points). ${overlap(a5, a3) ? 'The intervals overlap almost completely, so it is a tie and not a demonstrated gain.' : ''} False answers ${fmt.pct(fa(5))} against ${fmt.pct(fa(3))}, and slower at the tail (${p95(5)} s against ${p95(3)} s at the 95th percentile). The simpler planner stays.`]
   ];
-  const items = [a1, a2, a3, a4, a5].map((b, i) => ({label: spec[i][0], value: b.rate, ci: b.ci, kind: spec[i][1], tag: spec[i][2], tip: spec[i][3]}));
-  return staircase(items, {domain: [0.5, 1]});
+  return [a1, a2, a3, a4, a5].map((b, i) => ({label: spec[i][0], value: b.rate, ci: b.ci, kind: spec[i][1], tag: spec[i][2], tip: spec[i][3]}));
+}
+
+export function experimentStaircase(m) {
+  const items = ladderItems(m);
+  return items ? staircase(items, {domain: [0.5, 1]}) : null;
+}
+
+const FINAL_MODELS = ['gpt-6-luna', 'gpt-5.6-luna'];
+
+/** The final system's numbers, read from final_evaluation: per question set and model, the two arms and the paired difference. */
+export function finalFacts(m) {
+  const fe = m.finalEvaluation;
+  if (!fe?.splits?.length) return null;
+  const sets = fe.splits.map(s => {
+    const arm = (a, model) => s.arms.find(x => x.arm === a && x.model === model);
+    return {id: s.id, label: s.label, n: s.n, note: s.note, models: FINAL_MODELS.map(model => {
+      const r3 = arm('r3', model), hy = arm('hybrid', model), p = s.paired?.[model];
+      if (!r3 || !hy) return null;
+      const acc = x => x.metrics.behaviour_accuracy.rate;
+      return {model, r3, hy, r3rate: acc(r3), hyrate: acc(hy), p};
+    }).filter(Boolean)};
+  });
+  return {sets, fe};
+}
+
+const pointsText = d => `${d >= 0 ? '+' : '-'}${Math.abs(d * 100).toFixed(1)} points`;
+
+/** One plain paragraph of the final result, for notes, popovers and the report. Numbers come from the data. */
+export function finalSentence(m) {
+  const f = finalFacts(m);
+  if (!f) return 'The final evaluation is not available in the report data.';
+  const part = id => {
+    const s = f.sets.find(x => x.id === id), a = s?.models.find(x => x.model === 'gpt-6-luna');
+    return s && a ? `${fmt.pct(a.r3rate)} with filter then rerank against ${fmt.pct(a.hyrate)} for hybrid on the ${fmt.int(s.n)} ${s.label.toLowerCase()}` : '';
+  };
+  return `On the final system, gpt-6-luna scored ${[part('dev'), part('registered'), part('fresh')].filter(Boolean).join('; ')}. One run per arm.`;
+}
+
+/** Cost and latency of filter then rerank against hybrid on the development questions, as ratios read from the data. */
+export function finalCostFacts(m) {
+  const dev = finalFacts(m)?.sets.find(s => s.id === 'dev')?.models.find(x => x.model === 'gpt-6-luna');
+  if (!dev) return null;
+  const c = dev.r3.metrics, h = dev.hy.metrics;
+  return {cost: c.cost_per_case_usd, costBase: h.cost_per_case_usd, costRatio: c.cost_per_case_usd / h.cost_per_case_usd, p50: c.latency_p50_s, p50Base: h.latency_p50_s, latRatio: c.latency_p50_s / h.latency_p50_s,
+    over: c.over_abstention_rate?.rate, overBase: h.over_abstention_rate?.rate, falseRate: c.false_answer_rate?.rate, falseBase: h.false_answer_rate?.rate};
+}
+
+/** The headline result: per question set and model, hybrid against filter then rerank, with the paired difference. Detail on hover or focus. */
+export function finalComparison(m) {
+  const f = finalFacts(m);
+  if (!f) return null;
+  const wrap = el('div', 'fc');
+  const cols = el('div', 'fc-cols');
+  f.sets.forEach((s, i) => {
+    const col = el('div', 'fc-col'); col.style.setProperty('--i', String(i));
+    col.append(el('h3', 'fc-title', s.label), el('p', 'fc-sub num', `${fmt.int(s.n)} questions`));
+    const tipLines = [`${s.label}, ${fmt.int(s.n)} questions. ${s.note}`];
+    s.models.forEach(({model, r3, hy, r3rate, hyrate, p}) => {
+      const block = el('div', 'fc-model'); block.append(el('p', 'fc-name', model));
+      [['Hybrid', hyrate, 'is-base'], ['Filter then rerank', r3rate, 'is-new']].forEach(([name, rate, cls]) => {
+        const row = el('div', `fc-row ${cls}`); const track = el('div', 'fc-track'); const bar = el('div', 'fc-bar'); bar.style.setProperty('--w', `${Math.round(rate * 100)}%`);
+        track.append(bar); row.append(el('span', 'fc-label', name), track, el('span', 'fc-val num', fmt.pct(rate))); block.append(row);
+      });
+      const d = r3rate - hyrate;
+      block.append(el('p', `fc-diff num${Math.abs(d) < 1e-9 ? ' is-null' : d < 0 ? ' is-neg' : ''}`, Math.abs(d) < 1e-9 ? `No difference${p ? `, ${p.better} better and ${p.worse} worse` : ''}` : `${pointsText(d)}${p ? `, ${p.better} better and ${p.worse} worse` : ''}`));
+      col.append(block);
+      const x = r3.metrics, y = hy.metrics, ci = a => (a?.ci95 ? ` [${fmt.pct(a.ci95[0])} to ${fmt.pct(a.ci95[1])}]` : '');
+      tipLines.push(`${model}: filter then rerank ${fmt.pct(r3rate)}${ci(x.behaviour_accuracy)}, hybrid ${fmt.pct(hyrate)}${ci(y.behaviour_accuracy)}. ${p?.interval ? `Paired difference ${pointsText(p.paired_difference)}, ${Math.round((p.level ?? 0.95) * 100)}% interval ${(p.interval[0] * 100).toFixed(1)} to ${(p.interval[1] * 100).toFixed(1)} points. ` : ''}False answers ${fmt.pct(x.false_answer_rate?.rate)} against ${fmt.pct(y.false_answer_rate?.rate)}, over-abstention ${fmt.pct(x.over_abstention_rate?.rate)} against ${fmt.pct(y.over_abstention_rate?.rate)}, cost per question $${x.cost_per_case_usd?.toFixed(5)} against $${y.cost_per_case_usd?.toFixed(5)}, median ${x.latency_p50_s} s against ${y.latency_p50_s} s.`);
+    });
+    withTip(col, tipLines.join('\n'), 'is-down is-wide');
+    cols.append(col);
+  });
+  wrap.append(cols);
+  const items = ladderItems(m);
+  if (items) {
+    const steps = el('div', 'fc-steps');
+    steps.append(el('p', 'fc-steps-head', 'Earlier build, one change at a time'));
+    const row = el('div', 'fc-steps-row');
+    items.forEach(it => { const [name, ...rest] = [it.label.replace('\n', ' '), it.tag.replace('\n', ', ')]; const s = el('div', `fc-step${it.kind === 'accent' ? ' is-adopted' : ''}`); s.append(el('p', 'fc-step-name', name), el('p', 'fc-step-tag', rest[0])); withTip(s, it.tip, 'is-up'); row.append(s); });
+    steps.append(row); wrap.append(steps);
+  }
+  return wrap;
+}
+
+/** Where each headline number comes from: the question set, the build and code, the gold file, then one line for the models, runs and judge. */
+export function provenanceTable(m) {
+  const rows = m.finalEvaluation?.provenance_table;
+  if (!rows?.length) return null;
+  const wrap = el('div', 'pv');
+  const table = el('table', 'pv-table');
+  const head = el('tr'); ['Question set', 'Build and code', 'Gold file'].forEach(h => head.append(el('th', '', h)));
+  const thead = el('thead'); thead.append(head); table.append(thead);
+  const body = el('tbody');
+  rows.forEach(r => { const tr = el('tr'); [`${r.label}, ${r.n}`, `${r.corpus}, ${r.code || 'code not recorded'}`, `${r.gold_file} (${(r.gold_sha256 || '').slice(0, 8)})`].forEach(c => tr.append(el('td', '', c))); body.append(tr); });
+  table.append(body); wrap.append(table);
+  const first = rows[0];
+  wrap.append(el('p', 'pv-note', `Models: ${first.models.join(' and ')}. Judge: ${first.judge}. ${first.runs_per_arm} run per arm.`));
+  return wrap;
 }
 
 const LOOP_TIPS = [
@@ -835,14 +932,15 @@ export const RESPONSIBLE_AI = 'Least privilege: three typed read-only tools, no 
 
 /** Beyond behaviour accuracy: claim support, citation, fact coverage, latency, cost and the weakest question type, read from the final development run and the baseline. */
 export function contentMetricsText(m) {
-  const a3 = m.evalRow('dev-A3', 'gpt-6-luna'), a1 = m.evalRow('dev-A1', 'gpt-6-luna');
+  const dev = finalFacts(m)?.sets.find(s => s.id === 'dev')?.models.find(x => x.model === 'gpt-6-luna');
+  const a3 = dev ? {metrics: dev.r3.metrics, strata: dev.r3.strata} : null, a1 = dev ? {metrics: dev.hy.metrics} : null;
   const x = a3?.metrics;
   if (!x) return 'The content metrics are not available in the report data.';
   const rate = key => (finite(x[key]?.rate) ? fmt.pct(x[key].rate) : 'not recorded');
   const strata = Object.entries(a3.strata || {}).filter(([, v]) => finite(v.behaviour_accuracy));
   const weak = strata.sort((p, q) => p[1].behaviour_accuracy - q[1].behaviour_accuracy)[0];
   const base = a1?.metrics;
-  return `Beyond behaviour accuracy, on the ${fmt.int(x.n_cases)} development questions with filter then rerank: ${rate('claim_supported_rate')} of ${fmt.int(x.claims_judged)} claims were supported by their cited passage (an AI judge), the gold passage was cited in ${rate('gold_cited_any')} of answers that needed one, fact coverage was ${rate('fact_coverage')} and key-number recall ${rate('key_number_recall')}. Median ${x.latency_p50_s} s, 95th percentile ${x.latency_p95_s} s and ${fmt.money(x.cost_per_case_usd)} a question${base ? `, against ${base.latency_p50_s} s and ${fmt.money(base.cost_per_case_usd)} for the baseline` : ''}.${weak ? ` By question type: ${strata.map(([k, v]) => `${k.replace(/_/g, ' ')} ${fmt.pct(v.behaviour_accuracy)} of ${fmt.int(v.n)}`).join(', ')}.` : ''}`;
+  return `Beyond behaviour accuracy, on the ${fmt.int(x.n_cases)} development questions in the final run, gpt-6-luna with filter then rerank: ${rate('claim_supported_rate')} of ${fmt.int(x.claims_judged)} claims were supported by their cited passage (an AI judge), the gold passage was cited in ${rate('gold_cited_any')} of answers that needed one, fact coverage was ${rate('fact_coverage')} and key-number recall ${rate('key_number_recall')}. Median ${x.latency_p50_s} s, 95th percentile ${x.latency_p95_s} s and ${fmt.money(x.cost_per_case_usd)} a question${base ? `, against ${base.latency_p50_s} s and ${fmt.money(base.cost_per_case_usd)} for hybrid` : ''}.${weak ? ` By question type: ${strata.map(([k, v]) => `${k.replace(/_/g, ' ')} ${fmt.pct(v.behaviour_accuracy)} of ${fmt.int(v.n)}`).join(', ')}.` : ''}`;
 }
 
 export function measureCards(m) {

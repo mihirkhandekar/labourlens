@@ -1,0 +1,3 @@
+Paired development difference in behaviour accuracy, r3 minus hybrid, n=237, 10000 case-bootstrap resamples, seed 20261030, final system (corpus v3.1, current code, gold v3.7 rescored with --allow-gold-mismatch). Development cases guided the design, so this is descriptive, not a held-out test.
+gpt-6-luna diff 0.042 95% CI [0.004, 0.084] better 17 worse 7 r3 210/237 hybrid 200/237
+gpt-5.6-luna diff 0.059 95% CI [0.017, 0.101] better 20 worse 6 r3 213/237 hybrid 199/237

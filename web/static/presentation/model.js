@@ -26,6 +26,7 @@ export function model(report) {
     report, section, rows, charts,
     excerpts: report?.row_excerpts && typeof report.row_excerpts === 'object' ? report.row_excerpts : {},
     heldoutV31: report?.heldout_v31 && typeof report.heldout_v31 === 'object' ? report.heldout_v31 : null,
+    finalEvaluation: report?.final_evaluation && typeof report.final_evaluation === 'object' ? report.final_evaluation : null,
     generatedAt: report?.generated_at || null,
     commit: report?.provenance?.commit || null,
     artifactCount: Array.isArray(report?.provenance?.artifacts) ? report.provenance.artifacts.length : null,
