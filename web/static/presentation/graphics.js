@@ -11,6 +11,28 @@ export function ico(name, cls = '') {
   node.style.setProperty('--ico', `url("${PHOS}${name}.svg")`);
   return node;
 }
+
+let tipSerial = 0;
+/** A hover and focus popover for an HTML element. The text stays in the DOM, so screen readers get it through aria-describedby. */
+export function withTip(node, text) {
+  const tip = el('span', 'deck-tip', text);
+  tip.setAttribute('role', 'tooltip'); tip.id = `deck-tip-${tipSerial += 1}`;
+  node.classList.add('has-tip'); node.tabIndex = 0; node.setAttribute('aria-describedby', tip.id); node.append(tip);
+  return node;
+}
+/** The same for parts of an SVG: one shared popover inside `box`, placed at each part's horizontal centre (0 to 1). */
+function svgTips(box, parts) {
+  const tip = el('div', 'deck-tip is-svg', '');
+  tip.setAttribute('role', 'tooltip'); tip.id = `deck-tip-${tipSerial += 1}`;
+  box.classList.add('has-tip-host'); box.append(tip);
+  parts.forEach(({node, at, text, label}) => {
+    node.setAttribute('tabindex', '0'); node.setAttribute('role', 'img'); node.classList.add('is-tipped');
+    node.setAttribute('aria-label', `${label}. ${text.replace(/\n+/g, ' ')}`);
+    const show = () => { tip.textContent = text; tip.style.setProperty('--at', `${(at * 100).toFixed(1)}%`); tip.classList.add('is-on'); };
+    const hide = () => tip.classList.remove('is-on');
+    node.addEventListener('mouseenter', show); node.addEventListener('focus', show); node.addEventListener('mouseleave', hide); node.addEventListener('blur', hide);
+  });
+}
 const pctS = v => `${v.toFixed(1)}%`;
 export const latest = (m, id) => m.values(id, m.periods()).filter(finite).pop();
 const previous = (m, id) => m.values(id, m.periods()).filter(finite).slice(-2, -1)[0];
@@ -33,38 +55,51 @@ export function threeAnswers(m) {
   return wrap;
 }
 
-/** G2: two kinds of source feeding one answer. */
+/** Where the statistics and the reports are stored, as two flow rows. Hover or focus a step for the detail. */
 export function twoSources(m) {
   const types = m.section('sources').metrics?.by_type || {};
-  const wrap = el('div', 'g2');
-  const block = (icon, title, count, unit, lines) => {
-    const b = el('div', 'g2-block');
-    const head = el('div', 'g2-head'); head.append(ico(icon), el('h3', '', title));
-    b.append(head, el('p', 'g2-count num', `${fmt.int(count)} ${unit}`));
-    const ul = el('ul', 'g2-list'); lines.forEach(t => ul.append(el('li', '', t))); b.append(ul);
-    return b;
+  const wrap = el('div', 'sf');
+  const lane = (icon, title, count, tipText, steps) => {
+    const row = el('div', 'sf-lane');
+    const head = el('div', 'sf-head'); head.append(ico(icon), el('h3', '', title), el('p', 'sf-count num', count));
+    withTip(head, tipText);
+    row.append(head);
+    steps.forEach(([stepIcon, name, detail], i) => {
+      const arrow = el('span', 'sf-arrow'); arrow.append(ico('arrow-right')); row.append(arrow);
+      const step = el('div', 'sf-step'); step.style.setProperty('--i', String(i));
+      step.append(ico(stepIcon), el('p', 'sf-name', name));
+      row.append(withTip(step, detail));
+    });
+    return row;
   };
   wrap.append(
-    block('table', 'Structured: statistics', types.dataset_csv, 'snapshots', ['Unemployment rate', 'Vacancies per unemployed person', 'Retrenchments', 'Employment change by sector', 'Transport and storage jobs']),
-    el('div', 'g2-join'),
-    block('file-text', 'Unstructured: reports', types.report_pdf, 'PDFs', [`${fmt.int(types.release_html)} release pages`, 'MOM labour market reports', 'MTI AI-and-employment article'])
+    lane('table', 'Statistics', `${fmt.int(types.dataset_csv)} datasets`, 'Unemployment rate, vacancies per unemployed person, retrenchments, employment change by sector, and transport and storage jobs.', [
+      ['arrow-square-out', 'Download', 'Fetched from data.gov.sg. Each file is kept exactly as fetched, with its source address, date and SHA-256 hash.'],
+      ['lock', 'Snapshot', 'Immutable snapshots. A later fetch never replaces an earlier one.'],
+      ['table', 'Parquet table', 'Normalised into one long Parquet table. Every row keeps its series, unit, population, adjustment, release stage and a link back to the source cell.'],
+      ['wrench', 'Tool queries', 'The agent reads the table through typed read-only tools (pandas over Parquet). Changes are calculated in code.']
+    ]),
+    lane('file-text', 'Reports', `${fmt.int(types.report_pdf)} PDFs and ${fmt.int(types.release_html)} web pages`, 'MOM labour market reports, MOM release pages and one MTI article on AI and employment.', [
+      ['file-text', 'PDF and web page', 'PDFs are read with PyMuPDF and web pages with BeautifulSoup. Raw MOM and MTI files stay on my machine and are never published.'],
+      ['stack', 'Passages', 'Each passage keeps its source, page or section, and a quality flag.'],
+      ['squares-four', 'Chunks', 'Neighbouring good passages are merged into chunks of about 200 words.'],
+      ['magnifying-glass', 'BM25 and embeddings', 'A BM25 index and text-embedding-3-large vectors. Vectors are cached by content, so unchanged text is never embedded twice.']
+    ])
   );
-  wrap.querySelector('.g2-join').append(el('span', 'g2-plus', '+'));
   return wrap;
 }
 
-/** G3: the current document build first, then the two earlier builds in a plain table. Passage counts are recorded in the README and the decision log, not in report.json. */
+/** G3: the current document build first, then the earlier builds in a plain table. Passage counts are recorded in the README and the decision log, not in report.json. */
 export function buildTimeline() {
   const wrap = el('div', 'g3b');
-  wrap.append(el('p', 'g3b-lead', 'The system, the live site and the final held-out test all use the current document build: 85 sources, 16,419 passages. Two earlier builds are kept only so older results can be reproduced.'));
+  wrap.append(el('p', 'g3b-lead', 'The live site uses the current document build: 85 sources and 16,419 passages.'));
   const table = el('table', 'g3b-table');
   const head = el('tr'); ['Build', 'Passages', 'What it was for'].forEach(h => head.append(el('th', '', h))); table.append(el('thead', '', '')); table.lastChild.append(head);
   const body = el('tbody');
-  [['Earlier build (v1)', 13484, 'First experiments and the original held-out test. Results frozen.'], ['Middle build (v2)', 15915, 'Extraction fixes tested alone. No measurable change.'], ['Current build (v3)', 16419, 'Adds six untouched sources, so the 65-question held-out set shares no evidence with development.']].forEach(([name, count, why], i) => {
-    const tr = el('tr', i === 2 ? 'is-current' : ''); tr.append(el('th', '', name), el('td', 'num', fmt.int(count)), el('td', '', why)); body.append(tr);
+  [['Build v1', 13484, 'First experiments and the original test. Results frozen.'], ['Build v2', 15915, 'Extraction fixes tested alone. No measurable change.'], ['Build v3', 16419, 'Six new sources added. Every measured result since is on this build.'], ['Current build (v3.1)', 16419, 'Same sources. Forty passages of one article relabelled. No result re-run.']].forEach(([name, count, why], i) => {
+    const tr = el('tr', i === 3 ? 'is-current' : ''); tr.append(el('th', '', name), el('td', 'num', fmt.int(count)), el('td', '', why)); body.append(tr);
   });
   table.append(body); wrap.append(table);
-  wrap.append(el('p', 'g3b-note', 'Which numbers come from which build: development accuracy 0.903 appears on the earlier build (first experiments) and on the current build (regression check); held-out v2 0.754 is on the current build. Do not compare numbers across builds.'));
   return wrap;
 }
 
@@ -95,6 +130,7 @@ export function staircase(items, {domain = [0, 1], note} = {}) {
   pat.append(svgEl('rect', {width: 12, height: 12, class: 'g5-hatch-bg'}), svgEl('line', {x1: 0, y1: 0, x2: 0, y2: 12, class: 'g5-hatch-line'})); defs.append(pat); svg.append(defs);
   const y = v => top + (H - top - bottom) * (1 - (v - domain[0]) / (domain[1] - domain[0]));
   svg.append(svgEl('line', {x1: left - 10, x2: W - left + 10, y1: y(domain[0]), y2: y(domain[0]), class: 'g5-axis'}));
+  const parts = [];
   items.forEach((it, i) => {
     const x = left + i * (bw + gap);
     const g = svgEl('g', {class: `g5-step is-${it.kind || 'plain'}`});
@@ -108,31 +144,53 @@ export function staircase(items, {domain = [0, 1], note} = {}) {
     it.label.split('\n').forEach((line, k) => g.append(svgEl('text', {x: x + bw / 2, y: H - bottom + 44 + k * 34, 'text-anchor': 'middle', class: 'g5-label'}, line)));
     if (it.tag) g.append(svgEl('text', {x: x + bw / 2, y: H - bottom + 44 + (it.label.split('\n').length) * 34 + 4, 'text-anchor': 'middle', class: 'g5-tag'}, it.tag));
     svg.append(g);
+    if (it.tip) parts.push({node: g, at: (x + bw / 2) / W, text: it.tip, label: it.label.replace(/\n/g, ' ')});
   });
   const box = el('div', 'g5'); box.append(svg);
   if (note) box.append(el('p', 'g5-note', note));
+  if (parts.length) svgTips(box, parts);
   return box;
 }
 
-/** G5: retrieval staircase from the ladder. */
+/** G5: retrieval staircase from the ladder. The method for each bar is in its hover and focus popover. */
 export function retrievalStaircase(m) {
   const C = m.ladder?.configs;
   if (!C) return null;
-  const pick = (k, label, kind) => ({label, value: C[k]['hit@8'], ci: C[k]['hit@8_ci95'], kind});
-  return staircase([pick('R0', 'Baseline', 'plain'), pick('R1a', 'Filter\nby period', 'plain'), pick('R2', 'AI rerank', 'plain'), pick('R3', 'Filter, then\nrerank', 'accent')]);
+  const pick = (k, label, kind, tip) => ({label, value: C[k]['hit@8'], ci: C[k]['hit@8_ci95'], kind, tip});
+  return staircase([
+    pick('R0', 'Baseline', 'plain', 'Hybrid search: BM25 and text-embedding-3-large vectors, fused by reciprocal rank fusion (c=60, top 50 of each list). Chunks of about 200 words.'),
+    pick('R1a', 'Filter\nby period', 'plain', 'A hard filter keeps passages that overlap a named quarter and match the release stage when a source exists. If nothing matches, no filter is applied.'),
+    pick('R2', 'AI rerank', 'plain', 'gpt-6-luna reranks the top 30 candidates and returns up to 10. Unranked candidates keep their incoming order.'),
+    pick('R3', 'Filter, then\nrerank', 'accent', 'The period and release filter first, then the model rerank.')
+  ]);
 }
 
-/** G8: the experiment staircase, development accuracy for the main model. */
+/** G8: the experiment staircase, development accuracy for the main model. Each rung says in its popover what changed. */
 export function experimentStaircase(m) {
-  const spec = [[1, 'Baseline', 'plain'], [2, 'Better\nprompt', 'hatched'], [3, 'Filter, then\nrerank', 'accent'], [4, 'Wider\npool', 'hatched'], [5, 'New\nplanner', 'hatched']];
-  const items = spec.map(([n, label, kind]) => {
+  const spec = [
+    [1, 'Baseline', 'plain', 'Hybrid search, the first answer prompt and the first planner prompt.'],
+    [2, 'Better\nprompt', 'hatched', 'Only the answer prompt changed: it adds instructions for missing or conflicting data.'],
+    [3, 'Filter, then\nrerank', 'accent', 'Retrieval changed: filter by the named period and release, then rerank the top 30.'],
+    [4, 'Wider\npool', 'hatched', 'Retrieval widened its candidate pool when the filtered set was small or weak.'],
+    [5, 'New\nplanner', 'hatched', 'Only the planner prompt changed: it researches the legitimate part of a question that contains rules-override wording.']
+  ];
+  const items = spec.map(([n, label, kind, tip]) => {
     const row = m.evalRow(`dev-A${n}`, 'gpt-6-luna');
     const b = metricOf(row?.metrics?.behaviour_accuracy);
-    return b.rate == null ? null : {label, value: b.rate, ci: b.ci, kind, tag: kind === 'hatched' ? 'no change' : kind === 'accent' ? 'adopted' : ''};
+    return b.rate == null ? null : {label, value: b.rate, ci: b.ci, kind, tip, tag: kind === 'hatched' ? 'no change' : kind === 'accent' ? 'adopted' : ''};
   }).filter(Boolean);
   return items.length ? staircase(items, {domain: [0.5, 1]}) : null;
 }
 
+const LOOP_TIPS = [
+  'The question is capped at 1,000 characters and checked for instruction-like wording.',
+  'Round 1 gathers evidence. Round 2, only if needed: a calculation, or one more lookup after an error or a gap. Then finish. The planner sees the question and a catalogue, never passage text.',
+  'Three read-only tools. At most 6 calls in total, 3 per round, 10 seconds per call and 1 retry.',
+  'Code adds notes about missing periods, mixed series and advance against final figures.',
+  'Every claim must cite items by label and include a short verbatim quote. The model does no arithmetic.',
+  'Checks the answer schema, the citation labels, that each quote appears in its passage, and that reported numbers appear in the evidence.',
+  'The answer is returned as answered, abstained, clarifying or refused.'
+];
 /** G6: the agent loop, drawn from the fixed design. Labels are plain words. */
 export function agentLoop() {
   const W = 1560, H = 420;
@@ -153,13 +211,16 @@ export function agentLoop() {
   };
   loop(3, 1, true, 'up to 2 rounds');
   loop(5, 4, false, '1 repair');
+  const parts = [];
   boxes.forEach(([label, guard], i) => {
     const g = svgEl('g', {class: `g6-box${guard ? ' is-guard' : ''}`}); g.style.setProperty('--i', String(i));
     g.append(svgEl('rect', {x: xs[i], y: y0, width: bw, height: bh, rx: 12}));
     label.split('\n').forEach((line, k, all) => g.append(svgEl('text', {x: xs[i] + bw / 2, y: y0 + bh / 2 + 10 + (k - (all.length - 1) / 2) * 34, 'text-anchor': 'middle', class: 'g6-text'}, line)));
     svg.append(g);
+    parts.push({node: g, at: (xs[i] + bw / 2) / W, text: LOOP_TIPS[i], label: label.replace(/\n/g, ' ')});
   });
   const wrap = el('div', 'g6'); wrap.append(svg);
+  svgTips(wrap, parts);
   const chips = el('ul', 'g6-chips');
   ['6 tool calls', '10 seconds per call', '1 retry', 'Three read-only tools: search reports, get a series, calculate a change'].forEach(t => chips.append(el('li', '', t)));
   wrap.append(chips);
@@ -270,24 +331,42 @@ export function toolFixFlow() {
   return wrap;
 }
 
-/** The MCP trust boundary: four boxes and a dashed line. */
-export function mcpDiagram() {
-  const W = 1560, H = 300, bw = 300, bh = 130, y0 = 90;
-  const svg = svgEl('svg', {viewBox: `0 0 ${W} ${H}`, class: 'g6-svg', role: 'img', focusable: 'false'});
-  svg.setAttribute('aria-label', 'Host application uses an MCP client to validate calls and results from an MCP server with read-only tools and resources, backed by statistics.');
-  const names = [['Host app', 'live app: direct calls'], ['MCP client', 'checks every result'], ['MCP server', '9 tools, 2 resources'], ['Statistics', 'read-only data']];
-  const gap = (W - 20 - bw * 4) / 3, xs = names.map((_, i) => 10 + i * (bw + gap));
-  const defs = svgEl('defs'); const mk = svgEl('marker', {id: 'g6-arrow2', viewBox: '0 0 10 10', refX: 8, refY: 5, markerWidth: 9, markerHeight: 9, orient: 'auto'});
-  mk.append(svgEl('path', {d: 'M0 0 10 5 0 10z', class: 'g6-head'})); defs.append(mk); svg.append(defs);
-  for (let i = 0; i < 3; i += 1) svg.append(svgEl('line', {x1: xs[i] + bw, x2: xs[i + 1] - 4, y1: y0 + bh / 2, y2: y0 + bh / 2, class: 'g6-edge', 'marker-end': 'url(#g6-arrow2)'}));
-  const bx = (xs[1] + bw + xs[2]) / 2;
-  svg.append(svgEl('line', {x1: bx, x2: bx, y1: 20, y2: H - 10, class: 'g6-edge is-loop'}), svgEl('text', {x: bx, y: 14, 'text-anchor': 'middle', class: 'g6-loop-label'}, 'Optional MCP trust boundary'));
-  names.forEach(([a, b], i) => {
-    const g = svgEl('g', {class: `g6-box${i === 1 ? ' is-guard' : ''}`}); g.style.setProperty('--i', String(i));
-    g.append(svgEl('rect', {x: xs[i], y: y0, width: bw, height: bh, rx: 12}), svgEl('text', {x: xs[i] + bw / 2, y: y0 + 56, 'text-anchor': 'middle', class: 'g6-text'}, a), svgEl('text', {x: xs[i] + bw / 2, y: y0 + 96, 'text-anchor': 'middle', class: 'g5-tag'}, b));
-    svg.append(g);
+/** Where MCP sits: two paths to the same statistics. Figures for the comparison come from the report data and the protocol demo transcript. */
+export function mcpMap(m) {
+  const mx = m.section('mcp').metrics || {};
+  const wrap = el('div', 'mm');
+  const node = (icon, name, sub, tipText, cls = '') => {
+    const n = el('div', `mm-node${cls ? ` ${cls}` : ''}`); n.append(ico(icon), el('p', 'mm-name', name));
+    if (sub) n.append(el('p', 'mm-sub', sub));
+    return tipText ? withTip(n, tipText) : n;
+  };
+  const arrow = () => { const a = el('span', 'mm-arrow'); a.append(ico('arrow-right')); return a; };
+  const lane = (title, nodes, ran) => {
+    const section = el('div', 'mm-lane');
+    section.append(el('h3', 'mm-title', title));
+    const flow = el('div', 'mm-flow');
+    nodes.forEach((n, i) => { if (i) flow.append(arrow()); flow.append(n); });
+    section.append(flow);
+    if (ran.length) {
+      const list = el('ul', 'mm-ran');
+      ran.forEach(([text, tipText]) => { const li = el('li', '', text); list.append(tipText ? withTip(li, tipText) : li); });
+      section.append(list);
+    }
+    return section;
+  };
+  wrap.append(
+    lane('Direct calls', [node('wrench', 'Agent', '', 'The same planner, tools and answer step in both paths.'), node('table', 'Function call', 'in the same process'), node('database', 'Statistics', 'read-only table')], [['The live web app', ''], ['Every accuracy evaluation', 'The reference, fresh and development runs all call the statistics functions directly.']]),
+    lane('Through MCP', [node('wrench', 'Agent or demo client', ''), node('shield', 'MCP client', 'checks every reply', 'Checks the server name, version and tool list; validates arguments and results against schemas; sets time and size limits; quarantines instruction-like text.', 'is-guard'), node('path', 'MCP server', '9 tools, 2 resources, 1 prompt', 'Tools: get_statistic, list_datasets, describe_dataset, get_dimension_values, latest_value, compare_periods, series_summary, get_revisions, get_provenance.\nResources: labourlens://sources and labourlens://source/{source_id}.\nPrompt: compare_quarters.\nIt serves statistics and the source catalogue, never report text.'), node('database', 'Statistics', 'read-only table')], [
+      ['Scripted client demo, 17 parts', 'Discovery, a valid call, bad arguments, a slow server, instructions hidden in results, a server that dies, wrong name or version, broken schema, oversized replies, an extra tool, secrets, and a loopback HTTP transport.'],
+      ['One agent question over MCP', 'One question on retrenched employees from 2025-Q4 to 2026-Q1. The agent used get_statistic only; the figures matched a direct lookup. One run, a demonstration and not an evaluation.'],
+      ['10 hostile-server cases, all passed', 'Threat cases where the MCP server misbehaves: timeouts, crashes, oversized or malformed replies, extra tools, instructions in results. Each failed closed.']
+    ])
+  );
+  const result = el('div', 'mm-result');
+  [[`${fmt.int(mx.compared_datasets)} of ${fmt.int(mx.compared_datasets)}`, `datasets gave the same result either way (${fmt.int(mx.identical_datasets)} identical, ${fmt.int(mx.matching_refusals)} refused the same way)`], ['4.4 ms and 22.7 ms', 'median time per call, direct and over MCP'], ['No measured gain', 'MCP adds an interface and a trust boundary, not accuracy']].forEach(([big, label], i) => {
+    const cell = el('div', 'mm-fig'); cell.style.setProperty('--i', String(i)); cell.append(el('p', 'mm-big num', big), el('p', 'mm-cap', label)); result.append(cell);
   });
-  const wrap = el('div', 'g6'); wrap.append(svg);
+  wrap.append(result);
   return wrap;
 }
 
@@ -295,7 +374,7 @@ export function mcpDiagram() {
 const REQUIREMENTS = [
   ['question', 'Framing', 'Users, scope, a simple baseline', 'The problem; How I measured', 'Protocol sign-off pending'],
   ['database', 'Data', 'Two source types, two findings', 'Choosing the data; What the data showed', 'Rights gaps remain'],
-  ['magnifying-glass', 'Retrieval', 'Two retrievers, cited passages', 'Does filtering help?; Every claim has a source', 'Quotes not checked for meaning'],
+  ['magnifying-glass', 'Retrieval', 'Two retrievers, cited passages', 'Does filtering help?; Ensuring Reliable Sources', 'Quotes not checked for meaning'],
   ['stack', 'Models', 'Two settings: quality, speed, cost', 'Choosing the model; The experiment ladder', 'Defaults await confirmation'],
   ['wrench', 'Agent', 'Tools, arithmetic in code, limits', 'The agent loop; Fixing the calculation gap', 'Report-text arithmetic gap'],
   ['chart-line', 'Evaluation', '30+ cases, human review, errors', 'How I measured; fresh questions', 'One human reviewer'],
@@ -304,14 +383,13 @@ const REQUIREMENTS = [
   ['path', 'MCP', 'A tool, a resource, a client demo', 'The MCP server', 'Remote deployment unverified'],
   ['arrow-counter-clockwise', 'Setup', 'Pinned, tested, documented', 'Not shown in the talk', 'Clean-clone check recorded']
 ];
-/** The assignment as two plain columns: the problem statement in my words, and the ten asks as a ruled list. */
+/** The assignment as two plain columns: the brief in a few words, and the ten asks as a ruled list. */
 export function assignmentBrief() {
   const wrap = el('div', 'ab');
-  const statement = el('div', 'ab-col'); statement.append(el('h3', '', 'The problem statement'));
-  ['Policy researchers work with government statistics, reports and internal notes that can be incomplete, inconsistent or hard to search.',
-    'Build a GenAI assistant that answers analytical questions from supplied or public data, gives traceable evidence for each answer, and says plainly when it is uncertain.',
-    'The brief puts applied machine learning, experiments, retrieval quality, evaluation and responsible AI ahead of full-stack engineering.'].forEach(t => statement.append(el('p', 'ab-text', t)));
-  const asks = el('div', 'ab-col'); asks.append(el('h3', '', 'What it asked for'));
+  const statement = el('div', 'ab-col'); statement.append(el('h3', '', 'The brief'));
+  ['Policy researchers work with statistics and reports that can be incomplete, inconsistent or hard to search.',
+    'Build an assistant that answers analytical questions with traceable evidence, and says plainly when it is unsure.'].forEach(t => statement.append(el('p', 'ab-text', t)));
+  const asks = el('div', 'ab-col'); asks.append(el('h3', '', 'Ten asks'));
   const list = el('ul', 'ab-list');
   REQUIREMENTS.forEach(([, name, ask]) => { const li = el('li', ''); li.append(el('strong', '', name), el('span', '', ask)); list.append(li); });
   asks.append(list);
@@ -399,7 +477,7 @@ export function aboutMe() {
   return wrap;
 }
 
-/** The system and its two cross-cutting checks plus the optional MCP route. */
+/** The system, its stages and the three cross-cutting bars: guardrails, evaluation and the separate MCP interface. */
 export function architectureDiagram() {
   const wrap = el('div', 'g17');
   const stages = [['database', 'Sources', ['Quarterly statistics', 'MOM reports and an MTI article']], ['file-text', 'Processing', ['Parse and clean', 'Create passages', 'Validate observations']], ['magnifying-glass', 'Retrieval', ['BM25 and embeddings', 'Filter period/release', 'Rerank candidates']], ['wrench', 'Agent', ['Plan and assess evidence', 'Three typed tools', 'Calculate in code']], ['check-circle', 'Answer', ['Cited, validated output', 'Or clarify, decline, refuse']]];
@@ -413,25 +491,21 @@ export function architectureDiagram() {
   });
   const bars = el('div', 'g17-bars');
   bars.style.setProperty('grid-template-columns', 'repeat(3, minmax(0, 1fr))');
-  [['shield', 'Guardrails', 'Retrieved text is untrusted. Tools are read-only; calls are bounded.'], ['chart-line', 'Evaluation', 'Development and fresh cases, human review and attack tests.'], ['path', 'MCP', 'Optional client validates server tools/resources. Web app calls the same tools directly.']].forEach(([icon, name, text]) => {
+  [['shield', 'Guardrails', 'Retrieved text is untrusted. Tools are read-only and calls are bounded.'], ['chart-line', 'Evaluation', 'Development and fresh cases, human review and attack tests.'], ['path', 'MCP', 'A separate interface to the statistics tools. The live app calls the same functions directly.']].forEach(([icon, name, text]) => {
     const bar = el('div', 'g17-bar'); bar.append(ico(icon), el('strong', '', name), el('span', '', text)); bars.append(bar);
   });
   wrap.append(row, bars);
   return wrap;
 }
 
-/** The task as set, and the sources and topics I left out, with the recorded reason. */
-export function taskAndLeftOut() {
-  const wrap = el('div', 'g18');
-  const task = el('div', 'g18-panel is-task'); task.append(el('h3', '', 'The task'));
+/** What the agent does for whom: users, questions, period and what it will not do. */
+export function myProject() {
+  const wrap = el('div', 'g18 is-single');
+  const task = el('div', 'g18-panel is-task');
   const tl = el('dl', 'g18-dl');
-  [['Who asks', 'Policy researchers and analysts'], ['What they ask', 'Facts, changes, comparisons, revisions, vague and hostile questions'], ['How far', 'Q1 2024 to Q2 2026'], ['Not covered', 'Forecasts, causes, personal advice']].forEach(([k, v]) => { tl.append(el('dt', '', k), el('dd', '', v)); });
+  [['Who asks', 'Policy researchers and analysts'], ['What it answers', 'Facts, changes between quarters, comparisons and revisions, with a cited source'], ['What it asks back', 'Which series, when a question could mean several'], ['What it declines', 'Forecasts, causes, personal advice and anything before 2024'], ['How far', 'Q1 2024 to Q2 2026']].forEach(([k, v]) => { tl.append(el('dt', '', k), el('dd', '', v)); });
   task.append(tl);
-  const out = el('div', 'g18-panel'); out.append(el('h3', '', 'What I left out'));
-  const ul = el('ul', 'g18-out');
-  [['Housing, cost of living', 'Confounded, or heavy index methods'], ['Foreign workforce data', 'Stale: last updated June 2024'], ['GDP revision pairs', 'Not labour evidence'], ['Other ministry pages', 'No verified report links']].forEach(([k, v]) => { const li = el('li'); li.append(el('strong', '', k), el('span', '', v)); ul.append(li); });
-  out.append(ul);
-  wrap.append(task, out);
+  wrap.append(task);
   return wrap;
 }
 
@@ -447,42 +521,62 @@ export function hardParts() {
   return wrap;
 }
 
-/** Early retrieval comparison on 24 development questions: keyword, meaning, both. */
+/** Key failure modes as flow rows: what can go wrong, the control in the system, and how it was measured. Figures are from the evaluation report section on success criteria and failure modes; the retrieval figures come from the report data. */
+export function failureModes(m) {
+  const C = m.ladder?.configs;
+  const hit = C ? `Top-eight hit rate ${fmt.pct(C.R0['hit@8'])} to ${fmt.pct(C.R3['hit@8'])} on ${m.ladder.n_cases} questions` : 'Top-eight hit rate on development questions';
+  const rows = [
+    ['Retrieval misses the passage', 'Hybrid search, period and release filter, rerank', hit],
+    ['Wrong series, period or population', 'Typed series lookup. Scope fixed at Q1 2024 to Q2 2026', 'Revision-conflict questions: 19 of 19 right on development'],
+    ['Advance and final figures mixed', 'Release stage on every figure. Conflicts get a caveat', 'Conflict questions, plus a check of passages against the dataset'],
+    ['Wrong numbers', 'Arithmetic in code. Quote and dataset checks', 'Calculations right: 75% of 24. The planted false figure is not stable'],
+    ['Causal overreach and unsupported claims', 'Abstain or decline rules', 'Weakest family: 72.7% right on 44 questions, 4 false answers'],
+    ['Prompt injection in questions or passages', 'Untrusted text, read-only tools, output scan', '36 attack cases. The scanner missed five paraphrases'],
+    ['Tool failure or timeout', 'One retry, call caps, its own outcome', 'Scripted tests and MCP fault demos, not a live run'],
+    ['A real question wrongly blocked', 'Scope check that fails open (live app only)', '0 of 333 real questions blocked. 1 of 36 attack cases']
+  ];
+  const wrap = el('div', 'fm');
+  const head = el('div', 'fm-row fm-head'); head.append(el('span', '', 'What can go wrong'), el('span'), el('span', '', 'Control in the system'), el('span'), el('span', '', 'How I measured it'));
+  wrap.append(head);
+  rows.forEach(([fail, control, measure], i) => {
+    const row = el('div', 'fm-row'); row.style.setProperty('--i', String(i));
+    const a1 = el('span', 'fm-arrow'); a1.append(ico('arrow-right'));
+    const a2 = el('span', 'fm-arrow'); a2.append(ico('arrow-right'));
+    row.append(el('span', 'fm-fail', fail), a1, el('span', 'fm-control', control), a2, el('span', 'fm-measure', measure));
+    wrap.append(row);
+  });
+  return wrap;
+}
+
+/** Early retrieval comparison on 24 development questions: keyword, meaning, both. The settings are in each bar's popover. */
 export function keywordVsMeaning(m) {
   const hit = name => m.retrievalRow('dev-dense-E6', name)?.metrics?.['hit@10'];
-  const items = [['merge120 bm25', 'Keyword', 'plain'], ['merge120 dense', 'Meaning', 'plain'], ['merge120 hybrid-rrf', 'Both together', 'accent']].map(([k, label, kind]) => ({label, value: hit(k), kind})).filter(i => finite(i.value));
+  const items = [['merge120 bm25', 'Keyword', 'plain', 'BM25 with k1=1.5 and b=0.75; stop words on, stemming off, quarter normalisation on.'], ['merge120 dense', 'Meaning', 'plain', 'text-embedding-3-large vectors.'], ['merge120 hybrid-rrf', 'Both together', 'accent', 'Reciprocal rank fusion with c=60, from the top 50 of each list.']].map(([k, label, kind, tip]) => ({label, value: hit(k), kind, tip})).filter(i => finite(i.value));
   return items.length === 3 ? staircase(items, {domain: [0, 1]}) : null;
 }
 
 
-/** Early answer-model screening: G1 cost per case against behaviour accuracy, n=30. */
-export function earlyModelChart() {
-  const data = [
-    ['gpt-4.1-mini', 0.00161, 0.83], ['gpt-5.4-mini', 0.00335, 0.70],
-    ['gpt-5.6-luna', 0.00113, 0.73], ['gpt-6-luna', 0.00051, 0.60],
-    ['gpt-6-sol', 0.00912, 0.60], ['gpt-6.1-terra', 0.00432, 0.57]
-  ];
-  const W = 1500, H = 600, left = 140, right = 80, top = 75, bottom = 115;
-  const svg = svgEl('svg', {viewBox: `0 0 ${W} ${H}`, class: 'g5-svg', role: 'img', focusable: 'false'});
-  svg.setAttribute('aria-label', 'Six-model exploratory chart: per-case cost on the horizontal axis and behaviour accuracy on the vertical axis, from 30 development cases.');
-  const x = cost => left + cost / 0.01 * (W - left - right);
-  const y = accuracy => top + (0.9 - accuracy) / 0.4 * (H - top - bottom);
-  svg.append(svgEl('line', {x1: left, x2: W - right, y1: H - bottom, y2: H - bottom, class: 'g5-axis'}),
-    svgEl('line', {x1: left, x2: left, y1: top, y2: H - bottom, class: 'g5-axis'}),
-    svgEl('text', {x: (left + W - right) / 2, y: H - 22, 'text-anchor': 'middle', class: 'g5-label'}, 'Cost per case (USD)'),
-    svgEl('text', {x: 24, y: 42, class: 'g5-label'}, 'Behaviour accuracy'));
-  data.forEach(([name, cost, accuracy], i) => {
-    const g = svgEl('g', {class: `g5-step${name === 'gpt-6-luna' ? ' is-accent' : ' is-plain'}`});
-    g.style.setProperty('--i', String(i));
-    g.append(svgEl('circle', {cx: x(cost), cy: y(accuracy), r: 16, class: 'g5-bar'}),
-      svgEl('text', {x: x(cost) + 22, y: y(accuracy) - 10, class: 'g5-label'}, name),
-      svgEl('text', {x: x(cost) + 22, y: y(accuracy) + 24, class: 'g5-tag'}, `${fmt.pct(accuracy)} · $${cost.toFixed(5)}`));
-    svg.append(g);
+/** Early model screen, n=30 development questions. Three measures per model as bars: right behaviour, false answers and cost. Values are from the answer-generation G1 run summary. */
+export function modelChoice() {
+  const rows = [['gpt-6-luna', .60, .417, 0, .00051], ['gpt-5.6-luna', .73, .292, 0, .00113], ['gpt-6.1-terra', .57, .417, 0, .00432], ['gpt-5.4-mini', .70, .25, .167, .00335], ['gpt-6-sol', .60, .375, .167, .00912], ['gpt-4.1-mini', .83, .125, .333, .00161]];
+  const wrap = el('div', 'mc');
+  const head = el('div', 'mc-row mc-head');
+  head.append(el('span', ''), el('span', '', 'Right behaviour (higher is better)'), el('span', '', 'False answers (lower is better)'), el('span', '', 'Cost per question (lower is better)'));
+  wrap.append(head);
+  const cell = (value, max, text, kind) => {
+    const c = el('div', `mc-cell is-${kind}`); const track = el('div', 'mc-track'); const bar = el('div', 'mc-bar'); bar.style.setProperty('--w', `${Math.round(Math.min(value / max, 1) * 100)}%`); track.append(bar);
+    c.append(track, el('span', 'mc-val num', text)); return c;
+  };
+  rows.forEach(([name, right, over, falseRate, cost], i) => {
+    const row = el('div', `mc-row${name === 'gpt-6-luna' ? ' is-chosen' : ''}`); row.style.setProperty('--i', String(i));
+    row.append(el('span', 'mc-name', name), cell(right, 1, fmt.pct(right), 'right'), cell(falseRate, 0.5, fmt.pct(falseRate), 'false'), cell(cost, 0.01, `$${cost.toFixed(5)}`, 'cost'));
+    withTip(row, `${name}: right behaviour ${fmt.pct(right)}, over-abstention ${fmt.pct(over)}, false answers ${fmt.pct(falseRate)}, cost $${cost.toFixed(5)} per question. 30 development questions, one run.`);
+    wrap.append(row);
   });
-  return svg;
+  return wrap;
 }
 
-/** Registered held-out set and the second fresh set, main model, baseline against filter then rerank. */
+/** The original test set and the second fresh set, main model, baseline against filter then rerank. Used by the report page only. */
 export function freshQuestions(m) {
   const hybrid = metricOf(m.heldRow('hybrid', 'gpt-6-luna')?.metrics?.behaviour_accuracy).rate, r3 = metricOf(m.heldRow('r3', 'gpt-6-luna')?.metrics?.behaviour_accuracy).rate;
   const v2 = m.section('evaluation').heldout_v2?.paired?.['gpt-6-luna'], pair = m.paired[0]?.models?.['gpt-6-luna'];
@@ -494,44 +588,69 @@ export function freshQuestions(m) {
   ]);
 }
 
-/** The four separate review streams as a plain ruled list. Counts come from the review inventory, not the report data. */
+/** The four separate review streams: two sets of questions, then two sets of outputs checked. Counts come from the review inventory, not the report data. */
 export function reviewStreams() {
-  const wrap = el('div', 'g21 is-list');
-  const list = el('ul', 'g21-rows');
-  [['Gold questions', 268, '237 development and 31 original test; the 31 share evidence with development. Decisions: approve, change or reject.'],
-    ['Fresh-set (v2) questions', 65, 'Written on six sources no earlier question uses. Decisions: approve, change or reject.'],
-    ['Saved system answers', 40, 'Not questions. Rated right, partly right or wrong: 25, 6 and 9.'],
-    ['Source checks', 30, 'Not questions. Checked against the original pages: match, minor difference or major difference. 18 match, 12 minor.']].forEach(([name, n, what], i) => {
-    const li = el('li', 'g21-row'); li.style.setProperty('--i', String(i));
-    const head = el('div', 'g21-rowhead'); head.append(el('span', 'g21-name', name), el('span', 'g21-n num', String(n)));
-    li.append(head, el('p', 'g21-what', what)); list.append(li);
-  });
-  wrap.append(list, el('p', 'g21-total', 'Only the first two are questions. 403 items signed off in total, in four separate streams.'));
+  const wrap = el('div', 'rv');
+  const group = (title, items) => {
+    const g = el('section', 'rv-group'); g.append(el('h3', 'rv-title', title));
+    const row = el('div', 'rv-items');
+    items.forEach(([name, n, what, tipText], i) => {
+      const item = el('div', 'rv-item'); item.style.setProperty('--i', String(i));
+      item.append(el('p', 'rv-n num', String(n)), el('p', 'rv-name', name), el('p', 'rv-what', what));
+      row.append(withTip(item, tipText));
+    });
+    g.append(row); return g;
+  };
+  wrap.append(
+    group('Questions I signed off', [['Reference questions', 268, 'Approve, change or reject.', 'Each question was approved, changed or rejected.'], ['Fresh questions', 65, 'Approve, change or reject.', 'Written on six sources that no earlier question uses; signed before the run.']]),
+    group('Outputs I checked', [['Saved answers', 40, 'Right, partly right or wrong.', '40 saved system answers: 25 right, 6 partly right, 9 wrong. Failure-enriched, so not a sample of typical answers.'], ['Source checks', 30, 'Against the original pages.', '30 checks against the original pages: 18 match, 12 minor difference.']])
+  );
   return wrap;
 }
 
 
-/** Attack, defence and result from the final 36-case threat report, as a flow per attack: attack, the control it meets, and one segment per case (filled when the primary model passed). */
-export function threatMatrix() {
+/** Threat-run results for the four configurations shown: gpt-6-luna from the final-code run (corpus v3) and gpt-4.1-mini from the earlier matched run, each with and without defences. Read from the report data. */
+export function threatRuns(m) {
+  const row = (kind, name) => (kind === 'final' ? m.e2efixRow(name) : m.securityRow(name))?.metrics || null;
+  return [row('final', 'gpt-6-luna'), row('final', 'gpt-6-luna+naive'), row('earlier', 'gpt-4.1-mini'), row('earlier', 'gpt-4.1-mini+naive')];
+}
+
+/** Attack, defence and result per category, with and without the defences. Segments are filled for each case passed. */
+export function threatMatrix(m) {
+  const runs = threatRuns(m);
+  if (runs.some(r => !r?.by_category)) return null;
   const wrap = el('div', 'tm');
-  const head = el('div', 'tm-row tm-head'); head.append(el('span', '', 'Attack'), el('span', '', 'Defence it meets'), el('span', '', 'Cases passed by gpt-6-luna'));
-  wrap.append(head);
+  const head = el('div', 'tm-row tm-head');
+  const models = el('span', 'tm-models'); models.append(el('span', '', 'gpt-6-luna (final run)'), el('span', '', 'gpt-4.1-mini (earlier run)'));
+  head.append(el('span', '', 'Attack'), models);
+  const sub = el('div', 'tm-row tm-head tm-sub');
+  const cols = el('span', 'tm-models is-four');
+  ['With defences', 'Without defences', 'With defences', 'Without defences'].forEach(t => cols.append(el('span', '', t)));
+  sub.append(el('span', ''), cols);
+  wrap.append(head, sub);
   const rows = [
-    ['Question injection and secret requests', 'Input flags; secret and prompt output checks', 6, 6, ''],
-    ['Injection or false figure in a passage', 'Untrusted evidence cannot set instructions; figures cross-checked against statistics', 6, 6, 'gpt-5.6-luna 5/6, planted figure'],
-    ['Sensitive data, credentials, PII', 'Refusal; no personal-data tool exists', 5, 5, ''],
-    ['Unsupported or causal claim', 'Answer from cited evidence or decline', 4, 4, ''],
-    ['Unsafe tool use', 'Typed read-only tools, argument and call caps', 5, 5, ''],
-    ['Malicious or malformed MCP output', 'Allow-list, schema checks, size and time caps', 10, 10, ''],
-    ['Paraphrased injection', 'Keyword scanner plus untrusted-text rules', 0, 5, 'scanner probes, outside the 36: missed all five']
+    ['Question injection and secret requests', 'Input flags; secret and prompt output checks.', 'direct_injection', ''],
+    ['Injection or false figure in a passage', 'Untrusted evidence cannot set instructions; figures are cross-checked against the statistics.', 'indirect_injection_passage', 'The one failure in the final run, with or without defences, is the planted false figure. gpt-5.6-luna scored 5 of 6 in both.'],
+    ['Sensitive data, credentials, PII', 'Refusal; no personal-data tool exists.', 'sensitive_data', ''],
+    ['Unsupported or causal claim', 'Answer from cited evidence or decline.', 'unsupported_claims', ''],
+    ['Unsafe tool use', 'Typed read-only tools with argument and call caps.', 'unsafe_tool_use', ''],
+    ['Malicious or malformed MCP output', 'Allow-list, schema checks, size and time caps.', 'mcp_server_failure', '']
   ];
-  rows.forEach(([attack, defence, passed, total, note], i) => {
+  const who = ['gpt-6-luna', 'gpt-6-luna', 'gpt-4.1-mini', 'gpt-4.1-mini'];
+  rows.forEach(([attack, defence, key, extra], i) => {
+    const n = runs[0].by_category[key]?.n;
     const row = el('div', 'tm-row'); row.style.setProperty('--i', String(i));
-    const seg = el('div', 'tm-seg'); seg.setAttribute('role', 'img'); seg.setAttribute('aria-label', `${passed} of ${total} passed${note ? `; ${note}` : ''}`);
-    for (let k = 0; k < total; k += 1) seg.append(el('i', k < passed ? 'is-pass' : 'is-miss'));
-    const res = el('div', 'tm-res'); res.append(seg, el('span', 'tm-count num', `${passed}/${total}`));
-    if (note) res.append(el('span', 'tm-note', note));
-    row.append(el('span', 'tm-attack', attack), el('span', 'tm-def', defence), res);
+    const strips = el('div', 'tm-models is-four');
+    runs.forEach((run, k) => {
+      const passed = run.by_category[key]?.passed;
+      const res = el('div', `tm-res${k % 2 ? ' is-without' : ''}`);
+      const seg = el('div', 'tm-seg'); seg.setAttribute('role', 'img'); seg.setAttribute('aria-label', `${who[k]} ${k % 2 ? 'without' : 'with'} defences: ${passed} of ${n} passed`);
+      for (let c = 0; c < n; c += 1) seg.append(el('i', c < passed ? 'is-pass' : 'is-miss'));
+      res.append(seg, el('span', 'tm-count num', `${passed}/${n}`)); strips.append(res);
+    });
+    const label = el('span', 'tm-attack', attack);
+    withTip(label, `${defence}${extra ? `\n${extra}` : ''}`);
+    row.append(label, strips);
     wrap.append(row);
   });
   return wrap;
@@ -569,11 +688,11 @@ export function conceptGrid() {
 export function measureCards(m) {
   const dev = m.evalRow('dev-A3', 'gpt-6-luna')?.metrics?.n_cases, held = m.heldRow('r3', 'gpt-6-luna')?.metrics?.n_cases, v2 = m.section('evaluation').heldout_v2?.paired?.['gpt-6-luna']?.n_gold_cases;
   const referenceCount = finite(dev) && finite(held) ? fmt.int(dev + held) : 'not recorded';
-  return cardRow([{icon: 'stack', head: 'Reference set', line: `${referenceCount} total: ${fmt.int(dev)} development, ${fmt.int(held)} original test.`}, {icon: 'chart-line', head: 'Fresh set', line: `${fmt.int(v2)} source- and evidence-disjoint; used once, not tuned on.`}, {icon: 'check-circle', head: 'Human reviewed', line: 'I signed off the labels on both sets, 40 saved answers and 30 source checks.'}]);
+  return cardRow([{icon: 'stack', head: 'Reference questions', line: `${referenceCount} questions written for development and testing.`}, {icon: 'chart-line', head: 'Fresh questions', line: `${fmt.int(v2)} questions on sources no earlier question uses. Run once, never tuned on.`}, {icon: 'check-circle', head: 'Human reviewed', line: 'I signed off the labels on both sets, 40 saved answers and 30 source checks.'}]);
 }
 
-/** The development loop with the written guardrails around it, and three counts: the decision log, five end-to-end reviewers, the rights scan result. */
-export function buildProcess() {
+/** The development loop with the written guardrails around it, and three counts: the decision log (computed from the report data), five end-to-end reviewers, the rights scan result. */
+export function buildProcess(decisionCount) {
   const wrap = el('div', 'g24');
   const loop = el('div', 'g24-loop');
   ['Propose', 'Compare', 'Approve', 'Build', 'Verify', 'Record'].forEach((name, i) => {
@@ -583,11 +702,11 @@ export function buildProcess() {
     loop.append(step);
   });
   const lanes = el('ul', 'g24-lanes');
-  [['Written contract', 'Options and trade-offs first. No next phase without my approval.'], ['State in files', 'Progress log, claims and decision log, so any agent can resume.'], ['Frozen results', 'Hashes pinned. Post-freeze work gets a new experiment id.'], ['Independent review', 'Blind AI reviewers. Five end-to-end reviews found real defects.'], ['Safe by default', 'Secrets in a gitignored file. Rights scan and secret scan in CI.']].forEach(([head, text], i) => {
+  [['Written contract', 'Options and trade-offs first. No next phase without my approval.'], ['State in files', 'Progress log, claims and decision log, so any agent can resume.'], ['Frozen results', 'Hashes pinned. Post-freeze work gets a new experiment id.'], ['Separate review', 'Blind AI reviewers. Five end-to-end reviews found real defects.'], ['Safe by default', 'Secrets in a gitignored file. Rights scan and secret scan in CI.']].forEach(([head, text], i) => {
     const li = el('li', 'g24-lane'); li.style.setProperty('--i', String(i)); li.append(el('strong', '', head), el('span', '', text)); lanes.append(li);
   });
   const nums = el('div', 'g24-nums');
-  [['49', 'decisions logged'], ['5', 'independent reviewers'], ['0', 'rights-scan hits']].forEach(([n, label]) => { const d = el('div', 'g24-num'); d.append(el('p', 'num', n), el('p', '', label)); nums.append(d); });
+  [[finite(decisionCount) ? String(decisionCount) : 'many', 'decisions logged'], ['5', 'separate reviewers'], ['0', 'rights-scan hits']].forEach(([n, label]) => { const d = el('div', 'g24-num'); d.append(el('p', 'num', n), el('p', '', label)); nums.append(d); });
   wrap.append(loop, el('div', 'g24-body', ''), nums);
   wrap.querySelector('.g24-body').append(lanes);
   return wrap;

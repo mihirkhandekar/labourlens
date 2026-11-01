@@ -1,5 +1,25 @@
 # Evaluation report
 
+## Read this first
+
+This report is long because it keeps every layer of the work. This page is the summary. Every number below has its source in the section named.
+
+**What was measured (one run per configuration unless stated; gold labels are AI-drafted and reviewed as described in the Status paragraph above, so these are agreement figures, not validated accuracy).**
+
+| Question | Result |
+|---|---|
+| Retrieval ladder, 128 dev text cases | Plain BM25 baseline hit@8 0.570, MRR@10 0.324; filter plus rerank (R3) hit@8 0.969, MRR@10 0.912 (tuned on dev). |
+| End-to-end, 237 dev cases, `gpt-6-luna` | A3 behaviour accuracy 0.903 [0.865, 0.937] against A1 0.779 [0.728, 0.830] (n=235, not a paired test); over-abstention 0.030 against 0.157; p50 15.4 s against 10.7 s; $0.00212 against $0.00137 per case. |
+| Original held-out, 31 cases | r3 0.871 against hybrid 0.710; paired +16.1 points [0.0, 32.3]: not demonstrated. Shares evidence with dev (25 of 31 cases). |
+| Held-out v2, 65 cases on six untouched sources | `gpt-6-luna` r3 0.754 against hybrid 0.708, +0.046 (3 better, 0 worse), McNemar p = 0.25. The pre-registered rule is met; the effect is three cases; not called a confirmed gain; `gpt-5.6-luna` 0.723 against 0.723. |
+| Weakest family | Numerical comparisons 0.214 (3 of 14) on held-out v2, mostly a tool gap. A tool set built to fix it failed its pre-declared dev criteria (D-048) and was not adopted. The ambiguity, insufficient-evidence and causal family is 0.727 on dev A3 (n=44). |
+| Threat suite, 36 hand-written cases | Final-code run: `gpt-6-luna` 36/36, `gpt-5.6-luna` 35/36, naive baseline 35/36 for both. The suite shows no defence effect; T-I06 (a planted false figure) is not shown stable. |
+| Scope check in the live app (D-051) | Measured alone: 0 of 333 gold and held-out v2 questions diverted, 1 of 36 threat cases diverted, 30 of 30 off-topic messages caught. Not measured end to end. |
+
+**What was not measured.** Run-to-run variance for the main arms (one run each; the only repeat is the early G1 model screen, which moved rates by 0.07 to 0.17); temperature and reasoning effort (provider defaults, not recorded); nDCG; retrieval metrics on any held-out set; agreement between several human reviewers; real user traffic; the served system with the small-talk fast path and scope check switched on (D-050, D-051); a provider-side spend cap.
+
+**Limits that change how to read the numbers.** The gold set and the judge come from one AI provider; one person reviewed the gold, after the runs were scored; held-out v2 is only partly independent (same system, prompts and tools); the original held-out freeze cannot be time-stamped by git; documents are on corpus v3 and the live app serves v3.1, with no result re-run. Success criteria, failure modes and what was pre-registered are in "Success criteria and failure modes" below; conclusions are in "Conclusions and remaining submission gates" at the end.
+
 **Status — dev and held-out saved outputs rescored on gold v3.5; owner decisions recorded on all items.** Gold labels were drafted by AI. I then went through them in the review interface and signed off on every case, answer verdict and source check (four separate streams, 403 items in total: 268 gold questions, 65 held-out v2 questions, 40 saved system answers and 30 source checks; only the first two are questions). It is one reviewer, working after AI pre-review and after the saved runs were scored, so it is not independent inter-rater evidence. The items are 268 gold cases, 65 held-out v2 cases, 40 saved-answer verdicts and 30 source checks. Gold v3.7 adds review provenance only, so no score changes and the saved evaluations were not rescored on it. Current v3.5 figures and original v3.2–v3.4 sensitivity are shown separately.
 
 **Corpus versions (D-037, D-040, D-041, D-044).** The system and the live site use the current document build (v3.1, D-052: the same 85 sources and 16,419 passages; 40 passages of the MTI feature article are relabelled and the chunk index changes in 10 chunks). **Every result in this report was measured on v3; none was rescored or re-run on v3.1** (D-016), and a rerun would need a new experiment id and owner approval. Six held-out v2 cases cite MTI passages; all six keep `ok` and their ids. The two earlier builds are kept only so older results can be reproduced, and numbers should not be compared across builds. Three corpus states exist and the tables in this report belong to different ones. **v1** (13,484 passages): every registered result, that is A1–A5, held-out H-r3/H-hybrid, retrieval and answer studies and the pre-guard threat suites. **v2** (`extract-0.2`, 15,915 passages, 43,662 observations): the extraction-only X1 experiments and the first post-fix T-I06 threat run, reported beside the v1 results and never over them. **v3** (v2 plus six labour-only sources): 85 sources (36 datasets, 49 documents), 52,020 observations (4,300 in the answer scope), 16,419 passages, 276 build checks (269 pass, 7 warn). The committed manifest, the quality report and the local store are v3, and so is the live Droplet. **Owner-supplied serving fact (not file-verifiable here):** the Droplet serves corpus v3 and the post-review code at commit `c297146`, with `/healthz` fingerprint `d402120f6f8f`, 16,419 passages and 1,847 chunks. **Corpus v3 has three measured evaluations**: the dev regression check X2, the threat run `m7-e2efix-20261031` and the signed held-out v2 run, all reported below beside, never over, the registered results. Held-out v2 is the first evaluation on sources no earlier case cites; it is still a development-style system on fresh evidence, not a fresh system (see its section). Gold v3.6 migrates evidence IDs only, so v1 outputs stay scored on v3.5 and must not be rescored on migrated IDs.
@@ -17,6 +37,40 @@ The intended users are Singapore policy researchers and labour-market analysts. 
 - **Widening hypothesis:** relaxing a weak filtered pool reduces filter-related misses.
 
 The hypotheses organise the evidence. Completed dev comparisons are not retrospectively described as pre-registered. The held-out protocol below has now executed; results and deviations are reported separately from dev.
+
+## Success criteria and failure modes
+
+The assessment asks for measurable success criteria and key failure modes. This section states what the project used, what was fixed in advance and what was not. **Most criteria below were measured, not pre-registered:** the registered thresholds are the ones cited with a D-id; for the rest the numbers are reported with intervals and no pass mark was set beforehand, and this section does not invent one.
+
+### Success criteria
+
+| Criterion | Metric (deterministic code unless noted) | Threshold fixed in advance? | Observed |
+|---|---|---|---|
+| Right behaviour (answer, abstain, clarify or refuse) | Behaviour accuracy against gold status | **No absolute threshold.** Relative rules only: original held-out, a gain counts only if the paired interval excludes zero (D-033 protocol, above); held-out v2, the D-042 rule (primary model, one-sided 95% lower bound above zero under case and component bootstrap, at least 20 evidence components, no added false answer) | Dev A3 0.903; held-out 31 inconclusive; held-out v2 rule met on three cases |
+| No false answers | False-answer rate (answered where gold says abstain, clarify or refuse) | Only as a veto inside D-042 (r3 adds no false answer) and a cap in D-046/D-048 (at most 6 false-answer cases on dev for the tool-set test) | Dev X2 6 of 237 for `gpt-6-luna`; r3 0 against hybrid 1 on held-out v2 |
+| No needless abstention | Over-abstention rate | No | A1 0.157, A3 0.030 |
+| Citation validity | Schema, citation-label and quote-containment validator on every answer; claim support from the AI judge | The validator is a hard gate, not a rate. No threshold on claim support | Claim support 0.887 on dev A3 (judge is the same provider as the generators); quote presence is not semantic support |
+| Numbers grounded in tools or sources | Calculation correctness; ungrounded-number cases; key-number recall | Ungrounded numbers only inside the D-046/D-048 criteria (at most the X2 upper bound, none in cases that used the new tool) | calc_correct 0.75 (n=24); tool set v2 failed its criteria |
+| Retrieval finds the evidence | hit@k, MRR@10, pool recall on dev | Rules written before measuring for the retrieval ablation (D-029, `docs/experiments/m6-retrieval-improvements.md`); the BM25 baseline is the reference | hit@8 0.570 to 0.969 |
+| Threat resistance | Pass rate on 36 hand-written cases with deterministic checks (Wilson intervals) | **No overall pass mark.** Each case has its own deterministic pass condition | 36/36 and 35/36; naive 35/36 |
+| Scope check does not block real questions (live app only) | False out-of-scope on gold and held-out v2 questions, and on threats | **Yes, D-051:** target 0 of 333 and 0 of 36, failed-open calls counted separately | 0 of 333 met; 1 of 36 missed (T-D05) |
+| Latency and cost | p50 and p95 seconds, estimated dollars per case | **No target.** Only runtime limits (agent run deadline 80 s, triage deadline 8 s, application budget limit) | A3 p50 15.4 s, $0.00212 per case |
+
+Human review is not a success criterion here; it is evidence about the gold labels, described in the Status paragraph and the review sections.
+
+### Key failure modes and what covers them
+
+| Failure mode | Control in the system | Test or measurement |
+|---|---|---|
+| Retrieval miss (the passage is not in context) | Hybrid BM25 plus dense retrieval, period and stage filter, rerank (R3) | Retrieval ladder on 128 dev cases; family and hint breakdowns |
+| Wrong series, period or population | Typed `get_series` with known-source and scope checks; hard 2024-Q1 to 2026-Q2 scope (D-031) | `tests/retrieval/test_agent.py::test_get_series_enforces_scope_and_known_sources`, `tests/retrieval/test_period.py`; revision-conflict family 1.00 (n=19) on dev A3 |
+| Preliminary and final mixed | Release stage kept on every passage and observation; stage filter; conflict caveats | Revision-conflict gold family; deterministic passage-versus-dataset cross-check (D-038) in `tests/retrieval/test_crosscheck.py` |
+| Ungrounded or wrong numbers | Arithmetic only in Decimal tools; validator and soft ungrounded-number check; cross-check against the dataset | Calculation correctness; T-I06 planted false figure (35/36 and 36/36, not shown stable); numerical comparisons weak on held-out v2 (0.214) |
+| Causal overreach, forecasts, unsupported claims | Abstention policy (D-026), out-of-scope rules, gold family for ambiguity, insufficient evidence and causal overreach | That family scored 0.727 on dev A3 (n=44, 4 false answers): the weakest trust behaviour and not improved by the retrieval change |
+| Prompt injection and malicious passages | Untrusted-text handling, quarantine, output scan, read-only tools | Threat suite (36 cases); `tests/test_security.py`; scanner missed five paraphrases (disclosed) |
+| Over-abstention | Retrieval filter plus rerank; answer prompt | Over-abstention rate 0.157 to 0.030 |
+| Tool failure or timeout | One retry, round and call caps, timeouts, operational-failure status | `tests/retrieval/test_agent.py::test_transient_tool_failure_is_retried_once` (scripted, not a recorded live run); MCP fault demonstrations in `docs/mcp-demo-transcript.md` |
+| Wrongly blocked real question (live app) | Scope check defaults to in scope and fails open | D-051 measurement above; `tests/web/test_triage.py` |
 
 ## Dataset construction and review
 
@@ -220,6 +274,8 @@ The owner's recorded verdicts and decisions must remain distinguishable from eve
 ## Cost, latency and operational limits
 
 A3 `gpt-6-luna` records **15.4 s p50 / 37.0 s p95**, **$0.00212 per case**, and **$0.2442 judge cost** in the current snapshot; A3 `gpt-5.6-luna` records **15.5 / 34.7 s**, **$0.00360 per case** (`experiments/eval/agent-dev-A3/*.metrics.json`). A1 `gpt-6-luna` records **10.7 / 23.3 s**, **$0.00137 per case** (A1 metrics). The X2 regression check records **14.0 / 40.9 s** and **$0.00285 per case** for `gpt-6-luna`, and **13.9 / 33.8 s** and **$0.00463 per case** for `gpt-5.6-luna` (`experiments/eval/agent-dev-X2/*.metrics.json`). The `gpt-6-luna` p95 is higher than in A3 or X1, although p50 is lower; one run cannot say whether that tail is noise, the new run-level deadline or the cross-check. p95 uses the corrected nearest-rank rule (`docs/experiments/m7-eval-fixes.md`); the older 35.6 s and 34.4 s figures were first recorded with a rank one too low. These are single-run measurements, not service-level guarantees.
+
+**Generation settings and variance.** Temperature, top-p and reasoning effort were left at the provider defaults and were not recorded in the run files; the repository cannot show which values the provider applied, and there is no seed for the model calls, so reruns will not reproduce outputs bit for bit. Each configuration was run once. No run-to-run variance is measured for A1 to A5, held-out or X-series arms. The only repeat is the early G1 answer screen, run twice with the same prompt, where rates moved by 0.07 to 0.17 (for example `gpt-6-sol` false-answer 0.00 then 0.17; the second run also corrected a context header; `docs/experiments/m3-answer-generation.md`). Differences of a few cases, including the three-case held-out v2 effect, cannot be separated from sampling noise.
 
 Generation/rerank usage and API wall time are in saved runs; judge spend is reported separately. Prices use `specs/prices.yaml`, with no cached-input discount. These estimates do not include developer labour, hosting or all ingestion/index-building costs. Cached embeddings change reproduction cost. Timed-out calls without returned usage can have unobserved provider billing. No load, concurrency or service-level benchmark is claimed.
 
@@ -484,6 +540,8 @@ The extraction fix removes verified source-fidelity defects and preserves proven
 **What X2 does and does not show.** It shows that the served system, after 14 behavioural and security fixes and a deterministic cross-check, scores within noise of the frozen registered system on the development split, with one flagged check that rose. It does not show a quality gain, does not isolate the cross-check, is a development split that has guided choices, and uses gold that was AI-drafted and later confirmed by the owner (one reviewer, after the runs; gold v3.6 as scored). It is not held-out evidence. The held-out v2 run below is the separate held-out evaluation on corpus v3.
 
 ## Held-out v2 on corpus v3 (signed freeze, one run per arm)
+
+**What `demonstrated_gain: true` means.** `experiments/heldout-v2/paired.json` is a frozen result and is not edited. Its per-model field `demonstrated_gain: true` (and `demonstrated_gain_primary`) records only that the D-042 interval criteria were met for `gpt-6-luna`: the one-sided 95% lower bound of the paired difference is above zero under both bootstraps, with at least 20 components and no added false answer. It is not a statement that the gain is confirmed. The prose conclusion governs: three cases, McNemar exact p = 0.25, no gain for `gpt-5.6-luna`, and the lower bound falls to 0.0 once one source group is removed.
 
 Full result, rule quotation, caveats and error analysis: `docs/experiments/m7-heldout-v2-result.md`. Numbers: `experiments/heldout-v2/paired.json`, `experiments/eval/agent-heldout-V2-{r3,hybrid}/*.metrics.json`.
 

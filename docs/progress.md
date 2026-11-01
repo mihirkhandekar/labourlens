@@ -122,9 +122,13 @@ Every row came from a live call; none is stored as a repo artifact yet. M1.1 mus
 
 ## Log (newest first)
 
+### 2026-11-01 — Deck and report reworked after owner review
+
+- **DONE (web only, no paid calls):** deck reordered (data findings, challenges and the new success-criteria slide before the document build and report reading; retrieval before the agent loop), the fresh-question slide dropped from the face (result kept in notes, report and docs), model choice shown as right behaviour, false answers and cost per model, MCP slide redrawn as two paths (direct calls against MCP) with what ran through MCP, threat slide shown with and without defences from the metrics files, review slide split into questions and outputs, method boxes replaced by hover and focus popovers, titles renamed (Challenges with the data, Retrieval Strategies, Ensuring Reliable Sources, Human Review of Dataset, Agent Workbench), storage flow added to the data slide, `docs/demo-script.md` rewritten against the final slide numbers (main deck 1 to 32, appendix from 33). **FACT:** MCP is used by the scripted client demo, one recorded agent question and the 10 hostile-server threat cases; the live app and every accuracy evaluation call the statistics functions directly. `uv run pytest -q tests/web` passes.
+
 ### 2026-11-01 — LLM scope triage in front of the agent, web app only (D-051)
 
-- **IMPLEMENTED, NOT MEASURED:** `agent/triage.py`, `prompts/triage_v1*.md`, `evaluation/triage_check.py`, CLI `triage-check`, `experiments/triage/offtopic_cases.jsonl` (40 hand-written questions), wiring in `report/app.py` (setting `triage_enabled`, env `LABOURLENS_TRIAGE`). One `gpt-6-luna` structured call routes a non-small-talk message to `in_scope` (unchanged agent), or answers it without searching (`out_of_scope` and `small_talk` as `clarify`, `unsafe_or_sensitive` as `refused`). Any failure fails open to the agent. Tests with a stub model in `tests/web/test_triage.py`. Served-versus-evaluated difference logged in D-051. **Acceptance criterion (0 of 333 gold plus v2, 0 of 36 threat falsely out of scope) has not been measured**; no paid call was run for this change.
+- **IMPLEMENTED; later measured on its own (see the 1 Nov line below):** `agent/triage.py`, `prompts/triage_v1*.md`, `evaluation/triage_check.py`, CLI `triage-check`, `experiments/triage/offtopic_cases.jsonl` (40 hand-written questions), wiring in `report/app.py` (setting `triage_enabled`, env `LABOURLENS_TRIAGE`). One `gpt-6-luna` structured call routes a non-small-talk message to `in_scope` (unchanged agent), or answers it without searching (`out_of_scope` and `small_talk` as `clarify`, `unsafe_or_sensitive` as `refused`). Any failure fails open to the agent. Tests with a stub model in `tests/web/test_triage.py`. Served-versus-evaluated difference logged in D-051. **Acceptance criterion (0 of 333 gold plus v2, 0 of 36 threat falsely out of scope):** measured afterwards, 0 of 333 met, 1 of 36 (T-D05) missed; see the 1 Nov line at the end of this file.
 
 ### 2026-11-01 — Small-talk fast path in the web app (D-050)
 
@@ -176,4 +180,5 @@ Every row came from a live call; none is stored as a repo artifact yet. M1.1 mus
 
 Older entries (30 Oct to 31 Oct 2026: gold v3.2 to v3.5, threat reruns, scoring-cache correction, handoffs, owner-review ingests, Droplet deployment) are in [`docs/archive/progress-log.md`](archive/progress-log.md).
 
+- 1 Nov 2026: docs audit fixes: served-versus-evaluated section (D-043, D-050, D-051) in README, system card and architecture; success criteria and failure modes, read-this-first summary, generation-settings and `demonstrated_gain` notes in the evaluation report; innovation assessment cut to 802 words; decision count 53 (D-000 to D-052); rights-scan allowlist has 17 globs.
 - 1 Nov 2026: scope triage measured (D-051): 0/333 false out-of-scope on gold+v2, 1/36 on threats (T-D05, safe), 30/30 off-topic caught; enabled by default.

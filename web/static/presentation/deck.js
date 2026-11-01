@@ -76,7 +76,7 @@ function buildSlide(spec) {
     FLOW_STAGES.forEach((label, i) => { const li = el('li', spec.stage === 'all' || spec.stage === i ? 'is-here' : '', label); if (spec.stage === i) li.setAttribute('aria-current', 'step'); ul.append(li); });
     nav.append(ul); inner.append(nav);
   }
-  if (spec.caption || spec.detail) inner.classList.add('has-caption');
+  if (spec.caption) inner.classList.add('has-caption');
   const bullets = () => {
     if (!spec.bullets?.length) return null;
     const ul = el('ul', 'deck-bullets');
@@ -119,34 +119,18 @@ function buildSlide(spec) {
     const list = bullets();
     if (list) body.append(list);
     body.append(visualBox(spec.visual));
-    if (spec.detail?.open) {
-      const method = el('aside', 'deck-method');
-      method.append(el('p', 'deck-method-label', spec.detail.label), el('pre', 'deck-method-code', spec.detail.content));
-      body.append(method); body.classList.add('has-method');
-    }
     inner.append(body);
   }
-  const readingNote = spec.detail && !spec.detail.open && (spec.detail.label || 'How to read this') === 'How to read this';
-  if (spec.caption || (spec.detail && !readingNote)) {
+  if (spec.caption) {
     const caption = el('div', 'deck-caption');
-    if (spec.caption) caption.append(el('p', 'deck-caption-text', spec.caption));
-    if (spec.detail && !spec.detail.open && !readingNote) {
-      const disclosure = el('details', 'pr-details');
-      disclosure.append(el('summary', '', spec.detail.label || 'How to read this'));
-      const body = el('div', 'pr-details-body');
-      const code = el('pre', 'pr-mono-list', spec.detail.content);
-      code.style.setProperty('white-space', 'pre-wrap');
-      code.style.setProperty('overflow-wrap', 'anywhere');
-      code.style.setProperty('margin', '0');
-      body.append(code); disclosure.append(body); caption.append(disclosure);
-    }
+    caption.append(el('p', 'deck-caption-text', spec.caption));
     inner.append(caption);
   }
   if (spec.source) inner.append(el('p', 'deck-source', `Source: ${spec.source}`));
   section.append(inner);
   const notes = el('aside', 'notes');
   (spec.notes || []).filter(Boolean).forEach(line => notes.append(el('p', '', line)));
-  if (readingNote) notes.append(el('p', '', `How to read the chart: ${spec.detail.content.replace(/\n+/g, ' ')}`));
+  if (spec.detail) notes.append(el('p', '', `${spec.detail.label || 'How to read this'}: ${spec.detail.content.replace(/\n+/g, ' ')}`));
   if (!notes.children.length) notes.append(el('p', '', spec.title));
   section.append(notes);
   return section;

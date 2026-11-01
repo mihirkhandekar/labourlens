@@ -1,6 +1,6 @@
 # LabourLens — decision log
 
-Each entry: date, decision, alternatives, why, who approved, how reversible. Labels follow `CLAUDE.md`: **DECISION**, **PROPOSAL**, **VERIFIED FACT**, **ASSUMPTION**. ADRs in `docs/decisions/` hold the large architectural decisions; this log holds everything else.
+Each entry: date, decision, alternatives, why, who approved, how reversible. Labels follow `CLAUDE.md`: **DECISION**, **PROPOSAL**, **VERIFIED FACT**, **ASSUMPTION**. ADRs in `docs/decisions/` hold the large architectural decisions; this log holds everything else. **Count:** 53 entries, D-000 to D-052 (D-007 has a second heading, "deployment notes", under the same id).
 
 **How to read approvals.** An entry that cites an owner approval names it (date, and the quoted reply or the file that holds it). An entry that names no approver had none recorded in this log when this note was written (1 Nov 2026): it is an assistant decision inside the approved experiment protocol (D-016), open to owner reversal. The signed held-out v2 freeze (`experiments/heldout-v2/FREEZE.md`, 31 Oct 2026) is the owner's approval of the 65 held-out v2 cases and of the pre-registered rule of D-042; it does not approve the later entries. The owner confirmation or rollback of D-030 is not recorded.
 
@@ -424,7 +424,7 @@ Context: the review of the first v2 rule (both models, 97.5% two-sided case and 
 
 ### D-043 — End-to-end review fixes (DECISION / MEASURED, 31 Oct 2026)
 
-**Scope.** Five independent AI reviews of the whole flow (`docs/human-review/e2e-review-summary.md`); each finding was checked against code or artefacts before a fix, and some were disputed or deferred. Full lists: `docs/experiments/m7-e2e-fixes.md` (runtime and deploy), `docs/experiments/m7-eval-fixes.md` (evaluation). No model, network, fetch, build or index command was run, and no frozen raw output was modified.
+**Scope.** Five separate AI reviews of the whole flow (`docs/human-review/e2e-review-summary.md`); each finding was checked against code or artefacts before a fix, and some were disputed or deferred. Full lists: `docs/experiments/m7-e2e-fixes.md` (runtime and deploy), `docs/experiments/m7-eval-fixes.md` (evaluation). No model, network, fetch, build or index command was run, and no frozen raw output was modified.
 
 **Runtime behaviour changes (B1–B14), served versus evaluated system.** The served system now differs from the one the experiments measured in these ways:
 - Web projection uses the validator's quote matching; citations shown on saved answered runs rose from 4,188 to 5,172 of 5,194 accepted, and answered runs with an uncited claim fell from 451 to 8 (B1).
@@ -618,7 +618,7 @@ The default `AgentConfig.tool_set` stays `"base"`; the served system, web app, t
 
 **Limits.** Phrasings off the list still run the whole agent and can still abstain with the model's own wording; no behavioural claim covers them. **Reversibility.** Delete `agent/smalltalk.py`, its test file and the `run_smalltalk(...) or` prefix in the default runner in `report/app.py`; no evaluated result depends on it.
 
-### D-051 - LLM scope triage in front of the agent, web app only (OWNER REQUEST / IMPLEMENTED, NOT YET MEASURED, 1 Nov 2026)
+### D-051 - LLM scope triage in front of the agent, web app only (OWNER REQUEST / IMPLEMENTED, MEASURED ON ITS OWN, 1 Nov 2026)
 
 **Request.** The owner asked that generic or off-topic messages (general knowledge, creative writing, coding, medical or legal advice, personal employment advice, chit-chat beyond the D-050 list) get a safe, brief refusal that says what the workbench can do, and that the judgement is made by the model, not a keyword list. D-050 had rejected a classifier call for the closed fast path; this adds one for everything that fast path does not match.
 
@@ -631,7 +631,7 @@ The default `AgentConfig.tool_set` stays `"base"`; the served system, web app, t
 
 **Served versus evaluated (cumulative, adds to the D-043 list and D-050).** The served system differs from the one the experiments measured by: (1) the D-043 runtime changes; (2) D-050, whole-message small talk answered without a model; (3) **D-051, a model scope check in front of the agent, which adds one `gpt-6-luna` call (tokens, cost, latency) to every non-small-talk question and can answer a question without the agent.** `run_agent`, `agent-exp`, `threat-test`, the gold, held-out and threat sets do not use it (source and behaviour tests in `tests/web/test_triage.py`). No frozen result changes (D-016).
 
-**Acceptance criterion and measurement.** The measured false out-of-scope rate on gold is the criterion: target 0 of 333 (268 gold plus 65 held-out v2 questions) and 0 of 36 threat cases, counted with failed-open calls reported separately so a provider outage cannot pass as a clean result. `uv run labourlens triage-check --experiment <new-id> --yes` also runs 40 hand-written off-topic questions (`experiments/triage/offtopic_cases.jsonl`: 20 clear, 10 borderline off-topic that mention Singapore or jobs, 10 borderline in-scope) and writes `raw.jsonl` and `metrics.json` (off-topic recall, borderline accuracy by kind, tokens, cost, p50 and p95 latency). **MEASURED RESULT: none yet.** If the target is missed, the prompt is changed under a new version name (`triage_v2`) and measured again; the first result stays on record. Until it is measured, enable it on the live app only on the owner's decision.
+**Acceptance criterion and measurement.** The measured false out-of-scope rate on gold is the criterion: target 0 of 333 (268 gold plus 65 held-out v2 questions) and 0 of 36 threat cases, counted with failed-open calls reported separately so a provider outage cannot pass as a clean result. `uv run labourlens triage-check --experiment <new-id> --yes` also runs 40 hand-written off-topic questions (`experiments/triage/offtopic_cases.jsonl`: 20 clear, 10 borderline off-topic that mention Singapore or jobs, 10 borderline in-scope) and writes `raw.jsonl` and `metrics.json` (off-topic recall, borderline accuracy by kind, tokens, cost, p50 and p95 latency). **MEASURED RESULT (`experiments/triage/triage-v1-luna/metrics.json`, one run, 409 calls, no failed-open calls):** 0 of 333 gold and held-out v2 questions diverted (target met); 1 of 36 threat cases diverted (T-D05; the target of 0 was missed by one case); 30 of 30 expected off-topic, unsafe or small-talk messages routed away from the agent and 10 of 10 borderline in-scope messages kept; p50 1.56 s, p95 2.44 s, mean $0.000124 per call. The first result stays on record. **Still not measured:** end-to-end quality, cost and latency of the served system with triage on.
 
 | Option | Benefit | Downside | Disposition |
 |---|---|---|---|

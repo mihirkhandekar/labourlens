@@ -21,8 +21,8 @@ HOME = (STATIC / "js" / "home.js").read_text(encoding="utf-8")
 
 REQUIRED_STEPS = {
     "about": "About me", "assignment": "The assignment", "problem": "Why this problem", "system": "The Agentic System", "data": "The data",
-    "eda": "What the data showed", "hard": "Hard parts", "models": "Models", "retrieval": "Retrieval", "agent": "The agent",
-    "tools": "Tools and MCP", "safety": "Safety", "review": "Human review", "ops": "Cost and deployment", "process": "How I built it",
+    "eda": "What the data showed", "hard": "Challenges with the data", "build": "Document build", "models": "Models", "retrieval": "Retrieval Strategies", "agent": "The agent",
+    "tools": "Tools and MCP", "safety": "Safety", "review": "Human Review of Dataset", "ops": "Agent Workbench", "process": "How I built it",
     "limits": "Limits", "run": "Run it",
 }
 REVIEW_SENTENCE = "I signed off four separate review streams"
@@ -82,7 +82,7 @@ def test_report_copy_explains_transit_system_and_sources():
     assert "The Agentic System" in STORY
     assert "MCP exposes read only statistics and source metadata" in STORY
     assert "Evaluation measures retrieval, expected answer behaviour and safety on development and held-out cases" in STORY
-    assert "Structured + unstructured data" in STORY
+    assert "The structured records are quarterly statistical observations" in STORY
     assert "Statistics give the numbers and reports give the explanations" not in STORY
     assert "One answer, each part cited" not in STORY
     assert "Plus written deliverables" not in STORY
@@ -105,11 +105,11 @@ def test_technical_panels_explain_methods_prompts_and_charts():
 def test_review_wording_is_the_honest_wording_and_has_no_timing():
     assert REVIEW_SENTENCE in STORY
     assert "quick confirmation" not in STORY and "owner-confirmed" not in STORY and "I confirmed all 403" not in STORY
-    for phrase in ("268 gold questions (237 development and 31 original held-out", "65 held-out v2 questions",
-                   "40 saved system answers", "30 source checks", "Only the first two are questions",
-                   "three separate AI review passes from the same model family", "A later diagnostic used those same 65, not a new set",
+    for phrase in ("268 reference questions and 65 fresh questions", "Two are sets of questions",
+                   "40 saved system answers", "30 source checks",
+                   "three separate AI review passes from the same model family", "A later diagnostic reused the 65 fresh questions",
                    "Human review was done by me alone", "not independent inter-rater evidence",
-                   "25 cases", "15. Their results are not independent", "signed before the run", "not for tuning"):
+                   "in 25 cases", "represented in development for 15", "signed before the run", "not for tuning"):
         assert phrase in STORY, phrase
     assert "One reviewer" not in STORY
     assert "V2post" not in STORY

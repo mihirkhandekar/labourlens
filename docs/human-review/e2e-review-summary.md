@@ -1,6 +1,6 @@
 # End-to-end review: summary and finding status
 
-On 31 Oct 2026 five independent AI reviewers (not human review) traced the whole flow. Each finding was checked against code or artefacts before a fix; some were disputed or narrowed. Fix details: `docs/experiments/m7-e2e-fixes.md` (runtime, deploy), `docs/experiments/m7-eval-fixes.md` (evaluation) and decision D-043 in `docs/decisions.md`. Statuses: **fixed**, **narrowed** (partly fixed), **deferred** (reason given), **owner** (needs an owner decision or action). A blank fixer record is marked "no fix recorded".
+On 31 Oct 2026 five separate AI reviewers (not human review; one model family, so not independent) traced the whole flow. Each finding was checked against code or artefacts before a fix; some were disputed or narrowed. Fix details: `docs/experiments/m7-e2e-fixes.md` (runtime, deploy), `docs/experiments/m7-eval-fixes.md` (evaluation) and decision D-043 in `docs/decisions.md`. Statuses: **fixed**, **narrowed** (partly fixed), **deferred** (reason given), **owner** (needs an owner decision or action). A blank fixer record is marked "no fix recorded".
 
 | Report | Scope | P0 | P1 | P2 |
 |---|---|---:|---:|---:|

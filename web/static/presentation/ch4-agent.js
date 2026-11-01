@@ -263,7 +263,7 @@ export function renderAgent(m, ctx) {
   ch.body.append(limits);
 
   ch.body.append(callout({
-    tone: 'note', title: 'Tool outages end as operational_failure, one of eight named outcomes',
+    tone: 'note', title: 'A tool outage has its own named outcome',
     text: 'answered, abstained, clarify, refused, invalid, rejected_input, blocked_output and operational_failure. A tool outage, a timeout or a planner outage ends as operational_failure, which is separate from missing evidence.',
     src: 'docs/architecture.md › 4. The agent graph'
   }));

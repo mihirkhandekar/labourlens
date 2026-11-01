@@ -133,7 +133,7 @@ export function renderData(m, ctx) {
     return best;
   };
   const fUnemp = figure({
-    id: 'fig-unemployment', title: 'Unemployment rates, by population and adjustment', wide: true,
+    id: 'fig-unemployment', title: 'Unemployment rates by population and adjustment', wide: true,
     takeaway: '', summary: '',
     source: {data: 'report.json › charts[unemployment_*_sa|nsa].points', files: ['data/export/series.json']},
     table: () => ({caption: 'Unemployment rate (percent) by quarter', columns: ['Quarter', ...unempSeries().map(s => s.label)], rows: win().map((p, i) => [fmt.quarter(p), ...unempSeries().map(s => finite(s.values[i]) ? s.values[i] : '')])}),

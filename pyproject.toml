@@ -1,7 +1,7 @@
 [project]
 name = "labourlens"
 version = "0.1.0"
-description = "LabourLens: evidence-grounded Singapore labour-market research assistant (Milestone 1: data ingestion and provenance)"
+description = "LabourLens: evidence-grounded Singapore labour-market research assistant (data ingestion, hybrid retrieval, bounded LangGraph agent, MCP server, evaluation harness and web workbench)"
 requires-python = ">=3.12,<3.13"
 dependencies = [
   "pandas>=2.2,<3",

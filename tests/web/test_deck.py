@@ -144,10 +144,10 @@ def test_no_bridge_sentences_or_pills_on_faces():
 
 
 REQUIRED_TITLES = [
-    "About me", "The assignment", "Why this problem", "The task, and what I left out", "The Agentic System", "Choosing the data", "One current document build", "Reading the reports",
-    "What the data showed", "Hard parts, and what handles them", "Keyword, meaning or both?", "Does filtering help?", "The agent loop", "Every claim has a source",
-    "Choosing the models", "How I measured", "Who checked the answers", "The experiment ladder", "On fresh questions, the gain was small", "Why it missed", "Fixing the calculation gap",
-    "GenAI concepts in this build", "The MCP server", "Attacks and defences", "A planted wrong figure", "The product, and how to run it", "How I built it", "Limits, and what next", "Summary",
+    "About me", "The assignment", "Why this problem", "My project", "The Agentic System", "Choosing the data", "What the data showed", "Challenges with the data",
+    "Success criteria and failure modes", "One current document build", "Reading the reports", "Retrieval Strategies", "Does filtering help?", "The agent loop", "Ensuring Reliable Sources",
+    "Choosing the models", "How I measured", "Human Review of Dataset", "The experiment ladder", "Why it missed", "Fixing the calculation gap",
+    "GenAI concepts in this build", "The MCP server", "Attacks and defences", "A planted wrong figure", "Agent Workbench", "How I built it", "Limits and next steps", "Summary",
 ]
 
 
@@ -172,10 +172,10 @@ def test_calculation_fix_slide_states_the_failure_and_the_graphics_exist():
     assert main.count("Fixing the calculation gap") == 1
     assert "pre-declared criteria" in main and "optimistic" in main and "not adopted" in main.lower()
     graphics = (STATIC / "presentation" / "graphics.js").read_text()
-    for name in ("threeAnswers", "twoSources", "buildTimeline", "flattening", "retrievalStaircase", "agentLoop", "evidenceTrace", "experimentStaircase", "costBars", "toolFixBars", "toolFixFlow", "assignmentBrief", "domainChoice", "challengeGrid", "earlyModelChart", "aboutMe", "architectureDiagram", "taskAndLeftOut", "hardParts", "keywordVsMeaning", "reviewStreams", "threatMatrix", "workbenchShot", "conceptGrid", "measureCards", "plantedFlow", "buildProcess"):
+    for name in ("threeAnswers", "twoSources", "buildTimeline", "flattening", "retrievalStaircase", "agentLoop", "evidenceTrace", "experimentStaircase", "costBars", "toolFixBars", "toolFixFlow", "assignmentBrief", "domainChoice", "challengeGrid", "modelChoice", "aboutMe", "architectureDiagram", "myProject", "hardParts", "failureModes", "keywordVsMeaning", "reviewStreams", "threatMatrix", "threatRuns", "mcpMap", "workbenchShot", "conceptGrid", "measureCards", "plantedFlow", "buildProcess"):
         assert f"export function {name}" in graphics, name
     slides = (STATIC / "presentation" / "slides.js").read_text()
-    assert "403" in main and "Human reviewed" in main
+    assert "403" in main and "Human reviewed" in graphics
     assert "What I covered" not in main
     title_slide = main.split("add({", 1)[1].split("});", 1)[0]
     assert "Singapore AI Agent for Workforce Policy Researchers" in title_slide
@@ -193,7 +193,8 @@ def test_review_wording_is_plain_and_has_no_timing_claims():
         for banned in ("card by card", "each by my own click", "own clicks", "8 s each", "0.39 s", "rubber", "Not independent"):
             assert banned not in text, f"{path.name}: {banned}"
     slides = (STATIC / "presentation" / "slides.js").read_text(encoding="utf-8")
-    assert "Human reviewed" in slides and "same model family" in slides
+    graphics_text = (STATIC / "presentation" / "graphics.js").read_text(encoding="utf-8")
+    assert "Human reviewed" in graphics_text and "same model family" in slides
     assert "after the saved runs were scored" in slides
     assert "signed off" in slides and "quick confirmation" not in slides and "I confirmed all 403" not in slides
     faces = [line for line in _slides_main_section().splitlines() if "notes:" not in line and not line.strip().startswith("//")]
@@ -219,20 +220,75 @@ def test_deck_keys_and_controls_are_wired():
         assert label in deck, label
 
 
-def test_method_panels_and_retrieval_baseline_note():
+def test_method_detail_is_in_popovers_and_notes_not_in_boxes():
     main = _slides_main_section()
     deck = (STATIC / "presentation" / "deck.js").read_text()
-    assert "deck-method" in deck and "spec.detail.open" in deck
+    css = (STATIC / "css" / "presentation.css").read_text()
+    graphics = (STATIC / "presentation" / "graphics.js").read_text()
+    assert "deck-method" not in deck and "deck-method" not in css and "spec.detail.open" not in deck
+    assert "notes.append(el('p', '', `${spec.detail.label" in deck
+    assert "export function withTip" in graphics and "function svgTips" in graphics and "aria-describedby" in graphics and "role', 'tooltip'" in graphics
+    assert ".has-tip:focus" in css and ".deck-tip" in css
     for needle in ("k1=1.5, b=0.75", "text-embedding-3-large", "reciprocal rank fusion, c=60", "ranks top 30 candidates, returns up to 10"):
-        assert needle in main, needle
+        assert needle in main or needle in graphics, needle
     assert "not the 70.8% on the previous slide" in main and "24 cases" in main and "128" in main
 
 
 def test_title_slide_has_no_graphic_and_structure_labels_are_plain():
     graphics = (STATIC / "presentation" / "graphics.js").read_text()
     assert "titleVisual" not in graphics
-    assert "Structured: statistics" in graphics and "Unstructured: reports" in graphics
+    assert "Parquet table" in graphics and "BM25 and embeddings" in graphics and "Snapshot" in graphics
     assert "Same 65 questions, reused" in graphics and "not adopted" in graphics
+
+
+def _faces(text):
+    return [line for line in text.splitlines() if "notes:" not in line and "detail:" not in line and not line.strip().startswith(("//", "/**", "*"))]
+
+
+def test_faces_follow_the_owner_edits():
+    main = _slides_main_section()
+    graphics = (STATIC / "presentation" / "graphics.js").read_text()
+    faces = "\n".join(_faces(main))
+    for banned in ("held-out", "Held-out", "same model family", "237 development and 31", "31 original test", "Only the first two are questions", "Optional MCP", "optional MCP", "Transport-sector labour data is included", "A small, checkable scope beat", "Everything final runs on the current build", "kept only so older results", "The statement is the brief in my words"):
+        assert banned not in faces, banned
+        slide_graphics = graphics.split("export function freshQuestions", 1)[0] + graphics.split("export function reviewStreams", 1)[1]  # freshQuestions is used by the report page only
+        assert banned not in slide_graphics, banned
+    assert "Hard parts" not in main and "Who checked the answers" not in main and "Every claim has a source" not in main and "On fresh questions" not in main
+    assert "freshQuestions" not in main
+    assert "Optional" not in graphics and "403 items signed off" not in graphics
+
+
+def test_model_choice_numbers_match_the_screen():
+    graphics = (STATIC / "presentation" / "graphics.js").read_text()
+    block = graphics.split("export function modelChoice", 1)[1].split("return wrap;", 1)[0]
+    for row in ("['gpt-6-luna', .60, .417, 0, .00051]", "['gpt-5.6-luna', .73, .292, 0, .00113]", "['gpt-6.1-terra', .57, .417, 0, .00432]", "['gpt-5.4-mini', .70, .25, .167, .00335]", "['gpt-6-sol', .60, .375, .167, .00912]", "['gpt-4.1-mini', .83, .125, .333, .00161]"):
+        assert row in block, row
+    main = _slides_main_section()
+    assert "no false answers at the lowest cost" in main and "not a ranking" in main and "237-question" in main
+
+
+def test_mcp_slide_states_where_mcp_sits():
+    graphics = (STATIC / "presentation" / "graphics.js").read_text()
+    block = graphics.split("export function mcpMap", 1)[1].split("return wrap;", 1)[0]
+    for needle in ("Direct calls", "Through MCP", "get_statistic", "labourlens://sources", "compare_quarters", "17 parts", "10 hostile-server cases", "One agent question over MCP", "4.4 ms and 22.7 ms", "No measured gain"):
+        assert needle in block, needle
+    main = _slides_main_section()
+    assert "every accuracy evaluation call the same functions directly" in main
+
+
+def test_threat_slide_reads_counts_from_the_report_data_and_labels_runs():
+    graphics = (STATIC / "presentation" / "graphics.js").read_text()
+    block = graphics.split("export function threatMatrix", 1)[1].split("return wrap;", 1)[0]
+    assert "threatRuns(m)" in block and "(final run)" in block and "(earlier run)" in block
+    assert "With defences" in block and "Without defences" in block
+    assert "e2efixRow" in graphics and "securityRow" in graphics
+    main = _slides_main_section()
+    assert "threatRuns(m)" in main and "no defence effect for the stronger models" in main
+
+
+def test_workbench_slide_names_the_two_live_only_steps():
+    main = _slides_main_section()
+    assert "small-talk reply and a scope check before the agent" in main and "The experiments did not use them" in main
 
 
 def test_workbench_qr_has_a_quiet_zone():
@@ -241,3 +297,14 @@ def test_workbench_qr_has_a_quiet_zone():
     ys = [int(y) for y in re.findall(r'x="\d+mm" y="(\d+)mm" width="1mm"', svg)]
     size = int(re.search(r'width="(\d+)mm"', svg).group(1))
     assert min(xs) >= 4 and min(ys) >= 4 and size - 1 - max(xs) >= 4 and size - 1 - max(ys) >= 4
+
+
+def test_every_graphic_used_by_the_slides_and_report_is_imported():
+    graphics = (STATIC / "presentation" / "graphics.js").read_text()
+    exported = set(re.findall(r"export (?:function|const) (\w+)", graphics))
+    for path in (STATIC / "presentation" / "slides.js", STATIC / "js" / "report-story.js"):
+        text = path.read_text()
+        imported = set(re.findall(r"[\w$]+", re.search(r"import \{([^}]*)\} from '[./]*(?:presentation/)?graphics\.js'", text).group(1)))
+        body = re.sub(r"import \{[^}]*\} from [^\n]*", "", text)
+        used = {name for name in exported if re.search(rf"(?<![\w.]){name}\(", body) or re.search(rf"safe\([^)]*, {name}\)", body)}
+        assert used <= imported, (path.name, sorted(used - imported))

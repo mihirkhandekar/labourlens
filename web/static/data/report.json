@@ -1,6 +1,6 @@
 {
   "schema_version": "report-1.0",
-  "generated_at": "2026-11-01T06:37:37.159358+00:00",
+  "generated_at": "2026-11-01T07:41:44.184488+00:00",
   "summary": {
     "title": "LabourLens research workbench",
     "scope": [
@@ -65965,6 +65965,30 @@
         "date": "1 Nov 2026",
         "alternatives": "",
         "summary": "| Keep \"owner-confirmed\" and the quick-confirmations sentence | Most cautious reading of how labels were reached | Owner rejected it; the sentence characterised the review beyond what the records show | Rejected |"
+      },
+      {
+        "id": "D-050",
+        "title": "Small-talk fast path in the served web app",
+        "status": "ASSISTANT DECISION / IMPLEMENTED",
+        "date": "1 Nov 2026",
+        "alternatives": "",
+        "summary": "Served versus evaluated difference (adds to the D-043 list)"
+      },
+      {
+        "id": "D-051",
+        "title": "LLM scope triage in front of the agent, web app only",
+        "status": "OWNER REQUEST / IMPLEMENTED",
+        "date": "1 Nov 2026",
+        "alternatives": "",
+        "summary": "- Mapping to the public schema: outofscope and smalltalk become status clarify (summary is the model's reply, clarificationquestion carries the three fixed example questions from D-050, reason empty, so the browser show…"
+      },
+      {
+        "id": "D-052",
+        "title": "Corpus v3.1: refined garbled-text rule applied, parser extract-0.3",
+        "status": "OWNER APPROVED / REBUILT AND INDEXED LOCALLY",
+        "date": "1 Nov 2026",
+        "alternatives": ". (A) Leave v3: zero cost, but 16 legible MTI passages stay invisible and the data sheet keeps a known false positive",
+        "summary": "Rule (code in src/labourlens/data/pdfextract.py, unit tests in tests/data/testextractionfixes.py)"
       }
     ],
     "milestones": [
@@ -66073,7 +66097,7 @@
     "The population basis of the dataset employment series is unverified."
   ],
   "provenance": {
-    "commit": "e2503c8f65caa345c414c26ffd7c8b1688375912",
+    "commit": "a1aa2cf3025f4c94c787cc0b73f8a77acda09398",
     "artifacts": [
       {
         "path": "data/export/sources.json",
@@ -66898,12 +66922,12 @@
       {
         "path": "docs/decisions.md",
         "status": "available",
-        "sha256": "6b8ea81a8d310df060b3e444843e81f742fc52ef635da6873772659a7c193fef"
+        "sha256": "693a2e981676f3e73d7fcf4bd9aeb2326135b528b9f68f1e17e57287adda35d3"
       },
       {
         "path": "docs/progress.md",
         "status": "available",
-        "sha256": "f540db22234b338c74dbbeb196dc3f243826740e4a2bf059cafd9546c03dd77f"
+        "sha256": "8eea6a5f36663d7ae145181908611e9beec0ff1ada0cbfec2248febdb3a030ee"
       }
     ],
     "policy": "Committed artifacts only; numeric fields only."

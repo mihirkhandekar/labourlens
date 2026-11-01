@@ -15,6 +15,10 @@ LabourLens is an evidence-grounded research assistant for Singapore policy resea
 
 Reviewer entry points: [`SUBMISSION.md`](SUBMISSION.md) (what to read first and how to run it), [`docs/README.md`](docs/README.md) (documentation index), [`docs/agent-logs.md`](docs/agent-logs.md) (how AI agents were used, with the approval record).
 
+## Served versus evaluated
+
+**The live web app is not exactly the system the experiments measured.** In front of the agent the web runner adds (1) a **small-talk fast path** (D-050): a closed list of whole-message greetings, thanks and similar answered with no model call; and (2) a **model scope check** (D-051): one `gpt-6-luna` call that can answer or decline off-topic, small-talk and unsafe messages without running the agent, and otherwise adds its tokens, cost and latency (about 1.6 s median, 2.4 s p95, $0.000124 mean per call, 409 calls) to the question. It fails open to the agent on any error. Together with the runtime changes of D-043 (web citation projection, soft ungrounded-number notice, 80 s run deadline with retry, rights-window hardening, MCP withheld-row reporting, login and feedback limits) these are the full list of differences. `run_agent`, `agent-exp`, `threat-test` and every gold, held-out and threat result use none of the first two. Triage was measured on its own, not end to end: **0 of 333** gold and held-out v2 questions diverted as out of scope, **1 of 36** threat cases diverted (T-D05), **30 of 30** hand-written off-topic or unsafe or small-talk messages caught, 10 of 10 borderline in-scope kept ([`metrics.json`](experiments/triage/triage-v1-luna/metrics.json), one run, my own 40 off-topic cases). No end-to-end accuracy, cost or latency run exists with triage switched on; the 1-in-36 threat diversion and the borderline cases show it can misroute on judgement calls.
+
 ## Headline results
 
 All numbers are saved outputs, each with its source file. Behaviour accuracy means the answer's status matches the gold label (answer, abstain, clarify or refuse); it does not check content, which other metrics cover (key-number recall, claim support, fact coverage). Behaviour status, key-number recall, calculation correctness, false-answer and over-abstention are deterministic code. Claim support and fact coverage come from an AI judge (`gpt-6.1-terra`). Gold labels were drafted by AI. I then went through them in the review interface and signed off on every case, answer verdict and source check (four separate streams, 403 items in total: 268 gold questions, 65 held-out v2 questions, 40 saved system answers and 30 source checks; only the first two are questions). It is one reviewer, working after AI pre-review (three separate AI review passes, one model family) and after the saved runs were scored, so it is not independent inter-rater evidence. These are agreement figures, not validated accuracy. Intervals are 95% case-bootstrap intervals (Wilson only for the threat suite).
@@ -160,7 +164,7 @@ The MCP server exposes read-only statistics, discovery, comparison, revision and
 | [Demo script](docs/demo-script.md) | 20-minute live demonstration plan |
 | [Requirements matrix](docs/requirements-matrix.md) | Assessment requirement to evidence, with honest status |
 | [Deployment](docs/deploy.md) | Droplet runbook and verified state |
-| [Decisions](docs/decisions.md), [progress](docs/progress.md) | Dated decisions; current state and recent log |
+| [Decisions](docs/decisions.md), [progress](docs/progress.md) | Dated decisions (53 entries, D-000 to D-052); current state and recent log |
 | [Agent logs](docs/agent-logs.md) | How AI agents were used: contract, approval gates, controls, mistakes caught |
 | [Reproduce](docs/reproduce.md), [fresh-clone check](docs/fresh-clone-check.md) | Commands to each artefact, what needs the private corpus or an API key, expected output |
 | [Review records](docs/human-review/README.md) | Owner review and AI reviews, kept separate |

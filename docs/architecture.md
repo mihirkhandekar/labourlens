@@ -1,6 +1,6 @@
 # LabourLens architecture
 
-This document describes the system as built on 31 October 2026. Decision ids (D-nnn) refer to `docs/decisions.md`. Evaluation results are not in this document. See chapter 5 of the interactive report (`/#presentation/pr-evaluation`) and `experiments/eval/`.
+This document describes the system as built on 1 November 2026. Decision ids (D-nnn) refer to `docs/decisions.md`. Evaluation results are not in this document. See the evaluation report (`docs/evaluation-report.md`), the deck at `/deck` and `experiments/eval/`.
 
 ## 1. Overview
 
@@ -14,6 +14,8 @@ Two kinds of source feed the system.
 One bounded LangGraph agent reads both through three read-only tools. Code does all arithmetic. A deterministic validator checks every answer before it is returned. The answer has one of four statuses: answered, abstained, clarify or refused (D-024).
 
 The README (`README.md`) states the current data counts. The data sheet (`docs/data-sheet.md`) records sources, licences and checks.
+
+**Served versus evaluated.** The live web app adds two stages in front of the agent that the diagram's core path does not include: a **small-talk fast path** (D-050, whole-message greetings answered with no model call) and a **model scope check** (D-051, one `gpt-6-luna` call that can answer or decline off-topic, small-talk and unsafe messages without the agent; it fails open to the agent on error). The evaluated entry points (`run_agent`, `agent-exp`, `threat-test`) do not use them. Differences between served and evaluated are the D-043 runtime changes, D-050 and D-051. The scope check was measured on its own (0 of 333 gold and held-out v2 questions diverted, 1 of 36 threat cases diverted, 30 of 30 off-topic messages caught; `experiments/triage/triage-v1-luna/metrics.json`); no end-to-end run exists with it on.
 
 **Corpus versions.** Three corpus states exist. **v1** (13,484 passages) is what every registered held-out and development experiment (A1–A5, H-r3, H-hybrid) ran on. **v2** (`extract-0.2`, D-037/D-041: 15,915 passages, 1,732 `merge200` chunks, 43,662 observations) was used for the extraction-only X1 runs and the first post-fix T-I06 run. **v3** (v2 plus six labour-only sources, D-040) is what the committed manifest and quality report and the local store hold: 85 sources (36 datasets, 49 documents), 52,020 observations (4,300 in the answer scope), 16,419 passages, 1,847 chunks, 276 build checks (269 pass, 7 warn). Three measured evaluations exist on v3, all on 31 Oct 2026: the X2 development regression check, the `m7-e2efix-20261031` threat run (`docs/experiments/m7-e2e-fixes.md`) and held-out v2, the first evidence-disjoint-source evaluation (`docs/experiments/m7-heldout-v2-result.md`, D-045). Per the owner (not verifiable from repository files), the Droplet serves corpus v3 and the post-fix code at commit c297146; `/healthz` reports fingerprint `d402120f6f8f`, 16,419 passages and 1,847 chunks.
 
