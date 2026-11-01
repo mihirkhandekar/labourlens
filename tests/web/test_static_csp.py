@@ -37,7 +37,7 @@ def test_html_has_no_inline_script_style_or_handlers(page):
     for body in re.findall(r"<script\b[^>]*>(.*?)</script>", html, re.I | re.S):
         assert not body.strip(), "inline script body"
     for target in re.findall(r"\b(?:src|href)\s*=\s*['\"]([^'\"]+)", html, re.I):
-        if target.startswith(("#", "https://", "mailto:")):
+        if target.startswith(("#", "https://", "mailto:", "data:")):
             continue
         if target in ("/", "/workbench", "/workbench.html"):
             continue

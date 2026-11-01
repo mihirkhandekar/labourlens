@@ -69,6 +69,8 @@ def test_deck_html_has_no_inline_script_style_handlers_or_external_resources():
     for body in re.findall(r"<script\b[^>]*>(.*?)</script>", html, re.I | re.S):
         assert not body.strip()
     for target in re.findall(r"\b(?:src|href)\s*=\s*['\"]([^'\"]+)", html):
+        if target.startswith("data:"):
+            continue
         assert not re.match(r"(https?:)?//", target), target
         assert (WEB / target.lstrip("/").split("?", 1)[0]).is_file(), target
 
@@ -101,18 +103,53 @@ def test_deck_never_transitions_layout_properties():
     assert "prefers-reduced-motion: reduce" in css and "print" in css
 
 
+def _slides_main_section():
+    slides = (STATIC / "presentation" / "slides.js").read_text()
+    start = slides.index("// ---------- opening")
+    end = slides.index("// ---------- appendix")
+    return slides[start:end]
+
+
 def test_every_slide_has_a_heading_and_speaker_notes():
     builder = (STATIC / "presentation" / "deck.js").read_text()
     assert "el(spec.layout === 'title' ? 'h1' : 'h2', 'deck-title', spec.title)" in builder
     assert "el('aside', 'notes')" in builder and "if (!notes.children.length) notes.append(" in builder
-    slides = (STATIC / "presentation" / "slides.js").read_text()
-    specs = re.findall(r"\badd\(\{", slides)
-    assert 45 <= len(specs) <= 75, len(specs)
-    # Every declared slide supplies notes, directly or through figSlide.
-    blocks = re.split(r"\badd\(\{", slides)[1:]
-    for block in blocks:
-        head = block.split("\n  add(", 1)[0]
-        assert "notes:" in head or "figSlide(" in head, head[:120]
+    main = _slides_main_section()
+    specs = re.findall(r"\badd\(\{", main)
+    assert 28 <= len(specs) <= 32, len(specs)
+    total = len(re.findall(r"\badd\(\{", (STATIC / "presentation" / "slides.js").read_text()))
+    assert total - len(specs) >= 10  # appendix slides
+    for block in re.split(r"\badd\(\{", main)[1:]:
+        assert "notes:" in block, block[:100]
+        assert "title:" in block, block[:100]
+
+
+FACE_FORBIDDEN = re.compile(r"ADR-|D-0\d\d|\bX[12]\b|\bA[1-5]\b|T-I06|report\.json|\.md\b|\.js\b|\b[0-9a-f]{7,}\b|\bhit@8\b|\bheld-out\b")
+
+
+def test_slide_faces_carry_no_identifiers():
+    """Faces are everything except the notes arrays: titles, bullets, captions, row text and source lines."""
+    faces = [line for line in _slides_main_section().splitlines() if "notes:" not in line and not line.strip().startswith("//")]
+    for line in faces:
+        assert not FACE_FORBIDDEN.search(line), line.strip()[:140]
+    for path in [STATIC / "presentation" / "graphics.js"]:
+        text = path.read_text()
+        assert not re.search(r"ADR-|D-0\d\d|T-I06|\.md\b", text), path.name
+
+
+def test_no_bridge_sentences_or_pills_on_faces():
+    main = _slides_main_section()
+    for banned in ("withSoWhat", "The next slide", "pill", "eyebrow"):
+        assert banned not in main
+
+
+def test_home_page_has_no_logo_or_favicon_file():
+    app = (STATIC / "app.js").read_text()
+    assert "brandMark" not in app and "brand-mark" not in app
+    assert not (STATIC / "favicon.svg").exists()
+    for page in ("index.html", "deck.html", "workbench.html"):
+        assert "favicon.svg" not in (WEB / page).read_text()
+    assert "Mihir Khandekar" in (STATIC / "js" / "home.js").read_text()
 
 
 def test_deck_keys_and_controls_are_wired():

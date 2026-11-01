@@ -31,21 +31,10 @@ const themeButton = () => {
 };
 
 // ---------- nav ----------
-function brandMark() {
-  const ns = 'http://www.w3.org/2000/svg';
-  const s = document.createElementNS(ns, 'svg');
-  s.setAttribute('viewBox', '0 0 32 32'); s.setAttribute('class', 'brand-mark'); s.setAttribute('aria-hidden', 'true'); s.setAttribute('focusable', 'false');
-  const part = (tag, attrs) => { const n = document.createElementNS(ns, tag); Object.entries(attrs).forEach(([k, v]) => n.setAttribute(k, v)); s.append(n); };
-  part('rect', {width: 32, height: 32, rx: 9, class: 'bm-bg'});
-  part('circle', {cx: 14.5, cy: 14.5, r: 7.5, class: 'bm-ring'});
-  part('path', {d: 'M20.5 20.5 26 26', class: 'bm-handle'});
-  return s;
-}
-
 const header = el('header', 'nav-wrap');
 const nav = el('nav', 'nav'); nav.setAttribute('aria-label', 'Primary');
 const brand = el('a', 'brand'); brand.href = '/';
-add(brand, brandMark(), el('span', 'brand-name', 'LabourLens'));
+add(brand, el('span', 'brand-name', 'LabourLens'));
 const links = el('ul', 'nav-links');
 PAGES.forEach(([href, label]) => {
   const li = el('li'); const a = el('a', 'nav-link', label); a.href = href;
@@ -76,7 +65,7 @@ main.append(overviewRoot);
 
 const footer = el('footer', 'site-footer');
 const fc = el('div', 'container');
-fc.append(el('p', 'small muted', 'Statistics: Ministry of Manpower and the Singapore Department of Statistics via data.gov.sg, under the Singapore Open Data Licence. MOM reports remain the Ministry\u2019s. A research prototype, not an official source.'));
+fc.append(el('p', 'small muted', 'Statistics: Ministry of Manpower and the Singapore Department of Statistics via data.gov.sg, under the Singapore Open Data Licence. MOM reports remain the Ministry\u2019s. A research prototype by Mihir Khandekar, not an official source.'));
 footer.append(fc);
 const shell = el('div', 'shell');
 add(shell, header, menu, main, footer);

@@ -66,7 +66,8 @@ function buildSlide(spec) {
   section.dataset.title = spec.title || '';
   const inner = el('div', `deck-slide is-${spec.layout}${spec.cls ? ` ${spec.cls}` : ''}${spec.warn ? ' is-warn' : ''}`);
   const heading = el(spec.layout === 'title' ? 'h1' : 'h2', 'deck-title', spec.title);
-  inner.append(heading);
+  if (spec.layout !== 'title') inner.append(heading);
+  if (spec.caption) inner.classList.add('has-caption');
   const bullets = () => {
     if (!spec.bullets?.length) return null;
     const ul = el('ul', 'deck-bullets');
@@ -74,7 +75,11 @@ function buildSlide(spec) {
     return ul;
   };
   if (spec.layout === 'title') {
-    if (spec.sub) inner.append(el('p', 'deck-sub', spec.sub));
+    const left = el('div', 'tl-left');
+    left.append(el('p', 'deck-wordmark', spec.wordmark), heading);
+    const by = el('div', 'tl-by'); by.append(el('p', 'tl-author', spec.author), el('p', 'tl-role', spec.role));
+    left.append(by);
+    inner.append(left, spec.card);
   } else if (spec.layout === 'agenda') {
     const nav = el('nav', 'deck-agenda'); nav.setAttribute('aria-label', 'Contents');
     const ol = el('ul');
@@ -106,6 +111,7 @@ function buildSlide(spec) {
     body.append(visualBox(spec.visual));
     inner.append(body);
   }
+  if (spec.caption) inner.append(el('p', 'deck-caption', spec.caption));
   if (spec.source) inner.append(el('p', 'deck-source', `Source: ${spec.source}`));
   section.append(inner);
   const notes = el('aside', 'notes');

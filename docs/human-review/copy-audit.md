@@ -164,3 +164,15 @@ Register: GenAI Engineer assessment submission for technical interviewers. The w
 ## T-I06 post-fix update (31 Oct 2026)
 
 Every 'T-I06 open / proposed, not built' line was replaced. Sources: `docs/experiments/m7-t-i06-crosscheck.md`, `experiments/threats/m7-ti06-postfix-20261031/SUMMARY.md`, D-038. Wording rule: the cross-check handled the one planted-figure case in both models; the refined scorer that passes it was written after the run (post hoc); closed-grammar coverage; not shown to generalise. The words 'fixed' and 'closed' are not used. Places: `js/home.js` (hero limits line, limits list), `presentation/ch6-safety.js` (callout, title, bullets, new post-fix figure), `presentation/ch8-limits.js` (limit card, limits bullet, open items, next step, questions answer), `presentation/ch-work.js` (failure log), `presentation/index.js` (summary stat and note).
+
+## Deck and home page rewrite (1 Nov 2026)
+
+Edit list: `docs/human-review/deck-copy-review.md`. Applied:
+
+- Deck cut to 30 main slides (about 40 seconds each) plus a lettered appendix A to K. Cut slides moved to speaker notes or the appendix.
+- Slide faces carry no ADR or decision numbers, experiment tags (X1, X2, A1 to A5), commit hashes, file paths, `report.json`, or code identifiers. `tests/web/test_deck.py` checks this on the slide declarations. Notes and appendix keep the identifiers.
+- Titles are two to six words or one short sentence. Bridge sentences, hypothesis paragraphs, the agenda slide and the logo were removed. Body text is at most three short bullets, or one graphic with one caption line.
+- Nine graphics were built from the report data (three answers, two source types, document builds, table flattening, retrieval staircase, agent loop, evidence trace, experiment staircase, cost bars) plus an error bar chart, an MCP diagram and a title-slide answer card. Passage counts for the three document builds are literals from the README, as `report.json` does not carry them.
+- Brand mark, `.bm-*` styles and the favicon file were removed. The pages use a text wordmark; the author name appears on the title slide, the home hero and the footer.
+- Home page: one-line hero, one sentence, how an answer is made, four outcomes, data explorer, source count, five plain limits. No contents list, no hero bullets, no identifiers.
+- The tool-fix experiment is described only as a next step ("Fix the calculation gap") with no result.

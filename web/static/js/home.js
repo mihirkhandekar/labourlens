@@ -4,41 +4,31 @@ import {el, add, icon, cta, button, finite, fmtUnit, signed, human, CHANGE_UNIT}
 import {lineChart, sparkline} from './chart.js';
 import {FAMILIES} from './workbench.js';
 
-function heroHeadline() {
-  const h = el('h1', 'hero-title');
-  const words = ['LabourLens'];
-  words.forEach((w, i) => {
-    const emphasised = w.startsWith('*');
-    const outer = el('span', 'w'); const inner = el('span', `wi${emphasised ? ' em' : ''}`, w.replaceAll('*', ''));
-    outer.append(inner); h.append(outer); if (i < words.length - 1) h.append(document.createTextNode(' '));
-  });
-  return h;
-}
-
 export function renderHome(root, report, {go, tryQuestion}) {
   // ---------- hero ----------
   const hero = el('section', 'hero'); hero.id = 'top';
   const wrap = el('div', 'container hero-grid');
   const copy = el('div', 'hero-copy');
-  add(copy, heroHeadline(),
-    el('p', 'lead', 'Cited answers to questions about Singapore unemployment, vacancies and retrenchments, Q1 2024 to Q2 2026.'),
+  add(copy, el('h1', 'hero-title', 'Singapore labour statistics, with a source for every number.'),
+    el('p', 'lead', 'Ask about unemployment, vacancies and retrenchments, 2024 to 2026. Answers cite MOM data or say nothing is published.'),
+    el('p', 'byline', 'Built by Mihir Khandekar, for a GenAI Engineer assessment.'),
     add(el('div', 'hero-cta'), cta('Open the workbench', '/workbench', 'btn btn-primary', 'arrow-ur'), cta('Watch the presentation', '/deck', 'btn', 'arrow-r')));
   wrap.append(copy);
 
   const cards = Array.isArray(report?.summary?.cards) ? report.summary.cards : [];
   const seriesById = new Map((Array.isArray(report?.charts) ? report.charts : []).map(c => [c.id, c]));
   if (cards.length) wrap.append(specimen(cards, seriesById));
-  else wrap.append(add(el('div', 'bezel hero-specimen'), add(el('div', 'bezel-core'), el('p', 'muted', 'report.json did not load. No figures are shown. The workbench is unaffected.'))));
+  else wrap.append(add(el('div', 'bezel hero-specimen'), add(el('div', 'bezel-core'), el('p', 'muted', 'The figures could not be loaded. The workbench is unaffected.'))));
   hero.append(wrap);
   root.append(hero);
 
-  // ---------- how it works ----------
-  const how = section('how', 'One bounded agent answers each question with three read-only tools', 'It makes at most 6 tool calls in 2 evidence rounds, and one repair. Retrieved text is treated as untrusted input.');
+  // ---------- how an answer is made ----------
+  const how = section('how', 'How an answer is made', null);
   const steps = [
-    ['Question', 'If the period or definition is ambiguous, the agent asks for clarification.'],
-    ['Tools', 'Search report passages, get a statistical series, calculate a change. No write access, no web access.'],
-    ['Calculation', 'Changes are computed in code from validated observations, in decimal arithmetic.'],
-    ['Validation', 'Schema and citation checks. They confirm a quote exists, not that it supports the claim.']
+    ['Question', 'Checks that the period and series are clear.'],
+    ['Search', 'Finds report passages and statistics.'],
+    ['Calculate', 'Changes are computed in code.'],
+    ['Cited answer', 'Every claim shows its source.']
   ];
   const dl = el('dl', 'how-list reveal');
   steps.forEach(([title, body]) => dl.append(el('dt', '', title), el('dd', '', body)));
@@ -46,31 +36,27 @@ export function renderHome(root, report, {go, tryQuestion}) {
   root.append(how.node);
 
   // ---------- outcomes ----------
-  const outcomes = section('outcomes', 'The agent returns one of four statuses', 'Operational failures are reported separately from these.');
+  const outcomes = section('outcomes', 'Four possible outcomes', null);
   const oc = el('ul', 'outcome-list reveal');
-  const list = [
-    ['answered', 'check', 'Answered', 'Answer with citations. Check the cited excerpts before using it.'],
-    ['abstained', 'minus', 'Abstained', 'Evidence does not cover the question. No figure is given.'],
-    ['clarify', 'help', 'Needs clarification', 'The question has more than one reading. The agent asks which is meant.'],
-    ['refused', 'shield', 'Refused', 'Request outside the tool’s scope, such as changing a published figure.']
-  ];
-  list.forEach(([status, ic, label, body]) => {
+  [
+    ['answered', 'check', 'Answered', 'Answer with citations.'],
+    ['abstained', 'minus', 'No answer', 'The data does not cover it.'],
+    ['clarify', 'help', 'Needs clarification', 'The question has more than one reading.'],
+    ['refused', 'shield', 'Refused', 'The request is out of scope, such as a forecast.']
+  ].forEach(([status, ic, label, body]) => {
     const badge = el('span', `badge ${status}`); add(badge, icon(ic), el('span', '', label));
     oc.append(add(el('li'), badge, el('p', '', body)));
   });
   outcomes.body.append(oc, button('Try an example question', () => tryQuestion(FAMILIES[0].questions[0]), 'btn small plain', 'arrow-ur'));
   root.append(outcomes.node);
 
-  // ---------- explorer ----------
+  // ---------- data ----------
   const charts = Array.isArray(report?.charts) ? report.charts : [];
   if (charts.length) root.append(explorer(charts).node);
-
-  // ---------- sources ----------
   if (Array.isArray(report?.sources?.rows) && report.sources.rows.length) root.append(sources(report).node);
 
   // ---------- limits ----------
   root.append(limits(report).node);
-
   return {go};
 }
 
@@ -127,7 +113,7 @@ function tileValue(card) {
 }
 
 function explorer(charts) {
-  const s = section('series', 'Unemployment, vacancies and retrenchments by quarter', 'Series with different units cannot share a chart. Check population and adjustment before comparing.');
+  const s = section('series', 'Explore the data', 'Each series keeps its own population and adjustment.');
   const box = el('div', 'bezel reveal'); const core = el('div', 'bezel-core explorer');
   const picker = el('div', 'picker'); picker.setAttribute('role', 'group'); picker.setAttribute('aria-label', 'Series');
   const slot = el('div', 'explorer-chart');
@@ -166,11 +152,10 @@ function explorer(charts) {
 
 function sources(report) {
   const rows = report.sources.rows;
-  const s = section('sources-overview', `${rows.length} source records, each with release stage and licence status`, 'Advance and final releases are separate records.');
+  const s = section('sources-overview', `${rows.length} sources`, 'Advance and final releases are kept apart.');
   const tally = key => rows.reduce((m, r) => m.set(r[key] ?? null, (m.get(r[key] ?? null) ?? 0) + 1), new Map());
   const stage = [...tally('release_stage')].sort((a, b) => b[1] - a[1]);
   const total = rows.length;
-  const licensed = rows.filter(r => r.licence).length;
   const box = el('div', 'bezel reveal'); const bc = el('div', 'bezel-core');
   add(bc, add(el('p', 'big-number num'), document.createTextNode(String(total)), el('span', 'big-unit', ' source records')));
   const bar = el('div', 'stack-bar'); bar.setAttribute('role', 'img');
@@ -180,19 +165,19 @@ function sources(report) {
     const seg = el('span', `seg c${(i % 6) + 1}`); seg.setAttribute('data-n', n); seg.style.flexGrow = String(n); bar.append(seg);
     const li = el('li'); add(li, el('span', `swatch c${(i % 6) + 1}`), el('span', '', human(key ?? 'Not recorded')), el('strong', 'num', String(n))); legend.append(li);
   });
-  add(bc, bar, legend, el('p', 'small muted', `Statistics: Ministry of Manpower and the Singapore Department of Statistics via data.gov.sg, under the Singapore Open Data Licence. Reports: Ministry of Manpower. A licence is recorded for ${licensed} of ${total} records; this site shows only short excerpts cited by the live agent.`));
+  add(bc, bar, legend, el('p', 'small muted', `Statistics: Ministry of Manpower and the Singapore Department of Statistics via data.gov.sg, under the Singapore Open Data Licence. Reports: Ministry of Manpower. This site shows only short excerpts cited by the live agent.`));
   box.append(bc); s.body.append(box);
   return s;
 }
 
 function limits(report) {
-  const s = section('limits', 'Five limits on what these results show', null);
+  const s = section('limits', 'Limits', null);
   const items = [
-    'Gold labels are mostly AI drafts: 45 of 268 cases are owner-reviewed.',
-    'The held-out set has 31 cases, and the gain from filtered, reranked retrieval is not demonstrated.',
-    'T-I06 plants a false figure in a report passage. A cross-check corrected it in one run and not in the next for one model, so I do not claim it works in general. The injection scanner missed all 5 paraphrased attacks.',
-    'Registered results ran on corpus v1. The served corpus v3 has two measured evaluations and no held-out one.',
-    `The analysis period is ${report?.summary?.scope?.join(' to ') ?? 'fixed'} only. No forecasts, no causal claims.`
+    'Most reference answers were drafted by an AI. I reviewed 45 of 268.',
+    'On fresh questions, filtering helped by a few cases only.',
+    'A planted wrong figure was caught once and missed once. The attack scanner is weak.',
+    'The live system uses a newer document build than most results.',
+    `Covers ${report?.summary?.scope?.map(p => p.replace('-', ' ')).join(' to ') ?? 'a fixed period'}. No forecasts, no claims about causes.`
   ];
   const ul = el('ul', 'limit-list stagger');
   items.forEach(t => ul.append(add(el('li', 'reveal'), el('p', '', t))));

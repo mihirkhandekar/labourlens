@@ -5,6 +5,7 @@ const CATEGORIES = [
   ['direct_injection', 'Direct injection'], ['indirect_injection_passage', 'Poisoned passage'], ['sensitive_data', 'Sensitive data'],
   ['unsafe_tool_use', 'Unsafe tool use'], ['unsupported_claims', 'Unsupported claims'], ['mcp_server_failure', 'MCP server failure']
 ];
+const NAME = {'gpt-4.1-mini': 'Cheaper model', 'gpt-5.6-luna': 'Second model', 'gpt-6-luna': 'Main model'};
 const CONFIGS = [
   ['gpt-4.1-mini+naive', 'gpt-4.1-mini', 'no defence'], ['gpt-4.1-mini', 'gpt-4.1-mini', 'defended'], ['gpt-5.6-luna', 'gpt-5.6-luna', 'defended'],
   ['gpt-6-luna+naive', 'gpt-6-luna', 'no defence'], ['gpt-6-luna', 'gpt-6-luna', 'defended']
@@ -19,11 +20,11 @@ function matrixFigure(m) {
       const e = row.strata?.[key];
       if (!e) return null;
       const rate = e.n ? e.passed / e.n : null;
-      return {value: rate, text: `${e.passed}/${e.n}`, sub: '', tone: e.passed < e.n ? 'bad' : undefined, lines: [`${model}, ${mode}`, label, `Passed ${e.passed} of ${e.n}`, `Not exercised: ${e.not_exercised}`, Array.isArray(e.useful) ? `Useful answers: ${e.useful[0]} of ${e.useful[1]}` : ''].filter(Boolean)};
+      return {value: rate, text: `${e.passed}/${e.n}`, sub: '', tone: e.passed < e.n ? 'bad' : undefined, lines: [`${NAME[model] || model}, ${mode}`, label, `Passed ${e.passed} of ${e.n}`, `Not exercised: ${e.not_exercised}`, Array.isArray(e.useful) ? `Useful answers: ${e.useful[0]} of ${e.useful[1]}` : ''].filter(Boolean)};
     });
     const x = row.metrics;
-    cells.push({value: x.pass_rate, text: `${x.passed}/${x.n_scored}`, sub: fmt.pct(x.pass_rate), tone: x.passed < x.n_scored ? 'bad' : undefined, lines: [`${model}, ${mode}`, `Passed ${x.passed} of ${x.n_scored}`, `Wilson 95% interval ${fmt.pct(x.pass_rate_ci95?.[0])} to ${fmt.pct(x.pass_rate_ci95?.[1])}`]});
-    return {label: `${model}, ${mode}`, cells, row};
+    cells.push({value: x.pass_rate, text: `${x.passed}/${x.n_scored}`, sub: fmt.pct(x.pass_rate), tone: x.passed < x.n_scored ? 'bad' : undefined, lines: [`${NAME[model] || model}, ${mode}`, `Passed ${x.passed} of ${x.n_scored}`, `Wilson 95% interval ${fmt.pct(x.pass_rate_ci95?.[0])} to ${fmt.pct(x.pass_rate_ci95?.[1])}`]});
+    return {label: `${NAME[model] || model}, ${mode}`, cells, row};
   }).filter(Boolean);
   const defended = rows.filter(r => /defended/.test(r.label)), naive = rows.filter(r => /no defence/.test(r.label));
   const failOf = (row, only) => Object.entries(row.row.strata || {}).reduce((sum, [key, e]) => sum + (!only || key === only ? e.n - e.passed : 0), 0);
