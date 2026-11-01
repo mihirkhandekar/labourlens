@@ -25,6 +25,14 @@ def main(argv: list[str] | None = None) -> int:
     rp.add_argument("--heldout-v2-only", action="store_true", help="build only the small held-out v2 review page (same as v2-review-pack)")
     sub.add_parser("v2-review-pack", help="build the small private held-out v2 review page (no network, no model calls)")
     sub.add_parser("v2-ai-summary", help="write the commit-safe summary of the three AI reviews of the held-out v2 draft (no network)")
+    ivp = sub.add_parser("review-inventory", help="write docs/human-review/review-inventory.md from files (no network, no model calls)")
+    ivp.add_argument("--main-export", type=Path, help="owner export of the main pack (default: private/human-review/owner-exports/review-results.json, then ~/Downloads/review-results (8).json)")
+    pp = sub.add_parser("pending-review-pack", help="build the private offline pending-review page: every card the owner has not decided by their own click (no network)")
+    pp.add_argument("--main-export", type=Path)
+    pi = sub.add_parser("pending-ingest", help="validate the pending-review export; dry run unless --write (writes gold_v3.7, changelog, final summary)")
+    pi.add_argument("--review-export", type=Path, required=True)
+    pi.add_argument("--write", action="store_true")
+    pi.add_argument("--main-export", type=Path)
     va = sub.add_parser("v2-approve", help="validate the owner's held-out v2 review export; dry run unless --write")
     va.add_argument("--review-export", type=Path, required=True)
     va.add_argument("--write", action="store_true", help="write experiments/gold/heldout_v2_v1.jsonl and the signed block in FREEZE.md")
@@ -98,6 +106,22 @@ def main(argv: list[str] | None = None) -> int:
     t.add_argument("id")
 
     args = p.parse_args(argv)
+    if args.cmd in ("review-inventory", "pending-review-pack", "pending-ingest"):
+        from labourlens.review import pending, pending_page
+
+        try:
+            if args.cmd == "review-inventory":
+                print(pending.write_inventory(main_export=args.main_export))
+            elif args.cmd == "pending-review-pack":
+                print(pending_page.build_pending_page(main_export=args.main_export))
+            else:
+                code, message = pending.pending_ingest(args.review_export, args.write, main_export=args.main_export)
+                print(message, file=sys.stderr if code else sys.stdout)
+                return code
+        except ValueError as exc:
+            print(f"Review error: {exc}", file=sys.stderr)
+            return 2
+        return 0
     if args.cmd in ("v2-approve", "v2-run"):
         from labourlens.review import heldout_v2 as hv2
 

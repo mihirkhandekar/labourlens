@@ -646,6 +646,53 @@ def adjudication_banner(root: Path) -> tuple[str, set[str]]:
     return '<aside class="decisions"><h2>Needs the owner’s eyes — optional adjudication priorities</h2><p>This list identifies open decisions, not verdicts. Decide before revealing AI opinions.</p><pre>' + esc('\n'.join(selected)) + '</pre>' + links + '</aside>', ids
 
 
+ANSWER_PURPOSES = {'factual_lookup': 'Find the requested published fact, using the right population and period.', 'numerical_comparison': 'Compare the requested periods or groups without mixing units or series.', 'cross_source_synthesis': 'Bring the relevant official sources together, keeping their definitions distinct.', 'revision_conflict': 'Distinguish preliminary estimates, final reports and dataset snapshots.', 'ambiguity_insufficient_causal': 'Separate what can be established from ambiguity, missing evidence and unsupported causes.', 'adversarial': 'Handle the legitimate question without following malicious or unsafe instructions.'}
+
+
+def answer_review_html(c: dict, r: dict, ev_old: 'Evidence') -> str:
+    """The question, the saved answer and the cited evidence of one saved run, side by side."""
+    cid = c['case_id']
+    a = r.get('answer') or {}
+    s = '<div class="review-split"><section class="answer-pane">'
+    s += '<p class="purpose"><strong>What is being asked:</strong> ' + esc(ANSWER_PURPOSES[c['family']]) + '</p><h3>QUESTION</h3>' + para(c['question'])
+    s += '<h3>ANSWER</h3>' + para('Status: ' + str(a.get('status', r.get('outcome')))) + para(a.get('summary', 'No answer object'))
+    for claim in a.get('claims', []):
+        s += para(claim['text'])
+        for citation in claim.get('citations', []):
+            s += '<blockquote><a href="#evidence-' + esc(cid + '-' + citation['label']) + '">' + esc(citation['label']) + '</a>: ' + esc(citation['quote']) + '</blockquote>'
+    for field in ('caveats', 'clarification_question', 'reason'):
+        value = a.get(field)
+        if value:
+            s += para(f'{field}: ' + ('; '.join(value) if isinstance(value, list) else value))
+    tool_events = []
+    for event in r.get('trace', []):
+        detail = event.get('detail', {})
+        if detail.get('tool'):
+            tool_events.append({'tool': detail['tool'], 'arguments': detail.get('args', {}), 'outcome': event.get('event'), 'result': detail.get('result'), 'seconds': detail.get('seconds')})
+    s += '<details><summary>Tool-call trace — names, arguments and outcomes only</summary><pre>' + esc(json.dumps(tool_events, indent=2, ensure_ascii=False)) + '</pre></details>'
+    s += '</section><section class="verify evidence-pane"><h3>VERIFY — actual cited evidence</h3>'
+    labels = {x['label'] for claim in a.get('claims', []) for x in claim.get('citations', [])}
+    items = {e['label']: e for e in r.get('evidence', [])}
+    for label in sorted(labels):
+        item = items.get(label)
+        s += '<h4 id="evidence-' + esc(cid + '-' + label) + '">' + esc(label) + '</h4>'
+        if item is None:
+            s += para('Citation has no saved evidence mapping — citation problem.')
+        elif not item['id'].startswith('calc:'):
+            s += ev_old.render(item['id'])  # strict: an id missing from the frozen corpus fails the build
+            if label in r.get('evidence_text', {}):
+                s += '<details><summary>Exact rendered input seen by the system</summary><pre>' + esc(r['evidence_text'][label]) + '</pre></details>'
+        else:
+            # Calculation citations are saved deterministic tool results; their source rows are linked below.
+            s += '<pre>' + esc(r.get('evidence_text', {}).get(label, json.dumps(item))) + '</pre>'
+            for e in r.get('evidence', []):
+                if e['id'] in ev_old.observations:
+                    s += ev_old.render(e['id'])
+    if not labels:
+        s += para('No claim citations were supplied. Check whether absence of evidence is justified.')
+    return s + '</section></div>'
+
+
 def build_pack(root: Path = ROOT, tiebreak_dir: Path | None = None, use_tiebreak: bool = True, frozen_dir: Path | None = None) -> Path:
     root = root.resolve()
     destination = root / 'private/human-review/review-pack/index.html'
@@ -681,45 +728,8 @@ def build_pack(root: Path = ROOT, tiebreak_dir: Path | None = None, use_tiebreak
         info = suggestions[('answers', cid)]
         s = card_start('answers', cid, c['family'], cid in priority or cid in flagged_answers, cid in flagged_answers, hint(c), info,
                        what_to_do('answers', a.get('status', r.get('outcome'))), fast_actions('answers', '', info), ev_old.label)
-        s += '<div class="review-split"><section class="answer-pane">'
-        purposes = {'factual_lookup': 'Find the requested published fact, using the right population and period.', 'numerical_comparison': 'Compare the requested periods or groups without mixing units or series.', 'cross_source_synthesis': 'Bring the relevant official sources together, keeping their definitions distinct.', 'revision_conflict': 'Distinguish preliminary estimates, final reports and dataset snapshots.', 'ambiguity_insufficient_causal': 'Separate what can be established from ambiguity, missing evidence and unsupported causes.', 'adversarial': 'Handle the legitimate question without following malicious or unsafe instructions.'}
-        s += '<p class="purpose"><strong>What is being asked:</strong> ' + esc(purposes[c['family']]) + '</p><h3>QUESTION</h3>' + para(c['question'])
-        s += '<h3>ANSWER</h3>' + para('Status: ' + str(a.get('status', r.get('outcome')))) + para(a.get('summary', 'No answer object'))
-        for claim in a.get('claims', []):
-            s += para(claim['text'])
-            for citation in claim.get('citations', []):
-                s += '<blockquote><a href="#evidence-' + esc(cid + '-' + citation['label']) + '">' + esc(citation['label']) + '</a>: ' + esc(citation['quote']) + '</blockquote>'
-        for field in ('caveats', 'clarification_question', 'reason'):
-            value = a.get(field)
-            if value:
-                s += para(f'{field}: ' + ('; '.join(value) if isinstance(value, list) else value))
-        tool_events = []
-        for event in r.get('trace', []):
-            detail = event.get('detail', {})
-            if detail.get('tool'):
-                tool_events.append({'tool': detail['tool'], 'arguments': detail.get('args', {}), 'outcome': event.get('event'), 'result': detail.get('result'), 'seconds': detail.get('seconds')})
-        s += '<details><summary>Tool-call trace — names, arguments and outcomes only</summary><pre>' + esc(json.dumps(tool_events, indent=2, ensure_ascii=False)) + '</pre></details>'
-        s += '</section><section class="verify evidence-pane"><h3>VERIFY — actual cited evidence</h3>'
-        labels = {x['label'] for claim in a.get('claims', []) for x in claim.get('citations', [])}
-        items = {e['label']: e for e in r.get('evidence', [])}
-        for label in sorted(labels):
-            item = items.get(label)
-            s += '<h4 id="evidence-' + esc(cid + '-' + label) + '">' + esc(label) + '</h4>'
-            if item is None:
-                s += para('Citation has no saved evidence mapping — citation problem.')
-            elif not item['id'].startswith('calc:'):
-                s += ev_old.render(item['id'])  # strict: an id missing from the frozen corpus fails the build
-                if label in r.get('evidence_text', {}):
-                    s += '<details><summary>Exact rendered input seen by the system</summary><pre>' + esc(r['evidence_text'][label]) + '</pre></details>'
-            else:
-                # Calculation citations are saved deterministic tool results; their source rows are linked below.
-                s += '<pre>' + esc(r.get('evidence_text', {}).get(label, json.dumps(item))) + '</pre>'
-                for e in r.get('evidence', []):
-                    if e['id'] in ev_old.observations:
-                        s += ev_old.render(e['id'])
-        if not labels:
-            s += para('No claim citations were supplied. Check whether absence of evidence is justified.')
-        s += '</section></div>' + ai_box(info) + controls('answers', cid)
+        s += answer_review_html(c, r, ev_old)
+        s += ai_box(info) + controls('answers', cid)
         s += f'<details class="gold"><summary>Gold says — open only AFTER forming your own view (gold evidence ids from {esc(ev.label)})</summary>' + gold_panel(c, ev) + '</details>'
         content.append(s + '</article>')
     heldout = sorted(cid for cid in gold if cid.startswith('HO-'))
