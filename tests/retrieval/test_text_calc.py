@@ -356,3 +356,19 @@ def test_v2_planner_prompt_formats_like_its_parent(shared):
     system, user, _ = load_prompt("planner_v3")
     system.format(catalogue="c")
     user.format(question="q", round=1, calls_used=0, evidence="e", errors="x")
+
+
+def test_score_run_ignores_bonus_round_trace_event():
+    from labourlens.agent import experiments as agx
+    import json
+    from labourlens import paths
+    case = json.loads((paths.EXPERIMENTS / "gold" / "draft_cases.jsonl").read_text().splitlines()[0])
+    res = {"answer": {"status": "abstained", "summary": "", "claims": [], "caveats": []}, "outcome": "abstained", "tool_calls": 1, "rounds": 1,
+           "usage": {"cost_usd": 0.0, "prompt_tokens": 1, "completion_tokens": 1}, "errors": [], "evidence": [], "cited_ids": [], "seconds": 1.0,
+           "trace": [{"node": "execute_tool", "event": "ok", "detail": {"tool": "get_series"}},
+                     {"node": "execute_tool", "event": "bonus_round_granted", "detail": {"reason": "unknown_dimension", "rounds_allowed": 3}}]}
+    try:
+        s = agx.score_run(case, res)
+    except KeyError as e:  # the crash this test guards against
+        raise AssertionError(f"score_run crashed on bonus event: {e}")
+    assert s["tools_used"] == ["get_series"] and s["tool_errors"] == 0

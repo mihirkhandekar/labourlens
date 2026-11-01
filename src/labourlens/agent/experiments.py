@@ -111,8 +111,8 @@ def to_record(res: dict) -> dict:
 def score_run(case: dict, res: dict) -> dict:
     s = ae.score(case, to_record(res), include_data_gold=True)
     s.update({"outcome": res["outcome"], "tool_calls": res["tool_calls"], "rounds": res["rounds"], "cost_usd": res["usage"]["cost_usd"],
-              "tools_used": sorted({e["detail"]["tool"] for e in res["trace"] if e["node"] == "execute_tool"}),
-              "tool_errors": sum(1 for e in res["trace"] if e["node"] == "execute_tool" and e["event"] != "ok")})
+              "tools_used": sorted({e["detail"]["tool"] for e in res["trace"] if e["node"] == "execute_tool" and "tool" in e["detail"]}),
+              "tool_errors": sum(1 for e in res["trace"] if e["node"] == "execute_tool" and "tool" in e["detail"] and e["event"] != "ok")})
     cc = _calc_correct(case, res)
     if cc is not None:
         s["calc_correct"] = cc
