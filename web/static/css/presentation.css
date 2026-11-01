@@ -908,13 +908,14 @@ th[aria-sort="descending"] .pr-sort::after { content: " \2193"; }
 .mm-lane { display: grid; gap: 16px; }
 .mm-title { font-size: 26px; font-weight: 600; color: var(--muted); }
 .mm-flow { display: flex; align-items: stretch; gap: 18px; }
-.mm-node { flex: 1 1 0; min-width: 0; display: grid; grid-template-columns: auto 1fr; align-content: center; column-gap: 14px; padding: 18px 22px; border: 1px solid var(--line-strong); border-radius: var(--r); background: var(--paper-2); }
+.mm-node { flex: 1 1 0; min-width: 0; min-height: 92px; box-sizing: border-box; display: grid; grid-template-columns: auto 1fr; align-content: center; column-gap: 14px; padding: 18px 22px; border: 1px solid var(--line-strong); border-radius: var(--r); background: var(--paper-2); }
 .mm-node.is-guard { border: 2px solid var(--accent); }
+.mm-node.is-ghost { border-style: dashed; background: transparent; color: var(--muted); } .mm-node.is-ghost .deck-ico, .mm-node.is-ghost .mm-name { color: var(--muted); }
 .mm-node .deck-ico { width: 34px; height: 34px; color: var(--accent); align-self: center; }
 .mm-name { font-size: 30px; font-weight: 600; line-height: 1.15; } .mm-sub { grid-column: 2; font-size: 22px; color: var(--muted); }
 .mm-arrow { display: grid; place-items: center; color: var(--accent); } .mm-arrow .deck-ico { width: 30px; height: 30px; }
-.mm-ran { display: flex; flex-wrap: wrap; gap: 10px 40px; margin: 0; padding: 0; list-style: none; font-size: 26px; color: var(--ink-2); }
-.mm-ran li { border-bottom: 2px dotted var(--line-strong); }
+.mm-ran { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px 51px; margin: 0; padding: 0; list-style: none; font-size: 26px; color: var(--ink-2); }
+.mm-ran li { justify-self: start; border-bottom: 2px dotted var(--line-strong); }
 .mm-result { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 48px; padding-top: 26px; border-top: 1px solid var(--line-strong); }
 .mm-big { font-size: 52px; font-weight: 600; color: var(--accent); line-height: 1.05; } .mm-cap { margin-top: 8px; font-size: 24px; color: var(--ink-2); }
 

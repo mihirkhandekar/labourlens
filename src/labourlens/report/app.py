@@ -235,7 +235,7 @@ def public_result(raw: dict, shared) -> dict:
                 key = (sid, record.get("indicator_id", ""), record.get("dimension", ""), record.get("population", ""), record.get("adjustment", ""), record.get("unit", ""))
                 series[key].append({"period": record["period"], "value": float(val), "observation_id": eid})
     chart = {"series": [{"source_id": k[0], "label": " / ".join(str(v) for v in k[1:5] if v), "unit": k[5], "points": sorted(v, key=lambda p: p["period"])} for k, v in series.items()]}
-    trace = [{"node": e.get("node", ""), "event": e.get("event", ""), "detail": {k: v for k, v in e.get("detail", {}).items() if k in {"tool", "args", "new_items", "seconds", "round", "n_calls", "observations", "passages", "calculations", "error_kind", "calls_used", "data_quality_notes"}}} for e in raw.get("trace", [])]
+    trace = [{"node": e.get("node", ""), "event": e.get("event", ""), "detail": {**{k: v for k, v in e.get("detail", {}).items() if k in {"tool", "args", "new_items", "seconds", "round", "n_calls", "observations", "passages", "calculations", "error_kind", "calls_used", "data_quality_notes"}}, **({"transport": "mcp"} if e.get("detail", {}).get("transport") == "mcp" else {})}} for e in raw.get("trace", [])]
     usage = {"cost_usd": raw.get("usage", {}).get("cost_usd", 0), "seconds": raw.get("seconds", 0)}
     for key in ("prompt_tokens", "completion_tokens"):
         value = raw.get("usage", {}).get(key)

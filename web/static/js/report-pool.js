@@ -10,11 +10,12 @@ import {renderAgent} from '../presentation/ch4-agent.js';
 import {renderEvaluation} from '../presentation/ch5-evaluation.js';
 import {renderSafety} from '../presentation/ch6-safety.js';
 import {renderMcp} from '../presentation/ch7-mcp.js';
+import {renderServing} from '../presentation/ch-serving.js';
 import {renderLimits, renderNext, renderSummary} from '../presentation/ch8-limits.js';
 import {renderWork} from '../presentation/ch-work.js';
 import {evaluationNotices} from '../evaluation.js';
 
-const CHAPTERS = {scope: renderScope, data: renderData, retrieval: renderRetrieval, agent: renderAgent, evaluation: renderEvaluation, safety: renderSafety, mcp: renderMcp, limits: renderLimits, next: renderNext, work: renderWork, summary: renderSummary};
+const CHAPTERS = {scope: renderScope, data: renderData, retrieval: renderRetrieval, agent: renderAgent, evaluation: renderEvaluation, safety: renderSafety, mcp: renderMcp, serving: renderServing, limits: renderLimits, next: renderNext, work: renderWork, summary: renderSummary};
 
 export function buildPool(report) {
   const m = model(report);

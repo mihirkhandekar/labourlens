@@ -270,7 +270,7 @@ def test_model_choice_numbers_match_the_screen():
 def test_mcp_slide_states_where_mcp_sits():
     graphics = (STATIC / "presentation" / "graphics.js").read_text()
     block = graphics.split("export function mcpMap", 1)[1].split("return wrap;", 1)[0]
-    for needle in ("Direct calls", "Through MCP", "get_statistic", "labourlens://sources", "compare_quarters", "17 parts", "10 hostile-server cases", "One agent question over MCP", "4.4 ms and 22.7 ms", "No measured gain"):
+    for needle in ("Direct calls", "Through MCP", "get_statistic", "labourlens://sources", "compare_quarters", "17 parts", "10 hostile-server cases", "One agent question over MCP", "${lat.direct} ms and ${lat.mcp} ms", "No measured gain"):
         assert needle in block, needle
     main = _slides_main_section()
     assert "The live app reaches statistics through MCP. Every accuracy evaluation called the same functions directly" in main

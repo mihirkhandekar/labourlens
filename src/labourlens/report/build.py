@@ -486,6 +486,60 @@ def _mcp(artifacts: _Artifacts) -> dict:
     return _section("Protocol checks and direct-call comparison.", rows, [path], metrics=metrics, checks=checks,
                     limitations=["The input filter is heuristic and has known gaps.", "Warm-session timings exclude the initial connection."])
 
+_TRIAGE = "experiments/triage/triage-v1-luna/metrics.json"
+_CORPUS_V31 = "experiments/corpus-snapshots/v3.1.json"
+_CORPUS_V31_DIFF = "experiments/corpus-snapshots/v3.1-diff.json"
+
+
+def _serving(artifacts: _Artifacts, sources: dict) -> dict:
+    """What the served web app adds to the evaluated system: scope check results, the current corpus build and rights counts.
+
+    Numbers only. Each comes from a committed measurement file; a missing file leaves its block out.
+    """
+    triage = artifacts.mapping(_TRIAGE)
+    snapshot = artifacts.mapping(_CORPUS_V31)
+    diff = artifacts.mapping(_CORPUS_V31_DIFF)
+    rows = []
+    kinds = triage.get("offtopic", {}).get("by_kind", {}) if isinstance(triage.get("offtopic"), dict) else {}
+    for kind, value in kinds.items() if isinstance(kinds, dict) else []:
+        clean = _numeric(value)
+        if _label(kind) and isinstance(clean, dict) and clean:
+            rows.append({"kind": kind, **clean, "provenance": [_TRIAGE]})
+    block: dict = {}
+    if triage:
+        config = triage.get("config", {}) if isinstance(triage.get("config"), dict) else {}
+        block["triage"] = {
+            "n_calls": triage.get("n"),
+            "model": _label(config.get("model")), "prompt": _label(config.get("prompt")),
+            "gold_and_fresh": _numeric(triage.get("false_out_of_scope_gold_v2")),
+            "threats": _numeric(triage.get("false_out_of_scope_threats")),
+            "offtopic": {key: value for key, value in _numeric(triage.get("offtopic")).items() if key != "by_kind"} if isinstance(triage.get("offtopic"), dict) else {},
+            "cost_and_latency": _numeric(triage.get("cost_and_latency")),
+            "diverted_threat_cases": [case for case in triage.get("false_out_of_scope_threats", {}).get("diverted_case_ids", []) if _label(case)],
+        }
+    if snapshot:
+        parser = diff.get("parser_version", {}) if isinstance(diff.get("parser_version"), dict) else {}
+        block["corpus"] = {
+            "label": _label(snapshot.get("label")),
+            "sources": sources.get("metrics", {}).get("sources"),
+            "document_files": snapshot.get("document_files"), "passages": snapshot.get("passages"), "chunks": snapshot.get("chunks"),
+            "parser_before": _label(parser.get("before")), "parser_after": _label(parser.get("after")),
+            "quality_flags": _numeric(diff.get("quality_flags")),
+            "flag_transitions": {key.replace("->", "_to_"): value for key, value in (diff.get("quality_flags", {}).get("transitions") or {}).items() if _number(value)},
+            "chunks_changed": _numeric(diff.get("chunks")),
+            "embeddings": _numeric(diff.get("embeddings")),
+        }
+    counts = Counter(f"{row.get('type', 'unknown')}:{row.get('rights_status', 'unknown')}" for row in sources.get("rows", []))
+    if counts:
+        unverified_datasets = counts.get("dataset_csv:assumed_open_unverified", 0)
+        unresolved_documents = sum(count for key, count in counts.items() if key.endswith(":unresolved"))
+        block["rights"] = {"datasets_unverified": unverified_datasets, "sources_unresolved": unresolved_documents,
+                           "sources_all_rights_reserved": counts.get("report_pdf:verified_all_rights_reserved", 0)}
+    status = "available" if block else "missing"
+    return {"status": status, "summary": "Scope check measured alone, the current document build and rights counts. The served app differs from the evaluated system.",
+            "metrics": {}, "rows": rows, "provenance": [_TRIAGE, _CORPUS_V31, _CORPUS_V31_DIFF, "data/export/sources.json"], **block}
+
+
 def _saved_replay(artifacts: _Artifacts) -> list[dict]:
     """Observable statistics-only execution, once its artifact is committed."""
     saved = artifacts.mapping("experiments/runs/web-live-smoke.trace.json")
@@ -826,6 +880,7 @@ def build_report(root: Path) -> dict:
                             limitations=["Costs that were not recorded are not estimated."]),
         "agent": _section("Bounded workflow measurements on statistics-only traces.", agent_rows, agent_paths + trace_paths, trace=trace, events=_saved_replay(artifacts)),
         "mcp": mcp,
+        "serving": _serving(artifacts, sources),
         "reconciliation": reconciliation,
         "security": _section("Threat-suite measurements. They do not guarantee security. `postfix` and `e2efix` are separate labelled runs; neither replaces the registered rows.", security_rows, security_paths + postfix_paths + e2efix_paths, postfix=postfix_rows, e2efix=_e2efix(e2efix_rows)),
         "evaluation": _section("Development A1–A5 and registered held-out H-r3/H-hybrid luna runs. Measurements retain their recorded gold versions. Owner review, 1 Nov 2026: Gold labels were drafted by AI. The owner then went through them in the review interface and signed off on every case, answer verdict and source check (four separate streams, 403 items in total: 268 gold questions, 65 held-out v2 questions, 40 saved system answers and 30 source checks; only the first two are questions). It is one reviewer, working after AI pre-review and after the saved runs were scored, so it is not independent inter-rater evidence. The judge is an AI (gpt-6.1-terra); behaviour status, key-number recall, calculation correctness, false-answer and over-abstention are deterministic code. Gold v3.5 development and all four registered held-out rescoring runs are complete on existing generated outputs; held-out stale judge entries were rejudged. `paired` holds the registered corpus-v1 comparison, current first, with v3.2–v3.4 history; `corpus_v2_diagnostic` is a separate extraction-only diagnostic; `dev_x2_regression_check` labels the corpus-v3 dev X2 rows (a regression check, not an ablation). Rows with `diagnostic: true` and `registered: false` (agent-heldout-X-*) are post-freeze diagnostics, not registered held-out evidence. `heldout_v2` is the signed held-out v2 run on corpus v3, reported separately and never pooled with the registered held-out.", eval_rows, eval_paths + [path for entry in paired + ([paired_v2] if paired_v2 else []) for path in entry["provenance"]] + list((v2_held or {}).get("provenance", [])),

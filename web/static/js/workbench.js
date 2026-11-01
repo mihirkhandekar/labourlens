@@ -285,6 +285,7 @@ export function mountWorkbench(root, {onMode} = {}) {
     const note = [];
     if (isTool) {
       note.push(event.event === 'ok' ? 'ok' : event.event === 'error' ? `error${detail.error_kind ? `: ${human(detail.error_kind).toLowerCase()}` : ''}` : human(event.event).toLowerCase());
+      if (detail.transport === 'mcp') note.push('via MCP');
       if (Array.isArray(detail.new_items) && detail.new_items.length) note.push(`new evidence ${detail.new_items.join(', ')}`);
     } else if (event.node === 'plan_research') {
       if (finite(detail.round)) note.push(`round ${detail.round}`);
@@ -459,7 +460,7 @@ export function mountWorkbench(root, {onMode} = {}) {
       const d = e.detail ?? {};
       const names = {get_series: 'Read a statistical series', search_reports: 'Searched report passages', calculate_change: 'Calculated a change in code'};
       const labels = Array.isArray(d.new_items) ? d.new_items.join(', ') : '';
-      steps.append(el('li', '', `${names[d.tool] || d.tool || 'Tool call'}. Outcome: ${human(e.event)}. ${labels ? `Returned evidence labels ${labels}.` : 'No new evidence labels recorded.'}`));
+      steps.append(el('li', '', `${names[d.tool] || d.tool || 'Tool call'}${d.transport === 'mcp' ? ' (through the MCP server)' : ''}. Outcome: ${human(e.event)}. ${labels ? `Returned evidence labels ${labels}.` : 'No new evidence labels recorded.'}`));
     });
     if (!tools.length) steps.append(el('li', '', 'No tool calls were recorded for this response.'));
     c.append(steps);

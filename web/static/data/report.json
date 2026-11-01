@@ -1,6 +1,6 @@
 {
   "schema_version": "report-1.0",
-  "generated_at": "2026-11-01T12:30:58.182557+00:00",
+  "generated_at": "2026-11-01T13:37:08.208026+00:00",
   "summary": {
     "title": "LabourLens research workbench",
     "scope": [
@@ -55928,6 +55928,154 @@
       "Warm-session timings exclude the initial connection."
     ]
   },
+  "serving": {
+    "status": "available",
+    "summary": "Scope check measured alone, the current document build and rights counts. The served app differs from the evaluated system.",
+    "metrics": {},
+    "rows": [
+      {
+        "kind": "borderline_inscope",
+        "n": 10,
+        "correct": 10,
+        "provenance": [
+          "experiments/triage/triage-v1-luna/metrics.json"
+        ]
+      },
+      {
+        "kind": "borderline_offtopic",
+        "n": 10,
+        "correct": 10,
+        "provenance": [
+          "experiments/triage/triage-v1-luna/metrics.json"
+        ]
+      },
+      {
+        "kind": "clear_offtopic",
+        "n": 14,
+        "correct": 14,
+        "provenance": [
+          "experiments/triage/triage-v1-luna/metrics.json"
+        ]
+      },
+      {
+        "kind": "clear_small_talk",
+        "n": 3,
+        "correct": 3,
+        "provenance": [
+          "experiments/triage/triage-v1-luna/metrics.json"
+        ]
+      },
+      {
+        "kind": "clear_unsafe",
+        "n": 3,
+        "correct": 3,
+        "provenance": [
+          "experiments/triage/triage-v1-luna/metrics.json"
+        ]
+      }
+    ],
+    "provenance": [
+      "experiments/triage/triage-v1-luna/metrics.json",
+      "experiments/corpus-snapshots/v3.1.json",
+      "experiments/corpus-snapshots/v3.1-diff.json",
+      "data/export/sources.json"
+    ],
+    "triage": {
+      "n_calls": 409,
+      "model": "gpt-6-luna",
+      "prompt": "triage_v1",
+      "gold_and_fresh": {
+        "n": 333,
+        "false_out_of_scope": 0,
+        "false_diverted_any_route": 0,
+        "failed_open": 0
+      },
+      "threats": {
+        "n": 36,
+        "false_out_of_scope": 1,
+        "false_diverted_any_route": 1,
+        "failed_open": 0
+      },
+      "offtopic": {
+        "n": 40,
+        "expected_not_in_scope": 30,
+        "recall_not_in_scope": 30,
+        "exact_route_matches": 30
+      },
+      "cost_and_latency": {
+        "calls": 409,
+        "prompt_tokens": 418574,
+        "completion_tokens": 17502,
+        "total_cost_usd": 0.050601,
+        "mean_cost_usd": 0.000124,
+        "latency_p50_s": 1.56,
+        "latency_p95_s": 2.44
+      },
+      "diverted_threat_cases": [
+        "T-D05"
+      ]
+    },
+    "corpus": {
+      "label": "v3.1",
+      "sources": 85,
+      "document_files": 49,
+      "passages": 16419,
+      "chunks": 1847,
+      "parser_before": "extract-0.2",
+      "parser_after": "extract-0.3",
+      "quality_flags": {
+        "all_before": {
+          "garbled": 286,
+          "ok": 9040,
+          "table_unreliable": 7093
+        },
+        "all_after": {
+          "garbled": 246,
+          "ok": 9052,
+          "table_unreliable": 7121
+        },
+        "mti_before": {
+          "ok": 163,
+          "garbled": 40,
+          "table_unreliable": 15
+        },
+        "mti_after": {
+          "ok": 175,
+          "table_unreliable": 43
+        },
+        "control_character_garbled_before": 246,
+        "control_character_garbled_after": 246,
+        "new_garbled": 0
+      },
+      "flag_transitions": {
+        "garbled_to_ok": 16,
+        "garbled_to_table_unreliable": 24,
+        "ok_to_table_unreliable": 4
+      },
+      "chunks_changed": {
+        "before": 1847,
+        "after": 1847,
+        "ids_removed": 4,
+        "ids_added": 4,
+        "non_mti_ids_identical": true,
+        "non_mti_chunks": 1800,
+        "mti_before": 47,
+        "mti_after": 47
+      },
+      "embeddings": {
+        "cache_keys_before": 5113,
+        "unique_inputs_before": 1383,
+        "unique_inputs_after": 1383,
+        "unique_inputs_missing_from_cache_after": 10,
+        "cache_keys_no_longer_used": 3740
+      }
+    },
+    "rights": {
+      "datasets_unverified": 3,
+      "sources_unresolved": 23,
+      "sources_all_rights_reserved": 26
+    }
+  },
   "reconciliation": {
     "status": "available",
     "summary": "Advance and final releases differ by revision; dataset totals differ by population basis.",
@@ -66105,7 +66253,7 @@
     "The population basis of the dataset employment series is unverified."
   ],
   "provenance": {
-    "commit": "ff23400424b6beaa7d00e14958179329b8c4c0a9",
+    "commit": "b47cb273119497cfc026cc989c1f31b81091d2bf",
     "artifacts": [
       {
         "path": "data/export/sources.json",
@@ -66926,6 +67074,21 @@
         "path": "experiments/runs/web-live-smoke.trace.json",
         "status": "available",
         "sha256": "b6207bf4aab049fac5e62f23feffe60e35b3a4138dbaa4dab8e4017d8faddf58"
+      },
+      {
+        "path": "experiments/triage/triage-v1-luna/metrics.json",
+        "status": "available",
+        "sha256": "a544504444a2a00327e7ad7c5a85299787e2bc248477f56e9a4cb4e1827d90eb"
+      },
+      {
+        "path": "experiments/corpus-snapshots/v3.1.json",
+        "status": "available",
+        "sha256": "8f40df774b14d7af86f425893a9f7f0fb07f9d40d14d4112468f9b3925ddeaab"
+      },
+      {
+        "path": "experiments/corpus-snapshots/v3.1-diff.json",
+        "status": "available",
+        "sha256": "8ed1d5d8fede7ded8c23bc5e67db1e3bb3b50e03a53043dcd11ff2aa5eb37e1f"
       },
       {
         "path": "docs/decisions.md",
