@@ -21,8 +21,8 @@
 </g>
 <g id="clust3" class="cluster">
 <title>cluster_mcp</title>
-<path fill="white" stroke="#8a8f98" d="M294,-528.75C294,-528.75 450,-528.75 450,-528.75 456,-528.75 462,-534.75 462,-540.75 462,-540.75 462,-657.25 462,-657.25 462,-663.25 456,-669.25 450,-669.25 450,-669.25 294,-669.25 294,-669.25 288,-669.25 282,-663.25 282,-657.25 282,-657.25 282,-540.75 282,-540.75 282,-534.75 288,-528.75 294,-528.75"/>
-<text text-anchor="middle" x="371" y="-652.9" font-family="Helvetica,sans-Serif" font-size="13.00">Optional statistics transport</text>
+<path fill="white" stroke="#8a8f98" d="M33,-528.75C33,-528.75 450,-528.75 450,-528.75 456,-528.75 462,-534.75 462,-540.75 462,-540.75 462,-657.25 462,-657.25 462,-663.25 456,-669.25 450,-669.25 450,-669.25 33,-669.25 33,-669.25 27,-669.25 21,-663.25 21,-657.25 21,-657.25 21,-540.75 21,-540.75 21,-534.75 27,-528.75 33,-528.75"/>
+<text text-anchor="middle" x="241.62" y="-652.9" font-family="Helvetica,sans-Serif" font-size="13.00">Statistics transport (served default; evaluations called statistics directly)</text>
 </g>
 <g id="clust4" class="cluster">
 <title>cluster_eval</title>
@@ -202,7 +202,7 @@
 <title>TOOLS&#45;&gt;CLIENT</title>
 <path fill="none" stroke="#5b6470" stroke-dasharray="5,2" d="M535.41,-701.54C514.62,-692.22 488.8,-680.4 466,-669.25 449.72,-661.29 431.98,-652.12 416.65,-644.04"/>
 <polygon fill="#5b6470" stroke="#5b6470" points="418.01,-641.99 410.68,-640.88 415.72,-646.32 418.01,-641.99"/>
-<text text-anchor="middle" x="529.84" y="-678.45" font-family="Helvetica,sans-Serif" font-size="9.00">live get_series</text>
+<text text-anchor="middle" x="531.34" y="-678.45" font-family="Helvetica,sans-Serif" font-size="9.00">live get_series</text>
 </g>
 <!-- ASSESS&#45;&gt;PLAN -->
 <g id="edge16" class="edge">
@@ -307,20 +307,20 @@
 <!-- SERVER -->
 <g id="node18" class="node">
 <title>SERVER</title>
-<path fill="#f4f6f8" stroke="#5b6470" d="M442.25,-572.75C442.25,-572.75 301.75,-572.75 301.75,-572.75 295.75,-572.75 289.75,-566.75 289.75,-560.75 289.75,-560.75 289.75,-548.75 289.75,-548.75 289.75,-542.75 295.75,-536.75 301.75,-536.75 301.75,-536.75 442.25,-536.75 442.25,-536.75 448.25,-536.75 454.25,-542.75 454.25,-548.75 454.25,-548.75 454.25,-560.75 454.25,-560.75 454.25,-566.75 448.25,-572.75 442.25,-572.75"/>
-<text text-anchor="middle" x="372" y="-556.3" font-family="Helvetica,sans-Serif" font-size="11.00">MCP server</text>
-<text text-anchor="middle" x="372" y="-544.3" font-family="Helvetica,sans-Serif" font-size="11.00">9 tools / 2 resources / 1 prompt</text>
+<path fill="#f4f6f8" stroke="#5b6470" d="M371.25,-572.75C371.25,-572.75 230.75,-572.75 230.75,-572.75 224.75,-572.75 218.75,-566.75 218.75,-560.75 218.75,-560.75 218.75,-548.75 218.75,-548.75 218.75,-542.75 224.75,-536.75 230.75,-536.75 230.75,-536.75 371.25,-536.75 371.25,-536.75 377.25,-536.75 383.25,-542.75 383.25,-548.75 383.25,-548.75 383.25,-560.75 383.25,-560.75 383.25,-566.75 377.25,-572.75 371.25,-572.75"/>
+<text text-anchor="middle" x="301" y="-556.3" font-family="Helvetica,sans-Serif" font-size="11.00">MCP server</text>
+<text text-anchor="middle" x="301" y="-544.3" font-family="Helvetica,sans-Serif" font-size="11.00">9 tools / 2 resources / 1 prompt</text>
 </g>
 <!-- CLIENT&#45;&gt;SERVER -->
 <g id="edge18" class="edge">
 <title>CLIENT&#45;&gt;SERVER</title>
-<path fill="none" stroke="#5b6470" d="M375.66,-603.33C375.14,-596.63 374.54,-588.83 373.98,-581.5"/>
-<polygon fill="#5b6470" stroke="#5b6470" points="376.44,-581.52 373.46,-574.73 371.55,-581.89 376.44,-581.52"/>
+<path fill="none" stroke="#5b6470" d="M356.63,-603.33C347.77,-595.75 337.27,-586.77 327.79,-578.66"/>
+<polygon fill="#5b6470" stroke="#5b6470" points="329.49,-576.89 322.57,-574.2 326.3,-580.61 329.49,-576.89"/>
 </g>
 <!-- SERVER&#45;&gt;STORE -->
 <g id="edge30" class="edge">
 <title>SERVER&#45;&gt;STORE</title>
-<path fill="none" stroke="#5b6470" d="M310.66,-573.24C289.96,-583.19 272,-598.28 272,-620.75 272,-789 272,-789 272,-789 272,-816.23 295.51,-832.87 321.72,-842.97"/>
+<path fill="none" stroke="#5b6470" d="M288.53,-573.04C280.67,-585.63 272,-603.45 272,-620.75 272,-789 272,-789 272,-789 272,-816.23 295.51,-832.87 321.72,-842.97"/>
 <polygon fill="#5b6470" stroke="#5b6470" points="320.7,-845.2 328.11,-845.26 322.35,-840.59 320.7,-845.2"/>
 </g>
 <!-- GOLD -->

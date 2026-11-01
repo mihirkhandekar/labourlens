@@ -1,11 +1,13 @@
 # Checks that need no secrets, no private corpus and no paid API: lint, offline tests, docs links, tracked-file leak guard,
 # gitleaks over the full history. Actions are pinned to full commit SHAs (same SHAs as deploy.yml).
+# Runs on every push (master included), on pull requests and by hand. It cannot affect the deploy: deploy.yml is a separate
+# workflow with its own concurrency group (labourlens-production), and this one has read-only contents access, no secrets,
+# no package push and no SSH step. A master push therefore starts both, independently; only deploy.yml deploys.
 name: ci
 
 on:
   pull_request:
   push:
-    branches-ignore: [master]
   workflow_dispatch:
 
 permissions: {}

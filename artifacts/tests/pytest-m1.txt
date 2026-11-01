@@ -1,6 +1,6 @@
 ============================= test session starts ==============================
-platform darwin -- Python 3.12.12, pytest-9.2.0, pluggy-1.7.0 -- /Users/mihir/projects/experiments/zuhl/.venv/bin/python3
-rootdir: /Users/mihir/projects/experiments/zuhl
+platform darwin -- Python 3.12.12, pytest-9.2.0, pluggy-1.7.0 -- <repo>/.venv/bin/python3
+rootdir: <repo>
 configfile: pyproject.toml
 testpaths: tests
 plugins: anyio-4.15.1

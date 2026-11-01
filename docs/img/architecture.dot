@@ -31,7 +31,7 @@ digraph labourlens {
     ASSESS -> PLAN   [label="bounded next round", constraint=false];
     VALID  -> ANSWER [label="one repair", constraint=false];
   }
-  subgraph cluster_mcp { label="Optional statistics transport";
+  subgraph cluster_mcp { label="Statistics transport (served default; evaluations called statistics directly)";
     CLIENT [label="MCP client\nschema checks + quarantine"];
     SERVER [label="MCP server\n9 tools / 2 resources / 1 prompt"];
     CLIENT -> SERVER;

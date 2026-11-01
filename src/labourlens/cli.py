@@ -77,7 +77,8 @@ def main(argv: list[str] | None = None) -> int:
     cc.add_argument("--experiment", required=True, help="new experiment id; written to experiments/context/<id>/ and never overwritten")
     cc.add_argument("--yes", action="store_true", help="actually spend: without it only the plan and the free pass-through audit are printed")
     cc.add_argument("--rescore", action="store_true", help="recompute metrics from saved raw outputs, no API calls")
-    sub.add_parser("mcp-demo", help="run the scripted MCP client demo and write docs/mcp-demo-transcript.md")
+    md = sub.add_parser("mcp-demo", help="run the scripted MCP client demo; writes data/runs/mcp-demo-transcript.md (gitignored) unless --out is given")
+    md.add_argument("--out", type=Path, help="write the transcript here; pass docs/mcp-demo-transcript.md to overwrite the committed record")
     sub.add_parser("mcp-agent-demo", help="one agent run with statistics fetched over MCP (paid model calls); writes artifacts/mcp-agent-demo.md")
     ev_ = sub.add_parser("eval", help="metrics from saved raw agent runs; judged measures call the OpenAI API")
     ev_.add_argument("--exp", default="agent-dev-A1")
@@ -234,7 +235,7 @@ def main(argv: list[str] | None = None) -> int:
     if args.cmd == "mcp-demo":
         from labourlens.mcp import demo
 
-        demo.run()
+        demo.run(args.out)
         return 0
     if args.cmd == "eval":
         from labourlens.evaluation import harness

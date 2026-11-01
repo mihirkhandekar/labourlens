@@ -16,6 +16,7 @@ import statistics
 import subprocess
 import sys
 import time
+from pathlib import Path
 
 import httpx
 
@@ -24,7 +25,10 @@ from labourlens.agent.tools import StatsData
 from labourlens.mcp.client import McpClientError, McpStatsClient, register_http_server, register_test_server
 from labourlens.mcp.http_server import TOKEN_ENV
 
-OUT = paths.ROOT / "docs" / "mcp-demo-transcript.md"
+# The committed transcript (docs/mcp-demo-transcript.md) is a recorded run that the report reads. By default a new run
+# goes to this gitignored path, so following the README never dirties the checkout; pass --out to overwrite the record.
+COMMITTED = paths.ROOT / "docs" / "mcp-demo-transcript.md"
+OUT = paths.ROOT / "data" / "runs" / "mcp-demo-transcript.md"
 ARGS = dict(source_id="retrenched_employees", period_from="2026-Q1", period_to="2026-Q2")
 
 
@@ -270,7 +274,10 @@ async def comparison() -> list[str]:
             f"| datasets where outputs differed | {diff} | |", ""]
 
 
-def run() -> None:
+def run(out: Path | None = None) -> None:
+    target = out or OUT
     text = asyncio.run(demo())
-    OUT.write_text(text)
+    target.parent.mkdir(parents=True, exist_ok=True)
+    target.write_text(text)
     print(text)
+    print(f"\ntranscript written to {target}")

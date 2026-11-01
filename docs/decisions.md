@@ -1,6 +1,6 @@
 # LabourLens — decision log
 
-Each entry: date, decision, alternatives, why, who approved, how reversible. Labels follow `CLAUDE.md`: **DECISION**, **PROPOSAL**, **VERIFIED FACT**, **ASSUMPTION**. ADRs in `docs/decisions/` hold the large architectural decisions; this log holds everything else. **Count:** 57 entries, D-000 to D-056 (D-007 has a second heading, "deployment notes", under the same id).
+Each entry: date, decision, alternatives, why, who approved, how reversible. Labels follow `CLAUDE.md`: **DECISION**, **PROPOSAL**, **VERIFIED FACT**, **ASSUMPTION**. ADRs in `docs/decisions/` hold the large architectural decisions; this log holds everything else. **Count:** 57 entries, D-000 to D-056 (D-007 also has a "deployment notes" subsection, written as a sub-heading, not a separate entry).
 
 **How to read approvals.** An entry that cites an owner approval names it (date, and the quoted reply or the file that holds it). An entry that names no approver had none recorded in this log when this note was written (1 Nov 2026): it is an assistant decision inside the approved experiment protocol (D-016), open to owner reversal. The signed held-out v2 freeze (`experiments/heldout-v2/FREEZE.md`, 31 Oct 2026) is the owner's approval of the 65 held-out v2 cases and of the pre-registered rule of D-042; it does not approve the later entries. The owner confirmation or rollback of D-030 is not recorded.
 
@@ -103,7 +103,7 @@ Annual wages and income (`d_bd83b453...` Basic Wage Changes by Industry; `d_e584
 **PROPOSAL** (no code before M4): the agent is judged by the evaluation, not by features. Targets to measure, not claim: tool-selection accuracy, correct abstention on unanswerable or ambiguous questions, citation correctness, calculation exactness, and graceful tool-failure recovery, each stratified by case type. Design levers that matter more than extra tools: strict typed tool schemas, definition-aware refusal (resident vs overall, SA vs NSA), a "clarify before answering" path, and a deterministic reconciliation tool for advance vs final. These are already in ADR-002; M4 refines them.
 **Outcome (1 Nov 2026):** the measures are the ones the evaluation report uses (`docs/evaluation-report.md`); no separate approval is recorded.
 
-### D-007 deployment notes (PROPOSAL, unverified platform details)
+#### D-007 deployment notes (PROPOSAL, unverified platform details)
 - **Keep M1 to M6 local.** Deployment adds no rubric credit before the core works. Decide at the M7 gate.
 - **Where documents live in a hosted setup:** raw MOM PDFs should not be uploaded to any hosted bucket. Derived artifacts (Parquet observations, index files) go in a **private** object-storage bucket or are rebuilt at deploy time by the fetch script. App Platform disk is ephemeral, so the index must be rebuilt at start-up or loaded from private storage.
 - **Access control on a personal account:** App Platform URLs are public by default. Put an allow-list in front (identity-aware proxy) or add app-level login. Which of these App Platform supports natively is **unverified**; check DigitalOcean docs at the M7 gate.

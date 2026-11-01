@@ -21,7 +21,6 @@ from __future__ import annotations
 
 import asyncio
 import collections
-import contextvars
 import json
 import os
 import sys

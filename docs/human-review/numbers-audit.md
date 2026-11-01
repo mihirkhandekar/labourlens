@@ -157,6 +157,6 @@ Recommended wording until a real re-review is done: "The owner confirmed the AI-
 * Droplet serves corpus v3, commit `c297146`, `/healthz` fingerprint `d402120f6f8f` (README, eval report 5, demo-script, deck). `c297146` exists in git (31 Oct 14:49); the live state is not file-verifiable. Already labelled "owner-supplied".
 * "Owner reports about $3 for X2 and the threat rerun"; "about $1.5 for a first X3 attempt": owner-reported; file-derived X2 plus e2efix is $2.54.
 * The 198/198, 61/64, 38/39, 29/30 agreement-with-AI figures: the AI suggestions are not stored in the exports (`ai_basis` is empty in the pending export) and the private AI files were not recomputed; plausible given 4 changes, not re-derived.
-* Full test-suite counts (782 passed per `docs/submission-audit.md`): not re-run in this read-only audit.
+* Full test-suite counts (782 passed per an earlier submission audit that is no longer in the repository): not re-run in this read-only audit.
 * Licence verification claims for the 33 "verified open" datasets (the second blind review already reports it could not reproduce three); not re-checked online.
 * The "first-pack priorities (13 rows an AI pre-review marked partly or incorrect)" statement in the eval report (216).

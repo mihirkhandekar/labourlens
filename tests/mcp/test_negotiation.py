@@ -33,7 +33,9 @@ def test_server_without_resources_or_prompts_capability_is_not_asked_for_them():
     name = register_test_server("evil-no_capabilities", "no_capabilities")
 
     async def go():
-        async with McpStatsClient(name, call_timeout_s=5) as c:
+        # 30 s, not 5: the timeout also covers spawning the server subprocess, which can take over 5 s on a loaded machine.
+        # It only has to catch a real hang; every assertion below is unchanged.
+        async with McpStatsClient(name, call_timeout_s=30) as c:
             assert "tools" in c.capabilities and "resources" not in c.capabilities and "prompts" not in c.capabilities
             for call in (c.list_resources, lambda: c.read_resource("labourlens://sources"), lambda: c.get_prompt("compare_quarters", source_id="retrenched_employees",
                                                                                                                 quarter_a="2025-Q1", quarter_b="2026-Q1")):
@@ -51,7 +53,9 @@ def test_result_breaking_the_advertised_output_schema_is_malformed_not_unavailab
     name = register_test_server("evil-output_schema_violation", "output_schema_violation")
 
     async def go():
-        async with McpStatsClient(name, call_timeout_s=5) as c:
+        # 30 s, not 5: the timeout also covers spawning the server subprocess, which can take over 5 s on a loaded machine.
+        # It only has to catch a real hang; every assertion below is unchanged.
+        async with McpStatsClient(name, call_timeout_s=30) as c:
             assert c.output_schemas["get_statistic"]["properties"]["rows"]["maxItems"] == 1
             with pytest.raises(McpClientError) as e:  # the SDK notices first; the client must report a bad response, not a dead server (which would trigger a reconnect)
                 await c.get_statistic(**ARGS)

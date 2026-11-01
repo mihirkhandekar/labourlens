@@ -21,7 +21,7 @@ make verify       # lint, offline tests, docs links, rights scan, secrets scan
 | Docs link check | `make docs-check` | checkout only | `0 problem(s)` | none |
 | Statistical store, EDA, export | `uv run labourlens fetch && uv run labourlens build && uv run labourlens eda && uv run labourlens export` | network; rewrites generated files | manifest, snapshots, `data/processed/`, figures. Do not run on a checkout whose `data/` you want to keep. | none |
 | Documents and passages | `uv run labourlens fetch --kind documents`, then `build` | network, time; the MOM and MTI files are not redistributed | local `data/raw/`, `data/passages/` (gitignored) | none |
-| MCP protocol demo | `uv run labourlens mcp-demo` | the statistics store | rewrites `docs/mcp-demo-transcript.md` | none |
+| MCP protocol demo | `uv run labourlens mcp-demo` | the statistics store | writes `data/runs/mcp-demo-transcript.md` (gitignored; `--out docs/mcp-demo-transcript.md` overwrites the committed record) | none |
 | MCP-backed agent run | `uv run labourlens mcp-agent-demo` | corpus, `OPENAI_API_KEY` | rewrites `artifacts/mcp-agent-demo.md`; recorded run cost about $0.001 | paid, small |
 | Re-score a frozen run, no judge | `uv run labourlens eval --exp agent-dev-A3 --no-judge --gold experiments/gold/archive/gold-v3.5.jsonl` | `data/runs/` (raw outputs, not in git) | metrics identical to the committed ones | none |
 | A new dev experiment | `uv run labourlens agent-exp --split dev --tag SMOKE --pairs gpt-6-luna`, then `eval --exp agent-dev-SMOKE` | corpus, `OPENAI_API_KEY` | new files; refuses an existing id | paid. For scale: saved X2 metrics show $0.00285 per case for `gpt-6-luna` and $0.00463 for `gpt-5.6-luna`, plus judge cost $0.243 and $0.2689 for the 237 cases |
