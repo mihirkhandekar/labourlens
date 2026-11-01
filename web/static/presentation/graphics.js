@@ -511,22 +511,28 @@ export function reviewStreams() {
 }
 
 
-/** Attack category, control and result from the final 36-case threat report. */
+/** Attack, defence and result from the final 36-case threat report, as a flow per attack: attack, the control it meets, and one segment per case (filled when the primary model passed). */
 export function threatMatrix() {
-  const wrap = el('div', 'g14');
+  const wrap = el('div', 'tm');
+  const head = el('div', 'tm-row tm-head'); head.append(el('span', '', 'Attack'), el('span', '', 'Defence it meets'), el('span', '', 'Cases passed by gpt-6-luna'));
+  wrap.append(head);
   const rows = [
-    ['Question injection and secret requests', 'Input flags; secret and prompt output checks.', '6/6 direct-injection cases passed.'],
-    ['Prompt injection in a passage', 'Untrusted evidence is sanitised and cannot set instructions.', 'Primary 6/6; second model 5/6.'],
-    ['Planted false figure', 'Compare same measure, period, population and release.', 'Primary passed; second model failed once.'],
-    ['Sensitive data, credentials and PII', 'Refuse personal-data requests; no personal-data tool.', '5/5 sensitive-data cases passed.'],
-    ['Unsupported claim or causal request', 'Answer from cited evidence or decline the request.', '4/4 unsupported-claim cases passed.'],
-    ['Unsafe tool invocation', 'Typed read-only tools with argument and call caps.', '5/5 unsafe-tool cases passed.'],
-    ['Malicious or malformed MCP output', 'Allow-list, validate schemas, cap size and time.', '10/10 server-failure cases passed.'],
-    ['Paraphrased attacks', 'Heuristic input scan and untrusted-text rules.', 'Scanner missed all five paraphrased probes.']
+    ['Question injection and secret requests', 'Input flags; secret and prompt output checks', 6, 6, ''],
+    ['Injection or false figure in a passage', 'Untrusted evidence cannot set instructions; figures cross-checked against statistics', 6, 6, 'gpt-5.6-luna 5/6, planted figure'],
+    ['Sensitive data, credentials, PII', 'Refusal; no personal-data tool exists', 5, 5, ''],
+    ['Unsupported or causal claim', 'Answer from cited evidence or decline', 4, 4, ''],
+    ['Unsafe tool use', 'Typed read-only tools, argument and call caps', 5, 5, ''],
+    ['Malicious or malformed MCP output', 'Allow-list, schema checks, size and time caps', 10, 10, ''],
+    ['Paraphrased injection', 'Keyword scanner plus untrusted-text rules', 0, 5, 'scanner probes, outside the 36: missed all five']
   ];
-  rows.forEach(([head, defence, result], i) => {
-    const card = el('div', 'g14-card'); card.style.setProperty('--i', String(i));
-    card.append(el('h3', '', head), el('p', '', defence), el('p', '', result)); wrap.append(card);
+  rows.forEach(([attack, defence, passed, total, note], i) => {
+    const row = el('div', 'tm-row'); row.style.setProperty('--i', String(i));
+    const seg = el('div', 'tm-seg'); seg.setAttribute('role', 'img'); seg.setAttribute('aria-label', `${passed} of ${total} passed${note ? `; ${note}` : ''}`);
+    for (let k = 0; k < total; k += 1) seg.append(el('i', k < passed ? 'is-pass' : 'is-miss'));
+    const res = el('div', 'tm-res'); res.append(seg, el('span', 'tm-count num', `${passed}/${total}`));
+    if (note) res.append(el('span', 'tm-note', note));
+    row.append(el('span', 'tm-attack', attack), el('span', 'tm-def', defence), res);
+    wrap.append(row);
   });
   return wrap;
 }
