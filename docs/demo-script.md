@@ -41,7 +41,7 @@ There is no slack. If a live answer fails, use its fallback and drop slide 24 to
 
 ## Live workbench moment (6:30 to 11:30)
 
-The live app is the evaluated agent plus two steps in front of it that no experiment used: a small-talk fast path (D-050) and an LLM scope check (D-051). Say that once. Ask in this order and read the actual status each time.
+The live app is the evaluated agent plus two steps in front of it that no experiment used: a small-talk fast path (D-050) and an LLM scope check (D-051). It also differs in one way the other direction: its `get_series` lookups go through the local MCP server (D-053), while every accuracy evaluation called statistics directly. Say that once. Ask in this order and read the actual status each time.
 
 1. **Factual lookup (about 1:15).** "What was the seasonally adjusted overall unemployment rate in Q4 2024, not the resident or citizen rate?" (DEV-105, answered). Open the observation citation and its source link.
 2. **Ambiguity (about 1:15).** "How many workers were retrenched in the second quarter?" (DEV-405, clarify). The year is missing, so the right behaviour is a question back. If live guesses a year, call it a failure.
@@ -100,13 +100,13 @@ Tool set v2 (arithmetic on report figures) was built and measured and is **not a
 
 ## MCP steps (slide 26)
 
-State "recorded protocol execution, inspected live" first. The live web app and every accuracy evaluation call the statistics functions directly; MCP is a separate interface, so the live demo cannot show scenario 8 end to end.
+State "recorded protocol execution, inspected live" first. The live web app routes the agent's `get_series` lookups through the local MCP server (D-053), so the live demo can show scenario 8 end to end: open the trace of an answered question and read `transport: mcp` on the `get_series` step. Every accuracy evaluation called statistics directly, so say that accuracy results do not describe the MCP route and that no end-to-end accuracy run with MCP on the live path has been measured.
 
 1. Transcript section 1 (initialize and discovery: nine tools, resources including a URI template, one prompt) and section 2 (a validated retrenchment call returning rows with provenance).
-2. `artifacts/mcp-agent-demo.md`: one agent question answered over MCP, recorded on 1 Nov 2026 with `uv run labourlens mcp-agent-demo` (about $0.001; re-running makes paid calls). One question, one run, a demonstration and not an evaluation; the agent uses MCP for `get_series` only, through one `get_statistic` call.
+2. `artifacts/mcp-agent-demo.md`: one agent question answered over MCP, recorded on 1 Nov 2026 with `uv run labourlens mcp-agent-demo` (about $0.001; re-running makes paid calls). One question, one run, a demonstration and not an evaluation; the agent uses MCP for `get_series` only, through one `get_statistic` call (the live app does the same).
 3. Scenario 9: sections 3 (unknown source and malformed period rejected, twice), 4 (1.5 s timeout) and 7 (server dies: unavailable, never "no data"). No silent direct-call fallback.
 4. Scenario 10: sections 5 (an instruction-bearing row quarantined) and 6 (a subtler instruction passes the heuristic: screening is not a complete defence). Hostile fixtures are not trusted servers.
-5. Close with section 17: 33 datasets, same result either way, median 4.4 ms direct and 22.7 ms over MCP. MCP adds an interface and a trust boundary, not measured accuracy.
+5. Close with section 17: 33 datasets, same result either way, median 4.4 ms direct and 22.7 ms over MCP. MCP adds an interface and a trust boundary, not measured accuracy; the live app pays that latency (about 1.9 s once at startup).
 
 ## Scenario 7 command (15:30, live, synthetic)
 

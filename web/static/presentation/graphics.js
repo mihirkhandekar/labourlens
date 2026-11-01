@@ -331,7 +331,7 @@ export function toolFixFlow() {
   return wrap;
 }
 
-/** Where MCP sits: two paths to the same statistics. Figures for the comparison come from the report data and the protocol demo transcript. */
+/** Where MCP sits: two paths to the same statistics, MCP for the live web app and direct calls for the accuracy evaluations. Figures for the comparison come from the report data and the protocol demo transcript. */
 export function mcpMap(m) {
   const mx = m.section('mcp').metrics || {};
   const wrap = el('div', 'mm');
@@ -355,15 +355,16 @@ export function mcpMap(m) {
     return section;
   };
   wrap.append(
-    lane('Direct calls', [node('wrench', 'Agent', '', 'The same planner, tools and answer step in both paths.'), node('table', 'Function call', 'in the same process'), node('database', 'Statistics', 'read-only table')], [['The live web app', ''], ['Every accuracy evaluation', 'The reference, fresh and development runs all call the statistics functions directly.']]),
-    lane('Through MCP', [node('wrench', 'Agent or demo client', ''), node('shield', 'MCP client', 'checks every reply', 'Checks the server name, version and tool list; validates arguments and results against schemas; sets time and size limits; quarantines instruction-like text.', 'is-guard'), node('path', 'MCP server', '9 tools, 2 resources, 1 prompt', 'Tools: get_statistic, list_datasets, describe_dataset, get_dimension_values, latest_value, compare_periods, series_summary, get_revisions, get_provenance.\nResources: labourlens://sources and labourlens://source/{source_id}.\nPrompt: compare_quarters.\nIt serves statistics and the source catalogue, never report text.'), node('database', 'Statistics', 'read-only table')], [
+    lane('Through MCP, the live web app', [node('wrench', 'Agent', 'get_series only', 'The same planner, tools and answer step as in the direct path. Only the statistics lookup changes route; report search and the change calculation stay in the same process.'), node('shield', 'MCP client', 'checks every reply', 'Checks the server name, version and tool list; validates arguments and results against schemas; sets time and size limits; quarantines instruction-like text.', 'is-guard'), node('path', 'MCP server', '9 tools, 2 resources, 1 prompt', 'Tools: get_statistic, list_datasets, describe_dataset, get_dimension_values, latest_value, compare_periods, series_summary, get_revisions, get_provenance.\nResources: labourlens://sources and labourlens://source/{source_id}.\nPrompt: compare_quarters.\nThe agent is given get_statistic only. The server serves statistics and the source catalogue, never report text.'), node('database', 'Statistics', 'read-only table')], [
+      ['The live web app, statistics lookups only', 'The trace of an answered question shows the transport as mcp. A setting switches the web app back to direct calls.'],
       ['Scripted client demo, 17 parts', 'Discovery, a valid call, bad arguments, a slow server, instructions hidden in results, a server that dies, wrong name or version, broken schema, oversized replies, an extra tool, secrets, and a loopback HTTP transport.'],
       ['One agent question over MCP', 'One question on retrenched employees from 2025-Q4 to 2026-Q1. The agent used get_statistic only; the figures matched a direct lookup. One run, a demonstration and not an evaluation.'],
       ['10 hostile-server cases, all passed', 'Threat cases where the MCP server misbehaves: timeouts, crashes, oversized or malformed replies, extra tools, instructions in results. Each failed closed.']
-    ])
+    ]),
+    lane('Direct calls, the accuracy evaluations', [node('wrench', 'Agent', '', 'The same planner, tools and answer step in both paths.'), node('table', 'Function call', 'in the same process'), node('database', 'Statistics', 'read-only table')], [['Every accuracy evaluation', 'The reference, fresh and development runs all call the statistics functions directly, so their accuracy results do not describe the MCP route. I have not measured an accuracy run with MCP on the live path.']])
   );
   const result = el('div', 'mm-result');
-  [[`${fmt.int(mx.compared_datasets)} of ${fmt.int(mx.compared_datasets)}`, `datasets gave the same result either way (${fmt.int(mx.identical_datasets)} identical, ${fmt.int(mx.matching_refusals)} refused the same way)`], ['4.4 ms and 22.7 ms', 'median time per call, direct and over MCP'], ['No measured gain', 'MCP adds an interface and a trust boundary, not accuracy']].forEach(([big, label], i) => {
+  [[`${fmt.int(mx.compared_datasets)} of ${fmt.int(mx.compared_datasets)}`, `datasets gave the same result either way (${fmt.int(mx.identical_datasets)} identical, ${fmt.int(mx.matching_refusals)} refused the same way)`], ['4.4 ms and 22.7 ms', 'median time per call, direct and over MCP'], ['No measured gain', 'MCP adds an interface and a trust boundary, not accuracy. The live app pays about 1.9 s once to connect.']].forEach(([big, label], i) => {
     const cell = el('div', 'mm-fig'); cell.style.setProperty('--i', String(i)); cell.append(el('p', 'mm-big num', big), el('p', 'mm-cap', label)); result.append(cell);
   });
   wrap.append(result);
@@ -477,7 +478,7 @@ export function aboutMe() {
   return wrap;
 }
 
-/** The system, its stages and the three cross-cutting bars: guardrails, evaluation and the separate MCP interface. */
+/** The system, its stages and the three cross-cutting bars: guardrails, evaluation and the MCP interface. */
 export function architectureDiagram() {
   const wrap = el('div', 'g17');
   const stages = [['database', 'Sources', ['Quarterly statistics', 'MOM reports and an MTI article']], ['file-text', 'Processing', ['Parse and clean', 'Create passages', 'Validate observations']], ['magnifying-glass', 'Retrieval', ['BM25 and embeddings', 'Filter period/release', 'Rerank candidates']], ['wrench', 'Agent', ['Plan and assess evidence', 'Three typed tools', 'Calculate in code']], ['check-circle', 'Answer', ['Cited, validated output', 'Or clarify, decline, refuse']]];
@@ -491,7 +492,7 @@ export function architectureDiagram() {
   });
   const bars = el('div', 'g17-bars');
   bars.style.setProperty('grid-template-columns', 'repeat(3, minmax(0, 1fr))');
-  [['shield', 'Guardrails', 'Retrieved text is untrusted. Tools are read-only and calls are bounded.'], ['chart-line', 'Evaluation', 'Development and fresh cases, human review and attack tests.'], ['path', 'MCP', 'A separate interface to the statistics tools. The live app calls the same functions directly.']].forEach(([icon, name, text]) => {
+  [['shield', 'Guardrails', 'Retrieved text is untrusted. Tools are read-only and calls are bounded.'], ['chart-line', 'Evaluation', 'Development and fresh cases, human review and attack tests.'], ['path', 'MCP', 'The live app fetches statistics through an MCP server and client. The accuracy evaluations called the same functions directly.']].forEach(([icon, name, text]) => {
     const bar = el('div', 'g17-bar'); bar.append(ico(icon), el('strong', '', name), el('span', '', text)); bars.append(bar);
   });
   wrap.append(row, bars);

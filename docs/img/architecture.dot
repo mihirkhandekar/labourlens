@@ -51,7 +51,7 @@ digraph labourlens {
   AUDIT [label="Redacted audit + local traces", shape=cylinder];
 
   INDEX -> TOOLS; STORE -> TOOLS;
-  TOOLS -> CLIENT [style=dashed, label="optional route"];
+  TOOLS -> CLIENT [style=dashed, label="live get_series"];
   SERVER -> STORE;
   OUT -> RUNS; OUT -> WEB; OUT -> AUDIT;
 }

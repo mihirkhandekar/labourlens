@@ -55,6 +55,7 @@ class Settings:
     run_deadline_s: float = 80.0       # planner + answer LLM budget for one run; below request_timeout so the slot is freed
     feedback_dir: Path = field(default_factory=lambda: paths.DATA / "audit")
     triage_enabled: bool = True        # D-051: LLM scope check in front of the agent, web app only
+    mcp_enabled: bool = True           # D-053: the agent's statistics lookups go through the local MCP server (LABOURLENS_MCP=false for direct calls)
 
     @classmethod
     def from_env(cls):
@@ -62,6 +63,7 @@ class Settings:
                    session_secret=os.getenv("LABOURLENS_SESSION_SECRET", ""),
                    demo_enabled=os.getenv("LABOURLENS_DEMO_ENABLED", "true").lower() != "false",
                    triage_enabled=os.getenv("LABOURLENS_TRIAGE", "true").lower() != "false",
+                   mcp_enabled=os.getenv("LABOURLENS_MCP", "true").lower() != "false",
                    daily_budget_usd=float(os.getenv("LABOURLENS_DAILY_BUDGET_USD", "2.0")))
 
     @property
@@ -255,7 +257,19 @@ def create_app(settings: Settings | None = None, runner=None, shared_factory=Non
             run_with_triage(question, shared, audit, lambda a: agent(question, shared, a)) if cfg.triage_enabled else agent(question, shared, audit))
     if shared_factory is None:
         from labourlens.agent.tools import Shared
-        shared_factory = Shared
+        if cfg.mcp_enabled:
+            def shared_factory():
+                # The agent's get_series tool is an MCP get_statistic call to the local stdio server (allow-listed, handshake-checked).
+                from labourlens.mcp.client import SyncStatsBackend
+                sh = Shared()
+                sh.stats_backend = backend = SyncStatsBackend()
+                try:
+                    backend._run(backend._connect(), 30)
+                except Exception as e:  # noqa: BLE001 - query() reconnects once per call; a persistent failure is reported as a tool failure
+                    logging.getLogger(__name__).warning("MCP statistics server not reachable at startup: %s", type(e).__name__)
+                return sh
+        else:
+            shared_factory = Shared
     counters = defaultdict(deque)
     tasks = set()
     budget_file = cfg.feedback_dir / "budget.json"

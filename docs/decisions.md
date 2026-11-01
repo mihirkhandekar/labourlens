@@ -1,6 +1,6 @@
 # LabourLens — decision log
 
-Each entry: date, decision, alternatives, why, who approved, how reversible. Labels follow `CLAUDE.md`: **DECISION**, **PROPOSAL**, **VERIFIED FACT**, **ASSUMPTION**. ADRs in `docs/decisions/` hold the large architectural decisions; this log holds everything else. **Count:** 53 entries, D-000 to D-052 (D-007 has a second heading, "deployment notes", under the same id).
+Each entry: date, decision, alternatives, why, who approved, how reversible. Labels follow `CLAUDE.md`: **DECISION**, **PROPOSAL**, **VERIFIED FACT**, **ASSUMPTION**. ADRs in `docs/decisions/` hold the large architectural decisions; this log holds everything else. **Count:** 54 entries, D-000 to D-053 (D-007 has a second heading, "deployment notes", under the same id).
 
 **How to read approvals.** An entry that cites an owner approval names it (date, and the quoted reply or the file that holds it). An entry that names no approver had none recorded in this log when this note was written (1 Nov 2026): it is an assistant decision inside the approved experiment protocol (D-016), open to owner reversal. The signed held-out v2 freeze (`experiments/heldout-v2/FREEZE.md`, 31 Oct 2026) is the owner's approval of the 65 held-out v2 cases and of the pre-registered rule of D-042; it does not approve the later entries. The owner confirmation or rollback of D-030 is not recorded.
 
@@ -668,3 +668,22 @@ The default `AgentConfig.tool_set` stays `"base"`; the served system, web app, t
 **Reversibility.** Revert `PARSER_VERSION` and the rule, `labourlens build`, rebuild the BM25 index; the v3 vectors stay in the content-keyed cache. Restore the 49 passage files from a v3 copy to return to v3 exactly.
 
 **MEASURED RESULT (triage-v1-luna, 1 Nov 2026, one call per question, `gpt-6-luna`, `experiments/triage/triage-v1-luna/`).** False out-of-scope on gold plus fresh v2: 0 of 333 (none failed open). On the 36 threat cases: 1 of 36, T-D05 (decode a base64 string), politely declined by triage before reaching the agent; a safe outcome but a different route from the evaluated one. Our 40 hand-written off-topic cases: 30 of 30 correctly not in scope, borderline 20 of 20 correct. Cost $0.0506 over 409 calls; latency p50 1.56 s, p95 2.44 s. Small hand-written sets, one run, same model family: not a general guarantee. Triage stays on by default.
+
+### D-053 - The served web app routes `get_series` through the local MCP server (OWNER DECISION / IMPLEMENTED, 1 Nov 2026)
+
+**Decision (owner, 1 Nov 2026).** The live web app's agent `get_series` tool calls the local `labourlens-stats` MCP server (`get_statistic` tool, stdio) through `SyncStatsBackend`, set on `Shared.stats_backend` in `create_app` (`Settings.mcp_enabled`). Switch: `LABOURLENS_MCP=false` returns to direct calls; the default is true and applies to the web app only. The trace event of a `get_series` call now carries `transport: "mcp"`, so the live demo can show MCP end to end.
+
+**Unchanged.** `search_reports` and `calculate_change` stay in-process. The other eight MCP tools (`list_datasets`, `describe_dataset`, `get_dimension_values`, `latest_value`, `compare_periods`, `series_summary`, `get_revisions`, `get_provenance`) are not given to the agent; the agent tool set stays unevaluated beyond the base set (D-048). `run_agent`, `agent-exp` and `threat-test` leave `stats_backend` unset.
+
+**Served versus evaluated (cumulative, adds to D-043, D-050 and D-051).** The served system now also differs by D-053. All frozen accuracy evaluations (reference, fresh/v2, dev) and all threat runs, except the 10 `mcp_server_failure` cases and one recorded demo, called statistics directly, so their accuracy results do NOT describe the MCP route. **Not measured:** an end-to-end accuracy run with MCP on the live path. No frozen result changes (D-016).
+
+**MEASURED.** Smoke test on 1 Nov 2026: one real question ("retrenched 2026 Q1 vs 2025 Q1") answered with the stdio server subprocess running, `get_series` ok via MCP. Cost of the route (docs/mcp-demo-transcript.md section 17): median 22.7 ms per call over MCP against 4.4 ms direct, plus about 1.9 s once at startup to connect. No measured accuracy gain.
+
+| Option | Benefit | Downside | Disposition |
+|---|---|---|---|
+| Keep direct calls in the served app (D-028) | Fastest, no extra process or failure mode | The live app never exercises the protocol; the demo cannot show MCP end to end | Replaced as the served default |
+| Route `get_series` only through MCP, switchable | Live app shows MCP end to end; one tool is a small, well-tested surface; one switch to go back | About 18 ms more per call, one subprocess to manage, a new failure mode, accuracy on this route unmeasured | **Chosen** |
+| Give the agent all nine MCP tools | Fuller use of the server | A different tool set whose accuracy is unevaluated (D-048); more tokens and tool choices | Rejected |
+| Route every tool through MCP | Uniform | The server does not serve report text; `calculate_change` is deterministic in-process code | Rejected |
+
+**Reversibility.** Set `LABOURLENS_MCP=false` and restart; no code change, no data change.

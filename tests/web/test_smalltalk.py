@@ -115,3 +115,11 @@ def test_web_ask_small_talk_is_fast_feedback_ready_and_agent_untouched(no_model,
     assert slowest < 500
     with capsys.disabled():
         print(f"\nsmall-talk fast path via test client: slowest of 5 = {slowest:.1f} ms")
+
+
+def test_mcp_route_is_on_by_default_and_switchable(monkeypatch):
+    from labourlens.report.app import Settings
+    monkeypatch.delenv("LABOURLENS_MCP", raising=False)
+    assert Settings.from_env().mcp_enabled is True
+    monkeypatch.setenv("LABOURLENS_MCP", "false")
+    assert Settings.from_env().mcp_enabled is False

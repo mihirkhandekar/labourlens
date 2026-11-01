@@ -101,7 +101,7 @@ export function buildBands(report) {
   bands.problem = problem;
   const system = band({
     id: 'system', title: 'The Agentic System',
-    lede: ['The workflow retrieves official records and report passages, uses one bounded agent and returns cited evidence, a clarifying question, an abstention or a refusal. Retrieved text is untrusted input, tools are read only, and calls have limits on time, retries and total steps. MCP exposes read only statistics and source metadata through a separate protocol client; the live application uses direct data calls. I kept one agent so its decisions and failures are easier to trace. Evaluation measures retrieval, expected answer behaviour and safety on development and held-out cases, then reviews errors.']
+    lede: ['The workflow retrieves official records and report passages, uses one bounded agent and returns cited evidence, a clarifying question, an abstention or a refusal. Retrieved text is untrusted input, tools are read only, and calls have limits on time, retries and total steps. MCP exposes read only statistics and source metadata through a separate protocol client; the live application sends its statistics lookups through it. I kept one agent so its decisions and failures are easier to trace. Evaluation measures retrieval, expected answer behaviour and safety on development and held-out cases, then reviews errors.']
   });
   system.visual.append(stage(safe('The architecture', architectureDiagram)));
   system.node.append(more('Scope, question families and the answer pipeline', pool.rest('scope')));
@@ -217,18 +217,18 @@ export function buildBands(report) {
   // ---------- tools and MCP ----------
   const tools = band({
     id: 'tools', title: 'Evidence, tools and MCP',
-    lede: ['Each answer is schema-validated and is a cited answer, an abstention, a clarifying question or a refusal. Numbers and changes come from read-only tools and Decimal arithmetic, not model calculation. The validator checks that a quote appears in the cited passage, but not that it supports the claim. A separate MCP server exposes read-only statistics and source metadata; the live application calls its data directly to avoid an extra protocol call.']
+    lede: ['Each answer is schema-validated and is a cited answer, an abstention, a clarifying question or a refusal. Numbers and changes come from read-only tools and Decimal arithmetic, not model calculation. The validator checks that a quote appears in the cited passage, but not that it supports the claim. A separate MCP server exposes read-only statistics and source metadata; the live application sends the agent's statistics lookups through it, at the cost of extra latency per call.']
   });
   tools.visual.append(
     sub('Ensuring Reliable Sources', 'The values below are the latest resident unemployment figure in the report data. The change is computed in code, and a claim without a source is rejected.', stage(safe('The evidence trace', () => evidenceTrace(m)))),
-    sub('The MCP server', `${finite(m.section('mcp').metrics?.compared_datasets) ? `Nine read-only tools, two resources and one prompt cover statistics and source metadata, not report text. Across ${fmt.int(m.section('mcp').metrics.compared_datasets)} dataset comparisons, ${fmt.int(m.section('mcp').metrics.identical_datasets)} matched direct calls, ${fmt.int(m.section('mcp').metrics.matching_refusals)} returned the same refusal and ${fmt.int(m.section('mcp').metrics.different_outputs)} differed.` : 'Nine read-only tools, two resources and one prompt over statistics and source metadata, not report text.'} The live application and every accuracy evaluation call the same functions directly, so MCP adds an interface and a trust boundary, not a measured accuracy gain.`, stage(safe('The MCP diagram', () => mcpMap(m))))
+    sub('The MCP server', `${finite(m.section('mcp').metrics?.compared_datasets) ? `Nine read-only tools, two resources and one prompt cover statistics and source metadata, not report text. Across ${fmt.int(m.section('mcp').metrics.compared_datasets)} dataset comparisons, ${fmt.int(m.section('mcp').metrics.identical_datasets)} matched direct calls, ${fmt.int(m.section('mcp').metrics.matching_refusals)} returned the same refusal and ${fmt.int(m.section('mcp').metrics.different_outputs)} differed.` : 'Nine read-only tools, two resources and one prompt over statistics and source metadata, not report text.'} The live application reaches statistics through MCP and every accuracy evaluation called the same functions directly, so MCP adds an interface and a trust boundary, not a measured accuracy gain.`, stage(safe('The MCP diagram', () => mcpMap(m))))
   );
   tools.node.append(more('MCP checks, latency and the GenAI concepts used',
     group('MCP boundary and client checks', rows([
       ['Server capabilities', 'Nine read-only statistical tools, two source-catalogue resources and one prompt. The server does not expose report text.'],
       ['Client checks', 'The client checks its server allow-list and protocol version, validates tool arguments and results against schemas, applies time and response-size limits, and treats returned text as untrusted.'],
-      ['Comparison', 'The protocol demo compares MCP results with direct data calls. The live application uses direct calls because the MCP round trip adds latency.'],
-      ['Who calls it', 'A scripted client demo of 17 parts, one agent question answered over MCP, and the 10 hostile-server cases in the threat suite. The live application and the accuracy evaluations use direct calls.']
+      ['Comparison', 'The protocol demo compares MCP results with direct data calls. The live application accepts that added latency for its statistics lookups; the accuracy evaluations used direct calls.'],
+      ['Who calls it', 'A scripted client demo of 17 parts, one agent question answered over MCP, and the 10 hostile-server cases in the threat suite. The live application uses MCP for statistics lookups only; the accuracy evaluations used direct calls, so no accuracy run covers the MCP route.']
     ]), note('MCP client and server behaviour is recorded in the protocol demo and report data.')),
     group('GenAI concepts and where this build uses each', stage(safe('The concepts', conceptGrid))), pool.rest('mcp')));
   bands.tools = tools;

@@ -267,6 +267,7 @@ def build_graph(shared: Shared, tools: Tools, cfg: AgentConfig):
                 events += _ev("execute_tool", "operational_failure", tool=call["tool"], args=args, error=ops_err, seconds=dt)
             elif res.ok:
                 events += _ev("execute_tool", "ok", tool=call["tool"], args=args, result=res.message[:300], new_items=[i.label for i in res.items], seconds=dt,
+                              **({"transport": "mcp"} if call["tool"] == "get_series" and getattr(shared, "stats_backend", None) is not None else {}),
                               **res.retrieval_trace)
                 for key, value in res.usage.items():
                     usage[key] = usage.get(key, 0) + value

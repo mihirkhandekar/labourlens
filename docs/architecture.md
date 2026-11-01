@@ -15,7 +15,7 @@ One bounded LangGraph agent reads both through three read-only tools. Code does 
 
 The README (`README.md`) states the current data counts. The data sheet (`docs/data-sheet.md`) records sources, licences and checks.
 
-**Served versus evaluated.** The live web app adds two stages in front of the agent that the diagram's core path does not include: a **small-talk fast path** (D-050, whole-message greetings answered with no model call) and a **model scope check** (D-051, one `gpt-6-luna` call that can answer or decline off-topic, small-talk and unsafe messages without the agent; it fails open to the agent on error). The evaluated entry points (`run_agent`, `agent-exp`, `threat-test`) do not use them. Differences between served and evaluated are the D-043 runtime changes, D-050 and D-051. The scope check was measured on its own (0 of 333 gold and held-out v2 questions diverted, 1 of 36 threat cases diverted, 30 of 30 off-topic messages caught; `experiments/triage/triage-v1-luna/metrics.json`); no end-to-end run exists with it on.
+**Served versus evaluated.** The live web app adds two stages in front of the agent that the diagram's core path does not include: a **small-talk fast path** (D-050, whole-message greetings answered with no model call) and a **model scope check** (D-051, one `gpt-6-luna` call that can answer or decline off-topic, small-talk and unsafe messages without the agent; it fails open to the agent on error). The evaluated entry points (`run_agent`, `agent-exp`, `threat-test`) do not use them. Differences between served and evaluated are the D-043 runtime changes, D-050, D-051 and D-053 (the served app routes `get_series` through the local MCP stdio server; every accuracy evaluation called statistics directly). The scope check was measured on its own (0 of 333 gold and held-out v2 questions diverted, 1 of 36 threat cases diverted, 30 of 30 off-topic messages caught; `experiments/triage/triage-v1-luna/metrics.json`); no end-to-end run exists with it on.
 
 **Corpus versions.** Three corpus states exist. **v1** (13,484 passages) is what every registered held-out and development experiment (A1–A5, H-r3, H-hybrid) ran on. **v2** (`extract-0.2`, D-037/D-041: 15,915 passages, 1,732 `merge200` chunks, 43,662 observations) was used for the extraction-only X1 runs and the first post-fix T-I06 run. **v3** (v2 plus six labour-only sources, D-040) is what the committed manifest and quality report and the local store hold: 85 sources (36 datasets, 49 documents), 52,020 observations (4,300 in the answer scope), 16,419 passages, 1,847 chunks, 276 build checks (269 pass, 7 warn). Three measured evaluations exist on v3, all on 31 Oct 2026: the X2 development regression check, the `m7-e2efix-20261031` threat run (`docs/experiments/m7-e2e-fixes.md`) and held-out v2, the first evidence-disjoint-source evaluation (`docs/experiments/m7-heldout-v2-result.md`, D-045). Per the owner (not verifiable from repository files), the Droplet serves corpus v3 and the post-fix code at commit c297146; `/healthz` reports fingerprint `d402120f6f8f`, 16,419 passages and 1,847 chunks.
 
@@ -69,7 +69,7 @@ flowchart TB
   end
   INDEX --> TOOLS
   STORE --> TOOLS
-  TOOLS -. optional route .-> CLIENT
+  TOOLS -. live get_series .-> CLIENT
   SERVER --> STORE
   OUT --> RUNS
   OUT --> WEB[Research workspace]
@@ -133,7 +133,7 @@ The server is `src/labourlens/mcp/server.py`, built on the official `mcp` SDK. I
 
 The client is `src/labourlens/mcp/client.py`. It treats the server as untrusted: allow-listed launch, minimal subprocess environment, name/version checks, tool allow-list, input schemas, deadlines, response-size caps, typed tool-result validation and instruction-like-content quarantine. `mcp/redact.py` redacts secrets. The diagram names controls, not proof that every hostile paraphrase is detected; the saved transcript includes a heuristic miss. Resource handling must be assessed separately from tool-result screening. See `docs/threat-model.md`.
 
-The agent calls statistics directly by default. Setting `Shared.stats_backend` routes `get_series` through the MCP client. `docs/mcp-demo-transcript.md` records the scripted client run and a direct-versus-MCP comparison in section 17.
+The served web app sets `Shared.stats_backend` to a `SyncStatsBackend`, so the agent's `get_series` is an MCP `get_statistic` call to the local `labourlens-stats` stdio server, and its trace event carries `transport: "mcp"` (D-053; `LABOURLENS_MCP=false` or `Settings.mcp_enabled` off returns to direct calls). `search_reports` and `calculate_change` stay in-process, and the other eight tools are not given to the agent. The evaluated entry points (`run_agent`, `agent-exp`, `threat-test`) leave `stats_backend` unset and call statistics directly, so no accuracy result describes the MCP route. `docs/mcp-demo-transcript.md` records the scripted client run and a direct-versus-MCP comparison in section 17 (median 22.7 ms against 4.4 ms per call, about 1.9 s one-off connect).
 
 `src/labourlens/mcp/evil.py` is a test fixture. It is a deliberately hostile server and is never on the allow-list.
 
@@ -192,6 +192,6 @@ The evaluation branch consumes saved runs rather than changing live answers. Dev
 | Planner never sees passage text | Injected text cannot steer tool choice. | D-027, D-028 |
 | Operational failures end the run and are never "no data" | A tool outage must not look like an absence of evidence. | ADR-002, D-028 |
 | MCP server with nine read-only tools and a screening client | The server is treated as untrusted even when local. | D-028 |
-| MCP is an optional route and direct calls are the default | Direct calls are faster and the protocol adds a failure mode. | D-028 |
+| Served app uses MCP for `get_series`; evaluations used direct calls | The owner wanted the live app to exercise the protocol end to end; it costs latency and adds a failure mode, with no measured accuracy gain. Switch back with `LABOURLENS_MCP=false`. | D-028, D-053 |
 | Structured data scope of 36 datasets through a spec-driven adapter (33 until corpus v3) | One adapter and a spec per dataset keep the cost of each addition low. | ADR-003, D-003, D-040 |
 | Labels follow what the evidence supports | One rule makes abstain, refuse and answer cases consistent. | `experiments/gold/CHANGELOG.md`, section v3 |

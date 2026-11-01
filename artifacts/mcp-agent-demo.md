@@ -1,6 +1,6 @@
 # MCP-backed agent answer (demo scenario 8)
 
-Recorded 2026-11-01 04:05 UTC by `uv run labourlens mcp-agent-demo`. One question, one run: a demonstration that the agent can use the statistics server over MCP, not an evaluation. The live web app calls the same tools directly.
+Recorded 2026-11-01 04:05 UTC by `uv run labourlens mcp-agent-demo`. One question, one run: a demonstration that the agent can use the statistics server over MCP, not an evaluation. The live web app routes `get_series` the same way; the accuracy evaluations called the tools directly.
 
 ## Setup
 

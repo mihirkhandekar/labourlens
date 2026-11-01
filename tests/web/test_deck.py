@@ -273,7 +273,8 @@ def test_mcp_slide_states_where_mcp_sits():
     for needle in ("Direct calls", "Through MCP", "get_statistic", "labourlens://sources", "compare_quarters", "17 parts", "10 hostile-server cases", "One agent question over MCP", "4.4 ms and 22.7 ms", "No measured gain"):
         assert needle in block, needle
     main = _slides_main_section()
-    assert "every accuracy evaluation call the same functions directly" in main
+    assert "The live app reaches statistics through MCP. Every accuracy evaluation called the same functions directly" in main
+    assert "Through MCP, the live web app" in block and "Direct calls, the accuracy evaluations" in block
 
 
 def test_threat_slide_reads_counts_from_the_report_data_and_labels_runs():

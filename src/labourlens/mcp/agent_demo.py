@@ -1,6 +1,6 @@
 """One recorded agent run whose statistics lookups go through the MCP client (demo scenario 8).
 
-The live web app calls the statistics tools directly. This script plugs `SyncStatsBackend` into `Shared.stats_backend`, so the
+The live web app does the same since D-053 (`Settings.mcp_enabled`). This script plugs `SyncStatsBackend` into `Shared.stats_backend`, so the
 agent's `get_series` tool is an MCP `get_statistic` call to the stdio server, then writes `artifacts/mcp-agent-demo.md`.
 It makes paid model calls (a few thousand tokens). The record holds the question, the MCP calls, the structured answer and a
 deterministic comparison with the direct lookup. It is one question, one run: a demonstration, not an evaluation.
@@ -75,7 +75,7 @@ def render(question: str, cfg, res: dict, calls: list[dict], shared) -> str:
     L = ["# MCP-backed agent answer (demo scenario 8)", "",
          f"Recorded {datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M UTC')} by `uv run labourlens mcp-agent-demo`. "
          "One question, one run: a demonstration that the agent can use the statistics server over MCP, not an evaluation. "
-         "The live web app calls the same tools directly.", "",
+         "The live web app routes `get_series` the same way; the accuracy evaluations called the tools directly.", "",
          "## Setup", "",
          f"- Question: {question}",
          f"- Models: planner `{cfg.planner_model}`, answer `{cfg.answer_model}`; prompts `{cfg.planner_prompt}` and `{cfg.answer_prompt}`; retrieval `{cfg.retrieval}`.",

@@ -202,7 +202,7 @@
 <title>TOOLS&#45;&gt;CLIENT</title>
 <path fill="none" stroke="#5b6470" stroke-dasharray="5,2" d="M535.41,-701.54C514.62,-692.22 488.8,-680.4 466,-669.25 449.72,-661.29 431.98,-652.12 416.65,-644.04"/>
 <polygon fill="#5b6470" stroke="#5b6470" points="418.01,-641.99 410.68,-640.88 415.72,-646.32 418.01,-641.99"/>
-<text text-anchor="middle" x="529.84" y="-678.45" font-family="Helvetica,sans-Serif" font-size="9.00">optional route</text>
+<text text-anchor="middle" x="529.84" y="-678.45" font-family="Helvetica,sans-Serif" font-size="9.00">live get_series</text>
 </g>
 <!-- ASSESS&#45;&gt;PLAN -->
 <g id="edge16" class="edge">
