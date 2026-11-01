@@ -25,6 +25,7 @@ PAGE = 'private/human-review/pending-review/index.html'
 GOLD_DRAFT = 'experiments/gold/draft_cases.jsonl'
 GOLD_V37 = 'experiments/gold/gold_v3.7.jsonl'
 GOLD_V37_LOG = 'experiments/gold/gold_v3.7-review-log.jsonl'
+FINAL_PROVENANCE = 'experiments/gold/gold_v3.7-final-provenance.json'
 CHANGELOG = 'experiments/gold/CHANGELOG.md'
 PROPOSALS = 'experiments/gold/proposed_label_changes.jsonl'
 INVENTORY = 'docs/human-review/review-inventory.md'
@@ -86,7 +87,7 @@ def find_main_export(root: Path, explicit: Path | None = None) -> Path:
 class State:
     """Everything read from files once: gold, the main export, the saved runs, the v2 gold and its owner provenance."""
 
-    def __init__(self, root: Path, main_export: Path | None = None):
+    def __init__(self, root: Path, main_export: Path | None = None, use_overlay: bool = False):
         self.root = Path(root).resolve()
         root = self.root
         self.gold = rows(root / GOLD_DRAFT)
@@ -120,13 +121,32 @@ class State:
                 for n, identifier in enumerate(pack.source_rows(path, column), 1):
                     self.source_ids[f'{kind}-{n:02}'] = identifier
 
+        # After a pending-ingest --write the final provenance is stored; only the inventory reads it, so planning and ingest keep seeing the state the pack was built from.
+        self.overlay = None
+        overlay = root / FINAL_PROVENANCE
+        if use_overlay and overlay.exists():
+            self.overlay = json.loads(overlay.read_text())
+            for cid, source in self.overlay['streams']['v2'].items():
+                if cid in self.v2_provenance:
+                    self.v2_provenance[cid] = {**(self.v2_provenance[cid] or {}), 'decision_source': source}
+
     def gold_source(self, cid: str) -> str | None:
+        if self.overlay is not None:
+            return self.overlay['streams']['gold'].get(cid)
         provenance = self.gold_by_id[cid].get('owner_review')
         return provenance['decision_source'] if provenance else None
 
     def main_source(self, tab: str, cid: str) -> str | None:
+        if self.overlay is not None and tab in ('answers', 'sources'):
+            return self.overlay['streams'][tab].get(cid)
         item = self.main.get((tab, cid))
         return item['source'] if item else None
+
+    def j10_decision(self) -> str | None:
+        if self.overlay is not None and self.overlay.get('j10'):
+            return self.overlay['j10'].get('J10')
+        item = self.main.get(('decisions', 'J10'))
+        return item['fields'].decision if item else None
 
 
 # ---------------------------------------------------------------- AI suggestions, one normalised shape
@@ -389,7 +409,7 @@ def _count(values) -> Counter:
     return Counter(values)
 
 
-def inventory(root: Path, st: State) -> dict:
+def inventory(root: Path, st: State) -> dict:  # State(use_overlay=True) shows the state after pending-ingest --write
     """All counts, computed from files. Returns rows plus the lists of pending ids."""
     root = st.root
     infos = ai_infos(root, st)
@@ -445,13 +465,13 @@ def inventory(root: Path, st: State) -> dict:
             f'{s[MANUAL]} by the owner’s own click, {s[AGREED]} by agreeing with an AI suggestion.')
     dec = [('decisions', f'J{i}') for i in range(1, 11)]
     decided = [k for k in dec if st.main.get(k, {}).get('source')]
-    j10 = st.main.get(('decisions', 'J10'))
-    unresolved = j10 is not None and j10['fields'].decision == 'inspect_more'
+    j10_decision = st.j10_decision()
+    unresolved = j10_decision == 'inspect_more'
     if unresolved:
         pending['J10 extraction gaps (owner asked for more inspection)'] = [i[0] for i in J10_ITEMS] + ['J10']
     row('Owner decisions J1–J10', 'Methodology and acceptance choices (rubric, rights, limits)', 10, len(decided), 0, 0, 10 - len(decided), 'none (judgement calls; AI adjudication lists them)',
         'private main export (tab decisions); `docs/human-review/owner-review-summary.md`',
-        f'{len(decided)} chosen by the owner. J10 is "{j10["fields"].decision if j10 else "undecided"}": ' + ('an explicit request for more inspection, not acceptance.' if unresolved else 'see the summary.'))
+        f'{len(decided)} chosen by the owner. J10 is "{j10_decision or "undecided"}": ' + ('an explicit request for more inspection, not acceptance.' if unresolved else 'accepted with the frozen extraction gaps disclosed, not fixed (own clicks on five original pages).' if j10_decision == 'accept_limits' else 'see the summary.'))
     unapplied = list(st.proposals)
     all_proposals = rows(Path(root) / PROPOSALS) if (Path(root) / PROPOSALS).exists() else []
     applied = [p['case_id'] for p in all_proposals if str(p.get('status', '')).startswith(('applied', 'export_noop'))]
@@ -491,10 +511,13 @@ def inventory_markdown(root: Path, st: State) -> str:
     for r in inv['rows']:
         lines.append(f'| {r["name"]} | {r["what"]} | {r["population"]} | {r["manual"]} | {r["agreed"]} | {r["ai_only"]} | {r["untouched"]} | {r["ai_files"]} | {r["stored"]} | {r["wording"]} |')
     total = {k: sum(r[k] for r in inv['rows'] if r['name'].startswith(('Gold', 'Held-out v2 cases', 'Saved', 'Source'))) for k in ('population', 'manual', 'agreed', 'ai_only', 'untouched')}
+    all_manual = total['population'] and total['manual'] == total['population']
     lines += ['', f'Labelling and verdict streams together (gold, held-out v2, saved answers, source checks): {total["population"]} items, {total["manual"]} by the owner’s own click, {total["agreed"]} by agreeing with an AI suggestion, {total["ai_only"]} AI-reviewed only, {total["untouched"]} untouched.', '',
               '## Status wording that is true today', '',
-              f'- Do not write “all labelling was manually reviewed by the owner”. Today {total["manual"]} of {total["population"]} items were decided by the owner’s own click.',
-              f'- True: “The owner made a per-card decision on {total["manual"] + total["agreed"]} of {total["population"]} labelling items; {total["manual"]} by their own click and {total["agreed"]} by agreeing with an AI suggestion. The remaining {total["ai_only"] + total["untouched"]} were checked by AI reviewers only.”',
+              *([f'- All {total["population"]} labelling items were decided by the owner’s own click (pending-review export ingested). The report may say they were reviewed card by card by the owner, as one person’s review made after AI pre-review and after the runs were scored; it is not independent inter-rater evidence.']
+                if all_manual else
+                [f'- Do not write “all labelling was manually reviewed by the owner”. Today {total["manual"]} of {total["population"]} items were decided by the owner’s own click.',
+                 f'- True: “The owner made a per-card decision on {total["manual"] + total["agreed"]} of {total["population"]} labelling items; {total["manual"]} by their own click and {total["agreed"]} by agreeing with an AI suggestion. The remaining {total["ai_only"] + total["untouched"]} were checked by AI reviewers only.”']),
               '- AI-only streams (threat suite, judge validation, audits, document reviews) are never called human review.', '',
               '## Pending items', '']
     for name, ids in inv['pending'].items():
@@ -511,7 +534,7 @@ def write_inventory(root: Path = ROOT, main_export: Path | None = None) -> Path:
     from labourlens.data import rights_scan
 
     root = Path(root).resolve()
-    st = State(root, main_export)
+    st = State(root, main_export, use_overlay=True)
     text = inventory_markdown(root, st)
     passages = root / 'data' / 'passages'
     if passages.exists():
@@ -632,8 +655,36 @@ def remaining(cards: list[dict], export: PendingExport) -> dict[str, list[str]]:
 
 # ---------------------------------------------------------------- applying to a new gold version
 
-def apply_to_gold(st: State, export: PendingExport, export_sha: str) -> tuple[list[dict], list[dict], dict]:
-    """Returns (new gold records, per-case review log, report). Existing pinned files are never touched."""
+POLICY_FILE = 'experiments/gold/v3.7-policy-decisions.json'
+
+
+def load_policy(path: Path, root: Path) -> dict:
+    """The owner's later policy decisions that stop specific recorded 'change' clicks from being applied. Strict, no extra fields."""
+    path = Path(path)
+    path = path if path.is_absolute() else Path(root) / path
+    data = json.loads(path.read_text())
+    if not isinstance(data, dict) or set(data) != {'policy_ref', 'decided', 'text', 'non_applied_changes'}:
+        raise ValueError('Policy file: expected exactly policy_ref, decided, text and non_applied_changes')
+    date.fromisoformat(data['decided'])
+    cases = {}
+    for item in data['non_applied_changes']:
+        if not isinstance(item, dict) or set(item) != {'case_id', 'proposed_behavior'} or item['proposed_behavior'] not in BEHAVIOURS or item['case_id'] in cases:
+            raise ValueError(f'Policy file: invalid or duplicate entry {item!r}')
+        cases[item['case_id']] = item['proposed_behavior']
+    return {'ref': data['policy_ref'], 'decided': data['decided'], 'text': data['text'], 'cases': cases, 'sha256': sha256_file(path)}
+
+
+def apply_to_gold(st: State, export: PendingExport, export_sha: str, policy: dict | None = None) -> tuple[list[dict], list[dict], dict]:
+    """Returns (new gold records, per-case review log, report). Existing pinned files are never touched.
+
+    With a policy, the set of recorded 'change' clicks must equal the policy's list exactly: nothing is dropped silently and no entry is stale."""
+    recorded = {r.case_id: r.proposed_behavior for r in export.results if r.stream == 'gold' and r.decision == 'change'}
+    if policy is not None and recorded != policy['cases']:
+        missing = sorted(set(recorded) - set(policy['cases']))
+        extra = sorted(set(policy['cases']) - set(recorded))
+        different = sorted(c for c in set(recorded) & set(policy['cases']) if recorded[c] != policy['cases'][c])
+        raise ValueError(f'The non-applied changes in the policy file do not match the export: change(s) in the export but not in the policy {missing}; in the policy but not in the export {extra}; different behaviour {different}')
+    not_applied = []
     today = parse_timestamp(export.exported_at).date().isoformat()
     by_key = {r.key: r for r in export.results}
     out, log, changed, dropped = [], [], [], []
@@ -649,21 +700,25 @@ def apply_to_gold(st: State, export: PendingExport, export_sha: str) -> tuple[li
                  'earlier_source': st.gold_source(cid), 'original_behavior': c['expected_behavior']}
         if r.decision == 'reject':
             dropped.append(cid)
-            entry['applied'] = 'case removed from gold v3.7'
+            entry.update(applied=True, applied_note='case removed from gold v3.7')
             log.append(entry)
             continue
-        if r.decision == 'change':
+        entry['applied'] = True
+        if r.decision == 'change' and policy is not None:
+            not_applied.append((cid, c['expected_behavior'], r.proposed_behavior))
+            entry.update(applied=False, policy_ref=policy['ref'], policy_text=policy['text'], applied_note=f'recorded click: change {c["expected_behavior"]} -> {r.proposed_behavior}; not applied, label stays {c["expected_behavior"]}')
+        elif r.decision == 'change':
             new = hv2._relabel(new, r.proposed_behavior, r.reason)
             changed.append((cid, c['expected_behavior'], r.proposed_behavior))
-            entry['applied'] = f'label {c["expected_behavior"]} -> {r.proposed_behavior}'
+            entry['applied_note'] = f'label {c["expected_behavior"]} -> {r.proposed_behavior}'
         else:
-            entry['applied'] = 'label kept'
+            entry['applied_note'] = 'label kept'
         new['review_status'] = 'owner_reviewed'
         new['reviewed_by'] = export.reviewer_name
         new['owner_review'] = {'reviewer': export.reviewer_name, 'decision_source': r.decision_source, 'date': today}
         out.append(new)
         log.append(entry)
-    return out, log, {'changed': changed, 'dropped': dropped}
+    return out, log, {'changed': changed, 'dropped': dropped, 'not_applied': not_applied, 'policy': policy}
 
 
 def final_provenance(st: State, export: PendingExport) -> dict[str, dict]:
@@ -720,6 +775,15 @@ def manual_vs_ai(st: State, export: PendingExport, infos: dict) -> dict[str, tup
     return {s: (a, b) for s, (a, b) in stats.items()}
 
 
+def policy_changelog(report: dict) -> str:
+    if not report.get('not_applied'):
+        return ''
+    pol = report['policy']
+    ids = ', '.join(f'{i} (clicked: {a} -> {b})' for i, a, b in report['not_applied'])
+    return (f'**Policy ({pol["ref"]}, {pol["decided"]}):** {pol["text"]}. Recorded owner clicks not applied, labels unchanged from v3.6: {ids}. '
+            f'The clicks stay in `{GOLD_V37_LOG}` (decision_source owner_manual, applied false, policy_ref {pol["ref"]}); policy file `{POLICY_FILE}` SHA-256 `{pol["sha256"]}`.\n\n')
+
+
 def changelog_entry(export: PendingExport, export_sha: str, report: dict, new_sha: str, counts: dict) -> str:
     changes = ', '.join(f'{i} {a}->{b}' for i, a, b in report['changed']) or 'none'
     dropped = ', '.join(report['dropped']) or 'none'
@@ -728,7 +792,8 @@ def changelog_entry(export: PendingExport, export_sha: str, report: dict, new_sh
             f'Reviewer `{export.reviewer_name}`, export SHA-256 `{export_sha}`. Per-case decisions: `{GOLD_V37_LOG}`.\n\n'
             f'**Counts in this version:** {counts["manual"]} cases decided by the owner’s own click, {counts["agreed"]} by the owner agreeing with an AI suggestion, {counts["none"]} without an owner decision. '
             f'Label changes: {changes}. Cases removed: {dropped}.\n\n'
-            '**Post-hoc disclosure:** these changes were made after the saved runs were scored on v3.5/v3.6. They do not alter those results. Any rescoring on v3.7 is a separate, labelled sensitivity analysis.\n\n')
+            + policy_changelog(report)
+            + '**Post-hoc disclosure:** these changes were made after the saved runs were scored on v3.5/v3.6. They do not alter those results. Any rescoring on v3.7 is a separate, labelled sensitivity analysis.\n\n')
 
 
 def wording(counts: dict[str, dict]) -> list[str]:
@@ -790,9 +855,22 @@ def final_summary(root: Path, st: State, export: PendingExport, export_sha: str,
                   '| Case | Fresh net | Flags other than “other” | Your decision | Source |', '|---|---|---|---|---|']
         for cid, f in flagged_rows:
             r = decided.get(cid)
-            lines.append(f'| {cid} | {f["net"]} | {", ".join(f["flags"]) or "none"} | ' + (f'{r.decision}' + (f' to {r.proposed_behavior}' if r.proposed_behavior else '') if r else 'not decided') + f' | {r.decision_source if r else "n/a"} |')
+            skipped = any(i == cid for i, _, _ in report.get('not_applied', []))
+            lines.append(f'| {cid} | {f["net"]} | {", ".join(f["flags"]) or "none"} | ' + (f'{r.decision}' + (f' to {r.proposed_behavior}' if r.proposed_behavior else '') + (' (click recorded, not applied: ' + report['policy']['ref'] + ')' if skipped else '') if r else 'not decided') + f' | {r.decision_source if r else "n/a"} |')
         if not flagged_rows:
             lines.append('| none | | | | |')
+    if report.get('not_applied'):
+        pol = report['policy']
+        lines += ['', '## Owner clicks not applied because of a later policy decision', '',
+                  f'Policy {pol["ref"]} ({pol["decided"]}): {pol["text"]}. The clicks are recorded as owner_manual, with applied false; the labels stay as in v3.6.', '',
+                  '| Case | Label in v3.6 | Owner click | Applied |', '|---|---|---|---|'] + [f'| {i} | {a} | change to {b} | no ({pol["ref"]}) |' for i, a, b in report['not_applied']]
+    j10_final_result = next((r for r in export.results if r.key == 'j10:J10'), None)
+    if j10_final_result is not None:
+        accepted = [r.case_id for r in export.results if r.stream == 'j10' and r.decision == 'accept']
+        meaning = {'accept_limits': 'The owner accepted the disclosed frozen extraction gaps, with the limits disclosed, after inspecting the original pages. This is acceptance of limitations, not a claim that the defects were fixed.',
+                   'require_fixes': 'The owner did not accept the gaps until specific fixes are made.', 'inspect_more': 'The owner still needs more inspection: J10 stays open.'}[j10_final_result.decision]
+        lines += ['', '## J10 (human acceptance of the frozen extraction gaps)', '', f'- Decision: `{j10_final_result.decision}` (own click). Items accepted individually: {len(accepted)} of {len([r for r in export.results if r.stream == "j10"]) - 1} ({", ".join(sorted(accepted)) or "none"}).',
+                  f'- {meaning}', '- Progress wording: “J10: accepted by the owner (own clicks) with the frozen extraction gaps disclosed and not fixed in the saved runs.”' if j10_final_result.decision == 'accept_limits' else '- Progress wording: J10 remains open.']
     lines += ['', '## Gold changes (post-hoc)', '', f'- Label changes: {", ".join(f"{i} {a} -> {b}" for i, a, b in report["changed"]) or "none"}.',
               f'- Cases removed: {", ".join(report["dropped"]) or "none"}.',
               f'- New file: `{GOLD_V37}`' + (f' (SHA-256 `{new_sha}`)' if new_sha else ' (not written in a dry run)') + '; older gold files are untouched.',
@@ -800,23 +878,24 @@ def final_summary(root: Path, st: State, export: PendingExport, export_sha: str,
               '## Agreement with the AI suggestion (owner_manual decisions only)', '', '| Stream | Own decisions with an AI suggestion | Same as the AI |', '|---|---:|---:|']
     for s in ('gold', 'v2', 'answers', 'sources'):
         a, b = agreement[s]
-        lines.append(f'| {STREAM_LABEL[s]} | {b} | {a} |' + (f' ({a / b:.0%})' if b else ''))
+        lines.append(f'| {STREAM_LABEL[s]} | {b} | {a}' + (f' ({a / b:.0%})' if b else '') + ' |')
     lines += ['', 'This is agreement, not accuracy. Small counts: read the numbers, not the percentages.', '',
               '## Exact wording for the report', ''] + [f'> {w}' for w in wording_lines] + ['',
               '## Rescoring on gold v3.7 (separate offline step, no model calls)', '',
-              'The saved evaluations stay scored on v3.5/v3.6 and keep their hashes. To measure the effect of the v3.7 changes, rescore from the saved runs without the judge, one experiment at a time, '
+              'The saved evaluations stay scored on v3.5/v3.6 and keep their hashes. ' + ('Gold v3.7 has the same questions, labels, facts and evidence as v3.6 and differs only in review provenance fields, so a rescoring changes no behaviour or score; it only records the all-reviewed status against the v3.7 hash. ' if not report['changed'] and not report['dropped'] else 'To measure the effect of the v3.7 changes, ') + 'If you rescore, do it from the saved runs without the judge, one experiment at a time, '
               'for example (this rewrites `experiments/eval/<exp>/`, so run it on a copy or a scratch checkout, never over a frozen result):', '',
               '```', f'uv run labourlens eval --exp agent-dev-A1 --split dev --gold {GOLD_V37} --allow-gold-mismatch --no-judge', '```', '',
               'Report the result as a post-hoc sensitivity analysis next to, never instead of, the original scores.', '']
     return '\n'.join(lines), wording_lines
 
 
-def pending_ingest(review_export: Path, write: bool = False, root: Path = ROOT, main_export: Path | None = None) -> tuple[int, str]:
+def pending_ingest(review_export: Path, write: bool = False, root: Path = ROOT, main_export: Path | None = None, policy_file: Path | None = None) -> tuple[int, str]:
     root = Path(root).resolve()
     try:
         st = State(root, main_export)
         export, export_sha, cards = load_pending_export(review_export, root, st)
-        new_cases, log, report = apply_to_gold(st, export, export_sha)
+        policy = load_policy(policy_file, root) if policy_file else None
+        new_cases, log, report = apply_to_gold(st, export, export_sha, policy)
     except (ValueError, OSError) as exc:
         return 2, f'Review export rejected: {exc}'
     infos = ai_infos(root, st)
@@ -833,7 +912,10 @@ def pending_ingest(review_export: Path, write: bool = False, root: Path = ROOT, 
             f'{len(export.results)} cards decided: {sum(r.decision_source == MANUAL for r in export.results)} by your own click, {sum(r.decision_source == AGREED for r in export.results)} by agreeing with an AI suggestion.']
     for q in ('proposal', 'pending', 'redo'):
         head.append(f'  - {QUEUE_LABEL[q]}: {len(left.get(q, []))} undecided' + (' (optional)' if q == 'redo' else ''))
-    head += ['', f'Gold v3.7 would have {len(new_cases)} cases; label changes: {", ".join(f"{i} {a}->{b}" for i, a, b in report["changed"]) or "none"}; removed: {", ".join(report["dropped"]) or "none"}.']
+    head += ['', f'Gold v3.7 would have {len(new_cases)} cases; label changes applied: {", ".join(f"{i} {a}->{b}" for i, a, b in report["changed"]) or "none"}; removed: {", ".join(report["dropped"]) or "none"}.']
+    if report['not_applied']:
+        pol = report['policy']
+        head.append(f'Owner clicks NOT applied because of policy {pol["ref"]} ({pol["text"]}): ' + ', '.join(f'{i} ({a} -> {b})' for i, a, b in report['not_applied']) + '. Labels stay as in v3.6; the clicks are kept in the review log.')
     if blocking:
         head += ['', 'CANNOT WRITE YET: these required cards are undecided:']
         for q, ids in blocking.items():
@@ -853,7 +935,9 @@ def pending_ingest(review_export: Path, write: bool = False, root: Path = ROOT, 
     title, _, rest = old.partition('\n\n')
     if f'## v3.7: owner review' not in old:
         changelog.write_text(title + '\n\n' + changelog_entry(export, export_sha, report, new_sha, counts) + rest)
+    j10_results = {r.case_id: r.decision for r in export.results if r.stream == 'j10'}
+    (root / FINAL_PROVENANCE).write_text(json.dumps({'export_sha256': export_sha, 'gold_v3_7_sha256': new_sha, 'reviewer': export.reviewer_name, 'streams': final, 'j10': j10_results}, indent=1, sort_keys=True) + '\n')
     summary_path = root / FINAL_SUMMARY
     summary_path.parent.mkdir(parents=True, exist_ok=True)
     summary_path.write_text(summary)
-    return 0, '\n'.join(head + ['', f'Wrote {GOLD_V37} (SHA-256 {new_sha}), {GOLD_V37_LOG}, a changelog entry and {FINAL_SUMMARY}.'])
+    return 0, '\n'.join(head + ['', f'Wrote {GOLD_V37} (SHA-256 {new_sha}), {GOLD_V37_LOG}, a changelog entry, {FINAL_PROVENANCE} and {FINAL_SUMMARY}.'])

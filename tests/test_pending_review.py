@@ -332,3 +332,63 @@ def test_final_summary_lists_fresh_reviews_as_ai_opinion_only(root):
     assert '| DEV-005 | both change to abstain | evidence_missing | approve | owner_manual |' in text and '| DEV-001 |' not in text.split('Fresh blind AI review')[1].split('## Gold changes')[0]
     assert 'never human review' in text
     # an export built before the fresh files existed is rejected (different pack identity)
+
+
+# ------------------------------------------------------------------ owner policy that stops recorded changes from being applied
+
+def write_policy(root, cases, name='policy.json'):
+    data = dict(policy_ref='D-047', decided='2026-11-01', text='owner policy 2026-11-01: out-of-period figures needed, abstain retained',
+                non_applied_changes=[dict(case_id=c, proposed_behavior=b) for c, b in cases])
+    return put(root, name, json.dumps(data))
+
+
+def test_policy_keeps_labels_and_records_the_click_unapplied(root):
+    draft = (root / P.GOLD_DRAFT).read_bytes()
+    _, _, data = required_results(root, {'gold:DEV-002': dict(decision='change', proposed_behavior='abstain', reason='Not published.'),
+                                         'gold:DEV-005': dict(decision='change', proposed_behavior='clarify', reason='Needs a period.')})
+    path = write_export(root, data)
+    policy = write_policy(root, [('DEV-002', 'abstain')])
+    code, text = P.pending_ingest(path, write=False, root=root, policy_file=policy)
+    assert code == 2 and 'do not match the export' in text and "['DEV-005']" in text  # DEV-005 would be silently applied
+    policy = write_policy(root, [('DEV-002', 'abstain'), ('DEV-005', 'clarify')])
+    code, text = P.pending_ingest(path, write=False, root=root, policy_file=policy)
+    assert code == 0, text
+    assert 'label changes applied: none' in text and 'NOT applied because of policy D-047' in text and 'DEV-002 (answer -> abstain)' in text
+    assert not (root / P.GOLD_V37).exists()
+    code, text = P.pending_ingest(path, write=True, root=root, policy_file=policy)
+    assert code == 0, text
+    new = {json.loads(l)['case_id']: json.loads(l) for l in (root / P.GOLD_V37).read_text().splitlines()}
+    old = {json.loads(l)['case_id']: json.loads(l) for l in draft.decode().splitlines()}
+    assert new['DEV-002']['expected_behavior'] == old['DEV-002']['expected_behavior'] == 'answer'  # label unchanged
+    assert new['DEV-002']['evidence_text'] == old['DEV-002']['evidence_text']
+    assert new['DEV-002']['owner_review'] == {'reviewer': 'Synthetic Owner', 'decision_source': 'owner_manual', 'date': '2026-11-01'}
+    log = {e['case_id']: e for e in map(json.loads, (root / P.GOLD_V37_LOG).read_text().splitlines())}
+    assert log['DEV-002']['decision'] == 'change' and log['DEV-002']['decision_source'] == 'owner_manual' and log['DEV-002']['applied'] is False and log['DEV-002']['policy_ref'] == 'D-047'
+    assert log['DEV-001']['applied'] is True
+    assert 'Policy (D-047, 2026-11-01)' in (root / P.CHANGELOG).read_text()
+    summary = (root / P.FINAL_SUMMARY).read_text()
+    assert 'Owner clicks not applied because of a later policy decision' in summary and '| DEV-002 | answer | change to abstain | no (D-047) |' in summary
+    assert (root / P.GOLD_DRAFT).read_bytes() == draft
+
+
+@pytest.mark.parametrize('listed', [[], [('DEV-002', 'clarify')], [('DEV-002', 'abstain'), ('DEV-003', 'abstain')]])
+def test_policy_set_must_match_the_recorded_changes_exactly(root, listed):
+    _, _, data = required_results(root, {'gold:DEV-002': dict(decision='change', proposed_behavior='abstain', reason='Not published.')})
+    code, text = P.pending_ingest(write_export(root, data), write=True, root=root, policy_file=write_policy(root, listed))
+    assert code == 2 and 'do not match the export' in text and not (root / P.GOLD_V37).exists()
+
+
+def test_policy_file_is_validated_strictly(root):
+    _, _, data = required_results(root)
+    path = write_export(root, data)
+    put(root, 'bad.json', json.dumps(dict(policy_ref='D', decided='2026-11-01', text='x', non_applied_changes=[], surprise=1)))
+    code, text = P.pending_ingest(path, root=root, policy_file=root / 'bad.json')
+    assert code == 2 and 'expected exactly' in text
+
+
+def test_j10_acceptance_is_recorded_in_the_summary(root):
+    _, _, data = required_results(root, {'j10:J10': dict(decision='accept_limits')})
+    code, _ = P.pending_ingest(write_export(root, data), write=True, root=root)
+    assert code == 0
+    text = (root / P.FINAL_SUMMARY).read_text()
+    assert '## J10 (human acceptance of the frozen extraction gaps)' in text and '`accept_limits` (own click)' in text and 'not a claim that the defects were fixed' in text

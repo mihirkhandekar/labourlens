@@ -33,6 +33,7 @@ def main(argv: list[str] | None = None) -> int:
     pi.add_argument("--review-export", type=Path, required=True)
     pi.add_argument("--write", action="store_true")
     pi.add_argument("--main-export", type=Path)
+    pi.add_argument("--policy-file", type=Path, help="owner policy decisions that stop listed recorded change clicks from being applied (exact set must match the export)")
     va = sub.add_parser("v2-approve", help="validate the owner's held-out v2 review export; dry run unless --write")
     va.add_argument("--review-export", type=Path, required=True)
     va.add_argument("--write", action="store_true", help="write experiments/gold/heldout_v2_v1.jsonl and the signed block in FREEZE.md")
@@ -115,7 +116,7 @@ def main(argv: list[str] | None = None) -> int:
             elif args.cmd == "pending-review-pack":
                 print(pending_page.build_pending_page(main_export=args.main_export))
             else:
-                code, message = pending.pending_ingest(args.review_export, args.write, main_export=args.main_export)
+                code, message = pending.pending_ingest(args.review_export, args.write, main_export=args.main_export, policy_file=args.policy_file)
                 print(message, file=sys.stderr if code else sys.stdout)
                 return code
         except ValueError as exc:

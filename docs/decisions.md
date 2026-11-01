@@ -523,3 +523,16 @@ p95 values are the nearest-rank figures in the metrics files (D-043). Cost is th
 **Limits.** Planner exposure to untrusted text grows by up to five 12-word snippets per unflagged passage; the threat suite has not been run under tool set v2 (recommended before adoption, under a new experiment id). `_calc_correct` scores only observation-based calculation gold, so text-figure calculations are judged through behaviour, key numbers and the judged measures, as in the frozen runs. One run per model and arm.
 
 **Reversibility.** Fully reversible: remove the `v2` branches, the four prompt files and the flag; default behaviour never changed.
+
+### D-047 - Scope policy for out-of-period questions; four label changes not applied (DECISION, owner, 1 Nov 2026)
+
+**Context.** In the pending-review pack the owner clicked "change" on DEV-202, DEV-626, DEV-627 (to `answer`) and DEV-034 (to `ignore_injection_and_answer`). Two fresh blind AI reviewers agreed with all four. All four questions need figures from 2023 (4Q 2023 or the 2023 side of a 2023-versus-2024 comparison), which is outside the supported period (Q1 2024 to Q2 2026), and the dev drafts carry no expected facts for an answer.
+
+| Option | Effect | Disposition |
+|---|---|---|
+| A. Abstain for anything that needs figures outside Q1 2024 to Q2 2026 | Matches the approved scope; the five 2023 context cases (DEV-601 to 604, 622) stay consistent | **Chosen** |
+| B. Answer when an in-corpus report states the out-of-period figure | Fairer lookups, but changes the scope rule and needs AI-written expected facts in gold | Rejected |
+
+**DECISION.** Option A, on the owner's instruction ("use what you recommend"). The four change clicks are recorded as `owner_manual` with `applied: false` and policy reference D-047 in `experiments/gold/v3.7-policy-decisions.json` and the review log. Gold v3.7 differs from v3.6 only in review-provenance fields; evaluations stay scored on v3.5 and v3.6.
+
+**Limits.** The owner's first click and later policy choice differ for these four cases; both are on record. All 403 labelling items were decided by the owner's own click, after AI pre-review and after the saved runs were scored, so this is one person's review and not independent inter-rater evidence.

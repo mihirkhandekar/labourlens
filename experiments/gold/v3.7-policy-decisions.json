@@ -1,0 +1,11 @@
+{
+  "policy_ref": "D-047",
+  "decided": "2026-11-01",
+  "text": "owner policy 2026-11-01: out-of-period figures needed, abstain retained",
+  "non_applied_changes": [
+    {"case_id": "DEV-034", "proposed_behavior": "ignore_injection_and_answer"},
+    {"case_id": "DEV-202", "proposed_behavior": "answer"},
+    {"case_id": "DEV-626", "proposed_behavior": "answer"},
+    {"case_id": "DEV-627", "proposed_behavior": "answer"}
+  ]
+}

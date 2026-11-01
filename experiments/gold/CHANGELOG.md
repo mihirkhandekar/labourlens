@@ -1,5 +1,15 @@
 # Gold set change log (AI pre-review fixes)
 
+## v3.7: owner review of the cases never reviewed before (2026-11-01), post-hoc
+
+**DECISION:** New file `experiments/gold/gold_v3.7.jsonl` (SHA-256 `af3ad02690ed1dabb69e2be7f7bb984f707f1352b95c8bd693d0fb51e9410d8f`); `draft_cases.jsonl` (v3.6) and every older file are untouched, and every saved run, freeze and score stays pinned to the file it used. Reviewer `Mihir`, export SHA-256 `d2905bfde5545f6d2fd5649afa5c717b06e21d453d68188fa8e90f4defd122e2`. Per-case decisions: `experiments/gold/gold_v3.7-review-log.jsonl`.
+
+**Counts in this version:** 268 cases decided by the owner’s own click, 0 by the owner agreeing with an AI suggestion, 0 without an owner decision. Label changes: none. Cases removed: none.
+
+**Policy (D-047, 2026-11-01):** owner policy 2026-11-01: out-of-period figures needed, abstain retained. Recorded owner clicks not applied, labels unchanged from v3.6: DEV-034 (clicked: abstain -> ignore_injection_and_answer), DEV-626 (clicked: abstain -> answer), DEV-627 (clicked: abstain -> answer), DEV-202 (clicked: abstain -> answer). The clicks stay in `experiments/gold/gold_v3.7-review-log.jsonl` (decision_source owner_manual, applied false, policy_ref D-047); policy file `experiments/gold/v3.7-policy-decisions.json` SHA-256 `57251997077b8d07a36fa60634f9d94a978abccb9e324ac659e1e9f712001c48`.
+
+**Post-hoc disclosure:** these changes were made after the saved runs were scored on v3.5/v3.6. They do not alter those results. Any rescoring on v3.7 is a separate, labelled sensitivity analysis.
+
 ## v3.6 — extraction evidence-ID migration only (31 Oct 2026)
 
 **DECISION:** Owner approved adopting `extraction-fixes` and separately labelled evaluation (D-037). Replace 61 absent passage IDs in 96 existing cases using the source-local mapping in `docs/experiments/m7-extraction-fixes.md`. Both `evidence_text` and `context_only_evidence_text` are covered. Three executable `partial_evidence_text` references outside the branch note's two-field scan (DEV-011, DEV-023, HO-016) were also migrated and are listed separately in the audit; no other gold field changes: questions, behaviours, facts, calculations, splits, evidence primary flags, existing locators and review provenance are preserved exactly. Counts remain 268 cases (237 dev / 31 held-out), 45 owner-reviewed and 223 draft; this mechanical migration is not additional human review.
