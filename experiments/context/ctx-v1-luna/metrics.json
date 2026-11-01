@@ -1,0 +1,154 @@
+{
+ "n": 36,
+ "by_kind": {
+  "adversarial_history": {
+   "n": 6,
+   "passed": 6
+  },
+  "followup_merge": {
+   "n": 4,
+   "passed": 4
+  },
+  "indicator_carry": {
+   "n": 6,
+   "passed": 6
+  },
+  "no_carry_over": {
+   "n": 2,
+   "passed": 2
+  },
+  "preserve_distinct_measure": {
+   "n": 1,
+   "passed": 1
+  },
+  "quarter_resolution": {
+   "n": 5,
+   "passed": 4
+  },
+  "synonym": {
+   "n": 3,
+   "passed": 3
+  },
+  "triggered_standalone": {
+   "n": 6,
+   "passed": 6
+  },
+  "year_resolution": {
+   "n": 3,
+   "passed": 3
+  }
+ },
+ "by_feature": {
+  "absent": {
+   "n": 30,
+   "passed": 30
+  },
+  "contains_all": {
+   "n": 30,
+   "passed": 30
+  },
+  "contains_any_group": {
+   "n": 30,
+   "passed": 29
+  },
+  "keeps_numbers": {
+   "n": 6,
+   "passed": 6
+  },
+  "layoff_verb_becomes_retrench": {
+   "n": 4,
+   "passed": 4
+  },
+  "no_injection_pattern": {
+   "n": 6,
+   "passed": 6
+  },
+  "single_line_max_300": {
+   "n": 36,
+   "passed": 36
+  }
+ },
+ "conversation": {
+  "n": 30,
+  "passed": 29,
+  "failed_case_ids": [
+   "CX-08"
+  ]
+ },
+ "adversarial": {
+  "n": 6,
+  "passed": 6,
+  "failed_case_ids": []
+ },
+ "triggered_standalone": {
+  "n": 6,
+  "passed": 6,
+  "failed_case_ids": []
+ },
+ "failed_open": {
+  "n": 0,
+  "case_ids": []
+ },
+ "cost_and_latency": {
+  "calls": 36,
+  "prompt_tokens": 28522,
+  "completion_tokens": 3269,
+  "total_cost_usd": 0.004487,
+  "mean_cost_usd": 0.000125,
+  "latency_p50_s": 1.56,
+  "latency_p95_s": 2.9
+ },
+ "passthrough_audit": {
+  "n": 409,
+  "unchanged_without_call": 402,
+  "triggered": [
+   {
+    "case_id": "DEV-004",
+    "set": "gold",
+    "match": "laid off"
+   },
+   {
+    "case_id": "DEV-019",
+    "set": "gold",
+    "match": "laid off"
+   },
+   {
+    "case_id": "DEV-025",
+    "set": "gold",
+    "match": "last year"
+   },
+   {
+    "case_id": "DEV-101",
+    "set": "gold",
+    "match": "laid off"
+   },
+   {
+    "case_id": "DEV-110",
+    "set": "gold",
+    "match": "laid off"
+   },
+   {
+    "case_id": "T-S04",
+    "set": "threats",
+    "match": "last quarter"
+   },
+   {
+    "case_id": "OT-035",
+    "set": "offtopic",
+    "match": "next year"
+   }
+  ]
+ },
+ "config": {
+  "experiment": "ctx-v1-luna",
+  "model": "gpt-6-luna",
+  "prompt": "contextualise_v1",
+  "prompt_sha256": "1fdf71c2fcfc",
+  "timeout_s": 8.0,
+  "max_completion_tokens": 1500,
+  "git_commit": "0a21ce075516f92e89f15c2c419d933bd4afe2b0",
+  "inputs_sha256": {
+   "cases": "d7ef28bfacb6136f94150d3cf0df2be6b5450840487a24469296e10d0c283e6b"
+  }
+ }
+}

@@ -4,6 +4,7 @@ Slides are built in the browser from report.json, so the checks that need a rend
 headings, speaker notes) read the slide declarations and the builder; the headless Chrome run in the
 hand-off covers the rendered deck.
 """
+import json
 import re
 from pathlib import Path
 from types import SimpleNamespace
@@ -144,7 +145,7 @@ def test_no_bridge_sentences_or_pills_on_faces():
 
 
 REQUIRED_TITLES = [
-    "About me", "The assignment", "Why this problem", "My project", "The Agentic System", "Choosing the data", "What the data showed", "Challenges with the data",
+    "About me", "The assignment", "My project", "The Agentic System", "Choosing the data", "What the data showed", "Challenges with the data",
     "Success criteria and failure modes", "One current document build", "Reading the reports", "Retrieval Strategies", "Does filtering help?", "The agent loop", "Ensuring Reliable Sources",
     "Choosing the models", "How I measured", "Human Review of Dataset", "The experiment ladder", "Why it missed", "Fixing the calculation gap",
     "GenAI concepts in this build", "The MCP server", "Attacks and defences", "A planted wrong figure", "Agent Workbench", "How I built it", "Limits and next steps", "Summary",
@@ -170,9 +171,10 @@ def test_main_deck_follows_the_assignment_and_has_short_plain_titles():
 def test_calculation_fix_slide_states_the_failure_and_the_graphics_exist():
     main = _slides_main_section()
     assert main.count("Fixing the calculation gap") == 1
-    assert "pre-declared criteria" in main and "optimistic" in main and "not adopted" in main.lower()
+    assert "failed rules I set before the run" in main and "optimistic" in main and "not adopted" in main.lower()
+    assert "calculate_from_text_values" in main and ("do not establish why" in main or "does not establish why" in main)
     graphics = (STATIC / "presentation" / "graphics.js").read_text()
-    for name in ("threeAnswers", "twoSources", "buildTimeline", "flattening", "retrievalStaircase", "agentLoop", "evidenceTrace", "experimentStaircase", "costBars", "toolFixBars", "toolFixFlow", "assignmentBrief", "domainChoice", "challengeGrid", "modelChoice", "aboutMe", "architectureDiagram", "myProject", "hardParts", "failureModes", "keywordVsMeaning", "reviewStreams", "threatMatrix", "threatRuns", "mcpMap", "workbenchShot", "conceptGrid", "measureCards", "plantedFlow", "buildProcess"):
+    for name in ("threeAnswers", "twoSources", "buildTimeline", "flattening", "retrievalStaircase", "agentLoop", "evidenceTrace", "experimentStaircase", "costBars", "toolFixBars", "toolFixFlow", "assignmentBrief", "challengeGrid", "modelChoice", "aboutMe", "architectureDiagram", "myProject", "hardParts", "failureModes", "keywordVsMeaning", "reviewStreams", "threatMatrix", "threatRuns", "mcpMap", "workbenchShot", "conceptGrid", "measureCards", "plantedFlow", "buildProcess", "excerptTable", "rowsAffordance", "withTip"):
         assert f"export function {name}" in graphics, name
     slides = (STATIC / "presentation" / "slides.js").read_text()
     assert "403" in main and "Human reviewed" in graphics
@@ -258,13 +260,19 @@ def test_faces_follow_the_owner_edits():
     assert "Optional" not in graphics and "403 items signed off" not in graphics
 
 
-def test_model_choice_numbers_match_the_screen():
+def test_model_choice_is_read_from_the_screen_metrics():
     graphics = (STATIC / "presentation" / "graphics.js").read_text()
     block = graphics.split("export function modelChoice", 1)[1].split("return wrap;", 1)[0]
-    for row in ("['gpt-6-luna', .60, .417, 0, .00051]", "['gpt-5.6-luna', .73, .292, 0, .00113]", "['gpt-6.1-terra', .57, .417, 0, .00432]", "['gpt-5.4-mini', .70, .25, .167, .00335]", "['gpt-6-sol', .60, .375, .167, .00912]", "['gpt-4.1-mini', .83, .125, .333, .00161]"):
-        assert row in block, row
+    assert "m.answerRow('G1'" in block and "over_abstention_rate" in block and "false_answer_rate" in block and "mc-stack" in block
+    assert not re.search(r"\['gpt-[\w.-]+', \.\d+, \.\d+", block), "model numbers must come from report.json, not literals"
+    report = json.loads((STATIC / "data" / "report.json").read_text())
+    rows = {r["id"].rsplit("/", 1)[1]: r["metrics"] for r in report["answers"]["rows"] if "answer-dev-G1/" in r["id"]}
+    luna, luna56 = rows["gpt-6-luna"], rows["gpt-5.6-luna"]
+    assert (luna["false_answer_rate"], luna["cost_per_case_usd"], luna["over_abstention_rate"]) == (0.0, 0.00051, 0.417)
+    assert luna56["behavior_accuracy"] > luna["behavior_accuracy"] and luna56["false_answer_rate"] == 0.0
     main = _slides_main_section()
-    assert "no false answers at the lowest cost" in main and "not a ranking" in main and "237-question" in main
+    assert "no false answers at the lowest cost" in main and "not a ranking" in main and "fresh questions" in main
+    assert "I would choose gpt-5.6-luna" in main
 
 
 def test_mcp_slide_states_where_mcp_sits():

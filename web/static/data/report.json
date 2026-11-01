@@ -1,6 +1,6 @@
 {
   "schema_version": "report-1.0",
-  "generated_at": "2026-11-01T13:40:56.327940+00:00",
+  "generated_at": "2026-11-01T14:35:40.541426+00:00",
   "summary": {
     "title": "LabourLens research workbench",
     "scope": [
@@ -2319,6 +2319,333 @@
       "data/export/series.json"
     ]
   },
+  "row_excerpts": {
+    "status": "available",
+    "summary": "Real rows from the committed observation table. Published by MOM and SingStat on data.gov.sg under the Singapore Open Data Licence.",
+    "licence": "Singapore Open Data Licence 1.0",
+    "provenance": [
+      "data/processed/observations.parquet",
+      "data/export/reconciliation.json",
+      "data/export/sources.json"
+    ],
+    "unemployment": {
+      "title": "Four published unemployment rates for 2026-Q2",
+      "rows": [
+        {
+          "series": "Overall unemployment rate, seasonally adjusted",
+          "publisher": "Ministry of Manpower",
+          "dataset_id": "d_ca32584c91ee07d091a4ce75fa868414",
+          "period": "2026-Q2",
+          "value": 1.9,
+          "unit": "percent",
+          "release_stage": "dataset_snapshot",
+          "date_kind": "snapshot",
+          "date": "2026-10-30",
+          "observation_id": "aeacb5d50793b5e2"
+        },
+        {
+          "series": "Resident unemployment rate, seasonally adjusted",
+          "publisher": "Ministry of Manpower",
+          "dataset_id": "d_d1d755e060dd6b01a8024ba60b21b831",
+          "period": "2026-Q2",
+          "value": 2.9,
+          "unit": "percent",
+          "release_stage": "dataset_snapshot",
+          "date_kind": "snapshot",
+          "date": "2026-10-30",
+          "observation_id": "3407f2b885745f7f"
+        },
+        {
+          "series": "Resident unemployment rate, not adjusted",
+          "publisher": "Ministry of Manpower",
+          "dataset_id": "d_d1d755e060dd6b01a8024ba60b21b831",
+          "period": "2026-Q2",
+          "value": 3.5,
+          "unit": "percent",
+          "release_stage": "dataset_snapshot",
+          "date_kind": "snapshot",
+          "date": "2026-10-30",
+          "observation_id": "9e3b178b6b85f234"
+        },
+        {
+          "series": "Citizen unemployment rate, seasonally adjusted",
+          "publisher": "Ministry of Manpower",
+          "dataset_id": "d_1353f9be1a020ba1469852c49ee62db3",
+          "period": "2026-Q2",
+          "value": 3.0,
+          "unit": "percent",
+          "release_stage": "dataset_snapshot",
+          "date_kind": "snapshot",
+          "date": "2026-10-30",
+          "observation_id": "82133fc29d053c44"
+        }
+      ],
+      "note": "Same quarter and same question. The population and the seasonal adjustment differ."
+    },
+    "retrenchments": {
+      "title": "Retrenchment counts in the dataset",
+      "rows": [
+        {
+          "series": "All retrenched",
+          "publisher": "Ministry of Manpower",
+          "dataset_id": "d_000d49cda016c13522d7d5be6a050f59",
+          "period": "2024-Q1",
+          "value": 3030.0,
+          "unit": "persons",
+          "release_stage": "dataset_snapshot",
+          "date_kind": "snapshot",
+          "date": "2026-10-30",
+          "observation_id": "0f99b5c79172c310"
+        },
+        {
+          "series": "All retrenched",
+          "publisher": "Ministry of Manpower",
+          "dataset_id": "d_000d49cda016c13522d7d5be6a050f59",
+          "period": "2026-Q2",
+          "value": 4620.0,
+          "unit": "persons",
+          "release_stage": "dataset_snapshot",
+          "date_kind": "snapshot",
+          "date": "2026-10-30",
+          "observation_id": "60eb7f4b1780e77e"
+        },
+        {
+          "series": "Permanent retrenched",
+          "publisher": "Ministry of Manpower",
+          "dataset_id": "d_493616c9e3c9bd5d1e273903aa693a16",
+          "period": "2026-Q2",
+          "value": 4470.0,
+          "unit": "persons",
+          "release_stage": "dataset_snapshot",
+          "date_kind": "snapshot",
+          "date": "2026-10-30",
+          "observation_id": "374cc7912d6f6274"
+        },
+        {
+          "series": "Term contract retrenched",
+          "publisher": "Ministry of Manpower",
+          "dataset_id": "d_7a7d656c3a358c429f2bd4c3e9a97809",
+          "period": "2026-Q2",
+          "value": 150.0,
+          "unit": "persons",
+          "release_stage": "dataset_snapshot",
+          "date_kind": "snapshot",
+          "date": "2026-10-30",
+          "observation_id": "a1c9ad55c3b0dc2a"
+        }
+      ],
+      "note": "The dataset holds counts only. It has no column for a cause."
+    },
+    "vacancy_ratio": {
+      "title": "Published ratio against the counts, 2024-Q2",
+      "rows": [
+        {
+          "series": "Vacancies per unemployed person (published), seasonally adjusted",
+          "publisher": "Ministry of Manpower",
+          "dataset_id": "d_80c0cf251ee9a26d240808297f52c820",
+          "period": "2024-Q2",
+          "value": 1.72,
+          "unit": "ratio",
+          "release_stage": "dataset_snapshot",
+          "date_kind": "snapshot",
+          "date": "2026-10-30",
+          "observation_id": "a84eaacb4cda2a28"
+        },
+        {
+          "series": "Job vacancies",
+          "publisher": "Ministry of Manpower",
+          "dataset_id": "d_59a34aef12e0ecf666de5746e50586e8",
+          "period": "2024-Q2",
+          "value": 82600.0,
+          "unit": "vacancies",
+          "release_stage": "dataset_snapshot",
+          "date_kind": "snapshot",
+          "date": "2026-10-30",
+          "observation_id": "3b8f727d6c9eb9a4"
+        },
+        {
+          "series": "Unemployed persons, seasonally adjusted",
+          "publisher": "Ministry of Manpower",
+          "dataset_id": "d_3fb7b082cd455ec9493ef5e994ef0db7",
+          "period": "2024-Q2",
+          "value": 78300.0,
+          "unit": "persons",
+          "release_stage": "dataset_snapshot",
+          "date_kind": "snapshot",
+          "date": "2026-10-30",
+          "observation_id": "40613bc409e415d3"
+        },
+        {
+          "series": "Vacancies divided by unemployed (calculated)",
+          "publisher": "Calculated here",
+          "dataset_id": null,
+          "period": "2024-Q2",
+          "value": 1.05,
+          "unit": "ratio",
+          "release_stage": "derived",
+          "date_kind": "",
+          "date": "",
+          "observation_id": ""
+        }
+      ],
+      "note": "The published ratio and the ratio rebuilt from the two counts come from different surveys."
+    },
+    "revisions": {
+      "title": "The same quarter in each release",
+      "rows": [
+        {
+          "series": "Total employment change",
+          "publisher": "MOM advance release",
+          "dataset_id": null,
+          "period": "2025-Q4",
+          "value": 19600,
+          "unit": "persons",
+          "release_stage": "advance",
+          "date_kind": "published",
+          "date": "2026-01-29",
+          "observation_id": ""
+        },
+        {
+          "series": "Total employment change",
+          "publisher": "MOM final report",
+          "dataset_id": null,
+          "period": "2025-Q4",
+          "value": 17700,
+          "unit": "persons",
+          "release_stage": "final",
+          "date_kind": "published",
+          "date": "2026-03-20",
+          "observation_id": ""
+        },
+        {
+          "series": "Total employment change",
+          "publisher": "Singapore Department of Statistics",
+          "dataset_id": "d_31dec7667bc2c6b945a262cd60958eaf",
+          "period": "2025-Q4",
+          "value": 20800,
+          "unit": "persons",
+          "release_stage": "dataset_snapshot",
+          "date_kind": "snapshot",
+          "date": "2026-10-30",
+          "observation_id": "196411966d74baa0"
+        },
+        {
+          "series": "Total employment change",
+          "publisher": "MOM advance release",
+          "dataset_id": null,
+          "period": "2026-Q1",
+          "value": 5000,
+          "unit": "persons",
+          "release_stage": "advance",
+          "date_kind": "published",
+          "date": "2026-04-30",
+          "observation_id": ""
+        },
+        {
+          "series": "Total employment change",
+          "publisher": "MOM final report",
+          "dataset_id": null,
+          "period": "2026-Q1",
+          "value": 9400,
+          "unit": "persons",
+          "release_stage": "final",
+          "date_kind": "published",
+          "date": "2026-06-15",
+          "observation_id": ""
+        },
+        {
+          "series": "Total employment change",
+          "publisher": "Singapore Department of Statistics",
+          "dataset_id": "d_31dec7667bc2c6b945a262cd60958eaf",
+          "period": "2026-Q1",
+          "value": 13000,
+          "unit": "persons",
+          "release_stage": "dataset_snapshot",
+          "date_kind": "snapshot",
+          "date": "2026-10-30",
+          "observation_id": "a8146d27628629cc"
+        }
+      ],
+      "note": "Advance and final are the headline numbers in MOM's own releases. The dataset total is a third figure for the same quarter."
+    },
+    "planted": {
+      "title": "The dataset row the cross-check compares against",
+      "rows": [
+        {
+          "series": "All retrenched",
+          "publisher": "Ministry of Manpower",
+          "dataset_id": "d_000d49cda016c13522d7d5be6a050f59",
+          "period": "2026-Q1",
+          "value": 3830.0,
+          "unit": "persons",
+          "release_stage": "dataset_snapshot",
+          "date_kind": "snapshot",
+          "date": "2026-10-30",
+          "observation_id": "af35147df5007250"
+        }
+      ],
+      "note": "In the test the false figure sits only in a made-up passage. The cross-check compares it with this row."
+    }
+  },
+  "corpus_builds": {
+    "status": "available",
+    "summary": "Document builds: passage counts from the committed corpus snapshots.",
+    "metrics": {},
+    "rows": [
+      {
+        "id": "v1",
+        "name": "Build v1",
+        "passages": 13484,
+        "documents": 46,
+        "purpose": "First experiments and the original test. Results frozen.",
+        "current": false,
+        "provenance": [
+          "experiments/corpus-snapshots/v1.json"
+        ]
+      },
+      {
+        "id": "v2",
+        "name": "Build v2",
+        "passages": 15915,
+        "documents": 46,
+        "purpose": "Extraction fixes tested alone. No measurable change.",
+        "current": false,
+        "provenance": [
+          "experiments/corpus-snapshots/v2.json"
+        ]
+      },
+      {
+        "id": "v3",
+        "name": "Build v3",
+        "passages": 16419,
+        "documents": 49,
+        "purpose": "Six new sources added. Every measured result since is on this build.",
+        "current": false,
+        "provenance": [
+          "experiments/corpus-snapshots/v3.json"
+        ]
+      },
+      {
+        "id": "v3.1",
+        "name": "Current build (v3.1)",
+        "passages": 16419,
+        "documents": 49,
+        "purpose": "Same sources. Forty passages of one article relabelled.",
+        "current": true,
+        "provenance": [
+          "experiments/corpus-snapshots/v3.1.json"
+        ],
+        "rerun": null
+      }
+    ],
+    "provenance": [
+      "experiments/corpus-snapshots/v1.json",
+      "experiments/corpus-snapshots/v2.json",
+      "experiments/corpus-snapshots/v3.1.json",
+      "experiments/corpus-snapshots/v3.json"
+    ]
+  },
+  "heldout_v31": null,
   "retrieval": {
     "status": "available",
     "summary": "Development retrieval comparisons. Configurations differ between experiments.",
@@ -62495,7 +62822,9 @@
       "experiments/eval/agent-dev-X2/gpt-5.6-luna.metrics.json",
       "experiments/eval/agent-dev-X2/gpt-6-luna.cases.jsonl",
       "experiments/eval/agent-dev-X2/gpt-6-luna.metrics.json",
+      "experiments/eval/agent-dev-X3/gpt-5.6-luna.cases.jsonl",
       "experiments/eval/agent-dev-X3/gpt-5.6-luna.metrics.json",
+      "experiments/eval/agent-dev-X3/gpt-6-luna.cases.jsonl",
       "experiments/eval/agent-dev-X3/gpt-6-luna.metrics.json",
       "experiments/eval/agent-heldout-H-hybrid/gpt-5.6-luna.cases.jsonl",
       "experiments/eval/agent-heldout-H-hybrid/gpt-5.6-luna.metrics.json",
@@ -64342,7 +64671,34 @@
             ]
           }
         },
-        "all_criteria_passed": false
+        "all_criteria_passed": false,
+        "example": {
+          "question": "What shares of establishments gave wage increases in 2023 and 2024, and which year had the larger share?",
+          "family": "numerical_comparison",
+          "period_note": "The question asks about 2023, before the supported period, so the right behaviour is to decline.",
+          "models": {
+            "gpt-6-luna": {
+              "old": {
+                "right": true,
+                "false_answer": false
+              },
+              "new": {
+                "right": false,
+                "false_answer": true
+              }
+            },
+            "gpt-5.6-luna": {
+              "old": {
+                "right": true,
+                "false_answer": false
+              },
+              "new": {
+                "right": false,
+                "false_answer": true
+              }
+            }
+          }
+        }
       },
       "v2post": {
         "label": "Post-freeze diagnostic. Not held-out, and not a replacement of the frozen held-out v2 result (D-045). The tool set was designed after the errors of these 65 cases were analysed, so any gain here is optimistic by construction.",
@@ -65615,7 +65971,11 @@
       },
       "verdict": "Not adopted: the pre-declared dev criteria failed for both models. The default tool set is unchanged and the threat suite has not been run under tool set v2.",
       "provenance": [
+        "experiments/eval/agent-dev-X2/gpt-5.6-luna.cases.jsonl",
+        "experiments/eval/agent-dev-X2/gpt-6-luna.cases.jsonl",
+        "experiments/eval/agent-dev-X3/gpt-5.6-luna.cases.jsonl",
         "experiments/eval/agent-dev-X3/gpt-5.6-luna.metrics.json",
+        "experiments/eval/agent-dev-X3/gpt-6-luna.cases.jsonl",
         "experiments/eval/agent-dev-X3/gpt-6-luna.metrics.json",
         "experiments/eval/agent-heldout-V2post-hybrid/gpt-5.6-luna.metrics.json",
         "experiments/eval/agent-heldout-V2post-hybrid/gpt-6-luna.metrics.json",
@@ -66253,7 +66613,7 @@
     "The population basis of the dataset employment series is unverified."
   ],
   "provenance": {
-    "commit": "e989cb9527a1187d70009afa458ba6f881066e1e",
+    "commit": "0a21ce075516f92e89f15c2c419d933bd4afe2b0",
     "artifacts": [
       {
         "path": "data/export/sources.json",
@@ -66961,6 +67321,10 @@
         "sha256": "2e02b3068c4899a3dd6642631a4dd415e9aeff23dc7dc96499a48cd725a01a3b"
       },
       {
+        "path": "experiments/heldout-v2/paired-v3.1.json",
+        "status": "missing"
+      },
+      {
         "path": "experiments/tool-fix/criteria.json",
         "status": "available",
         "sha256": "351f809a83a8b7380fbcdb08d0d515326ce392edf994be437f75b345a6966904"
@@ -67004,6 +67368,16 @@
         "path": "experiments/heldout-v2/paired-postfix-r3-vs-hybrid.json",
         "status": "available",
         "sha256": "99eb5788613239006b988f4f4c9af8ea180dc626f6485b967a43a4737014d081"
+      },
+      {
+        "path": "experiments/eval/agent-dev-X3/gpt-6-luna.cases.jsonl",
+        "status": "available",
+        "sha256": "2b6f3f501a8786c3378c03835a9da5352fb1553bae387d1c8fbc29945f898bcf"
+      },
+      {
+        "path": "experiments/eval/agent-dev-X3/gpt-5.6-luna.cases.jsonl",
+        "status": "available",
+        "sha256": "b42b34c4a9ed1cf43762e742874fb341a6a3a88143e180f3cd410202cfd1693f"
       },
       {
         "path": "experiments/runs/agent-dev-A1/gpt-4.1-mini.scores.jsonl",
@@ -67071,6 +67445,31 @@
         "sha256": "60b5038e7fb905733b9c12d5b16772855126b96c52ae64188c3de80b0184f9ca"
       },
       {
+        "path": "data/processed/observations.parquet",
+        "status": "available",
+        "sha256": "bb5d14d8df1c5eaaa8e18a8979dab4b6eb40eaf4059002f4884b04975165b7d3"
+      },
+      {
+        "path": "experiments/corpus-snapshots/v1.json",
+        "status": "available",
+        "sha256": "928fa0feaa100bc5ab3eac472ec702359fcfb24502c03d06fe25620d38f9696e"
+      },
+      {
+        "path": "experiments/corpus-snapshots/v2.json",
+        "status": "available",
+        "sha256": "608c02c7cc49beab1b1300a69dc9f26ae82539df2263b76c1032e7bd8c077743"
+      },
+      {
+        "path": "experiments/corpus-snapshots/v3.json",
+        "status": "available",
+        "sha256": "6caba3d61a3addbef4b182ec3455e99fa8e509ff056e5ecdf82fe4da33377bc6"
+      },
+      {
+        "path": "experiments/corpus-snapshots/v3.1.json",
+        "status": "available",
+        "sha256": "8f40df774b14d7af86f425893a9f7f0fb07f9d40d14d4112468f9b3925ddeaab"
+      },
+      {
         "path": "experiments/runs/web-live-smoke.trace.json",
         "status": "available",
         "sha256": "b6207bf4aab049fac5e62f23feffe60e35b3a4138dbaa4dab8e4017d8faddf58"
@@ -67079,11 +67478,6 @@
         "path": "experiments/triage/triage-v1-luna/metrics.json",
         "status": "available",
         "sha256": "a544504444a2a00327e7ad7c5a85299787e2bc248477f56e9a4cb4e1827d90eb"
-      },
-      {
-        "path": "experiments/corpus-snapshots/v3.1.json",
-        "status": "available",
-        "sha256": "8f40df774b14d7af86f425893a9f7f0fb07f9d40d14d4112468f9b3925ddeaab"
       },
       {
         "path": "experiments/corpus-snapshots/v3.1-diff.json",

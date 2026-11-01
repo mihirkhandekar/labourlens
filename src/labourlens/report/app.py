@@ -55,6 +55,7 @@ class Settings:
     run_deadline_s: float = 80.0       # planner + answer LLM budget for one run; below request_timeout so the slot is freed
     feedback_dir: Path = field(default_factory=lambda: paths.DATA / "audit")
     triage_enabled: bool = True        # D-051: LLM scope check in front of the agent, web app only
+    contextualise_enabled: bool = True # D-054: follow-up and relative-date rewrite before triage, web app only
     mcp_enabled: bool = True           # D-053: the agent's statistics lookups go through the local MCP server (LABOURLENS_MCP=false for direct calls)
 
     @classmethod
@@ -63,6 +64,7 @@ class Settings:
                    session_secret=os.getenv("LABOURLENS_SESSION_SECRET", ""),
                    demo_enabled=os.getenv("LABOURLENS_DEMO_ENABLED", "true").lower() != "false",
                    triage_enabled=os.getenv("LABOURLENS_TRIAGE", "true").lower() != "false",
+                   contextualise_enabled=os.getenv("LABOURLENS_CONTEXTUALISE", "true").lower() != "false",
                    mcp_enabled=os.getenv("LABOURLENS_MCP", "true").lower() != "false",
                    daily_budget_usd=float(os.getenv("LABOURLENS_DAILY_BUDGET_USD", "2.0")))
 
@@ -131,8 +133,11 @@ class _Overlap:
 
 
 def _bounded_answer(answer, evidence_text):
-    """Rights boundary independent of model compliance and internal answer validators."""
-    overlap = _Overlap(evidence_text.values())
+    """Rights boundary independent of model compliance and internal answer validators.
+
+    Only report passages (labels P*) are guarded. Statistic records (O*) and calculation lines (C*) are ~100-letter templated rows of open-licensed
+    data or our own arithmetic; the 80-character window covers a whole row, so merely naming a row in a caveat or a clarifying question tripped it (D-054)."""
+    overlap = _Overlap(text for label, text in evidence_text.items() if str(label).startswith("P"))
 
     def free_text(value):
         return RIGHTS_NOTICE if overlap.copies(value) else str(value or "")
@@ -241,7 +246,21 @@ def public_result(raw: dict, shared) -> dict:
         value = raw.get("usage", {}).get(key)
         if isinstance(value, int) and not isinstance(value, bool) and value >= 0:
             usage[key] = value
-    return {"run_id": raw.get("run_id", ""), "answer": answer, "evidence": evidence, "chart": chart, "trace": trace, "usage": usage}
+    result = {"run_id": raw.get("run_id", ""), "answer": answer, "evidence": evidence, "chart": chart, "trace": trace, "usage": usage}
+    interpreted = raw.get("interpreted_as")
+    if isinstance(interpreted, str) and interpreted.strip():
+        result["interpreted_as"] = interpreted[:300]
+    return result
+
+# Fixed, read-only example calls for the workbench MCP tab. Never free-form tool names or arguments.
+MCP_REPLY_CHARS = 8000
+MCP_EXAMPLES = {
+    "latest_resident_unemployment": {"label": "Latest resident unemployment", "tool": "latest_value", "arguments": {"source_id": "resident_unemployment_rate"}},
+    "retrenched_2025q1_to_2026q1": {"label": "Retrenched employees, 2025-Q1 to 2026-Q1", "tool": "get_statistic",
+                                    "arguments": {"source_id": "retrenched_employees", "period_from": "2025-Q1", "period_to": "2026-Q1"}},
+    "list_datasets": {"label": "List datasets", "tool": "list_datasets", "arguments": {}},
+}
+
 
 def create_app(settings: Settings | None = None, runner=None, shared_factory=None):
     cfg = settings or Settings.from_env()
@@ -250,11 +269,25 @@ def create_app(settings: Settings | None = None, runner=None, shared_factory=Non
         from labourlens.agent.graph import AgentConfig, run_agent
         from labourlens.agent.smalltalk import run_smalltalk
         from labourlens.agent.triage import run_with_triage
-        # Small talk is answered without a model call (D-050); a clearly off-topic message is answered after one short scope-check
-        # call (D-051, fails open); everything else runs the evaluated agent unchanged.
+        # Small talk is answered without a model call (D-050), using the message alone. A follow-up or relative-date message is first rewritten
+        # into one standalone question (D-054, fails open); a clearly off-topic message is answered after one short scope-check call (D-051,
+        # fails open); everything else runs the evaluated agent unchanged.
+        from labourlens.agent.contextualise import attach, audit_block, contextualise, passthrough
         agent = lambda question, shared, audit=None: run_agent(question, shared, AgentConfig(run_deadline_s=cfg.run_deadline_s), save_trace=True, audit=audit)
-        runner = lambda question, shared, audit=None: run_smalltalk(question, shared, audit) or (
-            run_with_triage(question, shared, audit, lambda a: agent(question, shared, a)) if cfg.triage_enabled else agent(question, shared, audit))
+
+        def runner(question, shared, audit=None, history=None):
+            quick = run_smalltalk(question, shared, audit)
+            if quick is not None:
+                return quick
+            info = contextualise(question, history) if cfg.contextualise_enabled else passthrough(question)
+            q = info["question"]
+            if info["called"] and audit is not None:
+                audit = {**audit, "extra": {**(audit.get("extra") or {}), "contextualise": audit_block(info)}}
+            if cfg.triage_enabled:
+                res = run_with_triage(q, shared, audit, lambda a: agent(q, shared, a))
+            else:
+                res = agent(q, shared, audit)
+            return attach(res, info)
     if shared_factory is None:
         from labourlens.agent.tools import Shared
         if cfg.mcp_enabled:
@@ -461,6 +494,11 @@ def create_app(settings: Settings | None = None, runner=None, shared_factory=Non
         question = data.get("question")
         if not isinstance(question, str) or not question.strip() or len(question) > 1000:
             raise HTTPException(422, "Question must contain between 1 and 1000 characters.")
+        from labourlens.agent.contextualise import parse_history
+        try:
+            history = parse_history(data.get("history"))
+        except ValueError:
+            raise HTTPException(422, "History must be at most 3 turns of question, status and summary text within the size limits.")
         if app.state.day != date.today():
             app.state.day, app.state.spent_usd = date.today(), 0.0
         if app.state.spent_usd + RUN_RESERVATION_USD > cfg.daily_budget_usd:
@@ -478,6 +516,8 @@ def create_app(settings: Settings | None = None, runner=None, shared_factory=Non
                 context = {"channel": "web", "session": sid, "ip": request.client.host if request.client else None, "extra": {}}
                 parameters = inspect.signature(runner).parameters
                 kwargs = {"audit": context} if "audit" in parameters or any(p.kind == inspect.Parameter.VAR_KEYWORD for p in parameters.values()) else {}
+                if "history" in parameters:
+                    kwargs["history"] = history
                 raw = await runner(question, app.state.shared, **kwargs) if inspect.iscoroutinefunction(runner) else await asyncio.to_thread(runner, question, app.state.shared, **kwargs)
                 if isinstance(raw.get("run_id"), str) and sid in sessions:
                     session_runs[sid].append(raw["run_id"])
@@ -510,6 +550,78 @@ def create_app(settings: Settings | None = None, runner=None, shared_factory=Non
             raise HTTPException(504, "Run timed out. Please try again later.")
         except Exception:
             raise HTTPException(503, "Agent unavailable. Please try again later.")
+
+    def mcp_backend():
+        return getattr(app.state.shared, "stats_backend", None)
+
+    @app.get("/api/mcp")
+    async def mcp_overview(request: Request):
+        """Read-only view of the local MCP server the agent uses: what it offers, what the agent may call, the last calls made."""
+        sid = authorize(request)
+        hit(("mcp", sid.rsplit("~", 1)[-1]), cfg.session_limit * 6)
+        from labourlens.mcp.client import McpClientError
+        from labourlens.mcp.server import ALL_TOOLS, TOOL_NAME
+        backend = mcp_backend()
+        out = {"enabled": backend is not None and cfg.mcp_enabled, "connected": False, "message": "", "server": None, "tools": [], "resources": [], "prompts": [],
+               "used_by_agent": [], "not_given_to_agent": [], "recent_calls": [], "examples": []}
+        if backend is None or not cfg.mcp_enabled:
+            out["message"] = "MCP is switched off in this deployment: the agent reads statistics directly from the local table."
+            return out
+        out["recent_calls"] = list(backend.calls)[-20:]
+        out["used_by_agent"] = [TOOL_NAME]
+        out["agent_tool_name"] = "get_series"
+        out["not_given_to_agent"] = [t for t in ALL_TOOLS if t != TOOL_NAME]
+        out["examples"] = [{"id": k, "label": v["label"], "tool": v["tool"], "arguments": v["arguments"]} for k, v in MCP_EXAMPLES.items()]
+        out["connected"] = backend.client is not None
+        if not out["connected"]:
+            out["message"] = "The MCP server is not connected right now. It reconnects on the next lookup."
+            return out
+        try:
+            found = await asyncio.to_thread(backend.describe)
+        except (McpClientError, TimeoutError, OSError, RuntimeError, asyncio.TimeoutError) as e:
+            out["connected"] = False
+            out["message"] = f"The MCP server did not answer discovery ({type(e).__name__})."
+            return out
+        except Exception as e:  # noqa: BLE001 - this view must never turn a broken server into a 500
+            logging.getLogger(__name__).warning("MCP discovery failed: %s", type(e).__name__)
+            out["connected"] = False
+            out["message"] = "The MCP server did not answer discovery."
+            return out
+        out.update(found)
+        for tool in out["tools"]:
+            tool["used_by_agent"] = tool["name"] == TOOL_NAME
+        return redact_values(out, list(cfg.access_codes) + [cfg.session_secret])
+
+    @app.post("/api/mcp/try")
+    async def mcp_try(request: Request):
+        """Run one of a fixed set of read-only example calls through the MCP client. No model call, no cost; counts against the session limit."""
+        sid = authorize(request)
+        hit(("session", sid.rsplit("~", 1)[-1]), cfg.session_limit)
+        hit(("ip", client_host(request)), cfg.ip_limit)
+        data = await body(request)
+        example = MCP_EXAMPLES.get(data.get("example")) if isinstance(data.get("example"), str) else None
+        if example is None:
+            raise HTTPException(422, "Unknown example.")
+        backend = mcp_backend()
+        if backend is None or not cfg.mcp_enabled:
+            raise HTTPException(503, "MCP is switched off in this deployment.")
+        from labourlens.mcp.client import McpClientError
+        t0 = time.perf_counter()
+        out = {"tool": example["tool"], "arguments": example["arguments"], "ok": True}
+        try:
+            reply = await asyncio.to_thread(lambda: backend.call_tool(example["tool"], **example["arguments"]))
+            out["reply"] = reply.result.model_dump(mode="json")
+            out["quarantined"] = reply.quarantined
+        except McpClientError as e:
+            out.update(ok=False, error={"kind": e.kind, "message": e.message[:300]})
+        except Exception as e:  # noqa: BLE001 - a broken server is reported, never a 500
+            out.update(ok=False, error={"kind": "unavailable", "message": type(e).__name__})
+        out["ms"] = round((time.perf_counter() - t0) * 1000, 1)
+        if "reply" in out:
+            text = json.dumps(out["reply"], ensure_ascii=False)
+            if len(text) > MCP_REPLY_CHARS:
+                out["reply"] = {"truncated": True, "shown_characters": MCP_REPLY_CHARS, "total_characters": len(text), "text": text[:MCP_REPLY_CHARS]}
+        return redact_values(out, list(cfg.access_codes) + [cfg.session_secret])
 
     @app.post("/api/feedback")
     async def feedback(request: Request):

@@ -68,7 +68,6 @@ export function renderDataNotes(parent, notes) {
   const section = element('section', 'data-notes');
   section.append(
     element('h3', '', 'Data notes'),
-    element('p', 'small muted', 'Data-quality notes from the evidence tools. They are not citations.'),
     renderNote(notes)
   );
   parent.append(section);

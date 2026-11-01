@@ -121,10 +121,12 @@ function buildSlide(spec) {
     body.append(visualBox(spec.visual));
     inner.append(body);
   }
-  if (spec.caption) {
+  if (spec.caption || spec.rows) {
     const caption = el('div', 'deck-caption');
-    caption.append(el('p', 'deck-caption-text', spec.caption));
+    if (spec.rows) caption.append(spec.rows);
+    if (spec.caption) caption.append(el('p', 'deck-caption-text', spec.caption));
     inner.append(caption);
+    inner.classList.add('has-caption');
   }
   if (spec.source) inner.append(el('p', 'deck-source', `Source: ${spec.source}`));
   section.append(inner);

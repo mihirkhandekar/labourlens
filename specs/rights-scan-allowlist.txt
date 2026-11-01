@@ -16,3 +16,5 @@ experiments/gold/gold_v3.7-review-log.jsonl | review log copies the question tex
 experiments/eval/agent-dev-X3/gpt-5.6-luna.cases.jsonl | frozen X3 run output: one section heading echoed by the model (same class as the A1 entry)
 experiments/eval/agent-dev-X3/gpt-5.6-luna.judgements.json | frozen X3 judge output: the same section heading
 experiments/triage/*/raw.jsonl | triage run copies our own gold question text (official category and survey names, as in the pinned gold files); no MOM or MTI passage text
+experiments/context/*/raw.jsonl | context-check run copies our own hand-written conversation cases and the model one-line rewrites; no MOM or MTI passage text
+experiments/context/cases.jsonl | hand-written conversation cases; the 7-word run is the official indicator name (job vacancy to unemployed person ratio), not report prose

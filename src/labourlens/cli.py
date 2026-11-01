@@ -73,6 +73,10 @@ def main(argv: list[str] | None = None) -> int:
     tc.add_argument("--experiment", required=True, help="new experiment id; written to experiments/triage/<id>/ and never overwritten")
     tc.add_argument("--yes", action="store_true", help="actually spend: without it only the plan is printed")
     tc.add_argument("--rescore", action="store_true", help="recompute metrics from saved raw outputs, no API calls")
+    cc = sub.add_parser("context-check", help="measure the D-054 conversation-context rewrite: free pass-through audit, then 30 conversation cases (calls the OpenAI API with --yes)")
+    cc.add_argument("--experiment", required=True, help="new experiment id; written to experiments/context/<id>/ and never overwritten")
+    cc.add_argument("--yes", action="store_true", help="actually spend: without it only the plan and the free pass-through audit are printed")
+    cc.add_argument("--rescore", action="store_true", help="recompute metrics from saved raw outputs, no API calls")
     sub.add_parser("mcp-demo", help="run the scripted MCP client demo and write docs/mcp-demo-transcript.md")
     sub.add_parser("mcp-agent-demo", help="one agent run with statistics fetched over MCP (paid model calls); writes artifacts/mcp-agent-demo.md")
     ev_ = sub.add_parser("eval", help="metrics from saved raw agent runs; judged measures call the OpenAI API")
@@ -214,6 +218,10 @@ def main(argv: list[str] | None = None) -> int:
         from labourlens.evaluation import triage_check
 
         return triage_check.run(args.experiment, args.yes, args.rescore)
+    if args.cmd == "context-check":
+        from labourlens.evaluation import context_check
+
+        return context_check.run(args.experiment, args.yes, args.rescore)
     if args.cmd == "threat-test":
         from labourlens.security import threat_suite
 

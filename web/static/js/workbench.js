@@ -29,7 +29,7 @@ const STATUS = {
 };
 const KIND = {statistic: ['table', 'Statistic'], report: ['passage', 'Report passage'], calculation: ['calc', 'Calculation']};
 const NODE_LABEL = {
-  validate_question: 'Check question', plan_research: 'Plan', execute_tool: 'Tool call', assess_evidence: 'Assess evidence',
+  validate_question: 'Check question', contextualise: 'Read in context', plan_research: 'Plan', execute_tool: 'Tool call', assess_evidence: 'Assess evidence',
   generate_answer: 'Draft answer', validate_answer: 'Validate answer', finalize: 'Finish'
 };
 const BAD = new Set(['error', 'operational_failure', 'rejected', 'output_blocked', 'invalid_arguments']);
@@ -37,7 +37,7 @@ const WARN = new Set(['invalid', 'no_evidence', 'budget_exhausted']);
 
 export function mountWorkbench(root, {onMode} = {}) {
   let enabled = false, authenticated = false, busy = false, statusKnown = false;
-  let evidenceList = [], timer = null, lastQuestion = '';
+  let evidenceList = [], timer = null, lastQuestion = '', thread = [];  // thread: the last finished turns, kept in memory only and sent with the next question (D-054)
 
   const access = el('section', 'access-screen'); access.setAttribute('aria-labelledby', 'access-title');
   const accessCard = el('div', 'access-card');
@@ -98,10 +98,11 @@ export function mountWorkbench(root, {onMode} = {}) {
   const activity = el('div', 'bezel activity-bezel'); const activityCore = el('div', 'bezel-core activity'); activity.append(activityCore);
   const sourcePanel = el('section', 'wb-source-panel'); sourcePanel.setAttribute('aria-label', 'Sources and context');
   const dataPanel = el('section', 'wb-data-panel'); dataPanel.setAttribute('aria-label', 'Data');
+  const mcpPanel = el('section', 'wb-mcp-panel'); mcpPanel.setAttribute('aria-label', 'MCP server');
   const grid = el('div', 'wb-grid'); grid.append(chat, rail); rail.append(railHead, tabs, panel); root.append(access, grid);
   let region = el('div', 'answer-region'); region.setAttribute('aria-busy', 'false'); messages.append(region);
-  function activateTab(name) { tabs.querySelectorAll('[role="tab"]').forEach(t => { const active = t.dataset.tab === name; t.setAttribute('aria-selected', String(active)); t.tabIndex = active ? 0 : -1; }); panel.replaceChildren(name === 'activity' ? activity : name === 'data' ? dataPanel : sourcePanel); }
-  [['sources', 'Sources'], ['activity', 'Activity'], ['data', 'Data']].forEach(([id, label], index) => { const tab = el('button', 'wb-tab', label); tab.type = 'button'; tab.dataset.tab = id; tab.setAttribute('role', 'tab'); tab.setAttribute('aria-selected', String(index === 0)); tab.tabIndex = index === 0 ? 0 : -1; tab.addEventListener('click', () => activateTab(id)); tab.addEventListener('keydown', event => { if (event.key === 'ArrowRight' || event.key === 'ArrowLeft') { event.preventDefault(); const next = tabs.children[(index + (event.key === 'ArrowRight' ? 1 : 2)) % 3]; next.focus(); next.click(); } }); tabs.append(tab); });
+  function activateTab(name) { tabs.querySelectorAll('[role="tab"]').forEach(t => { const active = t.dataset.tab === name; t.setAttribute('aria-selected', String(active)); t.tabIndex = active ? 0 : -1; }); panel.replaceChildren(name === 'activity' ? activity : name === 'data' ? dataPanel : name === 'mcp' ? mcpPanel : sourcePanel); if (name === 'mcp' && authenticated) loadMcp(); }
+  [['sources', 'Sources'], ['activity', 'Activity'], ['data', 'Data'], ['mcp', 'MCP']].forEach(([id, label], index) => { const tab = el('button', 'wb-tab', label); tab.type = 'button'; tab.dataset.tab = id; tab.setAttribute('role', 'tab'); tab.setAttribute('aria-selected', String(index === 0)); tab.tabIndex = index === 0 ? 0 : -1; tab.addEventListener('click', () => activateTab(id)); tab.addEventListener('keydown', event => { if (event.key === 'ArrowRight' || event.key === 'ArrowLeft') { event.preventDefault(); const next = tabs.children[(index + (event.key === 'ArrowRight' ? 1 : 3)) % 4]; next.focus(); next.click(); } }); tabs.append(tab); });
   activateTab('sources');
   const clearDialog = el('dialog', 'modal clear-confirm');
   const confirmClear = el('button', 'btn btn-primary', 'Clear chat'); confirmClear.type = 'button'; const cancelClear = el('button', 'btn plain', 'Keep chat'); cancelClear.type = 'button';
@@ -109,7 +110,7 @@ export function mountWorkbench(root, {onMode} = {}) {
   add(clearDialog, clearTitle, el('p', 'small muted', 'This removes the questions and answers from this page. It cannot be undone.'), confirmClear, cancelClear); root.append(clearDialog);
   clearChat.addEventListener('click', () => { if (!busy) clearDialog.showModal(); });
   cancelClear.addEventListener('click', () => { clearDialog.close(); clearChat.focus(); });
-  confirmClear.addEventListener('click', () => { messages.replaceChildren(); region = el('div', 'answer-region'); messages.append(region, jumpLatest); evidenceList = []; emptyState(); idleActivity(); question.value = ''; sizeQuestion(); count.textContent = `0 / ${MAX_QUESTION}`; clearDialog.close(); announce.textContent = 'Chat cleared.'; question.focus(); });
+  confirmClear.addEventListener('click', () => { messages.replaceChildren(); region = el('div', 'answer-region'); messages.append(region, jumpLatest); evidenceList = []; thread = []; emptyState(); idleActivity(); question.value = ''; sizeQuestion(); count.textContent = `0 / ${MAX_QUESTION}`; clearDialog.close(); announce.textContent = 'Chat cleared.'; question.focus(); });
   examplesToggle.addEventListener('click', () => { examples.open = !examples.open; examplesToggle.setAttribute('aria-expanded', String(examples.open)); });
   const jumpLatest = el('button', 'btn small plain wb-jump-latest', 'Jump to latest'); jumpLatest.type = 'button'; jumpLatest.hidden = true; messages.append(jumpLatest);
   jumpLatest.addEventListener('click', () => { messages.scrollTo({top: messages.scrollHeight, behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth'}); });
@@ -190,6 +191,80 @@ export function mountWorkbench(root, {onMode} = {}) {
     } finally { clearTimeout(timeout); }
   }
 
+  // MCP tab: what the local MCP server offers, which tool the agent may use, the calls made, and three fixed read-only example calls.
+  let mcpLoaded = false, mcpBusy = false, mcpReply = '';
+  const mcpArgs = args => Object.entries(args || {}).map(([k, v]) => `${k}: ${v}`).join(', ') || 'no arguments';
+  function schemaBlock(schema) {
+    const props = Object.entries(schema?.properties || {}); const required = new Set(schema?.required || []);
+    const dl = el('dl', 'mcp-schema');
+    props.forEach(([name, p]) => {
+      const dt = el('dt', '', `${name}${required.has(name) ? ' (required)' : ''}`);
+      const parts = [p.type];
+      if (p.enum) parts.push(`one of ${p.enum_count} values: ${p.enum.join(', ')}`);
+      if (p.pattern) parts.push(`pattern ${p.pattern}`);
+      const dd = el('dd', '', parts.join('. ') + (p.description ? `. ${p.description}` : ''));
+      dl.append(dt, dd);
+    });
+    if (!props.length) dl.append(el('dd', '', 'No arguments.'));
+    return dl;
+  }
+  function mcpSection(title, ...children) { const s = el('section', 'mcp-section'); s.append(el('h3', '', title), ...children.filter(Boolean)); return s; }
+  function renderMcp(data) {
+    const nodes = [el('h2', '', 'MCP server'), el('p', 'small', 'The agent reads statistics through this local MCP server. Each lookup is a tool call over the protocol, checked by the client.')];
+    if (!data.enabled || !data.connected) nodes.push(el('p', 'mcp-note', data.message || 'MCP is not available.'));
+    if (data.server) nodes.push(el('p', 'small muted', `${data.server.name} version ${data.server.version}${data.server.protocol_version ? `, protocol ${data.server.protocol_version}` : ''}, ${data.server.transport} transport`));
+    if (data.tools?.length) {
+      const list = el('ul', 'mcp-list');
+      data.tools.forEach(t => {
+        const li = el('li', 'mcp-tool'); const head = el('div', 'mcp-tool-head');
+        const used = t.used_by_agent;
+        head.append(el('strong', '', t.name), el('span', `mcp-badge${used ? ' is-used' : ''}`, used ? 'Used by the agent' : 'Not given to the agent'));
+        const details = el('details', 'mcp-schema-details'); details.append(el('summary', '', 'Input schema'), schemaBlock(t.input_schema));
+        li.append(head, el('p', 'small muted', (t.description || '').split(/(?<=\.)\s/)[0].slice(0, 220) + (t.read_only ? ' Read only.' : '')), details);
+        list.append(li);
+      });
+      nodes.push(mcpSection(`Tools (${data.tools.length})`, el('p', 'small muted', 'The agent sees one of them, as its get_series tool. The other tools are available to any MCP client but are not given to the agent.'), list));
+    }
+    if (data.resources?.length || data.prompts?.length) {
+      const rl = el('ul', 'mcp-list');
+      (data.resources || []).forEach(r => { const li = el('li', 'mcp-res'); li.append(el('strong', '', r.uri), el('p', 'small muted', r.description)); rl.append(li); });
+      (data.prompts || []).forEach(r => { const li = el('li', 'mcp-res'); li.append(el('strong', '', `Prompt: ${r.name}`), el('p', 'small muted', r.description)); rl.append(li); });
+      nodes.push(mcpSection('Resources and prompt', rl));
+    }
+    const calls = el('ul', 'mcp-list');
+    (data.recent_calls || []).slice().reverse().forEach(c => {
+      const li = el('li', `mcp-call${c.ok ? '' : ' is-failed'}`);
+      li.append(el('strong', '', c.tool), el('span', 'small muted', `${mcpArgs(c.arguments)}`), el('span', 'small', `${c.ms} ms${c.ok ? '' : `, failed: ${c.kind || 'error'}`}${c.quarantined ? `, ${c.quarantined} row(s) quarantined` : ''}`));
+      calls.append(li);
+    });
+    nodes.push(mcpSection('Recent calls', calls.children.length ? calls : el('p', 'small muted', data.enabled ? 'Nothing called yet. Ask a question, or try a call below.' : 'No calls: MCP is off.'),
+      el('p', 'small muted', 'The last 20 lookups this server made, across all visitors.')));
+    if (data.enabled && data.connected && data.examples?.length) {
+      const out = el('pre', 'mcp-reply'); out.tabIndex = 0; out.setAttribute('aria-label', 'Raw reply'); out.setAttribute('aria-live', 'polite'); out.textContent = mcpReply || 'The raw reply appears here.';
+      const row = el('div', 'mcp-examples');
+      data.examples.forEach(ex => {
+        const b = el('button', 'btn small plain', ex.label); b.type = 'button'; b.title = `${ex.tool}: ${mcpArgs(ex.arguments)}`;
+        b.addEventListener('click', async () => {
+          if (mcpBusy) return; mcpBusy = true; row.querySelectorAll('button').forEach(x => { x.disabled = true; }); mcpReply = out.textContent = 'Calling the server…';
+          try {
+            const r = await request('/api/mcp/try', {example: ex.id});
+            const head = `${r.tool}(${mcpArgs(r.arguments)}) took ${r.ms} ms${r.ok ? '' : `, rejected: ${r.error?.kind}`}${r.quarantined ? `, ${r.quarantined} quarantined` : ''}\n\n`;
+            mcpReply = out.textContent = head + (r.ok ? JSON.stringify(r.reply, null, 2) : (r.error?.message || 'The call failed.'));
+          } catch (error) { mcpReply = out.textContent = error.message; }
+          finally { mcpBusy = false; row.querySelectorAll('button').forEach(x => { x.disabled = false; }); loadMcp(); }
+        });
+        row.append(b);
+      });
+      nodes.push(mcpSection('Try a call', el('p', 'small muted', 'Three fixed read-only calls. They go through the same client checks as the agent. No model is called and nothing costs money.'), row, out));
+    }
+    const keep = panel.scrollTop; mcpPanel.replaceChildren(...nodes); panel.scrollTop = keep;
+  }
+  async function loadMcp() {
+    if (!authenticated) { mcpPanel.replaceChildren(el('h2', '', 'MCP server'), el('p', 'small muted', 'Sign in to see the MCP server.')); return; }
+    try { const data = await request('/api/mcp'); mcpLoaded = true; renderMcp(data); }
+    catch (error) { mcpPanel.replaceChildren(el('h2', '', 'MCP server'), el('p', 'mcp-note', error.message)); }
+  }
+
   request('/api/status').then(data => { enabled = Boolean(data.enabled); authenticated = Boolean(data.authenticated); statusKnown = true; syncState(); if (authenticated) question.focus(); else if (enabled) code.focus(); })
     .catch(error => { enabled = false; statusKnown = true; syncState(); rootStatus.textContent = `Demo status unavailable. ${error.message}`; });
   syncState();
@@ -249,22 +324,22 @@ export function mountWorkbench(root, {onMode} = {}) {
   // ---------- activity ----------
   function activityHead(sub) {
     const h = el('div', 'activity-head');
-    add(h, el('h2', 'activity-title', 'Activity'), el('p', 'small muted', sub));
+    add(h, el('h2', 'activity-title', 'Activity'), ...(sub ? [el('p', 'small muted', sub)] : []));
     return h;
   }
   function idleActivity() {
-    activityCore.replaceChildren(activityHead('Tool calls appear here, with outcomes and timings.'));
+    activityCore.replaceChildren(activityHead(''));
     const ghost = el('ol', 'steps ghost'); ghost.setAttribute('aria-hidden', 'true');
     ['Check question', 'Plan', 'Tool call', 'Assess evidence', 'Draft answer', 'Validate answer'].forEach(name => ghost.append(add(el('li', 'step idle'), el('span', 'step-mark'), el('span', 'step-name', name))));
-    activityCore.append(ghost, el('p', 'small muted', 'No run yet.'));
+    activityCore.append(ghost);
   }
   function runningActivity() {
-    activityCore.replaceChildren(activityHead('The server returns the steps when the run ends.'));
+    activityCore.replaceChildren(activityHead(''));
     const list = el('ol', 'steps');
-    const mk = (state, name, note) => { const li = el('li', `step ${state}`); add(li, el('span', 'step-mark'), add(el('div', 'step-body'), el('span', 'step-name', name), el('span', 'step-note small muted', note))); list.append(li); return li; };
-    mk('ok', 'Question sent', 'Over this page’s own origin.');
-    const working = mk('active', 'Agent working on the server', 'Planning, reading tools, drafting, validating.');
-    mk('idle', 'Steps, timings and cost', 'Listed when the run ends.');
+    const mk = (state, name) => { const li = el('li', `step ${state}`); add(li, el('span', 'step-mark'), add(el('div', 'step-body'), el('span', 'step-name', name))); list.append(li); return li; };
+    mk('ok', 'Question sent');
+    const working = mk('active', 'Agent working on the server');
+    mk('idle', 'Steps, timings and cost');
     const clock = el('p', 'elapsed num', '0.0 s'); activityCore.append(list, clock);
     const start = performance.now();
     clearInterval(timer);
@@ -316,7 +391,7 @@ export function mountWorkbench(root, {onMode} = {}) {
   function finalActivity(response) {
     clearInterval(timer);
     const events = Array.isArray(response.trace) ? response.trace : response.trace?.events;
-    activityCore.replaceChildren(activityHead(events?.length ? `${events.length} steps recorded.` : 'The server returned no steps.'));
+    activityCore.replaceChildren(activityHead(''));
     if (events?.length) {
       const maxSeconds = Math.max(0, ...events.map(e => (finite(e.detail?.seconds) ? e.detail.seconds : 0)));
       const list = el('ol', 'steps stagger enter');
@@ -562,13 +637,17 @@ export function mountWorkbench(root, {onMode} = {}) {
     region.setAttribute('aria-busy', 'true'); skeleton(); runningActivity(); activateTab('activity');
     ask.classList.add('is-busy'); messages.scrollTo({top: messages.scrollHeight, behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth'});
     try {
-      const response = await request('/api/ask', {question: lastQuestion});
+      const response = await request('/api/ask', thread.length ? {question: lastQuestion, history: thread.slice(-3)} : {question: lastQuestion});
       busy = false; ask.classList.remove('is-busy'); region.setAttribute('aria-busy', 'false');
-      renderAnswer(response); finalActivity(response);
+      if (typeof response.interpreted_as === 'string' && response.interpreted_as) { const readAs = el('p', 'wb-read-as small muted'); readAs.textContent = `Read as: ${response.interpreted_as}`; userMessage.after(readAs); }
+      const a = response.answer && typeof response.answer === 'object' ? response.answer : {};
+      thread.push({question: (response.interpreted_as || lastQuestion).slice(0, 600), status: String(a.status || '').slice(0, 20), summary: String(a.status === 'clarify' && a.clarification_question ? a.clarification_question : (a.summary || a.reason || '')).slice(0, 600)});
+      thread = thread.slice(-3);
+      renderAnswer(response); finalActivity(response); if (mcpLoaded) loadMcp();
     } catch (error) {
       busy = false; ask.classList.remove('is-busy'); region.setAttribute('aria-busy', 'false'); clearInterval(timer);
       failure(error.message);
-      activityCore.replaceChildren(activityHead('The run failed before steps were returned.'), el('p', 'small muted', 'No steps to show. A failed run does not establish that evidence is missing.'));
+      activityCore.replaceChildren(activityHead(''), el('p', 'small muted', 'No steps to show. A failed run does not establish that evidence is missing.'));
     } finally { busy = false; syncState(); }
   });
   question.addEventListener('keydown', event => {
@@ -578,6 +657,7 @@ export function mountWorkbench(root, {onMode} = {}) {
   emptyState();
   sourcePanel.append(el('h2', '', 'Sources and context'), el('p', 'small muted', 'Retrieved report passages and statistical rows will appear here after a question.'));
   dataPanel.append(el('h2', '', 'Data'), el('p', 'small muted', 'A chart appears here when an answer uses a cited statistical series.'));
+  mcpPanel.append(el('h2', '', 'MCP server'), el('p', 'small muted', 'Open this tab after signing in.'));
   idleActivity();
   syncState();
   return {

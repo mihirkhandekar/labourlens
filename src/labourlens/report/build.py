@@ -32,7 +32,8 @@ _LABELS = {
 
 _HELDOUT_V2_PAIRED = "experiments/heldout-v2/paired.json"
 _HELDOUT_V2_ERRORS = "experiments/heldout-v2/error-analysis.json"
-_HELDOUT_V2_FILES = {_HELDOUT_V2_PAIRED, _HELDOUT_V2_ERRORS}
+_HELDOUT_V31_PAIRED = "experiments/heldout-v2/paired-v3.1.json"
+_HELDOUT_V2_FILES = {_HELDOUT_V2_PAIRED, _HELDOUT_V2_ERRORS, _HELDOUT_V31_PAIRED}
 # Tool set v2 (D-046/D-048): separately keyed, never merged into the registered or X2 rows.
 _TOOLFIX_CRITERIA = "experiments/tool-fix/criteria.json"
 _TOOLFIX_PAIRED = {"toolset": "experiments/heldout-v2/paired-postfix-toolset.json", "r3_vs_hybrid": "experiments/heldout-v2/paired-postfix-r3-vs-hybrid.json"}
@@ -111,6 +112,9 @@ class _Artifacts:
             if heldout is None:
                 heldout = re.fullmatch(r"experiments/eval/agent-heldout-V2-(?:r3|hybrid)/gpt-(?:6|5\.6)-luna\.(?:metrics\.json|cases\.jsonl)", path)
             if heldout is None:
+                # Fresh-set re-run on corpus v3.1: metrics only, kept in its own section (see _heldout_v31).
+                heldout = re.fullmatch(r"experiments/eval/agent-heldout-V31-(?:r3|hybrid)/gpt-(?:6|5\.6)-luna\.metrics\.json", path)
+            if heldout is None:
                 heldout = _TOOLFIX_EVAL.fullmatch(path)
             if not (development or heldout):
                 return False
@@ -170,7 +174,7 @@ def _experiments(artifacts: _Artifacts, prefix: str) -> tuple[list, list]:
     rows, paths = [], []
     for path in artifacts.paths:
         if path.startswith(prefix) and path.endswith(".metrics.json"):
-            if prefix == "experiments/eval/" and ("/agent-heldout-V2-" in path or _TOOLFIX_EVAL.fullmatch(path)):
+            if prefix == "experiments/eval/" and ("/agent-heldout-V2-" in path or "/agent-heldout-V31-" in path or _TOOLFIX_EVAL.fullmatch(path)):
                 continue  # reported only in the separately keyed evaluation.heldout_v2 and evaluation.tool_set_v2 sections
             data = artifacts.mapping(path)
             metrics = _numeric(data.get("metrics", data))
@@ -758,6 +762,28 @@ def _heldout_v2(artifacts: _Artifacts) -> dict | None:
 _TOOLFIX_THRESHOLD_KEYS = {"1_behaviour_accuracy": "min_correct", "3b_cases_with_ungrounded": "max_cases_with_ungrounded"}
 
 
+# One numerical-comparison case where the old and the new tool set differed. The question is our own gold wording, not report text.
+_TOOLFIX_EXAMPLE_CASE = "DEV-627"
+_TOOLFIX_EXAMPLE_QUESTION = "What shares of establishments gave wage increases in 2023 and 2024, and which year had the larger share?"
+
+
+def _toolfix_example(artifacts: _Artifacts, paths: list[str]) -> dict | None:
+    """Outcome of one case under the old (X2) and new (X3) tool set, per model, from the committed case records."""
+    outcomes = {}
+    for model in _V2_MODELS:
+        entry = {}
+        for label, directory in (("old", "agent-dev-X2"), ("new", "agent-dev-X3")):
+            path = f"experiments/eval/{directory}/{model}.cases.jsonl"
+            rows = artifacts.load(path)
+            case = next((r for r in rows if isinstance(r, dict) and r.get("case_id") == _TOOLFIX_EXAMPLE_CASE), None) if isinstance(rows, list) else None
+            if not case or not isinstance(case.get("behavior_ok"), bool):
+                return None
+            entry[label] = {"right": case["behavior_ok"], "false_answer": case.get("false_answer") is True}
+            paths.append(path)
+        outcomes[model] = entry
+    return {"question": _TOOLFIX_EXAMPLE_QUESTION, "family": "numerical_comparison", "period_note": "The question asks about 2023, before the supported period, so the right behaviour is to decline.", "models": outcomes}
+
+
 def _tool_set_v2(artifacts: _Artifacts) -> dict | None:
     """Tool set v2 (D-046, result D-048): dev X3 against the pre-declared criteria, plus the V2post diagnostic on the v2 gold.
     Separately keyed. V2post is a post-freeze diagnostic, not held-out, and does not replace the frozen held-out v2 result."""
@@ -828,7 +854,7 @@ def _tool_set_v2(artifacts: _Artifacts) -> dict | None:
         "experiment": "tool-set-v2", "corpus_version": "v3", "crosscheck": True, "gold_version_dev": "v3.6",
         "tool_set": "v2", "default_tool_set_changed": False, "adopted": False, "threat_suite_run": False,
         "dev_x3": {"label": "Dev X3 against X2: a pre-declared regression check, one factor (the tool-set bundle).",
-                   "rows": dev_rows, "criteria": criteria, "all_criteria_passed": bool(criteria) and all(v["all_pass"] for v in criteria.values())},
+                   "rows": dev_rows, "criteria": criteria, "all_criteria_passed": bool(criteria) and all(v["all_pass"] for v in criteria.values()), "example": _toolfix_example(artifacts, paths)},
         "v2post": {"label": "Post-freeze diagnostic. Not held-out, and not a replacement of the frozen held-out v2 result (D-045). The tool set was designed after the errors of these 65 cases were analysed, so any gain here is optimistic by construction.",
                    "post_freeze_diagnostic": True, "heldout": False, "replaces_frozen_result": False,
                    "gold_sha256": "e3d16597d542d33d106b4e9291aa3b92ca5fcdf19aa4d3c2b3319c0543efa542",
@@ -836,6 +862,173 @@ def _tool_set_v2(artifacts: _Artifacts) -> dict | None:
         "verdict": "Not adopted: the pre-declared dev criteria failed for both models. The default tool set is unchanged and the threat suite has not been run under tool set v2.",
         "provenance": sorted(set(paths)),
     }
+
+
+_OBSERVATIONS = "data/processed/observations.parquet"
+
+
+def _observations(artifacts: _Artifacts):
+    """The committed observation table, read from the commit (never the working tree). None when it is not available."""
+    entry = {"path": _OBSERVATIONS, "status": "missing"}
+    frame = None
+    try:
+        import io
+        import pandas as pd
+        raw = artifacts._git("show", f"{artifacts.commit}:{_OBSERVATIONS}")
+        entry.update(sha256=hashlib.sha256(raw).hexdigest(), status="available")
+        frame = pd.read_parquet(io.BytesIO(raw))
+        frame = frame[frame["in_answer_scope"]]
+    except Exception:  # missing file, missing git object or unreadable table: the excerpts are then left out
+        entry["status"] = "unavailable"
+    artifacts.provenance[_OBSERVATIONS] = entry
+    return frame
+
+
+def _row_excerpts(artifacts: _Artifacts, sources: dict, reconciliation: dict) -> dict:
+    """Real dataset rows that show a discrepancy, for the slides and the report page. Numbers, units, stages and dates only:
+    no report text. Datasets are published by MOM or SingStat under the Singapore Open Data Licence via data.gov.sg."""
+    frame = _observations(artifacts)
+    if frame is None or frame.empty:
+        return {"status": "missing", "summary": "Row excerpts need the committed observation table.", "provenance": [_OBSERVATIONS]}
+    dataset_ids, publishers = {}, {}
+    for row in sources.get("rows", []):
+        match = re.search(r"/datasets/(d_[0-9a-f]{32})", row.get("url", ""))
+        if match:
+            dataset_ids[row["source_id"]] = match.group(1)
+        publishers[row["source_id"]] = row.get("publisher", "")
+
+    names = {"retrenched_employees": "All retrenched", "retrenched_permanent": "Permanent retrenched", "retrenched_term_contract": "Term contract retrenched",
+             "job_vacancy_count": "Job vacancies", "vacancy_to_unemployed_ratio": "Vacancies per unemployed person (published)", "unemployed_overall": "Unemployed persons"}
+
+    def series(row) -> str:
+        population = {"overall": "Overall", "resident": "Resident", "citizen": "Citizen"}.get(str(row["population"]), "")
+        adjustment = {"seasonally_adjusted": "seasonally adjusted", "not_adjusted": "not adjusted"}.get(str(row["adjustment"]), "")
+        if row["source_id"].endswith("unemployment_rate"):
+            return f"{population} unemployment rate, {adjustment}"
+        label = names.get(row["source_id"], row["source_id"])
+        return f"{label}, {adjustment}" if adjustment else label
+
+    def dataset_row(source_id: str, period: str, adjustment: str | None = None) -> dict | None:
+        pick = frame[(frame["source_id"] == source_id) & (frame["period"] == period)]
+        if adjustment:
+            pick = pick[pick["adjustment"] == adjustment]
+        if len(pick) != 1:
+            return None
+        r = pick.iloc[0]
+        snap = str(r["snapshot_id"])
+        return {"series": series(r), "publisher": publishers.get(source_id) or "Ministry of Manpower", "dataset_id": dataset_ids.get(source_id),
+                "period": period, "value": float(r["value"]), "unit": str(r["unit"]), "release_stage": "dataset_snapshot",
+                "date_kind": "snapshot", "date": f"{snap[:4]}-{snap[4:6]}-{snap[6:8]}", "observation_id": str(r["observation_id"])}
+
+    periods = sorted(frame["period"].unique())
+    first, last = periods[0], periods[-1]
+    packs = {}
+    unemployment = [dataset_row("overall_unemployment_rate", last, "seasonally_adjusted"), dataset_row("resident_unemployment_rate", last, "seasonally_adjusted"),
+                    dataset_row("resident_unemployment_rate", last, "not_adjusted"), dataset_row("citizen_unemployment_rate", last, "seasonally_adjusted")]
+    packs["unemployment"] = {"title": f"Four published unemployment rates for {last}", "rows": [r for r in unemployment if r],
+                             "note": "Same quarter and same question. The population and the seasonal adjustment differ."}
+    retrenchments = [dataset_row("retrenched_employees", first), dataset_row("retrenched_employees", last), dataset_row("retrenched_permanent", last), dataset_row("retrenched_term_contract", last)]
+    packs["retrenchments"] = {"title": "Retrenchment counts in the dataset", "rows": [r for r in retrenchments if r],
+                              "note": "The dataset holds counts only. It has no column for a cause."}
+    # Vacancy ratio: the quarter where the published ratio is furthest from vacancies divided by seasonally adjusted overall unemployed.
+    best = None
+    for period in periods:
+        count = dataset_row("job_vacancy_count", period)
+        unemployed = dataset_row("unemployed_overall", period, "seasonally_adjusted")
+        ratio = dataset_row("vacancy_to_unemployed_ratio", period)
+        if count and unemployed and ratio and unemployed["value"]:
+            gap = abs(count["value"] / unemployed["value"] - ratio["value"])
+            if best is None or gap > best[0]:
+                best = (gap, count, unemployed, ratio)
+    if best:
+        _, count, unemployed, ratio = best
+        derived = {"series": "Vacancies divided by unemployed (calculated)", "publisher": "Calculated here", "dataset_id": None, "period": ratio["period"],
+                   "value": round(count["value"] / unemployed["value"], 2), "unit": "ratio", "release_stage": "derived", "date_kind": "", "date": "", "observation_id": ""}
+        packs["vacancy_ratio"] = {"title": f"Published ratio against the counts, {ratio['period']}", "rows": [ratio, count, unemployed, derived],
+                                  "note": "The published ratio and the ratio rebuilt from the two counts come from different surveys."}
+    # Advance and final releases of the same quarter, with the dataset total beside them. Numbers and dates only.
+    revisions = []
+    quarters = [q for q in reconciliation.get("rows", []) if isinstance(q.get("advance"), dict) and isinstance(q.get("final"), dict)]
+    quarters = sorted(sorted(quarters, key=lambda q: abs(q.get("final_minus_advance", 0)), reverse=True)[:2], key=lambda q: q["period"])
+    for q in quarters:
+        for stage, who in (("advance", "MOM advance release"), ("final", "MOM final report")):
+            item = q[stage]
+            revisions.append({"series": "Total employment change", "publisher": who, "dataset_id": None, "period": q["period"], "value": item["value"], "unit": "persons",
+                              "release_stage": stage, "date_kind": "published", "date": item.get("publication_date", ""), "observation_id": ""})
+        total = q.get("dataset_total")
+        if isinstance(total, dict) and _number(total.get("value")):
+            sid = total.get("source_id", "employment_change_by_sector")
+            snap = str(total.get("snapshot_id", ""))
+            revisions.append({"series": "Total employment change", "publisher": publishers.get(sid) or "Ministry of Manpower", "dataset_id": dataset_ids.get(sid), "period": q["period"],
+                              "value": total["value"], "unit": "persons", "release_stage": "dataset_snapshot", "date_kind": "snapshot",
+                              "date": f"{snap[:4]}-{snap[4:6]}-{snap[6:8]}" if len(snap) >= 8 else "", "observation_id": total.get("observation_id", "")})
+    packs["revisions"] = {"title": "The same quarter in each release", "rows": revisions,
+                          "note": "Advance and final are the headline numbers in MOM's own releases. The dataset total is a third figure for the same quarter."}
+    planted = dataset_row("retrenched_employees", "2026-Q1")
+    packs["planted"] = {"title": "The dataset row the cross-check compares against", "rows": [planted] if planted else [],
+                        "note": "In the test the false figure sits only in a made-up passage. The cross-check compares it with this row."}
+    return {"status": "available", "summary": "Real rows from the committed observation table. Published by MOM and SingStat on data.gov.sg under the Singapore Open Data Licence.",
+            "licence": "Singapore Open Data Licence 1.0", "provenance": [_OBSERVATIONS, "data/export/reconciliation.json", "data/export/sources.json"], **packs}
+
+
+# The four document builds. Passage and document counts are read from the committed snapshot files; the wording is curated here.
+# The current build's `rerun` text is written from the committed re-run of the fresh questions (see _heldout_v31); None when absent.
+_BUILDS = (
+    ("v1", "Build v1", "First experiments and the original test. Results frozen."),
+    ("v2", "Build v2", "Extraction fixes tested alone. No measurable change."),
+    ("v3", "Build v3", "Six new sources added. Every measured result since is on this build."),
+    ("v3.1", "Current build (v3.1)", "Same sources. Forty passages of one article relabelled."),
+)
+
+
+def _heldout_v31(artifacts: _Artifacts) -> dict | None:
+    """The 65 fresh questions re-run on corpus v3.1 (one run per arm, current code). Beside the registered v3 result, never replacing it:
+    corpus and code changed together, so differences from the original run cannot be assigned to either."""
+    raw = artifacts.mapping(_HELDOUT_V31_PAIRED)
+    if not raw.get("per_model"):
+        return None
+    paths, arms = [_HELDOUT_V31_PAIRED], []
+    for arm in _V2_ARMS:
+        for model in _V2_MODELS:
+            path = f"experiments/eval/agent-heldout-V31-{arm}/{model}.metrics.json"
+            data = artifacts.mapping(path)
+            metrics = _numeric(data.get("metrics", {}))
+            if metrics:
+                arms.append({"id": path.removesuffix(".metrics.json"), "arm": arm, "model": model, "metrics": metrics, "strata": _numeric(data.get("by_family", {})), "provenance": [path]})
+                paths.append(path)
+    paired = {model: _numeric({k: v for k, v in entry.items() if k not in {"missing", "unexpected"}}) for model, entry in raw["per_model"].items() if model in _V2_MODELS and isinstance(entry, dict)}
+    decision = raw.get("decision", {})
+    return {"corpus_version": "v3.1", "label": "Fresh-question re-run on corpus v3.1. One run per arm, current code. Beside the registered v3 result, not replacing it.",
+            "caveat": "The corpus (v3 to v3.1) and the code changed together since the original run, so differences cannot be assigned to either. One run per arm, so run-to-run variation is not separated.",
+            "paired": paired, "arms": arms,
+            "decision": {"statement": decision.get("statement") if isinstance(decision.get("statement"), str) else None, "demonstrated_gain_primary": decision.get("demonstrated_gain_primary") is True},
+            "provenance": sorted(set(paths))}
+
+
+def _rerun_sentence(v31: dict | None) -> str | None:
+    primary = ((v31 or {}).get("paired") or {}).get("gpt-6-luna")
+    if not primary or not isinstance(primary.get("behaviour_accuracy"), dict):
+        return None
+    acc, n = primary["behaviour_accuracy"], primary["n_gold_cases"]
+    right = lambda share: round(share * n) / n * 100  # the paired file rounds shares to four places; the case count is exact
+    gain = "a demonstrated gain" if (v31 or {}).get("decision", {}).get("demonstrated_gain_primary") else "not a demonstrated gain"
+    return f"Re-ran the {n} fresh questions on this build: filter then rerank {right(acc['candidate']):.1f}% against {right(acc['baseline']):.1f}% without it; {gain}."
+
+
+def _corpus_builds(artifacts: _Artifacts, v31: dict | None = None) -> dict:
+    rows = []
+    for key, name, purpose in _BUILDS:
+        path = f"experiments/corpus-snapshots/{key}.json"
+        snapshot = artifacts.mapping(path)
+        passages = snapshot.get("passages")
+        if not isinstance(passages, int):
+            continue
+        row = {"id": key, "name": name, "passages": passages, "documents": snapshot.get("document_files") if isinstance(snapshot.get("document_files"), int) else None,
+               "purpose": purpose, "current": key == _BUILDS[-1][0], "provenance": [path]}
+        if row["current"]:
+            row["rerun"] = _rerun_sentence(v31) if key == "v3.1" else None
+        rows.append(row)
+    return _section("Document builds: passage counts from the committed corpus snapshots.", rows, [row["provenance"][0] for row in rows])
 
 
 def build_report(root: Path) -> dict:
@@ -861,6 +1054,7 @@ def build_report(root: Path) -> dict:
     e2efix_rows, e2efix_paths = _experiments(artifacts, _E2EFIX_DIR + "runs/")
     x2_rows = [row for row in eval_rows if row.get("corpus_version") == "v3"]
     v2_held = _heldout_v2(artifacts)
+    v31_held = _heldout_v31(artifacts)
     tool_v2 = _tool_set_v2(artifacts)
     eval_paths = eval_paths + list((tool_v2 or {}).get("provenance", []))
     trace, trace_paths, errors = _agent_trace(artifacts)
@@ -875,6 +1069,9 @@ def build_report(root: Path) -> dict:
         "schema_version": "report-1.0",
         "generated_at": datetime.now(timezone.utc).isoformat(),
         "summary": summary, "sources": sources, "charts": charts, "eda": _eda(charts),
+        "row_excerpts": _row_excerpts(artifacts, sources, reconciliation),
+        "corpus_builds": _corpus_builds(artifacts, v31_held),
+        "heldout_v31": v31_held,
         "retrieval": _section("Development retrieval comparisons. Configurations differ between experiments.", retrieval_rows, retrieval_paths + ladder.get("provenance", []) + ladder_v2.get("provenance", []), ladder=ladder, ladder_corpus_v2=ladder_v2),
         "answers": _section("Saved answer metrics. Model outputs are not published.", answer_rows, answer_paths,
                             limitations=["Costs that were not recorded are not estimated."]),

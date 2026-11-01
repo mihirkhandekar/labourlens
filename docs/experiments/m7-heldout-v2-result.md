@@ -128,3 +128,9 @@ The primary limit on absolute accuracy is the tool coverage gap, which this expe
 ## Verdict sentence
 
 The preregistered rule is met for the primary model; the effect is three cases, two of which were decided before any retrieval in the hybrid arm; I would not call it a confirmed gain; the second model shows none; and both arms are held back far more by a tool coverage gap (arithmetic on report figures and dataset labels) than by retrieval.
+
+## Re-run on corpus v3.1 (D-055, 1 Nov 2026)
+
+The same 65 questions were re-run on the current document build, both arms and both models, one run each, current code (ids `agent-heldout-V31-r3` and `agent-heldout-V31-hybrid`; `experiments/heldout-v2/paired-v3.1.json`). The registered result above is unchanged. `gpt-6-luna`: r3 0.738 against hybrid 0.708, +0.031, 3 better and 1 worse, McNemar p 0.625, case interval [-0.015, 0.077]; the paired file states "R3 gain NOT demonstrated for the primary model gpt-6-luna under the preregistered rule; report descriptively." (lower bound not above zero, and r3 added one false answer). `gpt-5.6-luna`: 0.769 against 0.723, +0.046 (3 better, 0 worse). Numerical comparisons stay at 3 of 14 in every arm.
+
+**Reading.** The corpus (v3 to v3.1) and the code changed together between the two runs, so the difference cannot be assigned to either, and with one run per arm run-to-run variation is not separated. The model order flipping between runs is consistent with noise of that size. The rule's verdict for the original run stands; on the current build the primary model's gain is not demonstrated. The questions were already known, so this is not held-out evidence.

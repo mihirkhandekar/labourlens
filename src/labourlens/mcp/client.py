@@ -20,6 +20,7 @@ Controls (each is exercised by tests/mcp and the threat suite)
 from __future__ import annotations
 
 import asyncio
+import collections
 import json
 import os
 import sys
@@ -52,6 +53,7 @@ ALLOWED_SERVERS: dict[str, dict] = {
     "labourlens-stats-http": {"transport": "http", "url": "http://127.0.0.1:8765/mcp", "token_env": TOKEN_ENV, **_COMMON},
 }
 CONNECT_TIMEOUT_S, CALL_TIMEOUT_S, MAX_RESPONSE_BYTES = 20.0, 8.0, 200_000
+RECENT_CALLS = 20
 CORRECTABLE = ("invalid_arguments", "not_found", "too_large")
 
 
@@ -407,7 +409,9 @@ class SyncStatsBackend:
         self.thread = threading.Thread(target=self.loop.run_forever, daemon=True, name="mcp-client")
         self.thread.start()
         self.client: McpStatsClient | None = None
-        self.calls: list[dict] = []
+        self.calls: collections.deque[dict] = collections.deque(maxlen=RECENT_CALLS)  # bounded: the newest RECENT_CALLS lookups
+        self._described: dict | None = None
+        self._calls_lock = threading.Lock()
 
     def _run(self, coro, timeout: float):
         return asyncio.run_coroutine_threadsafe(coro, self.loop).result(timeout)
@@ -447,6 +451,65 @@ class SyncStatsBackend:
             self.loop.call_soon_threadsafe(self._stop.set)
         self.client = None
 
+    def _record(self, tool: str, args: dict, t0: float, ok: bool, attempt: int, quarantined: int = 0, kind: str | None = None) -> None:
+        entry = {"tool": tool, "arguments": {k: v for k, v in args.items() if v is not None}, "ms": round((time.perf_counter() - t0) * 1000, 1), "ok": ok,
+                 "attempt": attempt, "quarantined": quarantined}
+        if kind:
+            entry["kind"] = kind
+        with self._calls_lock:
+            self.calls.append(entry)
+
+    def call_tool(self, tool: str, **args) -> ToolReply:
+        """Run one allow-listed tool call through the same client checks as the agent path (validation, size cap, quarantine).
+        Same reconnect-once rule as `query`; raises McpClientError for a rejected or failed call."""
+        t0 = time.perf_counter()
+        for attempt in range(2):
+            try:
+                if self.client is None:
+                    self._run(self._connect(), CONNECT_TIMEOUT_S + 5)
+                reply = self._run(self.client.call(tool, **args), self.call_timeout_s + 5)
+                self._record(tool, args, t0, True, attempt, reply.quarantined)
+                return reply
+            except McpClientError as e:
+                self._record(tool, args, t0, False, attempt, kind=e.kind)
+                if e.kind == "unavailable" and attempt == 0:
+                    self._drop()
+                    continue
+                raise
+            except (TimeoutError, FutureTimeoutError) as e:
+                self._record(tool, args, t0, False, attempt, kind="timeout")
+                raise McpClientError("timeout", tool) from e
+        raise McpClientError("unavailable", tool)
+
+    def describe(self) -> dict:
+        """What the connected server offers: identity, tools (with annotations and trimmed input schemas), resources, templates, prompts.
+        Discovered once through the live session and cached; raises McpClientError / TimeoutError when not reachable."""
+        if self._described is not None:
+            return self._described
+        if self.client is None:
+            self._run(self._connect(), CONNECT_TIMEOUT_S + 5)
+        self._described = self._run(self._discover(self.client), self.call_timeout_s + 5)
+        return self._described
+
+    @staticmethod
+    async def _discover(c: "McpStatsClient") -> dict:
+        s = c.session
+        info = s.server_info
+        tools = (await s.list_tools()).tools
+        resources = (await s.list_resources()).resources
+        templates = (await s.list_resource_templates()).resource_templates
+        prompts = (await s.list_prompts()).prompts
+        return {
+            "server": {"name": getattr(info, "name", None), "version": getattr(info, "version", None), "protocol_version": str(s.protocol_version) if s.protocol_version else None,
+                       "transport": c.spec.get("transport", "stdio")},
+            "tools": [{"name": t.name, "title": getattr(t.annotations, "title", None) or getattr(t, "title", None) or t.name,
+                       "description": sanitize_text(t.description or "")[:600], "read_only": bool(getattr(t.annotations, "read_only_hint", False)),
+                       "in_allow_list": t.name in c.spec["allowed_tools"], "input_schema": _trim_schema(t.input_schema)} for t in tools],
+            "resources": [{"uri": str(r.uri), "name": r.name, "description": sanitize_text(r.description or "")[:400]} for r in resources]
+                         + [{"uri": str(r.uri_template), "name": r.name, "description": sanitize_text(r.description or "")[:400]} for r in templates],
+            "prompts": [{"name": p.name, "description": sanitize_text(p.description or "")[:400]} for p in prompts],
+        }
+
     def query(self, source_id, period_from, period_to, dimension=None, adjustment=None, indicator_id=None):
         args = dict(source_id=source_id, period_from=period_from, period_to=period_to, dimension=dimension, adjustment=adjustment, indicator_id=indicator_id)
         t0 = time.perf_counter()
@@ -455,10 +518,10 @@ class SyncStatsBackend:
                 if self.client is None:
                     self._run(self._connect(), CONNECT_TIMEOUT_S + 5)
                 reply = self._run(self.client.get_statistic(**args), self.call_timeout_s + 5)
-                self.calls.append({"ms": round((time.perf_counter() - t0) * 1000, 1), "ok": True, "attempt": attempt, "quarantined": reply.quarantined})
+                self._record(TOOL_NAME, args, t0, True, attempt, reply.quarantined)
                 return _Rows(reply.rows, reply.quarantined), None
             except McpClientError as e:
-                self.calls.append({"ms": round((time.perf_counter() - t0) * 1000, 1), "ok": False, "kind": e.kind, "attempt": attempt})
+                self._record(TOOL_NAME, args, t0, False, attempt, kind=e.kind)
                 if e.kind in ("invalid_arguments", "not_found", "too_large"):
                     return None, ToolResult(False, message=e.message or e.kind, error_kind=e.kind)
                 if e.kind == "unavailable" and attempt == 0:
@@ -470,6 +533,25 @@ class SyncStatsBackend:
             except (TimeoutError, FutureTimeoutError) as e:
                 raise TransientToolError("timeout") from e
         raise RuntimeError("mcp unavailable")
+
+
+def _trim_schema(schema: dict | None) -> dict:
+    """Only what a reader needs: property name -> type, enum (capped), pattern, description, plus which are required."""
+    out = {}
+    for name, prop in ((schema or {}).get("properties") or {}).items():
+        variants = [prop] + list(prop.get("anyOf") or [])
+        types = sorted({v.get("type") for v in variants if isinstance(v.get("type"), str) and v.get("type") != "null"})
+        enum = next((v["enum"] for v in variants if isinstance(v.get("enum"), list)), None)
+        entry = {"type": " or ".join(types) or "any"}
+        if enum:
+            entry["enum"] = [str(x) for x in enum[:12]] + (["..."] if len(enum) > 12 else [])
+            entry["enum_count"] = len(enum)
+        for k in ("pattern", "description"):
+            v = next((x[k] for x in variants if isinstance(x.get(k), str)), None)
+            if v:
+                entry[k] = sanitize_text(v)[:300]
+        out[name] = entry
+    return {"properties": out, "required": [r for r in (schema or {}).get("required", []) if isinstance(r, str)]}
 
 
 try:  # concurrent.futures.TimeoutError is an alias of TimeoutError on Python 3.11+, kept explicit for clarity

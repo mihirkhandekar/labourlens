@@ -16,6 +16,8 @@ export function model(report) {
   const find = (key, id) => rows(key).find(row => row.id === id) || null;
   const m = {
     report, section, rows, charts,
+    excerpts: report?.row_excerpts && typeof report.row_excerpts === 'object' ? report.row_excerpts : {},
+    heldoutV31: report?.heldout_v31 && typeof report.heldout_v31 === 'object' ? report.heldout_v31 : null,
     generatedAt: report?.generated_at || null,
     commit: report?.provenance?.commit || null,
     artifactCount: Array.isArray(report?.provenance?.artifacts) ? report.provenance.artifacts.length : null,
