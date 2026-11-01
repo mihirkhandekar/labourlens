@@ -5,7 +5,7 @@ Build a defensible, reproducible, evidence-grounded policy research assistant fo
 
 **Deadline:** Wednesday, 4 November 2026, morning (Singapore time). Budget work accordingly. The submitted project should run reliably and be explainable by its author. Use real, publicly available Singapore government data when feasible. Any synthetic or mocked data must be prominently labelled.
 
-**Status:** PLANNING ONLY until the human explicitly approves implementation of a named milestone. Do not treat this instruction file or the kickoff prompt as approval to implement.
+**Status (updated 1 Nov 2026):** implementation is complete through the experiments, review, deployment and presentation stages (see `docs/progress.md`). Remaining work is submission packaging and rehearsal. The original planning gate (explicit approval per milestone) still applies to any new major phase or architectural change.
 
 ## Non-negotiable collaboration contract
 1. **Explore -> compare -> recommend -> discuss -> approve -> implement -> verify -> document.** Never skip the discussion/approval gate for a new major phase or architectural decision.
@@ -48,7 +48,7 @@ MOM labour-market reports Q3 2025, Q4 2025, Q1 2026, Q2 2026 and MOM Q2 2026 adv
 **Out of scope:** forecasting, unsupported causal claims, unrestricted web research, individual employment advice.
 **Visual direction:** modern, sleek policy-research workbench with evidence pane, charts, citations, activity traces, and a dedicated experiment/evaluation view. Frontend stack not yet selected.
 
-**No application implementation is approved yet.** LangGraph `StateGraph` is approved. Ingestion/parsing/data-store specifics, exact libraries and versions, embedding/LLM choice, UI stack, MCP protocol details and evaluation implementation remain separate decision gates. Read `docs/decisions/ADR-002-langgraph.md` for approved graph boundaries.
+**Implementation status:** the pipeline, retrieval experiments, LangGraph agent, MCP server, web app, evaluation and threat tests are built and recorded in `docs/progress.md` and `docs/decisions.md`. New architectural changes still need owner approval. Read `docs/decisions/ADR-002-langgraph.md` for the approved graph boundaries.
 
 **Approved conceptual architecture:** repeatable ingestion -> validated observations and source passages -> BM25 baseline -> dense/hybrid retrieval experiments -> one bounded LangGraph research agent with typed read-only evidence and deterministic calculation tools -> structured cited answers/abstention -> evaluation and audit traces. MCP must expose useful read-only data capabilities, not a decorative endpoint. Detailed implementation and package versions are NOT approved.
 
@@ -90,14 +90,12 @@ Every study note should answer: **what it is; why this project needs it; alterna
 Design a modern, professional research product, not a generic chatbot clone: excellent typography, disciplined spacing, responsive layout, accessible contrast, real-data visualizations, status/uncertainty indicators, and easy inspection of citations. A visually attractive result must remain truthful and data-faithful. Do not let aesthetics hide missing evidence, mocked behavior, errors, or uncertain results.
 
 ## Session startup and handoff
-At the start of each session, read the original assessment, `README.md`, both approved ADRs, the current milestone plan and any implementation evidence. Summarize fixed decisions, observed progress, blockers and next gate. **Current gate: review Milestone 1 government-source ingestion and provenance; do not implement until explicit owner approval.** Work only from source documents and actual outputs; never infer tests/downloads were completed simply because a plan exists.
+At the start of each session, read the original assessment, `README.md`, the approved ADRs, `docs/progress.md`, `docs/decisions.md` and any implementation evidence. Summarize fixed decisions, observed progress, blockers and next gate. **Current gate (1 Nov 2026): submission packaging, the demo rehearsal and the owner's remaining actions (provider spend cap and key rotation, dataset licence checks); no new experiments without owner approval.** Work only from source documents and actual outputs; never infer tests/downloads were completed simply because a plan exists.
 
 
-## Current decision checkpoint — 30 Oct 2026
+## Decision checkpoint (historical, 30 Oct 2026; later decisions are in docs/decisions.md)
 - **APPROVED:** ADR-001 (domain/sources/range), ADR-002 (LangGraph single bounded research agent, typed tools/state, retry/observability boundaries).
-- **NOT APPROVED:** Milestone 1 ingestion implementation. See `docs/03_MILESTONE_1_INGESTION_PLAN.md`. Discuss download/snapshot approach, structured schema/analytical storage, PDF/HTML extraction, rights and verification before writing code.
-- **Default proposals, not final decisions:** official API + verified/manual fallback + immutable hashes; Pandas -> Parquet -> DuckDB; PyMuPDF layout-aware extraction; full report PDFs stored locally but not in public Git; manual sample verification.
-- **Next after M1 approval:** implement only M1, test/record real evidence, update data sheet/study note, and stop for M2 decision.
+- **Milestone 1 (ingestion) was approved and completed;** later milestones M2 to M7 followed, with decisions D-001 to D-048 in `docs/decisions.md`.
 - **Do not repeatedly ask to approve scope or LangGraph:** those decisions are settled. Escalate only a genuine incompatible requirement or blocker.
 
 ## Rights and public repository packaging
@@ -116,4 +114,4 @@ Several agents may work on this project, and any agent may be interrupted. Work 
 6. **Published vs private.** `docs/` is published to reviewers. `study/` and `private/` are the owner's, gitignored, and never copied into `docs/`. Interview prep, rehearsal answers and scratch research go there. If unsure, use `private/` and ask.
 7. **Commit hygiene:** small commits per substep with a message naming the substep ID (for example `M1.2: acquisition with throttle and hashes`). Propose commits; do not push or rewrite history without approval.
 8. **Repository policy (D-001):** private repo shared with reviewers, designed as if it could become public. MOM report PDFs and extracted MOM passage text are never committed.
-9. Startup list above also includes `docs/progress.md`, `docs/decisions.md`, `docs/glossary.md`. The owner has asked for the expanded structured-data scope (D-003); do not implement it until the owner approves tiers and ADR-003 exists.
+9. The expanded structured-data scope (D-003) was approved and implemented (corpus v3: 85 sources); see `docs/data-sheet.md`.

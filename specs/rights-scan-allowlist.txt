@@ -13,3 +13,5 @@ experiments/gold/archive/* | byte-exact archived gold versions with pinned hashe
 experiments/gold/heldout_v2_v1.jsonl | signed frozen gold (hash in FREEZE.md): two evidence locator fields carry a 7-word section heading
 experiments/gold/gold_v3.7.jsonl | gold v3.7 derived from pinned v3.6 (same locator headings and category names); hash recorded in CHANGELOG
 experiments/gold/gold_v3.7-review-log.jsonl | review log copies the question text and locator headings from pinned gold
+experiments/eval/agent-dev-X3/gpt-5.6-luna.cases.jsonl | frozen X3 run output: one section heading echoed by the model (same class as the A1 entry)
+experiments/eval/agent-dev-X3/gpt-5.6-luna.judgements.json | frozen X3 judge output: the same section heading

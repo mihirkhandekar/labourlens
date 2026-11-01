@@ -176,3 +176,11 @@ Edit list: `docs/human-review/deck-copy-review.md`. Applied:
 - Brand mark, `.bm-*` styles and the favicon file were removed. The pages use a text wordmark; the author name appears on the title slide, the home hero and the footer.
 - Home page: one-line hero, one sentence, how an answer is made, four outcomes, data explorer, source count, five plain limits. No contents list, no hero bullets, no identifiers.
 - The tool-fix experiment is described only as a next step ("Fix the calculation gap") with no result.
+
+## Deck: assignment structure and tool-fix result (1 Nov 2026)
+
+- Added four slides that follow the original assignment: "The assignment" (ten core requirements as an icon grid), "Why this problem" (the three candidate domains and the recorded reason for the choice), "Challenges" (eight real difficulties with one line each on the response) and "Requirement coverage" (each requirement with where the talk showed it and what is still open, from `docs/requirements-matrix.md`). The personal reason for choosing Singapore is not on record, so the notes carry a line marked `OWNER TO CONFIRM`.
+- To stay at 30 main slides, five slides moved to appendix M (why not a chatbot, what it covers, how I planned to test it, running it live, what went wrong). Their notes are unchanged.
+- One slide, "Fixing the calculation gap", states the tool set v2 result plainly: it failed its pre-declared criteria on the development set for both models and is not adopted; the fresh-set gain (3 to 12 of 14 number comparisons, main model) is optimistic because the fix was designed on those cases. Its figures are literals from `experiments/eval/agent-dev-X3-REPORT.md` and D-048, not from `report.json`. Detail table in appendix L.
+- "How I measured" now states that all 403 labelling items were reviewed card by card by the owner's own clicks, one reviewer after AI pre-review, not independent. The report data, appendix figures and workbench notices still carry the earlier 45 of 268 counts until `build-report` and the pinned disclosures are regenerated.
+- "A planted wrong figure" is now a three-step graphic instead of the verbose step list.

@@ -2,6 +2,8 @@
 
 Status: dev only, nothing locked, held-out untouched. Gold labels are AI drafts, not reviewed by the owner. 34 dev cases (all families, including the 6 numerical ones that needed the statistics tool). One run per configuration; the same prompts gave different rates across runs in M3, so differences under about 10 points are noise.
 
+> **Superseded 1 Nov 2026 (status of the labels).** The status line above describes the state when these runs were scored: AI-drafted labels, not reviewed. The owner has since decided every gold case card by card (gold v3.7). One reviewer, after AI pre-review, not independent inter-rater evidence. These runs were not rescored on v3.7, and v3.7 changes no score.
+
 Code: `src/labourlens/agent/` (`tools.py`, `graph.py`, `experiments.py`); prompts `prompts/planner_v1*.md`, `prompts/answer_v2*.md`; run `uv run labourlens agent-exp --split dev`. Tests: `tests/retrieval/test_agent.py` (13, including fault injection). Decision: D-027.
 
 ## Design

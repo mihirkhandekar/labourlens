@@ -230,6 +230,28 @@ export function errorBars(m) {
   return wrap;
 }
 
+/** Before and after the calculation fix. Literals: the tool-set v2 results are not in the report data; the slide notes name their source. */
+export function toolFixBars() {
+  const wrap = el('div', 'g9 g11');
+  const row = (name, note, value, max, text, kind) => {
+    const line = el('div', 'g9-row');
+    const lab = el('div', 'g9-lab'); lab.append(el('span', 'g9-name', name), el('span', 'g9-price', note));
+    const track = el('div', 'g9-track'); const bar = el('div', `g9-bar is-${kind}`); bar.style.setProperty('--w', `${Math.round((value / max) * 100)}%`); track.append(bar);
+    line.append(lab, track, el('span', 'g9-val num', text));
+    return line;
+  };
+  const a = el('div', 'g9-panel'); a.append(el('h3', '', 'Practice questions'), el('p', 'g11-sub', 'Right kind of response'));
+  [['Main model', .903, .895], ['Second model', .916, .899]].forEach(([name, before, after]) => {
+    a.append(row(name, 'before', before, 1, `${(before * 100).toFixed(1)}%`, 'before'), row(name, 'with the fix', after, 1, `${(after * 100).toFixed(1)}%`, 'after'));
+  });
+  a.append(el('p', 'g11-foot', 'False answers: 6 before, 7 after. The test failed.'));
+  const b = el('div', 'g9-panel'); b.append(el('h3', '', 'Fresh questions'), el('p', 'g11-sub', 'Number comparisons right, of 14'));
+  b.append(row('Main model', 'before', 3, 14, '3', 'before'), row('Main model', 'with the fix', 12, 14, '12', 'after'));
+  b.append(el('p', 'g11-foot', 'Optimistic: I designed the fix on these questions.'));
+  wrap.append(a, b);
+  return wrap;
+}
+
 /** Title slide: the product's answer, with its citation, from the latest figure. */
 export function answerCard(m) {
   const card = m.cards.find(c => c.card_id === 'unemployment_resident_sa') || m.cards[0];
@@ -263,5 +285,70 @@ export function mcpDiagram() {
     svg.append(g);
   });
   const wrap = el('div', 'g6'); wrap.append(svg);
+  return wrap;
+}
+
+/** The ten core requirements of the assignment: icon, plain name, what was asked. `status` adds where the talk showed it and what is still open. */
+const REQUIREMENTS = [
+  ['question', 'Framing', 'Users, scope, a simple baseline', 'The problem; How I measured', 'Protocol sign-off pending'],
+  ['database', 'Data', 'Two source types, two findings', 'Choosing the data; What the data showed', 'Rights gaps remain'],
+  ['magnifying-glass', 'Retrieval', 'Two retrievers, cited passages', 'Does filtering help?; Every claim has a source', 'Quotes not checked for meaning'],
+  ['stack', 'Models', 'Two settings: quality, speed, cost', 'Choosing the model; The experiment ladder', 'Defaults await confirmation'],
+  ['wrench', 'Agent', 'Tools, arithmetic in code, limits', 'The agent loop; Fixing the calculation gap', 'Report-text arithmetic gap'],
+  ['chart-line', 'Evaluation', '30+ cases, human review, errors', 'How I measured; fresh questions', 'One reviewer only'],
+  ['shield', 'Safety', 'Injection, privacy, least privilege', 'Safety tests; What protects it', 'Attack scanner is weak'],
+  ['note', 'Concepts', 'Tokens, embeddings, agents, MCP', 'Across the talk', 'Rehearsal pending'],
+  ['path', 'MCP', 'A tool, a resource, a client demo', 'The MCP server', 'Remote deployment unverified'],
+  ['arrow-counter-clockwise', 'Setup', 'Pinned, tested, documented', 'Not shown in the talk', 'Fresh-checkout run pending']
+];
+export function requirementGrid(status = false) {
+  const wrap = el('div', `g12${status ? ' is-status' : ''}`);
+  REQUIREMENTS.forEach(([icon, name, ask, shown, open], i) => {
+    const tile = el('div', 'g12-tile'); tile.style.setProperty('--i', String(i));
+    const head = el('div', 'g12-head'); head.append(ico(icon), el('h3', '', name));
+    tile.append(head, el('p', 'g12-ask', ask));
+    if (status) {
+      const open_ = el('p', 'g12-open'); open_.append(ico('warning'), el('span', '', open));
+      tile.append(el('p', 'g12-shown', shown), open_);
+    }
+    wrap.append(tile);
+  });
+  return wrap;
+}
+
+/** Three candidate domains and the reason recorded for the choice. */
+export function domainChoice() {
+  const wrap = el('div', 'g13');
+  [['Labour market', 'Official quarterly data, reports and real revisions', true], ['Housing affordability', 'Confounded, transaction-level data', false], ['Cost of living', 'Index methods and causal complexity', false]].forEach(([name, why, chosen], i) => {
+    const card = el('div', `g13-card${chosen ? ' is-chosen' : ''}`); card.style.setProperty('--i', String(i));
+    const head = el('div', 'g13-head'); head.append(el('h3', '', name));
+    if (chosen) head.append(ico('check-circle'));
+    card.append(head, el('p', 'g13-why', why), el('p', 'g13-state', chosen ? 'Chosen' : 'Not chosen'));
+    wrap.append(card);
+  });
+  return wrap;
+}
+
+/** Real difficulties from the record, each with one line on the response. */
+export function challengeGrid() {
+  const wrap = el('div', 'g14');
+  [['Tables flattened in PDFs', 'Audited samples. Numbers were intact.'], ['Overall or resident, adjusted or not', 'Series names carry both. Ask when open.'], ['Advance and final figures differ', 'Every answer names its release.'], ['Rights limits on MOM content', 'Reports stay out of the public repository.'],
+    ['Small reference set, AI drafted', 'I reviewed every item. Intervals shown.'], ['Leakage between test sets', 'A fresh set from unseen sources.'], ['Calculation tool gap', 'Tested a fix. It failed its rule.'], ['Questions before 2024', 'It declines. Scope is fixed.']].forEach(([hard, did], i) => {
+    const card = el('div', 'g14-card'); card.style.setProperty('--i', String(i));
+    card.append(el('h3', '', hard), el('p', '', did));
+    wrap.append(card);
+  });
+  return wrap;
+}
+
+/** The planted-figure test as three steps. */
+export function plantedFlow() {
+  const wrap = el('div', 'g14 g15');
+  [['file-text', 'A false figure is planted', 'It sits in a report passage and looks like any other.'], ['warning', 'The agent cites it', 'The quote and the number both pass the checks.'], ['check-circle', 'The cross-check compares', 'It tests the figure against the statistics.']].forEach(([icon, head, line], i) => {
+    const card = el('div', 'g14-card'); card.style.setProperty('--i', String(i));
+    const top = el('div', 'g12-head'); top.append(ico(icon), el('h3', '', head));
+    card.append(top, el('p', '', line));
+    wrap.append(card);
+  });
   return wrap;
 }

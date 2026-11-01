@@ -14,7 +14,7 @@ Corpus: **v3** (manifest generated **2026-10-31T05:38:08+00:00**; rights fields 
 | Rights | 33 datasets `verified_open_licence`; **3 datasets `assumed_open_unverified`** (local-only); 26 PDFs `verified_all_rights_reserved`; 23 documents `unresolved` (22 HTML releases and the MTI feature PDF) |
 | Quality checks | Saved build: **276 checks, 269 pass, 7 warnings, 0 failures** |
 | Chunks (`merge200`, `ok` passages only) | 1,847 on corpus v3 |
-| Spot-check by a human | **Not yet done** for statistical values and passages. Sheets in `docs/human-review/` |
+| Spot-check by a human | Updated 1 Nov 2026: the owner decided all 30 source checks (16 passage extraction, 14 statistical rows) by their own click, after AI pre-review. Agreement of those decisions with the AI suggestion was 29 of 30 (agreement, not accuracy). One reviewer, so not independent evidence. The owner accepted five disclosed frozen extraction gaps after inspecting the original pages (J10, accept_limits); the gaps were not fixed in the saved runs. Detail in `docs/human-review/owner-review-final-summary.md` |
 | Historical M1 tests | 51 passed in `artifacts/tests/pytest-m1.txt`; not a current-suite result |
 
 ## Corpus version history
@@ -22,7 +22,7 @@ Corpus: **v3** (manifest generated **2026-10-31T05:38:08+00:00**; rights fields 
 |---|---|---|---|---|---|---|
 | **v1 (frozen)** | 79 (33 datasets, 46 documents) | 13,484 | not recorded | `extract-0.1` | `experiments/corpus-snapshots/v1.json` | Dev and held-out v1 results, E1 to E7 retrieval runs, G and A1 to A5 answer and agent runs, threat suite; all frozen, never rescored on another corpus |
 | **v2** | 79 (33 datasets, 46 documents) | 15,915 | 1,732 | `extract-0.2` | `experiments/corpus-snapshots/v2.json`, `v2-observations.json` (33 sources, 43,662 rows) | X1 extraction-only dev run and the held-out diagnostic rerun (D-037, D-041) |
-| **v3 (current)** | 85 (36 datasets, 49 documents) | 16,419 | 1,847 | `extract-0.2` | `experiments/corpus-snapshots/v3.json` | Live data on disk and the website; held-out v2 cases (65 drafts) are written against it, **no scored run yet** |
+| **v3 (current)** | 85 (36 datasets, 49 documents) | 16,419 | 1,847 | `extract-0.2` | `experiments/corpus-snapshots/v3.json` | Live data on disk and the website; the 65 held-out v2 cases are written against it (labels owner-reviewed before the run; see `docs/experiments/m7-heldout-v2-result.md`) |
 
 The post-fix T-I06 threat run (`experiments/threats/m7-ti06-postfix-20261031`) does not record its corpus label in its `SUMMARY.md`. v3 is additive: every v2 passage file and every v2 per-source observation hash is unchanged (corpus tests in `tests/data/test_corpus_v3_additive.py` passed on the local build; two builds gave 52 byte-identical files, `artifacts/data-quality/determinism-v3.json`). Metrics reported for v1 or v2 must not be read as v3 results (D-040).
 
@@ -137,6 +137,6 @@ Coverage checked by the build (exact first periods): ULC 1980-Q1 to 2026-Q2; val
 ## 8. Limits
 - Extraction quality for tables is not reliable; numbers come from datasets, text supplies explanation.
 - Saved page-date checks cover releases; internal PDF dates and representative extraction fidelity still need human inspection.
-- No human has yet verified values; sheets are prepared (`docs/human-review/`).
+- Source checks: the owner decided 30 items (passage extraction and statistical rows) by their own click on 1 Nov 2026, after AI pre-review. This is one person's review, not independent verification of every value. Sheets and summaries are in `docs/human-review/`.
 - Coverage is one snapshot per source, so revision tracking is baseline-only until a second fetch is made.
 - A fresh clone has the manifest, the committed dataset snapshots and the processed tables, but not the PDFs, passages, indexes or the three v3 dataset CSVs. `uv run pytest -q` skips corpus tests there; `labourlens build` stops with a message naming the absent raw file, because a rebuild needs the local corpus.

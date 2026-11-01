@@ -151,13 +151,13 @@ function reviewProcess() {
     ['Independent AI passes', 'Two blind AI reviews: a 71-case gold review (70 of 71 labels kept) and a 40-case answer review (28 correct, 6 partly, 6 incorrect).'],
     ['Adjudication', 'The owner decided label policy and the post-run edits (D-031, D-034, D-035) in writing.'],
     ['Tie-break', 'Where earlier AI passes disagreed, a third AI pass broke the tie. 28 owner agreements followed that tie-break.'],
-    ['Owner review', '125 cards decided per card: 30 own verdicts, 95 agreed with an AI suggestion (67 with earlier passes, 28 with the tie-break).']
+    ['Owner review', 'All 403 items (268 gold cases, 65 held-out v2 cases, 40 saved answers, 30 source checks) decided card by card, each by the owner\u2019s own click, after the AI pre-review and after the runs were scored.']
   ];
   const ol = el('ol', 'pr-pipeline');
   steps.forEach(([t, x], i) => { const li = el('li', 'pr-pipe-step'); li.append(el('span', 'pr-pipe-no', String(i + 1)), el('strong', '', t), el('span', '', x)); ol.append(li); });
   const wrap = el('div');
-  wrap.append(ol, grid('pr-split', callout({tone: 'note', title: 'What it shows', items: ['17 manual answer verdicts agree with the independent AI review (17 of 17).', '45 gold cards reviewed: 43 unchanged, 2 label changes (HO-022, DEV-018).', '30 source cards: 19 match, 11 minor differences.']}),
-    callout({tone: 'warn', title: 'What it does not show', items: ['Agreeing with an AI suggestion is circular. It is not inter-rater evidence.', 'No blinded annotation. No second independent human.', '223 of 268 gold cases are still drafts.']})), evi('docs/human-review/owner-review-summary.md \u00b7 docs/system-card.md \u00b7 README.md'));
+  wrap.append(ol, grid('pr-split', callout({tone: 'note', title: 'What it shows', items: ['Where an AI suggestion existed, the owner\u2019s decision matched it in 198 of 198 gold cases, 61 of 64 held-out v2 cases, 38 of 39 answers and 29 of 30 source checks.', 'Labels are unchanged in v3.7. Four change-clicks (DEV-034, DEV-202, DEV-626, DEV-627) are recorded and not applied under the out-of-period policy.', '30 source cards in the first export: 19 match, 11 minor differences.']}),
+    callout({tone: 'warn', title: 'What it does not show', items: ['One reviewer, after the AI drafts and after the runs were scored. It is not independent inter-rater evidence.', 'Agreement with the AI suggestion is not accuracy.', 'No blinded annotation. No second independent human.']})), evi('docs/human-review/owner-review-final-summary.md \u00b7 docs/human-review/review-inventory.md'));
   return wrap;
 }
 
@@ -205,7 +205,7 @@ export function renderWork(m, ctx) {
   const s2 = section(`${rows.length} experiment groups; one factor changed in each, except the X2 regression check`, ['Sort by any column. Open a row for its configuration.']); s2.append(registryTable(rows, ids)); ch.body.append(s2);
   const s3 = section(`${decisions} decisions, searchable by id or text`, ['Alternatives appear only where the decision recorded them.']); s3.append(decisionLog(m, rows)); ch.body.append(s3);
   const s4 = section('Six problems found during the work; T-I06 not shown stable across runs'); s4.append(failures(m)); ch.body.append(s4);
-  const s5 = section('125 owner review cards: 30 own verdicts, 95 agreed with an AI suggestion'); s5.append(reviewProcess()); ch.body.append(s5);
+  const s5 = section('All 403 labelling items reviewed by one person, card by card'); s5.append(reviewProcess()); ch.body.append(s5);
   const s6 = section('Cost: recorded spend by phase'); s6.append(ledger(m).root); ch.body.append(s6);
   return ch.root;
 }

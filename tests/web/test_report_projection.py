@@ -266,11 +266,11 @@ def test_evaluation_copy_distinguishes_owner_review_from_historical_scores():
         Path(__file__).resolve().parents[2] / "web/static/evaluation.js"
     ).read_text()
     for disclosure in (
-        "owner review complete 31 Oct 2026: 125 cards decided by the owner "
-        "(30 own verdicts, 95 by agreeing per card with AI suggestions or the "
-        "three-pass AI tie-break), not independent inter-rater evidence",
-        "45 gold cases, 40 answers, 30 source checks and 10 decisions",
-        "45 are owner-reviewed and 223 remain AI-drafted",
+        "owner review complete 1 Nov 2026: all 403 labelling items (268 gold cases, 65 held-out v2 cases, "
+        "40 saved answers and 30 source checks) were decided card by card by the owner\\u2019s own click, 0 by agreeing with an AI suggestion",
+        "one person\\u2019s review, made after AI pre-review and after the saved runs were scored, not independent inter-rater evidence",
+        "The gold labels were AI-drafted first",
+        "labels are unchanged in gold v3.7",
         "25 correct, 6 partly correct and 9 incorrect",
         "19 matches and 11 minor issues",
         "HO-022 clarify → answer",

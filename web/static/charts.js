@@ -341,7 +341,7 @@ export function lineChart(host, ctx, o) {
     const nx = x(note.index), ny = y(note.value);
     svg.append(svgEl('circle', {cx: nx, cy: ny, r: 7, class: 'pr-ring'}));
     const side = note.side || (nx > W * 0.6 ? 'left' : 'right');
-    const tx = side === 'left' ? nx - 12 : nx + 12, ty = ny + (note.dy ?? -16);
+    const tx = side === 'left' ? nx - 12 : nx + 12, wantY = ny + (note.dy ?? -16), ty = wantY < m.t + 14 ? ny + 34 : wantY;
     svg.append(svgEl('text', {x: tx, y: ty, class: 'pr-t pr-t-brass', 'text-anchor': side === 'left' ? 'end' : 'start'}, note.text));
   });
   const items = o.periods.map((period, i) => {

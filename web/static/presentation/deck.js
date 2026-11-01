@@ -71,7 +71,7 @@ function buildSlide(spec) {
   const bullets = () => {
     if (!spec.bullets?.length) return null;
     const ul = el('ul', 'deck-bullets');
-    spec.bullets.forEach(text => { const li = el('li', 'fragment deck-frag', text); ul.append(li); });
+    spec.bullets.forEach(text => { const li = el('li', 'deck-bullet', text); ul.append(li); });
     return ul;
   };
   if (spec.layout === 'title') {

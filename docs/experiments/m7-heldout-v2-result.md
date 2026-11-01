@@ -44,7 +44,7 @@ Accuracy **0.723** against **0.723**, difference **0.000**, 2 better and 2 worse
 - **Report-text cases only** (n=34): `gpt-6-luna` **+0.0294** [0.0, 0.0882], 1 better, 0 worse; `gpt-5.6-luna` **-0.0294** [-0.0882, 0.0], 0 better, 1 worse.
 - **The two wins in the ambiguity family** (HO-V2-048 and -049) are clarification cases with no gold evidence. The retrieval filter and rerank are not designed to help there.
 - **One run per arm**, so run-to-run variation is not measured. Planner and answer are sampled.
-- **This set is only partly independent.** It uses fresh evidence but the same system, prompts, tools, reranker and question styles (`FREEZE.md`, "Known leakage that remains"). The gold is AI-drafted and owner-approved unchanged (59 cards by the owner's own click, 6 by agreeing with an AI suggestion; not independent inter-rater evidence).
+- **This set is only partly independent.** It uses fresh evidence but the same system, prompts, tools, reranker and question styles (`FREEZE.md`, "Known leakage that remains"). The gold was AI-drafted first and approved unchanged by the owner (at signing: 59 cards by the owner's own click, 6 by agreeing with an AI suggestion). Updated 1 Nov 2026: in the final review all 65 cards are recorded as the owner's own decision, with 61 of the 64 compared decisions matching the AI suggestion (agreement, not accuracy). One reviewer, after AI pre-review, not independent inter-rater evidence. The result was not rescored.
 - **Not combined with the earlier held-out.** The registered 31-case held-out remains inconclusive (`experiments/heldout/paired.txt`). The two sets are not pooled; a pooled claim would need its own pre-registration.
 
 ## Results by arm

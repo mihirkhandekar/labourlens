@@ -54,7 +54,7 @@ flowchart TB
     RUNS[Saved answers + traces] --> HARNESS
     HARNESS --> DETER[Deterministic metrics]
     HARNESS --> JUDGE[LLM judge<br/>support + fact coverage]
-    HARNESS --> HUMAN[Owner review: 125 cards<br/>AI-assisted, not independent]
+    HARNESS --> HUMAN[Owner review: 403 items, one reviewer<br/>after AI pre-review, not independent]
     DETER --> REPORT[Versioned metrics + error analysis]
     JUDGE --> REPORT
     HUMAN -. selected-card decisions, not population accuracy .-> REPORT

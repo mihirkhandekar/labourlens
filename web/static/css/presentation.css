@@ -709,6 +709,29 @@ th[aria-sort="descending"] .pr-sort::after { content: " \2193"; }
 .g10 { display: grid; gap: 28px; align-content: center; height: 100%; } .g10-row { grid-template-columns: 420px 1fr 80px; } .g10-label { font-size: 32px; }
 .g9-bar:not(.is-top) { background: var(--c6); } .g10 .g9-bar.is-top { background: var(--accent); }
 .g9 .g9-bar { background: var(--accent); }
+.g11 .g9-bar.is-before { background: var(--c6); } .g11 .g9-bar.is-after { background: var(--accent); }
+.g11-sub { font-size: 26px; color: var(--muted); margin-top: -16px; } .g11-foot { font-size: 28px; color: var(--ink-2); }
+.g11 { align-items: start; align-content: center; }
+.g12:not(.is-status) { gap: 36px; } .g12:not(.is-status) .g12-tile { padding: 40px 34px; gap: 18px; } .g12:not(.is-status) .g12-head h3 { font-size: 44px; } .g12:not(.is-status) .g12-head .deco-ico, .g12:not(.is-status) .g12-head .deck-ico { width: 50px; height: 50px; } .g12:not(.is-status) .g12-ask { font-size: 32px; }
+.g14.g15 { grid-template-columns: repeat(3, 1fr); } .g15 .g14-card { padding: 40px 34px; } .g15 .g14-card h3 { font-size: 38px; } .g15 .g14-card p { font-size: 30px; } .g15 .g12-head .deck-ico { width: 48px; height: 48px; color: var(--accent); flex: none; }
+/* G12 requirement grid, G13 domain choice, G14 challenges */
+.g12 { display: grid; grid-template-columns: repeat(5, 1fr); gap: 28px; align-content: center; height: 100%; }
+.g12-tile { padding: 28px 26px; border: 1px solid var(--line-strong); border-radius: var(--r); background: var(--paper-2); display: grid; gap: 12px; align-content: start; }
+.g12-head { display: flex; align-items: center; gap: 14px; } .g12-head h3 { font-size: 34px; font-weight: 600; }
+.g12-head .deck-ico { width: 36px; height: 36px; color: var(--accent); flex: none; }
+.g12-ask { font-size: 26px; color: var(--ink-2); }
+.g12-shown { font-size: 22px; color: var(--muted); } .g12-open { display: flex; gap: 10px; align-items: flex-start; font-size: 22px; font-weight: 600; } .g12-open .deck-ico { width: 24px; height: 24px; flex: none; color: var(--accent); }
+.g12.is-status .g12-ask { font-size: 24px; }
+.g13 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px; align-content: center; height: 100%; }
+.g13-card { padding: 44px 36px; border: 1px solid var(--line-strong); border-radius: var(--r); background: var(--paper-2); display: grid; gap: 18px; align-content: start; }
+.g13-card.is-chosen { border: 3px solid var(--accent); }
+.g13-head { display: flex; justify-content: space-between; align-items: center; gap: 12px; } .g13-head h3 { font-size: 40px; font-weight: 600; } .g13-head .deck-ico { width: 44px; height: 44px; color: var(--accent); }
+.g13-why { font-size: 32px; color: var(--ink-2); } .g13-state { font-size: 26px; color: var(--muted); } .g13-card.is-chosen .g13-state { color: var(--accent); font-weight: 600; }
+.g14 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 28px; align-content: center; height: 100%; }
+.g14-card { padding: 28px 26px; border: 1px solid var(--line-strong); border-radius: var(--r); background: var(--paper-2); display: grid; gap: 14px; align-content: start; border-top: 4px solid var(--accent); }
+.g14-card h3 { font-size: 30px; font-weight: 600; } .g14-card p { font-size: 26px; color: var(--ink-2); }
+.deck-page .reveal section.present .g12-tile, .deck-page .reveal section.present .g13-card, .deck-page .reveal section.present .g14-card { animation: g12-in 520ms var(--ease) both; animation-delay: calc(var(--i, 0) * 70ms + 120ms); }
+@keyframes g12-in { from { opacity: 0; transform: translate3d(0, 20px, 0); } to { opacity: 1; transform: none; } }
 
 @media (prefers-reduced-motion: reduce) {
   .deck-page .reveal section.present .g5-bar, .deck-page .reveal section.present .g6-box, .deck-page .reveal section.present .g9-bar, .tcard { animation: none; }
@@ -724,4 +747,5 @@ th[aria-sort="descending"] .pr-sort::after { content: " \2193"; }
   .g4-table, .g4-flat { font-size: 18px; } .g4-arrow { transform: rotate(90deg); justify-self: center; } .g4-note { position: static; font-size: 14px; }
   .g7-body { font-size: 18px; } .g7-head { font-size: 14px; } .g7-step { grid-template-columns: 36px 1fr; gap: 14px; } .g7-step .deck-ico { width: 30px; height: 30px; }
   .g9-row, .g10-row { grid-template-columns: 1fr; gap: 6px; } .g9-name, .g10-label { font-size: 16px; } .g9-val { text-align: left; font-size: 16px; } .g6-chips { font-size: 15px; }
+  .g12, .g14 { grid-template-columns: 1fr 1fr; gap: 12px; } .g13 { grid-template-columns: 1fr; gap: 12px; } .g12-tile, .g14-card, .g13-card { padding: 14px; } .g12-head h3, .g14-card h3, .g13-head h3 { font-size: 17px; } .g12-ask, .g14-card p, .g13-why { font-size: 14px; } .g12-shown, .g12-open, .g13-state { font-size: 13px; }
 }

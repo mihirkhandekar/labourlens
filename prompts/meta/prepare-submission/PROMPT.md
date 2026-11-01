@@ -10,7 +10,7 @@ You are preparing the **LabourLens** repository to be submitted to, and read by,
 
 **Remove noise, never remove honesty.**
 - Remove: secrets, private notes, scratch files, duplicated or superseded drafts, raw model outputs, anything with rights problems, stale statements, broken links, confusing structure, and internal chatter that adds nothing for a reviewer.
-- Keep and present clearly: limitations, negative results, disclosed post-run edits, the fact that the gold set is mostly AI-drafted with partial owner review, the fact that AI review is not human review, unresolved licence items, and the open issues list. A reviewer who finds a hidden weakness will distrust everything. A reviewer who finds a weakness already stated, measured and explained will trust the rest.
+- Keep and present clearly: limitations, negative results, disclosed post-run edits, the fact that the gold labels were AI-drafted first and then reviewed by one owner (all 403 labelling items decided by own click after the AI pre-review and after the saved runs were scored; not independent inter-rater evidence; gold v3.7 adds provenance fields only and no evaluation was rescored; the four D-047 owner change-clicks are recorded but not applied), the fact that AI review is not human review, unresolved licence items, and the open issues list. A reviewer who finds a hidden weakness will distrust everything. A reviewer who finds a weakness already stated, measured and explained will trust the rest.
 - Never rewrite published numbers to look better. Never alter frozen results, gold files, hashes, or experiment records. Never delete a negative result. If something is embarrassing but true, move it to the right place and describe it plainly.
 
 ## Ground rules

@@ -1,6 +1,8 @@
 # M2: BM25 retrieval baseline and first experiments
 
 **Status:** dev-split results only (n=24 text cases), on **unreviewed draft gold labels**. The held-out split has not been run (D-017: it is frozen after owner review). Nothing here is a final result.
+
+> **Superseded 1 Nov 2026 (status of the labels).** This run was scored on AI-drafted, unreviewed labels, as stated above. Since then the owner has decided every gold case card by card (gold v3.7, 268 cases). That is one reviewer, after AI pre-review, not independent inter-rater evidence. These results were not rescored on v3.7, and v3.7 changes no score.
 Raw outputs: `experiments/runs/dev-*/` (per-case ranked chunk ids, scores, relevance). Summary: `experiments/runs/dev-SUMMARY.md`. Reproduce: `uv run labourlens retrieval-exp --split dev`. Test output: `artifacts/tests/pytest-m2.txt`.
 
 ## What was built
@@ -11,7 +13,7 @@ Raw outputs: `experiments/runs/dev-*/` (per-case ranked chunk ids, scores, relev
 | BM25 index | `retrieval/bm25_index.py` | `bm25s` 0.3.16, persisted under `data/index/bm25/<chunk-config>-<corpus-hash>-<config-hash>`; loading against a changed corpus raises `StaleIndexError` (D-012) |
 | Gold set | `experiments/gold/draft_cases.jsonl` | 65 draft cases (34 dev, 31 held-out), validated by `labourlens gold-check` (D-017) |
 | Metrics and runner | `retrieval/evaluate.py`, `experiments.py` | hit@k, MRR, passage recall, page-level lenient hit, context words, latency |
-| Owner review sheet | `docs/human-review/gold-review.md` | two-pass review to limit anchoring; **UNREVIEWED** |
+| Owner review sheet | `docs/human-review/gold-review.md` | two-pass review to limit anchoring; unreviewed when written, later superseded by the owner's card-by-card review (see the note at the top) |
 
 **Correctness check (D-016):** `bm25s` was compared with a plain reference BM25 on a toy corpus. They agree on ranking. The first attempt failed because `bm25s` uses the Lucene form without the textbook `(k1+1)` multiplier, a constant factor that changes scores but not order. The reference now follows Lucene's form (documented in `bm25_index.py`).
 
@@ -68,7 +70,7 @@ The config with b=0.4 is excluded from the pre-registration to limit forking pat
 
 ## Limitations
 - 24 text cases in dev; held-out still unseen.
-- Gold labels are AI drafts, with only a spot-check by me of seven cases (evidence matched the stated facts when I read them). Not human-reviewed.
+- Gold labels were AI drafts when this run was scored, with only a spot-check by me of seven cases (evidence matched the stated facts when I read them). Owner review of all gold cases was completed afterwards (see the note at the top).
 - One query form (the question as typed); no query rewriting.
 - HTML section locators are weaker citations than PDF pages.
 - Latency is sub-millisecond per query and not a differentiator at this corpus size.

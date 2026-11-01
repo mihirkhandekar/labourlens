@@ -173,7 +173,7 @@ function sources(report) {
 function limits(report) {
   const s = section('limits', 'Limits', null);
   const items = [
-    'Most reference answers were drafted by an AI. I reviewed 45 of 268.',
+    'An AI drafted the reference answers. I reviewed every one, but I am one reviewer.',
     'On fresh questions, filtering helped by a few cases only.',
     'A planted wrong figure was caught once and missed once. The attack scanner is weak.',
     'The live system uses a newer document build than most results.',

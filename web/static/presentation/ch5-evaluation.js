@@ -286,7 +286,7 @@ export function renderEvaluation(m, ctx) {
     bullets: [
       'Gold set: 268 cases, 237 development and 31 held out.',
       `Development scored on ${goldOf(a3).label}; held-out on ${goldOf(r3).label}.`,
-      'Most labels began as AI drafts; the owner reviewed 45 gold cases.',
+      'Labels began as AI drafts; the owner then reviewed every case.',
       'An AI judge scores claim support.'
     ]
   });

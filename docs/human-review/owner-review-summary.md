@@ -2,6 +2,8 @@
 
 This is a rights-safe summary of owner-entered fields, not an automatic sign-off of gold.
 
+> **Superseded 1 Nov 2026.** This is the summary of the earlier pack export (31 Oct 2026). The final state is in `docs/human-review/owner-review-final-summary.md` and `docs/human-review/review-inventory.md`. In the final state all 403 labelling items (268 gold cases, 65 held-out v2 cases, 40 saved answers, 30 source checks) were decided by the owner's own click. The counts below describe the earlier export only.
+
 Reviewer: Mihir
 
 Export date: 2026-10-31T03:28:14.630Z

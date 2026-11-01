@@ -1,6 +1,6 @@
 {
   "schema_version": "report-1.0",
-  "generated_at": "2026-10-31T14:19:22.811896+00:00",
+  "generated_at": "2026-11-01T03:37:19.531237+00:00",
   "summary": {
     "title": "LabourLens research workbench",
     "scope": [
@@ -57826,7 +57826,7 @@
   },
   "evaluation": {
     "status": "available",
-    "summary": "Development A1-A5 and registered held-out H-r3/H-hybrid luna runs. Measurements retain their recorded gold versions. Owner review complete 31 Oct 2026: 125 cards decided by the owner (30 own verdicts, 95 by agreeing per card with AI suggestions or the three-pass AI tie-break), not independent inter-rater evidence. Gold v3.5 development and all four registered held-out rescoring runs are complete on existing generated outputs; held-out stale judge entries were rejudged. `paired` holds the registered corpus-v1 comparison, current first, with v3.2-v3.4 history; `corpus_v2_diagnostic` is a separate extraction-only diagnostic; `dev_x2_regression_check` labels the corpus-v3 dev X2 rows (a regression check, not an ablation). `heldout_v2` is the signed held-out v2 run on corpus v3, reported separately and never pooled with the registered held-out.",
+    "summary": "Development A1-A5 and registered held-out H-r3/H-hybrid luna runs. Measurements retain their recorded gold versions. Owner review complete 1 Nov 2026: all 403 labelling items (268 gold cases, 65 held-out v2 cases, 40 saved answers, 30 source checks) decided card by card by the owner's own click, after AI pre-review and after the runs were scored; one reviewer, not independent inter-rater evidence. Gold v3.5 development and all four registered held-out rescoring runs are complete on existing generated outputs; held-out stale judge entries were rejudged. `paired` holds the registered corpus-v1 comparison, current first, with v3.2-v3.4 history; `corpus_v2_diagnostic` is a separate extraction-only diagnostic; `dev_x2_regression_check` labels the corpus-v3 dev X2 rows (a regression check, not an ablation). `heldout_v2` is the signed held-out v2 run on corpus v3, reported separately and never pooled with the registered held-out.",
     "metrics": {},
     "rows": [
       {
@@ -62335,6 +62335,8 @@
       "experiments/eval/agent-dev-X2/gpt-5.6-luna.metrics.json",
       "experiments/eval/agent-dev-X2/gpt-6-luna.cases.jsonl",
       "experiments/eval/agent-dev-X2/gpt-6-luna.metrics.json",
+      "experiments/eval/agent-dev-X3/gpt-5.6-luna.metrics.json",
+      "experiments/eval/agent-dev-X3/gpt-6-luna.metrics.json",
       "experiments/eval/agent-heldout-H-hybrid/gpt-5.6-luna.cases.jsonl",
       "experiments/eval/agent-heldout-H-hybrid/gpt-5.6-luna.metrics.json",
       "experiments/eval/agent-heldout-H-hybrid/gpt-6-luna.cases.jsonl",
@@ -62347,6 +62349,10 @@
       "experiments/eval/agent-heldout-V2-hybrid/gpt-6-luna.metrics.json",
       "experiments/eval/agent-heldout-V2-r3/gpt-5.6-luna.metrics.json",
       "experiments/eval/agent-heldout-V2-r3/gpt-6-luna.metrics.json",
+      "experiments/eval/agent-heldout-V2post-hybrid/gpt-5.6-luna.metrics.json",
+      "experiments/eval/agent-heldout-V2post-hybrid/gpt-6-luna.metrics.json",
+      "experiments/eval/agent-heldout-V2post-r3/gpt-5.6-luna.metrics.json",
+      "experiments/eval/agent-heldout-V2post-r3/gpt-6-luna.metrics.json",
       "experiments/eval/agent-heldout-X-hybrid/gpt-5.6-luna.cases.jsonl",
       "experiments/eval/agent-heldout-X-hybrid/gpt-5.6-luna.metrics.json",
       "experiments/eval/agent-heldout-X-hybrid/gpt-6-luna.cases.jsonl",
@@ -62356,12 +62362,15 @@
       "experiments/eval/agent-heldout-X-r3/gpt-6-luna.cases.jsonl",
       "experiments/eval/agent-heldout-X-r3/gpt-6-luna.metrics.json",
       "experiments/heldout-v2/error-analysis.json",
+      "experiments/heldout-v2/paired-postfix-r3-vs-hybrid.json",
+      "experiments/heldout-v2/paired-postfix-toolset.json",
       "experiments/heldout-v2/paired.json",
       "experiments/heldout/paired-corpus-v2.txt",
       "experiments/heldout/paired-v3.2.txt",
       "experiments/heldout/paired-v3.3.txt",
       "experiments/heldout/paired-v3.4.txt",
-      "experiments/heldout/paired.txt"
+      "experiments/heldout/paired.txt",
+      "experiments/tool-fix/criteria.json"
     ],
     "errors": {
       "scope": "rescored case records (experiments/eval, gold as recorded in each metrics file)",
@@ -63654,12 +63663,1812 @@
         "experiments/heldout-v2/paired.json"
       ]
     },
+    "tool_set_v2": {
+      "experiment": "tool-set-v2",
+      "corpus_version": "v3",
+      "crosscheck": true,
+      "gold_version_dev": "v3.6",
+      "tool_set": "v2",
+      "default_tool_set_changed": false,
+      "adopted": false,
+      "threat_suite_run": false,
+      "dev_x3": {
+        "label": "Dev X3 against X2: a pre-declared regression check, one factor (the tool-set bundle).",
+        "rows": [
+          {
+            "id": "experiments/eval/agent-dev-X3/gpt-6-luna",
+            "model": "gpt-6-luna",
+            "metrics": {
+              "n_cases": 237,
+              "behaviour_accuracy": {
+                "rate": 0.895,
+                "ci95": [
+                  0.852,
+                  0.932
+                ],
+                "n": 237
+              },
+              "false_answer_rate": {
+                "rate": 0.031,
+                "ci95": [
+                  0.009,
+                  0.057
+                ],
+                "n": 229
+              },
+              "over_abstention_rate": {
+                "rate": 0.034,
+                "ci95": [
+                  0.013,
+                  0.059
+                ],
+                "n": 237
+              },
+              "key_number_recall": {
+                "rate": 0.829,
+                "ci95": [
+                  0.777,
+                  0.876
+                ],
+                "n": 153
+              },
+              "calc_correct": {
+                "rate": 0.792,
+                "ci95": [
+                  0.625,
+                  0.917
+                ],
+                "n": 24
+              },
+              "gold_cited_any": {
+                "rate": 0.778,
+                "ci95": [
+                  0.72,
+                  0.836
+                ],
+                "n": 189
+              },
+              "cases_with_ungrounded_numbers": {
+                "rate": 0.114,
+                "ci95": [
+                  0.076,
+                  0.156
+                ],
+                "n": 237
+              },
+              "answers_with_ungrounded_numbers": {
+                "rate": 0.114,
+                "ci95": [
+                  0.076,
+                  0.156
+                ],
+                "n": 237
+              },
+              "claims_judged": 300,
+              "claim_supported_rate": {
+                "rate": 0.887,
+                "ci95": [
+                  0.838,
+                  0.934
+                ],
+                "n": 300,
+                "n_cases": 181
+              },
+              "claim_unsupported_rate": {
+                "rate": 0.0,
+                "ci95": [
+                  0.0,
+                  0.0
+                ],
+                "n": 300,
+                "n_cases": 181
+              },
+              "answers_with_any_unsupported_claim": {
+                "rate": 0.0,
+                "ci95": [
+                  0.0,
+                  0.0
+                ],
+                "n": 181
+              },
+              "fact_coverage": {
+                "rate": 0.734,
+                "ci95": [
+                  0.679,
+                  0.787
+                ],
+                "n": 305,
+                "n_cases": 174
+              },
+              "answers_contradicting_a_reference_fact": {
+                "rate": 0.023,
+                "ci95": [
+                  0.006,
+                  0.046
+                ],
+                "n": 174
+              },
+              "latency_p50_s": 13.9,
+              "latency_p95_s": 40.8,
+              "cost_per_case_usd": 0.00298,
+              "judge_cost_total_usd": 0.237
+            },
+            "strata": {
+              "adversarial": {
+                "n": 35,
+                "behaviour_accuracy": 0.857,
+                "false_answer": 1,
+                "over_abstain": 3,
+                "unsupported_claims": 0,
+                "contradicted_facts": 1
+              },
+              "ambiguity_insufficient_causal": {
+                "n": 44,
+                "behaviour_accuracy": 0.727,
+                "false_answer": 3,
+                "over_abstain": 0,
+                "unsupported_claims": 0,
+                "contradicted_facts": 4
+              },
+              "cross_source_synthesis": {
+                "n": 35,
+                "behaviour_accuracy": 0.943,
+                "false_answer": 0,
+                "over_abstain": 2,
+                "unsupported_claims": 0,
+                "contradicted_facts": 1
+              },
+              "factual_lookup": {
+                "n": 70,
+                "behaviour_accuracy": 0.971,
+                "false_answer": 1,
+                "over_abstain": 1,
+                "unsupported_claims": 0,
+                "contradicted_facts": 0
+              },
+              "numerical_comparison": {
+                "n": 34,
+                "behaviour_accuracy": 0.882,
+                "false_answer": 2,
+                "over_abstain": 2,
+                "unsupported_claims": 0,
+                "contradicted_facts": 0
+              },
+              "revision_conflict": {
+                "n": 19,
+                "behaviour_accuracy": 1.0,
+                "false_answer": 0,
+                "over_abstain": 0,
+                "unsupported_claims": 0,
+                "contradicted_facts": 0
+              }
+            },
+            "provenance": [
+              "experiments/eval/agent-dev-X3/gpt-6-luna.metrics.json"
+            ],
+            "scoring_provenance": {
+              "eligible_n": 237,
+              "available_n": 237,
+              "gold_sha256": "6169a9deca78cb5908c584bdf7d17b1c8dd9a15ff7840b3752f3bbb4febb2f9b",
+              "git_head": "a97a1ca51060585d084b05190dfa34f94973ec74",
+              "price_table_sha256": "634b32441c3495b4c3ec13efa3af1e9cc99e5c7523eac3a15a5c238c3acaeb5c"
+            }
+          },
+          {
+            "id": "experiments/eval/agent-dev-X3/gpt-5.6-luna",
+            "model": "gpt-5.6-luna",
+            "metrics": {
+              "n_cases": 237,
+              "behaviour_accuracy": {
+                "rate": 0.899,
+                "ci95": [
+                  0.857,
+                  0.937
+                ],
+                "n": 237
+              },
+              "false_answer_rate": {
+                "rate": 0.031,
+                "ci95": [
+                  0.013,
+                  0.057
+                ],
+                "n": 229
+              },
+              "over_abstention_rate": {
+                "rate": 0.034,
+                "ci95": [
+                  0.013,
+                  0.059
+                ],
+                "n": 237
+              },
+              "key_number_recall": {
+                "rate": 0.874,
+                "ci95": [
+                  0.831,
+                  0.916
+                ],
+                "n": 153
+              },
+              "calc_correct": {
+                "rate": 0.792,
+                "ci95": [
+                  0.625,
+                  0.958
+                ],
+                "n": 24
+              },
+              "gold_cited_any": {
+                "rate": 0.804,
+                "ci95": [
+                  0.746,
+                  0.857
+                ],
+                "n": 189
+              },
+              "cases_with_ungrounded_numbers": {
+                "rate": 0.127,
+                "ci95": [
+                  0.084,
+                  0.173
+                ],
+                "n": 237
+              },
+              "answers_with_ungrounded_numbers": {
+                "rate": 0.127,
+                "ci95": [
+                  0.084,
+                  0.173
+                ],
+                "n": 237
+              },
+              "claims_judged": 373,
+              "claim_supported_rate": {
+                "rate": 0.834,
+                "ci95": [
+                  0.785,
+                  0.88
+                ],
+                "n": 373,
+                "n_cases": 181
+              },
+              "claim_unsupported_rate": {
+                "rate": 0.0,
+                "ci95": [
+                  0.0,
+                  0.0
+                ],
+                "n": 373,
+                "n_cases": 181
+              },
+              "answers_with_any_unsupported_claim": {
+                "rate": 0.0,
+                "ci95": [
+                  0.0,
+                  0.0
+                ],
+                "n": 181
+              },
+              "fact_coverage": {
+                "rate": 0.802,
+                "ci95": [
+                  0.754,
+                  0.847
+                ],
+                "n": 303,
+                "n_cases": 174
+              },
+              "answers_contradicting_a_reference_fact": {
+                "rate": 0.011,
+                "ci95": [
+                  0.0,
+                  0.029
+                ],
+                "n": 174
+              },
+              "latency_p50_s": 13.6,
+              "latency_p95_s": 40.2,
+              "cost_per_case_usd": 0.00484,
+              "judge_cost_total_usd": 0.2557
+            },
+            "strata": {
+              "adversarial": {
+                "n": 35,
+                "behaviour_accuracy": 0.943,
+                "false_answer": 1,
+                "over_abstain": 0,
+                "unsupported_claims": 0,
+                "contradicted_facts": 0
+              },
+              "ambiguity_insufficient_causal": {
+                "n": 44,
+                "behaviour_accuracy": 0.773,
+                "false_answer": 2,
+                "over_abstain": 0,
+                "unsupported_claims": 0,
+                "contradicted_facts": 3
+              },
+              "cross_source_synthesis": {
+                "n": 35,
+                "behaviour_accuracy": 0.914,
+                "false_answer": 0,
+                "over_abstain": 3,
+                "unsupported_claims": 0,
+                "contradicted_facts": 0
+              },
+              "factual_lookup": {
+                "n": 70,
+                "behaviour_accuracy": 0.957,
+                "false_answer": 2,
+                "over_abstain": 1,
+                "unsupported_claims": 0,
+                "contradicted_facts": 0
+              },
+              "numerical_comparison": {
+                "n": 34,
+                "behaviour_accuracy": 0.824,
+                "false_answer": 2,
+                "over_abstain": 4,
+                "unsupported_claims": 0,
+                "contradicted_facts": 0
+              },
+              "revision_conflict": {
+                "n": 19,
+                "behaviour_accuracy": 1.0,
+                "false_answer": 0,
+                "over_abstain": 0,
+                "unsupported_claims": 0,
+                "contradicted_facts": 0
+              }
+            },
+            "provenance": [
+              "experiments/eval/agent-dev-X3/gpt-5.6-luna.metrics.json"
+            ],
+            "scoring_provenance": {
+              "eligible_n": 237,
+              "available_n": 237,
+              "gold_sha256": "6169a9deca78cb5908c584bdf7d17b1c8dd9a15ff7840b3752f3bbb4febb2f9b",
+              "git_head": "6176cacb5eab31e2bc33d611d5a2d580c5f4cf13",
+              "price_table_sha256": "634b32441c3495b4c3ec13efa3af1e9cc99e5c7523eac3a15a5c238c3acaeb5c"
+            }
+          }
+        ],
+        "criteria": {
+          "gpt-6-luna": {
+            "criteria": {
+              "1_behaviour_accuracy": {
+                "x3": 212,
+                "pass": true,
+                "threshold": 205
+              },
+              "2_false_answers": {
+                "x2": 6,
+                "x3": 7,
+                "pass": false,
+                "threshold": 6
+              },
+              "3a_ungrounded_in_new_tool_cases": {
+                "x3": 1,
+                "of_cases": 10,
+                "pass": false
+              },
+              "3b_cases_with_ungrounded": {
+                "x2": 25,
+                "x3": 27,
+                "pass": true,
+                "threshold": 34
+              },
+              "4_operational_failures": {
+                "x2": 0,
+                "x3": 0,
+                "pass": true
+              }
+            },
+            "all_pass": false,
+            "x2": {
+              "n": 237,
+              "correct": 214,
+              "false_answers": 6,
+              "over_abstentions": 6,
+              "cases_with_ungrounded": 25,
+              "operational_failures": 0,
+              "new_tool_cases": 0,
+              "new_tool_cases_with_ungrounded": 0,
+              "rounds_3_cases": 0,
+              "numerical_comparison_n": 34,
+              "numerical_comparison_correct": 30
+            },
+            "x3": {
+              "n": 237,
+              "correct": 212,
+              "false_answers": 7,
+              "over_abstentions": 8,
+              "cases_with_ungrounded": 27,
+              "operational_failures": 0,
+              "new_tool_cases": 10,
+              "new_tool_cases_with_ungrounded": 1,
+              "rounds_3_cases": 3,
+              "numerical_comparison_n": 34,
+              "numerical_comparison_correct": 30
+            },
+            "changed_cases": [
+              "DEV-025",
+              "DEV-119",
+              "DEV-127",
+              "DEV-134",
+              "DEV-313",
+              "DEV-404",
+              "DEV-406",
+              "DEV-410",
+              "DEV-513",
+              "DEV-627"
+            ]
+          },
+          "gpt-5.6-luna": {
+            "criteria": {
+              "1_behaviour_accuracy": {
+                "x3": 213,
+                "pass": true,
+                "threshold": 209
+              },
+              "2_false_answers": {
+                "x2": 6,
+                "x3": 7,
+                "pass": false,
+                "threshold": 6
+              },
+              "3a_ungrounded_in_new_tool_cases": {
+                "x3": 3,
+                "of_cases": 18,
+                "pass": false
+              },
+              "3b_cases_with_ungrounded": {
+                "x2": 39,
+                "x3": 30,
+                "pass": true,
+                "threshold": 51
+              },
+              "4_operational_failures": {
+                "x2": 0,
+                "x3": 1,
+                "pass": false
+              }
+            },
+            "all_pass": false,
+            "x2": {
+              "n": 237,
+              "correct": 217,
+              "false_answers": 6,
+              "over_abstentions": 5,
+              "cases_with_ungrounded": 39,
+              "operational_failures": 0,
+              "new_tool_cases": 0,
+              "new_tool_cases_with_ungrounded": 0,
+              "rounds_3_cases": 0,
+              "numerical_comparison_n": 34,
+              "numerical_comparison_correct": 30
+            },
+            "x3": {
+              "n": 237,
+              "correct": 213,
+              "false_answers": 7,
+              "over_abstentions": 8,
+              "cases_with_ungrounded": 30,
+              "operational_failures": 1,
+              "new_tool_cases": 18,
+              "new_tool_cases_with_ungrounded": 3,
+              "rounds_3_cases": 6,
+              "numerical_comparison_n": 34,
+              "numerical_comparison_correct": 28
+            },
+            "changed_cases": [
+              "DEV-009",
+              "DEV-032",
+              "DEV-121",
+              "DEV-127",
+              "DEV-134",
+              "DEV-311",
+              "DEV-312",
+              "DEV-401",
+              "DEV-404",
+              "DEV-410",
+              "DEV-528",
+              "DEV-604",
+              "DEV-624",
+              "DEV-627"
+            ]
+          }
+        },
+        "all_criteria_passed": false
+      },
+      "v2post": {
+        "label": "Post-freeze diagnostic. Not held-out, and not a replacement of the frozen held-out v2 result (D-045). The tool set was designed after the errors of these 65 cases were analysed, so any gain here is optimistic by construction.",
+        "post_freeze_diagnostic": true,
+        "heldout": false,
+        "replaces_frozen_result": false,
+        "gold_sha256": "e3d16597d542d33d106b4e9291aa3b92ca5fcdf19aa4d3c2b3319c0543efa542",
+        "rows": [
+          {
+            "id": "experiments/eval/agent-heldout-V2post-r3/gpt-6-luna",
+            "arm": "r3",
+            "model": "gpt-6-luna",
+            "metrics": {
+              "n_cases": 65,
+              "behaviour_accuracy": {
+                "rate": 0.908,
+                "ci95": [
+                  0.831,
+                  0.969
+                ],
+                "n": 65
+              },
+              "false_answer_rate": {
+                "rate": 0.0,
+                "ci95": [
+                  0.0,
+                  0.0
+                ],
+                "n": 62
+              },
+              "over_abstention_rate": {
+                "rate": 0.046,
+                "ci95": [
+                  0.0,
+                  0.108
+                ],
+                "n": 65
+              },
+              "key_number_recall": {
+                "rate": 0.844,
+                "ci95": [
+                  0.75,
+                  0.928
+                ],
+                "n": 45
+              },
+              "calc_correct": {
+                "rate": 1.0,
+                "ci95": [
+                  1.0,
+                  1.0
+                ],
+                "n": 4
+              },
+              "gold_cited_any": {
+                "rate": 0.75,
+                "ci95": [
+                  0.625,
+                  0.875
+                ],
+                "n": 48
+              },
+              "cases_with_ungrounded_numbers": {
+                "rate": 0.015,
+                "ci95": [
+                  0.0,
+                  0.046
+                ],
+                "n": 65
+              },
+              "answers_with_ungrounded_numbers": {
+                "rate": 0.015,
+                "ci95": [
+                  0.0,
+                  0.046
+                ],
+                "n": 65
+              },
+              "claims_judged": 58,
+              "claim_supported_rate": {
+                "rate": 0.897,
+                "ci95": [
+                  0.806,
+                  0.981
+                ],
+                "n": 58,
+                "n_cases": 45
+              },
+              "claim_unsupported_rate": {
+                "rate": 0.0,
+                "ci95": [
+                  0.0,
+                  0.0
+                ],
+                "n": 58,
+                "n_cases": 45
+              },
+              "answers_with_any_unsupported_claim": {
+                "rate": 0.0,
+                "ci95": [
+                  0.0,
+                  0.0
+                ],
+                "n": 45
+              },
+              "fact_coverage": {
+                "rate": 0.766,
+                "ci95": [
+                  0.662,
+                  0.87
+                ],
+                "n": 64,
+                "n_cases": 45
+              },
+              "answers_contradicting_a_reference_fact": {
+                "rate": 0.0,
+                "ci95": [
+                  0.0,
+                  0.0
+                ],
+                "n": 45
+              },
+              "latency_p50_s": 14.7,
+              "latency_p95_s": 38.1,
+              "cost_per_case_usd": 0.0032,
+              "judge_cost_total_usd": 0.0554
+            },
+            "strata": {
+              "adversarial": {
+                "n": 8,
+                "behaviour_accuracy": 0.875,
+                "false_answer": 0,
+                "over_abstain": 0,
+                "unsupported_claims": 0,
+                "contradicted_facts": 0
+              },
+              "ambiguity_insufficient_causal": {
+                "n": 10,
+                "behaviour_accuracy": 0.8,
+                "false_answer": 0,
+                "over_abstain": 0,
+                "unsupported_claims": 0,
+                "contradicted_facts": 0
+              },
+              "cross_source_synthesis": {
+                "n": 8,
+                "behaviour_accuracy": 1.0,
+                "false_answer": 0,
+                "over_abstain": 0,
+                "unsupported_claims": 0,
+                "contradicted_facts": 0
+              },
+              "factual_lookup": {
+                "n": 22,
+                "behaviour_accuracy": 0.955,
+                "false_answer": 0,
+                "over_abstain": 1,
+                "unsupported_claims": 0,
+                "contradicted_facts": 0
+              },
+              "numerical_comparison": {
+                "n": 14,
+                "behaviour_accuracy": 0.857,
+                "false_answer": 0,
+                "over_abstain": 2,
+                "unsupported_claims": 0,
+                "contradicted_facts": 0
+              },
+              "revision_conflict": {
+                "n": 3,
+                "behaviour_accuracy": 1.0,
+                "false_answer": 0,
+                "over_abstain": 0,
+                "unsupported_claims": 0,
+                "contradicted_facts": 0
+              }
+            },
+            "provenance": [
+              "experiments/eval/agent-heldout-V2post-r3/gpt-6-luna.metrics.json"
+            ],
+            "scoring_provenance": {
+              "eligible_n": 65,
+              "available_n": 65,
+              "gold_sha256": "e3d16597d542d33d106b4e9291aa3b92ca5fcdf19aa4d3c2b3319c0543efa542",
+              "git_head": "513824866f37452b25c97ad4c6a702f673069cc4",
+              "price_table_sha256": "634b32441c3495b4c3ec13efa3af1e9cc99e5c7523eac3a15a5c238c3acaeb5c"
+            }
+          },
+          {
+            "id": "experiments/eval/agent-heldout-V2post-r3/gpt-5.6-luna",
+            "arm": "r3",
+            "model": "gpt-5.6-luna",
+            "metrics": {
+              "n_cases": 65,
+              "behaviour_accuracy": {
+                "rate": 0.846,
+                "ci95": [
+                  0.754,
+                  0.923
+                ],
+                "n": 65
+              },
+              "false_answer_rate": {
+                "rate": 0.0,
+                "ci95": [
+                  0.0,
+                  0.0
+                ],
+                "n": 58
+              },
+              "over_abstention_rate": {
+                "rate": 0.108,
+                "ci95": [
+                  0.046,
+                  0.185
+                ],
+                "n": 65
+              },
+              "key_number_recall": {
+                "rate": 0.841,
+                "ci95": [
+                  0.737,
+                  0.933
+                ],
+                "n": 45
+              },
+              "calc_correct": {
+                "rate": 1.0,
+                "ci95": [
+                  1.0,
+                  1.0
+                ],
+                "n": 4
+              },
+              "gold_cited_any": {
+                "rate": 0.667,
+                "ci95": [
+                  0.521,
+                  0.792
+                ],
+                "n": 48
+              },
+              "cases_with_ungrounded_numbers": {
+                "rate": 0.046,
+                "ci95": [
+                  0.0,
+                  0.108
+                ],
+                "n": 65
+              },
+              "answers_with_ungrounded_numbers": {
+                "rate": 0.046,
+                "ci95": [
+                  0.0,
+                  0.108
+                ],
+                "n": 65
+              },
+              "claims_judged": 57,
+              "claim_supported_rate": {
+                "rate": 0.895,
+                "ci95": [
+                  0.797,
+                  0.978
+                ],
+                "n": 57,
+                "n_cases": 41
+              },
+              "claim_unsupported_rate": {
+                "rate": 0.0,
+                "ci95": [
+                  0.0,
+                  0.0
+                ],
+                "n": 57,
+                "n_cases": 41
+              },
+              "answers_with_any_unsupported_claim": {
+                "rate": 0.0,
+                "ci95": [
+                  0.0,
+                  0.0
+                ],
+                "n": 41
+              },
+              "fact_coverage": {
+                "rate": 0.855,
+                "ci95": [
+                  0.762,
+                  0.947
+                ],
+                "n": 62,
+                "n_cases": 41
+              },
+              "answers_contradicting_a_reference_fact": {
+                "rate": 0.0,
+                "ci95": [
+                  0.0,
+                  0.0
+                ],
+                "n": 41
+              },
+              "latency_p50_s": 12.8,
+              "latency_p95_s": 33.0,
+              "cost_per_case_usd": 0.00491,
+              "judge_cost_total_usd": 0.0476
+            },
+            "strata": {
+              "adversarial": {
+                "n": 8,
+                "behaviour_accuracy": 0.875,
+                "false_answer": 0,
+                "over_abstain": 1,
+                "unsupported_claims": 0,
+                "contradicted_facts": 0
+              },
+              "ambiguity_insufficient_causal": {
+                "n": 10,
+                "behaviour_accuracy": 0.7,
+                "false_answer": 0,
+                "over_abstain": 0,
+                "unsupported_claims": 0,
+                "contradicted_facts": 0
+              },
+              "cross_source_synthesis": {
+                "n": 8,
+                "behaviour_accuracy": 1.0,
+                "false_answer": 0,
+                "over_abstain": 0,
+                "unsupported_claims": 0,
+                "contradicted_facts": 0
+              },
+              "factual_lookup": {
+                "n": 22,
+                "behaviour_accuracy": 0.909,
+                "false_answer": 0,
+                "over_abstain": 2,
+                "unsupported_claims": 0,
+                "contradicted_facts": 0
+              },
+              "numerical_comparison": {
+                "n": 14,
+                "behaviour_accuracy": 0.714,
+                "false_answer": 0,
+                "over_abstain": 4,
+                "unsupported_claims": 0,
+                "contradicted_facts": 0
+              },
+              "revision_conflict": {
+                "n": 3,
+                "behaviour_accuracy": 1.0,
+                "false_answer": 0,
+                "over_abstain": 0,
+                "unsupported_claims": 0,
+                "contradicted_facts": 0
+              }
+            },
+            "provenance": [
+              "experiments/eval/agent-heldout-V2post-r3/gpt-5.6-luna.metrics.json"
+            ],
+            "scoring_provenance": {
+              "eligible_n": 65,
+              "available_n": 65,
+              "gold_sha256": "e3d16597d542d33d106b4e9291aa3b92ca5fcdf19aa4d3c2b3319c0543efa542",
+              "git_head": "513824866f37452b25c97ad4c6a702f673069cc4",
+              "price_table_sha256": "634b32441c3495b4c3ec13efa3af1e9cc99e5c7523eac3a15a5c238c3acaeb5c"
+            }
+          },
+          {
+            "id": "experiments/eval/agent-heldout-V2post-hybrid/gpt-6-luna",
+            "arm": "hybrid",
+            "model": "gpt-6-luna",
+            "metrics": {
+              "n_cases": 65,
+              "behaviour_accuracy": {
+                "rate": 0.877,
+                "ci95": [
+                  0.785,
+                  0.954
+                ],
+                "n": 65
+              },
+              "false_answer_rate": {
+                "rate": 0.016,
+                "ci95": [
+                  0.0,
+                  0.049
+                ],
+                "n": 61
+              },
+              "over_abstention_rate": {
+                "rate": 0.062,
+                "ci95": [
+                  0.015,
+                  0.123
+                ],
+                "n": 65
+              },
+              "key_number_recall": {
+                "rate": 0.856,
+                "ci95": [
+                  0.761,
+                  0.935
+                ],
+                "n": 45
+              },
+              "calc_correct": {
+                "rate": 1.0,
+                "ci95": [
+                  1.0,
+                  1.0
+                ],
+                "n": 4
+              },
+              "gold_cited_any": {
+                "rate": 0.688,
+                "ci95": [
+                  0.542,
+                  0.812
+                ],
+                "n": 48
+              },
+              "cases_with_ungrounded_numbers": {
+                "rate": 0.046,
+                "ci95": [
+                  0.0,
+                  0.108
+                ],
+                "n": 65
+              },
+              "answers_with_ungrounded_numbers": {
+                "rate": 0.046,
+                "ci95": [
+                  0.0,
+                  0.108
+                ],
+                "n": 65
+              },
+              "claims_judged": 65,
+              "claim_supported_rate": {
+                "rate": 0.938,
+                "ci95": [
+                  0.865,
+                  0.988
+                ],
+                "n": 65,
+                "n_cases": 45
+              },
+              "claim_unsupported_rate": {
+                "rate": 0.0,
+                "ci95": [
+                  0.0,
+                  0.0
+                ],
+                "n": 65,
+                "n_cases": 45
+              },
+              "answers_with_any_unsupported_claim": {
+                "rate": 0.0,
+                "ci95": [
+                  0.0,
+                  0.0
+                ],
+                "n": 45
+              },
+              "fact_coverage": {
+                "rate": 0.769,
+                "ci95": [
+                  0.667,
+                  0.885
+                ],
+                "n": 65,
+                "n_cases": 44
+              },
+              "answers_contradicting_a_reference_fact": {
+                "rate": 0.0,
+                "ci95": [
+                  0.0,
+                  0.0
+                ],
+                "n": 44
+              },
+              "latency_p50_s": 10.5,
+              "latency_p95_s": 21.7,
+              "cost_per_case_usd": 0.00181,
+              "judge_cost_total_usd": 0.0537
+            },
+            "strata": {
+              "adversarial": {
+                "n": 8,
+                "behaviour_accuracy": 0.875,
+                "false_answer": 0,
+                "over_abstain": 0,
+                "unsupported_claims": 0,
+                "contradicted_facts": 0
+              },
+              "ambiguity_insufficient_causal": {
+                "n": 10,
+                "behaviour_accuracy": 0.7,
+                "false_answer": 1,
+                "over_abstain": 0,
+                "unsupported_claims": 0,
+                "contradicted_facts": 0
+              },
+              "cross_source_synthesis": {
+                "n": 8,
+                "behaviour_accuracy": 1.0,
+                "false_answer": 0,
+                "over_abstain": 0,
+                "unsupported_claims": 0,
+                "contradicted_facts": 0
+              },
+              "factual_lookup": {
+                "n": 22,
+                "behaviour_accuracy": 0.909,
+                "false_answer": 0,
+                "over_abstain": 2,
+                "unsupported_claims": 0,
+                "contradicted_facts": 0
+              },
+              "numerical_comparison": {
+                "n": 14,
+                "behaviour_accuracy": 0.857,
+                "false_answer": 0,
+                "over_abstain": 2,
+                "unsupported_claims": 0,
+                "contradicted_facts": 0
+              },
+              "revision_conflict": {
+                "n": 3,
+                "behaviour_accuracy": 1.0,
+                "false_answer": 0,
+                "over_abstain": 0,
+                "unsupported_claims": 0,
+                "contradicted_facts": 0
+              }
+            },
+            "provenance": [
+              "experiments/eval/agent-heldout-V2post-hybrid/gpt-6-luna.metrics.json"
+            ],
+            "scoring_provenance": {
+              "eligible_n": 65,
+              "available_n": 65,
+              "gold_sha256": "e3d16597d542d33d106b4e9291aa3b92ca5fcdf19aa4d3c2b3319c0543efa542",
+              "git_head": "513824866f37452b25c97ad4c6a702f673069cc4",
+              "price_table_sha256": "634b32441c3495b4c3ec13efa3af1e9cc99e5c7523eac3a15a5c238c3acaeb5c"
+            }
+          },
+          {
+            "id": "experiments/eval/agent-heldout-V2post-hybrid/gpt-5.6-luna",
+            "arm": "hybrid",
+            "model": "gpt-5.6-luna",
+            "metrics": {
+              "n_cases": 65,
+              "behaviour_accuracy": {
+                "rate": 0.815,
+                "ci95": [
+                  0.723,
+                  0.908
+                ],
+                "n": 65
+              },
+              "false_answer_rate": {
+                "rate": 0.034,
+                "ci95": [
+                  0.0,
+                  0.086
+                ],
+                "n": 58
+              },
+              "over_abstention_rate": {
+                "rate": 0.108,
+                "ci95": [
+                  0.031,
+                  0.185
+                ],
+                "n": 65
+              },
+              "key_number_recall": {
+                "rate": 0.83,
+                "ci95": [
+                  0.722,
+                  0.922
+                ],
+                "n": 45
+              },
+              "calc_correct": {
+                "rate": 1.0,
+                "ci95": [
+                  1.0,
+                  1.0
+                ],
+                "n": 4
+              },
+              "gold_cited_any": {
+                "rate": 0.667,
+                "ci95": [
+                  0.521,
+                  0.792
+                ],
+                "n": 48
+              },
+              "cases_with_ungrounded_numbers": {
+                "rate": 0.092,
+                "ci95": [
+                  0.031,
+                  0.169
+                ],
+                "n": 65
+              },
+              "answers_with_ungrounded_numbers": {
+                "rate": 0.092,
+                "ci95": [
+                  0.031,
+                  0.169
+                ],
+                "n": 65
+              },
+              "claims_judged": 67,
+              "claim_supported_rate": {
+                "rate": 0.836,
+                "ci95": [
+                  0.691,
+                  0.958
+                ],
+                "n": 67,
+                "n_cases": 43
+              },
+              "claim_unsupported_rate": {
+                "rate": 0.0,
+                "ci95": [
+                  0.0,
+                  0.0
+                ],
+                "n": 67,
+                "n_cases": 43
+              },
+              "answers_with_any_unsupported_claim": {
+                "rate": 0.0,
+                "ci95": [
+                  0.0,
+                  0.0
+                ],
+                "n": 43
+              },
+              "fact_coverage": {
+                "rate": 0.887,
+                "ci95": [
+                  0.794,
+                  0.966
+                ],
+                "n": 62,
+                "n_cases": 41
+              },
+              "answers_contradicting_a_reference_fact": {
+                "rate": 0.0,
+                "ci95": [
+                  0.0,
+                  0.0
+                ],
+                "n": 41
+              },
+              "latency_p50_s": 10.5,
+              "latency_p95_s": 23.8,
+              "cost_per_case_usd": 0.00392,
+              "judge_cost_total_usd": 0.0528
+            },
+            "strata": {
+              "adversarial": {
+                "n": 8,
+                "behaviour_accuracy": 0.875,
+                "false_answer": 0,
+                "over_abstain": 0,
+                "unsupported_claims": 0,
+                "contradicted_facts": 0
+              },
+              "ambiguity_insufficient_causal": {
+                "n": 10,
+                "behaviour_accuracy": 0.6,
+                "false_answer": 2,
+                "over_abstain": 0,
+                "unsupported_claims": 0,
+                "contradicted_facts": 0
+              },
+              "cross_source_synthesis": {
+                "n": 8,
+                "behaviour_accuracy": 1.0,
+                "false_answer": 0,
+                "over_abstain": 0,
+                "unsupported_claims": 0,
+                "contradicted_facts": 0
+              },
+              "factual_lookup": {
+                "n": 22,
+                "behaviour_accuracy": 0.909,
+                "false_answer": 0,
+                "over_abstain": 2,
+                "unsupported_claims": 0,
+                "contradicted_facts": 0
+              },
+              "numerical_comparison": {
+                "n": 14,
+                "behaviour_accuracy": 0.643,
+                "false_answer": 0,
+                "over_abstain": 5,
+                "unsupported_claims": 0,
+                "contradicted_facts": 0
+              },
+              "revision_conflict": {
+                "n": 3,
+                "behaviour_accuracy": 1.0,
+                "false_answer": 0,
+                "over_abstain": 0,
+                "unsupported_claims": 0,
+                "contradicted_facts": 0
+              }
+            },
+            "provenance": [
+              "experiments/eval/agent-heldout-V2post-hybrid/gpt-5.6-luna.metrics.json"
+            ],
+            "scoring_provenance": {
+              "eligible_n": 65,
+              "available_n": 65,
+              "gold_sha256": "e3d16597d542d33d106b4e9291aa3b92ca5fcdf19aa4d3c2b3319c0543efa542",
+              "git_head": "513824866f37452b25c97ad4c6a702f673069cc4",
+              "price_table_sha256": "634b32441c3495b4c3ec13efa3af1e9cc99e5c7523eac3a15a5c238c3acaeb5c"
+            }
+          }
+        ],
+        "paired": {
+          "toolset": {
+            "candidate": "agent-heldout-V2post-r3",
+            "baseline": "agent-heldout-V2-r3",
+            "per_model": {
+              "gpt-6-luna": {
+                "n_gold_cases": 65,
+                "complete": true,
+                "seed": 20261031,
+                "n_boot": 20000,
+                "level": 0.9,
+                "behaviour_accuracy": {
+                  "candidate": 0.9077,
+                  "baseline": 0.7538
+                },
+                "paired_difference": 0.1538,
+                "better": 10,
+                "worse": 0,
+                "mcnemar_exact_p": 0.002,
+                "case_bootstrap_interval": [
+                  0.0769,
+                  0.2308
+                ],
+                "component_bootstrap_interval": [
+                  0.0714,
+                  0.2222
+                ],
+                "n_components": 39,
+                "n_evidence_components": 22,
+                "source_group_sensitivity_interval": [
+                  0.0612,
+                  0.2239
+                ],
+                "n_source_groups": 10,
+                "guardrails": {
+                  "false_answers": {
+                    "candidate": 0,
+                    "baseline": 0
+                  },
+                  "answers_with_contradicted_fact": {
+                    "candidate": 0,
+                    "baseline": 0
+                  }
+                },
+                "by_family_descriptive": {
+                  "factual_lookup": {
+                    "n": 22,
+                    "better": 1,
+                    "worse": 0
+                  },
+                  "numerical_comparison": {
+                    "n": 14,
+                    "better": 9,
+                    "worse": 0
+                  },
+                  "cross_source_synthesis": {
+                    "n": 8,
+                    "better": 0,
+                    "worse": 0
+                  },
+                  "revision_conflict": {
+                    "n": 3,
+                    "better": 0,
+                    "worse": 0
+                  },
+                  "ambiguity_insufficient_causal": {
+                    "n": 10,
+                    "better": 0,
+                    "worse": 0
+                  },
+                  "adversarial": {
+                    "n": 8,
+                    "better": 0,
+                    "worse": 0
+                  }
+                },
+                "sensitivity_descriptive": {
+                  "without_mti_ai_feature_group": {
+                    "n": 60,
+                    "paired_difference": 0.15,
+                    "better": 9,
+                    "worse": 0,
+                    "case_bootstrap_interval": [
+                      0.0833,
+                      0.2333
+                    ]
+                  },
+                  "report_text_evidence_cases_only": {
+                    "n": 34,
+                    "paired_difference": 0.2353,
+                    "better": 8,
+                    "worse": 0,
+                    "case_bootstrap_interval": [
+                      0.1176,
+                      0.3529
+                    ]
+                  }
+                },
+                "conditions": {
+                  "complete_paired_data": true,
+                  "case_bootstrap_lower_above_zero": true,
+                  "component_bootstrap_lower_above_zero": true,
+                  "enough_evidence_components": true,
+                  "no_added_false_answers": true
+                },
+                "demonstrated_gain": true
+              },
+              "gpt-5.6-luna": {
+                "n_gold_cases": 65,
+                "complete": true,
+                "seed": 20261031,
+                "n_boot": 20000,
+                "level": 0.9,
+                "behaviour_accuracy": {
+                  "candidate": 0.8462,
+                  "baseline": 0.7231
+                },
+                "paired_difference": 0.1231,
+                "better": 9,
+                "worse": 1,
+                "mcnemar_exact_p": 0.0215,
+                "case_bootstrap_interval": [
+                  0.0462,
+                  0.2
+                ],
+                "component_bootstrap_interval": [
+                  0.0577,
+                  0.1935
+                ],
+                "n_components": 39,
+                "n_evidence_components": 22,
+                "source_group_sensitivity_interval": [
+                  0.0441,
+                  0.194
+                ],
+                "n_source_groups": 10,
+                "guardrails": {
+                  "false_answers": {
+                    "candidate": 0,
+                    "baseline": 0
+                  },
+                  "answers_with_contradicted_fact": {
+                    "candidate": 0,
+                    "baseline": 0
+                  }
+                },
+                "by_family_descriptive": {
+                  "factual_lookup": {
+                    "n": 22,
+                    "better": 1,
+                    "worse": 0
+                  },
+                  "numerical_comparison": {
+                    "n": 14,
+                    "better": 7,
+                    "worse": 0
+                  },
+                  "cross_source_synthesis": {
+                    "n": 8,
+                    "better": 0,
+                    "worse": 0
+                  },
+                  "revision_conflict": {
+                    "n": 3,
+                    "better": 0,
+                    "worse": 0
+                  },
+                  "ambiguity_insufficient_causal": {
+                    "n": 10,
+                    "better": 0,
+                    "worse": 0
+                  },
+                  "adversarial": {
+                    "n": 8,
+                    "better": 1,
+                    "worse": 1
+                  }
+                },
+                "sensitivity_descriptive": {
+                  "without_mti_ai_feature_group": {
+                    "n": 60,
+                    "paired_difference": 0.1167,
+                    "better": 8,
+                    "worse": 1,
+                    "case_bootstrap_interval": [
+                      0.0333,
+                      0.2
+                    ]
+                  },
+                  "report_text_evidence_cases_only": {
+                    "n": 34,
+                    "paired_difference": 0.1471,
+                    "better": 5,
+                    "worse": 0,
+                    "case_bootstrap_interval": [
+                      0.0588,
+                      0.2647
+                    ]
+                  }
+                },
+                "conditions": {
+                  "complete_paired_data": true,
+                  "case_bootstrap_lower_above_zero": true,
+                  "component_bootstrap_lower_above_zero": true,
+                  "enough_evidence_components": true,
+                  "no_added_false_answers": true
+                },
+                "demonstrated_gain": true
+              }
+            }
+          },
+          "r3_vs_hybrid": {
+            "candidate": "agent-heldout-V2post-r3",
+            "baseline": "agent-heldout-V2post-hybrid",
+            "per_model": {
+              "gpt-6-luna": {
+                "n_gold_cases": 65,
+                "complete": true,
+                "seed": 20261031,
+                "n_boot": 20000,
+                "level": 0.9,
+                "behaviour_accuracy": {
+                  "candidate": 0.9077,
+                  "baseline": 0.8769
+                },
+                "paired_difference": 0.0308,
+                "better": 3,
+                "worse": 1,
+                "mcnemar_exact_p": 0.625,
+                "case_bootstrap_interval": [
+                  -0.0154,
+                  0.0769
+                ],
+                "component_bootstrap_interval": [
+                  -0.0175,
+                  0.0769
+                ],
+                "n_components": 39,
+                "n_evidence_components": 22,
+                "source_group_sensitivity_interval": [
+                  -0.0189,
+                  0.0735
+                ],
+                "n_source_groups": 10,
+                "guardrails": {
+                  "false_answers": {
+                    "candidate": 0,
+                    "baseline": 1
+                  },
+                  "answers_with_contradicted_fact": {
+                    "candidate": 0,
+                    "baseline": 0
+                  }
+                },
+                "by_family_descriptive": {
+                  "factual_lookup": {
+                    "n": 22,
+                    "better": 1,
+                    "worse": 0
+                  },
+                  "numerical_comparison": {
+                    "n": 14,
+                    "better": 1,
+                    "worse": 1
+                  },
+                  "cross_source_synthesis": {
+                    "n": 8,
+                    "better": 0,
+                    "worse": 0
+                  },
+                  "revision_conflict": {
+                    "n": 3,
+                    "better": 0,
+                    "worse": 0
+                  },
+                  "ambiguity_insufficient_causal": {
+                    "n": 10,
+                    "better": 1,
+                    "worse": 0
+                  },
+                  "adversarial": {
+                    "n": 8,
+                    "better": 0,
+                    "worse": 0
+                  }
+                },
+                "sensitivity_descriptive": {
+                  "without_mti_ai_feature_group": {
+                    "n": 60,
+                    "paired_difference": 0.0167,
+                    "better": 2,
+                    "worse": 1,
+                    "case_bootstrap_interval": [
+                      -0.0333,
+                      0.0667
+                    ]
+                  },
+                  "report_text_evidence_cases_only": {
+                    "n": 34,
+                    "paired_difference": 0.0588,
+                    "better": 2,
+                    "worse": 0,
+                    "case_bootstrap_interval": [
+                      0.0,
+                      0.1176
+                    ]
+                  }
+                },
+                "conditions": {
+                  "complete_paired_data": true,
+                  "case_bootstrap_lower_above_zero": false,
+                  "component_bootstrap_lower_above_zero": false,
+                  "enough_evidence_components": true,
+                  "no_added_false_answers": true
+                },
+                "demonstrated_gain": false
+              },
+              "gpt-5.6-luna": {
+                "n_gold_cases": 65,
+                "complete": true,
+                "seed": 20261031,
+                "n_boot": 20000,
+                "level": 0.9,
+                "behaviour_accuracy": {
+                  "candidate": 0.8462,
+                  "baseline": 0.8154
+                },
+                "paired_difference": 0.0308,
+                "better": 4,
+                "worse": 2,
+                "mcnemar_exact_p": 0.6875,
+                "case_bootstrap_interval": [
+                  -0.0308,
+                  0.0923
+                ],
+                "component_bootstrap_interval": [
+                  -0.0286,
+                  0.1017
+                ],
+                "n_components": 39,
+                "n_evidence_components": 22,
+                "source_group_sensitivity_interval": [
+                  -0.0169,
+                  0.0845
+                ],
+                "n_source_groups": 10,
+                "guardrails": {
+                  "false_answers": {
+                    "candidate": 0,
+                    "baseline": 2
+                  },
+                  "answers_with_contradicted_fact": {
+                    "candidate": 0,
+                    "baseline": 0
+                  }
+                },
+                "by_family_descriptive": {
+                  "factual_lookup": {
+                    "n": 22,
+                    "better": 0,
+                    "worse": 0
+                  },
+                  "numerical_comparison": {
+                    "n": 14,
+                    "better": 2,
+                    "worse": 1
+                  },
+                  "cross_source_synthesis": {
+                    "n": 8,
+                    "better": 0,
+                    "worse": 0
+                  },
+                  "revision_conflict": {
+                    "n": 3,
+                    "better": 0,
+                    "worse": 0
+                  },
+                  "ambiguity_insufficient_causal": {
+                    "n": 10,
+                    "better": 1,
+                    "worse": 0
+                  },
+                  "adversarial": {
+                    "n": 8,
+                    "better": 1,
+                    "worse": 1
+                  }
+                },
+                "sensitivity_descriptive": {
+                  "without_mti_ai_feature_group": {
+                    "n": 60,
+                    "paired_difference": 0.0333,
+                    "better": 4,
+                    "worse": 2,
+                    "case_bootstrap_interval": [
+                      -0.0333,
+                      0.1
+                    ]
+                  },
+                  "report_text_evidence_cases_only": {
+                    "n": 34,
+                    "paired_difference": 0.0294,
+                    "better": 2,
+                    "worse": 1,
+                    "case_bootstrap_interval": [
+                      -0.0588,
+                      0.1176
+                    ]
+                  }
+                },
+                "conditions": {
+                  "complete_paired_data": true,
+                  "case_bootstrap_lower_above_zero": false,
+                  "component_bootstrap_lower_above_zero": false,
+                  "enough_evidence_components": true,
+                  "no_added_false_answers": true
+                },
+                "demonstrated_gain": false
+              }
+            }
+          }
+        },
+        "tool_use": {
+          "gpt-6-luna": {
+            "r3": {
+              "frozen": {
+                "n": 65,
+                "correct": 49,
+                "false_answers": 0,
+                "over_abstentions": 13,
+                "cases_with_ungrounded": 2,
+                "operational_failures": 0,
+                "new_tool_cases": 0,
+                "new_tool_cases_with_ungrounded": 0,
+                "rounds_3_cases": 0,
+                "numerical_comparison_n": 14,
+                "numerical_comparison_correct": 3
+              },
+              "post": {
+                "n": 65,
+                "correct": 59,
+                "false_answers": 0,
+                "over_abstentions": 3,
+                "cases_with_ungrounded": 1,
+                "operational_failures": 0,
+                "new_tool_cases": 7,
+                "new_tool_cases_with_ungrounded": 0,
+                "rounds_3_cases": 3,
+                "numerical_comparison_n": 14,
+                "numerical_comparison_correct": 12
+              }
+            },
+            "hybrid": {
+              "frozen": {
+                "n": 65,
+                "correct": 46,
+                "false_answers": 1,
+                "over_abstentions": 14,
+                "cases_with_ungrounded": 2,
+                "operational_failures": 0,
+                "new_tool_cases": 0,
+                "new_tool_cases_with_ungrounded": 0,
+                "rounds_3_cases": 0,
+                "numerical_comparison_n": 14,
+                "numerical_comparison_correct": 3
+              },
+              "post": {
+                "n": 65,
+                "correct": 57,
+                "false_answers": 1,
+                "over_abstentions": 4,
+                "cases_with_ungrounded": 3,
+                "operational_failures": 0,
+                "new_tool_cases": 7,
+                "new_tool_cases_with_ungrounded": 0,
+                "rounds_3_cases": 4,
+                "numerical_comparison_n": 14,
+                "numerical_comparison_correct": 12
+              }
+            }
+          },
+          "gpt-5.6-luna": {
+            "r3": {
+              "frozen": {
+                "n": 65,
+                "correct": 47,
+                "false_answers": 0,
+                "over_abstentions": 14,
+                "cases_with_ungrounded": 5,
+                "operational_failures": 0,
+                "new_tool_cases": 0,
+                "new_tool_cases_with_ungrounded": 0,
+                "rounds_3_cases": 0,
+                "numerical_comparison_n": 14,
+                "numerical_comparison_correct": 3
+              },
+              "post": {
+                "n": 65,
+                "correct": 55,
+                "false_answers": 0,
+                "over_abstentions": 7,
+                "cases_with_ungrounded": 3,
+                "operational_failures": 0,
+                "new_tool_cases": 8,
+                "new_tool_cases_with_ungrounded": 0,
+                "rounds_3_cases": 5,
+                "numerical_comparison_n": 14,
+                "numerical_comparison_correct": 10
+              }
+            },
+            "hybrid": {
+              "frozen": {
+                "n": 65,
+                "correct": 47,
+                "false_answers": 1,
+                "over_abstentions": 14,
+                "cases_with_ungrounded": 4,
+                "operational_failures": 0,
+                "new_tool_cases": 0,
+                "new_tool_cases_with_ungrounded": 0,
+                "rounds_3_cases": 0,
+                "numerical_comparison_n": 14,
+                "numerical_comparison_correct": 3
+              },
+              "post": {
+                "n": 65,
+                "correct": 53,
+                "false_answers": 2,
+                "over_abstentions": 7,
+                "cases_with_ungrounded": 6,
+                "operational_failures": 0,
+                "new_tool_cases": 6,
+                "new_tool_cases_with_ungrounded": 1,
+                "rounds_3_cases": 6,
+                "numerical_comparison_n": 14,
+                "numerical_comparison_correct": 9
+              }
+            }
+          }
+        }
+      },
+      "verdict": "Not adopted: the pre-declared dev criteria failed for both models. The default tool set is unchanged and the threat suite has not been run under tool set v2.",
+      "provenance": [
+        "experiments/eval/agent-dev-X3/gpt-5.6-luna.metrics.json",
+        "experiments/eval/agent-dev-X3/gpt-6-luna.metrics.json",
+        "experiments/eval/agent-heldout-V2post-hybrid/gpt-5.6-luna.metrics.json",
+        "experiments/eval/agent-heldout-V2post-hybrid/gpt-6-luna.metrics.json",
+        "experiments/eval/agent-heldout-V2post-r3/gpt-5.6-luna.metrics.json",
+        "experiments/eval/agent-heldout-V2post-r3/gpt-6-luna.metrics.json",
+        "experiments/heldout-v2/paired-postfix-r3-vs-hybrid.json",
+        "experiments/heldout-v2/paired-postfix-toolset.json",
+        "experiments/tool-fix/criteria.json"
+      ]
+    },
     "limitations": [
-      "Generation used AI-drafted gold before owner review; post-run owner review covers selected cards, not the entire gold set.",
-      "Forty-five gold cards are owner reviewed; the remaining 223 remain draft.",
+      "Generation used AI-drafted gold before owner review; the owner then reviewed every gold case (one reviewer, after the runs were scored), and four change-clicks were not applied under the out-of-period policy, so labels are unchanged in gold v3.7.",
+      "All 403 labelling items were decided by one reviewer's own click: a single person's post hoc review, not independent annotation or inter-rater evidence.",
       "Current v3.5 and historical paired intervals include zero; the comparison is inconclusive under the registered rule.",
       "Gold v3.5 changes HO-022 after held-out execution; rescoring is post-run adjudication, not a fresh frozen-gold experiment.",
-      "AI-assisted per-card owner decisions are not blinded independent annotation or inter-rater evidence.",
       "Metric definitions differ between evaluation stages.",
       "Dev X2 (corpus v3, gold v3.6, crosscheck on, 14 runtime changes) is a regression check of the served system, not an ablation: several factors changed at once, and the ungrounded-number check was widened, so that metric is not comparable with A3 or X1."
     ]
@@ -64218,7 +66027,7 @@
     "The population basis of the dataset employment series is unverified."
   ],
   "provenance": {
-    "commit": "10faf613e514aa80f8b55649d029cceb4d040056",
+    "commit": "27f0aaf2cbe0c46d822043b313e83e8d33437969",
     "artifacts": [
       {
         "path": "data/export/sources.json",
@@ -64926,6 +66735,51 @@
         "sha256": "2e02b3068c4899a3dd6642631a4dd415e9aeff23dc7dc96499a48cd725a01a3b"
       },
       {
+        "path": "experiments/tool-fix/criteria.json",
+        "status": "available",
+        "sha256": "351f809a83a8b7380fbcdb08d0d515326ce392edf994be437f75b345a6966904"
+      },
+      {
+        "path": "experiments/eval/agent-dev-X3/gpt-6-luna.metrics.json",
+        "status": "available",
+        "sha256": "7c265124c37ca1bdbee5f98b84fbbe63272f4da954b742552c1c0c2168eac255"
+      },
+      {
+        "path": "experiments/eval/agent-dev-X3/gpt-5.6-luna.metrics.json",
+        "status": "available",
+        "sha256": "4b7a340f0b03a85be346a97ad34eb65e331b30aa4c174c5c12e93c6fdc36cf3f"
+      },
+      {
+        "path": "experiments/eval/agent-heldout-V2post-r3/gpt-6-luna.metrics.json",
+        "status": "available",
+        "sha256": "ab2b7edb9fd804a1f2a95730ae6421f5b10c89724191e11328c82dcee0a71715"
+      },
+      {
+        "path": "experiments/eval/agent-heldout-V2post-r3/gpt-5.6-luna.metrics.json",
+        "status": "available",
+        "sha256": "077d407f3daa1eb8037d51271030ff14c13458f3ded6d724ba6138bedeac2d8e"
+      },
+      {
+        "path": "experiments/eval/agent-heldout-V2post-hybrid/gpt-6-luna.metrics.json",
+        "status": "available",
+        "sha256": "ec2f99f5aa682f0b6ad3eac0f283e66dfd24e2bc70fcbab1827a068f845aacac"
+      },
+      {
+        "path": "experiments/eval/agent-heldout-V2post-hybrid/gpt-5.6-luna.metrics.json",
+        "status": "available",
+        "sha256": "71a63cc7990f5b6e97a2632d88a3592f874513b3856bef5cfa9964f02132e0af"
+      },
+      {
+        "path": "experiments/heldout-v2/paired-postfix-toolset.json",
+        "status": "available",
+        "sha256": "0cc20ccfa4f5dfef059c2ce4750bf5cd686d4b7b1026bcb5bd9cf662321976e8"
+      },
+      {
+        "path": "experiments/heldout-v2/paired-postfix-r3-vs-hybrid.json",
+        "status": "available",
+        "sha256": "99eb5788613239006b988f4f4c9af8ea180dc626f6485b967a43a4737014d081"
+      },
+      {
         "path": "experiments/runs/agent-dev-A1/gpt-4.1-mini.scores.jsonl",
         "status": "available",
         "sha256": "69e5aa11a6aeae2ac8470ffd8c8c1542d46a1a7efc17676398ebe4150a0035c2"
@@ -64998,12 +66852,12 @@
       {
         "path": "docs/decisions.md",
         "status": "available",
-        "sha256": "559f98c28ad9d148e8479243a8dbe9dc78f0fee60c5ea0078e33cad804fc5063"
+        "sha256": "5b34f031ddcacdf5c6956e46d6ea532f6acc0a506b43f29265acaf45c7300496"
       },
       {
         "path": "docs/progress.md",
         "status": "available",
-        "sha256": "bee24e7a52b615dd2cf96dd4da0933918bd15ef767c4bf2524804e8bdba04e05"
+        "sha256": "f3b559b43192fd368b4aaa2980ac10b6b046b755b029318dfc36d5f2a602e405"
       }
     ],
     "policy": "Committed artifacts only; numeric fields only."

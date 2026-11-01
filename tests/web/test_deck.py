@@ -124,7 +124,7 @@ def test_every_slide_has_a_heading_and_speaker_notes():
         assert "title:" in block, block[:100]
 
 
-FACE_FORBIDDEN = re.compile(r"ADR-|D-0\d\d|\bX[12]\b|\bA[1-5]\b|T-I06|report\.json|\.md\b|\.js\b|\b[0-9a-f]{7,}\b|\bhit@8\b|\bheld-out\b")
+FACE_FORBIDDEN = re.compile(r"ADR-|D-0\d\d|\bX[12]\b|\bX3\b|\bA[1-5]\b|\bR[0-3]a?\b|T-I06|report\.json|\.md\b|\.js\b|\b[0-9a-f]{7,}\b|\bhit@8\b|\bheld-out\b|\bV2post\b")
 
 
 def test_slide_faces_carry_no_identifiers():
@@ -141,6 +141,43 @@ def test_no_bridge_sentences_or_pills_on_faces():
     main = _slides_main_section()
     for banned in ("withSoWhat", "The next slide", "pill", "eyebrow"):
         assert banned not in main
+
+
+REQUIRED_TITLES = [
+    "The assignment", "Why this problem", "The problem", "Why one number is not enough", "Choosing the data", "What the data showed",
+    "Does filtering help?", "The agent loop", "How I measured", "The experiment ladder", "Fixing the calculation gap", "Choosing the model",
+    "Safety tests", "The MCP server", "How I worked with AI agents", "Challenges", "Limits, and what next", "Requirement coverage", "Summary", "Sources",
+]
+
+
+def test_main_deck_follows_the_assignment_and_has_short_plain_titles():
+    main = _slides_main_section()
+    titles = []
+    for title in re.findall(r"\btitle: '([^']+)'", main):
+        if title not in titles:
+            titles.append(title)
+    position = -1
+    for wanted in REQUIRED_TITLES:
+        assert wanted in titles, wanted
+        assert titles.index(wanted) > position, f"{wanted} is out of order"
+        position = titles.index(wanted)
+    for title in titles[1:]:
+        assert len(title.split()) <= 9, title
+    assert 28 <= len(re.findall(r"\badd\(\{", main)) <= 32
+
+
+def test_calculation_fix_slide_states_the_failure_and_the_graphics_exist():
+    main = _slides_main_section()
+    assert main.count("Fixing the calculation gap") == 1
+    assert "Not adopted." in main and "optimistic" in main
+    graphics = (STATIC / "presentation" / "graphics.js").read_text()
+    for name in ("threeAnswers", "twoSources", "buildTimeline", "flattening", "retrievalStaircase", "agentLoop", "evidenceTrace", "experimentStaircase", "costBars", "toolFixBars", "requirementGrid", "domainChoice", "challengeGrid", "answerCard"):
+        assert f"export function {name}" in graphics, name
+    slides = (STATIC / "presentation" / "slides.js").read_text()
+    assert "403" in main and "One reviewer" in main  # the review fact sits on the measuring slide
+    assert "OWNER TO CONFIRM" in slides
+    css = (STATIC / "css" / "presentation.css").read_text()
+    assert re.search(r"\.deck-page \.pr-fig-title[^{]*\{[^}]*display:\s*none", css)
 
 
 def test_home_page_has_no_logo_or_favicon_file():
