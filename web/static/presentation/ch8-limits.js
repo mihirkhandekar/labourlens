@@ -8,15 +8,15 @@ import {goldOf, metricOf} from './model.js';
 function reviewFigure() {
   const rows = [
     {label: 'Answer verdicts, 40 outputs', sub: 'human review of saved answers', segments: [
-      {key: 'c', label: 'Correct', value: 25, cls: 'c1'}, {key: 'p', label: 'Partly correct', value: 6, cls: 'c2'}, {key: 'i', label: 'Incorrect', value: 9, cls: 'c4'}]},
+      {key: 'c', label: 'Correct', value: 25, cls: 'c1'}, {key: 'p', label: 'Partly correct', value: 6, cls: 'c6'}, {key: 'i', label: 'Incorrect', value: 9, cls: 'c2'}]},
     {label: 'Gold cases, 268', sub: 'owner review of label, evidence, facts', segments: [
-      {key: 'ok', label: 'Reviewed, label kept', value: 266, cls: 'c1'}, {key: 'dis', label: 'Label changed in v3.5', value: 2, cls: 'c2'}]},
+      {key: 'ok', label: 'Reviewed, label kept', value: 266, cls: 'c1'}, {key: 'dis', label: 'Label changed in v3.5', value: 2, cls: 'c6'}]},
     {label: 'Held-out v2 questions, 65', sub: 'owner review of label, evidence, facts', segments: [
       {key: 'v2', label: 'Reviewed and signed off', value: 65, cls: 'c1'}]},
     {label: 'Source checks, 30', sub: 'human source/data quality review', segments: [
-      {key: 'm', label: 'Match', value: 18, cls: 'c1'}, {key: 'mi', label: 'Minor difference', value: 12, cls: 'c2'}]},
+      {key: 'm', label: 'Match', value: 18, cls: 'c1'}, {key: 'mi', label: 'Minor difference', value: 12, cls: 'c6'}]},
     {label: 'AI review of 40 outputs', sub: 'blind AI judgment, failure-enriched sample', segments: [
-      {key: 'ac', label: 'AI: correct', value: 28, cls: 'c1'}, {key: 'ap', label: 'AI: partly correct', value: 6, cls: 'c2'}, {key: 'ai', label: 'AI: incorrect', value: 6, cls: 'c4'}]}
+      {key: 'ac', label: 'AI: correct', value: 28, cls: 'c1'}, {key: 'ap', label: 'AI: partly correct', value: 6, cls: 'c6'}, {key: 'ai', label: 'AI: incorrect', value: 6, cls: 'c2'}]}
   ];
   return figure({
     id: 'fig-review', title: 'I signed off four separate review streams; labels began as AI drafts', wide: true,
@@ -47,7 +47,7 @@ const limitsFor = m => { const rights = m.section('serving').rights || {}; retur
   ['Temperature and reasoning effort were not varied', 'Calls used provider defaults rather than explicit temperature or reasoning settings. New runs record provider-default temperature and top_p, no seed, prompt hashes and completion limits. Older runs did not record that sampling block.', 'docs/evaluation-report.md › Read this first'],
   ['Licences are unverified for some sources', `${rights.datasets_unverified != null ? `${rights.datasets_unverified} datasets are assumed open but unverified, and ${rights.sources_unresolved} documents have unresolved rights.` : 'Licence status is not recorded.'} All of them stay on my machine; none is committed or published. The report PDFs carry their own copyright notices.`, 'docs/data-sheet.md › section 5 · report.json › serving.rights'],
   ['No provider-side spend cap is verified', 'The app reserves $0.05 per question and keeps a daily budget, but that is its own estimate. A cap set at the provider has not been checked on the server.', 'docs/deploy.md'],
-  ['The live app is not the evaluated system', 'It adds a small-talk reply, a scope check, a rewrite of follow-up questions and statistics lookups through MCP, and serves document build v3.1. The scope check was measured alone and the MCP route for latency and protocol behaviour; a separate 65-case sample measures the served configuration: 90.8% for both models, no observed loss against direct, but 51 reused development cases, 14 hand-written probes, one run and the same judge family.', 'docs/decisions.md › D-050 to D-053 · report.json › serving']
+  ['The live app is not the evaluated system', 'It adds a small-talk reply, a scope check, a rewrite of follow-up questions and statistics lookups through MCP, and serves document build v3.1. The scope check was measured alone and the MCP route for latency and protocol behaviour; a separate 65-case served-chain sample (statistics-only MCP; not the fresh 65) measures the served configuration: 90.8% for both models, no observed loss against direct, but 51 reused development cases, 14 hand-written probes, one run and the same judge family.', 'docs/decisions.md › D-050 to D-053 · report.json › serving']
 ]; };
 
 function limitCards(m) {

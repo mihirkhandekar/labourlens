@@ -139,7 +139,13 @@ def test_committed_report_keeps_x2_and_e2efix_separate_from_registered_entries()
 def test_current_served_chain_and_threat_reruns_are_separate_numeric_blocks():
     report = json.loads((REPO / "web/static/data/report.json").read_text())
     chain = report["serving"]["chain"]
-    assert len(chain["rows"]) == 7
+    no_stats = [row for row in chain["rows"] if row["route"] == "no-stats"]  # present once the arm's artifacts are committed and the report is rebuilt
+    assert len(chain["rows"]) == 7 + len(no_stats)
+    if no_stats:
+        assert len(no_stats) == 1 and no_stats[0]["model"] == "gpt-6-luna" and no_stats[0]["metrics"]["all"]["behavior_accuracy"] == 0.692
+        for key, better, worse in (("nostats-vs-direct-on", 0, 14), ("nostats-vs-mcp-on", 1, 15)):
+            paired = chain["paired"][key]["gpt-6-luna"]
+            assert (paired["better"], paired["worse"], paired["paired_difference"]) == (better, worse, -0.2154)
     all_tools = [row for row in chain["rows"] if row["route"] == "mcp-all"]
     assert len(all_tools) == 1 and all_tools[0]["model"] == "gpt-6-luna"
     assert all_tools[0]["metrics"]["all"]["behavior_accuracy"] == 0.877

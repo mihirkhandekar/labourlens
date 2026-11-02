@@ -45,3 +45,74 @@ uv run labourlens paired --gold experiments/served/mixed-sample.jsonl --candidat
 ```
 
 **Cost forecast, not a result:** about $0.0026 per question, or $0.17 for 65 generation questions, anchored to the existing primary-model served arm and the committed token prices (gpt-6-luna input $0.10/output $0.50 per million tokens). The dry-run estimate uses the saved mcp-on cost per case. The actual candidate may use a different number of report searches, tokens and answer repairs. This is not a spending cap or invoice; the subsequent `eval` command can incur separate judge calls. The paired commands are offline. No candidate results are filled in this pre-registration.
+
+
+## Result (recorded 2 November 2026, after the run)
+
+The pre-registration above is unchanged. This section records what happened. Sources: `experiments/runs/served-dev-S65-nostats-b/gpt-6-luna.metrics.json` and `.scores.jsonl`; `experiments/eval/served-dev-S65-nostats-b-REPORT.md` (judge `gpt-6.1-terra`); `experiments/served/paired-S65-nostats-vs-direct-on.json` and `experiments/served/paired-S65-nostats-vs-mcp-on.json`. `gpt-6-luna` only, 65 served questions, one run per arm, retrieval `r3`, web steps on.
+
+### Deviation: the tag changed from `S65-nostats` to `S65-nostats-b`
+
+The first attempt, tag `S65-nostats`, was stopped by a 25-minute command timeout set by the person running it, after 44 of 65 cases. The harness cannot resume a run, so one complete run was made under the new tag `S65-nostats-b` with identical settings (same model, route, retrieval, web steps, fixture and prompts). This is an operational rerun of an incomplete run, not a rerun to change a result. The 44 interrupted rows were not scored, not paired and not used anywhere; they remain only as an unscored raw file in the local ignored `data/runs/served-dev-S65-nostats/`, and no `experiments/` directory exists for them. The pre-registered commands and tag in this file still show `S65-nostats`; the evidence uses `-b`.
+
+### Headline
+
+| Measure | Statistics tool removed (`nostats-b`) | Direct `get_series` (`direct-on`) | `get_series` over MCP (`mcp-on`) |
+|---|---|---|---|
+| Behaviour accuracy, all 65 | 0.692 [0.585, 0.800] (45/65) | 0.908 (59/65) | 0.908 (59/65) |
+| Gold only (51) / probes (14) | 0.608 / 1.000 | 0.882 / 1.000 | 0.902 / 0.929 |
+| Paired difference of removal | | -21.5 points; 90% case-bootstrap interval [-30.8, -13.8]; 0 better, 14 worse; exact McNemar p = 0.0001 | -21.5 points; [-30.8, -12.3]; 1 better, 15 worse; p = 0.0005 |
+| False answers (count) | 3 (rate 0.06 of 50) | 3 | 3 |
+| Answers contradicting a reference fact | 4 | 1 | 1 |
+| Over-abstentions on answerable cases | 15 of 65 (0.231) | 1 (0.015) | 0 |
+| `calculate_change` correct | 0 of 6 | 5 of 6 (0.833) | 5 of 6 (0.833) |
+| Key-number recall | 0.404 | 0.836 | 0.870 |
+| Gold passage cited (any), answerable cases | 0.310 | 0.738 | 0.738 |
+| Operational failures / false diversions | 0 / 0 | 0 / 0 | 0 / 0 |
+| Latency, median / 95th percentile | 34.6 s / 54.4 s | 10.8 s / 32.8 s | 12.4 s / 34.7 s |
+| Mean prompt tokens per question | 27,966 | 19,998 | 20,722 |
+| Cost per question | about $0.0035 | about $0.00257 | about $0.00268 |
+
+The false-answer rate and the over-abstention rate use the denominators printed in each arm's evaluation report, which differ slightly between arms, so the table compares counts for false answers. The 90% intervals are two-sided case bootstraps from `labourlens paired`; the component bootstrap intervals are [-29.7, -13.3] (direct-on) and [-30.4, -12.3] (mcp-on). The behaviour-accuracy interval of the removal arm in the first row is the 95% interval printed in its evaluation report. Judge cost for scoring this arm was $0.0431.
+
+### By question family (behaviour accuracy)
+
+| Family | n | Statistics tool removed | Direct | MCP | Over-abstentions, removed arm |
+|---|---|---|---|---|---|
+| Factual lookup | 15 | 0.867 | 1.000 | 1.000 | 2 |
+| Numerical comparison | 7 | 0.143 | 0.857 | 1.000 | 6 |
+| Revision conflict | 4 | 0.250 | 1.000 | 1.000 | 3 |
+| Cross-source synthesis | 8 | 0.750 | 1.000 | 1.000 | 2 |
+| Adversarial | 8 | 0.500 | 0.750 | 0.750 | 2 |
+| Ambiguity, insufficient evidence, causal | 9 | 0.667 | 0.667 | 0.667 | 0 |
+| Served context probes | 6 | 1.000 | 1.000 | 0.833 | 0 |
+| Served diversion probes | 8 | 1.000 | 1.000 | 1.000 | 0 |
+
+Cases that got worse than direct-on, by family (descriptive, from the paired file): numerical comparison 5, revision conflict 3, factual lookup 2, cross-source synthesis 2, adversarial 2; ambiguity and both probe families 0. Against mcp-on, six numerical cases got worse. Denominators are small: the numerical family has 7 cases and the revision family 4.
+
+### What the traces show
+
+- **No forced calls.** The saved traces contain zero `disabled_tool` errors and no attempt to call `get_series`: with the tool removed from the catalogue and the structured-output enum, the planner never asked for it. The offered tools were `search_reports` and `calculate_change`, as registered.
+- **More searching.** The removal arm made 103 report searches over the 65 questions (102 ok, 1 error) against 61 for direct-on and 62 for mcp-on. Planner rounds: 42 questions used two rounds, against 34 in both other arms. `calculate_change` was never called (8 calls in direct-on, 6 in mcp-on), because it needs observation labels that only the removed tool returns.
+- **Slower and larger.** Median time inside the agent step was 34.3 s against 14.1 s (direct-on) and 12.6 s (mcp-on); median time of one report search was 5.3 s against 4.0 s and 4.5 s; mean prompt tokens rose by about 40% and cost per question by about a third. These are the arm's own measurements. The three arms ran at different times, so some of the gap could come from provider load; I did not test that, and the searches and longer prompts are the only differences visible in the traces. Latency is therefore not a clean comparison with the other arms.
+- **Tool errors.** One tool error in each arm (a `search_reports` error here, a `get_series` error in the others), rate 0.015.
+- **Evidence in context.** The gold evidence was in the retrieved context for 0.643 of answerable cases against 0.976 in both other arms.
+
+### Interpretation
+
+Taking the statistics tool away drops behaviour accuracy from 90.8% to 69.2% on the same 65 questions: about 21 points, with a paired interval that excludes zero against both arms. Routing the same tool through MCP instead of calling it directly changes nothing measurable (both 0.908; one case better and one worse in the earlier comparison). So the answer to "does MCP help?" is that the data helps and the transport neither helps nor hurts. The structured statistics store carries the numerical and revision questions: the report text did not give the model what it needed for them, and the model mostly abstained (15 over-abstentions, 6 of them in the 7 numerical cases) rather than guess. This answers the objection that the report chunks already hold the tables: with the store removed, accuracy fell by 21 points, so they did not substitute for it on these questions.
+
+Not every loss is an abstention. Answers contradicting a reference fact rose from 1 to 4, so removal also produced some wrong content, not only refusals. False answers, as counted by the evaluation report, stayed at 3 in every arm.
+
+### What this does not show
+
+- **One run, 65 cases.** The sample is 51 reused development cases and 14 hand-written probes. Model sampling noise is unmeasured; the two baselines differ by one case in the earlier comparison. The numerical family has 7 cases and the revision family 4, so family figures are descriptive.
+- **A missing calculation input, not a calculation failure.** `calculate_change` needs observation labels from `get_series`. Removing the lookup removes that input, so "0 of 6 correct" reflects the missing observations, not a defect in the arithmetic tool. Report text was not given a substitute arithmetic path, by design.
+- **Not a statement about all use.** It does not show the store is necessary for questions outside this sample, or that report text could never be enough with a different tool design.
+- **Gold and judge.** The gold labels were drafted with AI help and reviewed by the owner (not independent inter-rater evidence). The judge `gpt-6.1-terra` is an AI from the same provider family as the generator.
+- **Latency.** Not a clean comparison, as noted above.
+- **Transport.** Direct and MCP use the same lookup and were each run once; a null difference between them is not a proof of equivalence.
+
+### Verdict against the pre-registered hypothesis
+
+The pre-registration set no numeric pass mark; it asked for whatever happened to be reported. The hypothesis was that removing the lookup lowers accuracy on factual-lookup and numerical-comparison questions and may raise abstentions and false answers. Result: **supported for accuracy and abstentions, not for false answers.** Numerical comparison fell from 0.857 (direct) and 1.000 (MCP) to 0.143; factual lookup from 1.000 to 0.867 (2 cases, small); over-abstentions rose from 1 and 0 to 15; false answers did not rise (3 against 3). Drops in revision conflict, cross-source synthesis and adversarial questions were not named in the hypothesis and are reported as observed. The paired intervals against both baselines exclude zero.

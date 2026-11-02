@@ -39,7 +39,7 @@ Tools are bounded and read-only; retrieved text is isolated; MCP responses are v
 
 ## Latency and cost
 
-Filter then rerank on development: median 14.35 s (mean of runs), p95 35.4 and 34.1 s, $0.002845 per question. All-tools MCP scored 0.877 (57/65) versus 0.908 (59/65) for statistics-only, median 14.3 versus 12.4 s, p95 51.4 versus 34.7 s; it was rejected ([comparison](experiments/served-chain-mcp-all.md)).
+Filter then rerank on development: median 14.35 s (mean of runs), p95 35.4 and 34.1 s, $0.002845 per question. All-tools MCP scored 0.877 (57/65) versus 0.908 (59/65) for statistics-only, median 14.3 versus 12.4 s, p95 51.4 versus 34.7 s; it was rejected ([comparison](experiments/served-chain-mcp-all.md)). Removing the statistics tool dropped accuracy to 0.692: the data adds about 21 points, MCP none ([ablation](experiments/served-chain-no-stats.md)).
 
 **Proposal:** test revision-keyed caches, filter-only routing and smaller triage/rerank models; add token and cost budgets, p95 alerts and provider caps. Target p95 below 40 s and mean cost below $0.005, with no regression in citations, numbers or abstention.
 

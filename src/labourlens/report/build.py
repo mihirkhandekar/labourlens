@@ -1106,16 +1106,17 @@ def _final_paired_text(text: object) -> dict:
 
 def _served_chain(artifacts: _Artifacts) -> dict:
     rows, provenance = [], []
-    for route in ("mcp-on", "direct-on", "direct-off", "mcpall"):
+    for route in ("mcp-on", "direct-on", "direct-off", "mcpall", "nostats-b"):
         for model in _V2_MODELS:
             path = f"experiments/runs/served-dev-S65-{route}/{model}.metrics.json"
             data = artifacts.mapping(path)
             if data:
-                rows.append({"route": "mcp-all" if route == "mcpall" else route, "model": model, "metrics": _numeric(data.get("metrics", {}))})
+                rows.append({"route": {"mcpall": "mcp-all", "nostats-b": "no-stats"}.get(route, route), "model": model, "metrics": _numeric(data.get("metrics", {}))})
                 provenance.append(path)
     paired = {}
     for key, path in (("direct-on", "experiments/served/paired-S65-direct-on.json"), ("direct-off", "experiments/served/paired-S65-direct-off.json"),
-                      ("mcpall-vs-direct-on", "experiments/served/paired-S65-mcpall-vs-direct-on.json"), ("mcpall-vs-mcp-on", "experiments/served/paired-S65-mcpall-vs-mcp-on.json")):
+                      ("mcpall-vs-direct-on", "experiments/served/paired-S65-mcpall-vs-direct-on.json"), ("mcpall-vs-mcp-on", "experiments/served/paired-S65-mcpall-vs-mcp-on.json"),
+                      ("nostats-vs-direct-on", "experiments/served/paired-S65-nostats-vs-direct-on.json"), ("nostats-vs-mcp-on", "experiments/served/paired-S65-nostats-vs-mcp-on.json")):
         data = _numeric(artifacts.mapping(path).get("per_model", {}))
         if data:
             paired[key] = data

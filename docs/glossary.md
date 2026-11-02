@@ -28,6 +28,7 @@ A `D-0nn` id is an entry in the [decision log](decisions.md); every other id is 
 | Same-set retrieval comparison | Keyword against embeddings against hybrid on the same 128 questions | [summary](../experiments/runs/dev-R-V31-methods/SUMMARY.md) | `dev-R-V31-methods` |
 | Served-chain check | The web app's full chain (small-talk, rewrite, scope check, agent with MCP) on 65 mixed cases | [registration](experiments/served-chain-eval.md); [all-tools variant, pre-declaration and result](experiments/served-chain-mcp-all.md) | `S65`, folders `served-dev-S65-*`, probes `SERVED-Pnn` |
 | All-three-tools MCP variant | The served app with search, series lookup and calculation all over MCP; built and measured on one model, slower with no accuracy gain, not live (the live route sends only the statistics lookup) | [pre-declaration and result](experiments/served-chain-mcp-all.md) | `mcp_all`, `S65-mcpall`; live route `mcp_stats` |
+| Statistics tool removed | An experiment-only route of the served chain: the planner can search reports and calculate changes but cannot look up statistics; used to measure what the statistics store adds. Accuracy 0.692 against 0.908 with the tool, on 65 questions, one run | [pre-registration and result](experiments/served-chain-no-stats.md) | `no-stats`, `S65-nostats-b` (first attempt `S65-nostats` was interrupted and not used) |
 | Second-judge check | A second-family AI judge re-scoring one saved sample; not human review | [declaration](experiments/second-judge.md); [summary](../experiments/xjudge/sonnet55-FIN-s60-b-20261102/SUMMARY.md) | `sonnet55-FIN-s60-b-20261102` |
 | Attack suite | 36 hand-written attack cases with deterministic checks | [threat model](threat-model.md) | `experiments/threats/`, case ids `T-Dnn`, `T-Inn` |
 | First scorer; second scorer | The two scoring rules for the planted-false-figure attack; the second allows the planted figure inside a disclosed-conflict caveat and was written after outputs were seen | [rule](experiments/t-i06-scorer-v2-rule.md) | scorer `v1`; scorer `v2` |
@@ -45,7 +46,7 @@ A `D-0nn` id is an entry in the [decision log](decisions.md); every other id is 
 
 ## Decision log ids
 
-The decision log ([decisions.md](decisions.md)) numbers its entries `D-000` to `D-066`. Only the ones that public documents still need are listed.
+The decision log ([decisions.md](decisions.md)) numbers its entries `D-000` to `D-069`. Only the ones that public documents still need are listed.
 
 | Plain name | Id |
 |---|---|
@@ -72,6 +73,7 @@ The decision log ([decisions.md](decisions.md)) numbers its entries `D-000` to `
 | Small-talk fast path; scope check; conversation context | D-050, D-051, D-054 |
 | Corpus v3.1 | D-052 |
 | MCP route for statistics (live); all three tools over MCP (built and measured, not live) | D-053, D-066 |
+| Statistics-tool ablation (statistics tool removed) | D-069 |
 | Fresh questions re-run on v3.1 | D-055 |
 | The final evaluation headline | D-056 |
 | Served-chain check; retrieval re-runs | D-058, D-059 |

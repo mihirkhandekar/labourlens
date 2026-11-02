@@ -1,6 +1,6 @@
 {
   "schema_version": "report-1.0",
-  "generated_at": "2026-11-02T14:47:33.107977+00:00",
+  "generated_at": "2026-11-02T15:17:57.006619+00:00",
   "summary": {
     "title": "LabourLens research workbench",
     "scope": [
@@ -78618,7 +78618,7 @@
     "The population basis of the dataset employment series is unverified."
   ],
   "provenance": {
-    "commit": "f11afd2fbcd750da00f9fa4aa1b930653a57c7ec",
+    "commit": "db9db143fe9382bf22dbefdbb1793a2ada1cba61",
     "artifacts": [
       {
         "path": "data/export/sources.json",
@@ -79715,6 +79715,14 @@
         "status": "missing"
       },
       {
+        "path": "experiments/runs/served-dev-S65-nostats-b/gpt-6-luna.metrics.json",
+        "status": "unavailable"
+      },
+      {
+        "path": "experiments/runs/served-dev-S65-nostats-b/gpt-5.6-luna.metrics.json",
+        "status": "missing"
+      },
+      {
         "path": "experiments/served/paired-S65-direct-on.json",
         "status": "available",
         "sha256": "0cd798a4c8c7d80b21573404065988a1527391a4224841e494c27ae253b50cd4"
@@ -79733,6 +79741,14 @@
         "path": "experiments/served/paired-S65-mcpall-vs-mcp-on.json",
         "status": "available",
         "sha256": "084c958adac46edf0350885409f8266a501d598431839ab8185d700095da2a82"
+      },
+      {
+        "path": "experiments/served/paired-S65-nostats-vs-direct-on.json",
+        "status": "unavailable"
+      },
+      {
+        "path": "experiments/served/paired-S65-nostats-vs-mcp-on.json",
+        "status": "unavailable"
       },
       {
         "path": "experiments/threats/ti06-v2-original-20261102/runs/gpt-4.1-mini+naive.metrics.json",
@@ -79993,10 +80009,11 @@
           "summary": "Accept cheaper routing only after quality checks.",
           "paragraphs": [
             {
-              "text": "All-tools MCP scored 0.877 (57/65) versus statistics-only 0.908 (59/65); median latency 14.3/12.4 s, p95 51.4/34.7 s. It was rejected.",
+              "text": "All-tools MCP scored 0.877 (57/65) versus statistics-only 0.908 (59/65); median latency 14.3/12.4 s, p95 51.4/34.7 s. It was rejected. Removing the statistics tool dropped accuracy to 0.692: the data adds about 21 points, MCP none.",
               "refs": [
                 "final",
-                "mcp"
+                "mcp",
+                "nostats"
               ]
             }
           ],
@@ -80110,6 +80127,11 @@
           "id": "mcp",
           "label": "MCP comparison",
           "path": "docs/experiments/served-chain-mcp-all.md"
+        },
+        {
+          "id": "nostats",
+          "label": "Statistics-tool ablation",
+          "path": "docs/experiments/served-chain-no-stats.md"
         }
       ]
     },
@@ -80255,8 +80277,8 @@
     },
     "source": {
       "path": "docs/innovation-page.json",
-      "sha256": "b4219e50dee58d0bdbb98f363ea2618e11181a8dde797d851a1eafaaa06a1f1d",
-      "evidence_commit": "f11afd2fbcd750da00f9fa4aa1b930653a57c7ec"
+      "sha256": "81fddf42756a9ba931d4320fdb8a4646f425a5b8d3eed5d6e2e8332a9b492681",
+      "evidence_commit": "db9db143fe9382bf22dbefdbb1793a2ada1cba61"
     }
   }
 }

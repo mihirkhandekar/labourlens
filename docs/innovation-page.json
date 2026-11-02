@@ -55,7 +55,7 @@
     {
       "id": "cost", "title": "Latency and cost",
       "summary": "Accept cheaper routing only after quality checks.",
-      "paragraphs": [{"text": "All-tools MCP scored 0.877 (57/65) versus statistics-only 0.908 (59/65); median latency 14.3/12.4 s, p95 51.4/34.7 s. It was rejected.", "refs": ["final", "mcp"]}],
+      "paragraphs": [{"text": "All-tools MCP scored 0.877 (57/65) versus statistics-only 0.908 (59/65); median latency 14.3/12.4 s, p95 51.4/34.7 s. It was rejected. Removing the statistics tool dropped accuracy to 0.692: the data adds about 21 points, MCP none.", "refs": ["final", "mcp", "nostats"]}],
       "tables": ["cost"],
       "proposals": [
         {"title": "Caches, routing and budgets", "gap": "Repeated context and optional calls consume latency and spend.", "measure": "Retain embedding caches; test revision-keyed retrieval/answer caches, filter-only routing and smaller triage/rerank models. Invalidate on revisions. Add token/call/cost budgets, p95 alerts and provider caps.", "threshold": "p95 below 40 s; mean cost below $0.005/question on an approved mix; no regression in citation support, numerical correctness or abstention.", "status": "proposal"}
@@ -92,6 +92,7 @@
     {"id": "audit", "label": "Audit and feedback", "path": "docs/audit-and-logging.md"},
     {"id": "scanner", "label": "Scanner experiment", "path": "docs/experiments/injection-scanner-v2.md"},
     {"id": "threat", "label": "Threat experiment", "path": "docs/experiments/t-i06-scorer-v2-rule.md"},
-    {"id": "mcp", "label": "MCP comparison", "path": "docs/experiments/served-chain-mcp-all.md"}
+    {"id": "mcp", "label": "MCP comparison", "path": "docs/experiments/served-chain-mcp-all.md"},
+    {"id": "nostats", "label": "Statistics-tool ablation", "path": "docs/experiments/served-chain-no-stats.md"}
   ]
 }

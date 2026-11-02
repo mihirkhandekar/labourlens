@@ -361,6 +361,9 @@ def test_mcp_slide_labels_the_all_tools_arm_as_tested_and_not_live():
             assert (p["better"], p["worse"], p["paired_difference"]) == (better, worse, -0.0308)
     live = (STATIC / "presentation" / "slides.js").read_text()
     assert "the live app does not use it" in live and "not used live" in live
+    face = (STATIC / "presentation" / "graphics.js").read_text()
+    assert "Taking the statistics tool away drops accuracy from 90.8% to 69.2% on the same 65 questions; routing it through MCP changes nothing." in face
+    assert "-21.5 points" in live and "first attempt stopped at 44 of 65" in live and "gpt-5.6" not in face.split("Taking the statistics tool away")[1][:1500]
 
 
 def test_ladder_hides_fresh_results_and_difference_labels_on_deck_only():

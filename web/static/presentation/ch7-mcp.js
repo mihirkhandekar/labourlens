@@ -135,7 +135,7 @@ export function renderMcp(m, ctx) {
     bullets: [
       `Server: ${TOOLS.length} read-only tools, 2 resources, 1 prompt. Statistics and catalogue only; no MOM report text.`,
       `Client: treats the server as untrusted; ${(mcp.checks || []).length} client refusal behaviours observed.`,
-      'Comparison: the same queries over the direct route and over MCP. The live app uses MCP for get_series; a separate 65-case served sample scores 90.8% for both models, with no observed loss versus direct.',
+      'Comparison: the same queries over the direct route and over MCP. The live app uses MCP for get_series; a separate 65-case served-chain sample (51 development cases and 14 probes, statistics-only MCP; not the fresh 65) scores 90.8% for both models, with no observed loss versus direct.',
       'Limit: a protocol demo on the cases tried, not an audit.'
     ]
   });
