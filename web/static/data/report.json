@@ -1,6 +1,6 @@
 {
   "schema_version": "report-1.0",
-  "generated_at": "2026-11-02T07:04:48.076392+00:00",
+  "generated_at": "2026-11-02T07:31:06.580415+00:00",
   "summary": {
     "title": "LabourLens research workbench",
     "scope": [
@@ -77813,6 +77813,14 @@
         "date": "2 Nov 2026",
         "alternatives": "retain only the same-provider judge (free but leaves correlated-family bias unchecked); human independent review (stronger ground truth but not this task and requires actual reviewers); paired second-family sample (chosen, checks sensitivity without regenerat…",
         "summary": "DECISION. Implement the owner's second-family judge check, pre-declared in second-judge.md before code, with its pre-paid native-output amendment"
+      },
+      {
+        "id": "D-063",
+        "title": "Align the deck and documents with the agent tool loop and same-set retrieval comparison",
+        "status": "OWNER REQUEST / DOCUMENTED",
+        "date": "2 Nov 2026",
+        "alternatives": ". Keep the old order (success criteria before the data findings that motivate them; build details repeated before retrieval); leave the 24-question retrieval chart as the headline (cheap and familiar, but not like-for-like with the next slide); or show the cu…",
+        "summary": "DECISION. Reorder and retitle the 29-slide main story: project, system overview, Sources, success criteria after data challenges, Processing, Retrieval, Agent, Answer, Checks and close"
       }
     ],
     "milestones": [
@@ -77921,7 +77929,7 @@
     "The population basis of the dataset employment series is unverified."
   ],
   "provenance": {
-    "commit": "d8a0b0ee873ca38015ad909df1b7ab776cb48572",
+    "commit": "99c0fe3b055929720563ed7166e81630743177bd",
     "artifacts": [
       {
         "path": "data/export/sources.json",
@@ -79106,12 +79114,12 @@
       {
         "path": "docs/decisions.md",
         "status": "available",
-        "sha256": "ecb167c2bbbcf580a857ec73cf357901d839d1a12ea38c78b85b56646fd48e03"
+        "sha256": "d06d25452eef33f4800b80864298f069919640cf0ac7d2a346c3dc860dd32eae"
       },
       {
         "path": "docs/progress.md",
         "status": "available",
-        "sha256": "2bea70ae64ea6a3537591119ca8f006ed5d8f588fd9628580da1e2355de1f536"
+        "sha256": "f92bffe5d481d0c013c60fd2c4eb3ba2af9d8e4efe64be79368ee624eb44f112"
       }
     ],
     "policy": "Committed artifacts only; numeric fields only."
