@@ -1,6 +1,6 @@
 # Repository audit (read-only, 1 Nov 2026)
 
-> **Historical, superseded.** This is the first audit pass, at commit `1f8226b`; its counts (for example 782 tests, 77 modules) and open items are out of date and later decisions settled several of them. The current state is in [`fresh-clone-check.md`](../fresh-clone-check.md), [`requirements-matrix.md`](../requirements-matrix.md) and [`progress.md`](../progress.md) (2 Nov 2026). It is kept as a record of the process, unchanged below.
+> **Historical, superseded.** This is the first audit pass, at commit `1f8226b`; its counts (for example 782 tests, 77 modules) and open items are out of date and later decisions settled several of them. The current state is in [`fresh-clone-check.md`](../fresh-clone-check.md), [`requirements-matrix.md`](../requirements-matrix.md) and [`progress.md`](../progress.md) (2 Nov 2026). All blockers below were closed; see section 2 for their dispositions. It is kept as a record of the process, unchanged below. Its old history-wide absence claims do not supersede the later disclosures in [SECURITY.md](../../SECURITY.md).
 
 Audit of the repository at commit `1f8226b` (`master`), run on 1 Nov 2026. Nothing was changed except the creation of this file. No model, embedding or judge call and no network call was made.
 

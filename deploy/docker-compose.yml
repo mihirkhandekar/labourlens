@@ -1,6 +1,8 @@
 # LabourLens on one Droplet: Caddy (HTTPS, the only published ports) in front of one app container.
 # Run from /srv/labourlens/deploy as the deploy user:
 #   IMAGE_TAG=<git sha> docker compose --env-file /srv/labourlens/.env up -d
+# Set LABOURLENS_IMAGE=ghcr.io/<your-github-owner>/<your-repository> in the private .env first (lowercase).
+# IMAGE_TAG selects a commit within that repository; the fallback image below belongs to the author.
 # Optional MCP sidecar (loopback only, not published):
 #   IMAGE_TAG=<git sha> docker compose --env-file /srv/labourlens/.env --profile mcp up -d
 # The corpus is NOT in the image: /srv/labourlens/data is bind-mounted at /app/data (see runtime-data.txt).

@@ -235,7 +235,7 @@ def test_ingest_separates_endorsement_and_never_proposes_changes(fixture_root):
     gold = (fixture_root / 'experiments/gold/draft_cases.jsonl').read_bytes()
     summary, proposal = ingest_review(path, fixture_root)
     text = summary.read_text()
-    assert '## Independent human review' in text
+    assert '## Owner-entered decisions' in text
     assert '## Owner-endorsed AI review (no independent per-item review)' in text
     assert endorsement_statement(2) in text
     assert '1/1 comparable manual owner verdicts' in text

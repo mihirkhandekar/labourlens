@@ -19,4 +19,10 @@ Retrieved passages, dataset text and MCP tool output are treated as data, never 
 
 ## Rights
 
-MOM and MTI documents, text extracted from them and raw model outputs are not in this repository. `uv run labourlens rights-scan` fails if a tracked file repeats more than six consecutive words of the local copies. It needs the private corpus and reports `NOT CHECKED` without it. See `docs/data-sheet.md` section 9 for what it does not cover.
+Full MOM/MTI documents, extracted passage stores and raw answer transcripts are absent from the current tracked tree. This is not a history-wide absence claim: pre-truncation section headings and a few review-note sentences remain in Git history; the 1,031 shortened runs in 35 files are recorded in `experiments/rights-truncation-sidecar.json`. `uv run labourlens rights-scan` detects exact overlap within its exclusions, not permission or complete copyright compliance. Without the private passage corpus it reports `NOT CHECKED`, normally exits zero, and is not a pass; see [data-sheet section 9](docs/data-sheet.md#9-open-licence-items-and-what-the-rights-scan-covers).
+
+## Historical disclosure and packaging
+
+Published data.gov.sg officer addresses remain unredacted in history, although current metadata uses replacement addresses. A dashed `sslip.io` hostname encoding the first deployment IP remains in commits `c297146` and `d835e6f`; no hostname or address is reproduced here. Local `/Users` paths and historical `prompts/meta/` authoring prompts also remain in history. Current test artefacts replace local paths with `<repo>`; this is a path-only scrub, not a rerun.
+
+The reviewer-session `.env` exposure is recorded in [the historical security review](docs/human-review/e2e-review-security-deploy.md). That record does not establish key rotation; rotation status remains an owner action, not a claimed completed control. Share only a repository URL, fresh clone or `git archive HEAD`, not the working folder with ignored private data.

@@ -39,15 +39,15 @@ Source: [evaluation report](docs/evaluation-report.md#headline-the-final-evaluat
 
 ## Quick start
 
-Requires Python 3.12 and [uv](https://docs.astral.sh/uv/). Run from the repository root.
+Prerequisites: Git, [uv](https://docs.astral.sh/uv/), CPython 3.12 (uv can provision it) and make. Run from the repository root. No Node/npm, Docker, provider key or private corpus is needed. After cloning and entering the repository, these three commands install, check, run the MCP client and recompute the headline, then start the app:
 
 ```bash
-make setup     # uv sync --frozen (Python 3.12 and uv required)
-make verify    # lint, offline tests, docs links, rights scan, secret scan; about 2 to 3 minutes
-make serve     # report, presentation and workbench page at http://127.0.0.1:8000
+make setup
+make verify && uv run labourlens mcp-demo && uv run python scripts/final_mean.py
+LABOURLENS_DEMO_ENABLED=false make serve
 ```
 
-In a clone `make verify` prints `rights-scan: NOT CHECKED`. That is expected: the scan needs the private MOM and MTI text, so it is not a pass. Observed on 2 Nov 2026 in a fresh clone: 1,027 passed, 1 skipped, 57 deselected, about 3 minutes in total ([details](docs/fresh-clone-check.md)).
+Open <http://127.0.0.1:8000>, `/deck` or `/workbench`. In a public clone the rights scan prints `NOT CHECKED`, not a pass: it needs private MOM/MTI text. The clean-clone audit of `d8a0b0e` on 2 Nov 2026 recorded 1,100 passed, 1 skipped, 57 deselected; durations depend on host/cache. That is historical evidence, not a target count ([fresh-clone record](docs/fresh-clone-check.md)).
 
 `make help` lists every target. The underlying commands, for reference:
 
@@ -61,15 +61,15 @@ LABOURLENS_DEMO_ENABLED=false uv run labourlens serve --host 127.0.0.1 --port 80
 
 Open <http://127.0.0.1:8000> for the report and <http://127.0.0.1:8000/workbench> for the workbench page. This offline path needs no API key and no local corpus. `build-report` reads curated artefacts from the current Git commit and runs no experiments.
 
-`labourlens --help` lists 40 subcommands. A reviewer needs `serve`, `build-report`, `mcp-demo`, `rights-scan` and `audit-report`. The review-pack, `pending-ingest`, `v2-*` and `review-ingest` commands are the owner's tooling and need files that are not in the repository; the experiment commands cost money.
+CLI help lists 38 subcommands. A reviewer needs `serve`, `build-report`, `mcp-demo`, `rights-scan` and `audit-report`. Review-ingest commands need original owner exports and associated private review inputs; they are not all reproducible from the public checkout.
 
-### What you can and cannot run without the corpus
+### Replicate: what can run with which inputs
 
-| Needs nothing but the checkout | Needs the local corpus (`data/raw`, `data/passages`, `data/runs`; gitignored for rights reasons) | Needs an API key and spends money |
+| Without private corpus or key | With corpus or private saved outputs, no key | With API key and cost |
 |---|---|---|
-| `uv sync`, CLI help, `pytest -m 'not corpus'`, `build-report`, report-only `serve`, `mcp-demo` (about 40 s; writes the gitignored `data/runs/mcp-demo-transcript.md` and leaves the committed [transcript](docs/mcp-demo-transcript.md) alone unless you pass `--out docs/mcp-demo-transcript.md`), `judge-xfamily --dry-run` and `--summary` | `fetch`, `build`, `eda`, `export`, `scan-sources`, `trace`, `pytest -m corpus`, the real `rights-scan`, the private raw outputs needed for a new `judge-xfamily` run | live answers, `mcp-agent-demo`, `answer-exp`, `agent-exp`, reranked retrieval, model-judged `eval`, the threat suite, a paid `judge-xfamily` run (`ANTHROPIC_API_KEY`) |
+| Locked install, CLI help, offline tests, `build-report`, report-only `serve`, `mcp-demo`, `scripts/final_mean.py`, `paired` from committed scores, `judge-xfamily --experiment sonnet55-FIN-s60-b-20261102 --summary` | `build`, `eda`, `export`, BM25 retrieval, corpus tests and real rights scan need source files; `eval --no-judge` needs private raw answers; a new `judge-xfamily --dry-run` needs private FIN raw outputs even though it makes no API calls | Live answers, embedding-cache preparation, `mcp-agent-demo`, new answer/agent/served experiments, reranked retrieval, model-judged `eval`, threat generation (`OPENAI_API_KEY`); paid second-family judging (`ANTHROPIC_API_KEY`) |
 
-`uv run pytest -q -m 'not corpus'` is the supported command on a fresh clone. Corpus-marked tests skip cleanly when `data/` is absent, so plain `uv run pytest -q` also runs, but they only check anything with the local corpus. Metrics cannot be regenerated without the corpus and a key, so they are read from committed JSON under [`experiments/`](experiments/). MOM reports are not redistributed: acquire them yourself with `labourlens fetch`, which depends on publisher access.
+Final aggregation and paired comparisons can be recomputed offline from committed scored rows, without a corpus or key. `mcp-demo` uses the committed statistical store, manifest and snapshots and needs no private MOM/MTI corpus; it writes the gitignored `data/runs/mcp-demo-transcript.md`, not the committed transcript. New generation/retrieval and raw-answer rescoring need the inputs above. Source downloads cannot restore private historical model outputs. See [replication commands](docs/reproduce.md).
 
 ### Rebuild the corpus (needs network and time)
 
@@ -80,7 +80,11 @@ uv run labourlens eda
 uv run labourlens export
 ```
 
-`fetch --kind datasets|documents` and `--only <source_id>` narrow acquisition. Immutable hashes and provenance are recorded in `data/manifests/`. Do not run these on a checkout whose `data/` you want to keep as is: they rewrite generated files.
+`fetch --kind datasets|documents` and `--only <source_id>` narrow acquisition. Immutable hashes and provenance are recorded in `data/manifests/`. Preserve the frozen manifest and compare retrieval statuses and raw hashes before building: a fresh fetch acquires current publisher bytes, not a guaranteed restoration of the historical corpus. Do not run these on a checkout whose `data/` you want to keep as is: they rewrite generated files.
+
+### Deploy
+
+Use [the deployment guide](docs/deploy.md) for your own registry, domain and private corpus. Set `LABOURLENS_IMAGE` to your workflow's lower-case GHCR repository; `IMAGE_TAG` selects a commit within it. Compose does not build the image. Docker Engine/Compose, SSH tools, DNS and reachable ports 80/443 are deployment prerequisites, not quick-start requirements.
 
 ### Enable the live workspace locally
 
@@ -108,18 +112,18 @@ All numbers are saved outputs, each with its source file. Behaviour accuracy mea
 
 | Question | Result | Source |
 |---|---|---|
-| **Headline: final system, D-061, corpus v3.1, two runs per arm** | Filter then rerank gives a consistent gain on the development questions that shaped it, in both runs and both models, but no demonstrated gain on either the original test or fresh set. The two models tie on development r3 mean (0.897 each); I keep `gpt-6-luna` as default because it costs about 60% as much, not because it is more accurate. The development cost ratio is about 1.7 and latency about 1.5 for the primary model. Two runs per arm are still not a variance estimate; intervals resample cases, not independent runs. Mean development over-abstention r3/hybrid: 3.2%/10.1% and 4.2%/8.9%. | [`final-mean.json`](experiments/eval/final-mean.json), [evaluation report](docs/evaluation-report.md) |
-| **Same-set retrieval methods, D-063, corpus v3.1** | On the same 128 report-passage development questions, hit@8 is BM25 .477 [.391, .562], dense embeddings .367 [.289, .453], hybrid .539 [.453, .625]. BM25 alone beat dense. Hybrid minus BM25 is +.062 [-.023, .148], not demonstrated; hybrid minus dense is +.172 [.102, .242]. The earlier 24-case result, including hybrid .708, is labelled history: top ten not eight, 24 not 128 questions, and 46 documents not 85 sources with more look-alike quarters. | [summary](experiments/runs/dev-R-V31-methods/SUMMARY.md), [evaluation report](docs/evaluation-report.md) |
-| Does another model family judge claim support the same way (D-062, saved FIN run 1)? | **MEASURED, not human review.** `claude-sonnet-5-5` and `gpt-6.1-terra` judged the same 240 sampled answers (60 case IDs per generator, both retrieval arms). Valid-pair analysis covers 117 pairs; three items were `judge_omitted` after one retry, not imputed. Claim labels agree on 84.3% of 432 claims (kappa 0.436); contradiction agrees on 99.6% of 226 answers (kappa 0.907); the unsupported flag agrees on 99.6% of 234 but kappa is 0 because positives are rare. Pooled r3-minus-hybrid claim support for `gpt-5.6-luna` is +16.8 points under the first judge and +0.5 under Claude (development -2.7 under Claude); `gpt-6-luna` is +2.8 and -1.1. Fact coverage differences are +4.2 and +4.3 points under both. Low kappa, omissions and sign changes are reported problem flags. Deterministic behaviour, false-answer and key-number metrics are unchanged. New list-price spend $0.767506 (estimate, not an invoice). | [evaluation report](docs/evaluation-report.md), [summary](experiments/xjudge/sonnet55-FIN-s60-b-20261102/SUMMARY.md), [declaration](docs/experiments/second-judge.md) |
-| History, earlier build (corpus v1): does filter plus rerank (A3) beat plain hybrid retrieval (A1) with `gpt-6-luna`? | Development behaviour 0.903 [0.865, 0.937] (n=237) versus 0.779 [0.728, 0.830] (n=235); over-abstention 0.030 [0.008, 0.051] versus 0.157 [0.111, 0.204]. Earlier build and gold, not comparable to the final run; descriptive, not a paired test. | [`experiments/eval/`](experiments/eval/) |
-| History: does it hold on the 31 held-out cases (original run)? | r3 0.871 [0.742, 0.968] versus hybrid 0.710 [0.548, 0.839]. Paired gain +16.1 points [0.0, 32.3]: **not demonstrated**. | [`experiments/heldout/paired.txt`](experiments/heldout/paired.txt) |
-| History: does it hold on the 65-case held-out v2 set (original run on corpus v3, sources no earlier case cites)? | Original run, build v3 (the registered result): `gpt-6-luna` r3 0.754 versus hybrid 0.708, paired +0.046 (3 better, 0 worse), McNemar exact p = 0.25. The effect is three cases; I would not call it a confirmed gain; `gpt-5.6-luna` 0.723 versus 0.723. Re-run on build v3.1 (D-055): 0.738 versus 0.708 (3 better, 1 worse), p = 0.625, not demonstrated. Corpus and code changed together between the runs. `numerical_comparison` is 0.214 in both, mostly a tool gap. Full text: [evaluation report](docs/evaluation-report.md). | [result](docs/experiments/m7-heldout-v2-result.md), [`paired.json`](experiments/heldout-v2/paired.json), [`paired-v3.1.json`](experiments/heldout-v2/paired-v3.1.json) |
-| Do the extraction fixes (corpus v2) help? | No measurable change (dev 0.886 [0.844, 0.924] versus 0.903). | [evaluation report](docs/evaluation-report.md) |
-| Which model should generate answers? | Early exploratory screen, 30 development questions, six models (`gpt-4.1-mini`, `gpt-5.4-mini`, `gpt-5.6-luna`, `gpt-6-luna`, `gpt-6-sol`, `gpt-6.1-terra`), with retrieved and with oracle evidence. Price did not track quality; models differ more in caution than in skill; single runs cannot rank neighbours. `gpt-6.1-terra` was a generator candidate here and later became the judge. The later two-model comparison (A3, 237 questions) shows no model winner. | [m3 answer generation](docs/experiments/m3-answer-generation.md) |
-| History: does the agent (corpus v3, end-to-end review fixes, cross-check on) hold up on the development set? | **MEASURED** regression check, not an ablation: several factors changed together. Behaviour `gpt-6-luna` 0.903 [0.865, 0.941], `gpt-5.6-luna` 0.916 [0.878, 0.949], both overlapping A3. Cases with an ungrounded number rose for `gpt-5.6-luna` to 0.165 [0.118, 0.215] from 0.051 [0.025, 0.080] in A3 (no overlap), and the check itself was widened in the same change. | [X2 report](experiments/eval/agent-dev-X2-REPORT.md), [evaluation report](docs/evaluation-report.md) |
-| Does an extra tool for arithmetic on report figures help (tool set v2, D-046 and D-048)? | **MEASURED, not adopted.** Dev X3 against X2 (n=237, earlier corpus v3 / gold v3.6, one run per model): behaviour `gpt-6-luna` 0.903 to 0.895, `gpt-5.6-luna` 0.916 to 0.899, no gain; the criteria declared before the run **failed for both models** (false-answer cases 7 against 6, and ungrounded numbers in cases that used the new tool). On the held-out v2 questions, re-run as a **post-freeze diagnostic (not held-out, optimistic by construction, not a replacement of the held-out v2 result)**, `numerical_comparison` rose from 3 to 12 of 14 for `gpt-6-luna`. The default tool set is unchanged and the threat suite was not run under v2. | [tool-fix report](docs/experiments/m7-tool-fix.md) |
-| Threat suite, 36 hand-written cases | 31 Oct `m7-e2efix-20261031`: defended primary 36/36, second model 35/36 under v1. Fresh 2 Nov `ti06-v2-fresh-20261102`: all four defended/naive configurations 35/36 under both scorers; T-I06 fails again. Old-output v2 rescoring is diagnostic only. Not shown stable. The scanner now covers its five formerly missed paraphrase probes in regression tests, not all paraphrases. | [threat model](docs/threat-model.md) |
-| Human review | Gold labels were drafted by AI. The owner then went through them in the review interface and signed off on every case, answer verdict and source check (four separate streams, 403 items in total: 268 gold questions, 65 held-out v2 questions, 40 saved system answers and 30 source checks; only the first two are questions). The strongest human evidence is the first pack (17 answer verdicts, J1 to J10, 3 gold cards), the four change-clicks, J10 and the owner's written policy decisions (D-031, D-034, D-035, D-036, D-047). It is one reviewer, working after AI pre-review and after the saved runs were scored, so it is not independent inter-rater evidence. Gold v3.7 changes no label. The earlier saved evaluations were not rescored on it; only the final FIN/FIN2 evaluations (D-056, D-061) were scored on v3.7 for the development and registered held-out sets, with `--allow-gold-mismatch` because generation ran on v3.6. | [final owner review summary](docs/human-review/owner-review-final-summary.md), [numbers audit](docs/human-review/numbers-audit.md) |
+| Final system, D-061: development r3/hybrid | 0.897/0.827; 0.897/0.844; no demonstrated test-set gain | [two-run scores and caveats](experiments/eval/final-mean.json) |
+| Same-set retrieval, D-063: hit@8 | BM25 .477; dense .367; hybrid .539 | [intervals and comparison](experiments/runs/dev-R-V31-methods/SUMMARY.md) |
+| Second-family judge, D-062 (AI, not human review) | 84.3% claim agreement; kappa 0.436; 117 valid pairs | [omissions and judge-dependent gains](experiments/xjudge/sonnet55-FIN-s60-b-20261102/SUMMARY.md) |
+| History, corpus v1: development A3/A1 | 0.903/0.779; descriptive, not paired | [scores and caveats](docs/evaluation-report.md) |
+| History: original held-out, 31 | +16.1 points [0.0, 32.3]; gain not demonstrated | [paired result](experiments/heldout/paired.txt) |
+| History: held-out v2, 65 | 0.754/0.708; p = 0.25; gain not confirmed | [registered result and v3.1 diagnostic](docs/experiments/m7-heldout-v2-result.md) |
+| Extraction fixes, corpus v2 | 0.886 versus 0.903; no measurable gain | [evaluation report](docs/evaluation-report.md) |
+| Early model screen | 30 questions, six models; no reliable ranking | [screen and limits](docs/experiments/m3-answer-generation.md) |
+| History: X2 regression check, corpus v3 | 0.903/0.916; not an ablation | [regressions and intervals](experiments/eval/agent-dev-X2-REPORT.md) |
+| Extra arithmetic tool, not adopted | 0.903 to 0.895; 0.916 to 0.899 | [failed criteria and post-freeze diagnostic](docs/experiments/m7-tool-fix.md) |
+| Threat suite, 36 cases | Fresh: 35/36 in all four configurations; T-I06 not stable | [history and residual risks](docs/threat-model.md) |
+| Human review, one reviewer after scoring | 403 items: 268 + 65 gold, 40 answers, 30 source checks | [review scope and limitations](docs/human-review/owner-review-final-summary.md) |
 
 The question sets are separate and not additive. The 268 reference questions are 237 development questions (used while building the system) plus 31 original held-out questions. The original 31 share evidence with development (25 of 31 cite at least one development evidence id, 15 of 31 have their whole evidence set in it), so they are held out by question, not by evidence. The 65 held-out v2 questions are a later set written on six sources no earlier case cites, signed before their run and used in their registered run, then reused for labelled diagnostics and final-run replication. The post-freeze tool-set diagnostic re-ran those same 65, so it is not a fresh test. The 40 saved answers (a failure-enriched sample from one run) and the 30 source checks are review items, not question sets. Five original held-out cases changed after the v3.2 freeze (HO-029 in v3.3; HO-027, HO-023 and HO-004 in v3.4; HO-022 in v3.5); the full version history is in the [evaluation report](docs/evaluation-report.md). Held-out v2 uses the same system, prompts and tools, with an AI-drafted gold that I approved unchanged. Each configuration was run once.
 
@@ -140,19 +144,20 @@ The system and the live site use the current document build (v3.1: 85 sources, 1
 
 ## Experiments
 
-Commands that call a model or the embeddings API cost money. The registered dev and held-out raw runs are not re-run by these commands, and re-running them is not needed to reproduce the published numbers. `labourlens agent-exp` refuses to overwrite an existing experiment id (`--force` overrides it and destroys frozen evidence). To exercise the pipeline, use a throwaway tag (paid API calls; needs `OPENAI_API_KEY`):
+Commands that call a model or embeddings API cost money. Use a disposable reproduction checkout and a new unused experiment tag. `retrieval-exp` and `dense-exp` have fixed output names and now refuse existing metrics/cases/summaries; `eval` refuses existing judgements/cases/metrics/reports; `paired --out` refuses an existing destination. All expose `--force`, which deliberately replaces evidence and must never be used on the authoritative submission. Gold-hash checks remain independent of `--force`.
 
 ```bash
-uv run labourlens retrieval-exp --split dev          # BM25, no model calls
-uv run labourlens retrieval-exp2 --split dev --no-rerank
-uv run labourlens agent-exp --split dev --tag SMOKE --pairs gpt-6-luna
-uv run labourlens eval --exp agent-dev-SMOKE
+# Scratch checkout only: replaces its published BM25 outputs; no model calls.
+uv run labourlens retrieval-exp --split dev --force
+uv run labourlens retrieval-exp2 --split dev --tag MY-RETRIEVAL --no-rerank
+uv run labourlens agent-exp --split dev --tag MY-SMOKE --pairs gpt-6-luna
+uv run labourlens eval --exp agent-dev-MY-SMOKE
 ```
 
-To re-score a frozen run offline, pass the gold file it was scored on:
+Private saved raw outputs required: `eval --no-judge` cannot reconstruct raw answers from committed scores. A public clone can recompute paired statistics and `scripts/final_mean.py`, but cannot re-score this run. With original private inputs, the following is a **scratch-checkout-only** replacement of its evaluation output, using the matching gold:
 
 ```bash
-uv run labourlens eval --exp agent-dev-A3 --no-judge --gold experiments/gold/archive/gold-v3.5.jsonl
+uv run labourlens eval --exp agent-dev-A3 --no-judge --gold experiments/gold/archive/gold-v3.5.jsonl --force
 ```
 
 `eval` and `paired` refuse a gold file whose SHA-256 differs from the one recorded for the run unless `--allow-gold-mismatch` is given. Scoring still reads `experiments/gold/draft_cases.jsonl` (v3.6, `6169a9de…`); `gold_v3.7.jsonl` is the review-provenance file. In `draft_cases.jsonl` 3 records are `owner_manual`, 42 `agreed_with_ai_suggestion` and 223 `draft`; only `gold_v3.7.jsonl` carries 268 `owner_manual`. The published A1 to A5 and held-out metrics were scored on v3.5 (`aac4b405…`), archived at `experiments/gold/archive/gold-v3.5.jsonl`. The registered held-out comparison already ran once and must not be rerun to pick a winner.
@@ -189,6 +194,7 @@ Retrieval is not run before the agent: the planner calls `search_reports` in its
 | Document | What it is |
 |---|---|
 | [Architecture](docs/architecture.md) | Data flow, agent graph, guardrails, trust boundaries; [rendered diagram](docs/img/architecture.svg) |
+| [AI-assisted development](docs/ai-assisted-development.md) | Method, approval gates, controls with their limits, mistakes caught, and what I would do differently |
 | [Data sheet](docs/data-sheet.md) | Sources, licences, schema, checks, EDA findings |
 | [Evaluation report](docs/evaluation-report.md) | Design, results, error analysis, review rubric, limits |
 | [System card](docs/system-card.md) | Intended use, risks, controls |

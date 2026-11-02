@@ -195,7 +195,9 @@ def check_gold(gold: Path, arms: dict[str, Path], allow_mismatch: bool = False) 
 
 
 def run(gold: Path, candidate_exp: str, baseline_exp: str, models: list[str], out: Path | None = None,
-        n_boot: int = N_BOOT, seed: int = SEED, allow_gold_mismatch: bool = False) -> dict:
+        n_boot: int = N_BOOT, seed: int = SEED, allow_gold_mismatch: bool = False, force: bool = False) -> dict:
+    if out is not None and Path(out).exists() and not force:
+        raise FileExistsError(f"Existing paired output: {out}. Pass --force to overwrite deliberately.")
     eval_dir = paths.EXPERIMENTS / "eval"
     check_gold(gold, {f"{exp}/{m}": eval_dir / exp / f"{m}.metrics.json" for exp in (candidate_exp, baseline_exp) for m in models}, allow_gold_mismatch)
     cases = [json.loads(line) for line in Path(gold).read_text().splitlines() if line.strip()]

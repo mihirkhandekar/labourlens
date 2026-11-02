@@ -4,7 +4,7 @@
 
 ## 1. Improve retrieval and answer quality
 
-**Final evaluation (MEASURED, D-056).** On the final system (corpus v3.1, one run per arm, `gpt-6-luna`), filter then rerank scores 0.886 against 0.844 for hybrid on the 237 development questions (+4.2 points, 95% interval [0.4, 8.4]; `gpt-5.6-luna` +5.9 points) and halves over-abstention (0.042 against 0.089). It shows **no gain on either held-out set**: 26 of 31 in both arms on the registered original test, and 0.708 against 0.754 on the 65 fresh questions (0 better, 3 worse, within noise). It costs about 1.7 times as much per question and about 1.5 times the latency. The development questions shaped the design, so the development gain is descriptive.
+**Current headline (MEASURED, D-061).** The mean of FIN and FIN2 on corpus v3.1 gives filter-then-rerank behaviour accuracy 0.897 versus hybrid 0.827 on 237 development questions for `gpt-6-luna` (+7.0 points, 95% case-bootstrap interval [3.6, 10.6]); the second model's gain is +5.3 [1.9, 8.9]. Primary over-abstention is 3.2% versus 10.1%. Neither test set demonstrates a gain: primary original-test means 0.839/0.806 (31 cases), fresh 0.715/0.746 (65). Both singles remain in the evaluation report; FIN alone is history, not the headline. Development shaped the design; two runs do not estimate variance.
 
 **History (earlier build, corpus v1).** Period and release filtering plus an LLM rerank (A3) lifted `gpt-6-luna` behaviour accuracy from 0.779 [0.728, 0.830] (A1, hybrid) to 0.903 [0.865, 0.937] on development cases and cut over-abstention from 0.157 to 0.030. Populations differ (235 versus 237 cases), so this is descriptive, not a paired test. On the 31 original held-out cases the paired gain, 0.161 [0.000, 0.323], is **not demonstrated**; those cases share evidence with development.
 
@@ -22,13 +22,13 @@ Passage locators, observation lineage, claim citations and a task timeline suppo
 
 ## 4. Privacy, governance and third-party risk
 
-Tools are read-only and bounded, MCP results are screened, and hostile-server fixtures exist. **MEASURED** (36 hand-written cases, one run per configuration): final-code defended `gpt-6-luna` passed 36/36 and `gpt-5.6-luna` 35/36; the naive baselines passed 35/36, so the suite shows no measurable defence effect and says nothing about adaptive attacks. The shared weak case is T-I06, a false figure planted in a passage. A deterministic cross-check against validated dataset values (D-038) addresses it, but T-I06 is one case with a closed grammar and is **not shown stable across runs**. See the [threat model](threat-model.md).
+Tools are read-only and bounded, MCP results are screened, and hostile-server fixtures exist. **MEASURED:** fresh 2 Nov threats give 35/36 in all four configurations under both scorers. The 31 Oct run is history: defended primary 36/36, second model 35/36, naive 35/36. The suite shows no general safety or causal defence effect. T-I06 plants a false figure in a passage; its deterministic dataset cross-check (D-038) is closed-grammar and **not shown stable across runs**. See the [threat model](threat-model.md).
 
 **PROPOSAL** for sensitive use: government identity, source-level permissions, approved retention, restricted audit access and an approved processing agreement. Redaction does not anonymise questions, and shared access codes do not identify researchers. Provider data-use terms for the passages are unverified (D-022). Restricted source text stays out of public packages.
 
 ## 5. Latency and cost
 
-On the final system filter then rerank buys development accuracy with time and money: median 15.1 s and about $0.0028 per case against 9.9 s and $0.0017 for hybrid (the earlier A3 and A1 runs: median 15.4 s and about $0.0021 against 10.7 s and $0.0014; list-price estimates from saved usage, not a bill). **PROPOSAL:** keep embedding caches and fixed tool budgets, test filter-only routing for simple lookups as a separate factor, and watch supported-answer coverage with p95 latency and failure counts. Application budget reservations are not provider spending caps.
+The current primary development means cost about $0.002845 per case for r3 versus $0.001695 for hybrid; the mean of run medians is 14.35 s versus 10.05 s (about 1.4 times latency). FIN alone's 15.1/9.9 s is history. Costs are saved-usage list-price estimates, not bills. **PROPOSAL:** retain embedding caches and bounded tools, test filter-only routing separately, and watch supported-answer coverage, p95 latency and failures. Application reservations are not provider spending caps.
 
 ## 6. First two priorities and acceptance targets
 

@@ -4,7 +4,7 @@ Run from the repository root.
 
 | Command | What it runs | Needs |
 |---|---|---|
-| `make test` (`uv run pytest -q -m 'not corpus'`) | The supported suite for a fresh clone: 782 tests on 1 Nov 2026 | Nothing beyond `make setup`. No API key, no network, no private data. |
+| `make test` (`uv run pytest -q -m 'not corpus'`) | The supported suite for a fresh clone (the current count is in `docs/progress.md`) | Nothing beyond `make setup`. No API key, no network, no private data. |
 | `make test-corpus` (`uv run pytest -q -m corpus`) | 56 tests that read the private local corpus (`data/raw`, `data/passages`, `data/index`, or built artefacts) | The corpus, which is gitignored for rights reasons. |
 
 ## Markers

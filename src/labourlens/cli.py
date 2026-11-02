@@ -44,8 +44,10 @@ def main(argv: list[str] | None = None) -> int:
     ri.add_argument("results")
     rx = sub.add_parser("retrieval-exp", help="run BM25 experiments on a gold split")
     rx.add_argument("--split", default="dev", choices=["dev", "heldout"])
+    rx.add_argument("--force", action="store_true", help="overwrite existing BM25 metrics, cases and summaries deliberately")
     dx = sub.add_parser("dense-exp", help="run dense/hybrid embedding experiments (calls the OpenAI embeddings API; needs OPENAI_API_KEY)")
     dx.add_argument("--split", default="dev", choices=["dev", "heldout"])
+    dx.add_argument("--force", action="store_true", help="overwrite existing dense/hybrid metrics, cases and summaries deliberately")
     r2x = sub.add_parser("retrieval-exp2", help="retrieval improvements R0-R3 (query metadata, LLM rerank); dev only; calls the OpenAI API for rerank")
     r2x.add_argument("--split", default="dev", choices=["dev"])
     r2x.add_argument("--no-rerank", action="store_true", help="skip reranking; missing dense/query embeddings still require the API")
@@ -100,6 +102,7 @@ def main(argv: list[str] | None = None) -> int:
     ev_.add_argument("--gold", type=Path, help="same gold JSONL used for generation")
     ev_.add_argument("--labels", nargs="*")
     ev_.add_argument("--allow-gold-mismatch", action="store_true", help="rescore a run under a gold file different from the one recorded for it (loud warning)")
+    ev_.add_argument("--force", action="store_true", help="overwrite existing judgements, cases, metrics and report deliberately; gold checks still apply")
     ev_.add_argument("--no-judge", action="store_true")
     ev_.add_argument("--rejudge-stale", action=argparse.BooleanOptionalAction, default=True,
                      help="re-judge cached judgments whose input fingerprint changed (default); --no-rejudge-stale raises instead")
@@ -116,6 +119,7 @@ def main(argv: list[str] | None = None) -> int:
     pr.add_argument("--models", nargs="+", required=True)
     pr.add_argument("--allow-gold-mismatch", action="store_true", help="accept arms scored under a different gold file (loud warning)")
     pr.add_argument("--out", type=Path)
+    pr.add_argument("--force", action="store_true", help="overwrite an existing --out file deliberately; gold checks still apply")
     pr.add_argument("--n-boot", type=int, default=20000)
     pr.add_argument("--seed", type=int, default=20261031)
     sub.add_parser("audit-report", help="summarise the audit and feedback logs (data/audit)")
@@ -213,12 +217,12 @@ def main(argv: list[str] | None = None) -> int:
     if args.cmd == "retrieval-exp":
         from labourlens.retrieval import experiments
 
-        experiments.run(args.split)
+        experiments.run(args.split, force=args.force)
         return 0
     if args.cmd == "dense-exp":
         from labourlens.retrieval import experiments_dense
 
-        experiments_dense.run(args.split)
+        experiments_dense.run(args.split, force=args.force)
         return 0
     if args.cmd == "retrieval-exp2":
         from labourlens.retrieval import experiments_rerank
@@ -277,7 +281,7 @@ def main(argv: list[str] | None = None) -> int:
         from labourlens.evaluation import harness
 
         harness.run(args.exp, args.split, args.labels, not args.no_judge, rejudge_stale=args.rejudge_stale, gold_path=args.gold,
-                    allow_gold_mismatch=args.allow_gold_mismatch)
+                    allow_gold_mismatch=args.allow_gold_mismatch, force=args.force)
         return 0
     if args.cmd == "judge-xfamily":
         from labourlens.evaluation import xjudge
@@ -288,7 +292,7 @@ def main(argv: list[str] | None = None) -> int:
 
         from labourlens.evaluation import paired
 
-        result = paired.run(args.gold, args.candidate, args.baseline, args.models, args.out, args.n_boot, args.seed, args.allow_gold_mismatch)
+        result = paired.run(args.gold, args.candidate, args.baseline, args.models, args.out, args.n_boot, args.seed, args.allow_gold_mismatch, force=args.force)
         print(_json.dumps(result, indent=1))
         return 0
     if args.cmd in ("audit-report", "audit-show", "audit-prune"):

@@ -9,6 +9,7 @@
 #
 # State: /srv/labourlens/state/{current_tag,previous_tag}. Secrets are read by compose from /srv/labourlens/.env; this
 # script never prints them.
+# Set LABOURLENS_IMAGE in that private .env to YOUR lower-case GHCR repository; this script selects only IMAGE_TAG.
 set -euo pipefail
 
 root=/srv/labourlens

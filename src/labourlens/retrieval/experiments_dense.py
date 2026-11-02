@@ -45,7 +45,13 @@ def _query_api_ms(model: str) -> str:
     return f"{statistics.median(q):.0f} ms median over {len(q)} uncached query calls" if q else "no uncached query calls recorded"
 
 
-def run(split: str = "dev") -> None:
+def run(split: str = "dev", force: bool = False) -> None:
+    root = paths.EXPERIMENTS / "runs"
+    # E7's exact labels depend on the measured E5 winner. Guard every E5–E7
+    # metrics/cases file before any embedding work, including partial runs.
+    ev.refuse_existing([root / f"{split}-dense-SUMMARY.md", root / f"{split}-dense-summary.json"]
+                       + [p for exp in ("E5", "E6", "E7") for suffix in ("metrics.json", "cases.jsonl")
+                          for p in (root / f"{split}-dense-{exp}").glob(f"*.{suffix}")], force)
     passages = ck.load_passages()
     cases = ev.text_cases(ev.load_cases(split))
     if not cases:
@@ -58,12 +64,12 @@ def run(split: str = "dev") -> None:
 
     # E5
     out += ["## E5-embedding-model (dense only, merge120)", "", COLS, _row("bm25 baseline", base, base)]
-    ev.write_run(f"{exp}-E5", "bm25_baseline", base)
+    ev.write_run(f"{exp}-E5", "bm25_baseline", base, force=force)
     e5 = {}
     for model in MODELS:
         r = ev.run_config(BASE_CHUNK, BM, cases, passages, lambda ch, m=model: dn.DenseIndex(ch, dn.DenseConfig(m)), f"dense:{model}")
         e5[model] = r
-        ev.write_run(f"{exp}-E5", model, r)
+        ev.write_run(f"{exp}-E5", model, r, force=force)
         out.append(_row(model, r, base))
         results[f"E5/{model}"] = r["metrics"]
     winner = max(MODELS, key=lambda m: (e5[m]["metrics"]["mrr"], e5[m]["metrics"]["hit@10"]))
@@ -81,7 +87,7 @@ def run(split: str = "dev") -> None:
                                                  lambda ch: dn.HybridIndex(BM25Index.build(ch, BM), dn.DenseIndex(ch, cfg)), f"hybrid-rrf:{cfg.key()}"),
         }
         for label, r in runs.items():
-            ev.write_run(f"{exp}-E6", label, r)
+            ev.write_run(f"{exp}-E6", label, r, force=force)
             out.append(_row(label, r, base))
             results[f"E6/{label}"] = r["metrics"]
     out.append("")
@@ -91,7 +97,7 @@ def run(split: str = "dev") -> None:
     for hdr in (False, True):
         cfg = dn.DenseConfig(winner, header=hdr)
         r = ev.run_config(BASE_CHUNK, BM, cases, passages, lambda ch, c=cfg: dn.DenseIndex(ch, c), f"dense:{cfg.key()}")
-        ev.write_run(f"{exp}-E7", cfg.key(), r)
+        ev.write_run(f"{exp}-E7", cfg.key(), r, force=force)
         out.append(_row(f"header={'on' if hdr else 'off'}", r, base))
         results[f"E7/header={hdr}"] = r["metrics"]
     out.append("")

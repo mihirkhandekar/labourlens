@@ -100,10 +100,17 @@ def run_config(chunk_cfg: ck.ChunkConfig, bm_cfg: BM25Config, cases: list[dict],
     return {"config": {"chunk": asdict(chunk_cfg), "bm25": asdict(bm_cfg), "retriever": retriever_label}, "metrics": metrics, "rows": rows}
 
 
-def write_run(exp_id: str, label: str, result: dict) -> Path:
+def refuse_existing(outputs, force: bool = False) -> None:
+    existing = [str(p) for p in outputs if p.exists()]
+    if existing and not force:
+        raise FileExistsError("Existing experiment outputs: " + ", ".join(existing) + ". Pass --force to overwrite deliberately.")
+
+
+def write_run(exp_id: str, label: str, result: dict, force: bool = False) -> Path:
     d = paths.EXPERIMENTS / "runs" / exp_id
-    d.mkdir(parents=True, exist_ok=True)
     stem = label.replace("/", "_")
+    refuse_existing([d / f"{stem}.metrics.json", d / f"{stem}.cases.jsonl"], force)
+    d.mkdir(parents=True, exist_ok=True)
     (d / f"{stem}.metrics.json").write_text(json.dumps({"label": label, "config": result["config"], "metrics": result["metrics"]}, indent=1, default=str))
     (d / f"{stem}.cases.jsonl").write_text("\n".join(json.dumps(r) for r in result["rows"]) + "\n")
     return d

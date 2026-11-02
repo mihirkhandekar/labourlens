@@ -138,6 +138,20 @@ def test_unknown_routes_never_create_events_or_client_state(audit_dir):
     assert not (audit_dir / "salt").exists()
 
 
+@pytest.mark.parametrize("route", ["/api/mcp", "/api/mcp/try"])
+def test_mcp_rejection_is_pseudonymised_and_sampled(audit_dir, route):
+    event(route=route)
+    event(route=route)
+    records = events(audit_dir)
+    assert len(records) == 1
+    assert records[0]["detail"]["route"] == route
+    assert records[0]["detail"]["status"] == 401
+    assert records[0]["client"] == log.salted_hash("203.0.113.7")
+    assert records[0]["session"] == log.salted_hash("private-session")
+    assert "203.0.113.7" not in json.dumps(records)
+    assert "private-session" not in json.dumps(records)
+
+
 def test_events_sample_by_hmac_client_per_minute(audit_dir, monkeypatch):
     monkeypatch.setattr(audit.time, "monotonic", lambda: 120.0)
     event()

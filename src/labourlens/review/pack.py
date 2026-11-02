@@ -957,7 +957,7 @@ def ingest_review(path: Path, root: Path = ROOT) -> tuple[Path, Path]:
     agree = sum(a == b for a, b in paired)
     summary = '# Owner review summary\n\nThis is a rights-safe summary of owner-entered fields, not an automatic sign-off of gold.\n\n'
     summary += f'Reviewer: {md_cell(export.reviewer_name)}\n\nExport date: {md_cell(export.exported_at)}\n\n'
-    summary += '## Independent human review\n\nOnly independent owner-entered choices are counted here. An endorsement is not independent per-item review. Partial fields do not by themselves establish a completed review.\n\n'
+    summary += '## Owner-entered decisions\n\nThese are owner input actions, not independent annotation: the owner could see AI suggestions. Endorsements are counted separately. Partial fields do not by themselves establish a completed review.\n\n'
     summary += '### Decision provenance\n\n' + f'- owner_manual: {provenance["owner_manual"]}\n- agreed_with_ai_suggestion: {provenance["agreed_with_ai_suggestion"]}\n\n'
     basis_counts = Counter(r.ai_basis or 'earlier_passes' for r in decided_items if source_of(r) == 'agreed_with_ai_suggestion')
     summary += f'- of which agreed with earlier AI passes: {basis_counts["earlier_passes"]}; agreed with the 3-pass AI tie-break: {basis_counts["tiebreak"]}\n\n'

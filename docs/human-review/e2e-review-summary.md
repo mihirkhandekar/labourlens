@@ -1,5 +1,7 @@
 # End-to-end review: summary and finding status
 
+> **Historical status ledger: 31 Oct 2026 fix pass.** Pending/owner statements below describe that pass, not today's gate; original findings and numbers are retained. Later dispositions are listed at the end. The current process account is [AI-assisted development](../ai-assisted-development.md).
+
 On 31 Oct 2026 five separate AI reviewers (not human review; one model family, so not independent) traced the whole flow. Each finding was checked against code or artefacts before a fix; some were disputed or narrowed. Fix details: `docs/experiments/m7-e2e-fixes.md` (runtime, deploy), `docs/experiments/m7-eval-fixes.md` (evaluation) and decision D-043 in `docs/decisions.md`. Statuses: **fixed**, **narrowed** (partly fixed), **deferred** (reason given), **owner** (needs an owner decision or action). A blank fixer record is marked "no fix recorded".
 
 | Report | Scope | P0 | P1 | P2 |
@@ -101,3 +103,17 @@ On 31 Oct 2026 five separate AI reviewers (not human review; one model family, s
 | P2-5 old "T-I06 open" string in copy audit | left as history |
 | P2-6 private study notes | deferred (`study/` is private) |
 | P2-7 repeated caveat blocks | deferred |
+
+## Later dispositions (2 Nov 2026)
+
+| Historical pending item | Later evidence and limit |
+|---|---|
+| MTI garbled rule not applied | D-052 and [v3.1 diff](../../experiments/corpus-snapshots/v3.1-diff.json): refined rule applied, reindex/re-embed recorded in [archived progress](../archive/progress-log-2.md). This does not repair every unreliable table. |
+| v2 freeze sign-off pending | [Signed freeze](../../experiments/heldout-v2/FREEZE.md), 31 Oct; signing-time 59 manual / six AI agreements remains unchanged. Later rapid redo is separate provenance, not independent annotation. |
+| MCP-backed answer to record | [Recorded agent answer](../../artifacts/mcp-agent-demo.md), 1 Nov; one demonstration, not evaluation. D-058/D-061 later measures a 65-case served-chain sample, not full-set or browser admission. |
+| No exported diagram | [Rendered SVG](../img/architecture.svg) and [architecture](../architecture.md) now exist; no PNG requirement is inferred. |
+| D-030 owner default confirmation pending | Initial assistant choice remains history. D-056/D-061 record the later owner default/reporting choices; not retrospective approval. |
+| Judge one-family limitation | [Second-family sensitivity](../experiments/second-judge.md), D-062, partly addresses family dependence but remains AI judging and finds support disagreement. |
+| Fresh-clone evidence pending | [Dated clone checks](../fresh-clone-check.md) distinguish offline checks from unavailable private-corpus work. NOT CHECKED rights scans are not rights passes. |
+
+Deferred findings above remain deferred unless a later linked record states a disposition. This appendix does not claim that every review issue was fixed.

@@ -497,44 +497,71 @@ class SyncStatsBackend:
         self.calls: collections.deque[dict] = collections.deque(maxlen=RECENT_CALLS)  # bounded: the newest RECENT_CALLS lookups
         self._described: dict | None = None
         self._calls_lock = threading.Lock()
+        self._connect_lock = asyncio.Lock()  # used only on the private event loop
+        self._task: asyncio.Task | None = None
+        self._stop: asyncio.Event | None = None
+        self._closed = False
 
     def _run(self, coro, timeout: float):
         return asyncio.run_coroutine_threadsafe(coro, self.loop).result(timeout)
 
-    async def _serve(self, ready: "asyncio.Future") -> None:
-        """Owns the MCP connection for its whole life in ONE task: anyio cancel scopes must be entered and exited by the same task."""
-        self._stop = asyncio.Event()
+    async def _serve(self, ready: "asyncio.Future", stop: asyncio.Event) -> None:
+        """Own the connection and its anyio cancel scopes in one task."""
+        c = None
         try:
             async with McpStatsClient(self.server, self.call_timeout_s) as c:
                 self.client = c
-                ready.set_result(None)
-                await self._stop.wait()
+                if not ready.done():
+                    ready.set_result(c)
+                await stop.wait()
         except BaseException as e:  # noqa: BLE001
             if not ready.done():
                 ready.set_exception(e)
         finally:
-            self.client = None
+            if self.client is c:
+                self.client = None
 
-    async def _connect(self) -> None:
-        ready = self.loop.create_future()
-        self._task = self.loop.create_task(self._serve(ready))
-        await asyncio.wait_for(ready, CONNECT_TIMEOUT_S + 5)
+    async def _stop_session(self) -> None:
+        if self._task is not None:
+            self._stop.set()
+            await self._task
+            self._task = None
+            self._stop = None
+
+    async def _connect(self) -> McpStatsClient:
+        async with self._connect_lock:
+            if self._closed:
+                raise McpClientError("unavailable", TOOL_NAME)
+            if self.client is not None:
+                return self.client
+            await self._stop_session()
+            ready = self.loop.create_future()
+            self._stop = asyncio.Event()
+            self._task = self.loop.create_task(self._serve(ready, self._stop))
+            try:
+                return await asyncio.wait_for(ready, CONNECT_TIMEOUT_S)
+            except BaseException:
+                self._task.cancel()
+                await self._stop_session()
+                raise
+
+    async def _disconnect(self, expected=None, closing: bool = False) -> None:
+        async with self._connect_lock:
+            if closing:
+                self._closed = True
+            if expected is not None and self.client is not expected:
+                return
+            await self._stop_session()
 
     def close(self) -> None:
-        task = getattr(self, "_task", None)
-        if task is not None:
-            try:
-                self.loop.call_soon_threadsafe(self._stop.set)
-                self._run(asyncio.wait_for(asyncio.shield(task), 10), 12)
-            except Exception:  # noqa: BLE001
-                pass
-        self.loop.call_soon_threadsafe(self.loop.stop)
+        try:
+            self._run(self._disconnect(closing=True), 12)
+        finally:
+            self.loop.call_soon_threadsafe(self.loop.stop)
+            self.thread.join(timeout=12)
 
-    def _drop(self) -> None:
-        task = getattr(self, "_task", None)
-        if task is not None:
-            self.loop.call_soon_threadsafe(self._stop.set)
-        self.client = None
+    def _drop(self, expected=None) -> None:
+        self._run(self._disconnect(expected), CONNECT_TIMEOUT_S + 5)
 
     def _record(self, tool: str, args: dict, t0: float, ok: bool, attempt: int, quarantined: int = 0, kind: str | None = None) -> None:
         entry = {"tool": tool, "arguments": {k: v for k, v in args.items() if v is not None}, "ms": round((time.perf_counter() - t0) * 1000, 1), "ok": ok,
@@ -552,16 +579,17 @@ class SyncStatsBackend:
         Same reconnect-once rule as `query`; raises McpClientError for a rejected or failed call."""
         t0 = time.perf_counter()
         for attempt in range(2):
+            c = None
             try:
-                if self.client is None:
-                    self._run(self._connect(), CONNECT_TIMEOUT_S + 5)
-                reply = self._run(self.client.call(tool, **args), self.call_timeout_s + 5)
+                c = self._run(self._connect(), CONNECT_TIMEOUT_S + 5)
+                reply = self._run(c.call(tool, **args), self.call_timeout_s + 5)
                 self._record(tool, args, t0, True, attempt, reply.quarantined)
                 return reply
             except McpClientError as e:
                 self._record(tool, args, t0, False, attempt, kind=e.kind)
                 if e.kind == "unavailable" and attempt == 0:
-                    self._drop()
+                    if c is not None:
+                        self._drop(c)
                     continue
                 raise
             except (TimeoutError, FutureTimeoutError) as e:
@@ -574,9 +602,8 @@ class SyncStatsBackend:
         Discovered once through the live session and cached; raises McpClientError / TimeoutError when not reachable."""
         if self._described is not None:
             return self._described
-        if self.client is None:
-            self._run(self._connect(), CONNECT_TIMEOUT_S + 5)
-        self._described = self._run(self._discover(self.client), self.call_timeout_s + 5)
+        c = self._run(self._connect(), CONNECT_TIMEOUT_S + 5)
+        self._described = self._run(self._discover(c), self.call_timeout_s + 5)
         return self._described
 
     @staticmethod
@@ -602,10 +629,10 @@ class SyncStatsBackend:
         args = dict(source_id=source_id, period_from=period_from, period_to=period_to, dimension=dimension, adjustment=adjustment, indicator_id=indicator_id)
         t0 = time.perf_counter()
         for attempt in range(2):
+            c = None
             try:
-                if self.client is None:
-                    self._run(self._connect(), CONNECT_TIMEOUT_S + 5)
-                reply = self._run(self.client.get_statistic(**args), self.call_timeout_s + 5)
+                c = self._run(self._connect(), CONNECT_TIMEOUT_S + 5)
+                reply = self._run(c.get_statistic(**args), self.call_timeout_s + 5)
                 self._record(TOOL_NAME, args, t0, True, attempt, reply.quarantined)
                 return _Rows(reply.rows, reply.quarantined), None
             except McpClientError as e:
@@ -613,7 +640,8 @@ class SyncStatsBackend:
                 if e.kind in ("invalid_arguments", "not_found", "too_large"):
                     return None, ToolResult(False, message=e.message or e.kind, error_kind=e.kind)
                 if e.kind == "unavailable" and attempt == 0:
-                    self._drop()  # lost connection: reconnect once
+                    if c is not None:
+                        self._drop(c)  # only drop the session this call used
                     continue
                 if e.kind == "timeout" and attempt == 0:
                     raise TransientToolError(e.kind) from e

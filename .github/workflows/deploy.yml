@@ -9,7 +9,6 @@ on:
     paths-ignore:
       - "**/*.md"
       - "docs/**"
-      - "study/**"
   workflow_dispatch:
 
 # Nothing by default; each job asks for what it needs.
@@ -44,6 +43,7 @@ jobs:
 
   build-push:
     needs: test
+    if: github.ref == 'refs/heads/master'
     runs-on: ubuntu-latest
     timeout-minutes: 30
     permissions:

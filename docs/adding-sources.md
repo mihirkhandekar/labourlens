@@ -4,14 +4,14 @@ How a new report, dataset or agency enters LabourLens, and how it is reprocessed
 
 ## 1. Today
 1. **Register.** Add an entry to `specs/sources.yaml`: publisher, title, canonical URL, download URL, release stage, period, and **rights status with the evidence** (quote the notice you read).
-2. **Allow the host.** A new publisher host must be added to the fetch allow-list in `data/acquire.py` (a deliberate code change, reviewed).
+2. **Allow the host.** Allow a new publisher host in `src/labourlens/data/acquire.py` (a deliberate code change, reviewed).
 3. **Datasets only:** add `specs/datasets/<id>.yaml` (columns, measures, unit, population, adjustment, missing tokens, plausible range). A schema change fails the build loudly.
 4. **Fetch** (`labourlens fetch --only <id>`). The file is stored in a new hash-addressed snapshot and the manifest and its history are updated. Existing snapshots are never overwritten.
 5. **Build** (`labourlens build`). Normalise, extract passages, run all checks. Today this reprocesses everything; it is deterministic, so unchanged inputs give identical outputs (tested).
 6. **Review and test.** Quality report, spot-check sheet rows for the new source, tests for any new adapter behaviour.
 7. **Record** in `docs/data-sheet.md` and `docs/decisions.md` if it changes scope.
 
-**A revised report** (for example MOM republishes a final report) is a new snapshot of the same `source_id`. `labourlens revisions` diffs the old and new CSVs. Old answers remain reproducible because their snapshot id is still stored.
+**A revised report** creates a new raw snapshot. `labourlens revisions` compares dataset CSV snapshots only; it is not a PDF/HTML revision diff. Preserve the previous manifest and snapshot IDs for historical report analyses.
 
 ## 2. What production systems usually do (PROPOSAL)
 | Practice | What it means | Why |

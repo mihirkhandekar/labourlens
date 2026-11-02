@@ -68,7 +68,7 @@ def make_run(sandbox, gold_hash_in_metrics, gen_hash=None):
 def test_eval_refuses_gold_mismatch_and_writes_nothing(sandbox, monkeypatch):
     gold = make_run(sandbox, "0" * 64)
     with pytest.raises(h.GoldMismatch):
-        h.run("agent-dev-T", judge=False, gold_path=gold)
+        h.run("agent-dev-T", judge=False, gold_path=gold, force=True)
     assert not (sandbox / "experiments" / "eval" / "agent-dev-T-REPORT.md").exists()
     assert not (sandbox / "experiments" / "eval" / "agent-dev-T" / "m.cases.jsonl").exists()
 
@@ -85,7 +85,7 @@ def test_eval_allow_mismatch_warns_and_writes_gold_hash(sandbox, monkeypatch, ca
     monkeypatch.setattr(h, "case_metrics", lambda case, rec, judged: {"seconds": 1.0, "cost_usd": 0.0, "family": None, "behavior_ok": True})
     monkeypatch.setattr(h, "aggregate", lambda rows: {"n_cases": len(rows)})
     monkeypatch.setattr(h, "by_family", lambda rows: {})
-    h.run("agent-dev-T", judge=False, gold_path=gold, allow_gold_mismatch=True)
+    h.run("agent-dev-T", judge=False, gold_path=gold, allow_gold_mismatch=True, force=True)
     assert "WARNING" in capsys.readouterr().out
     metrics = json.loads((sandbox / "experiments" / "eval" / "agent-dev-T" / "m.metrics.json").read_text())
     assert metrics["provenance"]["gold_sha256"] == hashlib.sha256(gold.read_bytes()).hexdigest()

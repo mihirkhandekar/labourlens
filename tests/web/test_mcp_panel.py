@@ -77,6 +77,30 @@ def test_endpoints_need_a_session(settings):
     run(settings, FakeBackend(), scenario)
 
 
+@pytest.mark.parametrize("route,method", [("/api/mcp", "GET"), ("/api/mcp/try", "POST")])
+def test_rejected_request_emits_sampled_private_audit(settings, tmp_path, monkeypatch, route, method):
+    import json
+    from labourlens.audit import log
+    from labourlens.report import audit
+
+    monkeypatch.setattr(log, "AUDIT_DIR", tmp_path)
+    monkeypatch.setattr(audit, "_sample_clients", set())
+    monkeypatch.setattr(audit, "_sample_minute", -1)
+    monkeypatch.setattr(audit.time, "monotonic", lambda: 120.0)
+
+    async def scenario(app, client):
+        for _ in range(2):
+            assert (await client.request(method, route)).status_code == 401
+
+    run(settings, FakeBackend(), scenario)
+    records = [json.loads(line) for file in tmp_path.glob("events-*.jsonl") for line in file.read_text().splitlines()]
+    assert len(records) == 1
+    assert records[0]["detail"]["route"] == route
+    assert records[0]["detail"]["status"] == 401
+    assert records[0]["client"] == log.salted_hash("127.0.0.1")
+    assert "127.0.0.1" not in json.dumps(records)
+
+
 def test_overview_shape_and_roles(settings):
     async def scenario(app, client):
         await login(client)

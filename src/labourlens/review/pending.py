@@ -903,7 +903,7 @@ def final_summary(root: Path, st: State, export: PendingExport, export_sha: str,
               '## Rescoring on gold v3.7 (separate offline step for saved runs, no model calls)', '',
               'The earlier saved evaluations stay scored on v3.5/v3.6 and keep their hashes; the final consolidated run (D-056, which ran new generation, on v3.6) was scored on v3.7 for development and the registered held-out set. ' + ('Gold v3.7 has the same questions, labels, facts and evidence as v3.6 and differs only in review provenance fields, so a rescoring changes no behaviour or score; it only records the all-reviewed status against the v3.7 hash. ' if not report['changed'] and not report['dropped'] else 'To measure the effect of the v3.7 changes, ') + 'If you rescore, do it from the saved runs without the judge, one experiment at a time, '
               'for example (this rewrites `experiments/eval/<exp>/`, so run it on a copy or a scratch checkout, never over a frozen result):', '',
-              '```', f'uv run labourlens eval --exp agent-dev-A1 --split dev --gold {GOLD_V37} --allow-gold-mismatch --no-judge', '```', '',
+              '```', f'uv run labourlens eval --exp agent-dev-A1 --split dev --gold {GOLD_V37} --allow-gold-mismatch --no-judge --force', '```', '',
               'Report the result as a post-hoc sensitivity analysis next to, never instead of, the original scores.', '']
     return '\n'.join(lines), wording_lines
 

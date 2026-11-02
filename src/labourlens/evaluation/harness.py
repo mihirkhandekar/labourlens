@@ -209,13 +209,16 @@ def by_family(rows: list[dict]) -> dict:
 
 
 def run(exp: str = "agent-dev-A1", split: str = "dev", labels: list[str] | None = None, judge: bool = True,
-        rejudge_stale: bool = True, gold_path=None, allow_gold_mismatch: bool = False) -> None:
+        rejudge_stale: bool = True, gold_path=None, allow_gold_mismatch: bool = False, force: bool = False) -> None:
     cases = {c["case_id"]: c for c in ev.load_cases(split, gold_path)}
     raw_dir = paths.DATA / "runs" / exp
     pub = paths.EXPERIMENTS / "eval" / exp
     raw_files = [f for f in sorted(raw_dir.glob("*.jsonl")) if not labels or f.stem in labels]
     if not raw_files:
         raise FileNotFoundError(f"No raw runs in {raw_dir}" + (f" for labels {labels}" if labels else "") + "; nothing scored and no report written.")
+    ev.refuse_existing([pub.parent / f"{exp}-REPORT.md"]
+                       + [p for suffix in ("judgements.json", "cases.jsonl", "metrics.json")
+                          for p in pub.glob(f"*.{suffix}")], force)
     gold_hash = file_hash(gold_path or paths.EXPERIMENTS / "gold" / "draft_cases.jsonl")
     for f in raw_files:  # check every run before anything is written
         check_gold(f.stem, [json.loads(line) for line in f.read_text().splitlines() if line.strip()], pub / f"{f.stem}.metrics.json", gold_hash, allow_gold_mismatch)

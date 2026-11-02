@@ -5,7 +5,7 @@ import time
 
 from labourlens.audit import log
 
-KNOWN_ROUTES = frozenset({"/api/status", "/api/login", "/api/logout", "/api/ask", "/api/feedback"})
+KNOWN_ROUTES = frozenset({"/api/status", "/api/login", "/api/logout", "/api/ask", "/api/feedback", "/api/mcp", "/api/mcp/try"})
 EVENT_MAX_BYTES = 1024 * 1024
 EVENT_MAX_CLIENTS = 4096
 _sample_lock = threading.Lock()

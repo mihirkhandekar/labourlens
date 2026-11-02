@@ -2,35 +2,47 @@
 
 Exact commands from a fresh clone. Each step says what it needs. Costs are from the saved metrics files, not estimates for your account; model prices are in `specs/prices.yaml`.
 
-**Reruns are not bit-reproducible.** The model requests set no temperature, top_p or seed, so a rerun can differ from a saved run. Historic runs did not record sampling values; new `agent-exp` and `threat-test` runs write a `sampling` block (model, prompt files and SHA-256, max tokens, `provider-default` where unset, no seed, timestamp) into their metrics files.
+**Reruns are not bit-reproducible.** Requests set no temperature, top_p or seed. Agent/served raw generation provenance records `sampling`; eval publishes this as `generation_sampling` in metrics. Threat-test metrics use `sampling`. Unset values are recorded as `provider-default`, not an invented temperature or seed.
+
+## Quick start — report and MCP, zero spend
+
+Prerequisites: Git, uv, CPython 3.12 (uv can provision it) and make for make targets. No Node/npm, Docker, provider key or private corpus is needed. Clone the supplied repository URL and enter its root, then run:
 
 ```bash
-git clone <repository-url> labourlens && cd labourlens
-make setup        # uv sync --frozen: Python 3.12 and the locked dependencies (needs the package index once)
-make verify       # lint, offline tests, docs links, rights scan, secrets scan
+make setup
+make verify && uv run labourlens mcp-demo && uv run python scripts/final_mean.py
+LABOURLENS_DEMO_ENABLED=false make serve
 ```
 
-`make verify` needs no API key, no private data and no paid call. On a clone, `rights-scan` prints `NOT CHECKED` (there is no source text to compare with), and `secrets-scan` runs gitleaks only if it is installed. A fresh-clone run is recorded in [`fresh-clone-check.md`](fresh-clone-check.md).
+Open `http://127.0.0.1:8000/`, `/deck` and `/workbench`. Without make, install with `uv sync --frozen`; the direct app command is `LABOURLENS_DEMO_ENABLED=false uv run labourlens serve --host 127.0.0.1 --port 8000`.
+
+`make verify` needs no key or paid call. In a public clone the rights scan prints `NOT CHECKED` (not a pass); history scanning is conditional on installed gitleaks. The clean-clone audit of `d8a0b0e` on 2 Nov 2026 recorded 1,100 passed, 1 skipped, 57 deselected; counts and durations are not acceptance targets. See the [fresh-clone record](fresh-clone-check.md). The documentation checker validates tracked relative links and anchors, not external URL availability, CLI flags or prose accuracy.
 
 ## What each artefact needs
 
 | Artefact | Command | Needs | Expected result | Cost |
 |---|---|---|---|---|
-| Offline test suite | `make test` | checkout only | 1027 passed, 57 deselected (1 Nov 2026, `uv run pytest -q -m 'not corpus'`) | none |
-| Corpus tests | `make test-corpus` | private corpus | 56 tests pass | none |
+| Offline test suite | `make test` | checkout only | offline tests pass; `corpus`-marked tests are deselected | none |
+| Corpus tests | `make test-corpus` | complete private corpus | corpus-marked tests pass | none |
 | Report data for the site | `make report` (`uv run labourlens build-report`) | checkout only | rewrites `web/static/data/report.json` from committed artefacts; the file in git is the output of this command | none |
 | Report and deck, static chapters | `make serve`, open `http://127.0.0.1:8000/` | checkout only | the ten report chapters and the deck; the live workbench needs the corpus and an API key | none |
 | Docs link check | `make docs-check` | checkout only | `0 problem(s)` | none |
 | Statistical store, EDA, export | `uv run labourlens fetch && uv run labourlens build && uv run labourlens eda && uv run labourlens export` | network; rewrites generated files | manifest, snapshots, `data/processed/`, figures. Do not run on a checkout whose `data/` you want to keep. | none |
 | Documents and passages | `uv run labourlens fetch --kind documents`, then `build` | network, time; the MOM and MTI files are not redistributed | local `data/raw/`, `data/passages/` (gitignored) | none |
-| MCP protocol demo | `uv run labourlens mcp-demo` | the statistics store | writes `data/runs/mcp-demo-transcript.md` (gitignored; `--out docs/mcp-demo-transcript.md` overwrites the committed record) | none |
+| MCP protocol demo | `uv run labourlens mcp-demo` | committed statistical store, manifest and snapshots; no private MOM/MTI corpus | writes gitignored `data/runs/mcp-demo-transcript.md`; leave committed transcript unchanged | none |
 | MCP-backed agent run | `uv run labourlens mcp-agent-demo` | corpus, `OPENAI_API_KEY` | rewrites `artifacts/mcp-agent-demo.md`; recorded run cost about $0.001 | paid, small |
-| Re-score a frozen run, no judge | `uv run labourlens eval --exp agent-dev-A3 --no-judge --gold experiments/gold/archive/gold-v3.5.jsonl` | `data/runs/` (raw outputs, not in git) | metrics identical to the committed ones | none |
-| A new dev experiment | `uv run labourlens agent-exp --split dev --tag SMOKE --pairs gpt-6-luna`, then `eval --exp agent-dev-SMOKE` | corpus, `OPENAI_API_KEY` | new files; refuses an existing id | paid. For scale: saved X2 metrics show $0.00285 per case for `gpt-6-luna` and $0.00463 for `gpt-5.6-luna`, plus judge cost $0.243 and $0.2689 for the 237 cases |
-| Threat suite | `uv run labourlens threat-test` | corpus, `OPENAI_API_KEY` | per-case results under `experiments/threats/` | paid |
-| Held-out v2 paired comparison | `uv run labourlens paired ...` (see `docs/experiments/m7-heldout-v2-result.md`) | saved scores | `experiments/heldout-v2/paired.json` | none |
+| Re-score saved raw answers, no judge | `uv run labourlens eval --exp agent-dev-A3 --no-judge --gold experiments/gold/archive/gold-v3.5.jsonl --force` | scratch checkout only, original private `data/runs/` records; deliberately replaces scratch evaluation output | deterministic rescoring, not restoration of judge metrics | none |
+| A new dev experiment | `uv run labourlens agent-exp --split dev --tag MY-SMOKE --pairs gpt-6-luna`, then `eval --exp agent-dev-MY-SMOKE` | corpus, `OPENAI_API_KEY`; new unused tag | new files; refuses an existing id | paid; saved X2 generation $0.00285/$0.00463 per case plus judge $0.243/$0.2689 per 237 cases |
+| Threat suite | `uv run labourlens threat-test --experiment MY-THREATS-20261102 --models gpt-6-luna gpt-5.6-luna` | complete corpus, `OPENAI_API_KEY`; choose a new unused identifier | per-case results under `experiments/threats/` | paid requests |
+| Final aggregation and paired comparisons | `uv run python scripts/final_mean.py`; full `paired` command below | committed scored rows, no private corpus/key | two-run headline or separate paired diagnostics | none |
+| Saved second-family summary | `uv run labourlens judge-xfamily --experiment sonnet55-FIN-s60-b-20261102 --summary` | checkout only | saved summary, no calls or writes | none |
+| New second-family dry-run | `uv run labourlens judge-xfamily --experiment MY-JUDGE-20261102 --dry-run` | private FIN raw outputs to construct paired sample | token/list-price heuristic, not a bill; unavailable in public clone | none |
+| Embedding-cache preparation | `uv run labourlens dense-exp --force` | scratch checkout only, complete corpus, `OPENAI_API_KEY`; replaces fixed-name scratch experiment outputs | cached vectors needed before live serving | paid embeddings |
+| Human review ingestion | review-ingest / v2-approve commands | original owner exports and associated private review inputs | original signed records remain the evidence; never fabricate missing inputs | none |
 
 Published numbers come from saved outputs. Re-running a model gives different outputs; that is expected and does not change the published results. Do not use `--force` on a registered experiment: it overwrites frozen evidence.
+
+`retrieval-exp` and `dense-exp` refuse existing metrics, cases and summaries; `eval` refuses existing judgements, cases, metrics and reports; `paired --out` refuses an existing destination. Their `--force` flag deliberately allows replacement, not exemption from gold-hash checks. Only use it in a disposable reproduction checkout, never against the authoritative submission. For new generation choose unused tags; for paired statistics choose a new `--out` path (the example below deliberately omits `--force`). Historical command blocks below remain history and now refuse existing outputs.
 
 ## Verifying hashes
 
@@ -41,7 +53,7 @@ shasum -a 256 experiments/gold/gold_v3.7.jsonl experiments/gold/heldout_v2_v1.js
 shasum -a 256 data/processed/observations.parquet specs/prices.yaml
 ```
 
-Compare the output with those two files. `eval` and `paired` refuse a gold file whose SHA-256 differs from the one recorded with the run unless `--allow-gold-mismatch` is passed. With the corpus, `make test-corpus` re-hashes every raw file against `data/manifests/manifest.json`.
+Gold and observations hashes can be compared directly with the frozen records. `specs/prices.yaml` has since gained second-family judge prices; its current hash is `6c61e81b4fca213be3b9db467443ce294148be7f6e16697e13f105ac2d75d224`. Verify historical price hashes against the price file at the recorded run commit; do not edit a signed freeze to match the present file. `eval` and `paired` reject mismatched gold hashes unless `--allow-gold-mismatch` is passed. With the corpus, `make test-corpus` re-hashes raw files against the manifest.
 
 ## What a clone cannot reproduce
 
@@ -49,6 +61,10 @@ Compare the output with those two files. `eval` and `paired` refuse a gold file 
 - Three datasets whose raw CSVs are gitignored (licence not verified); their derived rows are in `observations.parquet`, so a rebuild from a clone stops at those files (`docs/data-sheet.md`, section 9).
 - Raw model outputs (`data/runs/`) are not in git; committed experiment files hold scores, metrics and short judge notes.
 - The live site needs the corpus, an API key and the server secrets (`docs/deploy.md`).
+
+A fresh fetch acquires current publisher bytes, not necessarily the historical corpus. Preserve the frozen manifest before `fetch`; compare all retrieval statuses and raw hashes before `build`. A successful download is not proof of snapshot identity. Local private files are needed for a complete rebuild.
+
+In `experiments/triage/*/raw.jsonl` and `experiments/context/*/raw.jsonl`, `raw.jsonl` holds routing results, not transcripts.
 
 ## Final two-run headline and 2 Nov measurements (D-061)
 
@@ -61,6 +77,17 @@ uv run python scripts/final_mean.py
 ```
 
 This reads committed FIN/FIN2 scored cases and writes `experiments/eval/final-mean.json`. It asserts identical case membership within each repeated arm, averages each case's two binary outcomes, and computes paired 95% case-bootstrap intervals with 10,000 resamples and seed 20261030. It also saves both run costs, medians and all-case false-answer/over-abstention rates. Mean-of-medians is not pooled p50, and two runs are not a variance estimate. Run only on a disposable reproduction checkout if you need to preserve the existing generated file unchanged.
+
+For the final headline use `scripts/final_mean.py`, which selects each declared question set. Stored generic FIN2 development/original-heldout paired files used combined gold and have incomplete-membership diagnostics; their generic adoption verdicts are not valid split-specific headline tests. Keep those historical files unchanged.
+Regenerating those generic FIN2 files needs explicit split selection while preserving the parent gold hash, not manual deletion of missing cases.
+
+To recompute a separate complete held-out v2 comparison from committed scores, choose an unused output path:
+
+```sh
+uv run labourlens paired --gold experiments/gold/heldout_v2_v1.jsonl --candidate agent-heldout-V2-r3 --baseline agent-heldout-V2-hybrid --models gpt-6-luna gpt-5.6-luna --out /tmp/labourlens-paired-v2-new.json
+```
+
+`web/static/data/report.json` is generated output: rebuilding changes its timestamp and commit provenance, so byte identity is not expected. `final_mean.py` reads saved scores, not new model answers.
 
 ### Tagged current-corpus retrieval (paid reranking/possible embeddings)
 
@@ -107,7 +134,20 @@ The [declaration and continuation amendment](experiments/second-judge.md) descri
 
 ```sh
 uv run labourlens judge-xfamily --experiment sonnet55-FIN-s60-b-20261102 --summary
-uv run labourlens judge-xfamily --experiment <new-id> --dry-run
 ```
 
-The summary command reads saved paired and agreement output only. The dry-run makes no API call and prints a token and list-price heuristic, not a bill. A paid execution is deliberately not part of the reproduction path here; if it is needed, use a new immutable ID and an explicit `--max-usd`, never overwrite an existing ID.
+A new dry-run needs private FIN raw outputs; it is not checkout-only:
+
+```sh
+uv run labourlens judge-xfamily --experiment MY-JUDGE-20261102 --dry-run
+```
+
+The summary command reads saved paired and agreement output only. A new dry-run makes no API call but still requires private FIN raw outputs to construct its sample; it does not work from this public clone. Paid execution additionally needs `ANTHROPIC_API_KEY`, a new immutable ID and an explicit `--max-usd`.
+
+## Deploy — your registry, domain and private corpus
+
+Follow [deploy.md](deploy.md). Deployment needs Docker Engine and Compose, SSH/scp/rsync, openssl, curl, a domain/DNS and reachable ports 80/443; the bootstrap installs server tooling. The gh CLI is not required: Actions secrets can be configured in the web UI. Set `LABOURLENS_IMAGE=ghcr.io/<your-github-owner>/<your-repository>` in the private server `.env`; publish that image before selecting its commit with `IMAGE_TAG`. Compose has no build stanza. Report-only mode does not need restricted passages; live mode requires all files in `deploy/runtime-data.txt`, including the complete embedding cache. Deployment commands are operational instructions, not evidence that a fork or remote deployment was executed in this pass.
+
+## Packaging
+
+Hand over by GitHub URL, a fresh clone or `git archive HEAD`, never zip or copy the working folder: ignored secrets, private corpus and assessment material share that folder.

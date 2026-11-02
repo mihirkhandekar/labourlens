@@ -37,21 +37,25 @@ def words(text: str) -> list[str]:
     return _WORD.findall(_URL.sub(" ", text).lower())
 
 
-def _passage_texts(passages_dir: Path):
+def build_shingles(passages_dir: Path, n: int = SHINGLE) -> set[int]:
+    """Include boundary windows between consecutive passages of the same document."""
+    out: set[int] = set()
     for f in sorted(passages_dir.glob("*.jsonl")):
+        previous_document = None
+        tail: list[str] = []
         with f.open(encoding="utf-8") as fh:
             for raw in fh:
-                raw = raw.strip()
-                if raw:
-                    yield json.loads(raw).get("text") or ""
-
-
-def build_shingles(passages_dir: Path, n: int = SHINGLE) -> set[int]:
-    out: set[int] = set()
-    for text in _passage_texts(passages_dir):
-        w = words(text)
-        for i in range(len(w) - n + 1):
-            out.add(hash(tuple(w[i : i + n])))
+                if not raw.strip():
+                    continue
+                passage = json.loads(raw)
+                document = passage.get("source_id") or f.stem
+                if document != previous_document:
+                    tail = []
+                w = tail + words(passage.get("text") or "")
+                for i in range(len(w) - n + 1):
+                    out.add(hash(tuple(w[i : i + n])))
+                tail = w[-(n - 1):] if n > 1 else []
+                previous_document = document
     return out
 
 

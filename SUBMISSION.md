@@ -14,16 +14,18 @@ The deck has 29 main slides plus appendix. Press X twice quickly for speaker not
 ## Run it
 
 ```bash
-make setup     # locked dependencies, Python 3.12
-make verify    # lint, offline tests, docs links, rights scan, secret scan
-make serve     # report and deck at http://127.0.0.1:8000
+make setup
+make verify && uv run labourlens mcp-demo && uv run python scripts/final_mean.py
+LABOURLENS_DEMO_ENABLED=false make serve
 ```
 
 Fresh-clone run, with the observed output: [`docs/fresh-clone-check.md`](docs/fresh-clone-check.md). Commands for every artefact: [`docs/reproduce.md`](docs/reproduce.md).
 
+**Packaging:** hand over by GitHub URL, a fresh clone or `git archive HEAD`, never zip or copy the working folder. Ignored secrets, private corpus and assessment material are present alongside the tracked submission.
+
 ## What a clone can and cannot reproduce
 
-- **Can (no key, no private data, no cost):** the offline test suite, lint, docs-link check, history secret scan, the static report and deck, report data rebuilt from committed artefacts, re-checking frozen hashes, reading every saved score, metric and review record.
+- **Can (no key, no private data, no cost):** offline tests, lint, relative docs-link checks, history secret scanning if gitleaks is installed, static report/deck, report rebuilding, frozen hash checks, the real MCP client demo using the committed statistical store, final two-run aggregation and paired comparisons from committed scores.
 - **Cannot:** anything that reads MOM or MTI text (retrieval indexes, live answers about report content, the quote scan against source text). Those documents are not redistributed; the rights scan prints `NOT CHECKED` in a clone. Raw model outputs are not in git; scores and metrics are.
 - **Needs a key and spends money:** live answers, new experiments, the threat suite.
 

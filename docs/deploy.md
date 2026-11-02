@@ -59,6 +59,7 @@ ssh deploy@<droplet-ip>
 umask 077
 cat > /srv/labourlens/.env <<'EOF'
 DOMAIN=labourlens.example.org
+LABOURLENS_IMAGE=ghcr.io/<your-github-owner>/<your-repository>
 OPENAI_API_KEY=sk-REPLACE-WITH-A-RESTRICTED-PROJECT-KEY
 LABOURLENS_ACCESS_CODES=REPLACE-WITH-RANDOM-CODE-1,REPLACE-WITH-RANDOM-CODE-2
 LABOURLENS_SESSION_SECRET=REPLACE-64-HEX-CHARACTERS
@@ -79,6 +80,7 @@ Do not paste real values into documentation, shell history shared with others, s
 | Variable | Meaning |
 |---|---|
 | `DOMAIN` | Public host name. Used by Caddy for the certificate and by `deploy.sh` for its edge health check. |
+| `LABOURLENS_IMAGE` | Lower-case GHCR image repository published by your workflow: `ghcr.io/<your-github-owner>/<your-repository>`. Set explicitly for your account/fork; the Compose fallback is the author's image. |
 | `OPENAI_API_KEY` | Restricted server-side OpenAI project key for live research and query embeddings. Omit while live mode is off. |
 | `LABOURLENS_ACCESS_CODES` | Comma-separated reviewer codes; **every code must be at least 16 characters**, otherwise live mode is disabled. Generate independently at random and distribute privately. |
 | `LABOURLENS_SESSION_SECRET` | Signing secret for session cookies; code enforces at least **32 characters**, and operators should generate 32 random bytes or more (for example 64 hex characters). Rotating it revokes all sessions. |
@@ -88,11 +90,13 @@ Do not paste real values into documentation, shell history shared with others, s
 
 `LABOURLENS_FORWARDED_ALLOW_IPS` is set by `docker-compose.yml`, not by you (section 8). Set an OpenAI project-level budget in addition to the application limit. Start with `LABOURLENS_DEMO_ENABLED=false`, verify the site, then enable live mode.
 
-Existing behaviour that matters to operators: sessions are signed `labourlens_session` cookies (HttpOnly, SameSite=Strict, eight hours, Secure when the app sees HTTPS) and require an active in-memory session. Same-origin `POST /api/logout` revokes that session and clears the cookie; restarting the app revokes all sessions. Login also checks Origin. Default limits: login 5 attempts per IP per 60 seconds **and 50 failed logins globally per 10 minutes**; questions 10 per access-code-bound identity and 20 per IP per 60 seconds (logging in again does not reset the code's question allowance); at most 2 active runs; 90-second HTTP wait; 8 KiB request body; questions and feedback comments up to 1,000 characters. Audit session hashes still identify distinct sessions. These are `Settings` fields; `Settings.from_env` reads only the variables above.
+Set `LABOURLENS_IMAGE` to the lower-case GHCR name published by your workflow. `IMAGE_TAG` selects a commit in that image repository; it does not select the repository.
+
+Existing behaviour that matters to operators: sessions are signed `labourlens_session` cookies (HttpOnly, SameSite=Strict, eight hours, Secure when the app sees HTTPS) and require an active in-memory session. Same-origin `POST /api/logout` revokes that session and clears the cookie; restarting the app revokes all sessions. Login also checks Origin. Login requests are limited to 5 per client IP per 60 seconds. Failed logins lock a client after 10 failures in 10 minutes; a global threshold of 200 failures still refuses invalid codes. Valid codes are not rejected by those failure locks. Questions are limited to 10 per access-code-bound identity and 20 per IP per 60 seconds (logging in again does not reset the code allowance); at most 2 active runs; 90-second HTTP wait; 8 KiB request body; questions and feedback comments up to 1,000 characters. Audit session hashes still identify distinct sessions. These are `Settings` fields; `Settings.from_env` reads only the variables above.
 
 ## 5. GitHub secrets and repository settings
 
-In the repository `mihirkhandekar/labourlens`, branch `master`, add Actions secrets (repository-level, or on the `production` environment that the deploy job uses; an environment can also require a manual approval):
+In your GitHub repository, branch `master`, add Actions secrets (repository-level, or on the `production` environment that the deploy job uses; an environment can also require manual approval). The gh CLI is optional; the web UI is sufficient:
 
 | Secret | Value |
 |---|---|
@@ -103,20 +107,20 @@ In the repository `mihirkhandekar/labourlens`, branch `master`, add Actions secr
 
 The workflow (`.github/workflows/deploy.yml`) has three jobs.
 
-1. **test** installs the locked dependencies with `uv sync --frozen` and runs the test suite in a checkout that has no gitignored corpus. One test is deselected because it re-hashes raw files that exist only on the author's machine (`tests/data/test_provenance_and_packaging.py::test_every_ok_entry_has_matching_file_hash`). It first fails if git tracks any corpus path, PDF or env file.
-2. **build-push** checks the build context, builds the image, fails if `/app/data` is not empty or the image contains a PDF (outside the Python dependency tree) or an env file, then pushes `ghcr.io/mihirkhandekar/labourlens:<commit sha>` and `:latest`.
+1. **test** installs locked dependencies with `uv sync --frozen` and runs `pytest -m 'not corpus'`, deselecting the corpus-marked group. Historic counts below are not acceptance targets. It first fails if git tracks any corpus path, PDF or env file.
+2. **build-push** runs only on `master`, checks the build context, builds the image, fails if `/app/data` is not empty or the image contains a PDF (outside the Python dependency tree) or an env file, then pushes `ghcr.io/<your-github-owner>/<your-repository>:<commit-sha>` and `:latest`. The image name is derived from the lower-case GitHub repository name.
 3. **deploy** copies `deploy/` to the Droplet, logs the Droplet into GHCR with the job's short-lived `GITHUB_TOKEN` (logged out again afterwards), and runs `deploy.sh up <sha>`, which pulls the image, starts it, waits for container health (up to 240 seconds) and for `https://DOMAIN/healthz` through Caddy, and returns to the previous tag automatically if either fails.
 
 A concurrency group serialises runs; a queued run waits rather than cancelling one in progress. Workflow permissions are empty by default, and each job requests only what it needs (`packages: write` only to push, `packages: read` only to deploy). The third-party actions are pinned to full commit SHAs, each the commit of the tag in the adjacent comment, checked with `git ls-remote` on 30 Oct 2026; re-verify them when you bump a version. The base images (`python:3.12-slim`, `caddy:2-alpine`, the `uv` image) are pinned by tag, not digest, because no digest was verified. Pull access for the package is assumed to follow repository access for a package published by the same repository's workflow; this was not verified, and if the pull is denied, grant the repository access in the package settings.
 
 ## 6. Runtime data
 
-The live app reads these files at startup (the list is `deploy/runtime-data.txt`, 2 structured files, 46 passage files and 2 embedding files, about 39 MB):
+The runtime list in `deploy/runtime-data.txt` contains 52 files: `observations.parquet`, `manifest.json`, 49 passage JSONL files and `data/index/embeddings/text-embedding-3-large/cache.npz`. Use `scripts/upload-corpus.sh` rather than reconstructing this list by hand. File sizes depend on the built corpus.
 
 - `data/processed/observations.parquet`: structured observations (`StatsData`).
-- `data/manifests/manifest.json`: source provenance shown in answers, and the manifest hash in audit records.
-- `data/passages/*.jsonl`: extracted MOM report passages (`load_passages`). Not redistributable publicly (D-001); server disk only.
-- `data/index/embeddings/text-embedding-3-large/{keys.json,vectors.npy}`: cached chunk embeddings. Only the user's question is embedded at runtime. Each new question appends to this cache and to `usage.jsonl`, so the directory must stay writable; the files that exist at start stay valid.
+- `data/manifests/manifest.json`: source provenance and audit manifest hash.
+- `data/passages/*.jsonl`: extracted source passages; server disk only, not publicly redistributed.
+- `data/index/embeddings/text-embedding-3-large/cache.npz`: complete cached chunk vectors. Runtime question embeddings append to the writable cache; the legacy `keys.json`/`vectors.npy` pair is not shipped.
 
 Everything else under `data/` (raw PDFs and HTML, other embedding models, `runs/`, `export/`, `snapshots/`) is not needed by the web app and stays off the server, with one optional exception: the MCP sidecar's `get_revisions` tool reads `data/snapshots`, and without it that tool reports no history, which is not evidence that nothing was revised. Upload them with `--with-mcp-snapshots` if you run the sidecar.
 
@@ -135,9 +139,9 @@ The script refuses to run if any listed file is missing locally, never uses `--d
 
 ## 7. First deploy
 
-Do the steps in order; there is no image until the workflow has run once.
+Publish your own image first: Compose references an image and has no build stanza. Deployment needs Docker Engine and Compose, SSH/scp/rsync, openssl, curl, a domain pointing at the host and reachable ports 80/443; the bootstrap installs server tooling.
 
-1. Push to `master` (or run the workflow from the Actions tab with `workflow_dispatch`). The test and build jobs run; the deploy job will fail the first time if `/srv/labourlens/.env` or the data directory is missing, which is expected if you skipped sections 4 or 6.
+1. Push to `master` (or dispatch the workflow on `master`). Tests run on other dispatched refs, but build-push and deploy are gated to `master`. The deploy job needs `/srv/labourlens/.env` (including your explicit `LABOURLENS_IMAGE`) and runtime data for live mode.
 2. After the deploy job succeeds, on the Droplet: `/srv/labourlens/deploy/deploy.sh status` shows the current tag, container state and `/healthz`.
 
 To enable live mode: edit `/srv/labourlens/.env`, set `LABOURLENS_DEMO_ENABLED=true`, then run `/srv/labourlens/deploy/deploy.sh restart`.
@@ -161,7 +165,7 @@ The server logs its explicit trusted-proxy setting without secrets. Regression c
 
 On the Droplet and from your machine:
 
-1. `curl -fsS https://<domain>/healthz` returns `{"status":"ok","version":"0.1.0+<commit sha>"}`. It is unauthenticated and returns nothing else.
+1. `curl -fsS https://<domain>/healthz`: GET `/healthz` returns `status`, `version` and `corpus`. In report-only mode `corpus` is null; in live mode it contains passage/chunk counts and corpus fingerprints. No key, passage text or access code is returned.
 2. `curl -sI http://<domain>/` redirects to HTTPS; the HTTPS response carries the CSP and `strict-transport-security`.
 3. In a browser: the report, figures and source links load with live mode off and no OpenAI key.
 4. `/api/status` shows the disabled, signed-out and signed-in states correctly; a wrong code is rejected, repeated attempts get a 429; a right code sets an HttpOnly, Secure, SameSite cookie.
@@ -183,7 +187,7 @@ On the Droplet and from your machine:
 
 **Rotating access codes and the session secret.** Edit the values, run `deploy.sh restart`. The restart revokes all in-memory sessions, including when only access codes changed. `POST /api/logout` revokes the current session without a restart. After a suspected disclosure, rotate both and the API key. Fresh logins with the same code share a code-bound question-rate identity; shared codes are not individual accounts.
 
-**Updating the corpus.** Run `scripts/upload-corpus.sh deploy@<ip> --go` from the machine that holds the new files, then `deploy.sh restart` so the app reloads them. If the file set changes, update `deploy/runtime-data.txt` first. The embedding cache must contain vectors for every chunk of the new passages; the app does not generate missing embeddings at startup, and a missing vector would be requested from the embeddings API on first use. Do not run `fetch`, `build`, `dense-exp`, `agent-exp` or `eval` on the server.
+**Updating the corpus.** Run `scripts/upload-corpus.sh deploy@<ip> --go` from the machine holding the new files, then `deploy.sh restart`. If the file set changes, update `deploy/runtime-data.txt` first. The container refuses startup if any chunk vector is missing (`LABOURLENS_ALLOW_EMBED=0`); it does not defer embedding until the first question. Complete the local cache, upload `cache.npz`, restart and compare health fingerprints. Do not run `fetch`, `build`, `dense-exp`, `agent-exp` or `eval` on the server.
 
 **Updating the corpus to v3.1 (D-052; not yet done on the Droplet).** Prerequisites on the machine that holds `data/`: the local rebuild is done (`experiments/corpus-snapshots/v3.1.json`) and the 10 new vectors are embedded (`labourlens` step in `docs/experiments/m7-corpus-v3-runbook.md`, "Applied: corpus v3.1"). Then, with the deploy key described in section 5 (the same key that `DROPLET_SSH_KEY` holds; no new secret):
 1. `scripts/upload-corpus.sh deploy@<ip>` (dry run), then `--go`. The file list in `deploy/runtime-data.txt` is unchanged. Two groups of files differ: `data/passages/mti-2026-q2-feature-ai-employment.jsonl` (the only file with changed flags; required for correct retrieval) and the other 48 passage files, which differ only in the `parser_version` value (`extract-0.3`; optional for behaviour, recommended so the server holds the exact bytes of the local build; about 20 MB in all). `data/index/embeddings/text-embedding-3-large/cache.npz` (about 64 MB) must also be uploaded: it now holds the 10 new vectors, and the container refuses to start without a vector for every chunk. The upload replaces the Droplet's copy, which also drops cached question vectors added since the last upload; they are re-embedded on demand. `data/manifests/manifest.json` and `observations.parquet` are unchanged.

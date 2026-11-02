@@ -44,7 +44,12 @@ def _paired(base_rows: list[dict], rows: list[dict]) -> str:
     return f"{better} better / {worse} worse / {len(rows) - better - worse} same"
 
 
-def run(split: str = "dev") -> None:
+def run(split: str = "dev", force: bool = False) -> None:
+    root = paths.EXPERIMENTS / "runs"
+    ev.refuse_existing([root / f"{split}-SUMMARY.md", root / f"{split}-summary.json"]
+                       + [root / f"{split}-{exp}" / f"{label.replace('/', '_')}.{suffix}"
+                          for exp, items in grid().items() for label, _, _ in items
+                          for suffix in ("metrics.json", "cases.jsonl")], force)
     passages = ck.load_passages()
     cases = ev.text_cases(ev.load_cases(split))
     if not cases:
@@ -59,7 +64,7 @@ def run(split: str = "dev") -> None:
                     "|---|---|---|---|---|---|---|---|---|---|---|---|"]
         for label, cc, bc in items:
             r = base if (cc == BASE_CHUNK and bc == BASE_BM) else ev.run_config(cc, bc, cases, passages)
-            ev.write_run(f"{split}-{exp}", label, r)
+            ev.write_run(f"{split}-{exp}", label, r, force=force)
             m = r["metrics"]
             results[f"{exp}/{label}"] = m
             summary.append(f"| {label} | {m['hit@1']} | {m['hit@3']} | {m['hit@5']} | {m['hit@10']} | {m['page_hit@5']} | {m['mrr']} | {m['passage_recall@5']} | {m['ctx_words@5']} | {m['n_chunks']} | {m['latency_ms_p50']} | {_paired(base['rows'], r['rows'])} |")

@@ -17,6 +17,7 @@ Read in this order. Everything here is dated; where a later document supersedes 
 | Topic | Documents |
 |---|---|
 | Requirements and traceability | [`requirements-matrix.md`](requirements-matrix.md) |
+| AI-assisted development | [`ai-assisted-development.md`](ai-assisted-development.md), [`agent-logs.md`](agent-logs.md) |
 | Data | [`data-sheet.md`](data-sheet.md), [`data-processing-log.md`](data-processing-log.md), [`storage.md`](storage.md), [`adding-sources.md`](adding-sources.md) |
 | Model and system | [`system-card.md`](system-card.md), [`concepts.md`](concepts.md), [`audit-and-logging.md`](audit-and-logging.md), [`innovation.md`](innovation.md) |
 | MCP | [`mcp-demo-transcript.md`](mcp-demo-transcript.md), [`../artifacts/mcp-agent-demo.md`](../artifacts/mcp-agent-demo.md) |
