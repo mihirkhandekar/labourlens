@@ -92,7 +92,7 @@ Existing behaviour that matters to operators: sessions are signed `labourlens_se
 
 ## 5. GitHub secrets and repository settings
 
-In the private repository `mihirkhandekar/labourlens`, branch `master`, add Actions secrets (repository-level, or on the `production` environment that the deploy job uses; an environment can also require a manual approval):
+In the repository `mihirkhandekar/labourlens`, branch `master`, add Actions secrets (repository-level, or on the `production` environment that the deploy job uses; an environment can also require a manual approval):
 
 | Secret | Value |
 |---|---|

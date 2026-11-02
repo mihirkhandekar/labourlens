@@ -35,7 +35,7 @@ function repositoryButton() {
   const button = cta('Repository', 'https://github.com/mihirkhandekar/labourlens', 'btn', 'arrow-ur');
   button.target = '_blank'; button.rel = 'noopener noreferrer';
   const wrap = el('div', 'rp-repo');
-  wrap.append(button, note('Private repository shared with reviewers.'));
+  wrap.append(button, note('Public repository.'));
   return wrap;
 }
 

@@ -766,3 +766,6 @@ On the development questions filter then rerank also cuts over-abstention from 0
 **Consequence for wording.** The deck, report and docs show the final evaluation as the headline. The earlier ladder, the original held-out run, the fresh-set original run (V2) and its v3.1 re-run (V31, D-055) stay as history, labelled by build. Nothing registered was edited.
 
 **Reversibility.** Fully reversible: the default is a configuration choice (`D-030`), the evaluation files are additive, and the wording changes are in the deck, report builder and docs. **The owner may reverse the default at any time.**
+
+### D-057: Repository is public
+**DECISION** (owner, 2 Nov 2026). Supersedes the private-repository part of D-001; the published/private split stays. Alternatives: private repo with invites, emailed export. Consequences checked before this decision: the tracked tree and full history have no secrets (gitleaks, 120 commits); no PDF, extracted MOM or MTI text, raw model output, `private/`, `study/` or screenshots are tracked; `rights-scan` reports 0 hits. Open before flipping visibility: the three datasets with an assumed licence still have derived rows committed (D-004); `prompts/meta` exists in history only; 23 sources with unresolved rights are local-only. Reversible by making the repo private again, but anything fetched while public cannot be recalled.

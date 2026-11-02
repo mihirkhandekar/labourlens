@@ -71,10 +71,10 @@ def test_hero_has_name_pitch_and_three_buttons():
     assert "heroCard" not in HOME
     assert "cta('Open the workbench', '/workbench'" in HOME and "cta('View the deck', '/deck'" in HOME
     assert "https://github.com/mihirkhandekar/labourlens" in HOME
-    assert "Private repository shared with reviewers." in HOME
+    assert "Public repository." in HOME
     assert HOME.count("cta(") == 3
     assert "repositoryButton()" in STORY
-    assert "Private repository shared with reviewers." in STORY
+    assert "Public repository." in STORY
 
 def test_report_copy_explains_transit_system_and_sources():
     assert "Public transport was not among the recorded alternatives" in STORY

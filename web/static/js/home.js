@@ -16,7 +16,7 @@ export function renderHome(root, report) {
   const repository = cta('Repository', 'https://github.com/mihirkhandekar/labourlens', 'btn', 'arrow-ur');
   repository.target = '_blank'; repository.rel = 'noopener noreferrer';
   const repo = el('div', 'rp-repo');
-  repo.append(repository, el('span', 'rp-note', 'Private repository shared with reviewers.'));
+  repo.append(repository, el('span', 'rp-note', 'Public repository.'));
   add(copy, title,
     el('p', 'rp-hero-lead', 'A bounded research agent for Singapore workforce policy, built around official statistics, reports and reproducible evaluation.'),
     el('p', 'rp-byline', 'Mihir Khandekar'),
