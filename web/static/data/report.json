@@ -1,6 +1,6 @@
 {
   "schema_version": "report-1.0",
-  "generated_at": "2026-11-02T15:51:52.983718+00:00",
+  "generated_at": "2026-11-02T15:59:36.741299+00:00",
   "summary": {
     "title": "LabourLens research workbench",
     "scope": [
@@ -79034,6 +79034,14 @@
         "date": "2 Nov 2026",
         "alternatives": ". Compare only direct against MCP (already done: both 0.908, so it cannot show whether the data or the transport matters); add a report-figure arithmetic tool as a workaround (rejected: it changes a second factor); run both models (rejected: cost and the owne…",
         "summary": "MEASURED RESULT (gpt-6-luna, 65 questions, one run)"
+      },
+      {
+        "id": "D-070",
+        "title": "Final-review corrections: wording, evaluation caveats and disclosures",
+        "status": "CORRECTION / MEASURED RESULT",
+        "date": "2 Nov 2026",
+        "alternatives": "",
+        "summary": "- Stale \"run once\". The 65 fresh questions were not run once: five runs per arm exist (31 October first run, corpus v3.1 rerun, the post-freeze diagnostic, FIN and FIN2)"
       }
     ],
     "milestones": [],
@@ -79051,7 +79059,7 @@
     "The population basis of the dataset employment series is unverified."
   ],
   "provenance": {
-    "commit": "c52b7c0d3ebf93655278172634f82640bb2daa9e",
+    "commit": "673c7b3a0e539e540cb7e3d1ceafa77678c8b031",
     "artifacts": [
       {
         "path": "data/export/sources.json",
@@ -80284,12 +80292,12 @@
       {
         "path": "docs/decisions.md",
         "status": "available",
-        "sha256": "23d18ba98351e651d1d7511e8358d2c3f84e2000a5919cc70ef3489f7ff26f72"
+        "sha256": "06ce2dc98a5b05b3d658b6043c8a601840cb96d74e277ed6564c33d9f2c80a7a"
       },
       {
         "path": "docs/progress.md",
         "status": "available",
-        "sha256": "8438b808f99580d6df18369d0d9083226094bdb8e839b414e039e240c51617fa"
+        "sha256": "7bb273f54f5944ee5d9d13f7be23c02298af596958962d07d8415ab83085f864"
       }
     ],
     "policy": "Committed artifacts only; numeric fields only."
@@ -80714,7 +80722,7 @@
     "source": {
       "path": "docs/innovation-page.json",
       "sha256": "4b26c85c3de316b706fc3fd3344afec898727a39dd4276bd24ae1c0eee80ed3c",
-      "evidence_commit": "c52b7c0d3ebf93655278172634f82640bb2daa9e"
+      "evidence_commit": "673c7b3a0e539e540cb7e3d1ceafa77678c8b031"
     }
   }
 }
