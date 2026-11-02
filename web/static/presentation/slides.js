@@ -6,7 +6,7 @@
 import {el, fmt, finite} from '../charts.js';
 import {model, metricOf, goldOf, contextSentence} from './model.js';
 import {stat, textStat, countRunner, dataTable} from './ui.js';
-import {threeAnswers, twoSources, buildTimeline, flattening, mcpMap, retrievalStaircase, experimentStaircase, agentLoop, evidenceTrace, errorBars, assignmentBrief, challengeGrid, plantedFlow, aboutMe, architectureDiagram, myProject, hardParts, failureModes, keywordVsMeaning, modelChoice, RESPONSIBLE_AI, HYPOTHESES, contentMetricsText, reviewStreams, workbenchShot, conceptGrid, measureCards, cardRow, toolFixFlow, threatMatrix, threatRuns, buildProcess, rowsAffordance, finalComparison, finalFacts, finalSentence, finalCostFacts, provenanceTable} from './graphics.js';
+import {threeAnswers, twoSources, buildTimeline, flattening, mcpMap, retrievalStaircase, experimentStaircase, agentLoop, evidenceTrace, errorBars, assignmentBrief, challengeGrid, plantedFlow, architectureDiagram, myProject, hardParts, failureModes, keywordVsMeaning, modelChoice, RESPONSIBLE_AI, HYPOTHESES, contentMetricsText, reviewStreams, workbenchShot, conceptGrid, measureCards, cardRow, toolFixFlow, threatMatrix, threatRuns, buildProcess, rowsAffordance, finalComparison, finalFacts, finalSentence, finalCostFacts, provenanceTable} from './graphics.js';
 import {renderScope} from './ch1-scope.js';
 import {renderData} from './ch2-data.js';
 import {renderRetrieval} from './ch3-retrieval.js';
@@ -122,18 +122,14 @@ export function slideSpecs(report) {
   add({
     layout: 'title', chapter: 'Start', title: 'Singapore AI Agent for Workforce Policy Researchers',
     wordmark: 'LabourLens', author: 'Mihir Khandekar', source: '',
-    notes: ['This is a technical assessment prototype for policy researchers. The talk covers the task, the data, retrieval, a bounded agent, evaluation, security, MCP and the limits I found.', 'Keys: arrows, space and page keys move; F is fullscreen; O or Escape opens the overview; S shows these notes; add ?print-pdf to the address to export a PDF.']
-  });
-  add({
-    layout: 'solo', chapter: 'Introduction', title: 'About me', visual: aboutMe(), source: 'LabourLens project record',
-    notes: ['I am Mihir Khandekar. My recent work is on AI products in the HR Tech space. The weighted rubric gives evaluation and error analysis 25%, the largest share; this is why the talk focuses on methods, measurements and failures.', qa('Why is so much of the talk about evaluation?', 'Evaluation and error analysis carry 25% of the assessment rubric, the largest single weighting. I show what I measured and where the evidence is limited.')]
+    notes: ['I am Mihir Khandekar. My recent work is on AI products in the HR Tech space. This is a technical assessment prototype for policy researchers. The talk covers the task, the data, retrieval, a bounded agent, evaluation, security, MCP and the limits I found.', 'Keys: arrows, space and page keys move; F is fullscreen; O or Escape opens the overview; S shows these notes; add ?print-pdf to the address to export a PDF.']
   });
 
   // ---------- the assignment ----------
   add({
     layout: 'solo', chapter: 'The problem', title: 'The assignment', visual: assignmentBrief(),
     source: 'GenAI Engineer technical challenge',
-    notes: ['The PDF problem statement: policy researchers use government statistics, reports and internal knowledge that may be incomplete, inconsistent or difficult to search. Build a GenAI solution that answers analytical questions using supplied or public data, produces traceable evidence and communicates uncertainty. It prioritises applied ML, experimentation, retrieval quality, evaluation and responsible AI over full-stack engineering.', 'Ten core requirements in the brief; the list on the slide shows nine. The tenth, problem framing and experimental design, is covered by the My project slide, by the success criteria and failure modes slide and by How I measured. The others are data preparation and exploratory analysis; retrieval-augmented generation; model experimentation; one bounded agent workflow; evaluation and error analysis; responsible AI, security and privacy; GenAI concepts; MCP and tool integration; reproducibility. The rubric gives evaluation 25%, RAG and GenAI design 20%, concepts and MCP 15%, and five other areas 10% each.', 'Likely question: why build an agent? The assessment asks for a purposeful tool-using workflow, deterministic calculations, state and stopping conditions, retry limits and recovery from a tool failure.']
+    notes: ['The weighted rubric gives evaluation and error analysis 25%, the largest share; this is why the talk focuses on methods, measurements and failures. ' + qa('Why is so much of the talk about evaluation?', 'Evaluation and error analysis carry 25% of the assessment rubric, the largest single weighting. I show what I measured and where the evidence is limited.'), 'The PDF problem statement: policy researchers use government statistics, reports and internal knowledge that may be incomplete, inconsistent or difficult to search. Build a GenAI solution that answers analytical questions using supplied or public data, produces traceable evidence and communicates uncertainty. It prioritises applied ML, experimentation, retrieval quality, evaluation and responsible AI over full-stack engineering.', 'Ten core requirements in the brief; the list on the slide shows nine. The tenth, problem framing and experimental design, is covered by the My project slide, by the success criteria and failure modes slide and by How I measured. The others are data preparation and exploratory analysis; retrieval-augmented generation; model experimentation; one bounded agent workflow; evaluation and error analysis; responsible AI, security and privacy; GenAI concepts; MCP and tool integration; reproducibility. The rubric gives evaluation 25%, RAG and GenAI design 20%, concepts and MCP 15%, and five other areas 10% each.', 'Likely question: why build an agent? The assessment asks for a purposeful tool-using workflow, deterministic calculations, state and stopping conditions, retry limits and recovery from a tool failure.']
   });
   add({
     layout: 'solo', chapter: 'Why this problem', title: 'My project', visual: myProject(),
@@ -554,7 +550,6 @@ export function slideSpecs(report) {
   // 0 Sources, 1 Processing, 2 Retrieval, 3 Agent, 4 Answer, 5 Checks). Reordering a slide means moving its row here.
   const FLOW = [
     ['Singapore AI Agent for Workforce Policy Researchers', null, 'Start'],
-    ['About me', null, 'Introduction'],
     ['The assignment', null, 'The problem'],
     ['My project', null, 'The problem'],
     ['The Agentic System', 'all', 'The system'],

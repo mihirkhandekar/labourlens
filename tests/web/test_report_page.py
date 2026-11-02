@@ -20,7 +20,7 @@ GRAPHICS = (STATIC / "presentation" / "graphics.js").read_text(encoding="utf-8")
 HOME = (STATIC / "js" / "home.js").read_text(encoding="utf-8")
 
 REQUIRED_STEPS = {
-    "about": "About me", "assignment": "The assignment", "problem": "My project", "system": "The Agentic System", "data": "The data",
+    "assignment": "The assignment", "problem": "My project", "system": "The Agentic System", "data": "The data",
     "eda": "What the data showed", "hard": "Challenges with the data", "build": "Document build", "retrieval": "Retrieval Strategies", "agent": "The agent",
     "models": "Models", "tools": "Tools and MCP", "ops": "Agent Workbench", "review": "Human Review of Dataset", "safety": "Safety", "process": "How I built it",
     "limits": "Limits", "run": "Run it",

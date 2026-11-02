@@ -772,13 +772,6 @@ th[aria-sort="descending"] .pr-sort::after { content: " \2193"; }
 .deck-flow li.is-here { color: var(--ink); border-bottom-color: var(--accent); }
 .deck-slide.has-flow { padding-top: 96px; }
 /* G16 about me */
-.g16 { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: 120px; align-items: center; height: 100%; }
-.g16-name { font-size: 132px; line-height: 0.98; font-weight: 600; letter-spacing: -0.04em; max-width: 900px; }
-.g16-line { margin-top: 36px; font-size: 40px; color: var(--accent); font-weight: 500; }
-.g16-list { display: grid; gap: 0; padding: 0; list-style: none; }
-.g16-item { display: flex; align-items: center; gap: 28px; padding: 34px 0; border-top: 1px solid var(--line-strong); font-size: 44px; font-weight: 500; letter-spacing: -0.02em; }
-.g16-item:last-child { border-bottom: 1px solid var(--line-strong); }
-.g16-item .deck-ico { width: 52px; height: 52px; color: var(--accent); flex: none; }
 /* G17 architecture */
 .g17 { display: grid; grid-template-rows: 1fr auto; gap: 36px; height: 100%; align-content: center; }
 .g17-row { display: grid; grid-template-columns: 1fr auto 1fr auto 1fr auto 1fr auto 1fr; align-items: stretch; gap: 14px; align-self: center; }
@@ -833,11 +826,10 @@ th[aria-sort="descending"] .pr-sort::after { content: " \2193"; }
 /* G22 workbench screenshot */
 .g22 { height: 100%; display: grid; place-items: center; }
 .g22-img { max-width: 100%; max-height: 100%; width: auto; height: auto; border: 1px solid var(--line-strong); border-radius: var(--r); }
-.deck-page .reveal section.present .g16-item, .deck-page .reveal section.present .g17-stage, .deck-page .reveal section.present .g19-row, .deck-page .reveal section.present .g20-table tbody tr, .deck-page .reveal section.present .g21-seg { animation: g12-in 520ms var(--ease) both; animation-delay: calc(var(--i, 0) * 90ms + 120ms); }
+.deck-page .reveal section.present .g17-stage, .deck-page .reveal section.present .g19-row, .deck-page .reveal section.present .g20-table tbody tr, .deck-page .reveal section.present .g21-seg { animation: g12-in 520ms var(--ease) both; animation-delay: calc(var(--i, 0) * 90ms + 120ms); }
 .deck-page .reveal section.present .g21-seg:nth-child(2) { --i: 1; } .deck-page .reveal section.present .g21-seg:nth-child(3) { --i: 2; } .deck-page .reveal section.present .g21-seg:nth-child(4) { --i: 3; }
 @media (max-width: 800px) {
   .deck-flow { left: 20px; top: 16px; } .deck-flow ul { gap: 14px; font-size: 12px; } .deck-slide.has-flow { padding-top: 52px; }
-  .g16 { grid-template-columns: 1fr; gap: 28px; } .g16-name { font-size: 44px; } .g16-line { font-size: 20px; } .g16-item { font-size: 22px; padding: 16px 0; }
   .g17-row { grid-template-columns: 1fr; } .g17-arrow { transform: rotate(90deg); } .g17-bars { grid-template-columns: 1fr; } .g17-stage ul, .g17-bar { font-size: 15px; }
   .g18 { grid-template-columns: 1fr; gap: 16px; } .g18-dl { grid-template-columns: 1fr; gap: 4px 0; font-size: 16px; } .g18-out { font-size: 16px; } .g18-out li { grid-template-columns: 1fr; gap: 2px; } .g18-panel { padding: 16px; }
   .g19-row { grid-template-columns: 1fr; gap: 4px; padding: 12px 0; } .g19-arrow { display: none; } .g19-hard { font-size: 18px; } .g19-fix { font-size: 16px; }

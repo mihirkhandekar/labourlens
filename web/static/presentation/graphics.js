@@ -661,18 +661,6 @@ export function pairPanels(panels) {
   return wrap;
 }
 
-/** About me: the name, the one recorded fact, and what the talk covers. */
-export function aboutMe() {
-  const wrap = el('div', 'g16');
-  const left = el('div', 'g16-left'); left.append(el('p', 'g16-name', 'Mihir Khandekar'), el('p', 'g16-line', 'Recent work: AI products in HR Tech.'));
-  const list = el('ul', 'g16-list');
-  [['wrench', 'What I built'], ['chart-line', 'How I measured it'], ['warning', 'What went wrong']].forEach(([icon, text], i) => {
-    const li = el('li', 'g16-item'); li.style.setProperty('--i', String(i)); li.append(ico(icon), el('span', '', text)); list.append(li);
-  });
-  wrap.append(left, list);
-  return wrap;
-}
-
 /** The system, its stages and the three cross-cutting bars: guardrails, evaluation and the MCP interface. */
 export function architectureDiagram() {
   const wrap = el('div', 'g17');

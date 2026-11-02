@@ -145,7 +145,7 @@ def test_no_bridge_sentences_or_pills_on_faces():
 
 
 REQUIRED_TITLES = [
-    "About me", "The assignment", "My project", "The Agentic System", "Success criteria and failure modes",
+    "The assignment", "My project", "The Agentic System", "Success criteria and failure modes",
     "Choosing the data", "What the data showed", "Retrenchments rose but the data does not say why", "Advance and final figures differ", "Challenges with the data",
     "Reading the reports", "One current document build", "Retrieval Strategies", "Does filtering help?",
     "The agent loop", "Choosing the models", "The MCP server", "GenAI concepts in this build",
@@ -165,7 +165,7 @@ def test_main_deck_follows_the_navigation_flow_and_has_short_plain_titles():
     main = _slides_main_section()
     defined = set(re.findall(r"\btitle: '([^']+)'", main))
     rows = _flow_rows()
-    assert len(rows) == 31
+    assert len(rows) == 30
     assert [r[0] for r in rows[1:]] == REQUIRED_TITLES
     for title, _, _ in rows:
         assert title in defined or "Singapore AI Agent" in title, title
@@ -188,7 +188,7 @@ def test_calculation_fix_slide_states_the_failure_and_the_graphics_exist():
     assert "failed rules I set before the run" in main and "optimistic" in main and "not adopted" in main.lower()
     assert "calculate_from_text_values" in main and ("do not establish why" in main or "does not establish why" in main)
     graphics = (STATIC / "presentation" / "graphics.js").read_text()
-    for name in ("threeAnswers", "twoSources", "buildTimeline", "flattening", "retrievalStaircase", "agentLoop", "evidenceTrace", "experimentStaircase", "costBars", "toolFixBars", "toolFixFlow", "assignmentBrief", "challengeGrid", "modelChoice", "aboutMe", "architectureDiagram", "myProject", "hardParts", "failureModes", "keywordVsMeaning", "reviewStreams", "threatMatrix", "threatRuns", "mcpMap", "workbenchShot", "conceptGrid", "measureCards", "plantedFlow", "buildProcess", "excerptTable", "rowsAffordance", "withTip"):
+    for name in ("threeAnswers", "twoSources", "buildTimeline", "flattening", "retrievalStaircase", "agentLoop", "evidenceTrace", "experimentStaircase", "costBars", "toolFixBars", "toolFixFlow", "assignmentBrief", "challengeGrid", "modelChoice", "architectureDiagram", "myProject", "hardParts", "failureModes", "keywordVsMeaning", "reviewStreams", "threatMatrix", "threatRuns", "mcpMap", "workbenchShot", "conceptGrid", "measureCards", "plantedFlow", "buildProcess", "excerptTable", "rowsAffordance", "withTip"):
         assert f"export function {name}" in graphics, name
     slides = (STATIC / "presentation" / "slides.js").read_text()
     assert "403" in main and "Human reviewed" in graphics

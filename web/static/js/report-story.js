@@ -4,7 +4,7 @@
 // in report.json, an adjacent note names where it comes from.
 import {fmt, finite} from '../charts.js';
 import {model, metricOf, contextSentence} from '../presentation/model.js';
-import {aboutMe, assignmentBrief, excerptTable, myProject, architectureDiagram, twoSources, buildTimeline, flattening, hardParts, challengeGrid, costBars, retrievalStaircase, keywordVsMeaning, agentLoop, experimentStaircase, freshQuestions, errorBars, toolFixBars, evidenceTrace, mcpMap, conceptGrid, plantedFlow, reviewStreams, measureCards, workbenchShot, cardRow, modelChoice, threatMatrix, failureModes, HYPOTHESES, RESPONSIBLE_AI, contentMetricsText, finalComparison, finalSentence, finalCostFacts, provenanceTable} from '../presentation/graphics.js';
+import {assignmentBrief, excerptTable, myProject, architectureDiagram, twoSources, buildTimeline, flattening, hardParts, challengeGrid, costBars, retrievalStaircase, keywordVsMeaning, agentLoop, experimentStaircase, freshQuestions, errorBars, toolFixBars, evidenceTrace, mcpMap, conceptGrid, plantedFlow, reviewStreams, measureCards, workbenchShot, cardRow, modelChoice, threatMatrix, failureModes, HYPOTHESES, RESPONSIBLE_AI, contentMetricsText, finalComparison, finalSentence, finalCostFacts, provenanceTable} from '../presentation/graphics.js';
 import {dataTable} from '../presentation/ui.js';
 import {el, band, stage, chartBox, sub, more, group, rows, statRow, table, commands, link, note} from './report-kit.js';
 import {cta} from './dom.js';
@@ -16,7 +16,7 @@ const REPO = 'https://github.com/mihirkhandekar/labourlens/blob/master/';
 
 /** The nav labels, in order. Each id is a band below. */
 export const STEPS = [
-  ['about', 'About me'], ['assignment', 'The assignment'], ['problem', 'My project'], ['system', 'The Agentic System'], ['data', 'The data'],
+  ['assignment', 'The assignment'], ['problem', 'My project'], ['system', 'The Agentic System'], ['data', 'The data'],
   ['eda', 'What the data showed'], ['hard', 'Challenges with the data'], ['build', 'Document build'], ['retrieval', 'Retrieval Strategies'], ['agent', 'The agent'],
   ['models', 'Models'], ['tools', 'Tools and MCP'], ['ops', 'Agent Workbench'], ['review', 'Human Review of Dataset'], ['safety', 'Safety'], ['process', 'How I built it'],
   ['limits', 'Limits'], ['run', 'Run it']
@@ -81,14 +81,6 @@ export function buildBands(report) {
     group('', pool.fig('fig-vacancy-ratio'), pool.fig('fig-vacancies'), pool.fig('fig-quality')),
     pool.rest('data')));
   bands.eda = eda;
-
-  // ---------- about ----------
-  const about = band({
-    id: 'about', title: 'Who I am',
-    lede: ['I am Mihir Khandekar. My recent work is on AI products in HR Tech. This report follows the work, experiments and limits of a research assistant for Singapore labour statistics.']
-  });
-  about.visual.append(stage(safe('The introduction', aboutMe)));
-  bands.about = about;
 
   // ---------- assignment ----------
   const assignment = band({

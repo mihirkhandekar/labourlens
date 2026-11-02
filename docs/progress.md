@@ -124,6 +124,10 @@ Every row came from a live call; none is stored as a repo artifact yet. M1.1 mus
 
 ## Log (newest first)
 
+### 2026-11-01 — About me slide and section removed
+
+- **DONE (deck and report wording only):** the About me slide and the report's About me section are removed; the deck is 30 main slides (50 with the appendix), the author line stays on the title slide, the rubric-weights note moved to the notes of The assignment, and `docs/demo-script.md` is renumbered.
+
 ### 2026-11-01 — Final evaluation wired in as the headline (D-056)
 
 - **MEASURED (paid, one run per arm, corpus v3.1):** `agent-dev-FIN-*` (237), `agent-heldout-FIN-*` (31), `agent-heldout-FINV2-*` (65). `gpt-6-luna` filter then rerank against hybrid: 0.886 against 0.844 on development (+4.2 points [0.4, 8.4]), 26 of 31 in both arms on the registered test, 0.708 against 0.754 on the fresh questions. `gpt-5.6-luna`: 0.899 against 0.840, 26 of 31 both, 0.723 both. Cost about 1.7 times, latency about 1.5 times.

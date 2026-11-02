@@ -71,7 +71,7 @@
 .rp-canvas { min-width: 0; }
 .rp-stage.is-fluid { overflow-x: auto; }
 .rp-stage.is-fluid .g5-svg, .rp-stage.is-fluid .g6-svg { min-width: 760px; }
-.rp-canvas .g1, .rp-canvas .g2, .rp-canvas .g3, .rp-canvas .g4, .rp-canvas .g9, .rp-canvas .g12, .rp-canvas .g13, .rp-canvas .g14, .rp-canvas .g16, .rp-canvas .g17, .rp-canvas .g18, .rp-canvas .g19, .rp-canvas .g20, .rp-canvas .g21, .rp-canvas .g23 { height: auto; }
+.rp-canvas .g1, .rp-canvas .g2, .rp-canvas .g3, .rp-canvas .g4, .rp-canvas .g9, .rp-canvas .g12, .rp-canvas .g13, .rp-canvas .g14, .rp-canvas .g17, .rp-canvas .g18, .rp-canvas .g19, .rp-canvas .g20, .rp-canvas .g21, .rp-canvas .g23 { height: auto; }
 .rp-canvas .tcard { box-shadow: none; }
 .rp-shot .g22 { display: block; height: auto; }
 .rp-shot .g22-img { width: 100%; max-width: 100%; height: auto; }
