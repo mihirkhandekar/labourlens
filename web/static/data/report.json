@@ -1,6 +1,6 @@
 {
   "schema_version": "report-1.0",
-  "generated_at": "2026-11-01T17:13:30.995036+00:00",
+  "generated_at": "2026-11-02T01:14:29.629634+00:00",
   "summary": {
     "title": "LabourLens research workbench",
     "scope": [
@@ -70013,7 +70013,7 @@
         "title": "One final evaluation as the headline; keep filter then rerank as the served default",
         "status": "OWNER REQUEST / MEASURED",
         "date": "1 Nov 2026",
-        "alternatives": "",
+        "alternatives": "private repo with invites, emailed export",
         "summary": "MEASURED RESULT (behaviour accuracy, filter then rerank against hybrid)."
       }
     ],
@@ -70123,7 +70123,7 @@
     "The population basis of the dataset employment series is unverified."
   ],
   "provenance": {
-    "commit": "9362c80a1416b9d9d2cab29d106e44b7051be897",
+    "commit": "b6623be0d7eaa568da6a22b42341bd1b8f9344c3",
     "artifacts": [
       {
         "path": "data/export/sources.json",
@@ -71103,7 +71103,7 @@
       {
         "path": "docs/decisions.md",
         "status": "available",
-        "sha256": "930d8dbdd308fb8ae8345aaf83f771f731835bc1a5f328bf0a9b0b9241d4483e"
+        "sha256": "b98e219455834098d92f27649df6ca7b0592059c6d35b22fb4d9875291c3b1fe"
       },
       {
         "path": "docs/progress.md",
