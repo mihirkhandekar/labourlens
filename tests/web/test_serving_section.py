@@ -61,5 +61,5 @@ def test_serving_chapter_is_wired_into_deck_and_report():
     assert re.search(r"appendix\('M', 'Live app against the evaluated system'", slides)
     assert "N1. Cut from the talk" in slides and "M. Cut from the talk" not in slides
     chapter = (STATIC / "presentation" / "ch-serving.js").read_text()
-    for needle in ("via MCP", "scope check", "small-talk", "provider-side spend cap", "Each configuration was run once", "Temperature and reasoning effort"):
+    for needle in ("via MCP", "scope check", "small-talk", "provider-side spend cap", "two runs per arm", "65-case sample", "Temperature and reasoning effort"):
         assert needle.lower() in chapter.lower(), needle

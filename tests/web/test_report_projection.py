@@ -387,7 +387,7 @@ def test_ladder_labels_v1_and_v2_separately():
         v1: {"n_cases": 128, "metrics": {"R3": {"hit_at_8": 0.969}}},
         v2: {"n_cases": 128, "metrics": {"R3": {"hit_at_8": 0.953}}},
     })
-    first, second = _ladder(artifacts), _ladder(artifacts, v2)
+    first, second = _ladder(artifacts, v1), _ladder(artifacts, v2)
     assert (first["corpus_version"], second["corpus_version"]) == ("v1", "v2")
     assert first["provenance"] == [v1] and second["provenance"] == [v2]
     assert second["configs"]["R3"]["hit_at_8"] == 0.953

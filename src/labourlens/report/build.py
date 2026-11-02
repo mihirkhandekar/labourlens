@@ -36,7 +36,7 @@ _HELDOUT_V31_PAIRED = "experiments/heldout-v2/paired-v3.1.json"
 _FINAL_FRESH_PAIRED = "experiments/heldout-v2/paired-final.json"
 _FINAL_DEV_PAIRED = "experiments/eval/paired-dev-final.txt"
 _FINAL_REGISTERED_PAIRED = "experiments/heldout/paired-final.txt"
-_FINAL_EVAL = re.compile(r"experiments/eval/agent-(?:dev|heldout)-FIN(?:V2)?-(?:r3|hybrid)/gpt-(?:6|5\.6)-luna\.metrics\.json")
+_FINAL_EVAL = re.compile(r"experiments/eval/agent-(?:dev|heldout)-FIN(?:2)?(?:V2)?-(?:r3|hybrid)/gpt-(?:6|5\.6)-luna\.metrics\.json")
 _HELDOUT_V2_FILES = {_HELDOUT_V2_PAIRED, _HELDOUT_V2_ERRORS, _HELDOUT_V31_PAIRED, _FINAL_FRESH_PAIRED}
 # Tool set v2 (D-046/D-048): separately keyed, never merged into the registered or X2 rows.
 _TOOLFIX_CRITERIA = "experiments/tool-fix/criteria.json"
@@ -48,6 +48,8 @@ _E2EFIX_EXPERIMENT = "m7-e2efix-20261031"
 
 def _corpus_version(path: str) -> str:
     """Explicit corpus label: v2 only for the separately labelled X1 artifacts, v3 only for dev X2."""
+    if "/dev-R-V31" in path:
+        return "v3.1"
     if "/agent-dev-X2/" in path:
         return "v3"
     return "v2" if re.search(r"/(?:agent-dev-X1|agent-heldout-X-(?:r3|hybrid)|extraction-v2-X1)/", path) else "v1"
@@ -105,7 +107,7 @@ class _Artifacts:
             return False
         # Development comparisons plus only the registered held-out models.
         # Raw held-out runs and extra/unregistered models stay private.
-        if path in {_FINAL_DEV_PAIRED}:
+        if path in {_FINAL_DEV_PAIRED, "experiments/eval/final-mean.json"}:
             return True
         if path.startswith("experiments/eval/"):
             development = re.fullmatch(r"experiments/eval/agent-dev-A[1-5]/[^/]+", path)
@@ -590,7 +592,7 @@ def _saved_replay(artifacts: _Artifacts) -> list[dict]:
 
 
 
-def _ladder(artifacts: _Artifacts, path: str = "experiments/runs/dev-R-summary.json") -> dict:
+def _ladder(artifacts: _Artifacts, path: str = "experiments/runs/dev-R-V31/summary.json") -> dict:
     """Retrieval ladder R0-R3 (128 dev cases): numeric measurements only."""
     data = artifacts.mapping(path)
     configs = _numeric(data.get("metrics"))
@@ -600,7 +602,7 @@ def _ladder(artifacts: _Artifacts, path: str = "experiments/runs/dev-R-summary.j
     for item in data.get("end_to_end_context_coverage", []):
         if isinstance(item, dict) and _label(item.get("config")):
             context[item["config"]] = _selected(item, ("n", "gold_in_context_of_top8_chunks", "gold_in_first8_context_passages"))
-    return {"corpus_version": _corpus_version(path),
+    return {"corpus_version": "v3.1" if "/dev-R-V31/" in path else _corpus_version(path),
             "n_cases": data.get("n_cases") if _number(data.get("n_cases")) else None,
             "configs": configs, "hint_coverage": _numeric(data.get("hint_coverage")),
             "end_to_end_context": context,
@@ -1056,9 +1058,35 @@ def _final_paired_text(text: object) -> dict:
     return paired
 
 
+def _served_chain(artifacts: _Artifacts) -> dict:
+    rows, provenance = [], []
+    for route in ("mcp-on", "direct-on", "direct-off"):
+        for model in _V2_MODELS:
+            path = f"experiments/runs/served-dev-S65-{route}/{model}.metrics.json"
+            data = artifacts.mapping(path)
+            if data:
+                rows.append({"route": route, "model": model, "metrics": _numeric(data.get("metrics", {}))})
+                provenance.append(path)
+    paired = {}
+    for control in ("direct-on", "direct-off"):
+        path = f"experiments/served/paired-S65-{control}.json"
+        paired[control] = _numeric(artifacts.mapping(path).get("per_model", {}))
+        provenance.append(path)
+    return {"rows": rows, "paired": paired, "provenance": provenance,
+            "limits": "65 cases: 51 development gold cases, 8 diversion probes and 6 context probes. One run, same judge family, hand-written probes, date fixed to 2 Nov 2026. Not independent evidence. The web-steps-off control changes two factors."}
+
+
+def _threat_v2(artifacts: _Artifacts) -> dict:
+    blocks = {}
+    for tag in ("original", "postfix", "e2efix", "fresh"):
+        prefix = f"experiments/threats/ti06-v2-{tag}-20261102/runs/"
+        rows, provenance = _experiments(artifacts, prefix)
+        blocks[tag] = {"rows": rows, "provenance": provenance, "diagnostic_only": tag != "fresh"}
+    return blocks
+
+
 def _final_evaluation(artifacts: _Artifacts) -> dict | None:
-    """One set of headline numbers: the final system (corpus v3.1, current code), filter then rerank against hybrid, on three question sets.
-    One run per arm; older results stay in their own labelled sections."""
+    """Mean of two pre-registered runs per arm; preserve both runs and labelled history."""
     splits, paths, table = [], [], []
     for key, label, prefix, gold, paired_path, kind, note in _FINAL_SPLITS:
         arms = []
@@ -1099,9 +1127,40 @@ def _final_evaluation(artifacts: _Artifacts) -> dict | None:
                       "experiments": [f"{prefix}-{arm}" for arm in _V2_ARMS], "models": list(_V2_MODELS), "runs_per_arm": 1, "judge": "gpt-6.1-terra"})
     if not splits:
         return None
-    return {"label": "Final system, filter then rerank against hybrid, corpus v3.1. One run per arm. These are the headline numbers; earlier results are history, labelled by build.",
-            "caveat": "One run per arm cannot separate a real effect of a few points from run-to-run variation. The web-only steps (small-talk reply, scope check, follow-up rewrite) and the MCP route were not in these runs.",
-            "splits": splits, "provenance_table": table, "provenance": sorted(set(paths))}
+    mean_path = "experiments/eval/final-mean.json"
+    means = artifacts.mapping(mean_path)
+    if not means.get("sets"):
+        return None  # Never label a first run as a two-run mean when the aggregate is absent.
+    for split in splits:
+        for item in split["arms"]:
+            entry = means.get("sets", {}).get(split["id"], {}).get(item["model"], {})
+            measured = entry.get(item["arm"], {})
+            if not measured:
+                continue
+            item["first_run_metrics"] = item["metrics"]
+            second_path = item["provenance"][0].replace("FINV2", "FIN2V2").replace("-FIN-", "-FIN2-")
+            second = artifacts.mapping(second_path)
+            item["second_run_metrics"] = _numeric(second.get("metrics", {}))
+            item["provenance"].append(second_path)
+            paths.append(second_path)
+            item["runs"] = _numeric(measured)
+            metrics = dict(item["metrics"])
+            metrics["behaviour_accuracy"] = {"rate": measured["mean"], "n": entry["n"]}
+            for source, target in (("over_abstain", "over_abstention_rate"), ("false_answer", "false_answer_rate")):
+                metrics[target] = {"rate": sum(measured[source]) / 2, "n": entry["n"], "denominator": "all questions"}
+            metrics["cost_per_case_usd"] = sum(measured["cost"]) / 2
+            metrics["latency_p50_s"] = sum(measured["p50_s"]) / 2
+            item["metrics"] = metrics
+            split["paired"][item["model"]] = {"paired_difference": entry["paired_mean_diff"], "interval": entry["ci95"], "level": 0.95,
+                                               "run1_diff": entry["run1_diff"], "run2_diff": entry["run2_diff"], "sign_agrees": entry["sign_agrees"]}
+        split["label"] = "Original test" if split["id"] == "registered" else split["label"]
+    for row in table:
+        row["runs_per_arm"] = 2 if means else 1
+        row["experiments"] += [name.replace("FINV2", "FIN2V2").replace("-FIN-", "-FIN2-") for name in row["experiments"]]
+        row["label"] = "Original test" if row["split"] == "registered" else row["label"]
+    return {"label": "Final system, mean of two runs per arm, corpus v3.1. Both single runs are retained; earlier builds are labelled history.",
+            "caveat": "Two runs are not a variance estimate. Case-bootstrap intervals describe paired case differences, not run-to-run uncertainty. The full 237/31/65 comparisons exclude web-only steps and MCP; a separate 65-case served-chain sample measures those.",
+            "mean_of_two": bool(means), "splits": splits, "provenance_table": table, "provenance": sorted(set(paths + [mean_path]))}
 
 
 def _rerun_sentence(final: dict | None) -> str | None:
@@ -1114,7 +1173,7 @@ def _rerun_sentence(final: dict | None) -> str | None:
             parts.append(f"{r3 * 100:.1f}% against {hybrid * 100:.1f}% on the {split['n']} {split['label'].lower()}")
     if not parts:
         return None
-    return "The final evaluation ran on this build, one run per arm. For gpt-6-luna, filter then rerank against hybrid scored " + ", ".join(parts[:-1]) + (" and " if len(parts) > 1 else "") + parts[-1] + "."
+    return "The final evaluation ran on this build, two runs per arm, reported as their mean. For gpt-6-luna, filter then rerank against hybrid scored " + ", ".join(parts[:-1]) + (" and " if len(parts) > 1 else "") + parts[-1] + "."
 
 
 def _corpus_builds(artifacts: _Artifacts, final: dict | None = None) -> dict:
@@ -1142,6 +1201,7 @@ def build_report(root: Path) -> dict:
     v2_rows, v2_paths = _experiments(artifacts, "experiments/runs/extraction-v2-X1/dev-")
     retrieval_rows, retrieval_paths = retrieval_rows + v2_rows, retrieval_paths + v2_paths
     ladder = _ladder(artifacts)
+    ladder_v1 = _ladder(artifacts, "experiments/runs/dev-R-summary.json")
     ladder_v2 = _ladder(artifacts, "experiments/runs/extraction-v2-X1/dev-R-summary.json")
     paired = _paired(artifacts)
     paired_v2 = _paired_corpus_v2(artifacts)
@@ -1176,14 +1236,14 @@ def build_report(root: Path) -> dict:
         "corpus_builds": _corpus_builds(artifacts, final_eval),
         "heldout_v31": v31_held,
         "final_evaluation": final_eval,
-        "retrieval": _section("Development retrieval comparisons. Configurations differ between experiments.", retrieval_rows, retrieval_paths + ladder.get("provenance", []) + ladder_v2.get("provenance", []), ladder=ladder, ladder_corpus_v2=ladder_v2),
+        "retrieval": _section("Current corpus v3.1 retrieval rerun; earlier builds retained as history.", retrieval_rows, retrieval_paths + ladder.get("provenance", []) + ladder_v2.get("provenance", []) + ladder_v1.get("provenance", []), ladder=ladder, ladder_corpus_v1=ladder_v1, ladder_corpus_v2=ladder_v2),
         "answers": _section("Saved answer metrics. Model outputs are not published.", answer_rows, answer_paths,
                             limitations=["Costs that were not recorded are not estimated."]),
         "agent": _section("Bounded workflow measurements on statistics-only traces.", agent_rows, agent_paths + trace_paths, trace=trace, events=_saved_replay(artifacts)),
         "mcp": mcp,
-        "serving": _serving(artifacts, sources),
+        "serving": {**_serving(artifacts, sources), "chain": _served_chain(artifacts)},
         "reconciliation": reconciliation,
-        "security": _section("Threat-suite measurements. They do not guarantee security. `postfix` and `e2efix` are separate labelled runs; neither replaces the registered rows.", security_rows, security_paths + postfix_paths + e2efix_paths, postfix=postfix_rows, e2efix=_e2efix(e2efix_rows)),
+        "security": _section("Threat-suite measurements, with frozen v1 results and separately labelled v2 diagnostics and fresh rerun.", security_rows, security_paths + postfix_paths + e2efix_paths, postfix=postfix_rows, e2efix=_e2efix(e2efix_rows), scorer_v2=_threat_v2(artifacts)),
         "evaluation": _section("Development A1–A5 and registered held-out H-r3/H-hybrid luna runs. Measurements retain their recorded gold versions. Owner review, 1 Nov 2026: Gold labels were drafted by AI. The owner then went through them in the review interface and signed off on every case, answer verdict and source check (four separate streams, 403 items in total: 268 gold questions, 65 held-out v2 questions, 40 saved system answers and 30 source checks; only the first two are questions). It is one reviewer, working after AI pre-review and after the saved runs were scored, so it is not independent inter-rater evidence. The judge is an AI (gpt-6.1-terra); behaviour status, key-number recall, calculation correctness, false-answer and over-abstention are deterministic code. Gold v3.5 development and all four registered held-out rescoring runs are complete on existing generated outputs; held-out stale judge entries were rejudged. `paired` holds the registered corpus-v1 comparison, current first, with v3.2–v3.4 history; `corpus_v2_diagnostic` is a separate extraction-only diagnostic; `dev_x2_regression_check` labels the corpus-v3 dev X2 rows (a regression check, not an ablation). Rows with `diagnostic: true` and `registered: false` (agent-heldout-X-*) are post-freeze diagnostics, not registered held-out evidence. `heldout_v2` is the signed held-out v2 run on corpus v3, reported separately and never pooled with the registered held-out.", eval_rows, eval_paths + [path for entry in paired + ([paired_v2] if paired_v2 else []) for path in entry["provenance"]] + list((v2_held or {}).get("provenance", [])),
                                errors={"scope": "rescored case records (experiments/eval, gold as recorded in each metrics file)", "counts": errors, "provenance": trace_paths}, paired=paired, corpus_v2_diagnostic=paired_v2, dev_x2_regression_check=_x2_check(x2_rows), heldout_v2=v2_held, tool_set_v2=tool_v2,
                                limitations=["Gold labels were drafted by AI. The owner then went through them in the review interface and signed off on every case, answer verdict and source check (four separate streams, 403 items in total: 268 gold questions, 65 held-out v2 questions, 40 saved system answers and 30 source checks; only the first two are questions). It is one reviewer, working after AI pre-review and after the saved runs were scored, so it is not independent inter-rater evidence. Four change-clicks were not applied under the out-of-period policy (D-047), so labels are unchanged in gold v3.7.", "One reviewer, after AI pre-review and after the saved runs were scored: not independent annotation or inter-rater evidence. The judge is an AI (gpt-6.1-terra); behaviour status, key-number recall, calculation correctness, false-answer and over-abstention are deterministic code, not the judge.", "Current v3.5 and historical paired intervals include zero; the comparison is inconclusive under the registered rule.", "Five held-out cases changed after the v3.2 freeze (HO-029 in v3.3; HO-027, HO-023 and HO-004 in v3.4; HO-022 in v3.5); rescoring is post-run adjudication, not a fresh frozen-gold experiment.", "Metric definitions differ between evaluation stages.", "Dev X2 (corpus v3, gold v3.6, crosscheck on, 14 runtime changes) is a regression check of the served system, not an ablation: several factors changed at once, and the ungrounded-number check was widened, so that metric is not comparable with A3 or X1."]),

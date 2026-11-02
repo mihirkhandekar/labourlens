@@ -77,7 +77,7 @@ export function runLabel(runId) {
 
 // Gold versions are identified by the SHA-256 recorded when a run was scored. Add a version here
 // when a new gold file is adopted; an unknown hash is shown as its first eight characters.
-const KNOWN_GOLD = {'647b26a2': 'v3.2', '050bb40b': 'v3.4', 'aac4b405': 'v3.5', '6169a9de': 'v3.6'};
+const KNOWN_GOLD = {'647b26a2': 'v3.2', '050bb40b': 'v3.4', 'aac4b405': 'v3.5', '6169a9de': 'v3.6', 'af3ad026': 'v3.7', 'e3d16597': 'fresh set v1'};
 export function goldOf(row) {
   const sha = row?.scoring_provenance?.gold_sha256;
   if (typeof sha !== 'string') return {sha: null, version: null, label: 'gold version not recorded'};

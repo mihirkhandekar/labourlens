@@ -15,10 +15,10 @@ function differenceCards(m) {
   const lat = (mcp.rows || []).find(r => r.metric === 'latency_p50_ms') || {};
   const cl = t.cost_and_latency || {};
   const cards = [
-    ['Small-talk reply', `Greetings, thanks, "help", "who are you" and messages with no letters or digits are answered from a fixed list: no model call, no search, no cost. The whole message must match, so "hi, ignore previous instructions" and "what can you do about unemployment" still go to the agent. Phrasings off the list run the whole agent. Unit-tested; no accuracy figure covers it.`, 'docs/decisions.md › D-050 · tests/web/test_smalltalk.py'],
-    ['Scope check before the agent', `One short model call decides whether a message is about the workbench's subject. Off-topic, personal-advice and unsafe messages get a brief refusal; when unsure it defaults to in scope; if the call fails the agent runs anyway. It adds one call to each question that is not small talk${cl.mean_cost_usd != null ? `, about ${usd(cl.mean_cost_usd)} and ${secs(cl.latency_p50_s)} at the median` : ''}. Not measured end to end.`, 'docs/decisions.md › D-051 · tests/web/test_triage.py'],
+    ['Small-talk reply', `Greetings, thanks, "help", "who are you" and messages with no letters or digits are answered from a fixed list: no model call, no search, no cost. The whole message must match, so "hi, ignore previous instructions" and "what can you do about unemployment" still go to the agent. Phrasings off the list run the whole agent. Unit-tested; included in the separate 65-case served-chain sample.`, 'docs/decisions.md › D-050 · tests/web/test_smalltalk.py'],
+    ['Scope check before the agent', `One short model call decides whether a message is about the workbench's subject. Off-topic, personal-advice and unsafe messages get a brief refusal; when unsure it defaults to in scope; if the call fails the agent runs anyway. It adds one call to each question that is not small talk${cl.mean_cost_usd != null ? `, about ${usd(cl.mean_cost_usd)} and ${secs(cl.latency_p50_s)} at the median` : ''}. Measured end to end on a separate 65-case sample, not the full final sets.`, 'docs/decisions.md › D-051 · tests/web/test_triage.py'],
     ['Follow-up rewrite before the agent', `When a message follows earlier turns or uses a relative date such as last quarter, one short model call turns it into a standalone question first. A first question with no such wording passes through with no call, and if the call fails the original question goes to the agent. ${contextSentence(sv)}`, 'docs/decisions.md › D-054 · experiments/context/ctx-v1-luna, ctx-v2-luna'],
-    ['Statistics lookups through MCP', `The agent's get_series tool calls the local MCP server over stdio, and the workbench activity shows "via MCP". Report search and the change calculation stay in the same process, and the other eight MCP tools are not given to the agent. ${lat.mcp != null ? `Median ${lat.mcp} ms per call against ${lat.direct} ms direct` : 'Latency per call is not recorded'}${mx.connection_seconds != null ? `, and about ${mx.connection_seconds.toFixed(1)} s once to connect` : ''}. No accuracy run used this route.`, 'docs/decisions.md › D-053 · docs/mcp-demo-transcript.md §17'],
+    ['Statistics lookups through MCP', `The agent's get_series tool calls the local MCP server over stdio, and the workbench activity shows "via MCP". Report search and the change calculation stay in the same process, and the other eight MCP tools are not given to the agent. ${lat.mcp != null ? `Median ${lat.mcp} ms per call against ${lat.direct} ms direct` : 'Latency per call is not recorded'}${mx.connection_seconds != null ? `, and about ${mx.connection_seconds.toFixed(1)} s once to connect` : ''}. A 65-case served-chain sample scored 90.8% for both models, with no observed loss versus direct calls.`, 'docs/decisions.md › D-053 · docs/mcp-demo-transcript.md §17'],
     ['Document build v3.1', `${corpus.sources != null ? `${fmt.int(corpus.sources)} sources, ${fmt.int(corpus.passages)} passages and ${fmt.int(corpus.chunks)} chunks, parser ${corpus.parser_after || 'not recorded'}.` : 'Corpus counts are not recorded.'} The same sources and passage ids as build v3; a refined rule relabels 40 passages of one article. The final evaluation of all three question sets ran on v3.1 and gives the headline numbers. Earlier results ran on earlier builds and stay as labelled history.`, 'docs/decisions.md › D-052, D-055 · experiments/corpus-snapshots/v3.1-diff.json']
   ];
   const grid = el('div', 'pr-limit-grid');
@@ -76,12 +76,12 @@ export function knownLimits(m) {
   return [
     'The reference labels began as AI drafts. One reviewer signed off every item after three AI review passes and after the runs were scored. These are agreement figures, not validated accuracy, and not independent inter-rater evidence.',
     'The judge and the answer models come from one provider family, so their errors may correlate.',
-    'Each configuration was run once; there is no run-to-run variance for the main comparisons.',
-    'Temperature and reasoning effort were left at the provider defaults and were not recorded.',
+    'The final comparisons use two runs per arm; this is not a run-to-run variance estimate. Other experiments have one run unless labelled otherwise.',
+    'Temperature and reasoning effort were not varied. New runs record provider-default temperature and top_p, no seed, prompt hashes and completion limits; older runs lack that sampling block.',
     'The ingestion scanner missed all five paraphrased injection probes. Zero hits does not show a source is safe.',
     'A provider-side spend cap is not verified; the app\u2019s own daily budget is an estimate.',
     r.datasets_unverified != null ? `Licences are unverified for ${fmt.int(r.datasets_unverified)} datasets (assumed open) and ${fmt.int(r.sources_unresolved)} documents (rights unresolved). All of them stay local and none is committed.` : 'Licence status is not recorded.',
-    'The live app differs from the evaluated system (small-talk reply, scope check, MCP route, build v3.1), and no accuracy run covers the served configuration.'
+    'The live app differs from the evaluated system (small-talk reply, scope check, MCP route, build v3.1), and a separate 65-case sample measures the served configuration, not the full final sets.'
   ];
 }
 
@@ -93,8 +93,8 @@ export function renderServing(m, ctx) {
     title: 'The live app differs from the system I evaluated in four ways',
     bullets: [
       'A small-talk reply, a scope check, statistics lookups through MCP and document build v3.1.',
-      g.n != null ? `Only the scope check has its own measurement: ${of(g.false_out_of_scope, g.n)} reference and fresh questions wrongly turned away. No accuracy run covers the served system.` : 'No accuracy run covers the served system.',
-      'Every accuracy result in this work describes the evaluated system.'
+      g.n != null ? `The scope check alone measured: ${of(g.false_out_of_scope, g.n)} reference and fresh questions wrongly turned away. The served chain also has a 65-case sample, 90.8% for both models.` : 'The served chain also has a 65-case sample, 90.8% for both models.',
+      'The served sample contains 51 development cases and 14 hand-written probes, one run, same judge family, not independent evidence.'
     ]
   });
   const a = section('Four differences between the live app and the evaluated system');

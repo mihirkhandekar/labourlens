@@ -487,6 +487,8 @@ p95 values are the nearest-rank figures in the metrics files (D-043). Cost is th
 
 **Reversibility.** Documentation only; no raw output, gold file or scorer was changed. Reworking the T-I06 scorer and re-running is an open owner decision.
 
+**Follow-up, 2 Nov 2026 (D-060).** The owner requested the T-I06 scorer revision. V1 and its registered results remain unchanged; selectable v2 is declared before implementation in [the v2 rule](experiments/t-i06-scorer-v2-rule.md). Rescoring previously seen outputs is post-hoc diagnostic work under new ids, not new evidence. Only fresh generation after that declaration supplies new v2 evidence. No historical result in this entry is replaced.
+
 ### D-045 — Held-out v2 result and interpretation (MEASURED / DECISION, 31 Oct 2026)
 
 **Context.** The signed 65-case held-out v2 set (D-039, D-042, `experiments/heldout-v2/FREEZE.md`) was run once per arm on corpus v3: retrieval `r3` against `hybrid`, `planner_v1`, `answer_v3`, cross-check on, code `89c51d7`. Full numbers, tables and error analysis: `docs/experiments/m7-heldout-v2-result.md`. Sources: `experiments/heldout-v2/paired.json`, `experiments/eval/agent-heldout-V2-{r3,hybrid}/`. This entry supersedes the D-044 statements that held-out v2 was unrun and that corpus v3 had no evidence-disjoint evaluation; D-044 itself is unchanged as a dated record.
@@ -671,6 +673,8 @@ The default `AgentConfig.tool_set` stays `"base"`; the served system, web app, t
 
 ### D-053 - The served web app routes `get_series` through the local MCP server (OWNER DECISION / IMPLEMENTED, 1 Nov 2026)
 
+**Clarification, 2 Nov 2026 (D-058, D-061).** This route is now measured on a 65-case served-chain sample, with no observed accuracy loss against direct/web-on. This supersedes the unmeasured-route limitation below for that sample only. Full-set FIN/FIN2 still uses direct statistics. One run, not independent evaluation or statistical non-inferiority. Historical decision text stays dated.
+
 **Decision (owner, 1 Nov 2026).** The live web app's agent `get_series` tool calls the local `labourlens-stats` MCP server (`get_statistic` tool, stdio) through `SyncStatsBackend`, set on `Shared.stats_backend` in `create_app` (`Settings.mcp_enabled`). Switch: `LABOURLENS_MCP=false` returns to direct calls; the default is true and applies to the web app only. The trace event of a `get_series` call now carries `transport: "mcp"`, so the live demo can show MCP end to end. The Workbench has an MCP tab (`GET /api/mcp`, `POST /api/mcp/try`, `docs/deploy.md` section 14) that lists the server's tools, resources and prompt, marks the one tool the agent uses, shows the last 20 calls, and runs three fixed read-only example calls with their raw replies.
 
 **Unchanged.** `search_reports` and `calculate_change` stay in-process. The other eight MCP tools (`list_datasets`, `describe_dataset`, `get_dimension_values`, `latest_value`, `compare_periods`, `series_summary`, `get_revisions`, `get_provenance`) are not given to the agent; the agent tool set stays unevaluated beyond the base set (D-048). `run_agent`, `agent-exp` and `threat-test` leave `stats_backend` unset.
@@ -741,6 +745,8 @@ For `gpt-6-luna` the paired difference is +0.031 (3 better, 1 worse), exact McNe
 
 ### D-056 - One final evaluation as the headline; keep filter then rerank as the served default (OWNER REQUEST / MEASURED, 1 Nov 2026)
 
+**Clarification, 2 Nov 2026 (D-061).** FIN below is the first run, not the headline. The owner amended FIN2 before results to headline the mean of both runs. Models tie on development r3 mean (0.897); `gpt-6-luna` stays default only because it costs about 60% as much, not because it is more accurate. No run establishes an accuracy winner. Historical records below remain unchanged.
+
 **Problem.** Results came from several builds and code eras (corpus v1, v2, v3 and v3.1; the ladder, the original test, the fresh set and its v3.1 re-run), and the owner asked for one consistent set of headline numbers for the final system.
 
 **What was run.** A consolidated evaluation, corpus v3.1, code at `9f979a5` (development and registered sets) and `3054195` (fresh set); agent code unchanged between them; the web-only steps (small-talk reply, scope check, follow-up rewrite) and the MCP route are not in these runs. Gold v3.7 for development and the registered set (generation ran on v3.6; labels identical apart from provenance fields; scored with `--allow-gold-mismatch`), `heldout_v2_v1.jsonl` for the fresh set. Both models, both arms, one run per arm, judge `gpt-6.1-terra`. Ids `agent-dev-FIN-*`, `agent-heldout-FIN-*`, `agent-heldout-FINV2-*`; paired files `experiments/eval/paired-dev-final.txt`, `experiments/heldout/paired-final.txt`, `experiments/heldout-v2/paired-final.json`. Retrieval metrics were not re-run (the script would overwrite frozen results).
@@ -769,3 +775,76 @@ On the development questions filter then rerank also cuts over-abstention from 0
 
 ### D-057: Repository is public
 **DECISION** (owner, 2 Nov 2026). Supersedes the private-repository part of D-001; the published/private split stays. Alternatives: private repo with invites, emailed export. Consequences checked before this decision: the tracked tree and full history have no secrets (gitleaks, 120 commits); no PDF, extracted MOM or MTI text, raw model output, `private/`, `study/` or screenshots are tracked; `rights-scan` reports 0 hits. Open before flipping visibility: the three datasets with an assumed licence still have derived rows committed (D-004); `prompts/meta` exists in history only; 23 sources with unresolved rights are local-only. Reversible by making the repo private again, but anything fetched while public cannot be recalled.
+
+### D-060 - Versioned T-I06 scorer and immutable rescoring
+
+**DECISION** (owner-requested task, 2 Nov 2026). Add `threat-test --scorer {v1,v2}`, default v1, and explicit `--source-experiment` for offline rescoring to a new experiment id. The [rule declaration](experiments/t-i06-scorer-v2-rule.md) was written before v2 code or reruns. V2 uses assertion versus caveat fields, complete numeric tokens rather than exact unit-bearing strings, and same-caveat conflict disclosure. It preserves a hard negative for asserting the planted figure. All other controls still apply. Fresh v2 output reports unchanged v1 scoring side by side.
+
+**Alternatives:** retain only brittle v1 (audit continuity but known false failures); overwrite the refined scorer (hides provenance and changes historical meaning); selectable v2 with new ids (**chosen**, explicit semantics and preserved registered results, at the cost of two reported scoring versions). Earlier refinement was post-hoc, and rescoring old outputs under v2 remains post-hoc despite this advance declaration. Only a fresh run is new v2 evidence, not new held-out evidence.
+
+**Boundary:** no agent/runtime or corpus change, no paid run, no historical artifact replacement. Offline synthetic tests cover numeric formatting, disclosed caveats, omitted structured figures, hard planted assertions, immutable source/destination handling and CLI forwarding. Exact parent commands for all three saved run sets and all four fresh configurations are in the declaration. **Reversible:** v1 stays default; v2 is opt-in. No v2 measured threat pass rate is claimed here.
+
+### D-059 - Isolated tagged retrieval development re-runs
+
+**DECISION** (owner-requested task, 2 Nov 2026). Add optional `retrieval-exp2 --tag`, preserving legacy output paths and payloads when absent. Tagged configuration directories are `experiments/runs/dev-R-<tag>-R*/`; a sibling `dev-R-<tag>/` contains `SUMMARY.md` and `summary.json`. Existing tagged outputs are refused, not overwritten. [Analysis rules](experiments/retrieval-v31-rerun.md) were declared before implementation.
+
+**VERIFIED FACT (source audit):** legacy matrix filenames hash chunk IDs, query-vector keys hash only questions, and rerank cache keys omit the full corpus. They are not proof of a v3.1 build. Tagged runs isolate all three caches by tag, actual chunk corpus hash and embedding configuration. Exact model-and-text keyed shared embeddings may still be reused safely. Each tagged metrics configuration records matched corpus version, actual chunk count/hash, gold SHA-256 and code commit; v3.1 is claimed only on a snapshot hash/count match (1,847 chunks).
+
+**Alternatives:** overwrite frozen results (rejected by D-016); globally change legacy paths/cache semantics (breaks historical reproduction); opt-in isolated namespace (**chosen**, additive with no algorithm change). R0-R3 scoring, sensitivity checks and the conditional R3 gate are unchanged. Summaries explicitly label this as a development re-run, explain changed corpus/gold/code/cache provenance and do not claim new held-out evidence. No retrieval measurement or paid command was run for this change; `--no-rerank` still requires dense/query embeddings, so no `V31test` trial was attempted. **Reversible:** omit the tag to retain the old convention; no frozen artefact is edited.
+
+### D-058 - Shared served-chain evaluation harness
+
+**DECISION** (owner-requested task, 2 Nov 2026). Add `labourlens served-exp` with new `served-<split>-<tag>` ids, raw private rows and public scores/metrics. Existing ids are refused before loading data or calling models. The web app and harness import `agent/served.py` for the runner and MCP shared-state factory. The existing small-talk-first order is preserved, followed by contextualise, triage and agent; no prompt, gate, timeout or retry policy is changed. Route and front steps are explicit experiment factors, with the same base agent score and aggregation as agent-exp.
+
+**Alternatives:** duplicate app orchestration (simple initially, risks evaluation drift); evaluate only run_agent and label it served (does not exercise front steps or MCP); share the existing orchestration (**chosen**, small refactor and offline regression coverage, unchanged web contract). The harness turns trace-file saving off so it writes only its own new run directories, never `agent-*` experiment results.
+
+**Analysis declared before code:** [served-chain evaluation](experiments/served-chain-eval.md), 51 family-stratified development gold cases (seed 20261102) plus 8 new diversion and 6 new context probes, all clearly labelled. H1 requires behaviour within 3 points of FIN on the exact 51 ids and no gold false diversion; H2 requires identical numerical records on matched statistics call arguments. The mixed direct/web-off control changes two factors and cannot isolate MCP causality. Front-step timings/costs, p50/p95 total, backend attempts/errors and gold/probe denominators are recorded separately. Probe date expectations are fixed and must not be silently reinterpreted.
+
+**Boundary:** no paid run, no new accuracy claim, no change to frozen FIN or concurrent FIN2 outputs. This is not independent evaluation, repeated-trial evidence or human judging. The HTTP rights projection/admission layer is not evaluated. Parent commands for both models, scoring, paired descriptive analysis and exact-case FIN/matched-call audits are in the declaration. **Reversible:** remove the new CLI and harness; the shared runner can remain without changing the app.
+
+### D-061 - Final evaluation headline is the mean of two runs; FIN2 replicate, retrieval v3.1, served chain, T-I06 v2 (OWNER REQUEST / MEASURED RESULT, 2 Nov 2026)
+
+**DECISION.** The owner amended [FIN2](experiments/fin2-replicate.md) before any replicate result was scored or read (generation was underway): headline the mean of FIN and FIN2 per arm and show both single runs. FIN is the first run, not the headline. Every frozen result remains immutable (D-016). No default tool, corpus, model or prompt change is adopted here. D-058 to D-060 declarations cover the owner-requested served-chain, tagged retrieval and versioned scorer work.
+
+**MEASURED RESULT: final agreement, corpus v3.1, two runs per arm.** Direct statistics, no web steps, base tools, `planner_v1`, `answer_v3`, judge `gpt-6.1-terra`. [Source](../experiments/eval/final-mean.json); replicate ids `agent-dev-FIN2-*`, `agent-heldout-FIN2-*`, `agent-heldout-FIN2V2-*` beside the FIN first-run ids.
+
+| Question set | Model | Filter then rerank: mean (first, replicate) | Hybrid: mean (first, replicate) | Paired mean difference, 95% interval |
+|---|---|---:|---:|---|
+| Development, 237 | `gpt-6-luna` | 0.897 (0.886, 0.907) | 0.827 (0.844, 0.810) | +7.0 points [3.6, 10.6] |
+| Development, 237 | `gpt-5.6-luna` | 0.897 (0.899, 0.895) | 0.844 (0.840, 0.848) | +5.3 points [1.9, 8.9] |
+| Registered original test, 31 | `gpt-6-luna` | 0.839 (0.839, 0.839) | 0.806 (0.839, 0.774) | +3.2 points [-3.2, 11.3] |
+| Registered original test, 31 | `gpt-5.6-luna` | 0.839 (0.839, 0.839) | 0.823 (0.839, 0.806) | +1.6 points [-8.1, 12.9] |
+| Fresh, 65 | `gpt-6-luna` | 0.715 (0.708, 0.723) | 0.746 (0.754, 0.738) | -3.1 points [-7.7, 0.8] |
+| Fresh, 65 | `gpt-5.6-luna` | 0.731 (0.723, 0.738) | 0.738 (0.723, 0.754) | -0.8 points [-2.3, 0.0] |
+
+Filter then rerank gives a consistent gain on the development questions that shaped it, in both runs and both models, but no demonstrated gain on either the original test or fresh set. The two models tie on development r3 mean (0.897 each); I keep `gpt-6-luna` as default because it costs about 60% as much, not because it is more accurate. The development cost ratio is about 1.7 and latency about 1.5 for the primary model. Two runs per arm are still not a variance estimate; intervals resample cases, not independent runs.
+
+Development r3/hybrid over-abstention means: 3.2%/10.1% and 4.2%/8.9% (all-case denominators in the aggregate file). Primary cost means $0.002845/$0.001695; mean of run medians 14.35/10.05 s, not a pooled median. Paired 95% intervals use each case's mean outcome (0, 0.5, 1), 10,000 resamples, seed 20261030. Development signs agree across both runs for both models. Original-test first-run differences are null, so the positive means remain unresolved; neither test set demonstrates gain.
+
+**MEASURED RESULT: retrieval on the current corpus.** [V31 summary](../experiments/runs/dev-R-V31/SUMMARY.md), `retrieval-exp2 --tag V31`, 128 answerable development text-evidence cases, gold v3.6, 1,847 chunks, corpus/model-keyed isolated caches:
+
+| Hit@8 | R0 | R1a | R2 | R3 |
+|---|---|---|---|---|
+| Current v3.1 | .539 [.453, .625] | .852 | .742 | .969 [.938, .992] |
+| Frozen v1 history | .570 | .844 | .789 | .969 |
+
+Development re-run, not new held-out evidence or a causal estimate of cross-build changes: corpus, gold, code and cache provenance changed together. Frozen R-series remains history.
+
+**MEASURED RESULT: served chain.**
+
+**MEASURED RESULT (D-058/D-061, 2 Nov 2026).** The served research chain (small-talk, contextualise, scope triage, agent with MCP statistics) was measured on 65 cases: 51 stratified development gold cases, eight hand-written diversion probes and six context probes. Both models score 90.8% overall; gold-only scores are 90.2% / 88.2% (`gpt-6-luna` / `gpt-5.6-luna`). Diversion probes pass 8/8 for both, context probes 5/6 / 6/6 (SERVED-P14 fails for the primary model), and false diversion is zero. With web steps on for both routes, MCP minus direct is 0.0 points (one better, one worse) / +3.1 points [0.0, 6.2] (two better, none worse), a descriptive 90% case-bootstrap interval. No accuracy loss was observed on this sample, not a statistical non-inferiority proof. Median / p95 total latency is 12.4 / 34.7 s and 10.2 / 32.0 s; estimated cost per question $0.00268 / $0.00385, excluding one-off startup latency. The 38 / 41 MCP attempts include 1 / 4 `not_found` tool errors from unmatched dimensions or series, not transport failures. The direct/web-off control scores 75.4% / 72.3% overall (gold-only 86.3% / 84.3%); it changes two factors, and its eight diversion probes fail by design. This is one run, reused development evidence, hand-written date-anchored probes, the same judge family, and no HTTP admission or rights-projection evaluation; the full 237/31/65 evaluation still uses direct statistics and no web steps.
+
+Sources: [MCP metrics](../experiments/runs/served-dev-S65-mcp-on/), [web-on route comparison](../experiments/served/paired-S65-direct-on.json), [web-off control](../experiments/served/paired-S65-direct-off.json), [registration](experiments/served-chain-eval.md). Aggregate accuracy is not the exact-case H1 or exact-call H2 audit. The primary context-probe failure precludes a clean overall protocol pass. No full-set served evaluation or HTTP response/admission evaluation is claimed.
+
+**MEASURED RESULT: T-I06.** [Fresh generation](../experiments/threats/ti06-v2-fresh-20261102/SUMMARY.md) is 35/36 for both models, defended and naive, under both scorers. All fail T-I06; primary naive also fails conflict detection. The 31 Oct primary defended 36/36 is one run among several. Old-output v2 diagnostics preserve the original pre-guard counts; postfix primary defended stays 35/36, second-model defended becomes 36/36 from v1 35/36; e2efix primary defended stays 36/36, second-model defended becomes 36/36 from v1 35/36. Naive rows stay 35/36. [Full table](threat-model.md#t-i06-v2-diagnostics-and-fresh-2-nov-rerun-d-060-d-061). Rescoring old outputs is post-hoc, not new evidence. T-I06 is not shown stable.
+
+| Reporting option | Benefit | Downside / dependency | Decision |
+|---|---|---|---|
+| Keep FIN alone as headline | Simple, already published | Ignores the pre-result owner amendment and replicate | Rejected |
+| Choose the best run or model | Strongest-looking headline | Selection bias; no accuracy winner established | Rejected |
+| Mean of two, both runs and null/negative findings visible | Follows pre-result rule; exposes variation; auditable | Two runs cannot estimate variance; needs saved per-case outcomes and longer tables | **Chosen, owner instruction** |
+| Pool served sample with final gold or replace v1 by v2 | One larger headline | Mixes sets/configurations and retroactively changes meaning | Rejected |
+
+**Limits and evaluation impact.** AI-drafted gold signed off by one person after scoring (D-049) gives agreement, not validated accuracy or independent inter-rater evidence. Same provider family; development-shaped design; original-test evidence overlap and post-freeze changes; already-known fresh questions; two runs only. No generalisation, production reliability, statistical non-inferiority, model superiority or stable defence claim. Current-build/sample gaps now have measurements without altering historical acceptance rules. The two models tie on development r3 mean; the primary stays default because its measured cost is about 60% as much. Six scanner patterns and regression coverage for five known paraphrase probes address known bypasses, not all attacks. The MCP transcript is a recorded session of real calls in a fixed order, recorded 2 Nov 2026.
+
+**Reversibility.** Reporting and default choices can change under a new explicit decision. Historical result files, declarations and interpretations are never overwritten. Further experiments require fresh ids and labelled build, gold, route, sample and scorer.

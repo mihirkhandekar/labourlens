@@ -282,7 +282,7 @@ export function renderEvaluation(m, ctx) {
   const a3 = m.evalRow('dev-A3', 'gpt-6-luna'), r3 = m.heldRow('r3', 'gpt-6-luna');
   const ch = chapter({
     id: 'evaluation',
-    title: a3 && r3 ? `gpt-6-luna scores ${fmt.pct(metricOf(a3.metrics.behaviour_accuracy).rate)} behaviour accuracy on ${fmt.int(a3.metrics.n_cases)} development cases and ${fmt.pct(metricOf(r3.metrics.behaviour_accuracy).rate)} on ${fmt.int(r3.metrics.n_cases)} held-out cases` : 'Answer evaluation',
+    title: a3 && r3 ? `Earlier build and gold: gpt-6-luna ${fmt.pct(metricOf(a3.metrics.behaviour_accuracy).rate)} on ${fmt.int(a3.metrics.n_cases)} development cases and ${fmt.pct(metricOf(r3.metrics.behaviour_accuracy).rate)} on ${fmt.int(r3.metrics.n_cases)} original test cases, not comparable to the final run` : 'Earlier evaluation history',
     bullets: [
       'Gold set: 268 cases, 237 development and 31 held out.',
       `Development scored on ${goldOf(a3).label}; held-out on ${goldOf(r3).label}.`,
@@ -291,7 +291,7 @@ export function renderEvaluation(m, ctx) {
     ]
   });
   const stats = el('div', 'pr-stats');
-  if (a3) stats.append(stat({value: metricOf(a3.metrics.behaviour_accuracy).rate, format: v => fmt.pct(v), label: 'Behaviour accuracy, development', note: `Run A3, gpt-6-luna, n=${a3.metrics.n_cases}`, tone: 'brass', src: 'report.json › evaluation.rows[agent-dev-A3/gpt-6-luna].metrics.behaviour_accuracy'}));
+  if (a3) stats.append(stat({value: metricOf(a3.metrics.behaviour_accuracy).rate, format: v => fmt.pct(v), label: 'Behaviour accuracy, earlier development', note: `Earlier build and gold, not comparable to the final run. Run A3, gpt-6-luna, n=${a3.metrics.n_cases}`, tone: 'brass', src: 'report.json › evaluation.rows[agent-dev-A3/gpt-6-luna].metrics.behaviour_accuracy'}));
   if (r3) stats.append(stat({value: metricOf(r3.metrics.behaviour_accuracy).rate, format: v => fmt.pct(v), label: 'Behaviour accuracy, held-out r3', note: `gpt-6-luna, n=${r3.metrics.n_cases}. Interval ${fmt.pct(metricOf(r3.metrics.behaviour_accuracy).ci?.[0])} to ${fmt.pct(metricOf(r3.metrics.behaviour_accuracy).ci?.[1])}.`, src: 'report.json › evaluation.rows[agent-heldout-H-r3/gpt-6-luna]'}));
   if (m.paired[0]) stats.append(stat({value: m.paired[0].models['gpt-6-luna'].diff, format: v => fmt.pts(v), label: 'r3 minus hybrid, held-out', note: `Interval ${fmt.pts(m.paired[0].models['gpt-6-luna'].ci95[0])} to ${fmt.pts(m.paired[0].models['gpt-6-luna'].ci95[1])}. Inconclusive.`, tone: 'warn', src: 'report.json › evaluation.paired[0].models[gpt-6-luna]'}));
   if (a3) stats.append(stat({value: a3.metrics.latency_p50_s, format: v => `${v.toFixed(1)} s`, label: 'Median response time', note: `95th percentile ${fmt.seconds(a3.metrics.latency_p95_s)}. ${fmt.money(a3.metrics.cost_per_case_usd)} per case.`, src: 'report.json › evaluation.rows[agent-dev-A3/gpt-6-luna].metrics.{latency_p50_s,latency_p95_s,cost_per_case_usd}'}));

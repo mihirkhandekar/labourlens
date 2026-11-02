@@ -266,43 +266,15 @@ def create_app(settings: Settings | None = None, runner=None, shared_factory=Non
     cfg = settings or Settings.from_env()
     injected_runner = runner is not None
     if runner is None:
-        from labourlens.agent.graph import AgentConfig, run_agent
-        from labourlens.agent.smalltalk import run_smalltalk
-        from labourlens.agent.triage import run_with_triage
-        # Small talk is answered without a model call (D-050), using the message alone. A follow-up or relative-date message is first rewritten
-        # into one standalone question (D-054, fails open); a clearly off-topic message is answered after one short scope-check call (D-051,
-        # fails open); everything else runs the evaluated agent unchanged.
-        from labourlens.agent.contextualise import attach, audit_block, contextualise, passthrough
-        agent = lambda question, shared, audit=None: run_agent(question, shared, AgentConfig(run_deadline_s=cfg.run_deadline_s), save_trace=True, audit=audit)
+        from labourlens.agent.graph import AgentConfig
+        from labourlens.agent.served import make_runner
 
-        def runner(question, shared, audit=None, history=None):
-            quick = run_smalltalk(question, shared, audit)
-            if quick is not None:
-                return quick
-            info = contextualise(question, history) if cfg.contextualise_enabled else passthrough(question)
-            q = info["question"]
-            if info["called"] and audit is not None:
-                audit = {**audit, "extra": {**(audit.get("extra") or {}), "contextualise": audit_block(info)}}
-            if cfg.triage_enabled:
-                res = run_with_triage(q, shared, audit, lambda a: agent(q, shared, a))
-            else:
-                res = agent(q, shared, audit)
-            return attach(res, info)
+        runner = make_runner(AgentConfig(run_deadline_s=cfg.run_deadline_s),
+                             contextualise_enabled=cfg.contextualise_enabled, triage_enabled=cfg.triage_enabled)
     if shared_factory is None:
-        from labourlens.agent.tools import Shared
-        if cfg.mcp_enabled:
-            def shared_factory():
-                # The agent's get_series tool is an MCP get_statistic call to the local stdio server (allow-listed, handshake-checked).
-                from labourlens.mcp.client import SyncStatsBackend
-                sh = Shared()
-                sh.stats_backend = backend = SyncStatsBackend()
-                try:
-                    backend._run(backend._connect(), 30)
-                except Exception as e:  # noqa: BLE001 - query() reconnects once per call; a persistent failure is reported as a tool failure
-                    logging.getLogger(__name__).warning("MCP statistics server not reachable at startup: %s", type(e).__name__)
-                return sh
-        else:
-            shared_factory = Shared
+        from labourlens.agent.served import make_shared
+
+        shared_factory = lambda: make_shared(cfg.mcp_enabled)
     counters = defaultdict(deque)
     tasks = set()
     budget_file = cfg.feedback_dir / "budget.json"

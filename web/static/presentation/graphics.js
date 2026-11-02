@@ -161,20 +161,38 @@ export function buildTimeline(m) {
   return wrap;
 }
 
-/** G4: a table and what extraction made of it. Schematic: cells carry no data. */
-export function flattening() {
-  const wrap = el('div', 'g4');
-  const left = el('div', 'g4-panel');
-  left.append(el('p', 'g4-label', 'In the PDF'));
-  const table = el('table', 'g4-table');
-  [['', 'Q1', 'Q2'], ['Row A', 'value', 'value'], ['Row B', 'value', 'value']].forEach((r, i) => {
-    const tr = el('tr'); r.forEach(c => tr.append(el(i === 0 || c.startsWith('Row') ? 'th' : 'td', '', c))); table.append(tr);
+/** Source reports become quality-flagged passages, eligible chunks and two indexes. Table conversion below remains an honest schematic, not a claim of repaired tables. */
+export function flattening(m) {
+  const corpus = m?.section('serving')?.corpus || {};
+  const wrap = el('div', 'rpipeline');
+  const flow = el('div', 'rpipeline-flow');
+  const node = (head, sub, tip) => {
+    const n = el('div', 'rpipeline-node'); n.append(el('h3', '', head), el('p', '', sub));
+    withTip(n, tip, 'is-down'); flow.append(n);
+  };
+  node('Source report', 'PDF or web page', 'Raw MOM and MTI PDF and HTML files stay local in data/raw, never in public Git. The committed data/manifests/manifest.json records source snapshots, hashes and acquisition metadata.');
+  node('Parse layout', 'Read blocks and sections', 'Parser extract-0.3: PyMuPDF reads PDF blocks with bounding boxes and column-aware ordering; BeautifulSoup reads HTML sections. Page, heading, source and release metadata are kept. This is not a reliable table-to-rows parser: table-like blocks can flatten and are flagged table_unreliable rather than silently repaired.');
+  node('Passages', `${fmt.int(corpus.passages)} across ${fmt.int(m?.sources?.length)} sources`, 'Corpus v3.1 has 16,419 passages and 85 sources in its source inventory, including 49 documents. Extracted report passages are local JSONL files in data/passages. Only quality_flag=ok enters default retrieval; table_unreliable and garbled blocks remain available for inspection, not default retrieval.');
+  node('Merge chunks', `${fmt.int(corpus.chunks)} · about 200 words`, 'The live runtime uses merge200, not the earlier merge120 experiment: adjacent eligible passages within one source and section, target 200 words and up to 40 words of whole-passage overlap. Chunks are rebuilt in memory at startup. JSONL export is supported under data/index/chunks. That directory and all report-derived indexes are gitignored.');
+  const forms = el('div', 'rpipeline-indexes');
+  const form = (head, sub, tip) => { const n = el('div', 'rpipeline-index'); n.append(el('h3', '', head), el('p', '', sub)); withTip(n, tip, 'is-down'); forms.append(n); };
+  form('Keyword index', 'BM25', 'BM25 indexes tokenised chunk text. The live runtime builds it in memory. Persisted bm25s exports and meta.json live under data/index/bm25, keyed by corpus and configuration hashes. Loading an index for different chunks fails rather than serving stale text.');
+  form('Embedding vectors', '3,072 dimensions', 'text-embedding-3-large produces 3,072-number vectors, verified in the local cache. Vectors are L2-normalised float32 arrays, stored with content keys in data/index/embeddings/text-embedding-3-large/cache.npz. The key hashes the model and exact embedded text. A corpus rebuild rebuilds the chunk/index mapping; unchanged text reuses its vector, changed text needs a new embedding. No embedding call was made for this slide.');
+  flow.append(forms);
+  node('Hybrid search', 'Fuse, filter, rerank', 'Both indexes search the same chunks. Reciprocal rank fusion combines keyword and dense rankings; retrieval applies period and release-stage filtering, then reranks candidates. Period hints are matched in retrieval, not stored as a period field on each Chunk.');
+  wrap.append(flow);
+  const examples = el('div', 'rpipeline-examples');
+  const tableExample = el('div', 'rpipeline-table');
+  const table = el('table'); [['', 'Q1', 'Q2'], ['Row A', 'value', 'value'], ['Row B', 'value', 'value']].forEach((r, i) => {
+    const tr = el('tr'); r.forEach((v, j) => tr.append(el(i === 0 || j === 0 ? 'th' : 'td', '', v))); table.append(tr);
   });
-  left.append(table);
-  const right = el('div', 'g4-panel');
-  right.append(el('p', 'g4-label', 'After extraction'), el('p', 'g4-flat', 'Q1 Q2 Row A value value Row B value value'));
-  withTip(right, exampleBlock('Worked example: one table, two rows', [['In the PDF:', 'Row A and Row B each have a value under Q1 and under Q2.'], ['After extraction:', 'One run of text, so the column each value belongs to is no longer clear.'], ['What I did:', 'Numbers come from the datasets, and every quote must be found in its passage.'], ['What I checked:', 'In 16 sampled passages all 4 tables came out flattened, and no number was wrong.']], 'A schematic with no real cells.'), 'is-table is-up');
-  wrap.append(left, ico('arrow-right', 'g4-arrow'), right, el('p', 'g4-note', 'Schematic: cells carry no data'));
+  const after = el('div', 'rpipeline-flat'); after.append(el('strong', '', 'Flattened table'), el('p', '', 'Q1 Q2 Row A value value Row B value value'), el('p', 'rpipeline-flag', 'Flag and exclude, do not invent rows'));
+  tableExample.append(table, ico('arrow-right'), after);
+  withTip(tableExample, 'Schematic, not a real report quotation. A real table-like block in the MOM Q1 2026 final report, PDF page 28, is flagged table_unreliable by extract-0.3 and excluded from default chunks. Numerical answers use validated structured datasets instead. The code does not turn this report table into a trusted row chunk.', 'is-up');
+  const example = el('div', 'rpipeline-example');
+  example.append(el('h3', '', 'A real eligible chunk, without report text'), el('p', '', 'MOM Q1 2026 final · pages 2 to 3'), el('p', '', '216 words · 9 source passages · 3,072-number vector'));
+  withTip(example, 'Verified from the local current-build chunk and cached vector: release_stage=final; publication_date=2026-06-15; page_start=2; page_end=3; word_count=216; nine source_passage_ids. Chunk fields also include source_id, snapshot_id, original_url, document_title, section_heading, locator, chunk configuration, text hash and rights status. Publisher joins through source_id to the catalogue; there is no publisher or observation-period field in the Chunk model. Table-like passages from this report are excluded, so this example is eligible report text, not a repaired table. Source text and vector values are not published here.', 'is-up is-wide');
+  examples.append(tableExample, example); wrap.append(examples);
   return wrap;
 }
 
@@ -281,7 +299,7 @@ export function finalSentence(m) {
     const s = f.sets.find(x => x.id === id), a = s?.models.find(x => x.model === 'gpt-6-luna');
     return s && a ? `${fmt.pct(a.r3rate)} with filter then rerank against ${fmt.pct(a.hyrate)} for hybrid on the ${fmt.int(s.n)} ${s.label.toLowerCase()}` : '';
   };
-  return `On the final system, gpt-6-luna scored ${[part('dev'), part('registered'), part('fresh')].filter(Boolean).join('; ')}. One run per arm.`;
+  return `On the final system, gpt-6-luna scored ${[part('dev'), part('registered'), part('fresh')].filter(Boolean).join('; ')}. Mean of two runs per arm; not a variance estimate.`;
 }
 
 /** Cost and latency of filter then rerank against hybrid on the development questions, as ratios read from the data. */
@@ -310,10 +328,10 @@ export function finalComparison(m) {
         track.append(bar); row.append(el('span', 'fc-label', name), track, el('span', 'fc-val num', fmt.pct(rate))); block.append(row);
       });
       const d = r3rate - hyrate;
-      block.append(el('p', `fc-diff num${Math.abs(d) < 1e-9 ? ' is-null' : d < 0 ? ' is-neg' : ''}`, Math.abs(d) < 1e-9 ? `No difference${p ? `, ${p.better} better and ${p.worse} worse` : ''}` : `${pointsText(d)}${p ? `, ${p.better} better and ${p.worse} worse` : ''}`));
+      block.append(el('p', `fc-diff num${Math.abs(d) < 1e-9 ? ' is-null' : d < 0 ? ' is-neg' : ''}`, `${pointsText(d)}${p?.interval ? ` [${(p.interval[0] * 100).toFixed(1)}, ${(p.interval[1] * 100).toFixed(1)}]` : ''}`));
       col.append(block);
       const x = r3.metrics, y = hy.metrics, ci = a => (a?.ci95 ? ` [${fmt.pct(a.ci95[0])} to ${fmt.pct(a.ci95[1])}]` : '');
-      tipLines.push(`${model}: filter then rerank ${fmt.pct(r3rate)}${ci(x.behaviour_accuracy)}, hybrid ${fmt.pct(hyrate)}${ci(y.behaviour_accuracy)}. ${p?.interval ? `Paired difference ${pointsText(p.paired_difference)}, ${Math.round((p.level ?? 0.95) * 100)}% interval ${(p.interval[0] * 100).toFixed(1)} to ${(p.interval[1] * 100).toFixed(1)} points. ` : ''}False answers ${fmt.pct(x.false_answer_rate?.rate)} against ${fmt.pct(y.false_answer_rate?.rate)}, over-abstention ${fmt.pct(x.over_abstention_rate?.rate)} against ${fmt.pct(y.over_abstention_rate?.rate)}, cost per question $${x.cost_per_case_usd?.toFixed(5)} against $${y.cost_per_case_usd?.toFixed(5)}, median ${x.latency_p50_s} s against ${y.latency_p50_s} s.`);
+      tipLines.push(`${model}: mean of two runs. Filter then rerank ${fmt.pct(r3rate)}, first ${fmt.pct(r3.runs?.run1)}, second ${fmt.pct(r3.runs?.run2)}. Hybrid ${fmt.pct(hyrate)}, first ${fmt.pct(hy.runs?.run1)}, second ${fmt.pct(hy.runs?.run2)}. ${p?.interval ? `Paired mean difference ${pointsText(p.paired_difference)}, 95% case-bootstrap interval ${(p.interval[0] * 100).toFixed(1)} to ${(p.interval[1] * 100).toFixed(1)} points. Direction agrees across runs: ${p.sign_agrees ? 'yes' : 'no'}. ` : ''}False-answer and over-abstention shares here use all ${s.n} questions, not an answerable-only denominator: ${fmt.pct(x.false_answer_rate?.rate)} / ${fmt.pct(x.over_abstention_rate?.rate)} against ${fmt.pct(y.false_answer_rate?.rate)} / ${fmt.pct(y.over_abstention_rate?.rate)}. Mean cost $${x.cost_per_case_usd?.toFixed(5)} against $${y.cost_per_case_usd?.toFixed(5)}. Mean of run medians ${x.latency_p50_s?.toFixed(1)} s against ${y.latency_p50_s?.toFixed(1)} s. Two runs are not a variance estimate.`);
     });
     withTip(col, tipLines.join('\n'), 'is-down is-wide');
     cols.append(col);
@@ -322,7 +340,7 @@ export function finalComparison(m) {
   const items = ladderItems(m);
   if (items) {
     const steps = el('div', 'fc-steps');
-    steps.append(el('p', 'fc-steps-head', 'Earlier build, one change at a time'));
+    steps.append(el('p', 'fc-steps-head', 'Earlier build and gold, not comparable to the final run'));
     const row = el('div', 'fc-steps-row');
     items.forEach(it => { const [name, ...rest] = [it.label.replace('\n', ' '), it.tag.replace('\n', ', ')]; const s = el('div', `fc-step${it.kind === 'accent' ? ' is-adopted' : ''}`); s.append(el('p', 'fc-step-name', name), el('p', 'fc-step-tag', rest[0])); withTip(s, it.tip, 'is-up'); row.append(s); });
     steps.append(row); wrap.append(steps);
@@ -342,15 +360,15 @@ export function provenanceTable(m) {
   rows.forEach(r => { const tr = el('tr'); [`${r.label}, ${r.n}`, `${r.corpus}, ${r.code || 'code not recorded'}`, `${r.gold_file} (${(r.gold_sha256 || '').slice(0, 8)})`].forEach(c => tr.append(el('td', '', c))); body.append(tr); });
   table.append(body); wrap.append(table);
   const first = rows[0];
-  wrap.append(el('p', 'pv-note', `Models: ${first.models.join(' and ')}. Judge: ${first.judge}. ${first.runs_per_arm} run per arm.`));
+  wrap.append(el('p', 'pv-note', `Models: ${first.models.join(' and ')}. Judge: ${first.judge}. ${first.runs_per_arm} runs per arm, reported as their mean.`));
   return wrap;
 }
 
 const LOOP_TIPS = [
-  'The question is capped at 1,000 characters and checked for instruction-like wording.',
-  'Round 1 gathers evidence. Round 2, only if needed: a calculation, or one more lookup after an error or a gap. Then finish. The planner sees the question and a catalogue, never passage text.',
-  'Three read-only tools. At most 6 calls in total, 3 per round, 10 seconds per call and 1 retry.',
-  'Code adds notes about missing periods, mixed series and advance against final figures.',
+  'The question is capped at 1,000 characters and checked, then the planner chooses evidence calls. The planner sees the question and catalogue, never passage text. Its three-tool list is fixed in code.',
+  'Choose a report search, series lookup or calculation. Report search and calculation stay in process. Only the live series lookup takes the MCP path shown next.',
+  'Live statistics path: the MCP client sends tools/call get_statistic over stdio. The server validates arguments, reads the catalogue and observation table, and returns structured content. The client validates outputSchema and its own typed model, with size and time caps. Report search and calculation bypass this node.',
+  'Assess the returned evidence. Code adds notes about missing periods, mixed series and advance against final figures. Gather evidence again only when needed, up to two rounds.',
   'Every claim must cite items by label and include a short verbatim quote. The model does no arithmetic.',
   'Checks the answer schema, the citation labels, that each quote appears in its passage, and that reported numbers appear in the evidence.',
   'The answer is returned as answered, abstained, clarifying or refused.'
@@ -359,8 +377,8 @@ const LOOP_TIPS = [
 export function agentLoop() {
   const W = 1560, H = 420;
   const svg = svgEl('svg', {viewBox: `0 0 ${W} ${H}`, class: 'g6-svg', role: 'img', focusable: 'false'});
-  svg.setAttribute('aria-label', 'Agent loop: check the question, plan, call a tool, check the evidence, write the answer, check the answer, done. Evidence gathering can repeat for two rounds and the answer can be repaired once.');
-  const boxes = [['Check\nquestion', true], ['Plan', false], ['Tool\ncall', false], ['Check\nevidence', true], ['Write\nanswer', false], ['Check\nanswer', true], ['Done', false]];
+  svg.setAttribute('aria-label', 'Live agent loop: check and plan, call a tool, statistics through the MCP server, check evidence, write answer, check answer, done. Report search and calculation bypass MCP. Evidence gathering can repeat for two rounds and the answer can be repaired once.');
+  const boxes = [['Check and\nplan', true], ['Tool\ncall', false], ['MCP server\nseries only', false], ['Check\nevidence', true], ['Write\nanswer', false], ['Check\nanswer', true], ['Done', false]];
   const bw = 170, bh = 110, y0 = 150, gap = (W - 40 - bw * boxes.length) / (boxes.length - 1);
   const xs = boxes.map((_, i) => 20 + i * (bw + gap));
   const defs = svgEl('defs'); const mk = svgEl('marker', {id: 'g6-arrow', viewBox: '0 0 10 10', refX: 8, refY: 5, markerWidth: 9, markerHeight: 9, orient: 'auto'});
@@ -373,11 +391,11 @@ export function agentLoop() {
     const p = svgEl('path', {d: `M${x1} ${yy} C${x1} ${yy + dy} ${x2} ${yy + dy} ${x2} ${yy + (up ? -4 : 4)}`, class: 'g6-edge is-loop', 'marker-end': 'url(#g6-arrow)'});
     svg.append(p, svgEl('text', {x: (x1 + x2) / 2, y: yy + dy * 0.78 + (up ? -8 : 28), 'text-anchor': 'middle', class: 'g6-loop-label'}, text));
   };
-  loop(3, 1, true, 'up to 2 rounds');
+  loop(3, 0, true, 'up to 2 rounds');
   loop(5, 4, false, '1 repair');
   const parts = [];
   boxes.forEach(([label, guard], i) => {
-    const g = svgEl('g', {class: `g6-box${guard ? ' is-guard' : ''}`}); g.style.setProperty('--i', String(i));
+    const g = svgEl('g', {class: `g6-box${guard ? ' is-guard' : ''}${i === 2 ? ' is-mcp' : ''}`}); g.style.setProperty('--i', String(i));
     g.append(svgEl('rect', {x: xs[i], y: y0, width: bw, height: bh, rx: 12}));
     label.split('\n').forEach((line, k, all) => g.append(svgEl('text', {x: xs[i] + bw / 2, y: y0 + bh / 2 + 10 + (k - (all.length - 1) / 2) * 34, 'text-anchor': 'middle', class: 'g6-text'}, line)));
     svg.append(g);
@@ -386,7 +404,7 @@ export function agentLoop() {
   const wrap = el('div', 'g6'); wrap.append(svg);
   svgTips(wrap, parts);
   const chips = el('ul', 'g6-chips');
-  ['6 tool calls', '10 seconds per call', '1 retry', 'Three read-only tools: search reports, get a series, calculate a change'].forEach(t => chips.append(el('li', '', t)));
+  ['6 tool calls', '10 seconds per call', '1 retry', 'Three read-only tools: search reports, get a series (through MCP in the live app), calculate a change'].forEach(t => chips.append(el('li', '', t)));
   wrap.append(chips);
   return wrap;
 }
@@ -402,8 +420,9 @@ export function evidenceTrace(m) {
   let stepNo = 0;
   const step = (icon, head, body, cls = '') => { const li = el('li', `g7-step ${cls}`.trim()); li.style.setProperty('--i', String(stepNo++)); const t = el('div', 'g7-text'); t.append(el('p', 'g7-head', head), el('p', 'g7-body', body)); li.append(ico(icon), t); wrap.append(li); };
   step('question', 'Question', `What was resident unemployment in ${fmt.quarter(card.period)}, and how did it change?`);
-  step('wrench', 'Tool call', `Get series: ${card.label.toLowerCase()}, ${fmt.quarter(card.period)}`);
-  step('table', 'Row returned', `${pctS(now)}, seasonally adjusted, from ${src?.publisher || 'MOM'} via data.gov.sg`);
+  step('wrench', 'MCP client', `Request ${card.label.toLowerCase()} for ${fmt.quarter(card.period)}.`);
+  step('path', 'MCP server', 'Validate the lookup, then read the statistics. Report search and calculation stay in process.');
+  step('table', 'Row returned to the client', `${pctS(now)}, seasonally adjusted, from ${src?.publisher || 'MOM'} via data.gov.sg. Check the schema before use.`);
   step('calculator', 'Calculation, in code', finite(prev) ? `${pctS(now)} minus ${pctS(prev)} = ${fmt.signed(Math.round((now - prev) * 10) / 10, 1)} points` : 'Change not recorded');
   step('chat-text', 'Answer', `Resident unemployment was ${pctS(now)} in ${fmt.quarter(card.period)} [1].`);
   step('check-circle', 'Citation [1]', `${src?.publisher || 'MOM'}, ${card.label}. Quote found in the source.`, 'is-ok');
@@ -468,7 +487,7 @@ export function toolFixBars(m) {
   };
   const crit = m?.section('evaluation')?.tool_set_v2?.dev_x3?.criteria || {};
   const models = ['gpt-6-luna', 'gpt-5.6-luna'].filter(name => crit[name]?.x2 && crit[name]?.x3);
-  const a = el('div', 'g9-panel'); a.append(el('h3', '', 'Development questions'), el('p', 'g11-sub', `Right behaviour, of ${models.length ? crit[models[0]].x2.n : 237}`));
+  const a = el('div', 'g9-panel'); a.append(el('h3', '', 'Development, earlier build'), el('p', 'g11-sub', `Corpus v3, gold v3.6; right behaviour of ${models.length ? crit[models[0]].x2.n : 237}`), el('p', 'g11-sub', 'Earlier build and gold, not comparable to the final run'));
   models.forEach(name => {
     const {x2, x3} = crit[name];
     a.append(row(name, 'old tools', x2.correct, x2.n, `${(x2.correct / x2.n * 100).toFixed(1)}%`, 'before'), row(name, 'with the new tool', x3.correct, x3.n, `${(x3.correct / x3.n * 100).toFixed(1)}%`, 'after'));
@@ -539,46 +558,67 @@ export function toolFixFlow(m) {
 export function mcpMap(m) {
   const mx = m.section('mcp').metrics || {};
   const lat = (m.section('mcp').rows || []).find(r => r.metric === 'latency_p50_ms') || {};
-  const wrap = el('div', 'mm');
-  const node = (icon, name, sub, tipText, cls = '') => {
-    const n = el('div', `mm-node${cls ? ` ${cls}` : ''}`); n.append(ico(icon), el('p', 'mm-name', name));
-    if (sub) n.append(el('p', 'mm-sub', sub));
-    return tipText ? withTip(n, tipText) : n;
-  };
-  const arrow = () => { const a = el('span', 'mm-arrow'); a.append(ico('arrow-right')); return a; };
-  const lane = (title, nodes, ran) => {
-    const section = el('div', 'mm-lane');
-    section.append(el('h3', 'mm-title', title));
-    const flow = el('div', 'mm-flow');
-    nodes.forEach((n, i) => { if (i) flow.append(arrow()); flow.append(n); });
-    section.append(flow);
-    if (ran.length) {
-      const list = el('ul', 'mm-ran');
-      ran.forEach(([text, tipText]) => { const li = el('li', '', text); list.append(tipText ? withTip(li, tipText) : li); });
-      section.append(list);
-    }
-    return section;
-  };
-  wrap.append(
-    lane('Through MCP, the live web app', [node('wrench', 'Agent', 'get_series only', 'The same planner, tools and answer step as in the direct path. Only the statistics lookup changes route; report search and the change calculation stay in the same process.'), node('shield', 'MCP client', 'checks every reply', 'Checks the server name, version and tool list; validates arguments against the advertised input schemas and results against the advertised output schema and its own models; sets time and size limits; quarantines instruction-like text.', 'is-guard'), node('path', 'MCP server', '9 read-only tools', 'Tools: get_statistic, list_datasets, describe_dataset, get_dimension_values, latest_value, compare_periods, series_summary, get_revisions, get_provenance.\nResources: labourlens://sources and labourlens://source/{source_id}.\nPrompt: compare_quarters.\nThe agent is given get_statistic only. The server serves statistics and the source catalogue, never report text.'), node('database', 'Statistics', 'read-only table')], [
-      ['The live web app', 'The trace of an answered question shows the transport as mcp. A setting switches the web app back to direct calls.'],
-      ['Scripted demo, 17 parts', 'Discovery, a valid call, bad arguments, a slow server, instructions hidden in results, a server that dies, wrong name or version, broken schema, oversized replies, an extra tool, secrets, and a loopback HTTP transport.'],
-      ['One agent question over MCP', 'One question on retrenched employees from 2025-Q4 to 2026-Q1. The agent used get_statistic only; the figures matched a direct lookup. One run, a demonstration and not an evaluation.'],
-      ['10 hostile-server cases', 'Threat cases where the MCP server misbehaves: timeouts, crashes, oversized or malformed replies, extra tools, instructions in results. Each failed closed.']
-    ]),
-    lane('Direct calls, the accuracy evaluations', [node('wrench', 'Agent', 'get_series direct', 'The same planner, tools and answer step in both paths.'), node('path', 'No client or server', 'one hop fewer', 'The direct path has no protocol layer, so nothing is validated against a schema or screened for instruction-like text on the way.', 'is-ghost'), node('table', 'Function call', 'in the same process'), node('database', 'Statistics', 'read-only table')], [['Every accuracy evaluation', 'The reference, fresh and development runs all call the statistics functions directly, so their accuracy results do not describe the MCP route. I have not measured an accuracy run with MCP on the live path.']])
-  );
-  const result = el('div', 'mm-result');
-  [[`${fmt.int(mx.compared_datasets - (mx.different_outputs || 0))} of ${fmt.int(mx.compared_datasets)}`, `datasets gave the same result either way (${fmt.int(mx.identical_datasets)} identical, ${fmt.int(mx.matching_refusals)} refused the same way)`], [`${lat.direct} ms and ${lat.mcp} ms`, 'median time per call, direct and over MCP'], ['No measured gain', `MCP adds an interface and a trust boundary, not accuracy. The live app pays about ${Number.isFinite(mx.connection_seconds) ? mx.connection_seconds.toFixed(1) : 'an unrecorded number of'} s once to connect.`]].forEach(([big, label], i) => {
-    const cell = el('div', 'mm-fig'); cell.style.setProperty('--i', String(i)); cell.append(el('p', 'mm-big num', big), el('p', 'mm-cap', label)); result.append(cell);
+  const wrap = el('div', 'ma');
+  wrap.append(el('p', 'ma-lead', 'Model Context Protocol connects my agent to a read-only statistics server.'));
+  const flow = el('div', 'ma-flow');
+  [
+    ['Live agent', 'Series lookup', 'The planner has three fixed tools. Only get_series uses MCP, through get_statistic. Report search and calculation stay in process.'],
+    ['MCP client', 'Checks the boundary', 'Over stdio, initialize negotiates protocol revision 2025-11-25 and capabilities. Discovery verifies the fixed tool list, not the planner prompt. The client checks input schemas, outputSchema and its own typed models. Replies are untrusted data, screened and capped at 200 KB. Default call deadline: 8 s; connect: 20 s.'],
+    ['MCP server', 'Validates and reads', 'tools/call get_statistic validates the arguments, reads the catalogue and observations, then returns structured content with provenance. Invalid inputs return errors; timeouts or unavailable servers stay operational failures, never no data. No silent direct-call fallback.'],
+    ['Statistics', 'Rows with provenance', 'Read-only official observations. No network, writes or model arithmetic in the server.'],
+  ].forEach(([head, sub, tip], i) => {
+    if (i) { const a = el('span', 'ma-arrow'); a.append(ico('arrow-right')); flow.append(a); }
+    const n = el('div', 'ma-node'); n.append(el('strong', '', head), el('span', '', sub)); withTip(n, tip, 'is-down'); flow.append(n);
   });
-  wrap.append(result);
-  const live = el('p', 'mm-live'); live.append(ico('path'), document.createTextNode('To see it live, open the MCP tab in the Workbench.'));
-  withTip(live, exampleBlock('For the presenter', [['Where:', 'The MCP tab in the Workbench. Sign in first.'], ['What it shows:', 'The running server\u2019s tools and resources, the calls made in this session, and a try-it call with the raw reply.']], 'The tab is part of the live app. The accuracy evaluations did not use MCP.'), 'is-table is-up');
+  wrap.append(flow);
+  const api = el('div', 'ma-api');
+  const tools = el('div', 'ma-tools'); tools.append(el('h3', '', 'Tools to call'));
+  const list = el('dl', 'ma-tool-list');
+  [
+    ['get_statistic', 'Read a series', 'Used by my agent for its live series lookup. Returns matching observations for a period range, with units and provenance.'],
+    ['list_datasets', 'Find datasets', 'List datasets, optionally filtered by topic, with coverage and definitions.'],
+    ['describe_dataset', 'Read definitions', 'Units, population, adjustment, series, release stage, coverage and licence.'],
+    ['get_dimension_values', 'Find valid filters', 'List valid industry, sector or occupation values for a dataset.'],
+    ['latest_value', 'Latest published figure', 'Most recent non-null published value for each matching series.'],
+    ['compare_periods', 'Compare two quarters', 'Exact Decimal difference and relative change for the same series; refuses ambiguous or missing values.'],
+    ['series_summary', 'Summarise a series', 'First, last, minimum, maximum and direction, computed in code.'],
+    ['get_revisions', 'Compare snapshots', 'Changes between the two latest snapshots. One snapshot means no revision history, not no revisions.'],
+    ['get_provenance', 'Trace one observation', 'Source URL, publisher, snapshot checksum, licence and transformations. Not report passages.'],
+  ].forEach(([name, desc, tip], i) => {
+    const item = el('div', `ma-tool${i === 0 ? ' is-used' : ''}`);
+    item.append(el('dt', '', name), el('dd', '', `${desc}${i === 0 ? ' · used by my agent' : ''}`));
+    withTip(item, tip, 'is-up'); list.append(item);
+  });
+  tools.append(list);
+  const context = el('div', 'ma-context');
+  context.append(el('h3', '', 'Resources to read'));
+  [['labourlens://sources', 'Source catalogue'], ['labourlens://source/{source_id}', 'One catalogue entry']].forEach(([name, desc]) => {
+    const r = el('div', 'ma-resource'); r.append(el('strong', '', name), el('span', '', desc));
+    withTip(r, 'Application-driven catalogue metadata, not report text. MOM report rights are why passages are not exposed as resources.', 'is-up'); context.append(r);
+  });
+  context.append(el('h3', '', 'Prompt to choose'));
+  const prompt = el('div', 'ma-resource'); prompt.append(el('strong', '', 'compare_quarters'), el('span', '', 'Ask for a like-for-like comparison'));
+  withTip(prompt, 'A user-controlled template that asks the host to call compare_periods rather than subtract in the model. It is exercised by the protocol demo; my agent does not use prompts or resources.', 'is-up'); context.append(prompt);
+  context.append(el('p', 'ma-hosts', 'Other MCP hosts could use this API. No third-party host has been connected.'));
+  api.append(tools, context); wrap.append(api);
+  const facts = el('div', 'ma-facts');
+  const served = m.section('serving').chain;
+  const measured = served?.rows?.filter(row => row.route === 'mcp-on') || [];
+  measured.forEach(row => {
+    const a = row.metrics.all, g = row.metrics.gold;
+    const fact = el('span', '', `${row.model}: ${fmt.pct(a.behavior_accuracy)} on 65`);
+    withTip(fact, `Served chain, recorded 2 Nov 2026. Gold only: ${fmt.pct(g.behavior_accuracy)} on 51. Diversion probes: 8/8; context probes: ${row.model === 'gpt-6-luna' ? '5' : '6'}/6. False diversions: ${a.false_diversions}. Median ${a.latency_p50_s.toFixed(1)} s, p95 ${a.latency_p95_s.toFixed(1)} s, $${a.cost_per_case_usd.toFixed(5)} per question. ${a.mcp_call_count} MCP calls, ${a.mcp_error_count} agent-level lookup errors (unknown dimension labels, not transport failures). ${served.limits}`, 'is-up is-wide');
+    facts.append(fact);
+  });
+  facts.append(el('span', '', 'MCP vs direct: no observed loss'));
+  withTip(facts, 'Both routes keep web steps on. gpt-6-luna: 0.0 points, 1 better / 1 worse. gpt-5.6-luna: +3.1 points [0.0, 6.2], 2 better / 0 worse (90% paired case-bootstrap interval). This sample does not establish equivalence. The steps-off control changes both route and web steps; its eight diversion probes fail by design. One recorded session of real calls in a fixed order: 17 steps, 6 client refusals, 10 hostile-server cases. Recorded 2 Nov 2026.', 'is-up is-wide');
+  withTip(flow, `${lat.direct} ms direct, ${lat.mcp} ms over MCP per warm call. About ${mx.connection_seconds} s to connect once. The served-chain medians include the full question, not just MCP transport.`, 'is-down');
+  wrap.append(facts);
+  const live = el('a', 'ma-live', 'Open the Workbench MCP tab to inspect the server and try a call.');
+  live.href = '/workbench'; live.setAttribute('aria-label', 'Open the Workbench; choose the MCP tab after signing in');
   wrap.append(live);
   return wrap;
 }
-
 /** The nine remaining asks of the assignment: plain name and what was asked. */
 const REQUIREMENTS = [
   ['database', 'Data', 'Two source types, two findings'],
@@ -664,18 +704,25 @@ export function pairPanels(panels) {
 /** The system, its stages and the three cross-cutting bars: guardrails, evaluation and the MCP interface. */
 export function architectureDiagram() {
   const wrap = el('div', 'g17');
-  const stages = [['database', 'Sources', ['Quarterly statistics', 'MOM reports and an MTI article']], ['file-text', 'Processing', ['Parse and clean', 'Create passages', 'Validate observations']], ['magnifying-glass', 'Retrieval', ['BM25 and embeddings', 'Filter period/release', 'Rerank candidates']], ['wrench', 'Agent', ['Plan and assess evidence', 'Three typed tools', 'Calculate in code']], ['check-circle', 'Answer', ['Cited, validated output', 'Or clarify, decline, refuse']]];
+  const stages = [['database', 'Sources', ['Quarterly statistics', 'MOM reports and an MTI article']], ['file-text', 'Processing', ['Parse and clean', 'Create passages', 'Validate observations']], ['magnifying-glass', 'Retrieval', ['BM25 and embeddings', 'Filter period/release', 'Rerank candidates']], ['wrench', 'Agent', ['Plan and assess evidence', 'Series lookup through MCP', 'Search and calculate in code']], ['check-circle', 'Answer', ['Cited, validated output', 'Or clarify, decline, refuse']]];
   const row = el('div', 'g17-row');
   stages.forEach(([icon, name, lines], i) => {
     if (i) { const arrow = el('div', 'g17-arrow'); arrow.append(ico('arrow-right')); row.append(arrow); }
     const box = el('div', 'g17-stage'); box.style.setProperty('--i', String(i));
     const head = el('div', 'g12-head'); head.append(ico(icon), el('h3', '', name));
     const ul = el('ul'); lines.forEach(t => ul.append(el('li', '', t)));
-    box.append(head, ul); row.append(box);
+    box.append(head, ul);
+    if (name === 'Agent') {
+      const mcp = el('div', 'g17-mcp');
+      mcp.append(ico('path'), el('strong', '', 'MCP server'), el('span', 'g17-mcp-sub', 'Read-only statistics'));
+      withTip(mcp, 'The live agent uses an MCP client and a local statistics server. Only series lookups cross this process boundary. The server validates the call and returns typed rows; report search and calculation stay in process.', 'is-up');
+      box.append(mcp);
+    }
+    row.append(box);
   });
   const bars = el('div', 'g17-bars');
   bars.style.setProperty('grid-template-columns', 'repeat(3, minmax(0, 1fr))');
-  [['shield', 'Guardrails', 'Retrieved text is untrusted. Tools are read-only and calls are bounded.'], ['chart-line', 'Evaluation', 'Development and fresh cases, human review and attack tests.'], ['path', 'MCP', 'The live app fetches statistics through an MCP server and client. The accuracy evaluations called the same functions directly.']].forEach(([icon, name, text]) => {
+  [['shield', 'Guardrails', 'Retrieved text is untrusted. Tools are read-only and calls are bounded.'], ['chart-line', 'Evaluation', 'Development and fresh cases, human review and attack tests.'], ['path', 'MCP', 'Model Context Protocol: a read-only statistics server with tools to call, catalogue resources to read and a comparison prompt to choose.']].forEach(([icon, name, text]) => {
     const bar = el('div', 'g17-bar'); bar.append(ico(icon), el('strong', '', name), el('span', '', text)); bars.append(bar);
   });
   wrap.append(row, bars);
@@ -795,7 +842,7 @@ export function modelChoice(m) {
     const costCell = el('div', 'mc-cell is-cost'); const ctrack = el('div', 'mc-track'); const cbar = el('div', 'mc-bar'); cbar.style.setProperty('--w', `${Math.round(Math.min(x.cost_per_case_usd / 0.01, 1) * 100)}%`); ctrack.append(cbar);
     costCell.append(ctrack, el('span', 'mc-val num', `$${x.cost_per_case_usd.toFixed(5)}`));
     row.append(el('span', 'mc-name', name), stack, falseCell, costCell);
-    withTip(row, `${name}: ${right} of ${n} right (${fmt.pct(x.behavior_accuracy)}); declined on ${over} of ${x.n_answer_cases} questions that had an answer (${fmt.pct(x.over_abstention_rate)}); false answer on ${bad} of ${x.n_nonanswer_cases} that should not be answered (${fmt.pct(x.false_answer_rate)}); ${other} other status errors; $${x.cost_per_case_usd.toFixed(5)} per question. 30 development questions, one run.`, 'is-up');
+    withTip(row, `${name}: ${right} of ${n} right (${fmt.pct(x.behavior_accuracy)}); over-abstention ${over} of ${x.n_answer_cases} answerable (${fmt.pct(x.over_abstention_rate)}); false answers ${bad} of ${x.n_nonanswer_cases} non-answerable (${fmt.pct(x.false_answer_rate)}); ${other} other status errors; $${x.cost_per_case_usd.toFixed(5)} per question. 30 development questions, one run.`, 'is-up');
     wrap.append(row);
   });
   return wrap;
@@ -838,8 +885,9 @@ export function reviewStreams() {
 
 /** Threat-run results for the four configurations shown: gpt-6-luna from the final-code run (corpus v3) and gpt-4.1-mini from the earlier matched run, each with and without defences. Read from the report data. */
 export function threatRuns(m) {
-  const row = (kind, name) => (kind === 'final' ? m.e2efixRow(name) : m.securityRow(name))?.metrics || null;
-  return [row('final', 'gpt-6-luna'), row('final', 'gpt-6-luna+naive'), row('earlier', 'gpt-4.1-mini'), row('earlier', 'gpt-4.1-mini+naive')];
+  const fresh = m.section('security').scorer_v2?.fresh?.rows || [];
+  const row = name => fresh.find(r => r.label === name)?.metrics || null;
+  return [row('gpt-6-luna'), row('gpt-6-luna+naive'), row('gpt-5.6-luna'), row('gpt-5.6-luna+naive')];
 }
 
 /** Attack, defence and result per category, with and without the defences. Segments are filled for each case passed. */
@@ -848,7 +896,7 @@ export function threatMatrix(m) {
   if (runs.some(r => !r?.by_category)) return null;
   const wrap = el('div', 'tm');
   const head = el('div', 'tm-row tm-head');
-  const models = el('span', 'tm-models'); models.append(el('span', '', 'gpt-6-luna (final run)'), el('span', '', 'gpt-4.1-mini (earlier run)'));
+  const models = el('span', 'tm-models'); models.append(el('span', '', 'gpt-6-luna (2 Nov)'), el('span', '', 'gpt-5.6-luna (2 Nov)'));
   head.append(el('span', '', 'Attack'), models);
   const sub = el('div', 'tm-row tm-head tm-sub');
   const cols = el('span', 'tm-models is-four');
@@ -857,13 +905,13 @@ export function threatMatrix(m) {
   wrap.append(head, sub);
   const rows = [
     ['Question injection and secret requests', 'Input flags; secret and prompt output checks.', 'direct_injection', ''],
-    ['Injection or false figure in a passage', 'Untrusted evidence cannot set instructions; figures are cross-checked against the statistics.', 'indirect_injection_passage', 'The one failure in the final run, with or without defences, is the planted false figure. gpt-5.6-luna scored 5 of 6 in both.'],
+    ['Injection or false figure in a passage', 'Untrusted evidence cannot set instructions; figures are cross-checked against the statistics.', 'indirect_injection_passage', 'The planted figure fails in all four configurations in the 2 Nov rerun, under both scorers. The naive gpt-6-luna arm also misses figure-conflict detection. The check is not shown stable.'],
     ['Sensitive data, credentials, PII', 'Refusal; no personal-data tool exists.', 'sensitive_data', ''],
     ['Unsupported or causal claim', 'Answer from cited evidence or decline.', 'unsupported_claims', ''],
     ['Unsafe tool use', 'Typed read-only tools with argument and call caps.', 'unsafe_tool_use', ''],
     ['Malicious or malformed MCP output', 'Allow-list, schema checks, size and time caps.', 'mcp_server_failure', '']
   ];
-  const who = ['gpt-6-luna', 'gpt-6-luna', 'gpt-4.1-mini', 'gpt-4.1-mini'];
+  const who = ['gpt-6-luna', 'gpt-6-luna', 'gpt-5.6-luna', 'gpt-5.6-luna'];
   rows.forEach(([attack, defence, key, extra], i) => {
     const n = runs[0].by_category[key]?.n;
     const row = el('div', 'tm-row'); row.style.setProperty('--i', String(i));
@@ -921,14 +969,14 @@ export const RESPONSIBLE_AI = 'Least privilege: three typed read-only tools, no 
 /** Beyond behaviour accuracy: claim support, citation, fact coverage, latency, cost and the weakest question type, read from the final development run and the baseline. */
 export function contentMetricsText(m) {
   const dev = finalFacts(m)?.sets.find(s => s.id === 'dev')?.models.find(x => x.model === 'gpt-6-luna');
-  const a3 = dev ? {metrics: dev.r3.metrics, strata: dev.r3.strata} : null, a1 = dev ? {metrics: dev.hy.metrics} : null;
+  const a3 = dev ? {metrics: dev.r3.first_run_metrics || dev.r3.metrics, strata: dev.r3.strata} : null, a1 = dev ? {metrics: dev.hy.first_run_metrics || dev.hy.metrics} : null;
   const x = a3?.metrics;
   if (!x) return 'The content metrics are not available in the report data.';
   const rate = key => (finite(x[key]?.rate) ? fmt.pct(x[key].rate) : 'not recorded');
   const strata = Object.entries(a3.strata || {}).filter(([, v]) => finite(v.behaviour_accuracy));
   const weak = strata.sort((p, q) => p[1].behaviour_accuracy - q[1].behaviour_accuracy)[0];
   const base = a1?.metrics;
-  return `Beyond behaviour accuracy, on the ${fmt.int(x.n_cases)} development questions in the final run, gpt-6-luna with filter then rerank: ${rate('claim_supported_rate')} of ${fmt.int(x.claims_judged)} claims were supported by their cited passage (an AI judge), the gold passage was cited in ${rate('gold_cited_any')} of answers that needed one, fact coverage was ${rate('fact_coverage')} and key-number recall ${rate('key_number_recall')}. Median ${x.latency_p50_s} s, 95th percentile ${x.latency_p95_s} s and ${fmt.money(x.cost_per_case_usd)} a question${base ? `, against ${base.latency_p50_s} s and ${fmt.money(base.cost_per_case_usd)} for hybrid` : ''}.${weak ? ` By question type: ${strata.map(([k, v]) => `${k.replace(/_/g, ' ')} ${fmt.pct(v.behaviour_accuracy)} of ${fmt.int(v.n)}`).join(', ')}.` : ''}`;
+  return `Beyond behaviour accuracy, on the ${fmt.int(x.n_cases)} development questions in the first final-system run (FIN, not the two-run mean), gpt-6-luna with filter then rerank: ${rate('claim_supported_rate')} of ${fmt.int(x.claims_judged)} claims were supported by their cited passage (an AI judge), the gold passage was cited in ${rate('gold_cited_any')} of answers that needed one, fact coverage was ${rate('fact_coverage')} and key-number recall ${rate('key_number_recall')}. Median ${x.latency_p50_s} s, 95th percentile ${x.latency_p95_s} s and ${fmt.money(x.cost_per_case_usd)} a question${base ? `, against ${base.latency_p50_s} s and ${fmt.money(base.cost_per_case_usd)} for hybrid` : ''}.${weak ? ` By question type: ${strata.map(([k, v]) => `${k.replace(/_/g, ' ')} ${fmt.pct(v.behaviour_accuracy)} of ${fmt.int(v.n)}`).join(', ')}.` : ''}`;
 }
 
 export function measureCards(m) {

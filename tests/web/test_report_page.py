@@ -98,7 +98,7 @@ def test_technical_panels_explain_methods_prompts_and_charts():
         assert excerpt in STORY, excerpt
     assert "24 development questions and reports hit@5 and hit@10" in STORY
     assert "128 development questions and hit@8" in STORY
-    assert "Both use corpus v1, but the case set and metric differ" in STORY
+    assert "ladder headline is now the corpus v3.1 rerun" in STORY
     assert "How to read this" in STORY and "Source: report data" in STORY
 
 

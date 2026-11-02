@@ -117,8 +117,8 @@ function ladderFigure(m) {
   const fig = figure({
     id: 'fig-ladder', title: `Filtering then reranking (R3) raised hit@8 from ${fmt.pct(L.R0['hit@8'])} to ${fmt.pct(best.value)} on ${m.ladder.n_cases} development cases`, wide: true, controls,
     takeaway: '', summary: '',
-    source: {data: 'report.json › retrieval.ladder.configs[R0..R3].{hit@3,hit@5,hit@8,hit@10,hit@8_ci95,mrr@10}', files: ['experiments/runs/dev-R-summary.json']},
-    note: `hit@k: a gold passage is inside the top k chunks. n=${m.ladder.n_cases} answerable development cases. Whiskers are 95% bootstrap intervals (hit@8 only). Labels are AI-drafted and an LLM also does the reranking, so R2 and R3 may be optimistic.`,
+    source: {data: 'report.json › retrieval.ladder.configs[R0..R3].{hit@3,hit@5,hit@8,hit@10,hit@8_ci95,mrr@10}', files: ['experiments/runs/dev-R-V31/summary.json']},
+    note: `hit@k: a gold passage is inside the top k chunks. n=${m.ladder.n_cases} answerable development text cases, current corpus v3.1 and gold v3.6. Frozen corpus-v1 history remains in the report data. Whiskers are 95% bootstrap intervals (hit@8 only). Labels are AI-drafted and an LLM also does the reranking, so R2 and R3 may be optimistic.`,
     table: () => ({caption: 'Retrieval ladder, development cases', columns: ['Config', 'hit@3', 'hit@5', 'hit@8', 'hit@10', 'hit@8 CI low', 'hit@8 CI high', 'MRR@10', 'Gold passages covered @8'], rows: all.map(r => [`${r.id} ${r.label}`, L[r.id]['hit@3'], L[r.id]['hit@5'], L[r.id]['hit@8'], L[r.id]['hit@10'], r.ci?.[0], r.ci?.[1], r.mrr, L[r.id]['gold_passage_coverage@8']])}),
     draw: (host, c) => dotPlot(host, c, {rows: [...main.map(mk), {group: true, label: 'Soft-boost weight, for sensitivity'}, ...extra.map(mk)], domain: [0, 1], axisTitle: `hit@${state.k}`, label: `hit@${state.k} by retrieval configuration`, rowH: c.compact ? 42 : 44})
   });
@@ -144,7 +144,7 @@ function sliderFigure(m) {
     id: 'fig-rank-shift', title: `R3 puts the first relevant chunk at rank 1 in ${after[0]} of ${after.reduce((a, b) => a + b, 0)} cases, up from ${before[0]} with R0`,
     takeaway: `No relevant chunk in the top 10: ${before[10]} cases with R0, ${after[10]} with R3.`,
     summary: `Rank of the first relevant chunk, counts of cases. Baseline: ${cats.map((k, i) => `${k}: ${before[i]}`).join(', ')}. Filter then rerank: ${cats.map((k, i) => `${k}: ${after[i]}`).join(', ')}.`,
-    source: {data: 'report.json › retrieval.ladder.first_relevant_rank_histogram[R0, R3]', files: ['experiments/runs/dev-R-summary.json']},
+    source: {data: 'report.json › retrieval.ladder.first_relevant_rank_histogram[R0, R3]', files: ['experiments/runs/dev-R-V31/summary.json']},
     note: 'Counts of the 128 development cases. "None" means no relevant chunk in the top 10. Drag the slider to fade the after state (green) in over the before state (grey).',
     controls: label,
     table: () => ({caption: 'First relevant rank, cases', columns: ['Rank', 'R0 hybrid', 'R3 filter then rerank'], rows: cats.map((k, i) => [k === 'miss' ? 'Not in top 10' : `Rank ${k}`, before[i], after[i]])}),
@@ -181,7 +181,7 @@ function familyHeat(m) {
     id: 'fig-retrieval-family', title: rev && rev0 ? `Revision-conflict questions gained most: hit@8 rose from ${fmt.pct(rev0['hit@8'], 1)} to ${fmt.pct(rev['hit@8'], 1)} with R3` : 'hit@8 by question family',
     takeaway: 'Strata are small; n is in each cell.',
     summary: rows.map(r => `${r.label}: ${r.cells.map((c, i) => `${cols[i]} ${c ? fmt.pct(c.value) : 'n/a'}`).join(', ')}`).join('. '),
-    source: {data: 'report.json › retrieval.ladder.configs[*].by_family_hit@8', files: ['experiments/runs/dev-R-summary.json']},
+    source: {data: 'report.json › retrieval.ladder.configs[*].by_family_hit@8', files: ['experiments/runs/dev-R-V31/summary.json']},
     table: () => ({caption: 'hit@8 by family', columns: ['Family', ...cols], rows: rows.map(r => [r.label, ...r.cells.map(c => c ? `${c.value} (n=${c.n})` : '')])}),
     draw: (host, c) => heatmap(host, c, {cols: cols.map(id => ({label: id})), rows, label: 'hit@8 by question family and configuration'})
   });
@@ -202,7 +202,7 @@ function hintFigure(m) {
     id: 'fig-hint', title: `With a period or release named, hit@8 rose from ${fmt.pct(h[0].value)} to ${fmt.pct(h[3].value)}; without one the baseline was already ${fmt.pct(nh[0].value)}`,
     takeaway: 'With no period named, the filter has nothing to act on.',
     summary: rows.map(r => `${r.label} (${r.sub}): ${r.points.map(p => `${p.label} ${fmt.pct(p.value)}`).join(', ')}`).join('. '),
-    source: {data: 'report.json › retrieval.ladder.configs[*].by_hint_hit@8', files: ['experiments/runs/dev-R-summary.json']},
+    source: {data: 'report.json › retrieval.ladder.configs[*].by_hint_hit@8', files: ['experiments/runs/dev-R-V31/summary.json']},
     table: () => ({caption: 'hit@8 by hint', columns: ['Group', ...ids], rows: rows.map(r => [`${r.label} (${r.sub})`, ...r.points.map(p => p.value)])}),
     draw: (host, c) => dumbbell(host, c, {rows, domain: [0.4, 1], format: v => fmt.pct(v, 0), label: 'hit@8 with and without a period hint'})
   });

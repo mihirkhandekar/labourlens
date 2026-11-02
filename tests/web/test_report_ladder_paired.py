@@ -57,7 +57,7 @@ def test_ladder_projection_keeps_numbers_and_drops_text():
                                          "gold_in_first8_context_passages": 0.41, "secret": "PRIVATE_TEXT"}],
         "first_relevant_rank_histogram": {"R0": {"0": 53, "1": 27}},
     }
-    ladder = _ladder(SyntheticArtifacts({"experiments/runs/dev-R-summary.json": summary}))
+    ladder = _ladder(SyntheticArtifacts({"experiments/runs/dev-R-V31/summary.json": summary}))
     assert ladder["n_cases"] == 128
     assert ladder["configs"]["R0"]["hit@8"] == 0.57
     assert ladder["configs"]["R0"]["by_family_hit@8"]["factual_lookup"] == {"n": 50, "hit@8": 0.72}
@@ -71,6 +71,9 @@ def test_ladder_projection_keeps_numbers_and_drops_text():
 def test_committed_report_carries_ladder_and_paired():
     report = json.loads((REPO / "web/static/data/report.json").read_text())
     assert set(report["retrieval"]["ladder"]["configs"]) >= {"R0", "R1a", "R1b", "R2", "R3"}
+    assert report["retrieval"]["ladder"]["corpus_version"] == "v3.1"
+    assert report["retrieval"]["ladder"]["configs"]["R0"]["hit@8"] == 0.5391
+    assert report["retrieval"]["ladder_corpus_v1"]["configs"]["R0"]["hit@8"] == 0.5703
     current = report["evaluation"]["paired"][0]
     assert current["gold_version"] == "v3.5" and current["n"] == 31
     assert current["models"]["gpt-6-luna"]["ci95"][0] == 0.0
@@ -131,3 +134,20 @@ def test_committed_report_keeps_x2_and_e2efix_separate_from_registered_entries()
     assert report["evaluation"]["paired"][0]["gold_version"] == "v3.5"
     raw = json.dumps(report)
     assert "verdicts.jsonl" not in raw and "judgements.json" not in raw
+
+
+def test_current_served_chain_and_threat_reruns_are_separate_numeric_blocks():
+    report = json.loads((REPO / "web/static/data/report.json").read_text())
+    chain = report["serving"]["chain"]
+    assert len(chain["rows"]) == 6
+    mcp = [row for row in chain["rows"] if row["route"] == "mcp-on"]
+    assert all(row["metrics"]["all"]["n"] == 65 and row["metrics"]["gold"]["n"] == 51 for row in mcp)
+    assert all(row["metrics"]["all"]["behavior_accuracy"] == 0.908 for row in mcp)
+    assert chain["paired"]["direct-on"]["gpt-6-luna"]["paired_difference"] == 0
+    v2 = report["security"]["scorer_v2"]
+    assert set(v2) == {"original", "postfix", "e2efix", "fresh"}
+    assert all(block["diagnostic_only"] for key, block in v2.items() if key != "fresh")
+    assert not v2["fresh"]["diagnostic_only"]
+    assert len(v2["fresh"]["rows"]) == 4
+    assert all(row["metrics"]["passed"] == 35 for row in v2["fresh"]["rows"])
+    assert "verdicts.jsonl" not in json.dumps(v2)

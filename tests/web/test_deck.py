@@ -247,7 +247,7 @@ def test_method_detail_is_in_popovers_and_notes_not_in_boxes():
     assert ".has-tip:focus" in css and ".deck-tip" in css
     for needle in ("k1=1.5, b=0.75", "text-embedding-3-large", "reciprocal rank fusion, c=60", "ranks top 30 candidates, returns up to 10"):
         assert needle in main or needle in graphics, needle
-    assert "not the 70.8% on the previous slide" in main and "24 cases" in main and "128" in main
+    assert "re-ran retrieval on the current build" in main and "24-question screen" in main and "128" in main
 
 
 def test_title_slide_has_no_graphic_and_structure_labels_are_plain():
@@ -286,32 +286,33 @@ def test_model_choice_is_read_from_the_screen_metrics():
     assert luna56["behavior_accuracy"] > luna["behavior_accuracy"] and luna56["false_answer_rate"] == 0.0
     main = _slides_main_section()
     assert "no false answers at the lowest cost" in main and "not a ranking" in main and "fresh questions" in main
-    assert "I would choose gpt-5.6-luna" in main
+    assert "ties at 89.7% for both models" in main and "costs about 60% as much" in main and "not because it is more accurate" in main
 
 
 def test_mcp_slide_states_where_mcp_sits():
     graphics = (STATIC / "presentation" / "graphics.js").read_text()
     block = graphics.split("export function mcpMap", 1)[1].split("return wrap;", 1)[0]
-    for needle in ("Direct calls", "Through MCP", "get_statistic", "labourlens://sources", "compare_quarters", "17 parts", "10 hostile-server cases", "One agent question over MCP", "${lat.direct} ms and ${lat.mcp} ms", "No measured gain"):
+    for needle in ("Model Context Protocol", "Live agent", "MCP client", "MCP server", "get_statistic", "labourlens://sources", "compare_quarters", "10 hostile-server cases", "${lat.direct} ms direct, ${lat.mcp} ms over MCP", "outputSchema", "stdio", "No third-party host"):
         assert needle in block, needle
     main = _slides_main_section()
-    assert "The live app reaches statistics through MCP. Every accuracy evaluation called the same functions directly" in main
-    assert "Through MCP, the live web app" in block and "Direct calls, the accuracy evaluations" in block
+    assert "full served chain on 65 cases" in main and "no observed loss against direct calls" in main and "not the full final evaluation" in main
+    assert "['MCP server\\nseries only', false]" in graphics or "['MCP server\\nseries only', false]".replace("\n", "\\n") in graphics
+    assert "step('wrench', 'MCP client'" in graphics and "step('path', 'MCP server'" in graphics and "Row returned to the client" in graphics
 
 
 def test_threat_slide_reads_counts_from_the_report_data_and_labels_runs():
     graphics = (STATIC / "presentation" / "graphics.js").read_text()
     block = graphics.split("export function threatMatrix", 1)[1].split("return wrap;", 1)[0]
-    assert "threatRuns(m)" in block and "(final run)" in block and "(earlier run)" in block
+    assert "threatRuns(m)" in block and "gpt-6-luna (2 Nov)" in block and "gpt-5.6-luna (2 Nov)" in block
     assert "With defences" in block and "Without defences" in block
-    assert "e2efixRow" in graphics and "securityRow" in graphics
+    assert "scorer_v2?.fresh?.rows" in graphics
     main = _slides_main_section()
-    assert "threatRuns(m)" in main and "no defence effect for the stronger models" in main
+    assert "35/36 in all four configurations" in main and "31 Oct run scored 36/36" in main
 
 
 def test_workbench_slide_names_the_live_only_steps():
     main = _slides_main_section()
-    assert "a small-talk reply, a scope check and a rewrite of follow-up questions" in main and "The experiments did not use them" in main
+    assert "small-talk replies, a scope check and follow-up rewrites" in main and "65-case sample measures the served chain" in main
 
 
 def test_workbench_qr_has_a_quiet_zone():
@@ -361,7 +362,7 @@ def test_build_row_reads_the_final_evaluation_and_the_headline_numbers_come_from
     final = report["final_evaluation"]
     assert [s["id"] for s in final["splits"]] == ["dev", "registered", "fresh"]
     rerun = next(row["rerun"] for row in report["corpus_builds"]["rows"] if row.get("current"))
-    assert "final evaluation ran on this build" in rerun and "one run per arm" in rerun
+    assert "final evaluation ran on this build" in rerun and "two runs per arm" in rerun
     dev = next(s for s in final["splits"] if s["id"] == "dev")
     r3 = next(a for a in dev["arms"] if a["arm"] == "r3" and a["model"] == "gpt-6-luna")
     assert f"{r3['metrics']['behaviour_accuracy']['rate'] * 100:.1f}%" in rerun
@@ -380,8 +381,11 @@ def test_final_evaluation_has_both_models_both_arms_and_paired_results():
         assert {(a["arm"], a["model"]) for a in split["arms"]} == {(a, m) for a in ("r3", "hybrid") for m in ("gpt-6-luna", "gpt-5.6-luna")}
         assert set(split["paired"]) == {"gpt-6-luna", "gpt-5.6-luna"}
         for entry in split["paired"].values():
-            assert entry["candidate_correct"] is not None and entry["baseline_correct"] is not None
-    assert all(row["runs_per_arm"] == 1 and row["corpus"] == "v3.1" for row in final["provenance_table"])
+            assert entry["interval"] is not None and "sign_agrees" in entry
+        for arm in split["arms"]:
+            assert arm["metrics"]["behaviour_accuracy"]["rate"] == (arm["runs"]["run1"] + arm["runs"]["run2"]) / 2
+            assert "first_run_metrics" in arm
+    assert all(row["runs_per_arm"] == 2 and row["corpus"] == "v3.1" for row in final["provenance_table"])
 
 
 def test_mcp_wording_is_exact():
@@ -389,3 +393,14 @@ def test_mcp_wording_is_exact():
     assert "another protocol version" not in mcp and "unexpected version string" in mcp and "client default is 8 s" in mcp
     slides = (STATIC / "presentation" / "slides.js").read_text(encoding="utf-8")
     assert "advertised input schemas" in slides and "fixed in code" in slides and "2025-11-25" in slides
+
+
+def test_report_processing_path_matches_the_runtime_and_discloses_table_limits():
+    graphics = (STATIC / "presentation" / "graphics.js").read_text(encoding="utf-8")
+    block = graphics.split("export function flattening(m)", 1)[1].split("return wrap;", 1)[0]
+    for item in ("Source report", "Parse layout", "Passages", "Merge chunks", "Keyword index", "Embedding vectors", "Hybrid search", "table_unreliable", "merge200", "3,072", "float32", "cache.npz", "source_passage_ids"):
+        assert item in block, item
+    assert "corpus.passages" in block and "corpus.chunks" in block
+    assert "does not turn this report table into a trusted row chunk" in block
+    assert "no publisher or observation-period field" in block
+    assert "visual: flattening(m)" in (STATIC / "presentation" / "slides.js").read_text(encoding="utf-8")

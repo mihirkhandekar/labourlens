@@ -13,7 +13,7 @@ const CHECKS = {
 
 function diagramFigure() {
   const boxes = [
-    {id: 'agent', title: 'Agent', sub: 'plans and answers', text: 'In the live app, get_series goes through the MCP client (get_statistic only). The accuracy evaluations called statistics directly.'},
+    {id: 'agent', title: 'Agent', sub: 'plans and answers', text: 'In the live app, get_series goes through the MCP client (get_statistic only). The full final evaluations called statistics directly; a separate 65-case sample measures this served route.'},
     {id: 'client', title: 'MCP client', sub: 'treats the server as untrusted', text: 'Allow-listed launch, minimal environment, name and version checks, tool allow-list, input and output schemas, deadlines, size caps, typed result validation, and quarantine of instruction-like content.'},
     {id: 'server', title: 'MCP server', sub: '9 tools, 2 resources, 1 prompt', text: 'labourlens-stats. Serves statistics and catalogue metadata only. MOM report text is excluded. Default transport is stdio; an optional loopback HTTP transport needs a bearer token.'},
     {id: 'store', title: 'Validated statistics', sub: 'observations and catalogue', text: 'The same validated observation table the agent uses. Rows carry observation identifiers.'}
@@ -93,7 +93,7 @@ function latencyFigures(m) {
   const names = {latency_p50_ms: 'Median per call', latency_p95_ms: 'Slowest 5% of calls'};
   const lat = figure({
     id: 'fig-mcp-latency', title: rows.length ? `MCP took ${p50.mcp} ms at the median per call against ${p50.direct} ms direct` : 'Direct call against MCP, latency per call',
-    takeaway: rows.length ? `Connecting once costs ${fmt.num(x.connection_seconds, 2)} s. The live app pays this once at startup; the accuracy evaluations used direct calls.` : 'No latency rows recorded.',
+    takeaway: rows.length ? `Connecting once costs ${fmt.num(x.connection_seconds, 2)} s. The live app pays this once at startup; the full final comparisons used direct calls; the separate served sample uses MCP.` : 'No latency rows recorded.',
     summary: rows.map(r => `${names[r.metric] || r.metric}: direct ${r.direct} ms, MCP ${r.mcp} ms`).join('. '),
     source: {data: 'report.json › mcp.rows[*].{direct,mcp} · mcp.metrics.connection_seconds', files: ['docs/mcp-demo-transcript.md §17']},
     note: 'Warm-session timings exclude the one-off connection (spawn, initialise, discovery).',
@@ -134,8 +134,8 @@ export function renderMcp(m, ctx) {
     title: p50 && x.compared_datasets != null ? `MCP output differed from direct calls on ${x.different_outputs} of ${x.compared_datasets} datasets, at ${p50.mcp} ms against ${p50.direct} ms per median call` : 'MCP server and client against direct calls',
     bullets: [
       `Server: ${TOOLS.length} read-only tools, 2 resources, 1 prompt. Statistics and catalogue only; no MOM report text.`,
-      `Client: treats the server as untrusted; ${(mcp.checks || []).length} scripted failure behaviours observed.`,
-      'Comparison: the same queries over the direct route and over MCP. The live app uses MCP for get_series; the accuracy evaluations used the direct route.',
+      `Client: treats the server as untrusted; ${(mcp.checks || []).length} client refusal behaviours observed.`,
+      'Comparison: the same queries over the direct route and over MCP. The live app uses MCP for get_series; a separate 65-case served sample scores 90.8% for both models, with no observed loss versus direct.',
       'Limit: a protocol demo on the cases tried, not an audit.'
     ]
   });
@@ -149,7 +149,7 @@ export function renderMcp(m, ctx) {
   const a = section(`${TOOLS.length} read-only tools and 2 resources behind a client that validates results`);
   a.append(stats, diagramFigure().root, catalogue());
   ch.body.append(a);
-  const b = section(`${(mcp.checks || []).length} failure behaviours observed against a hostile test server`, ['Scripted runs, one per behaviour.', 'Each is an observed result, not a general guarantee.']);
+  const b = section(`${(mcp.checks || []).length} failure behaviours observed against a hostile test server`, ['A recorded session of real calls in a fixed order, recorded 2 Nov 2026. The session has 17 steps and 6 client refusals; the threat suite adds 10 hostile-server cases.', 'Each is an observed result, not a general guarantee.']);
   b.append(checkCards(m));
   ch.body.append(b);
   const c = section(x.compared_datasets != null ? `MCP matched direct output on ${x.compared_datasets} datasets: ${x.identical_datasets} identical, ${x.matching_refusals} the same refusal` : 'MCP against a direct call');
