@@ -1,54 +1,97 @@
 {
-  "title": "Evidence first. Judgement stays human.",
-  "intro": "What LabourLens contributes today, what the results actually show, and what I would add before policy makers could rely on it.",
-  "contribution_intro": "The contribution is not a new model. It is a way of keeping a research answer connected to its evidence, its calculation and its limits.",
-  "contributions": [
-    {"title": "Answers with an evidence trail", "text": "Validated statistical records and source passages sit behind the answer, with claim citations and observation lineage for inspection.", "detail": "Numbers should come from validated tables or deterministic code. Citation checks establish mechanics, not that every claim is semantically supported."},
-    {"title": "The right quarter, the right release", "text": "Period and release filters narrow the evidence before reranking, keeping preliminary and final releases distinguishable.", "detail": "A later report can restate an earlier quarter. A hard period filter can still exclude useful evidence; conflict caveats do not guarantee that every revision is resolved."},
-    {"title": "Arithmetic outside the model", "text": "Typed, read-only tools retrieve series and calculate changes in code rather than asking the model to do the sums.", "detail": "Deterministic arithmetic can still use the wrong series or periods. Report-table arithmetic remains a weakness; the attempted tool extension failed its criteria and was not adopted."},
-    {"title": "An agent with boundaries", "text": "A bounded research graph uses typed state, read-only tools, stopping conditions and visible task traces, with abstention when evidence is missing.", "detail": "A working MCP server exposes evidence capabilities. The live route sends the statistics tool over MCP; all three tools over MCP is a measured option, not the live route."},
-    {"title": "Experiments that keep the losses", "text": "Pre-registered comparisons, frozen outputs, gold hashes and three question sets make the design decisions inspectable.", "detail": "Development questions shaped the system. The original test shares evidence with development; the fresh questions use different sources, but their outcomes are now known. Negative results stay in the record."},
-    {"title": "Defence in layers", "text": "Untrusted-text isolation, an ingestion scanner, constrained tools and attack tests reduce the authority given to retrieved text.", "detail": "The scanner is a warning layer, not a safety boundary. The attack suite is hand-written and shows no general defence effect; a planted false figure is not handled consistently across runs."}
+  "title": "Innovation assessment",
+  "scope": "LabourLens researches public Singapore labour statistics and reports for Q1 2024 to Q2 2026. Analysts inspect citations, records and tool calls before using an answer.",
+  "abstract": "Period filters and reranking select passages; typed read-only tools retrieve series and calculate changes. I measured retrieval, answer behaviour, runtime and attack responses. The next priorities are report-table arithmetic and independent evaluation.",
+  "approach": [
+    "Numbers come from validated tables or deterministic code; claims cite passages or records.",
+    "Period and release filters precede reranking; preliminary and final releases stay labelled.",
+    "A bounded agent uses typed read-only tools, including an MCP statistics server.",
+    "Evaluation uses fixed reference sets, retained negative results and an attack suite."
   ],
-  "roadmap_title": "From research tool to government workbench",
-  "roadmap_intro": "Six questions from the assessment shape this plan. Every addition below is a proposal, not a shipped feature. I assume public data only, an analyst in the decision loop and a government-approved deployment; none is evidence of production readiness.",
-  "roadmap": [
-    {"name": "Improve retrieval and answer quality", "purpose": "Fix missing numerical evidence before adding more model complexity.", "items": [
-      {"title": "Start with the observed failures", "why": "Current retrieval hit@8 rises from 0.539 to 0.969 on 128 development questions, but neither final test set demonstrates an answer-quality gain. Historical fresh-set numerical comparisons scored 0.214 (3 of 14); the attempted tool extension failed its criteria and was not adopted.", "status": "proposal"},
-      {"title": "Extract tables with verified definitions", "why": "Validate PDF table cells, units, populations and row/column lineage before making them calculable. Treat table_unreliable passages as insufficient evidence rather than letting a model infer the cells; test period restatements so a later report is not excluded by a hard period filter.", "status": "proposal"},
-      {"title": "Expand only after a quality gate", "why": "Add missing quarters, MOM, MTI and SingStat series and languages only with reviewed provenance, revision history and language-specific evaluation. Wider coverage is useful only if definitions and uncertainty remain visible.", "status": "proposal"}
-    ]},
-    {"name": "Detect and respond to change", "purpose": "Hold a release when changing evidence or behaviour causes an unexplained regression.", "items": [
-      {"title": "Version inputs and rerun the gate", "why": "Extend corpus fingerprints and gold-hash checks into release control: check schemas, missing quarters and revisions, then rerun evaluation on every corpus, prompt or model change. Retain the previous version and roll back on an unexplained regression.", "status": "proposal"},
-      {"title": "Watch retrieval, answers and providers", "why": "Track retrieval hit rate on reviewed probes, abstention, citation validity, grounded-number rate, latency and cost per question. Use a fixed embedding probe set, pin model versions where available and alert on provider changes; daily canaries would detect drift between releases.", "status": "proposal"},
-      {"title": "Watch researchers' changing needs", "why": "Sample minimised, pseudonymised audit logs and feedback for changing question families, clarification rates and unsupported requests. Analysts would review the shift before changing coverage; pseudonymisation does not remove all privacy risk.", "status": "proposal"}
-    ]},
-    {"name": "Support confidence and human review", "purpose": "Show evidence and disagreement, not an invented confidence probability.", "items": [
-      {"title": "Make each answer inspectable", "why": "Build on passage citations, observation lineage, abstention reasons, conflict flags, the evidence drawer and tool-call traces. Add table-row locators, side-by-side sources and evidence-coverage indicators, not hidden reasoning or a model self-rating.", "status": "proposal"},
-      {"title": "Turn feedback into reviewed cases", "why": "Existing feedback capture would feed an analyst queue: classify the failure, draft a regression case, adjudicate it and rerun one controlled change. Saved analyses, exportable cited briefings and revision alerts would preserve that trail for policy work.", "status": "proposal"},
-      {"title": "Check quality independently", "why": "Several reviewers would label before seeing AI suggestions, measure agreement and adjudicate disagreements. Add a second-family judge at full scale and repeated runs; today's AI-drafted gold, one reviewer and same-family main judge cannot establish independent accuracy.", "status": "proposal"}
-    ]},
-    {"name": "Manage privacy and third-party risk", "purpose": "Replace demo admission with accountable access and an approved processing boundary.", "items": [
-      {"title": "Clear rights and protect identities", "why": "Review data licences, report rights and publisher agreements, then replace shared demo access codes with government SSO and role-based source permissions. Set approved audit retention, restricted log access and pseudonymised records; use only public or approved synthetic data in this prototype.", "status": "proposal"},
-      {"title": "Approve hosting and model use", "why": "Data residency and private model endpoints require government approval; the current external model route is not an approved replacement. Provider data-use terms remain unverified. Review processing terms and keep a vendor exit plan with exportable evidence, a tested alternative endpoint and evaluation before switching.", "status": "proposal"},
-      {"title": "Keep untrusted content untrusted", "why": "Retain read-only tools, bounded calls and the MCP trust boundary; add an independently tested injection classifier, server allow-lists, incident ownership and recurring red-team checks. Scanner detections rose from 10 to 23 of 30, with 9 of 30 benign flags unchanged; it remains a warning layer.", "status": "proposal"},
-      {"title": "Fail safely, without fake services", "why": "On provider failure, return an explicit unavailable result or previously approved cached analysis, never an unvalidated model fallback. No live service on this page is mocked; hostile-server fixtures are synthetic tests, not government identity or hosting. Production replacements need approved SSO, private infrastructure and a reviewed provider contract.", "status": "proposal"}
-    ]},
-    {"name": "Control latency and cost", "purpose": "Keep the expensive steps only when their measured quality benefit justifies them.", "items": [
-      {"title": "Use the measured budget, not a promise", "why": "Primary development filter-then-rerank means are 14.35 s for run medians and $0.002845 per question; run p95 values are 35.4 s and 34.1 s. Costs are list-price estimates. All-three-tools MCP scored 0.877 versus 0.908 for the live statistics-only route, with median 14.3 versus 12.4 s and p95 51.4 versus 34.7 s: slower, no demonstrated gain, not live.", "status": "proposal"},
-      {"title": "Cache and route under quality tests", "why": "Retain embedding caches and test version-keyed retrieval or answer caches, filter-only routing and smaller models for triage or reranking. Cache invalidation must follow source revisions; cheaper routing must preserve citation support, numerical correctness and abstention behaviour.", "status": "proposal"},
-      {"title": "Set budgets and stop on overruns", "why": "Add per-question token, call, latency and cost budgets, p95 alerts and provider spending limits with named response owners. Proposed acceptance is p95 under 40 s and mean cost under $0.005 per question on the approved evaluation mix, with no quality regression; application reservations alone are not provider caps.", "status": "proposal"}
-    ]},
-    {"name": "Prioritise two measurable improvements", "purpose": "First make report figures usable; then establish an independent estimate of quality.", "items": [
-      {"title": "First: validated report-table arithmetic", "why": "Pre-register a single extraction-and-tool change. Use the known 14 fresh-set numerical questions as a regression set, not new-test evidence: target at least 0.50 accuracy versus the historical 0.214, no rise in all-question false-answer rate on a fixed paired suite, and unchanged definition/citation checks. Confirm on newly written blind numerical questions; reject the change if the safety or quality gate fails.", "status": "proposal"},
-      {"title": "Second: independent review and a blind set", "why": "Have at least three analysts independently label a stratified, newly written blind set before seeing AI outputs, then adjudicate. Target Fleiss' kappa at least 0.70 on behaviour labels and a 95% case-bootstrap headline accuracy interval no wider than 0.10; pre-register sampling and expand the sample if needed. Report disagreement, claim support, numerical correctness and run variance separately, without tuning on this set.", "status": "proposal"}
-    ]}
+  "sections": [
+    {
+      "id": "retrieval", "title": "Retrieval and answer quality",
+      "summary": "Validate report tables before adding retrieval complexity.",
+      "paragraphs": [
+        {"text": "Retrieval used 128 development text questions. Answer evaluation used 237 development, 31 original-test and 65 fresh-test questions, with two runs per arm. Behaviour accuracy measures answer, abstain, clarify or refuse status, not factual correctness.", "refs": ["retrieval", "final"]},
+        {"text": "Historical fresh-set numerical accuracy was 0.214 (3/14). The attempted tool extension failed its criteria and was rejected.", "refs": ["fresh", "tools"]}
+      ],
+      "tables": ["retrieval", "answers"],
+      "proposals": [
+        {"title": "Report-table extraction", "gap": "Tools cannot calculate reliably over report figures.", "measure": "Verify cells, units, population and row/column lineage; test paired numerical and false-answer rates.", "threshold": "Numerical regression accuracy at least 0.50; no rise in all-question false-answer rate; unchanged definition/citation checks.", "status": "proposal"},
+        {"title": "Period restatements and coverage", "gap": "Period filters miss later restatements; quarters, series and languages are incomplete.", "measure": "Test restatements; add reviewed MOM/MTI/SingStat series and language cases. Exclude table_unreliable cells from calculation.", "threshold": "No regression on definition, revision-conflict or citation cases before extending coverage.", "status": "proposal"}
+      ]
+    },
+    {
+      "id": "drift", "title": "Drift detection",
+      "summary": "Gate releases and monitor fixed probes.",
+      "paragraphs": [{"text": "Snapshots, corpus fingerprints and gold hashes record inputs.", "refs": ["system"]}],
+      "tables": [],
+      "proposals": [
+        {"title": "Release gates and probes", "gap": "Corpus, prompt, embedding and provider changes can alter answers.", "measure": "Check schemas, periods and revisions; rerun evaluation after every corpus/prompt/model change. Pin versions, alert on provider changes and probe embedding drift. Track hit rate, abstention, citation validity, grounded numbers, latency and cost.", "threshold": "Hold unexplained regressions; retain rollback versions. Detect seeded regressions within one daily probe cycle.", "status": "proposal"},
+        {"title": "Question-family review", "gap": "Researchers' requests can diverge from evaluation coverage.", "measure": "Sample minimised, pseudonymised logs and feedback by family, including clarification rates.", "threshold": "Review material shifts before changing coverage; derive alerts from an approved operating baseline.", "status": "proposal"}
+      ]
+    },
+    {
+      "id": "review", "title": "Provenance, explainability and review",
+      "summary": "Base confidence on evidence coverage and reviewer agreement.",
+      "paragraphs": [{"text": "Citations, observation lineage, abstention reasons, conflict flags, an evidence drawer and tool traces support inspection. Thumbs/comments link to the run's question, calls, answer and citations; no improvement loop consumes them.", "refs": ["system", "audit"]}],
+      "tables": [],
+      "proposals": [
+        {"title": "Evidence inspection and review", "gap": "Labels lack independent multi-reviewer validation.", "measure": "Add table-row locators, side-by-side sources and coverage/review indicators. Analysts label before AI suggestions, then adjudicate. Extend second-family judging and repeated runs. Preserve provenance in saved analyses, cited exports and revision alerts.", "threshold": "At least three reviewers; kappa at least 0.70; 95% accuracy interval width at most 0.10.", "status": "proposal"},
+        {"title": "Feedback review loop", "gap": "Stored votes do not currently produce reviewed tests.", "measure": "Review every thumbs-down and sample thumbs-up. Label evidence, number, period/population, abstention or style failures. Before fixing each confirmed failure, write a question with expected evidence for the next fresh set. Select one lever: filter/rerank, table extraction, planner prompt, validator or corpus gap. Change one thing; tune on development, report on fresh questions. Track weekly votes and abstention by family after corpus/prompt/model changes. Pseudonymise comments; limit retention.", "threshold": "Each confirmed failure has a pre-fix case and lever. No fine-tuning on votes, unreviewed votes as truth or thumbs-up prompt examples: these leak tests and reward fluent errors.", "status": "proposal"}
+      ]
+    },
+    {
+      "id": "security", "title": "Security, privacy and third-party risk",
+      "summary": "Require approved access, hosting, retention and model terms.",
+      "paragraphs": [{"text": "Tools are bounded and read-only; retrieved text is isolated and MCP responses validated. Scanner detections rose 10/30 to 23/30; benign flags stayed 9/30. Fresh attacks scored 35/36 across configurations.", "refs": ["scanner", "threat"]}],
+      "tables": [],
+      "proposals": [
+        {"title": "Access and processing controls", "gap": "Demo access and external model processing lack government approval.", "measure": "Clear licences, rights and publisher agreements. Add SSO/source roles; approve residency, private endpoints, retention and audit access. Review provider terms; retain exportable evidence and a tested vendor exit plan.", "threshold": "No sensitive deployment before approval. Provider failure returns unavailable or approved cached analysis, never an unvalidated fallback.", "status": "proposal"},
+        {"title": "Injection and MCP testing", "gap": "Pattern scanning lacks independent generalisation evidence.", "measure": "Retain least privilege and content isolation. Test a stronger classifier on independent paraphrases; maintain server allow-lists, incident owners and recurring red-team reviews.", "threshold": "Pass threat regressions without relaxing permissions; report misses and false positives.", "status": "proposal"}
+      ]
+    },
+    {
+      "id": "cost", "title": "Latency and cost",
+      "summary": "Accept cheaper routing only after quality checks.",
+      "paragraphs": [{"text": "All-tools MCP scored 0.877 (57/65) versus statistics-only 0.908 (59/65); median latency 14.3/12.4 s, p95 51.4/34.7 s. It was rejected.", "refs": ["final", "mcp"]}],
+      "tables": ["cost"],
+      "proposals": [
+        {"title": "Caches, routing and budgets", "gap": "Repeated context and optional calls consume latency and spend.", "measure": "Retain embedding caches; test revision-keyed retrieval/answer caches, filter-only routing and smaller triage/rerank models. Invalidate on revisions. Add token/call/cost budgets, p95 alerts and provider caps.", "threshold": "p95 below 40 s; mean cost below $0.005/question on an approved mix; no regression in citation support, numerical correctness or abstention.", "status": "proposal"}
+      ]
+    },
+    {
+      "id": "priorities", "title": "Priorities and measurement",
+      "summary": "Prioritise numerical evidence and independent evaluation.",
+      "paragraphs": [], "tables": [],
+      "proposals": [
+        {"title": "First: report-table arithmetic", "gap": "Historical numerical accuracy was 0.214; the previous tool change failed.", "measure": "Pre-register one extraction/tool change. Use 14 known cases for regression, then confirm on new blind numerical questions; compare paired false-answer rates and definition/citation checks.", "threshold": "Regression accuracy at least 0.50; no rise in all-question false-answer rate; unchanged definition/citation checks. Reject a failed gate.", "status": "proposal"},
+        {"title": "Second: independent review", "gap": "The label process cannot establish independent accuracy.", "measure": "Three analysts independently label a stratified blind set before AI suggestions, then adjudicate. Pre-register sampling; expand if needed; never tune on it. Report semantic support, numerical correctness and run variance separately.", "threshold": "Fleiss' kappa at least 0.70 on behaviour labels; headline 95% case-bootstrap accuracy interval width at most 0.10.", "status": "proposal"}
+      ]
+    }
   ],
-  "limits": [
-    "I would not call this production ready for government or a substitute for an analyst's judgement.",
-    "Gold was AI-drafted and reviewed by one person after AI pre-review and scoring, not independently labelled by several analysts.",
-    "The main judge is from the same model family. The three question sets are only partially independent, and neither final test set demonstrates a retrieval-driven answer-quality gain.",
-    "A citation is not proof of truth, a correct calculation is not proof of the right inputs, and a scanner pass is not proof of safety.",
-    "Rights clearance, provider data-use terms and the population basis of the employment series remain unverified."
+  "limitations": [
+    "Development shaped the design. Original-test evidence overlaps; fresh-test outcomes are known. Neither final test demonstrates a gain.",
+    "Gold was AI-drafted and reviewed by one person; the main judge is same-family. Two runs do not estimate variance.",
+    "Citations check mechanics; arithmetic can use wrong inputs. Scanner and attack results establish no general defence.",
+    "Full comparisons exclude web-only steps and MCP. Costs are list-price estimates. Monitoring, rollback and government readiness are untested."
+  ],
+  "components": [
+    {"component": "Identity", "current": "Shared access code.", "replacement": "Approved SSO/source roles."},
+    {"component": "Model processing", "current": "External route; residency/terms unverified.", "replacement": "Approved private endpoints and processing terms."},
+    {"component": "Data rights", "current": "Report rights, some licences and employment population basis unverified.", "replacement": "Publisher agreements, rights review and validated definitions."},
+    {"component": "Mocks", "current": "No live capability mocked; hostile-server fixtures are synthetic tests.", "replacement": "Real approved identity/hosting services."}
+  ],
+  "references": [
+    {"id": "retrieval", "label": "Current-corpus retrieval", "path": "docs/experiments/retrieval-v31-rerun.md"},
+    {"id": "final", "label": "Final evaluation", "path": "docs/evaluation-report.md"},
+    {"id": "fresh", "label": "Fresh-question errors", "path": "docs/experiments/m7-heldout-v2-result.md"},
+    {"id": "tools", "label": "Rejected tool extension", "path": "docs/experiments/m7-tool-fix.md"},
+    {"id": "system", "label": "System card", "path": "docs/system-card.md"},
+    {"id": "audit", "label": "Audit and feedback", "path": "docs/audit-and-logging.md"},
+    {"id": "scanner", "label": "Scanner experiment", "path": "docs/experiments/injection-scanner-v2.md"},
+    {"id": "threat", "label": "Threat experiment", "path": "docs/experiments/t-i06-scorer-v2-rule.md"},
+    {"id": "mcp", "label": "MCP comparison", "path": "docs/experiments/served-chain-mcp-all.md"}
   ]
 }

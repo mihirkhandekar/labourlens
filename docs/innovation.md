@@ -1,39 +1,57 @@
 # Innovation assessment
 
-**Scope and assumptions.** A plan for evolving LabourLens into a trusted research capability, not a claim of government readiness. I assume public or approved synthetic data, an analyst responsible for decisions and an approved government deployment. **MEASURED** means saved evidence; **PROPOSAL** means not built. Gold was AI-drafted, reviewed by one person after AI pre-review and scoring; the main judge is from the same model family. The three question sets are partially independent. Methods and intervals: [evaluation report](evaluation-report.md). The [site roadmap source](innovation-page.json) uses these same six headings.
+LabourLens researches public Singapore labour statistics and reports for Q1 2024 to Q2 2026. Analysts inspect citations, records and tool calls before using an answer.
 
-## Improve retrieval and answer quality
+**Abstract.** Period filters and reranking select passages; typed read-only tools retrieve series and calculate changes. I measured retrieval, answer behaviour, runtime and attack responses. The next priorities are report-table arithmetic and independent evaluation.
 
-**MEASURED:** current-corpus retrieval hit@8 is 0.969 versus hybrid 0.539 on 128 development text questions. Final primary-model development behaviour accuracy is 0.897 versus 0.827 on 237 questions, averaging two runs per arm. Neither final test set demonstrates a gain. Historical fresh-set numerical comparisons scored 0.214 (3/14), mostly because tools could not calculate over report figures; the attempted tool extension failed its criteria and was not adopted.
+## Current approach
 
-**PROPOSAL:** validate PDF table cells, units, populations and row/column lineage before deterministic calculation. Do not infer cells from `table_unreliable` passages. Test later reports restating earlier quarters, which hard period filters can miss. Expand quarters, MOM/MTI/SingStat series and languages only behind provenance and quality gates. Better extraction costs review effort; more retrieval or model complexity is not evidence of better answers.
+- Numbers come from validated tables or deterministic code; claims cite passages or records.
+- Period and release filters precede reranking; preliminary and final releases stay labelled.
+- A bounded agent uses typed read-only tools, including an MCP statistics server.
+- Evaluation uses fixed reference sets, retained negative results and an attack suite.
 
-## Detect and respond to change
+## Retrieval and answer quality
 
-**PROPOSAL:** extend existing corpus fingerprints, immutable snapshots and gold-hash checks into a release gate. Check schema, missing periods and revisions; rerun evaluation on every corpus, prompt or model change, retain the prior version and roll back unexplained regressions. Run daily canaries between releases.
+Hit@8 was 0.969 [0.938, 0.992] for filter then rerank versus 0.539 [0.453, 0.625] for hybrid (128 development text questions; [retrieval](experiments/retrieval-v31-rerun.md)). `gpt-6-luna` behaviour accuracy was 0.897 versus 0.827 (237 development questions, two-run means); difference +0.070 [0.036, 0.106] ([evaluation](evaluation-report.md)). Historical fresh-set numerical accuracy was 0.214 (3/14); the tool extension failed its criteria ([tools](experiments/m7-tool-fix.md)).
 
-Monitor retrieval hit rate on reviewed probes, abstention, citation validity, grounded-number rate, latency and cost per question. Use a fixed embedding probe set, pin model versions where available and alert on provider changes. Sample minimised, pseudonymised audit logs and feedback for changing question families, clarifications and unmet needs; have analysts review drift before changing coverage. This monitoring is not a service today; pseudonymisation does not eliminate privacy risk.
+**Proposal:** verify report-table cells, units, population and row/column lineage before calculation; exclude `table_unreliable` cells. Test period restatements. Add series, quarters and languages behind provenance and quality gates.
 
-## Support confidence and human review
+## Drift detection
 
-Passage citations, observation lineage, abstention reasons, conflict caveats, the evidence drawer, tool-call traces and feedback capture already support inspection. **PROPOSAL:** add table-row locators, side-by-side sources, evidence-coverage and review indicators, saved analyses, cited briefing exports and revision alerts. Confidence should describe evidence and disagreement, not a model self-rating presented as probability.
+**Proposal:** gate releases on schema, period and revision checks; rerun evaluation after every corpus, prompt or model change. Keep rollback versions, pin model versions, alert on provider changes and probe embedding drift.
 
-Route feedback into an analyst queue: classify the failure, draft a regression case, adjudicate, change one factor and rerun. Several reviewers should label before seeing AI suggestions, measure agreement and resolve differences. Extend the small second-family judge check to full scale and repeat runs to estimate variance. Review costs more, but today's single-reviewer and same-family-judge evidence cannot establish independent accuracy.
+Track hit rate, abstention, citation validity, grounded numbers, latency and cost daily, plus minimised, pseudonymised logs by question family. Set alert thresholds from an approved baseline; detect a seeded regression within one cycle. None of this runs today ([system card](system-card.md)).
 
-## Manage privacy and third-party risk
+## Provenance, explainability and review
 
-**PROPOSAL:** clear dataset licences, report rights and publisher agreements; replace shared demo codes with government SSO and role-based source permissions. Approve audit retention, restricted log access, minimisation and pseudonymisation. Data residency, private model endpoints and provider processing terms require approval; data-use terms remain unverified. Keep exportable evidence and a vendor exit plan, testing any alternative endpoint before switching. On failure, show unavailable or an approved cached analysis, not an unvalidated fallback.
+Citations, observation lineage, abstention reasons, conflict flags, an evidence drawer and tool traces support inspection. Thumbs and comments link to the run; nothing consumes them ([audit](audit-and-logging.md)).
 
-Retain untrusted-text isolation, bounded read-only tools and MCP response validation; add independently tested injection classification, server allow-lists, incident owners and recurring red-team checks. **MEASURED:** scanner detection improved 10/30 to 23/30, with benign flags unchanged at 9/30. Fresh attacks scored 35/36 across configurations, not a general defence effect. The scanner is a warning layer. No live service on the innovation page is mocked: hostile-server fixtures are synthetic tests, not government infrastructure. Production replacements require approved SSO, private hosting and a reviewed model contract. No confidential data should go to external services.
+**Proposal:** add table-row locators, side-by-side sources and review indicators. Several analysts label before AI suggestions, adjudicate and measure agreement; extend second-family judging.
 
-## Control latency and cost
+**Feedback loop proposal:** thumbs are triage, not labels. Review every thumbs-down and a sample of thumbs-up; label evidence, number, period/population, abstention or style failures. Before fixing a confirmed failure, write a test with expected evidence for the next fresh set. Pick one lever (filter/rerank, table extraction, planner prompt, validator or corpus gap); tune on development, report on fresh questions. Track weekly votes and abstention by family. Do not fine-tune on votes, trust unreviewed votes or use thumbs-up answers as prompts; that leaks tests and rewards fluent errors. Pseudonymise comments; limit retention.
 
-**MEASURED:** primary development filter-then-rerank mean cost is $0.002845 per question; the mean of run medians is 14.35 s, with p95 values 35.4 s and 34.1 s. Costs are saved-usage list-price estimates, not bills. All-three-tools MCP scored 0.877 versus 0.908 for the live statistics-only route; median 14.3 versus 12.4 s and p95 51.4 versus 34.7 s. It was slower with no demonstrated gain and is not live.
+## Security, privacy and third-party risk
 
-**PROPOSAL:** retain embedding caches; test version-keyed retrieval/answer caches, filter-only routing and smaller triage/rerank models against quality gates. Invalidate caches on revisions. Add token, call, latency and cost budgets, p95 alerts and provider limits. Target p95 below 40 s and mean cost below $0.005 on an approved mix, without quality regression. Cheaper routing trades quality risk for speed; application reservations are not provider spending caps.
+Tools are bounded and read-only; retrieved text is isolated; MCP responses are validated. Scanner detections rose 10/30 to 23/30 with benign flags unchanged at 9/30 ([scanner](experiments/injection-scanner-v2.md)). Fresh attacks scored 35/36 ([threats](experiments/t-i06-scorer-v2-rule.md)).
 
-## Prioritise two measurable improvements
+**Proposal:** clear licences and publisher agreements; replace shared codes with government SSO and source roles; approve residency, private endpoints, retention and audit access. Review provider terms; keep a tested vendor exit plan. On provider failure return unavailable, never an unvalidated fallback. Test a stronger injection classifier on independent paraphrases; keep server allow-lists and red-team reviews.
 
-**First, validated report-table arithmetic (PROPOSAL).** Pre-register one extraction/tool change. On the 14 known fresh-set numerical questions, now a regression set, target accuracy at least 0.50 versus historical 0.214, no rise in all-question false-answer rate on a fixed paired suite, and unchanged definition/citation checks. Confirm on newly written blind numerical questions; reject a failed safety or quality gate.
+## Latency and cost
 
-**Second, independent review and a blind set (PROPOSAL).** At least three analysts independently label a new stratified blind set before seeing AI outputs, then adjudicate. Target Fleiss' kappa at least 0.70 for behaviour labels and a 95% case-bootstrap headline accuracy interval no wider than 0.10; pre-register sampling and expand if needed. Report claim support, numerical correctness, disagreements and run variance separately. Never tune on that set. These thresholds are proposed acceptance criteria, not results; trustworthiness takes priority over fluent output.
+Filter then rerank on development: median 14.35 s (mean of runs), p95 35.4 and 34.1 s, $0.002845 per question. All-tools MCP scored 0.877 (57/65) versus 0.908 (59/65) for statistics-only, median 14.3 versus 12.4 s, p95 51.4 versus 34.7 s; it was rejected ([comparison](experiments/served-chain-mcp-all.md)).
+
+**Proposal:** test revision-keyed caches, filter-only routing and smaller triage/rerank models; add token and cost budgets, p95 alerts and provider caps. Target p95 below 40 s and mean cost below $0.005, with no regression in citations, numbers or abstention.
+
+## Priorities and measurement
+
+1. **Report-table arithmetic.** Pre-register one change; regress on the 14 known cases, then confirm on new blind questions. Threshold: accuracy at least 0.50, no rise in false-answer rate, unchanged citation checks.
+2. **Independent review.** Three analysts label a stratified blind set before AI suggestions, then adjudicate; never tune on it. Threshold: Fleiss' kappa at least 0.70; 95% accuracy interval width at most 0.10.
+
+## Limitations and threats to validity
+
+Development shaped the design; original-test evidence overlaps and fresh-test outcomes are known. Neither final test demonstrates a gain. Gold was AI-drafted and reviewed by one person; the main judge is same-family. Two runs do not estimate variance. Citations check mechanics; arithmetic can use wrong inputs. Scanner and attack results establish no general defence. Full comparisons exclude web-only steps and MCP. Costs are list-price estimates. Government readiness is untested.
+
+## Mocked or unverified components and their production replacements
+
+No live capability is mocked; hostile-server fixtures are synthetic tests. Shared codes need approved SSO; the external model route needs approved private endpoints; report rights, some licences and the employment population basis need publisher agreements and validated definitions.

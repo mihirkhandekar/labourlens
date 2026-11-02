@@ -74,7 +74,7 @@ export function buildBands(report) {
   eda.visual.append(pair);
   eda.visual.append(note('How to read these figures: quarterly retrenchment observations and release-stage revisions from published statistics. Each point is a reported value, not an estimate from a sample; no confidence interval is shown. Source: report data and source register.'));
   const ex = m.excerpts || {};
-  eda.node.append(more('How the data were checked, with the real rows',
+  eda.node.append(more('View examples',
     group('Four unemployment rates, real rows', excerptTable(ex.unemployment)),
     group('Retrenchment counts, real rows', excerptTable(ex.retrenchments)),
     group('Same quarter in each release, real numbers', excerptTable(ex.revisions)),
@@ -124,7 +124,7 @@ export function buildBands(report) {
   });
   hard.visual.append(stage(safe('Data challenges', () => hardParts(m)), {design: 1100}));
   hard.visual.append(sub('Success criteria and failure modes', 'Most measures had no pass mark set in advance. I report them with intervals and set none afterwards. Each row names a failure mode, the control that covers it and how it was measured.', stage(safe('Failure modes', () => failureModes(m)))));
-  hard.node.append(more('Eight real problems and what I did about each', stage(safe('Data challenges', challengeGrid))));
+  hard.node.append(more('Problems faced', stage(safe('Data challenges', challengeGrid))));
   bands.hard = hard;
 
   // ---------- document build ----------

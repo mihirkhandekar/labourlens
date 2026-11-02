@@ -13,6 +13,7 @@ from labourlens.agent import experiments as agx
 from labourlens.agent.graph import AgentConfig
 from labourlens.agent.served import make_runner, make_shared
 from labourlens.agent.contextualise import singapore_today
+from labourlens.agent.tools import BASE_TOOLS
 from labourlens.evaluation.provenance import file_hash, sampling_block, snapshot
 from labourlens.retrieval.evaluate import load_cases
 
@@ -168,7 +169,7 @@ def select_cases(cases, limit=None, case_ids=None):
     return cases
 
 
-ROUTES = {"mcp": "mcp_stats", "direct": "direct", "mcp-all": "mcp_all"}  # served-exp route -> agent.served transport
+ROUTES = {"mcp": "mcp_stats", "direct": "direct", "mcp-all": "mcp_all", "no-stats": "direct"}  # experiment-only route -> transport
 REFERENCE_ARM = "served-dev-S65-mcp-on"  # an existing arm whose measured cost per case anchors the --dry-run estimate
 
 
@@ -203,9 +204,12 @@ def run(split="dev", gold_path=None, pairs=None, tag=None, retrieval="r3", route
     if any(c.get("fixture_date", today) != today for c in cases):
         raise ValueError("Registered probes have a different Singapore date; use a newly registered fixture")
     transport = ROUTES[route]
+    tool_metadata = {"tool_list_filtered": route == "no-stats",
+                     "offered_tools": [name for name in BASE_TOOLS if route != "no-stats" or name != "get_series"]}
     if dry_run:  # no directory, no MCP server, no model, no embedding call: validation and a printed plan only
         plan = {"dry_run": True, "experiment": exp, "route": route, "tool_transport": transport, "retrieval": retrieval, "web_steps": web_steps,
                 "models": {label: dict(zip(("planner", "answer"), agx.MODEL_PAIRS[label])) for label in labels}, "cases": len(cases),
+                **tool_metadata,
                 "families": {f: sum(c.get("family") == f for c in cases) for f in sorted({c.get("family") for c in cases if c.get("family")})},
                 "probes": sum(bool(c.get("not_part_of_gold")) for c in cases), "outputs": [str(pub), str(raw)],
                 "paid_calls_per_case": "smalltalk (no model), contextualise, triage, planner x1-3, rerank x1 per search, answer x1-2; query embedding only for uncached queries",
@@ -217,9 +221,11 @@ def run(split="dev", gold_path=None, pairs=None, tag=None, retrieval="r3", route
     raw.mkdir(parents=True, exist_ok=False)
     started = time.perf_counter()
     shared = make_shared(transport)
+    if route == "no-stats":
+        shared.disabled_tools = frozenset({"get_series"})
     startup = time.perf_counter() - started
     backend = getattr(shared, "stats_backend", None)
-    if route != "direct":
+    if transport != "direct":
         shared.stats_backend = RecordingBackend(backend)
     else:
         shared.stats = RecordingBackend(shared.stats)
@@ -229,6 +235,7 @@ def run(split="dev", gold_path=None, pairs=None, tag=None, retrieval="r3", route
             cfg = AgentConfig(planner_model=pm, answer_model=am, retrieval=retrieval, run_deadline_s=80.0)
             provenance = {**snapshot(cfg.key(), len(cases), len(available), gold_path=gold_path), "sampling": sampling_block(cfg),
                           "served": {"route": route, "tool_transport": transport, "web_steps": web_steps, "order": list(STEPS), "singapore_date": today,
+                                     **tool_metadata,
                                      "shared_startup_seconds": startup, "case_ids": [c["case_id"] for c in cases],
                                      "contextualise_model": "gpt-6-luna", "triage_model": "gpt-6-luna",
                                      "contextualise_prompt_sha256": file_hash(paths.ROOT / "prompts/contextualise_v1.md"),

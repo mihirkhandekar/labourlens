@@ -29,9 +29,9 @@ def test_full_viewport_conversation_and_context_tabs_exist():
 
 
 def test_examples_cover_requested_question_types_and_enter_behavior():
-    for label in ("Factual lookup", "Comparison", "Cross-source", "Revision conflict", "Ambiguity", "Adversarial and safety"):
+    for label in ("Lookup", "Comparison", "Cross-source", "Preliminary and final", "Causal limits", "Injection resistance"):
         assert label in SCRIPT
-    assert "examplesToggle" in SCRIPT
+    assert "wb-start-examples" in SCRIPT
     assert "event.key === 'Enter' && !event.shiftKey" in SCRIPT
     assert "event.key === 'Enter' && (event.ctrlKey || event.metaKey)" not in SCRIPT
     assert "Clear chat" in SCRIPT

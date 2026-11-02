@@ -201,7 +201,7 @@ export function toolLegend() {
   wrap.append(head);
   [
     ['search_reports', 'Question → passages', 'App', 'Find report evidence', 'The app searches the passage index and embeddings, filters period and release and reranks. The planner never sees passage text: its catalogue and evidence summaries are separate from the answer writer’s cited passages.'],
-    ['get_series', 'Series + period → rows', 'MCP server', 'Share validated statistics', 'The agent calls get_series; the MCP client calls server tool get_statistic with source, periods and dimension. Output rows keep definitions and provenance. The served sample measured equal accuracy to direct calls: no observed loss and no demonstrated gain, not proof of equivalence.'],
+    ['get_series', 'Series + period → rows', 'MCP server (blue outline)', 'Share validated statistics', 'Blue outlines mark the MCP boundary, not a different kind of evidence. The agent calls get_series; the MCP client calls server tool get_statistic with source, periods and dimension. Output rows keep definitions and provenance. The served sample measured equal accuracy to direct calls: no observed loss and no demonstrated gain, not proof of equivalence.'],
     ['calculate_change', 'Two returned rows → change', 'App, plain code', 'Do not invent figures', 'Deterministic Decimal arithmetic checks compatible units and definitions on previously returned observations. It computes an exact difference or percentage change. It cannot invent input values; the base tool does not calculate from report-only figures.']
   ].forEach(([tool, exchange, where, why, detail]) => {
     const row = el('div', 'ex-tools-row'); row.setAttribute('role', 'row');
@@ -303,6 +303,21 @@ export function staircase(items, {domain = [0, 1], note} = {}) {
   return box;
 }
 
+/** Retrieval success and complete-answer behaviour use different denominators. */
+export function metricComparison(m) {
+  const dev = finalFacts(m)?.sets.find(s => s.id === 'dev');
+  const answer = dev?.models.find(r => r.model === 'gpt-6-luna');
+  const wrap = el('div', 'metric-key');
+  [
+    ['Retrieval hit@8', m.ladder?.configs?.R3?.['hit@8'], `${m.ladder?.n_cases != null ? fmt.int(m.ladder.n_cases) : 'not recorded'} development text questions`, 'The needed passage appears in the first eight retrieved chunks. This tests retrieval, without generating an answer.'],
+    ['End-to-end accuracy', answer?.r3rate, `${dev?.n != null ? fmt.int(dev.n) : 'not recorded'} development questions, mean of 2 runs`, 'Behaviour accuracy: the complete answer, abstention, clarification or refusal matches the expected behaviour. Citation and number checks also run. This is not retrieval hit rate, and not an answerable-only score.']
+  ].forEach(([label, value, sample, detail]) => {
+    const cell = el('div', 'metric-key-cell');
+    const head = el('p'); head.append(el('strong', '', label), el('span', 'num', fmt.pct(value)));
+    cell.append(head, el('p', '', sample)); wrap.append(withTip(cell, detail, 'is-up'));
+  });
+  return wrap;
+}
 /** G5: retrieval staircase from the ladder. Each bar has a popover with the method and a worked example, using the ladder's own counts. */
 export function retrievalStaircase(m) {
   const C = m.ladder?.configs, hist = m.ladder?.first_relevant_rank_histogram, hints = m.ladder?.hint_coverage, n = m.ladder?.n_cases;
@@ -512,7 +527,7 @@ export function finalComparison(m, {includeFresh = true, showDifference = true} 
   if (!includeFresh) cols.classList.add('is-two');
   sets.forEach((s, i) => {
     const col = el('div', 'fc-col'); col.style.setProperty('--i', String(i));
-    col.append(el('h3', 'fc-title', s.label), el('p', 'fc-sub num', `${fmt.int(s.n)} questions`));
+    col.append(el('h3', 'fc-title', s.label), el('p', 'fc-sub num', `${fmt.int(s.n)} questions · behaviour accuracy · mean of 2 runs`));
     const tipLines = [`${s.label}, ${fmt.int(s.n)} questions. ${s.note}`];
     s.models.forEach(({model, r3, hy, r3rate, hyrate, p}) => {
       const block = el('div', 'fc-model'); block.append(el('p', 'fc-name', model));
@@ -531,6 +546,7 @@ export function finalComparison(m, {includeFresh = true, showDifference = true} 
     cols.append(col);
   });
   wrap.append(cols);
+  if (!includeFresh) wrap.append(metricComparison(m));
   const items = ladderItems(m);
   if (items) {
     const steps = el('div', 'fc-steps');
@@ -608,9 +624,9 @@ export function agentLoop() {
   node(25, 240, 230, 110, ['Planner', 'Choose actions'], 'Input validation runs first. The planner sees the question, dataset catalogue, prior evidence summaries and tool errors. The base tool names and argument schemas are fixed in code: search_reports, get_series and calculate_change. It may request up to three calls in a round or stop gathering. It does not discover or choose freely among all MCP server tools.', 'is-planner');
   node(345, 35, 480, 130, ['Search reports', 'BM25 + embeddings', 'Filter, rerank, return passages'], LOOP_TIPS[1]);
   node(345, 205, 480, 120, ['Structured statistics', ''], LOOP_TIPS[2], 'is-mcp');
-  svg.append(svgEl('path', {d: 'M605 250 V315', transform: `scale(1 ${yScale})`, class: 'owner-agent-boundary'}));
-  label(470, 302, 'Client →', 'is-mcp-detail');
-  label(715, 302, 'MCP server → rows', 'is-mcp-detail');
+  svg.append(svgEl('path', {d: 'M585 250 V315', transform: `scale(1 ${yScale})`, class: 'owner-agent-boundary'}));
+  label(465, 302, 'Client →', 'is-mcp-detail');
+  label(705, 302, 'MCP server → rows', 'is-mcp-detail');
   node(345, 380, 480, 90, ['Calculate in code', 'Returned observations → change'], 'calculate_change uses deterministic Decimal arithmetic on previously collected, compatible observation rows. The model does not calculate the change. It runs in the app in the live system. The separately configured v2 experiment adds passage-value calculation; it is not part of the base three-tool choice.');
   node(345, 515, 480, 70, ['Stop gathering'], 'The planner can stop without calling a tool. A stop decision, exhausted round budget or exhausted call budget proceeds to final evidence assessment. It does not bypass evidence or answer validation.');
   node(925, 235, 210, 120, ['Review', 'evidence'], 'Logical evidence checkpoint: after tool execution, the planner receives evidence summaries and errors for another bounded round. In the actual graph, execute_tool routes back to plan_research while budget remains. When gathering stops, assess_evidence annotates source conflicts and coverage notes before generation. assess_evidence itself does not loop back.', 'is-guard');
@@ -621,6 +637,7 @@ export function agentLoop() {
   label(1500, 140, '1 repair');
   wrap.append(svg); svgTips(wrap, parts);
   const bounds = el('div', 'owner-agent-bounds');
+  bounds.setAttribute('role', 'group'); bounds.setAttribute('aria-label', 'Agent execution limits');
   [
     ['2 rounds', 'Base configuration: at most two evidence-gathering rounds, at most three planned calls per round and six calls overall. The optional v2 configuration grants one bonus round after an unknown-dimension error, without increasing the six-call cap.'],
     ['6 calls', 'Six planned tool calls across the run. Calls execute sequentially within each round. A tool invocation uses isolated evidence state; only an on-time completion is committed.'],
@@ -756,18 +773,18 @@ function toolFixCase(m) {
 export function toolFixFlow(m) {
   const wrap = el('div', 'owner-calc');
   const steps = el('div', 'owner-calc-steps');
-  [['Report figures', 'A fourth tool checks two quoted figures before doing arithmetic.'], ['Recovery', 'A wrong dimension returns valid labels, with one bonus round.'], ['Test before adoption', 'The bundle failed its pre-declared development rules.']].forEach(([head, tip]) => {
+  [['New capability', 'Calculate from two figures quoted in reports, not only dataset rows.'], ['Recovery added', 'Return valid dimension labels after an error, with one extra round.'], ['Decision rule', 'Do not adopt if false answers exceed the pre-set limit.']].forEach(([head, tip]) => {
     const step = el('div', 'owner-calc-step'); step.append(el('h3', '', head)); withTip(step, tip, 'is-down'); steps.append(step);
   });
   wrap.append(steps);
   const criteria = m?.section('evaluation')?.tool_set_v2?.dev_x3?.criteria || {};
   const result = el('div', 'owner-calc-result');
   const first = criteria['gpt-6-luna'];
-  result.append(el('h3', '', 'False-answer cases rose'), el('p', 'owner-calc-change', first ? `${first.x2.false_answers} → ${first.x3.false_answers}` : 'Not recorded'), el('p', '', first ? `For both models. The limit was ${first.criteria['2_false_answers'].threshold}.` : 'The development result is unavailable.'));
+  result.append(el('h3', '', 'False-answer cases, of 237 development questions'), el('p', 'owner-calc-change', first ? `${first.x2.false_answers} → ${first.x3.false_answers}` : 'Not recorded'), el('p', '', first ? `The pre-set limit was ${first.criteria['2_false_answers'].threshold}. One run, gpt-6-luna.` : 'The development result is unavailable.'));
   withTip(result, toolFixWhy(m) || 'The pre-declared development rule failed.', 'is-table is-up');
   const example = toolFixCase(m); if (example) withTip(steps.firstChild, example, 'is-table is-down');
   if (Object.keys(criteria).length) wrap.append(result);
-  wrap.append(el('p', 'owner-calc-verdict', 'I did not adopt the change.'));
+  wrap.append(el('p', 'owner-calc-verdict', 'Rejected: more false answers, despite the new capability.'));
   return wrap;
 }
 
@@ -821,7 +838,7 @@ export function mcpMap(m) {
     if (all && on && direct && pairedAll && pairedOn) {
       const acc = v => v.toFixed(3).slice(1), count = v => `${Math.round(v * 65)}/65`, sec = v => `${v.toFixed(1)} s`;
       const diff = p => `${p.paired_difference >= 0 ? '+' : '-'}${Math.abs(p.paired_difference).toFixed(3)}`;
-      wrap.append(tipped('span', 'owner-mcp-evidence is-tested', `Tested: all three tools over MCP. Slower (slowest 5% about ${Math.round(all.latency_p95_s)} s against ${Math.round(on.latency_p95_s)} s), no accuracy gain (${acc(all.behavior_accuracy)} against ${acc(on.behavior_accuracy)}; 65 questions, one run). Not used live.`,
+      wrap.append(tipped('span', 'owner-mcp-evidence is-tested', `Tested: all three tools over MCP. Slower (slowest 5% about ${Math.round(all.latency_p95_s)} s against ${Math.round(on.latency_p95_s)} s), no accuracy gain (behaviour accuracy ${acc(all.behavior_accuracy)} against ${acc(on.behavior_accuracy)}; 65 questions, one run). Not used live.`,
         `Tested variant: search_reports, the statistics lookup and calculation all ran in the MCP server; the app kept planning, query embedding, reranking, evidence checks and the answer. Behaviour accuracy ${acc(all.behavior_accuracy)} (${count(all.behavior_accuracy)}) against ${acc(on.behavior_accuracy)} (${count(on.behavior_accuracy)}) for the statistics-only route and ${acc(direct.behavior_accuracy)} (${count(direct.behavior_accuracy)}) for direct calls. Paired difference ${diff(pairedAll)} against direct (${pairedAll.better} better, ${pairedAll.worse} worse, exact p ${pairedAll.mcnemar_exact_p}) and ${diff(pairedOn)} against the statistics-only route (${pairedOn.better} better, ${pairedOn.worse} worse, exact p ${pairedOn.mcnemar_exact_p}); neither is a demonstrated difference. False answers ${pairedAll.guardrails.false_answers.candidate} against ${pairedAll.guardrails.false_answers.baseline}; operational failures ${all.operational_failures}. Median time ${sec(all.latency_p50_s)} against ${sec(on.latency_p50_s)} (statistics-only) and ${sec(direct.latency_p50_s)} (direct). Slowest 5% ${sec(all.latency_p95_s)} against ${sec(on.latency_p95_s)} and ${sec(direct.latency_p95_s)}, which exceeds the limit set in advance (43.3 s, 25% above the statistics-only route). Cost about $${all.cost_per_case_usd.toFixed(4)} per question, unchanged. ${all.mcp_call_count} MCP calls, ${all.mcp_error_count} tool errors. One run, same judge family, hand-written probes, not independent evidence. The tested server adds search_reports, calculate_change, calculate_from_text_values and describe_corpus on top of the nine statistics tools; the server holds the passages, the BM25 index and the stored vectors, and never receives the API key.`));
     }
   }
@@ -912,7 +929,7 @@ export function pairPanels(panels) {
 /** The system, its stages and the three cross-cutting bars: guardrails, evaluation and the MCP interface. */
 export function architectureDiagram() {
   const wrap = el('div', 'g17');
-  const stages = [['database', 'Sources', ['Quarterly statistics', 'MOM reports and an MTI article']], ['file-text', 'Processing', ['Parse and clean', 'Create passages', 'Validate observations']], ['magnifying-glass', 'Report-search tool', ['BM25 + dense embeddings', 'Filter period and release', 'Rerank and return chunks']], ['wrench', 'Agent loop', ['Planner chooses among 3 tools', 'get_series uses MCP live', 'calculate_change in code']], ['check-circle', 'Answer', ['Cited, validated output', 'Or clarify, decline, refuse']]];
+  const stages = [['database', 'Sources', ['Quarterly statistics', 'MOM reports and an MTI article']], ['file-text', 'Processing', ['Validate observations', 'Parse report passages', 'Build report indexes']], ['wrench', 'Agent loop', ['Planner chooses a tool', 'Reviews returned evidence', 'Calls again or stops']], ['magnifying-glass', 'Three tools', ['search_reports: passages', 'get_series: rows over MCP', 'calculate_change: exact change']], ['check-circle', 'Answer', ['Cited, validated output', 'Or clarify, decline, refuse']]];
   const row = el('div', 'g17-row');
   stages.forEach(([icon, name, lines], i) => {
     if (i) { const arrow = el('div', 'g17-arrow'); arrow.append(ico('arrow-right')); row.append(arrow); }
@@ -920,18 +937,17 @@ export function architectureDiagram() {
     const head = el('div', 'g12-head'); head.append(ico(icon), el('h3', '', name));
     const ul = el('ul'); lines.forEach(t => ul.append(el('li', '', t)));
     box.append(head, ul);
-    if (name === 'Agent loop') {
+    if (name === 'Three tools') {
       const mcp = el('div', 'g17-mcp');
-      mcp.append(ico('path'), el('strong', '', 'MCP server'), el('span', 'g17-mcp-sub', 'Read-only statistics'));
+      mcp.append(ico('path'), el('strong', '', 'get_series → get_statistic'), el('span', 'g17-mcp-sub', 'MCP client → statistics server'));
       withTip(mcp, 'The live agent uses an MCP client and a local statistics server. Only series lookups cross this process boundary. The server validates the call and returns typed rows; report search and calculation stay in process.', 'is-up');
       box.append(mcp);
     }
     row.append(box);
   });
-  const flowNote = el('p', 'g17-flow-note', 'The agent calls report search during its loop. Returned chunks go to the agent evidence check; retrieval is not a pre-step.');
+  const flowNote = el('p', 'g17-flow-note', 'The agent calls search_reports, get_series or calculate_change inside its loop. Evidence returns to the agent before it calls again or answers.');
   const bars = el('div', 'g17-bars');
-  bars.style.setProperty('grid-template-columns', 'repeat(3, minmax(0, 1fr))');
-  [['shield', 'Guardrails', 'Retrieved text is untrusted. Tools are read-only and calls are bounded.'], ['chart-line', 'Evaluation', 'Development and fresh cases, human review and attack tests.'], ['path', 'MCP', 'Model Context Protocol: a read-only statistics server with tools to call, catalogue resources to read and a comparison prompt to choose.']].forEach(([icon, name, text]) => {
+  [['shield', 'Guardrails', 'Retrieved text is untrusted. Tools are read-only and calls are bounded.'], ['chart-line', 'Evaluation', 'Development and fresh cases, human review and attack tests.']].forEach(([icon, name, text]) => {
     const bar = el('div', 'g17-bar'); bar.append(ico(icon), el('strong', '', name), el('span', '', text)); bars.append(bar);
   });
   wrap.append(row, flowNote, bars);

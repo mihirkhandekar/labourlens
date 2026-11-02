@@ -217,6 +217,10 @@ dialog.modal[open] { animation: rise 520ms var(--ease) both; }
 dialog.modal::backdrop, dialog.drawer::backdrop { background: color-mix(in srgb, var(--ink) 38%, transparent); }
 .modal-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
 .modal-head h2 { font-size: 1.6rem; }
+.dialog-actions { display: flex; flex-wrap: wrap; justify-content: flex-end; align-items: center; gap: 12px; }
+.dialog-actions .btn { min-height: 44px; padding: 10px 18px; border-radius: var(--r-sm); box-shadow: none; }
+.btn-destructive { border-color: var(--bad); color: var(--bad); background: transparent; }
+.btn-destructive:hover { background: color-mix(in srgb, var(--bad) 9%, var(--surface)); }
 .shortcut-list { display: grid; grid-template-columns: auto 1fr; gap: 14px 22px; margin: 0; align-items: center; }
 .shortcut-list dt { display: flex; gap: 4px; align-items: center; white-space: nowrap; }
 .shortcut-list dd { margin: 0; color: var(--ink-2); font-size: 0.92rem; }

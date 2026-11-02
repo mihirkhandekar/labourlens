@@ -38,6 +38,7 @@ MAX_ROWS = 40
 ADJUSTMENTS = ("seasonally_adjusted", "not_adjusted", "unspecified", "not_applicable")
 CHANGE_KINDS = ("difference", "percent_change")
 TOOL_SETS = ("base", "v2")
+BASE_TOOLS = ("search_reports", "get_series", "calculate_change")
 TEXT_UNITS = ("percent", "persons", "dollars", "ratio", "vacancies")
 TEXT_CALC_ARGS = ("passage_a", "value_a", "unit_a", "basis_a", "period_a", "passage_b", "value_b", "unit_b", "basis_b", "period_b", "kind")
 TEXT_CALC_REQUIRED = ("passage_a", "value_a", "unit_a", "basis_a", "period_a", "passage_b", "value_b", "unit_b", "basis_b", "period_b")
@@ -82,6 +83,13 @@ def _transported(fn):
             res.transport = "mcp"
         return res
     return wrapper
+
+
+def offered_tools(shared, tool_set: str = "base") -> list[str]:
+    """Runtime tool catalogue; experiments may disable tools without changing frozen prompts or live transports."""
+    names = BASE_TOOLS + (("calculate_from_text_values",) if tool_set == "v2" else ())
+    disabled = getattr(shared, "disabled_tools", frozenset())
+    return [name for name in names if name not in disabled]
 
 
 class StatsData:
@@ -526,6 +534,8 @@ class Tools:
     @_transported
     def get_series(self, source_id: str, period_from: str, period_to: str, dimension: str | None = None,
                    adjustment: str | None = None, indicator_id: str | None = None) -> ToolResult:
+        if "get_series" in getattr(self.sh, "disabled_tools", frozenset()):
+            return ToolResult(False, message="tool get_series is disabled for this experiment", error_kind="disabled_tool")
         backend = self.sh.stats_backend or self.sh.stats
         self._mcp_used = self.sh.stats_backend is not None
         token = CALLER_SESSION.set(self.caller)  # this runs in a pool thread that does not inherit the request context; re-attach the run's visitor tag

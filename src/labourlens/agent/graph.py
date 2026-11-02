@@ -25,7 +25,7 @@ from langgraph.graph import END, START, StateGraph
 
 from labourlens import paths, prices
 from labourlens.agent.tools import (TEXT_CALC_ARGS, TEXT_CALC_REQUIRED, TEXT_UNITS, TOOL_SETS, Shared, ToolResult, Tools, TransientToolError,
-                                    figure_snippets, is_unknown_dimension)
+                                    figure_snippets, is_unknown_dimension, offered_tools)
 from labourlens.answer import context as cx
 from labourlens.answer import llm, validate
 from labourlens.answer.pipeline import PROMPTS, _parse, load_prompt
@@ -101,6 +101,7 @@ def plan_schema(shared: Shared, tool_set: str = "base") -> dict:
             item["properties"].update({f"passage_{side}": _nullable("string"), f"value_{side}": _nullable("string"), f"unit_{side}": enum(TEXT_UNITS),
                                        f"basis_{side}": _nullable("string"), f"period_{side}": _nullable("string")})
         item["required"] = item["required"] + [a for a in TEXT_CALC_ARGS if a != "kind"]
+    base["properties"]["calls"]["items"]["properties"]["tool"]["enum"] = offered_tools(shared, tool_set)
     return base
 
 
@@ -146,6 +147,11 @@ def build_graph(shared: Shared, tools: Tools, cfg: AgentConfig):
     tools.retrieval, tools.tool_timeout_s, tools.tool_set = cfg.retrieval, cfg.tool_timeout_s, cfg.tool_set
     planner_sys, planner_user, _ = load_prompt(cfg.planner_prompt)
     planner_sys = planner_sys.format(catalogue=shared.catalogue_text())
+    disabled = getattr(shared, "disabled_tools", frozenset())
+    if disabled:
+        # Filter only the runtime catalogue bullets; frozen prompt files and all other instructions stay unchanged.
+        planner_sys = "\n".join(line for line in planner_sys.split("\n")
+                                if not any(line.startswith(f"- {name}(") for name in disabled))
     answer_sys, answer_user, _ = load_prompt(cfg.answer_prompt)
     pool = ThreadPoolExecutor(max_workers=2)
     schema = plan_schema(shared) if cfg.tool_set == "base" else plan_schema(shared, cfg.tool_set)
@@ -224,6 +230,8 @@ def build_graph(shared: Shared, tools: Tools, cfg: AgentConfig):
 
     def _run_one(call: dict) -> tuple[ToolResult | None, str | None]:
         name = call["tool"]
+        if name in getattr(shared, "disabled_tools", frozenset()):
+            return ToolResult(False, message=f"tool {name} is disabled for this experiment", error_kind="disabled_tool"), None
         if name == "calculate_from_text_values" and cfg.tool_set != "v2":
             return ToolResult(False, message="tool not available", error_kind="invalid_arguments"), None
         missing = [a for a in REQUIRED[name] if call.get(a) in (None, "")]

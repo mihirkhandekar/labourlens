@@ -203,7 +203,8 @@ def test_reading_reports_keeps_current_build_facts():
 def test_calculation_fix_slide_states_the_failure_and_the_graphics_exist():
     main = _slides_main_section()
     assert main.count("Fixing the calculation gap") == 1
-    assert "failed its adoption rule" in main and "optimistic" in main and "not adopted" in main.lower()
+    calculation = main.split("title: 'Fixing the calculation gap'", 1)[1].split("\n  });", 1)[0]
+    assert "Two criteria failed" in calculation and "optimistic diagnostic" in calculation and "not adopted" in calculation
     assert "calculate_from_text_values" in main and ("do not establish why" in main or "does not establish why" in main)
     graphics = (STATIC / "presentation" / "graphics.js").read_text()
     for name in ("threeAnswers", "twoSources", "buildTimeline", "flattening", "retrievalStaircase", "agentLoop", "evidenceTrace", "experimentStaircase", "costBars", "toolFixBars", "toolFixFlow", "assignmentBrief", "challengeGrid", "modelChoice", "architectureDiagram", "myProject", "hardParts", "failureModes", "keywordVsMeaning", "reviewStreams", "threatMatrix", "threatRuns", "mcpMap", "workbenchShot", "conceptGrid", "measureCards", "plantedFlow", "buildProcess", "excerptTable", "rowsAffordance", "withTip"):
@@ -265,7 +266,7 @@ def test_method_detail_is_in_popovers_and_notes_not_in_boxes():
     assert ".has-tip:focus" in css and ".deck-tip" in css
     for needle in ("k1=1.5, b=0.75", "text-embedding-3-large", "reciprocal rank fusion, c=60", "ranks the top 30 and returns up to 10"):
         assert needle in main or needle in graphics, needle
-    assert "Hybrid baseline: 53.9% hit@8" in main and "Same 128 report-answerable development questions" in main
+    assert "hybrid baseline: 53.9% hit@8" in main and "Same 128 report-answerable development questions" in main
 
 
 def test_title_slide_has_no_graphic_and_structure_labels_are_plain():
@@ -511,7 +512,7 @@ def test_tool_legend_lists_the_three_tools_with_inputs_outputs_where_and_why():
         assert f"['{tool}'," in block, tool
     for exchange in ("Question → passages", "Series + period → rows", "Two returned rows → change"):
         assert exchange in block, exchange
-    for where in ("'App'", "'MCP server'", "'App, plain code'"):
+    for where in ("'App'", "'MCP server (blue outline)'", "'App, plain code'"):
         assert where in block, where
     assert "not proof of equivalence" in block and "the base tool does not calculate from report-only figures" in block
 
@@ -528,3 +529,93 @@ def test_report_numeric_contract_pins_total_and_in_scope_observations():
     metrics = report["sources"]["metrics"]
     assert metrics["observations"] == 52020 and metrics["in_scope_observations"] == 4300, metrics
     assert metrics["by_type"]["dataset_csv"] == 36
+
+
+def test_metric_comparison_is_reused_and_keeps_retrieval_separate_from_answer_quality():
+    graphics = (STATIC / "presentation" / "graphics.js").read_text(encoding="utf-8")
+    block = _graphics_block(graphics, "export function metricComparison(m)", "export function retrievalStaircase(m)")
+    for label in ("Retrieval hit@8", "End-to-end accuracy", "development text questions", "development questions, mean of 2 runs"):
+        assert label in block, label
+    for field in ("m.ladder?.configs?.R3?.['hit@8']", "m.ladder?.n_cases", "answer?.r3rate", "dev?.n"):
+        assert field in block, "comparison values and denominators must come from the report model"
+    assert "without generating an answer" in block
+    assert "abstention, clarification or refusal" in block and "not an answerable-only score" in block
+    main = _slides_main_section()
+    retrieval = main.split("title: 'Does filtering help?'", 1)[1].split("\n  });", 1)[0]
+    assert "metricComparison(m)" in retrieval and "not answer accuracy" in retrieval
+    final = _graphics_block(graphics, "export function finalComparison", "export function agentLoop")
+    assert "if (!includeFresh) wrap.append(metricComparison(m))" in final
+    ladder = main.split("title: 'Experiment ladder'", 1)[1].split("\n  });", 1)[0]
+    assert "includeFresh: false" in ladder and "not retrieval hit@8" in ladder
+    report = json.loads((STATIC / "data" / "report.json").read_text(encoding="utf-8"))
+    retrieval_data = report["retrieval"]["ladder"]
+    assert retrieval_data["n_cases"] == 128
+    assert round(retrieval_data["configs"]["R3"]["hit@8"] * 100, 1) == 96.9
+    dev = next(s for s in report["final_evaluation"]["splits"] if s["id"] == "dev")
+    answer = next(a for a in dev["arms"] if a["model"] == "gpt-6-luna" and a["arm"] == "r3")
+    assert dev["n"] == 237 and round(answer["runs"]["mean"] * 100, 1) == 89.7
+
+
+def test_early_screen_uses_the_same_right_colour_for_every_model():
+    css = (STATIC / "css" / "presentation.css").read_text(encoding="utf-8")
+    right_rules = [(selector, body) for selector, body in re.findall(r"([^{}]+)\{([^{}]*)\}", css)
+                   if ".mc-seg.is-right" in selector]
+    assert right_rules
+    for selector, body in right_rules:
+        assert "is-chosen" not in selector, "right behaviour must not change colour by selected model"
+        assert re.search(r"background\s*:\s*var\(--accent\)", body)
+        assert not re.search(r"opacity\s*:", body)
+
+
+def test_report_expanders_use_the_owner_labels():
+    story = (STATIC / "js" / "report-story.js").read_text(encoding="utf-8")
+    assert "more('View examples'" in story
+    assert "more('Problems faced'" in story
+
+
+def test_architecture_names_all_three_tools_without_a_redundant_mcp_bar():
+    graphics = (STATIC / "presentation" / "graphics.js").read_text(encoding="utf-8")
+    block = _graphics_block(graphics, "export function architectureDiagram()", "export function myProject")
+    for tool in ("search_reports", "get_series", "calculate_change"):
+        assert tool in block, tool
+    assert "Only series lookups cross this process boundary" in block
+    bars = block.split("const bars =", 1)[1]
+    assert "'Guardrails'" in bars and "'Evaluation'" in bars
+    assert not re.search(r"\['[^']+', 'MCP',", bars)
+
+
+def test_pipeline_steps_have_no_top_border_and_agent_limits_are_aligned():
+    css = (STATIC / "css" / "presentation.css").read_text(encoding="utf-8")
+    pipeline = re.search(r"\.rpipeline-node,\s*\.rpipeline-index\s*\{([^}]*)\}", css).group(1)
+    assert not re.search(r"border(?:-top)?\s*:", pipeline)
+    assert ".rpipeline-index { border-top-color" not in css
+    bounds = re.search(r"\.owner-agent \.owner-agent-bounds\s*\{([^}]*)\}", css).group(1)
+    assert "display: grid" in bounds and "repeat(4, minmax(0, 1fr))" in bounds
+    graphics = (STATIC / "presentation" / "graphics.js").read_text(encoding="utf-8")
+    loop = _graphics_block(graphics, "export function agentLoop()", "return wrap;")
+    for label in ("2 rounds", "6 calls", "10 s per call", "Bounded retries"):
+        assert label in loop, label
+    legend = _graphics_block(graphics, "export function toolLegend()", "export function buildTimeline(m)")
+    assert "MCP server (blue outline)" in legend and "Blue outlines mark the MCP boundary" in legend
+    assert re.search(r"\.owner-agent \.owner-agent-node\.is-mcp rect\s*\{[^}]*stroke:\s*var\(--c3\)", css)
+
+
+def test_retained_calculation_experiment_explains_its_rejection_once():
+    main = _slides_main_section()
+    assert [row[0] for row in _flow_rows()][25] == "Fixing the calculation gap"
+    slide = main.split("title: 'Fixing the calculation gap'", 1)[1].split("\n  });", 1)[0]
+    assert "visual: toolFixFlow(m)" in slide and "toolFixBars(m)" not in slide
+    assert "kept the change out of the live system" in slide
+    graphics = (STATIC / "presentation" / "graphics.js").read_text(encoding="utf-8")
+    block = _graphics_block(graphics, "export function toolFixFlow(m)", "return wrap;")
+    for label in ("New capability", "Recovery added", "Decision rule", "False-answer cases, of 237 development questions", "The pre-set limit was", "Rejected: more false answers"):
+        assert label in block, label
+    assert "first.x2.false_answers" in block and "first.x3.false_answers" in block
+    assert "first.criteria['2_false_answers'].threshold" in block
+    assert "Same 65 questions" not in block and "For both models" not in block
+    report = json.loads((STATIC / "data" / "report.json").read_text(encoding="utf-8"))
+    result = report["evaluation"]["tool_set_v2"]["dev_x3"]["criteria"]["gpt-6-luna"]
+    assert (result["x2"]["n"], result["x3"]["n"]) == (237, 237)
+    assert (result["x2"]["false_answers"], result["x3"]["false_answers"]) == (6, 7)
+    assert result["criteria"]["2_false_answers"]["threshold"] == 6
+    assert result["criteria"]["2_false_answers"]["pass"] is False and result["all_pass"] is False

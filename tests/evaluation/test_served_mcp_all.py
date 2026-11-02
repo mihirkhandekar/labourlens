@@ -46,7 +46,7 @@ def test_dry_run_estimates_cost_from_a_measured_arm_or_says_it_cannot(sandbox):
 
 
 def test_routes_map_to_the_agent_transports_and_unknown_routes_are_refused(sandbox):
-    assert sx.ROUTES == {"mcp": "mcp_stats", "direct": "direct", "mcp-all": "mcp_all"} and set(sx.ROUTES.values()) == set(served.TRANSPORTS)
+    assert sx.ROUTES == {"mcp": "mcp_stats", "direct": "direct", "mcp-all": "mcp_all", "no-stats": "direct"} and set(sx.ROUTES.values()) == set(served.TRANSPORTS)
     with pytest.raises(ValueError):
         sx.run(gold_path=SAMPLE, tag="X", route="mcp-everything", dry_run=True)
 
@@ -103,13 +103,13 @@ def test_the_new_arm_records_every_tool_call_and_its_transport(sandbox, monkeypa
     assert len(served_block["statistics_calls"]) == 1
 
 
-@pytest.mark.parametrize("route,transport", [("mcp-all", "mcp_all"), ("mcp", "mcp_stats"), ("direct", "direct")])
+@pytest.mark.parametrize("route,transport", [("mcp-all", "mcp_all"), ("mcp", "mcp_stats"), ("direct", "direct"), ("no-stats", "direct")])
 def test_every_new_run_records_its_tool_transport_in_provenance(sandbox, monkeypatch, route, transport):
     seen = []
 
     def make_shared(t):
         seen.append(t)
-        return SimpleNamespace(stats_backend=None if route == "direct" else StubBackend(), stats=SimpleNamespace(), corpus={})
+        return SimpleNamespace(stats_backend=None if transport == "direct" else StubBackend(), stats=SimpleNamespace(), corpus={})
 
     case = {"case_id": "S-1", "question": "q", "family": "factual_lookup", "expected_behavior": "answer", "evidence_text": [], "evidence_data": [],
             "reference_facts": [], "calculation": None}
@@ -123,3 +123,6 @@ def test_every_new_run_records_its_tool_transport_in_provenance(sandbox, monkeyp
     sx.run(pairs=["gpt-6-luna"], tag="T", route=route)
     meta = json.loads((paths.EXPERIMENTS / "runs/served-dev-T/gpt-6-luna.metrics.json").read_text())
     assert seen == [transport] and meta["provenance"]["served"]["tool_transport"] == transport and meta["provenance"]["served"]["route"] == route
+    assert meta["provenance"]["served"]["tool_list_filtered"] == (route == "no-stats")
+    assert meta["provenance"]["served"]["offered_tools"] == (["search_reports", "calculate_change"] if route == "no-stats"
+                                                           else ["search_reports", "get_series", "calculate_change"])

@@ -942,7 +942,6 @@ th[aria-sort="descending"] .pr-sort::after { content: " \2193"; }
 .mc-legend { display: flex; flex-wrap: wrap; gap: 6px 22px; font-size: 20px; color: var(--ink-2); } .mc-key { display: inline-flex; align-items: center; gap: 8px; } .mc-key i { display: inline-block; width: 16px; height: 16px; border-radius: 4px; }
 .mc-stack { display: flex; gap: 3px; height: 38px; } .mc-seg { flex: var(--w) 1 0; display: grid; place-items: center; font-size: 22px; font-weight: 600; border-radius: 6px; min-width: 0; color: var(--accent-ink, #0b1210); }
 .mc-seg.is-right, .mc-key .is-right { background: var(--accent); } .mc-seg.is-over, .mc-key .is-over { background: var(--c6); } .mc-seg.is-false, .mc-key .is-false { background: var(--c2); } .mc-seg.is-other, .mc-key .is-other { background: var(--paper-3); color: var(--ink-2); }
-.mc-row:not(.is-chosen) .mc-seg.is-right { background: var(--c3, var(--accent)); opacity: 0.75; }
 .g5-tag.is-yes { fill: var(--accent); font-weight: 600; } .g5-tag.is-no { fill: var(--ink-2); }
 .mm-live { display: inline-flex; align-items: center; gap: 12px; font-size: 26px; color: var(--accent); width: fit-content; border-bottom: 2px dotted var(--accent); } .mm-live .deck-ico { width: 28px; height: 28px; }
 .rx-line { font-size: 21px; line-height: 1.3; color: var(--ink-2); white-space: normal; max-width: 1000px; } .rx-line strong { color: var(--ink); font-weight: 600; }
@@ -954,7 +953,7 @@ th[aria-sort="descending"] .pr-sort::after { content: " \2193"; }
 .mc-cell { display: grid; grid-template-columns: minmax(0, 1fr) 120px; gap: 14px; align-items: center; }
 .mc-track { height: 30px; border-radius: 8px; background: var(--paper-3); overflow: hidden; }
 .mc-bar { height: 100%; width: var(--w, 0); border-radius: 8px; background: var(--c6); }
-.mc-row.is-chosen .mc-cell.is-right .mc-bar, .mc-row.is-chosen .mc-cell.is-cost .mc-bar { background: var(--accent); }
+.mc-cell.is-right .mc-bar { background: var(--accent); }
 .mc-cell.is-false .mc-bar { background: var(--c2); }
 .mc-val { font-size: 28px; font-weight: 600; text-align: right; }
 .mc-row .deck-tip { left: 260px; }
@@ -1073,12 +1072,11 @@ th[aria-sort="descending"] .pr-sort::after { content: " \2193"; }
 /* Report processing: a shared path, two index branches and an honest table failure. */
 .rpipeline { display: grid; gap: 64px; align-content: center; }
 .rpipeline-flow { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 26px; align-items: center; }
-.rpipeline-node, .rpipeline-index { position: relative; min-width: 0; border-top: 3px solid var(--accent); padding-top: 18px; }
+.rpipeline-node, .rpipeline-index { position: relative; min-width: 0; padding-top: 18px; }
 .rpipeline-node:not(:last-child)::after { content: '›'; position: absolute; right: -22px; top: 25px; color: var(--accent); font-size: 38px; }
 .rpipeline h3 { font-size: 30px; line-height: 1.15; font-weight: 600; }
 .rpipeline-node > p, .rpipeline-index > p { margin-top: 14px; font-size: 26px; line-height: 1.25; color: var(--ink-2); }
 .rpipeline-indexes { display: grid; gap: 28px; }
-.rpipeline-index { border-top-color: var(--c3); }
 .rpipeline-examples { display: grid; grid-template-columns: 1.2fr 1fr; gap: 56px; border-top: 1px solid var(--line-strong); padding-top: 30px; }
 .rpipeline-table { display: grid; grid-template-columns: 1fr 32px 1fr; gap: 24px; align-items: center; }
 .rpipeline-table table { border-collapse: collapse; font-size: 24px; }
@@ -1128,7 +1126,9 @@ th[aria-sort="descending"] .pr-sort::after { content: " \2193"; }
 .owner-agent .owner-agent-label { fill: var(--muted); font-size: 22px; }
 .owner-agent .owner-agent-label.is-return { fill: var(--accent); }
 .owner-agent .owner-agent-node:focus-visible rect { stroke: var(--ink); stroke-width: 4; }
-.owner-agent .owner-agent-bounds { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 14px 30px; padding: 16px 0; border-top: 1px solid var(--line-strong); color: var(--ink-2); font-size: 23px; }
+.owner-agent .owner-agent-bounds { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0; border-top: 2px solid var(--line-strong); border-bottom: 1px solid var(--line-strong); color: var(--ink-2); font-size: 23px; }
+.owner-agent-bounds > span { padding: 8px 18px; text-align: center; border-right: 1px solid var(--line-strong); }
+.owner-agent-bounds > span:last-child { border-right: 0; }
 .owner-agent .deck-tip, .owner-mcp .deck-tip { font-size: 21px; line-height: 1.35; font-weight: 400; letter-spacing: 0; text-align: left; max-width: 620px; }
 .owner-agent .owner-agent-bounds > :last-child > .deck-tip { left: auto; right: 0; }
 .owner-mcp { display: grid; gap: 28px; align-content: center; min-width: 0; height: 100%; }
@@ -1254,3 +1254,24 @@ th[aria-sort="descending"] .pr-sort::after { content: " \2193"; }
   .ex-tools-row.is-head { display: none; }
   .ex-stores .deck-tip, .ex-sets .deck-tip, .ex-tools .deck-tip { font-size: 16px; }
 }
+.g17-row { grid-template-columns: 0.9fr 24px 0.9fr 24px 1fr 24px 1.45fr 24px 0.9fr; }
+.g17-stage li { overflow-wrap: anywhere; }
+.g17-stage .g17-mcp { font-size: 22px; }
+.metric-key { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 48px; padding-top: 16px; border-top: 1px solid var(--line-strong); }
+.metric-key-cell { display: grid; gap: 8px; min-width: 0; }
+.metric-key-cell > p:first-child { display: flex; align-items: baseline; justify-content: space-between; gap: 18px; font-size: 24px; }
+.metric-key-cell > p:last-of-type { color: var(--muted); font-size: 21px; }
+.metric-key-cell strong { font-weight: 500; }
+.metric-key .deck-tip { max-width: 640px; font-size: 22px; }
+.metric-key-cell:last-child > .deck-tip { left: auto; right: 0; }
+.g5.has-metric-key { grid-template-rows: minmax(0, 1fr) auto auto; }
+.g5.has-metric-key .ex-tuning { margin-top: 4px; font-size: 23px; }
+@media (max-width: 800px) {
+  .g17-row { grid-template-columns: 1fr; }
+  .metric-key { gap: 20px; }
+  .metric-key-cell > p:first-child { font-size: 17px; flex-wrap: wrap; }
+  .metric-key-cell > p:last-of-type { font-size: 15px; }
+  .owner-agent .owner-agent-bounds { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+.owner-agent:has(.ex-tools) .owner-agent-svg { max-height: 350px; }
+.owner-agent:has(.ex-tools) .ex-tools-row { padding: 9px 0; }

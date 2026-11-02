@@ -73,8 +73,8 @@ def main(argv: list[str] | None = None) -> int:
     sx.add_argument("--pairs", nargs="+", choices=["gpt-6-luna", "gpt-5.6-luna", "gpt-4.1-mini"])
     sx.add_argument("--tag", required=True, help="new experiment label; existing ids are never overwritten")
     sx.add_argument("--retrieval", choices=["hybrid", "r3", "r3w"], default="r3")
-    sx.add_argument("--route", choices=["mcp", "direct", "mcp-all"], default="mcp",
-                    help="mcp: only get_series over MCP (D-053); direct: all tools in process; mcp-all: all three tools over MCP (D-066)")
+    sx.add_argument("--route", choices=["mcp", "direct", "mcp-all", "no-stats"], default="mcp",
+                    help="mcp: only get_series over MCP (D-053); direct: all tools in process; mcp-all: all three tools over MCP (D-066); no-stats: experiment-only direct tools without get_series")
     sx.add_argument("--web-steps", choices=["on", "off"], default="on")
     sx.add_argument("--limit", type=int)
     sx.add_argument("--case-ids", nargs="+", help="restrict to these case ids before applying --limit")

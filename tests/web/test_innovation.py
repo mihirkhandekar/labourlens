@@ -30,18 +30,21 @@ def test_projection_uses_explicit_editorial_source_and_aggregate_primary_measure
     text = json.dumps(page, ensure_ascii=False)
     for banned in ("gpt-5.6", "held-out", "\u2014", "\u2013", "evidence_text", "passage_text"):
         assert banned not in text
-    assert all(item["status"] == "proposal" for group in page["content"]["roadmap"] for item in group["items"])
+    assert all(item["status"] == "proposal" for section in page["content"]["sections"] for item in section["proposals"])
 
 
 def test_six_assessment_questions_match_the_short_deliverable():
-    groups = projection()["content"]["roadmap"]
+    groups = projection()["content"]["sections"]
     headings = re.findall(r"^## (.+)$", (ROOT / "docs/innovation.md").read_text(), re.M)
-    assert len(groups) == len(headings) == 6
-    assert [group["name"] for group in groups] == headings
-    priorities = groups[-1]["items"]
+    assert len(groups) == 6
+    assert [group["title"] for group in groups] == headings[1:7]
+    priorities = groups[-1]["proposals"]
     assert len(priorities) == 2
-    assert all(term in priorities[0]["why"] for term in ("0.50", "false-answer", "blind"))
-    assert all(term in priorities[1]["why"] for term in ("kappa", "0.70", "0.10", "blind"))
+    assert "0.50" in priorities[0]["threshold"] and "false-answer" in priorities[0]["threshold"]
+    assert "blind" in priorities[0]["measure"]
+    assert all(term in priorities[1]["threshold"] for term in ("kappa", "0.70", "0.10"))
+    assert "blind" in priorities[1]["measure"]
+    assert len(headings) == 9 and headings[0] == "Current approach"
 
 
 def test_projection_opens_only_curated_content_not_private_runs(tmp_path):
@@ -59,7 +62,7 @@ def test_projection_opens_only_curated_content_not_private_runs(tmp_path):
 def test_roadmap_cannot_silently_promote_proposals(tmp_path, bad):
     (tmp_path / "docs").mkdir()
     content = json.loads((ROOT / CONTENT).read_text())
-    content["roadmap"][0]["items"][0]["status"] = bad
+    content["sections"][0]["proposals"][0]["status"] = bad
     (tmp_path / CONTENT).write_text(json.dumps(content))
     with pytest.raises(ValueError, match="proposals"):
         project_innovation(tmp_path, {})
@@ -92,3 +95,20 @@ def test_innovation_has_no_inline_code_or_external_assets():
     assert "addEventListener('scroll'" not in js
     for path in (WEB / "innovation.html", WEB / "static/js/innovation.js", WEB / "static/css/innovation.css"):
         assert not any(char in path.read_text() for char in ("\u2014", "\u2013"))
+
+
+def test_document_layout_keeps_tables_references_feedback_and_print_without_decoration():
+    content = projection()["content"]
+    for reference in content["references"]:
+        assert (ROOT / reference["path"]).is_file()
+    feedback = content["sections"][2]["proposals"][1]
+    assert feedback["title"] == "Feedback review loop"
+    assert all(term in feedback["measure"] for term in ("thumbs-down", "expected evidence", "one thing", "pseudonymise".capitalize()))
+    js = (WEB / "static/js/innovation.js").read_text()
+    css = (WEB / "static/css/innovation.css").read_text()
+    for token in ("el('table'", "el('caption'", "el('dl'", "el('sup'"):
+        assert token in js
+    for token in ("box-shadow", "gradient(", "iv-enter", "animation:", "transition:"):
+        assert token not in css
+    assert "@media print" in css and "@page" in css
+    assert "max-width" in css and "72ch" in css
