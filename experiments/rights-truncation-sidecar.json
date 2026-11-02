@@ -109,6 +109,9 @@
   },
   "experiments/runs/dev-dense-E7/text-embedding-3-large.cases.jsonl": {
    "locator": 34
+  },
+  "experiments/runs/served-dev-S65-mcpall/gpt-6-luna.scores.jsonl": {
+   "served.tool_calls[*].arguments.query / mcp_attempts[*].arguments.query (model-written search query echoing a report phrase)": 4
   }
  },
  "total_runs_truncated": 1031,

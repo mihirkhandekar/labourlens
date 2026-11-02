@@ -71,6 +71,65 @@ export const metricOf = value => {
   return {rate: null, ci: null, n: null};
 };
 
+// Deck only: the slides present gpt-6-luna alone. The report page and the documents keep both models, so this
+// is applied to the report data and the built DOM in deck.js and nowhere else.
+const SECOND = /gpt-5\.6-luna/;
+const TWO = /\b(both models|two models|either model|second model|each model)\b|\(four configurations\)/i;
+const REWRITE = [
+  [/Not for gpt-5\.6-luna\./g, 'Not clearly: the sign differs between the two judges for gpt-6-luna.'],
+  [/judge-measured; a second judge did not reproduce it for gpt-5\.6-luna/g, 'judge-measured; a second judge gave a different sign for gpt-6-luna on the sampled answers'],
+  [/all four registered configurations/g, 'both registered configurations'],
+  [/all four configurations/g, 'both gpt-6-luna configurations'],
+  [/for both defended models/g, 'for the defended model'],
+  [/Primary model gpt-6-luna/g, 'Model gpt-6-luna'],
+  [/Right kind of response at least 205 and 209 of 237/g, 'Right kind of response at least 205 of 237'],
+  [/Cases with an ungrounded number at most 34 and 51/g, 'Cases with an ungrounded number at most 34'],
+  [/Main model/g, 'gpt-6-luna'],
+  [/held-out/gi, 'Original test'],
+  [/the primary filtered arm/g, 'the filtered arm']
+];
+/** Drop every sentence or clause that names the second model or relies on there being two; what remains is true for gpt-6-luna alone. */
+export function scrubText(text) {
+  if (typeof text !== 'string') return text;
+  const rewritten = REWRITE.reduce((t, [re, to]) => t.replace(re, to), text);
+  if (!SECOND.test(rewritten) && !TWO.test(rewritten)) return rewritten;
+  return rewritten.split(/(?<=[.;])\s+/).filter(part => !SECOND.test(part) && !TWO.test(part)).join(' ').replace(/[;,]\s*$/, '.').trim();
+}
+export function withoutSecondModel(value) {
+  const names = x => x && typeof x === 'object' && ['id', 'label', 'model', 'name', 'key', 'run_id'].some(f => typeof x[f] === 'string' && SECOND.test(x[f]));
+  if (typeof value === 'string') return scrubText(value);
+  if (Array.isArray(value)) return value.filter(x => !names(x)).map(withoutSecondModel).filter(x => x !== '');
+  if (value && typeof value === 'object') {
+    const out = {};
+    Object.entries(value).forEach(([k, x]) => { if (!SECOND.test(k)) out[k] = withoutSecondModel(x); });
+    return out;
+  }
+  return value;
+}
+/** Remove second-model text from a built DOM subtree: text nodes, tooltips, titles and labels. Emptied wrappers go too. */
+export function scrubDom(root) {
+  const flagged = text => SECOND.test(text) || TWO.test(text);
+  const cellText = cell => [...cell.childNodes].filter(n => !n.classList?.contains('deck-tip')).map(n => n.textContent).join('');
+  root.querySelectorAll('table').forEach(table => {
+    const rows = [...table.rows], head = rows[0];
+    if (head) [...head.cells].map((cell, i) => [cell, i]).reverse().forEach(([cell, i]) => { if (flagged(cellText(cell))) rows.forEach(row => row.cells[i]?.remove()); });
+    rows.slice(1).forEach(row => { if ([...row.cells].some(cell => flagged(cellText(cell)))) row.remove(); });
+  });
+  const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
+  const nodes = [];
+  while (walker.nextNode()) if (scrubText(walker.currentNode.nodeValue) !== walker.currentNode.nodeValue) nodes.push(walker.currentNode);
+  nodes.forEach(node => {
+    const next = scrubText(node.nodeValue);
+    if (next) { node.nodeValue = next; return; }
+    let parent = node.parentElement; node.remove();
+    while (parent && parent !== root && !parent.textContent.trim() && !parent.querySelector('svg,img,canvas')) { const up = parent.parentElement; parent.remove(); parent = up; }
+  });
+  root.querySelectorAll('[title],[aria-label],[aria-description]').forEach(node => ['title', 'aria-label', 'aria-description'].forEach(attr => {
+    const v = node.getAttribute(attr);
+    if (v && scrubText(v) !== v) { const next = scrubText(v); if (next) node.setAttribute(attr, next); else node.removeAttribute(attr); }
+  }));
+}
+
 // Rank per run: '0' is "not in the top 10", '1'..'10' is the rank of the first relevant chunk.
 export function runLabel(runId) {
   const match = /agent-dev-(A\d)\/([^/]+)$/.exec(runId || '');

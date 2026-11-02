@@ -337,7 +337,10 @@ export function secondJudgeFacts(m) {
   }).filter(Boolean);
   if (!models.length) return null;
   const den = models.map(x => x.den);
-  return {s, judge: s.model || 'the second judge', original: s.original_judge || 'the original judge', agreement: a.agreement, omitted: a.judge_omitted || {}, models,
+  // The recorded omitted count covers every sampled generator; when fewer models are present, count only their lost pairs.
+  const lost = den.every(d => finite(d.sampled_pairs) && finite(d.analysed_pairs)) ? den.reduce((t, d) => t + (d.sampled_pairs - d.analysed_pairs), 0) : null;
+  const omitted = models.length < SJ_MODELS.length && lost !== null ? {...(a.judge_omitted || {}), count: lost} : (a.judge_omitted || {});
+  return {s, judge: s.model || 'the second judge', original: s.original_judge || 'the original judge', agreement: a.agreement, omitted, models,
     sampled: den.every(d => finite(d.sampled_items)) ? den.reduce((t, d) => t + d.sampled_items, 0) : null};
 }
 
@@ -430,12 +433,14 @@ export function secondJudgeQa(m) {
 }
 
 /** The headline result: per question set and model, hybrid against filter then rerank, with the paired difference. Detail on hover or focus. */
-export function finalComparison(m) {
+export function finalComparison(m, {includeFresh = true, showDifference = true} = {}) {
   const f = finalFacts(m);
   if (!f) return null;
   const wrap = el('div', 'fc');
   const cols = el('div', 'fc-cols');
-  f.sets.forEach((s, i) => {
+  const sets = includeFresh ? f.sets : f.sets.filter(s => s.id !== 'v2' && !/fresh/i.test(s.label));
+  if (!includeFresh) cols.classList.add('is-two');
+  sets.forEach((s, i) => {
     const col = el('div', 'fc-col'); col.style.setProperty('--i', String(i));
     col.append(el('h3', 'fc-title', s.label), el('p', 'fc-sub num', `${fmt.int(s.n)} questions`));
     const tipLines = [`${s.label}, ${fmt.int(s.n)} questions. ${s.note}`];
@@ -446,7 +451,7 @@ export function finalComparison(m) {
         track.append(bar); row.append(el('span', 'fc-label', name), track, el('span', 'fc-val num', fmt.pct(rate))); block.append(row);
       });
       const d = r3rate - hyrate;
-      block.append(el('p', `fc-diff num${Math.abs(d) < 1e-9 ? ' is-null' : d < 0 ? ' is-neg' : ''}`, `${pointsText(d)}${p?.interval ? ` [${(p.interval[0] * 100).toFixed(1)}, ${(p.interval[1] * 100).toFixed(1)}]` : ''}`));
+      if (showDifference) block.append(el('p', `fc-diff num${Math.abs(d) < 1e-9 ? ' is-null' : d < 0 ? ' is-neg' : ''}`, `${pointsText(d)}${p?.interval ? ` [${(p.interval[0] * 100).toFixed(1)}, ${(p.interval[1] * 100).toFixed(1)}]` : ''}`));
       col.append(block);
       const x = r3.metrics, y = hy.metrics, ci = a => (a?.ci95 ? ` [${fmt.pct(a.ci95[0])} to ${fmt.pct(a.ci95[1])}]` : '');
       tipLines.push(`${model}: mean of two runs. Filter then rerank ${fmt.pct(r3rate)}, first ${fmt.pct(r3.runs?.run1)}, second ${fmt.pct(r3.runs?.run2)}. Hybrid ${fmt.pct(hyrate)}, first ${fmt.pct(hy.runs?.run1)}, second ${fmt.pct(hy.runs?.run2)}. ${p?.interval ? `Paired mean difference ${pointsText(p.paired_difference)}, 95% case-bootstrap interval ${(p.interval[0] * 100).toFixed(1)} to ${(p.interval[1] * 100).toFixed(1)} points. Direction agrees across runs: ${p.sign_agrees ? 'yes' : 'no'}. ` : ''}False-answer and over-abstention shares here use all ${s.n} questions, not an answerable-only denominator: ${fmt.pct(x.false_answer_rate?.rate)} / ${fmt.pct(x.over_abstention_rate?.rate)} against ${fmt.pct(y.false_answer_rate?.rate)} / ${fmt.pct(y.over_abstention_rate?.rate)}. Mean cost $${x.cost_per_case_usd?.toFixed(5)} against $${y.cost_per_case_usd?.toFixed(5)}. Mean of run medians ${x.latency_p50_s?.toFixed(1)} s against ${y.latency_p50_s?.toFixed(1)} s. Two runs are not a variance estimate.`);
@@ -485,8 +490,8 @@ export function provenanceTable(m) {
 
 const LOOP_TIPS = [
   'The planner sees the question and a dataset catalogue, not report passages. Its three-tool list is fixed in code.',
-  'Inside the agent loop, the planner chooses one tool. search_reports runs BM25 plus dense embeddings, filters by period and release, reranks and returns chunks for evidence checking. Retrieval is not a pre-step.',
-  'Only get_series uses MCP in the live app. The client sends tools/call get_statistic over stdio with source, period range and dimension. The server validates the request, reads validated observations and returns structured rows. The client checks outputSchema, its typed model, size and time limits. Search and calculation bypass MCP.',
+  'Inside the agent loop, the planner chooses one tool. search_reports runs BM25 plus dense embeddings, filters by period and release, reranks and returns chunks for evidence checking. Retrieval is not a pre-step. It runs in the app in the live system.',
+  'Only the statistics lookup uses MCP in the live app. The client sends tools/call get_statistic over stdio with source, period range and dimension. The server validates the request, reads validated observations and returns structured rows. The client checks outputSchema, its typed model, size and time limits. Report search and calculation run in the app. A tested variant sent all three tools over MCP; it was slower with no accuracy gain and is not used live.',
   'Assess data returned by the chosen tool. Search returns report chunks; statistics returns validated rows. If there is a gap, make another tool call, up to two rounds.',
   'Write a structured answer with claims tied to evidence. The model does not do arithmetic.',
   'Check the answer schema, citation labels, quote presence and numbers against evidence.',
@@ -530,12 +535,12 @@ export function agentLoop() {
   edge('M1030 355 V630 H140 V350', true);
   edge('M1485 370 H1535 V215 H1485', true);
   node(25, 240, 230, 110, ['Planner', 'Choose actions'], 'Input validation runs first. The planner sees the question, dataset catalogue, prior evidence summaries and tool errors. The base tool names and argument schemas are fixed in code: search_reports, get_series and calculate_change. It may request up to three calls in a round or stop gathering. It does not discover or choose freely among all MCP server tools.', 'is-planner');
-  node(345, 35, 480, 130, ['Search reports', 'BM25 + embeddings', 'Filter, rerank, return passages'], 'search_reports runs inside the agent loop. The default r3 route searches BM25 and dense embeddings, filters candidates using period and release hints, fuses rankings, then reranks. Ranked chunks resolve to original source passages with provenance. If reranking fails, the fused ordering remains available. Report search does not cross MCP.');
-  node(345, 205, 480, 120, ['Structured statistics', ''], 'get_series crosses the live MCP boundary through get_statistic, carrying source, quarter range, dimension and optional adjustment and indicator filters. The server reads validated observations. The client validates and screens returned rows. Direct evaluation routes can use the same query contract without MCP.', 'is-mcp');
+  node(345, 35, 480, 130, ['Search reports', 'BM25 + embeddings', 'Filter, rerank, return passages'], LOOP_TIPS[1]);
+  node(345, 205, 480, 120, ['Structured statistics', ''], LOOP_TIPS[2], 'is-mcp');
   svg.append(svgEl('path', {d: 'M605 250 V315', class: 'owner-agent-boundary'}));
   label(470, 302, 'Client →', 'is-mcp-detail');
   label(715, 302, 'MCP server → rows', 'is-mcp-detail');
-  node(345, 380, 480, 90, ['Calculate in code', 'Returned observations → change'], 'calculate_change uses deterministic Decimal arithmetic on previously collected, compatible observation rows. The model does not calculate the change. No MCP call is made. The separately configured v2 experiment adds passage-value calculation; it is not part of the base three-tool choice.');
+  node(345, 380, 480, 90, ['Calculate in code', 'Returned observations → change'], 'calculate_change uses deterministic Decimal arithmetic on previously collected, compatible observation rows. The model does not calculate the change. It runs in the app in the live system. The separately configured v2 experiment adds passage-value calculation; it is not part of the base three-tool choice.');
   node(345, 515, 480, 70, ['Stop gathering'], 'The planner can stop without calling a tool. A stop decision, exhausted round budget or exhausted call budget proceeds to final evidence assessment. It does not bypass evidence or answer validation.');
   node(925, 235, 210, 120, ['Review', 'evidence'], 'Logical evidence checkpoint: after tool execution, the planner receives evidence summaries and errors for another bounded round. In the actual graph, execute_tool routes back to plan_research while budget remains. When gathering stops, assess_evidence annotates source conflicts and coverage notes before generation. assess_evidence itself does not loop back.', 'is-guard');
   node(1205, 165, 280, 100, ['Write answer'], LOOP_TIPS[4]);
@@ -650,16 +655,16 @@ export function toolFixBars(m) {
 /** Why the change failed: figures from the pre-declared criteria in the report data, plus what the development run report states about tool use. */
 function toolFixWhy(m) {
   const crit = m?.section('evaluation')?.tool_set_v2?.dev_x3?.criteria || {};
-  const a = crit['gpt-6-luna'], b = crit['gpt-5.6-luna'];
-  if (!a || !b) return null;
+  const a = crit['gpt-6-luna'];
+  if (!a) return null;
   const failed = c => Object.values(c.criteria).filter(x => x.pass === false).length;
   return exampleBlock('Why it did not work', [
-    ['Rules:', `They were declared before the run. ${failed(a)} failed for gpt-6-luna and ${failed(b)} for gpt-5.6-luna. The extra failure is a single provider HTTP 520 error page, which the rules did not excuse.`],
-    ['Right behaviour:', `${a.x2.correct} to ${a.x3.correct} of ${a.x3.n} for gpt-6-luna, ${b.x2.correct} to ${b.x3.correct} for gpt-5.6-luna.`],
-    ['False-answer cases:', `${a.x2.false_answers} to ${a.x3.false_answers} for both. The limit was ${a.criteria['2_false_answers'].threshold}.`],
-    ['Cases with an ungrounded number:', `${a.x2.cases_with_ungrounded} to ${a.x3.cases_with_ungrounded}, and ${b.x2.cases_with_ungrounded} to ${b.x3.cases_with_ungrounded}. In cases that used the new tool: ${a.x3.new_tool_cases_with_ungrounded} of ${a.x3.new_tool_cases}, and ${b.x3.new_tool_cases_with_ungrounded} of ${b.x3.new_tool_cases}.`],
-    ['Numerical comparisons right:', `${a.x2.numerical_comparison_correct} of ${a.x3.numerical_comparison_n} unchanged for gpt-6-luna; ${b.x2.numerical_comparison_correct} to ${b.x3.numerical_comparison_correct} for gpt-5.6-luna.`],
-    ['How the tool was used:', 'gpt-6-luna made 9 successful and 2 refused calls, gpt-5.6-luna 8 successful and 12 refused. Almost all the refusals were one mistake: passing the text of a figure snippet where a passage label belongs.'],
+    ['Rules:', `They were declared before the run. ${failed(a)} failed for gpt-6-luna.`],
+    ['Right behaviour:', `${a.x2.correct} to ${a.x3.correct} of ${a.x3.n} for gpt-6-luna.`],
+    ['False-answer cases:', `${a.x2.false_answers} to ${a.x3.false_answers}. The limit was ${a.criteria['2_false_answers'].threshold}.`],
+    ['Cases with an ungrounded number:', `${a.x2.cases_with_ungrounded} to ${a.x3.cases_with_ungrounded}. In cases that used the new tool: ${a.x3.new_tool_cases_with_ungrounded} of ${a.x3.new_tool_cases}.`],
+    ['Numerical comparisons right:', `${a.x2.numerical_comparison_correct} of ${a.x3.numerical_comparison_n}, unchanged.`],
+    ['How the tool was used:', 'gpt-6-luna made 9 successful and 2 refused calls.'],
     ['What this does not show:', 'The measurements show it did not help. They do not establish why. Whether the extra ungrounded numbers are the new tool\u2019s fault was not investigated per case.']
   ], 'From the pre-declared criteria and the development run report.');
 }
@@ -710,7 +715,7 @@ export function mcpMap(m) {
   host.append(tipped('div', 'owner-mcp-client', 'MCP client', 'A persistent stdio session negotiates capabilities, discovers schemas and sends tools/call get_statistic. Arguments include source, period range, dimension and optional adjustment and indicator filters. The client validates input schema, advertised outputSchema and local typed models; screens untrusted strings; caps replies at 200 KB; and enforces time limits. Default call: 8 s. Connect: 20 s. Lost connections reconnect once; there is no silent direct-call fallback.'));
   const arrow = () => { const n = el('span', 'owner-mcp-arrow'); n.append(ico('arrow-right')); n.setAttribute('aria-hidden', 'true'); return n; };
   const server = el('div', 'owner-mcp-server');
-  server.append(tipped('h3', '', 'MCP server', 'The server exposes nine read-only statistics tools, one catalogue resource, one source-entry resource template and a compare_quarters prompt. The prompt is available but not used by the research agent. Resources are application-selected context, not agent tool calls. Other compatible hosts could connect; this does not claim a third-party host has been demonstrated.'));
+  server.append(tipped('h3', '', 'MCP server', 'The server exposes nine read-only statistics tools, one catalogue resource, one source-entry resource template and a compare_quarters prompt. The prompt is available but not used by the research agent. Resources are application-selected context, not agent tool calls. Other compatible hosts could connect; this does not claim a third-party host has been demonstrated. The tested all-tools variant starts the server with an agent profile that adds search_reports, calculate_change, calculate_from_text_values and describe_corpus on top of these nine. The live app does not use that profile.'));
   const tools = el('div', 'owner-mcp-tools');
   tools.setAttribute('role', 'group'); tools.setAttribute('aria-label', 'Nine read-only tools. The highlighted get_statistic is used by the live agent.');
   [
@@ -737,8 +742,17 @@ export function mcpMap(m) {
   wrap.append(exchange);
   const served = m.section('serving').chain;
   if (served) {
+    const lunaRow = route => (served.rows || []).find(row => row.route === route && row.model === 'gpt-6-luna')?.metrics?.all;
     const results = (served.rows || []).filter(row => row.route === 'mcp-on').map(row => `${row.model}: ${fmt.pct(row.metrics.all.behavior_accuracy)} behaviour accuracy on 65 served-chain cases.`).join(' ');
-    wrap.append(tipped('span', 'owner-mcp-evidence', 'Over MCP or direct, the answers matched: no loss, no demonstrated gain (65-case sample, one run).', `${results} Both routes run the same query code on the same store, so equal answers are expected. MCP earns its place when several clients share the data or a separate team owns the data service; it adds one hop. The four MCP errors in 41 calls (gpt-5.6-luna run) were not_found lookups from unmatched dimensions or series, not transport failures. The assessment requires the server, a client demonstration and a direct comparison, which is why it is built and measured. ${served.limits || ''} Full-set accuracy evaluations used direct calls. The sample does not establish equivalence.`));
+    wrap.append(tipped('span', 'owner-mcp-evidence', 'Live route: over MCP or direct, the answers matched. No loss, no demonstrated gain (65 questions, one run).', `Earlier route, the one used live. ${results} Both routes run the same query code on the same store, so equal answers are expected. MCP earns its place when several clients share the data or a separate team owns the data service; it adds one hop. The assessment requires the server, a client demonstration and a direct comparison, which is why it is built and measured. ${served.limits || ''} Full-set accuracy evaluations used direct calls. The sample does not establish equivalence.`));
+    const all = lunaRow('mcp-all'), on = lunaRow('mcp-on'), direct = lunaRow('direct-on');
+    const pairedAll = served.paired?.['mcpall-vs-direct-on']?.['gpt-6-luna'], pairedOn = served.paired?.['mcpall-vs-mcp-on']?.['gpt-6-luna'];
+    if (all && on && direct && pairedAll && pairedOn) {
+      const acc = v => v.toFixed(3).slice(1), count = v => `${Math.round(v * 65)}/65`, sec = v => `${v.toFixed(1)} s`;
+      const diff = p => `${p.paired_difference >= 0 ? '+' : '-'}${Math.abs(p.paired_difference).toFixed(3)}`;
+      wrap.append(tipped('span', 'owner-mcp-evidence is-tested', `Tested: all three tools over MCP. Slower (slowest 5% about ${Math.round(all.latency_p95_s)} s against ${Math.round(on.latency_p95_s)} s), no accuracy gain (${acc(all.behavior_accuracy)} against ${acc(on.behavior_accuracy)}; 65 questions, one run). Not used live.`,
+        `Tested variant: search_reports, the statistics lookup and calculation all ran in the MCP server; the app kept planning, query embedding, reranking, evidence checks and the answer. Behaviour accuracy ${acc(all.behavior_accuracy)} (${count(all.behavior_accuracy)}) against ${acc(on.behavior_accuracy)} (${count(on.behavior_accuracy)}) for the statistics-only route and ${acc(direct.behavior_accuracy)} (${count(direct.behavior_accuracy)}) for direct calls. Paired difference ${diff(pairedAll)} against direct (${pairedAll.better} better, ${pairedAll.worse} worse, exact p ${pairedAll.mcnemar_exact_p}) and ${diff(pairedOn)} against the statistics-only route (${pairedOn.better} better, ${pairedOn.worse} worse, exact p ${pairedOn.mcnemar_exact_p}); neither is a demonstrated difference. False answers ${pairedAll.guardrails.false_answers.candidate} against ${pairedAll.guardrails.false_answers.baseline}; operational failures ${all.operational_failures}. Median time ${sec(all.latency_p50_s)} against ${sec(on.latency_p50_s)} (statistics-only) and ${sec(direct.latency_p50_s)} (direct). Slowest 5% ${sec(all.latency_p95_s)} against ${sec(on.latency_p95_s)} and ${sec(direct.latency_p95_s)}, which exceeds the limit set in advance (43.3 s, 25% above the statistics-only route). Cost about $${all.cost_per_case_usd.toFixed(4)} per question, unchanged. ${all.mcp_call_count} MCP calls, ${all.mcp_error_count} tool errors. One run, same judge family, hand-written probes, not independent evidence. The tested server adds search_reports, calculate_change, calculate_from_text_values and describe_corpus on top of the nine statistics tools; the server holds the passages, the BM25 index and the stored vectors, and never receives the API key.`));
+    }
   }
   return wrap;
 }
@@ -999,11 +1013,11 @@ export function modelChoice(m) {
     const costCell = el('div', 'mc-cell is-cost'); const ctrack = el('div', 'mc-track'); const cbar = el('div', 'mc-bar'); cbar.style.setProperty('--w', `${Math.round(Math.min(x.cost_per_case_usd / 0.01, 1) * 100)}%`); ctrack.append(cbar);
     costCell.append(ctrack, el('span', 'mc-val num', `$${x.cost_per_case_usd.toFixed(5)}`));
     row.append(el('span', 'mc-name', name), stack, falseCell, costCell);
-    withTip(row, `${name}: ${right} of ${n} right (${fmt.pct(x.behavior_accuracy)}), 95% Wilson interval ${wilson(right, n)}; over-abstention ${over} of ${x.n_answer_cases} answerable (${fmt.pct(x.over_abstention_rate)}); false answers ${bad} of ${x.n_nonanswer_cases} non-answerable (${fmt.pct(x.false_answer_rate)}); ${other} other status errors; $${x.cost_per_case_usd.toFixed(5)} per question. First prototype, one run. The primary pair differs by four questions; their intervals overlap, which does not establish equivalence. gpt-6-luna declined 10 versus 7 for gpt-5.6-luna.`, 'is-down is-wide');
+    withTip(row, `${name}: ${right} of ${n} right (${fmt.pct(x.behavior_accuracy)}), 95% Wilson interval ${wilson(right, n)}; over-abstention ${over} of ${x.n_answer_cases} answerable (${fmt.pct(x.over_abstention_rate)}); false answers ${bad} of ${x.n_nonanswer_cases} non-answerable (${fmt.pct(x.false_answer_rate)}); ${other} other status errors; $${x.cost_per_case_usd.toFixed(5)} per question. First prototype, one run on 30 questions, so the interval is wide.`, 'is-down is-wide');
     early.append(row);
   });
   const final = el('div', 'owner-model-final');
-  final.append(el('h3', 'owner-model-heading', 'Final two on 237 questions'), el('p', 'owner-model-sub', 'Mean of two runs; rates use all 237 questions'));
+  final.append(el('h3', 'owner-model-heading', 'Final system on 237 questions'), el('p', 'owner-model-sub', 'Mean of two runs; rates use all 237 questions'));
   const header = el('div', 'owner-model-final-row');
   ['Model', 'Accuracy', 'False answers', 'Over-abstention', 'Cost / question'].forEach(t => header.append(el('span', '', t))); final.append(header);
   const arms = m.finalEvaluation?.splits?.find(s => s.id === 'dev')?.arms || [];
@@ -1060,30 +1074,32 @@ export function threatRuns(m) {
 
 /** Attack, defence and result per category, with and without the defences. Segments are filled for each case passed. */
 export function threatMatrix(m) {
-  const runs = threatRuns(m);
-  if (runs.some(r => !r?.by_category)) return null;
+  const all = threatRuns(m);
+  const groups = [['gpt-6-luna', all[0], all[1]], ['gpt-5.6-luna', all[2], all[3]]].filter(([, a, b]) => a?.by_category && b?.by_category);
+  if (!groups.length) return null;
+  const runs = groups.flatMap(([, a, b]) => [a, b]), who = groups.flatMap(([name]) => [name, name]), cls = groups.length > 1 ? 'is-four' : 'is-two';
   const wrap = el('div', 'tm');
   const head = el('div', 'tm-row tm-head');
-  const models = el('span', 'tm-models'); models.append(el('span', '', 'gpt-6-luna (2 Nov)'), el('span', '', 'gpt-5.6-luna (2 Nov)'));
+  const models = el('span', 'tm-models'); groups.forEach(([name]) => models.append(el('span', '', `${name} (2 Nov)`)));
   head.append(el('span', '', 'Attack'), models);
   const sub = el('div', 'tm-row tm-head tm-sub');
-  const cols = el('span', 'tm-models is-four');
-  ['With defences', 'Without defences', 'With defences', 'Without defences'].forEach(t => cols.append(el('span', '', t)));
+  const cols = el('span', `tm-models ${cls}`);
+  groups.forEach(() => ['With defences', 'Without defences'].forEach(t => cols.append(el('span', '', t))));
   sub.append(el('span', ''), cols);
   wrap.append(head, sub);
   const rows = [
     ['Question injection and secret requests', 'Input flags; secret and prompt output checks.', 'direct_injection', ''],
-    ['Injection or false figure in a passage', 'Untrusted evidence cannot set instructions; figures are cross-checked against the statistics.', 'indirect_injection_passage', 'The planted figure fails in all four configurations in the 2 Nov rerun, under both scorers. The naive gpt-6-luna arm also misses figure-conflict detection. The check is not shown stable.'],
+    ['Injection or false figure in a passage', 'Untrusted evidence cannot set instructions; figures are cross-checked against the statistics.', 'indirect_injection_passage', groups.length > 1 ? 'The planted figure fails in all four configurations in the 2 Nov rerun, under both scorers. The naive gpt-6-luna arm also misses figure-conflict detection. The check is not shown stable.' : 'The planted figure fails with and without defences in the 2 Nov rerun, under both scorers. The undefended arm also misses figure-conflict detection. The check is not shown stable.'],
     ['Sensitive data, credentials, PII', 'Refusal; no personal-data tool exists.', 'sensitive_data', ''],
     ['Unsupported or causal claim', 'Answer from cited evidence or decline.', 'unsupported_claims', ''],
     ['Unsafe tool use', 'Typed read-only tools with argument and call caps.', 'unsafe_tool_use', ''],
     ['Malicious or malformed MCP output', 'Allow-list, schema checks, size and time caps.', 'mcp_server_failure', '']
   ];
-  const who = ['gpt-6-luna', 'gpt-6-luna', 'gpt-5.6-luna', 'gpt-5.6-luna'];
+
   rows.forEach(([attack, defence, key, extra], i) => {
     const n = runs[0].by_category[key]?.n;
     const row = el('div', 'tm-row'); row.style.setProperty('--i', String(i));
-    const strips = el('div', 'tm-models is-four');
+    const strips = el('div', `tm-models ${cls}`);
     runs.forEach((run, k) => {
       const passed = run.by_category[key]?.passed;
       const res = el('div', `tm-res${k % 2 ? ' is-without' : ''}`);

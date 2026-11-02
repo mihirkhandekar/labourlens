@@ -13,11 +13,11 @@ from test_app import client_for, login, settings  # noqa: F401  (settings is a f
 from test_mcp_panel import DESCRIBED, FakeBackend
 
 
-def test_the_live_default_is_mcp_all_and_the_flag_values_are_validated(monkeypatch):
-    assert DEFAULT_TRANSPORT == "mcp_all" and TRANSPORTS == ("direct", "mcp_stats", "mcp_all")
+def test_the_live_default_is_mcp_stats_and_the_flag_values_are_validated(monkeypatch):
+    assert DEFAULT_TRANSPORT == "mcp_stats" and TRANSPORTS == ("direct", "mcp_stats", "mcp_all")
     monkeypatch.delenv("LABOURLENS_MCP", raising=False)
     monkeypatch.delenv("LABOURLENS_TOOL_TRANSPORT", raising=False)
-    assert Settings.from_env().tool_transport == "mcp_all" and Settings.from_env().mcp_enabled
+    assert Settings.from_env().tool_transport == "mcp_stats" and Settings.from_env().mcp_enabled
     for value in TRANSPORTS:
         monkeypatch.setenv("LABOURLENS_TOOL_TRANSPORT", value)
         assert Settings.from_env().tool_transport == value and Settings.from_env().mcp_enabled == (value != "direct")

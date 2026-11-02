@@ -1,6 +1,6 @@
 {
   "schema_version": "report-1.0",
-  "generated_at": "2026-11-02T08:24:58.885050+00:00",
+  "generated_at": "2026-11-02T12:50:50.318967+00:00",
   "summary": {
     "title": "LabourLens research workbench",
     "scope": [
@@ -64377,6 +64377,192 @@
               }
             }
           }
+        },
+        {
+          "route": "mcp-all",
+          "model": "gpt-6-luna",
+          "metrics": {
+            "all": {
+              "n": 65,
+              "n_answer_cases": 42,
+              "n_nonanswer_cases": 23,
+              "valid_rate": 0.938,
+              "repair_rate": 0.231,
+              "operational_failures": 0,
+              "behavior_accuracy": 0.877,
+              "answer_case_behavior": 0.929,
+              "nonanswer_case_behavior": 0.783,
+              "over_abstention_rate": 0.071,
+              "false_answer_rate": 0.13,
+              "numbers_complete_rate": 0.714,
+              "gold_in_context_rate": 0.952,
+              "gold_cited_rate": 0.769,
+              "gold_cited_given_in_context": 0.811,
+              "key_number_recall": 0.771,
+              "answers_with_ungrounded_numbers": 0.095,
+              "latency_p50_s": 14.252069,
+              "latency_max_s": 55.46695,
+              "prompt_tokens_mean": 19658,
+              "completion_tokens_mean": 1223,
+              "total_tokens": 1357310,
+              "calc_correct_rate": 0.667,
+              "n_calc_cases": 6,
+              "tool_calls_mean": 1.66,
+              "tool_error_rate": 0.031,
+              "cost_per_case_usd": 0.00258,
+              "gold_cited_any_rate": 0.714,
+              "false_diversions": 0,
+              "answerable_gold_n": 39,
+              "false_diversion_rate": 0.0,
+              "mcp_call_count": 108,
+              "mcp_error_count": 2,
+              "latency_p95_s": 51.42899,
+              "steps": {
+                "smalltalk": {
+                  "executed_n": 65,
+                  "latency_mean_s": 7.583002129999491e-05,
+                  "cost_mean_usd": 0.0,
+                  "failure_n": 0
+                },
+                "contextualise": {
+                  "executed_n": 61,
+                  "latency_mean_s": 0.18574758271256891,
+                  "cost_mean_usd": 1.0646153846153847e-05,
+                  "failure_n": 0
+                },
+                "triage": {
+                  "executed_n": 61,
+                  "latency_mean_s": 1.544939659564541,
+                  "cost_mean_usd": 0.00011495384615384615,
+                  "failure_n": 0
+                },
+                "agent": {
+                  "executed_n": 57,
+                  "latency_mean_s": 17.702602571137966,
+                  "cost_mean_usd": 0.002451953846153846,
+                  "failure_n": 0
+                }
+              }
+            },
+            "gold": {
+              "n": 51,
+              "n_answer_cases": 39,
+              "n_nonanswer_cases": 12,
+              "valid_rate": 0.922,
+              "repair_rate": 0.235,
+              "operational_failures": 0,
+              "behavior_accuracy": 0.843,
+              "answer_case_behavior": 0.923,
+              "nonanswer_case_behavior": 0.583,
+              "over_abstention_rate": 0.077,
+              "false_answer_rate": 0.25,
+              "numbers_complete_rate": 0.692,
+              "gold_in_context_rate": 0.952,
+              "gold_cited_rate": 0.769,
+              "gold_cited_given_in_context": 0.811,
+              "key_number_recall": 0.771,
+              "answers_with_ungrounded_numbers": 0.103,
+              "latency_p50_s": 21.541586,
+              "latency_max_s": 55.46695,
+              "prompt_tokens_mean": 24071,
+              "completion_tokens_mean": 1497,
+              "total_tokens": 1303951,
+              "calc_correct_rate": 0.667,
+              "n_calc_cases": 6,
+              "tool_calls_mean": 2.06,
+              "tool_error_rate": 0.039,
+              "cost_per_case_usd": 0.00316,
+              "gold_cited_any_rate": 0.714,
+              "false_diversions": 0,
+              "answerable_gold_n": 39,
+              "false_diversion_rate": 0.0,
+              "mcp_call_count": 105,
+              "mcp_error_count": 2,
+              "latency_p95_s": 51.642015,
+              "steps": {
+                "smalltalk": {
+                  "executed_n": 51,
+                  "latency_mean_s": 8.00562237261557e-05,
+                  "cost_mean_usd": 0.0,
+                  "failure_n": 0
+                },
+                "contextualise": {
+                  "executed_n": 51,
+                  "latency_mean_s": 0.0010826291023370098,
+                  "cost_mean_usd": 0.0,
+                  "failure_n": 0
+                },
+                "triage": {
+                  "executed_n": 51,
+                  "latency_mean_s": 1.6583279746301545,
+                  "cost_mean_usd": 0.00012194117647058824,
+                  "failure_n": 0
+                },
+                "agent": {
+                  "executed_n": 51,
+                  "latency_mean_s": 21.6598186282368,
+                  "cost_mean_usd": 0.003033607843137255,
+                  "failure_n": 0
+                }
+              }
+            },
+            "probes": {
+              "n": 14,
+              "n_answer_cases": 3,
+              "n_nonanswer_cases": 11,
+              "valid_rate": 1.0,
+              "repair_rate": 0.214,
+              "operational_failures": 0,
+              "behavior_accuracy": 1.0,
+              "answer_case_behavior": 1.0,
+              "nonanswer_case_behavior": 1.0,
+              "over_abstention_rate": 0.0,
+              "false_answer_rate": 0.0,
+              "numbers_complete_rate": 1.0,
+              "answers_with_ungrounded_numbers": 0.0,
+              "latency_p50_s": 1.861391,
+              "latency_max_s": 12.034352,
+              "prompt_tokens_mean": 3585,
+              "completion_tokens_mean": 226,
+              "total_tokens": 53359,
+              "n_calc_cases": 0,
+              "tool_calls_mean": 0.21,
+              "tool_error_rate": 0.0,
+              "cost_per_case_usd": 0.00047,
+              "gold_cited_any_rate": 0.0,
+              "false_diversions": 0,
+              "answerable_gold_n": 0,
+              "mcp_call_count": 3,
+              "mcp_error_count": 0,
+              "latency_p95_s": 12.034352,
+              "steps": {
+                "smalltalk": {
+                  "executed_n": 14,
+                  "latency_mean_s": 6.043456960469484e-05,
+                  "cost_mean_usd": 0.0,
+                  "failure_n": 0
+                },
+                "contextualise": {
+                  "executed_n": 10,
+                  "latency_mean_s": 0.8584556280069852,
+                  "cost_mean_usd": 4.942857142857143e-05,
+                  "failure_n": 0
+                },
+                "triage": {
+                  "executed_n": 10,
+                  "latency_mean_s": 1.1318822261112342,
+                  "cost_mean_usd": 8.95e-05,
+                  "failure_n": 0
+                },
+                "agent": {
+                  "executed_n": 6,
+                  "latency_mean_s": 3.287029791706508,
+                  "cost_mean_usd": 0.00033307142857142856,
+                  "failure_n": 0
+                }
+              }
+            }
+          }
         }
       ],
       "paired": {
@@ -64831,6 +65017,234 @@
             },
             "demonstrated_gain": true
           }
+        },
+        "mcpall-vs-direct-on": {
+          "gpt-6-luna": {
+            "n_gold_cases": 65,
+            "complete": true,
+            "seed": 20261031,
+            "n_boot": 20000,
+            "level": 0.9,
+            "behaviour_accuracy": {
+              "candidate": 0.8769,
+              "baseline": 0.9077
+            },
+            "paired_difference": -0.0308,
+            "better": 0,
+            "worse": 2,
+            "mcnemar_exact_p": 0.5,
+            "case_bootstrap_interval": [
+              -0.0615,
+              0.0
+            ],
+            "component_bootstrap_interval": [
+              -0.069,
+              0.0
+            ],
+            "n_components": 55,
+            "n_evidence_components": 32,
+            "source_group_sensitivity_interval": [
+              -0.0308,
+              -0.0308
+            ],
+            "n_source_groups": 1,
+            "guardrails": {
+              "false_answers": {
+                "candidate": 3,
+                "baseline": 3
+              },
+              "answers_with_contradicted_fact": {
+                "candidate": 1,
+                "baseline": 1
+              }
+            },
+            "by_family_descriptive": {
+              "factual_lookup": {
+                "n": 15,
+                "better": 0,
+                "worse": 0
+              },
+              "cross_source_synthesis": {
+                "n": 8,
+                "better": 0,
+                "worse": 0
+              },
+              "adversarial": {
+                "n": 8,
+                "better": 0,
+                "worse": 1
+              },
+              "revision_conflict": {
+                "n": 4,
+                "better": 0,
+                "worse": 0
+              },
+              "numerical_comparison": {
+                "n": 7,
+                "better": 0,
+                "worse": 1
+              },
+              "ambiguity_insufficient_causal": {
+                "n": 9,
+                "better": 0,
+                "worse": 0
+              },
+              "served_diversion_probe": {
+                "n": 8,
+                "better": 0,
+                "worse": 0
+              },
+              "served_context_probe": {
+                "n": 6,
+                "better": 0,
+                "worse": 0
+              }
+            },
+            "sensitivity_descriptive": {
+              "without_mti_ai_feature_group": {
+                "n": 65,
+                "paired_difference": -0.0308,
+                "better": 0,
+                "worse": 2,
+                "case_bootstrap_interval": [
+                  -0.0615,
+                  0.0
+                ]
+              },
+              "report_text_evidence_cases_only": {
+                "n": 29,
+                "paired_difference": -0.0345,
+                "better": 0,
+                "worse": 1,
+                "case_bootstrap_interval": [
+                  -0.1034,
+                  0.0
+                ]
+              }
+            },
+            "conditions": {
+              "complete_paired_data": true,
+              "case_bootstrap_lower_above_zero": false,
+              "component_bootstrap_lower_above_zero": false,
+              "enough_evidence_components": true,
+              "no_added_false_answers": true
+            },
+            "demonstrated_gain": false
+          }
+        },
+        "mcpall-vs-mcp-on": {
+          "gpt-6-luna": {
+            "n_gold_cases": 65,
+            "complete": true,
+            "seed": 20261031,
+            "n_boot": 20000,
+            "level": 0.9,
+            "behaviour_accuracy": {
+              "candidate": 0.8769,
+              "baseline": 0.9077
+            },
+            "paired_difference": -0.0308,
+            "better": 1,
+            "worse": 3,
+            "mcnemar_exact_p": 0.625,
+            "case_bootstrap_interval": [
+              -0.0769,
+              0.0154
+            ],
+            "component_bootstrap_interval": [
+              -0.0833,
+              0.0161
+            ],
+            "n_components": 55,
+            "n_evidence_components": 32,
+            "source_group_sensitivity_interval": [
+              -0.0308,
+              -0.0308
+            ],
+            "n_source_groups": 1,
+            "guardrails": {
+              "false_answers": {
+                "candidate": 3,
+                "baseline": 3
+              },
+              "answers_with_contradicted_fact": {
+                "candidate": 1,
+                "baseline": 1
+              }
+            },
+            "by_family_descriptive": {
+              "factual_lookup": {
+                "n": 15,
+                "better": 0,
+                "worse": 0
+              },
+              "cross_source_synthesis": {
+                "n": 8,
+                "better": 0,
+                "worse": 0
+              },
+              "adversarial": {
+                "n": 8,
+                "better": 0,
+                "worse": 1
+              },
+              "revision_conflict": {
+                "n": 4,
+                "better": 0,
+                "worse": 0
+              },
+              "numerical_comparison": {
+                "n": 7,
+                "better": 0,
+                "worse": 2
+              },
+              "ambiguity_insufficient_causal": {
+                "n": 9,
+                "better": 0,
+                "worse": 0
+              },
+              "served_diversion_probe": {
+                "n": 8,
+                "better": 0,
+                "worse": 0
+              },
+              "served_context_probe": {
+                "n": 6,
+                "better": 1,
+                "worse": 0
+              }
+            },
+            "sensitivity_descriptive": {
+              "without_mti_ai_feature_group": {
+                "n": 65,
+                "paired_difference": -0.0308,
+                "better": 1,
+                "worse": 3,
+                "case_bootstrap_interval": [
+                  -0.0769,
+                  0.0154
+                ]
+              },
+              "report_text_evidence_cases_only": {
+                "n": 29,
+                "paired_difference": -0.0345,
+                "better": 0,
+                "worse": 1,
+                "case_bootstrap_interval": [
+                  -0.1034,
+                  0.0
+                ]
+              }
+            },
+            "conditions": {
+              "complete_paired_data": true,
+              "case_bootstrap_lower_above_zero": false,
+              "component_bootstrap_lower_above_zero": false,
+              "enough_evidence_components": true,
+              "no_added_false_answers": true
+            },
+            "demonstrated_gain": false
+          }
         }
       },
       "provenance": [
@@ -64840,8 +65254,11 @@
         "experiments/runs/served-dev-S65-direct-on/gpt-5.6-luna.metrics.json",
         "experiments/runs/served-dev-S65-direct-off/gpt-6-luna.metrics.json",
         "experiments/runs/served-dev-S65-direct-off/gpt-5.6-luna.metrics.json",
+        "experiments/runs/served-dev-S65-mcpall/gpt-6-luna.metrics.json",
         "experiments/served/paired-S65-direct-on.json",
-        "experiments/served/paired-S65-direct-off.json"
+        "experiments/served/paired-S65-direct-off.json",
+        "experiments/served/paired-S65-mcpall-vs-direct-on.json",
+        "experiments/served/paired-S65-mcpall-vs-mcp-on.json"
       ],
       "limits": "65 cases: 51 development gold cases, 8 diversion probes and 6 context probes. One run, same judge family, hand-written probes, date fixed to 2 Nov 2026. Not independent evidence. The web-steps-off control changes two factors."
     }
@@ -78155,6 +78572,14 @@
         "date": "2 Nov 2026",
         "alternatives": "",
         "summary": "DECISION. Evaluate the passage scanner on its own with a declared protocol written before improvement code, and keep three predeclared normalisation factors that raised development recall without adding development fals…"
+      },
+      {
+        "id": "D-066",
+        "title": "All three agent tools run over MCP in the live app",
+        "status": "OWNER DECISION / IMPLEMENTED",
+        "date": "2 Nov 2026",
+        "alternatives": ".",
+        "summary": "- The server gains an agent profile, started only with --agent-tools (mcp/agenttools.py, mcp/server.py): searchreports, calculatechange, calculatefromtextvalues and describecorpus"
       }
     ],
     "milestones": [],
@@ -78172,7 +78597,7 @@
     "The population basis of the dataset employment series is unverified."
   ],
   "provenance": {
-    "commit": "dc8eaa42415276b716f798e63865f088c4ad6f65",
+    "commit": "1f0a0c886c6a3a79ae0d32736483a81c0d3dee51",
     "artifacts": [
       {
         "path": "data/export/sources.json",
@@ -79260,6 +79685,15 @@
         "sha256": "11cb2a11d41cd9038b216291389f063618b790152568baffc5d03031914329c8"
       },
       {
+        "path": "experiments/runs/served-dev-S65-mcpall/gpt-6-luna.metrics.json",
+        "status": "available",
+        "sha256": "1a926c06fdd2a4bdb04bffc57ecbcebdaf62cc9fd3de423aae6c71e54a081e94"
+      },
+      {
+        "path": "experiments/runs/served-dev-S65-mcpall/gpt-5.6-luna.metrics.json",
+        "status": "missing"
+      },
+      {
         "path": "experiments/served/paired-S65-direct-on.json",
         "status": "available",
         "sha256": "0cd798a4c8c7d80b21573404065988a1527391a4224841e494c27ae253b50cd4"
@@ -79268,6 +79702,16 @@
         "path": "experiments/served/paired-S65-direct-off.json",
         "status": "available",
         "sha256": "2902558e509dffac4d9b2d4cd81b02081c64003fc596ecfd0f369ea45111a214"
+      },
+      {
+        "path": "experiments/served/paired-S65-mcpall-vs-direct-on.json",
+        "status": "available",
+        "sha256": "6058196bde980f60b3e841fff7f986fa15369a9c2f965bb4764b19d535766ac1"
+      },
+      {
+        "path": "experiments/served/paired-S65-mcpall-vs-mcp-on.json",
+        "status": "available",
+        "sha256": "084c958adac46edf0350885409f8266a501d598431839ab8185d700095da2a82"
       },
       {
         "path": "experiments/threats/ti06-v2-original-20261102/runs/gpt-4.1-mini+naive.metrics.json",
@@ -79367,12 +79811,12 @@
       {
         "path": "docs/decisions.md",
         "status": "available",
-        "sha256": "81c325b774bba9548a421648990e1e3281a207a7e822c6f897359b610777ff5b"
+        "sha256": "6e6d8cf865f69915b3b59c329f6a305f023d7a69b15db23148fc313f670909a0"
       },
       {
         "path": "docs/progress.md",
         "status": "available",
-        "sha256": "75776fe86b670e2b4b7dcc7051db5ea4801774e82c10d5898cc4d3dffa7ee871"
+        "sha256": "9836b6699d95280bbab794d9253187c78d3398b1804787191ec726b5d27098cd"
       }
     ],
     "policy": "Committed artifacts only; numeric fields only."

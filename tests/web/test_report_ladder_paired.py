@@ -139,7 +139,11 @@ def test_committed_report_keeps_x2_and_e2efix_separate_from_registered_entries()
 def test_current_served_chain_and_threat_reruns_are_separate_numeric_blocks():
     report = json.loads((REPO / "web/static/data/report.json").read_text())
     chain = report["serving"]["chain"]
-    assert len(chain["rows"]) == 6
+    assert len(chain["rows"]) == 7
+    all_tools = [row for row in chain["rows"] if row["route"] == "mcp-all"]
+    assert len(all_tools) == 1 and all_tools[0]["model"] == "gpt-6-luna"
+    assert all_tools[0]["metrics"]["all"]["behavior_accuracy"] == 0.877
+    assert all_tools[0]["metrics"]["all"]["latency_p95_s"] > 43.3
     mcp = [row for row in chain["rows"] if row["route"] == "mcp-on"]
     assert all(row["metrics"]["all"]["n"] == 65 and row["metrics"]["gold"]["n"] == 51 for row in mcp)
     assert all(row["metrics"]["all"]["behavior_accuracy"] == 0.908 for row in mcp)

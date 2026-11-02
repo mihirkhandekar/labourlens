@@ -4,6 +4,7 @@
 import Reveal from '/static/vendor/reveal/reveal.mjs';
 import {el, reduced} from '../charts.js';
 import {slideSpecs} from './slides.js';
+import {withoutSecondModel, scrubDom} from './model.js';
 
 const DESIGN_W = 1920, DESIGN_H = 1080, CHART_W = 600;
 const printing = /[?&]print-pdf/.test(location.search);
@@ -139,11 +140,12 @@ function buildSlide(spec) {
 }
 
 function main(report) {
-  const specs = report && typeof report === 'object' ? slideSpecs(report) : [];
+  const specs = report && typeof report === 'object' ? slideSpecs(withoutSecondModel(report)) : [];
   if (!specs.length) {
     slidesHost.append(buildSlide({layout: 'text', title: 'The report data could not be loaded', bullets: ['Rebuild it with: uv run labourlens build-report.'], notes: ['report.json is missing or malformed.']}));
   }
   specs.forEach(spec => slidesHost.append(buildSlide(spec)));
+  scrubDom(slidesHost);
 
   const slides = () => [...slidesHost.querySelectorAll(':scope > section')];
   const deck = new Reveal(root, {

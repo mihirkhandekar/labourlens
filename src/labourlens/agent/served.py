@@ -10,7 +10,7 @@ import time
 #   mcp_all    get_series, search_reports and calculate_change (and calculate_from_text_values) go over MCP, to the same server
 #              started with --agent-tools. The live app default.
 TRANSPORTS = ("direct", "mcp_stats", "mcp_all")
-DEFAULT_TRANSPORT = "mcp_all"
+DEFAULT_TRANSPORT = "mcp_stats"
 AGENT_SERVER = "labourlens-stats-agent"
 MCP_ALL_ROUTED = frozenset({"search_reports", "calculate_change", "calculate_from_text_values"})
 

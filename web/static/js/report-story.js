@@ -229,7 +229,7 @@ export function buildBands(report) {
   });
   tools.visual.append(
     sub('Ensuring Reliable Sources', 'The values below are the latest resident unemployment figure in the report data. The change is computed in code, and a claim without a source is rejected.', stage(safe('Evidence trace', () => evidenceTrace(m)))),
-    sub('MCP server', 'The live agent sends its statistics lookup through the MCP client to the read-only server, then receives validated observation rows. It passes source, period range and dimension. Report search returns chunks within the agent loop; calculation stays in code. The planner tool list is fixed in code. The full final accuracy runs used direct calls; the served-chain sample measures this live route.', stage(safe('MCP API and live route', () => mcpMap(m))))
+    sub('MCP server', 'The live agent sends its statistics lookup through the MCP client to the read-only server, then receives validated observation rows. It passes source, period range and dimension. Report search returns chunks within the agent loop; calculation stays in code. The planner tool list is fixed in code. The full final accuracy runs used direct calls; the served-chain sample measures this live route. I also tested sending all three tools over MCP: it was slower with no accuracy gain on the same 65 questions (one run, gpt-6-luna), so it is not used live. The figures are in the graphic below.', stage(safe('MCP API and live route', () => mcpMap(m))))
   );
   tools.node.append(more('MCP checks, latency and the GenAI concepts used',
     group('MCP boundary and client checks', rows([

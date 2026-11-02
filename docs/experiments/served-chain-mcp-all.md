@@ -87,3 +87,25 @@ The first command is free: it validates the fixture and the id, prints the plan 
 ## Results
 
 None yet.
+
+## Deviations and result (recorded 2 November 2026, after the run)
+
+The pre-declaration above is unchanged. This section records what happened.
+
+**Deviation: one model only.** The arm was run for `gpt-6-luna` on all 65 cases. The run for `gpt-5.6-luna` was stopped at 17 of 65 cases at the owner's request and was not rerun, so there is no result for the second model on this arm and the pre-declared two-model comparison was not completed.
+
+**Result (`gpt-6-luna`, 65 served questions, one run).** Sources: `experiments/runs/served-dev-S65-mcpall/gpt-6-luna.metrics.json` (generation metrics in [runs](../../experiments/runs/)); `experiments/served/paired-S65-mcpall-vs-mcp-on.json` (paired against statistics-only MCP) and `experiments/served/paired-S65-mcpall-vs-direct-on.json` (paired against direct), in the [served-chain evidence directory](../../experiments/served/).
+
+| Measure | All three tools over MCP | Statistics lookup only over MCP | Direct (in process) |
+|---|---|---|---|
+| Behaviour accuracy | 0.877 (57/65) | 0.908 (59/65) | 0.908 (59/65) |
+| Paired difference of the all-three route | | -0.031; 1 case better, 3 worse, p = 0.63 | -0.031; 0 better, 2 worse, p = 0.50 |
+| False answers | 3 | 3 | 3 |
+| Operational failures | 0 | | |
+| Median latency | 14.3 s | 12.4 s | 10.8 s |
+| 95th percentile latency | 51.4 s | 34.7 s | 32.8 s |
+| Cost per question | about $0.0026 | | |
+
+The 95th percentile is above the limit set in advance (43.3 s). The accuracy difference is not demonstrated: the all-three route has two fewer correct cases out of 65 than either comparator in one run, with exact p values of 0.50 and 0.63. The route is slower, with no accuracy gain.
+
+**Decision.** The all-three route is kept as a built and measured option (`LABOURLENS_TOOL_TRANSPORT=mcp_all`) but is not the live default. The live app sends only the statistics lookup over MCP (`mcp_stats`), as before. See the note under the all-tools-over-MCP entry in the [decision log](../decisions.md).

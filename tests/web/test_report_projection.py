@@ -530,7 +530,9 @@ def test_site_states_current_serving_fact_and_drops_stale_corpus_claims():
 
 def test_site_does_not_hand_type_stale_nearest_rank_p95_values():
     text = _site_text("evaluation.js", "presentation/ch5-evaluation.js", "presentation/ch-work.js", "presentation/slides.js")
-    for stale in ("35.6 s", "34.4 s", "37.5 s", "26.6 s", "43.3 s"):
+    # 43.3 s is now the independently pre-set all-tools experiment limit,
+    # not a rounded latency result.
+    for stale in ("35.6 s", "34.4 s", "37.5 s", "26.6 s"):
         assert stale not in text
 
 

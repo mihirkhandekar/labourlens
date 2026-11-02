@@ -38,7 +38,7 @@ RIGHTS_NOTICE = "Text withheld: excessive verbatim overlap with source evidence.
 
 
 def _tool_transport_from_env() -> str:
-    """LABOURLENS_MCP=false (the D-053 switch) means direct; otherwise LABOURLENS_TOOL_TRANSPORT (direct | mcp_stats | mcp_all, default mcp_all).
+    """LABOURLENS_MCP=false (the D-053 switch) means direct; otherwise LABOURLENS_TOOL_TRANSPORT (direct | mcp_stats | mcp_all, default mcp_stats).
     An unknown value stops the start-up rather than quietly choosing a route."""
     from labourlens.agent.served import DEFAULT_TRANSPORT, TRANSPORTS
 
@@ -69,7 +69,7 @@ class Settings:
     feedback_dir: Path = field(default_factory=lambda: paths.DATA / "audit")
     triage_enabled: bool = True        # D-051: LLM scope check in front of the agent, web app only
     contextualise_enabled: bool = True # D-054: follow-up and relative-date rewrite before triage, web app only
-    tool_transport: str = "mcp_all"    # D-066: how the agent's three tools reach their data: mcp_all (live default), mcp_stats (get_series only, D-053) or direct (LABOURLENS_TOOL_TRANSPORT)
+    tool_transport: str = "mcp_stats"    # D-066: how the agent's three tools reach their data: mcp_stats (live default: get_series only, D-053), mcp_all (all three tools, measured, not live) or direct (LABOURLENS_TOOL_TRANSPORT)
 
     @property
     def mcp_enabled(self) -> bool:

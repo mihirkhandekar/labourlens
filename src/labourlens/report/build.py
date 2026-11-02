@@ -1093,18 +1093,20 @@ def _final_paired_text(text: object) -> dict:
 
 def _served_chain(artifacts: _Artifacts) -> dict:
     rows, provenance = [], []
-    for route in ("mcp-on", "direct-on", "direct-off"):
+    for route in ("mcp-on", "direct-on", "direct-off", "mcpall"):
         for model in _V2_MODELS:
             path = f"experiments/runs/served-dev-S65-{route}/{model}.metrics.json"
             data = artifacts.mapping(path)
             if data:
-                rows.append({"route": route, "model": model, "metrics": _numeric(data.get("metrics", {}))})
+                rows.append({"route": "mcp-all" if route == "mcpall" else route, "model": model, "metrics": _numeric(data.get("metrics", {}))})
                 provenance.append(path)
     paired = {}
-    for control in ("direct-on", "direct-off"):
-        path = f"experiments/served/paired-S65-{control}.json"
-        paired[control] = _numeric(artifacts.mapping(path).get("per_model", {}))
-        provenance.append(path)
+    for key, path in (("direct-on", "experiments/served/paired-S65-direct-on.json"), ("direct-off", "experiments/served/paired-S65-direct-off.json"),
+                      ("mcpall-vs-direct-on", "experiments/served/paired-S65-mcpall-vs-direct-on.json"), ("mcpall-vs-mcp-on", "experiments/served/paired-S65-mcpall-vs-mcp-on.json")):
+        data = _numeric(artifacts.mapping(path).get("per_model", {}))
+        if data:
+            paired[key] = data
+            provenance.append(path)
     return {"rows": rows, "paired": paired, "provenance": provenance,
             "limits": "65 cases: 51 development gold cases, 8 diversion probes and 6 context probes. One run, same judge family, hand-written probes, date fixed to 2 Nov 2026. Not independent evidence. The web-steps-off control changes two factors."}
 

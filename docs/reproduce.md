@@ -4,6 +4,8 @@ Exact commands from a fresh clone. Each step says what it needs. Costs are from 
 
 **Reruns are not bit-reproducible.** Requests set no temperature, top_p or seed. Agent/served raw generation provenance records `sampling`; eval publishes this as `generation_sampling` in metrics. Threat-test metrics use `sampling`. Unset values are recorded as `provider-default`, not an invented temperature or seed.
 
+Ids inside commands (for example `agent-dev-A3`, `S65`, `FIN`) are internal experiment names that must stay as they are; each is explained beside its command and in the [glossary](glossary.md). Tags starting `MY-` are placeholders for names you choose.
+
 ## Quick start — report and MCP, zero spend
 
 Prerequisites: Git, uv, CPython 3.12 (uv can provision it) and make for make targets. No Node/npm, Docker, provider key or private corpus is needed. Clone the supplied repository URL and enter its root, then run:
@@ -31,14 +33,14 @@ Open `http://127.0.0.1:8000/`, `/deck` and `/workbench`. Without make, install w
 | Documents and passages | `uv run labourlens fetch --kind documents`, then `build` | network, time; the MOM and MTI files are not redistributed | local `data/raw/`, `data/passages/` (gitignored) | none |
 | MCP protocol demo | `uv run labourlens mcp-demo` | committed statistical store, manifest and snapshots; no private MOM/MTI corpus | writes gitignored `data/runs/mcp-demo-transcript.md`; leave committed transcript unchanged | none |
 | MCP-backed agent run | `uv run labourlens mcp-agent-demo` | corpus, `OPENAI_API_KEY` | rewrites `artifacts/mcp-agent-demo.md`; recorded run cost about $0.001 | paid, small |
-| Re-score saved raw answers, no judge | `uv run labourlens eval --exp agent-dev-A3 --no-judge --gold experiments/gold/archive/gold-v3.5.jsonl --force` | scratch checkout only, original private `data/runs/` records; deliberately replaces scratch evaluation output | deterministic rescoring, not restoration of judge metrics | none |
-| A new dev experiment | `uv run labourlens agent-exp --split dev --tag MY-SMOKE --pairs gpt-6-luna`, then `eval --exp agent-dev-MY-SMOKE` | corpus, `OPENAI_API_KEY`; new unused tag | new files; refuses an existing id | paid; saved X2 generation $0.00285/$0.00463 per case plus judge $0.243/$0.2689 per 237 cases |
+| Re-score saved raw answers, no judge (`agent-dev-A3` is the filter-then-rerank run, one of the five first-build development runs) | `uv run labourlens eval --exp agent-dev-A3 --no-judge --gold experiments/gold/archive/gold-v3.5.jsonl --force` | scratch checkout only, original private `data/runs/` records; deliberately replaces scratch evaluation output | deterministic rescoring, not restoration of judge metrics | none |
+| A new development experiment (`MY-SMOKE` is a tag you choose) | `uv run labourlens agent-exp --split dev --tag MY-SMOKE --pairs gpt-6-luna`, then `eval --exp agent-dev-MY-SMOKE` | corpus, `OPENAI_API_KEY`; new unused tag | new files; refuses an existing id | paid; for scale, the saved regression check cost $0.00285/$0.00463 per case for generation, plus judge $0.243/$0.2689 per 237 cases |
 | Threat suite | `uv run labourlens threat-test --experiment MY-THREATS-20261102 --models gpt-6-luna gpt-5.6-luna` | complete corpus, `OPENAI_API_KEY`; choose a new unused identifier | per-case results under `experiments/threats/` | paid requests |
-| Final aggregation and paired comparisons | `uv run python scripts/final_mean.py`; full `paired` command below | committed scored rows, no private corpus/key | two-run headline or separate paired diagnostics | none |
-| Saved second-family summary | `uv run labourlens judge-xfamily --experiment sonnet55-FIN-s60-b-20261102 --summary` | checkout only | saved summary, no calls or writes | none |
-| New second-family dry-run | `uv run labourlens judge-xfamily --experiment MY-JUDGE-20261102 --dry-run` | private FIN raw outputs to construct paired sample | token/list-price heuristic, not a bill; unavailable in public clone | none |
+| Final aggregation and paired comparisons | `uv run python scripts/final_mean.py`; full `paired` command below | committed scored rows, no private corpus/key | the two-run mean headline of the final evaluation, or separate paired diagnostics | none |
+| Saved second-family summary (the second-judge check: `FIN` is the first run of the final evaluation, whose answers were judged; `s60` is 60 cases per generator) | `uv run labourlens judge-xfamily --experiment sonnet55-FIN-s60-b-20261102 --summary` | checkout only | saved summary, no calls or writes | none |
+| New second-family dry-run | `uv run labourlens judge-xfamily --experiment MY-JUDGE-20261102 --dry-run` | private raw outputs of the first run of the final evaluation, to construct the paired sample | token/list-price heuristic, not a bill; unavailable in public clone | none |
 | Embedding-cache preparation | `uv run labourlens dense-exp --force` | scratch checkout only, complete corpus, `OPENAI_API_KEY`; replaces fixed-name scratch experiment outputs | cached vectors needed before live serving | paid embeddings |
-| Human review ingestion | review-ingest / v2-approve commands | original owner exports and associated private review inputs | original signed records remain the evidence; never fabricate missing inputs | none |
+| Human review ingestion (`v2-approve` is the approval step for the 65 fresh questions) | review-ingest and v2-approve commands | original owner exports and associated private review inputs | original signed records remain the evidence; never fabricate missing inputs | none |
 
 Published numbers come from saved outputs. Re-running a model gives different outputs; that is expected and does not change the published results. Do not use `--force` on a registered experiment: it overwrites frozen evidence.
 
@@ -66,22 +68,23 @@ A fresh fetch acquires current publisher bytes, not necessarily the historical c
 
 In `experiments/triage/*/raw.jsonl` and `experiments/context/*/raw.jsonl`, `raw.jsonl` holds routing results, not transcripts.
 
-## Final two-run headline and 2 Nov measurements (D-061)
+## Final two-run headline and 2 Nov measurements
 
-The [FIN2 pre-registration](experiments/fin2-replicate.md) was amended before results to use the mean of two runs. Both single runs remain visible. The commands below document reproduction, not commands executed by this documentation pass. Paid commands require the private corpus and a key. Existing tags below are frozen: substitute a new tag/destination for a new experiment, never use `--force`. The relative-date probes are anchored to 2 Nov 2026; a different date requires a newly declared fixture rather than silently reusing their expected labels.
+The [pre-registration of the second run](experiments/fin2-replicate.md) of the final evaluation was amended before results to use the mean of the two runs. Both single runs remain visible. The commands below document reproduction, not commands executed by this documentation pass. Paid commands require the private corpus and a key. Existing tags below are frozen: substitute a new tag/destination for a new experiment, never use `--force`. The relative-date probes are anchored to 2 Nov 2026; a different date requires a newly declared fixture rather than silently reusing their expected labels.
 
 ### Final aggregate (offline, no model calls)
 
 ```sh
+# the two-run mean of the first and second runs of the final evaluation (folders FIN and FIN2)
 uv run python scripts/final_mean.py
 ```
 
-This reads committed FIN/FIN2 scored cases and writes `experiments/eval/final-mean.json`. It asserts identical case membership within each repeated arm, averages each case's two binary outcomes, and computes paired 95% case-bootstrap intervals with 10,000 resamples and seed 20261030. It also saves both run costs, medians and all-case false-answer/over-abstention rates. Mean-of-medians is not pooled p50, and two runs are not a variance estimate. Run only on a disposable reproduction checkout if you need to preserve the existing generated file unchanged.
+This reads the committed scored cases of the first and second runs and writes `experiments/eval/final-mean.json`. It asserts identical case membership within each repeated arm, averages each case's two binary outcomes, and computes paired 95% case-bootstrap intervals with 10,000 resamples and seed 20261030. It also saves both run costs, medians and all-case false-answer/over-abstention rates. Mean-of-medians is not pooled p50, and two runs are not a variance estimate. Run only on a disposable reproduction checkout if you need to preserve the existing generated file unchanged.
 
-For the final headline use `scripts/final_mean.py`, which selects each declared question set. Stored generic FIN2 development/original-heldout paired files used combined gold and have incomplete-membership diagnostics; their generic adoption verdicts are not valid split-specific headline tests. Keep those historical files unchanged.
-Regenerating those generic FIN2 files needs explicit split selection while preserving the parent gold hash, not manual deletion of missing cases.
+For the final headline use `scripts/final_mean.py`, which selects each declared question set. Stored generic paired files for the second run, on the 237 development questions and the original 31 test questions, used combined gold and have incomplete-membership diagnostics; their generic adoption verdicts are not valid split-specific headline tests. Keep those historical files unchanged.
+Regenerating those generic second-run files needs explicit split selection while preserving the parent gold hash, not manual deletion of missing cases.
 
-To recompute a separate complete held-out v2 comparison from committed scores, choose an unused output path:
+To recompute a separate complete comparison on the 65 fresh questions from committed scores, choose an unused output path:
 
 ```sh
 uv run labourlens paired --gold experiments/gold/heldout_v2_v1.jsonl --candidate agent-heldout-V2-r3 --baseline agent-heldout-V2-hybrid --models gpt-6-luna gpt-5.6-luna --out /tmp/labourlens-paired-v2-new.json
@@ -92,16 +95,18 @@ uv run labourlens paired --gold experiments/gold/heldout_v2_v1.jsonl --candidate
 ### Tagged current-corpus retrieval (paid reranking/possible embeddings)
 
 ```sh
+# tag V31 = the current-corpus retrieval re-run (128 development report questions, build v3.1)
 uv run labourlens retrieval-exp2 --tag V31
 ```
 
-Historical command, now refuses because V31 exists. Use a new tag for a new run. It writes isolated corpus/model-keyed caches, per-configuration directories `dev-R-<tag>-R*` and a sibling summary directory. Saved [V31 summary](../experiments/runs/dev-R-V31/SUMMARY.md) records 1,847 chunks, gold v3.6 and the actual corpus hash. Do not overwrite or pool the frozen v1 ladder.
+Historical command (`V31` tags the current-corpus retrieval re-run); it now refuses because that tag exists. Use a new tag for a new run. It writes isolated corpus/model-keyed caches, per-configuration directories `dev-R-<tag>-R*` and a sibling summary directory. Saved [current-corpus summary](../experiments/runs/dev-R-V31/SUMMARY.md) records 1,847 chunks, gold v3.6 and the actual corpus hash. Do not overwrite or pool the frozen v1 ladder.
 
 ### Served research chain (paid generation and judging)
 
 Historical commands, one run per model and arm:
 
 ```sh
+# S65 = the served-chain check (65 cases); mcp-on / direct-on / direct-off = which route and whether the web-only steps were used
 uv run labourlens served-exp --split dev --gold experiments/served/mixed-sample.jsonl --pairs gpt-6-luna gpt-5.6-luna --tag S65-mcp-on --retrieval r3 --route mcp --web-steps on
 uv run labourlens served-exp --split dev --gold experiments/served/mixed-sample.jsonl --pairs gpt-6-luna gpt-5.6-luna --tag S65-direct-on --retrieval r3 --route direct --web-steps on
 uv run labourlens served-exp --split dev --gold experiments/served/mixed-sample.jsonl --pairs gpt-6-luna gpt-5.6-luna --tag S65-direct-off --retrieval r3 --route direct --web-steps off
@@ -112,37 +117,41 @@ uv run labourlens paired --gold experiments/served/mixed-sample.jsonl --candidat
 uv run labourlens paired --gold experiments/served/mixed-sample.jsonl --candidate served-dev-S65-mcp-on --baseline served-dev-S65-direct-off --models gpt-6-luna gpt-5.6-luna --out experiments/served/paired-S65-direct-off.json
 ```
 
-Scoring/paired commands need saved raw or scored rows; judging is paid, paired analysis offline. Mixed n=65 comprises 51 stratified reused development gold plus 8 diversion/6 context probes, not 65 new gold cases. The web-on route comparison is the matched-factor comparison; web-off changes route and front steps together. The paired command's generic adoption verdict is not the served protocol's H1/H2 verdict. Exact-case FIN and matched-call numerical-audit commands are in the [served registration](experiments/served-chain-eval.md); those require private raw records for matched-call auditing. Browser HTTP admission, login and rights projection are not evaluated by this harness.
+Scoring/paired commands need saved raw or scored rows; judging is paid, paired analysis offline. Mixed n=65 comprises 51 stratified reused development gold plus 8 diversion/6 context probes, not 65 new gold cases. The web-on route comparison is the matched-factor comparison; web-off changes route and front steps together. The paired command's generic adoption verdict is not the served-chain check's own verdict (within three points on the same 51 questions; matched numerical records). The exact-case comparison and matched-call numerical-audit commands are in the [served registration](experiments/served-chain-eval.md); those require private raw records for matched-call auditing. Browser HTTP admission, login and rights projection are not evaluated by this harness.
 
-### T-I06 scorer v2 (offline diagnostics versus paid fresh generation)
+### Second scorer for the planted-false-figure attack (offline diagnostics versus paid fresh generation)
 
 Historical commands, all destinations already exist. Use new destination ids for any further work:
 
 ```sh
+# ti06 = the planted-false-figure attack (case T-I06); v2 = the second scorer; the date suffix is the run date
+# 1-3: rescore saved answers of the original attack run, the 31 Oct post-fix attack run (m7-ti06-postfix-...) and the 31 Oct fixed-system attack run (m7-e2efix-...)
 uv run labourlens threat-test --rescore --source-experiment . --experiment ti06-v2-original-20261102 --scorer v2
 uv run labourlens threat-test --rescore --source-experiment m7-ti06-postfix-20261031 --experiment ti06-v2-postfix-20261102 --scorer v2
 uv run labourlens threat-test --rescore --source-experiment m7-e2efix-20261031 --experiment ti06-v2-e2efix-20261102 --scorer v2
+# 4-5: the fresh 2 Nov attack rerun (defended, then with the defences switched off)
 uv run labourlens threat-test --models gpt-6-luna gpt-5.6-luna --experiment ti06-v2-fresh-20261102 --scorer v2
 uv run labourlens threat-test --models gpt-6-luna gpt-5.6-luna --ablation naive --experiment ti06-v2-fresh-20261102 --scorer v2
 ```
 
 The first three commands need private saved answers, no model calls; outputs are post-hoc diagnostics. The last two make paid calls on the known 36-case suite and save both scorer verdicts. V1 remains default and all registered historical scores stay unchanged. [Rule declaration](experiments/t-i06-scorer-v2-rule.md), [fresh results](../experiments/threats/ti06-v2-fresh-20261102/SUMMARY.md). A fresh clone can inspect committed metrics/scores, but cannot reproduce raw-answer diagnostics without the private outputs.
 
-## Second-family judge check (D-062)
+## Second-family judge check
 
-The [declaration and continuation amendment](experiments/second-judge.md) describe the saved `sonnet55-FIN-s60-b-20261102` experiment. This documentation pass did not run these commands. A clone can read the committed [summary](../experiments/xjudge/sonnet55-FIN-s60-b-20261102/SUMMARY.md) and `summary.json`; a new judging run needs the private saved raw outputs, `ANTHROPIC_API_KEY` and a new experiment ID.
+The [declaration and continuation amendment](experiments/second-judge.md) describe the saved second-judge check, experiment `sonnet55-FIN-s60-b-20261102` (FIN is the first run of the final evaluation, whose answers it judged). This documentation pass did not run these commands. A clone can read the committed [summary](../experiments/xjudge/sonnet55-FIN-s60-b-20261102/SUMMARY.md) and `summary.json`; a new judging run needs the private saved raw outputs, `ANTHROPIC_API_KEY` and a new experiment ID.
 
 ```sh
+# the second-judge check: FIN = the first run of the final evaluation (the answers judged), s60 = 60 cases per generator
 uv run labourlens judge-xfamily --experiment sonnet55-FIN-s60-b-20261102 --summary
 ```
 
-A new dry-run needs private FIN raw outputs; it is not checkout-only:
+A new dry-run needs private raw outputs of the first run of the final evaluation; it is not checkout-only:
 
 ```sh
 uv run labourlens judge-xfamily --experiment MY-JUDGE-20261102 --dry-run
 ```
 
-The summary command reads saved paired and agreement output only. A new dry-run makes no API call but still requires private FIN raw outputs to construct its sample; it does not work from this public clone. Paid execution additionally needs `ANTHROPIC_API_KEY`, a new immutable ID and an explicit `--max-usd`.
+The summary command reads saved paired and agreement output only. A new dry-run makes no API call but still requires private raw outputs of the first run of the final evaluation to construct its sample; it does not work from this public clone. Paid execution additionally needs `ANTHROPIC_API_KEY`, a new immutable ID and an explicit `--max-usd`.
 
 ## Deploy — your registry, domain and private corpus
 

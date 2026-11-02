@@ -47,17 +47,18 @@ function progressionFigure(m) {
   const series = Object.keys(MODEL_CLS).map(name => ({
     key: name, label: name, cls: MODEL_CLS[name], focus: name === 'gpt-6-luna',
     rows: ids.map(id => m.evalRow(`dev-${id}`, name)),
-  })).map(s => ({...s, values: s.rows.map(r => r ? metricOf(r.metrics.behaviour_accuracy).rate : null), ci: s.rows.map(r => r ? metricOf(r.metrics.behaviour_accuracy).ci : null), ns: s.rows.map(r => r ? r.metrics.n_cases : null)}));
-  const luna = series[0], luna56 = series[1];
+  })).filter(s => s.rows.some(Boolean)).map(s => ({...s, values: s.rows.map(r => r ? metricOf(r.metrics.behaviour_accuracy).rate : null), ci: s.rows.map(r => r ? metricOf(r.metrics.behaviour_accuracy).ci : null), ns: s.rows.map(r => r ? r.metrics.n_cases : null)}));
+  const luna = series[0], luna56 = series.find(z => z.key === 'gpt-5.6-luna');
   const a1 = luna.values[0], a3 = luna.values[2];
   const val = (name, i) => series.find(z => z.key === name).values[i];
-  const promptMove = Math.max(...['gpt-6-luna', 'gpt-5.6-luna'].map(n => Math.abs(val(n, 1) - val(n, 0))));
-  const flat = Math.max(...['gpt-6-luna', 'gpt-5.6-luna'].flatMap(n => [Math.abs(val(n, 3) - val(n, 2)), Math.abs(val(n, 4) - val(n, 2))]));
+  const present = ['gpt-6-luna', 'gpt-5.6-luna'].filter(n => series.some(z => z.key === n));
+  const promptMove = Math.max(...present.map(n => Math.abs(val(n, 1) - val(n, 0))));
+  const flat = Math.max(...present.flatMap(n => [Math.abs(val(n, 3) - val(n, 2)), Math.abs(val(n, 4) - val(n, 2))]));
   const aside = el('ol', 'pr-steps');
   STEPS.forEach(([id, text]) => { const li = el('li'); li.append(el('strong', '', id), el('span', '', text)); aside.append(li); });
   return figure({
     id: 'fig-progression', title: `Changing retrieval to r3 raised gpt-6-luna behaviour accuracy from ${fmt.pct(a1)} to ${fmt.pct(a3)} (A1 to A3, ${luna.ns[2]} cases)`, wide: true,
-    takeaway: `gpt-5.6-luna: ${fmt.pct(luna56.values[0])} to ${fmt.pct(luna56.values[2])}. Answer prompt (A2) moves either model by at most ${(100 * promptMove).toFixed(1)} points. I did not adopt the wider pool (A4) or planner v2 (A5): each stays within ${(100 * flat).toFixed(1)} points of A3.`,
+    takeaway: `${luna56 ? `gpt-5.6-luna: ${fmt.pct(luna56.values[0])} to ${fmt.pct(luna56.values[2])}. ` : ''}Answer prompt (A2) moves ${luna56 ? 'either model' : 'it'} by at most ${(100 * promptMove).toFixed(1)} points. I did not adopt the wider pool (A4) or planner v2 (A5): each stays within ${(100 * flat).toFixed(1)} points of A3.`,
     summary: series.map(s => `${s.label}: ${s.values.map((v, i) => finite(v) ? `${ids[i]} ${fmt.pct(v)}` : '').filter(Boolean).join(', ')}`).join('. '),
     source: {data: 'report.json › evaluation.rows[agent-dev-A1..A5/*].metrics.behaviour_accuracy', files: ['experiments/eval/agent-dev-A1..A5/*.metrics.json']},
     note: 'A1 and A2 scored 235 cases; A3 to A5 scored 237. The A1 to A3 gain is descriptive, not a paired significance test. Whiskers are 95% bootstrap intervals.',
@@ -97,7 +98,7 @@ function devHeldFigure(m) {
   };
   const rows = [];
   const summary = [];
-  ['gpt-6-luna', 'gpt-5.6-luna'].forEach(name => {
+  ['gpt-6-luna', 'gpt-5.6-luna'].filter(name => m.evalRow('dev-A3', name)).forEach(name => {
     rows.push({group: true, label: name});
     const dev = mk(name, 'Development, A3', m.evalRow('dev-A3', name), 'c1', false), r3 = mk(name, 'Held-out, r3', m.heldRow('r3', name), 'c1', true), hy = mk(name, 'Held-out, hybrid', m.heldRow('hybrid', name), 'c6', false);
     rows.push(dev, r3, hy);
@@ -136,7 +137,7 @@ function pairedFigure(m) {
   const a = current.models['gpt-6-luna'], b = current.models['gpt-5.6-luna'];
   return figure({
     id: 'fig-paired', title: `r3 minus hybrid is ${fmt.pts(a.diff)} for gpt-6-luna on ${current.n} held-out cases: ${a.ci95[0] <= 0 ? 'not demonstrated' : 'interval excludes zero'}`, wide: true,
-    takeaway: `gpt-6-luna interval ${fmt.pts(a.ci95[0])} to ${fmt.pts(a.ci95[1])}. gpt-5.6-luna ${fmt.pts(b.diff)}, interval ${fmt.pts(b.ci95[0])} to ${fmt.pts(b.ci95[1])}. Registered rule: inconclusive. I make no claim that r3 improves held-out accuracy.`,
+    takeaway: `gpt-6-luna interval ${fmt.pts(a.ci95[0])} to ${fmt.pts(a.ci95[1])}. ${b ? `gpt-5.6-luna ${fmt.pts(b.diff)}, interval ${fmt.pts(b.ci95[0])} to ${fmt.pts(b.ci95[1])}. ` : ''}Registered rule: inconclusive. I make no claim that r3 improves held-out accuracy.`,
     summary: rows.filter(r => !r.group).map(r => `${r.lines[0]}: ${fmt.pts(r.value)}, CI ${fmt.pts(r.ci[0])} to ${fmt.pts(r.ci[1])}`).join('. '),
     source: {data: 'report.json › evaluation.paired[*].models', files: ['experiments/heldout/paired.txt', 'experiments/heldout/paired-v3.3.txt', 'experiments/heldout/paired-v3.2.txt']},
     note: `Same ${current.n} cases for both retrievers, ${fmt.int(current.resamples)} case-bootstrap resamples. Brass whiskers touch or cross zero. Grey rows show the same comparison under earlier gold versions.`,

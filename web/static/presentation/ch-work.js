@@ -140,7 +140,8 @@ function failures(m) {
   const out = el('div');
   out.append(wrap, el('h5', 'pr-mini-title', 'Held-out behaviour accuracy by gold version'), dataTable('n=31 cases per row', ['Run', 'v3.2 (as run)', 'v3.3', 'v3.4', 'v3.5 (current)'], table));
   const pe = m.paired;
-  if (pe.length) out.append(dataTable('Paired difference, r3 minus hybrid, by gold version', ['Version', 'gpt-6-luna', 'gpt-5.6-luna'], pe.map(e => [e.gold_version, ...['gpt-6-luna', 'gpt-5.6-luna'].map(n => `${fmt.pts(e.models[n].diff)} [${fmt.pts(e.models[n].ci95[0])}, ${fmt.pts(e.models[n].ci95[1])}]`)])));
+  const pairedNames = ['gpt-6-luna', 'gpt-5.6-luna'].filter(n => pe.every(e => e.models?.[n]));
+  if (pe.length) out.append(dataTable('Paired difference, r3 minus hybrid, by gold version', ['Version', ...pairedNames], pe.map(e => [e.gold_version, ...pairedNames.map(n => `${fmt.pts(e.models[n].diff)} [${fmt.pts(e.models[n].ci95[0])}, ${fmt.pts(e.models[n].ci95[1])}]`)])));
   out.append(el('p', 'pr-small', 'Gold v3.5 applies HO-022 and DEV-018. Development runs A1-A5 and the four registered held-out arms were rescored on v3.5 from saved outputs, with no new answer generation. v3.6 migrates evidence ids for corpus v2 only.'), evi('report.json \u203a evaluation.paired \u00b7 docs/evaluation-report.md \u00b7 README.md'));
   return out;
 }

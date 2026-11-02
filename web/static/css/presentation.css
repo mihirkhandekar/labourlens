@@ -1205,4 +1205,11 @@ th[aria-sort="descending"] .pr-sort::after { content: " \2193"; }
 .owner-agent-boundary { stroke: var(--c3); stroke-width: 2; stroke-dasharray: 5 5; }
 .owner-agent-label.is-mcp-detail { fill: var(--c3); font-size: 24px; }
 .owner-model-early .mc-row > .deck-tip { max-width: 900px; width: 900px; font-size: 22px; }
-.owner-mcp .owner-mcp-evidence { font-size: 24px; color: var(--accent); }
+.owner-mcp .owner-mcp-evidence { font-size: 24px; color: var(--accent); line-height: 1.3; }
+.deck-slide .owner-mcp { gap: 18px; }
+.deck-slide .owner-mcp .owner-mcp-server { padding: 20px 26px; }
+.deck-slide .owner-mcp .owner-mcp-server h3 { margin-bottom: 14px; }
+.deck-slide .owner-mcp .owner-mcp-tools { margin-bottom: 16px; }
+.deck-slide .owner-mcp .owner-mcp-tool { min-height: 64px; padding-top: 10px; padding-bottom: 10px; }
+.tm-models.is-two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.fc-cols.is-two { grid-template-columns: repeat(2, minmax(0, 1fr)); }

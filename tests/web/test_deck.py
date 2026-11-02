@@ -303,15 +303,28 @@ def test_model_choice_is_read_from_the_screen_metrics():
     assert (luna["false_answer_rate"], luna["cost_per_case_usd"], luna["over_abstention_rate"]) == (0.0, 0.00051, 0.417)
     assert luna56["behavior_accuracy"] > luna["behavior_accuracy"] and luna56["false_answer_rate"] == 0.0
     main = _slides_main_section()
-    assert "Early screen on 30 questions" in block and "Final two on 237 questions" in block
+    assert "Early screen on 30 questions" in block and "Final system on 237 questions" in block
     assert "95% Wilson interval" in block and "wilson(right, n)" in block and "runs.run1" in block and "runs.run2" in block
-    assert "Tied on final accuracy" in main and "about 60% as much" in main and "No run shows either is more accurate" in main
+    models_slide = main.split("title: 'Choosing models'", 1)[1].split("\n  });", 1)[0]
+    assert "gpt-5.6" not in models_slide and "89.7%" in models_slide and "no false answers at the lowest cost" in models_slide
     final = next(s for s in report["final_evaluation"]["splits"] if s["id"] == "dev")
     arms = {a["model"]: a for a in final["arms"] if a["arm"] == "r3"}
-    assert arms["gpt-6-luna"]["runs"]["mean"] == arms["gpt-5.6-luna"]["runs"]["mean"]
+    assert round(arms["gpt-6-luna"]["runs"]["mean"], 3) == 0.897
     for arm in arms.values():
         for key, metric in [("false_answer", "false_answer_rate"), ("over_abstain", "over_abstention_rate")]:
             assert arm["metrics"][metric]["rate"] == sum(arm["runs"][key]) / 2
+
+
+def test_deck_presents_gpt_6_luna_alone_and_the_report_keeps_both():
+    model = (STATIC / "presentation" / "model.js").read_text()
+    deck = (STATIC / "presentation" / "deck.js").read_text()
+    assert "export function withoutSecondModel" in model and "export function scrubDom" in model and "export function scrubText" in model
+    assert "slideSpecs(withoutSecondModel(report))" in deck and "scrubDom(slidesHost)" in deck
+    report_story = (STATIC / "js" / "report-story.js").read_text()
+    assert "withoutSecondModel" not in report_story and "scrubDom" not in report_story
+    report = json.loads((STATIC / "data" / "report.json").read_text())
+    assert any(a["model"] == "gpt-5.6-luna" for s in report["final_evaluation"]["splits"] for a in s["arms"]), "report.json keeps both models"
+
 
 
 def test_mcp_slide_states_where_mcp_sits():
@@ -328,14 +341,43 @@ def test_mcp_slide_states_where_mcp_sits():
     assert "calculate_change" in graphics and "Search reports" in graphics and "Only the live get_series path crosses" in (STATIC / "js" / "report-story.js").read_text()
 
 
+def test_mcp_slide_labels_the_all_tools_arm_as_tested_and_not_live():
+    graphics = (STATIC / "presentation" / "graphics.js").read_text()
+    block = graphics.split("export function mcpMap", 1)[1].split("return wrap;", 1)[0]
+    assert "Tested: all three tools over MCP. Slower (slowest 5% about" in block and "no accuracy gain" in block and "Not used live." in block
+    assert "which exceeds the limit set in advance (43.3 s" in block and "never receives the API key" in block
+    assert "improves accuracy" not in block
+    report = json.loads((STATIC / "data" / "report.json").read_text())
+    chain = report["serving"]["chain"]
+    rows = {(r["route"], r["model"]): r["metrics"]["all"] for r in chain["rows"]}
+    if ("mcp-all", "gpt-6-luna") in rows:  # present once the arm's artifacts are committed and the report is rebuilt
+        allm, on, direct = rows[("mcp-all", "gpt-6-luna")], rows[("mcp-on", "gpt-6-luna")], rows[("direct-on", "gpt-6-luna")]
+        assert (allm["behavior_accuracy"], on["behavior_accuracy"], direct["behavior_accuracy"]) == (0.877, 0.908, 0.908)
+        assert allm["latency_p95_s"] > 43.3 and round(allm["latency_p95_s"]) == 51 and round(on["latency_p95_s"]) == 35
+        assert allm["operational_failures"] == 0
+        for key, better, worse in (("mcpall-vs-direct-on", 0, 2), ("mcpall-vs-mcp-on", 1, 3)):
+            p = chain["paired"][key]["gpt-6-luna"]
+            assert (p["better"], p["worse"], p["paired_difference"]) == (better, worse, -0.0308)
+    live = (STATIC / "presentation" / "slides.js").read_text()
+    assert "the live app does not use it" in live and "not used live" in live
+
+
+def test_ladder_hides_fresh_results_and_difference_labels_on_deck_only():
+    slides = (STATIC / "presentation" / "slides.js").read_text()
+    assert "finalComparison(m, {includeFresh: false, showDifference: false})" in slides
+    graphics = (STATIC / "presentation" / "graphics.js").read_text()
+    assert "includeFresh = true, showDifference = true" in graphics
+    assert "if (showDifference)" in graphics
+
+
 def test_threat_slide_reads_counts_from_the_report_data_and_labels_runs():
     graphics = (STATIC / "presentation" / "graphics.js").read_text()
     block = graphics.split("export function threatMatrix", 1)[1].split("return wrap;", 1)[0]
-    assert "threatRuns(m)" in block and "gpt-6-luna (2 Nov)" in block and "gpt-5.6-luna (2 Nov)" in block
+    assert "threatRuns(m)" in block and "(2 Nov)" in block and "groups" in block
     assert "With defences" in block and "Without defences" in block
     assert "scorer_v2?.fresh?.rows" in graphics
     main = _slides_main_section()
-    assert "35/36 in all four configurations" in main and "31 Oct run scored 36/36" in main
+    assert "35/36 with and without defences" in main and "31 Oct run scored 36/36 for defended gpt-6-luna" in main
 
 
 def test_workbench_slide_names_the_live_only_steps():
@@ -396,7 +438,7 @@ def test_build_row_reads_the_final_evaluation_and_the_headline_numbers_come_from
     assert f"{r3['metrics']['behaviour_accuracy']['rate'] * 100:.1f}%" in rerun
     graphics = (STATIC / "presentation" / "graphics.js").read_text(encoding="utf-8")
     slides = (STATIC / "presentation" / "slides.js").read_text(encoding="utf-8")
-    assert "finalComparison(m)" in slides and "provenanceTable(m)" in slides
+    assert "finalComparison(m, {includeFresh: false, showDifference: false})" in slides and "provenanceTable(m)" in slides
     for name in ("finalComparison", "finalSentence", "finalFacts", "provenanceTable"):
         assert f"export function {name}" in graphics
 
