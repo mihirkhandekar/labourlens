@@ -16,6 +16,9 @@ chat:
   gpt-5.4-nano:  {input: 0.20,  output: 1.25}
   gpt-4.1-mini:  {input: 0.40,  output: 1.60}
   gpt-4.1-nano:  {input: 0.10,  output: 0.40}
+  # Anthropic standard/global, verified 2026-11-02:
+  # https://platform.claude.com/docs/en/about-claude/pricing
+  claude-sonnet-5-5: {input: 2.00, output: 10.00, verified: true}
 embedding:
   text-embedding-3-small: {input: 0.02}
   text-embedding-3-large: {input: 0.13}

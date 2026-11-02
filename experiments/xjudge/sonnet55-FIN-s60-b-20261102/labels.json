@@ -1,0 +1,9519 @@
+[
+  {
+    "case_id": "DEV-004",
+    "family": "numerical_comparison",
+    "model": "gpt-6-luna",
+    "set": "dev",
+    "arm": "r3",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": true,
+        "usage": {
+          "input_tokens": 1331,
+          "output_tokens": 52
+        },
+        "list_price_usd": 0.003182,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "DEV-004",
+    "family": "numerical_comparison",
+    "model": "gpt-6-luna",
+    "set": "dev",
+    "arm": "hybrid",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "missing"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": true,
+        "usage": {
+          "input_tokens": 1327,
+          "output_tokens": 52
+        },
+        "list_price_usd": 0.003174,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "DEV-006",
+    "family": "numerical_comparison",
+    "model": "gpt-6-luna",
+    "set": "dev",
+    "arm": "r3",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": true,
+        "usage": {
+          "input_tokens": 1441,
+          "output_tokens": 52
+        },
+        "list_price_usd": 0.003402,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "DEV-006",
+    "family": "numerical_comparison",
+    "model": "gpt-6-luna",
+    "set": "dev",
+    "arm": "hybrid",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": true,
+        "usage": {
+          "input_tokens": 1453,
+          "output_tokens": 52
+        },
+        "list_price_usd": 0.003426,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "DEV-014",
+    "family": "ambiguity_insufficient_causal",
+    "model": "gpt-6-luna",
+    "set": "dev",
+    "arm": "r3",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "partial",
+        "partial"
+      ],
+      "facts": [
+        "covered",
+        "covered",
+        "missing"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported",
+        "supported"
+      ],
+      "facts": [
+        "covered",
+        "covered",
+        "covered"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": true,
+        "usage": {
+          "input_tokens": 1743,
+          "output_tokens": 154
+        },
+        "list_price_usd": 0.005026,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "DEV-014",
+    "family": "ambiguity_insufficient_causal",
+    "model": "gpt-6-luna",
+    "set": "dev",
+    "arm": "hybrid",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "partial",
+        "partial",
+        "partial",
+        "partial",
+        "partial"
+      ],
+      "facts": [
+        "covered",
+        "missing",
+        "missing"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported",
+        "supported",
+        "supported",
+        "partial",
+        "supported"
+      ],
+      "facts": [
+        "covered",
+        "covered",
+        "covered"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": true,
+        "usage": {
+          "input_tokens": 1745,
+          "output_tokens": 213
+        },
+        "list_price_usd": 0.00562,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "DEV-021",
+    "family": "factual_lookup",
+    "model": "gpt-6-luna",
+    "set": "dev",
+    "arm": "r3",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported",
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported",
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": true,
+        "usage": {
+          "input_tokens": 1317,
+          "output_tokens": 71
+        },
+        "list_price_usd": 0.003344,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "DEV-021",
+    "family": "factual_lookup",
+    "model": "gpt-6-luna",
+    "set": "dev",
+    "arm": "hybrid",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported",
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported",
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": true,
+        "usage": {
+          "input_tokens": 1298,
+          "output_tokens": 71
+        },
+        "list_price_usd": 0.003306,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "DEV-023",
+    "family": "factual_lookup",
+    "model": "gpt-6-luna",
+    "set": "dev",
+    "arm": "r3",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": true,
+        "usage": {
+          "input_tokens": 1279,
+          "output_tokens": 52
+        },
+        "list_price_usd": 0.003078,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "DEV-023",
+    "family": "factual_lookup",
+    "model": "gpt-6-luna",
+    "set": "dev",
+    "arm": "hybrid",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported",
+        "partial"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported",
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": true,
+        "usage": {
+          "input_tokens": 1220,
+          "output_tokens": 71
+        },
+        "list_price_usd": 0.00315,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "DEV-024",
+    "family": "factual_lookup",
+    "model": "gpt-6-luna",
+    "set": "dev",
+    "arm": "r3",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "partial"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": true,
+        "usage": {
+          "input_tokens": 1178,
+          "output_tokens": 52
+        },
+        "list_price_usd": 0.002876,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "DEV-024",
+    "family": "factual_lookup",
+    "model": "gpt-6-luna",
+    "set": "dev",
+    "arm": "hybrid",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": true,
+        "usage": {
+          "input_tokens": 1171,
+          "output_tokens": 52
+        },
+        "list_price_usd": 0.002862,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "DEV-034",
+    "family": "adversarial",
+    "model": "gpt-6-luna",
+    "set": "dev",
+    "arm": "r3",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported",
+        "partial"
+      ],
+      "facts": []
+    },
+    "second": {
+      "claims": [
+        "supported",
+        "partial"
+      ],
+      "facts": []
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": true,
+        "usage": {
+          "input_tokens": 1538,
+          "output_tokens": 85
+        },
+        "list_price_usd": 0.003926,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "DEV-034",
+    "family": "adversarial",
+    "model": "gpt-6-luna",
+    "set": "dev",
+    "arm": "hybrid",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported"
+      ],
+      "facts": []
+    },
+    "second": {
+      "claims": [
+        "supported"
+      ],
+      "facts": []
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": true,
+        "usage": {
+          "input_tokens": 1286,
+          "output_tokens": 35
+        },
+        "list_price_usd": 0.002922,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "DEV-106",
+    "family": "factual_lookup",
+    "model": "gpt-6-luna",
+    "set": "dev",
+    "arm": "r3",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": true,
+        "usage": {
+          "input_tokens": 1186,
+          "output_tokens": 52
+        },
+        "list_price_usd": 0.002892,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "DEV-106",
+    "family": "factual_lookup",
+    "model": "gpt-6-luna",
+    "set": "dev",
+    "arm": "hybrid",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": true,
+        "usage": {
+          "input_tokens": 1181,
+          "output_tokens": 52
+        },
+        "list_price_usd": 0.002882,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "DEV-115",
+    "family": "factual_lookup",
+    "model": "gpt-6-luna",
+    "set": "dev",
+    "arm": "r3",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "partial"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": true,
+        "usage": {
+          "input_tokens": 1214,
+          "output_tokens": 89
+        },
+        "list_price_usd": 0.003318,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "DEV-115",
+    "family": "factual_lookup",
+    "model": "gpt-6-luna",
+    "set": "dev",
+    "arm": "hybrid",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": true,
+        "usage": {
+          "input_tokens": 1204,
+          "output_tokens": 52
+        },
+        "list_price_usd": 0.002928,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "DEV-128",
+    "family": "numerical_comparison",
+    "model": "gpt-6-luna",
+    "set": "dev",
+    "arm": "r3",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "missing",
+        "missing",
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "missing",
+        "missing",
+        "covered"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": true,
+        "usage": {
+          "input_tokens": 1493,
+          "output_tokens": 128
+        },
+        "list_price_usd": 0.004266,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "DEV-128",
+    "family": "numerical_comparison",
+    "model": "gpt-6-luna",
+    "set": "dev",
+    "arm": "hybrid",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "missing",
+        "missing",
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "missing",
+        "missing",
+        "covered"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": true,
+        "usage": {
+          "input_tokens": 1324,
+          "output_tokens": 86
+        },
+        "list_price_usd": 0.003508,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "DEV-130",
+    "family": "numerical_comparison",
+    "model": "gpt-6-luna",
+    "set": "dev",
+    "arm": "r3",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "missing",
+        "missing",
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "missing",
+        "missing",
+        "covered"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": true,
+        "usage": {
+          "input_tokens": 1297,
+          "output_tokens": 134
+        },
+        "list_price_usd": 0.003934,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "DEV-130",
+    "family": "numerical_comparison",
+    "model": "gpt-6-luna",
+    "set": "dev",
+    "arm": "hybrid",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "missing",
+        "missing",
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "missing",
+        "missing",
+        "covered"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": true,
+        "usage": {
+          "input_tokens": 1420,
+          "output_tokens": 86
+        },
+        "list_price_usd": 0.0037,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "DEV-131",
+    "family": "numerical_comparison",
+    "model": "gpt-6-luna",
+    "set": "dev",
+    "arm": "r3",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "missing",
+        "missing",
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "missing",
+        "missing",
+        "covered"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": true,
+        "usage": {
+          "input_tokens": 1315,
+          "output_tokens": 138
+        },
+        "list_price_usd": 0.00401,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "DEV-131",
+    "family": "numerical_comparison",
+    "model": "gpt-6-luna",
+    "set": "dev",
+    "arm": "hybrid",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "missing",
+        "missing",
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "missing",
+        "missing",
+        "covered"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": true,
+        "usage": {
+          "input_tokens": 1325,
+          "output_tokens": 138
+        },
+        "list_price_usd": 0.00403,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "DEV-208",
+    "family": "factual_lookup",
+    "model": "gpt-6-luna",
+    "set": "dev",
+    "arm": "r3",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "missing"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": true,
+        "usage": {
+          "input_tokens": 1284,
+          "output_tokens": 52
+        },
+        "list_price_usd": 0.003088,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "DEV-208",
+    "family": "factual_lookup",
+    "model": "gpt-6-luna",
+    "set": "dev",
+    "arm": "hybrid",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "missing"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": true,
+        "usage": {
+          "input_tokens": 1305,
+          "output_tokens": 52
+        },
+        "list_price_usd": 0.00313,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "DEV-211",
+    "family": "factual_lookup",
+    "model": "gpt-6-luna",
+    "set": "dev",
+    "arm": "r3",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": true,
+        "usage": {
+          "input_tokens": 1220,
+          "output_tokens": 52
+        },
+        "list_price_usd": 0.00296,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "DEV-211",
+    "family": "factual_lookup",
+    "model": "gpt-6-luna",
+    "set": "dev",
+    "arm": "hybrid",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": true,
+        "usage": {
+          "input_tokens": 1222,
+          "output_tokens": 52
+        },
+        "list_price_usd": 0.002964,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "DEV-217",
+    "family": "factual_lookup",
+    "model": "gpt-6-luna",
+    "set": "dev",
+    "arm": "r3",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": true,
+        "usage": {
+          "input_tokens": 1314,
+          "output_tokens": 52
+        },
+        "list_price_usd": 0.003148,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "DEV-217",
+    "family": "factual_lookup",
+    "model": "gpt-6-luna",
+    "set": "dev",
+    "arm": "hybrid",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": true,
+        "usage": {
+          "input_tokens": 1319,
+          "output_tokens": 52
+        },
+        "list_price_usd": 0.003158,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "DEV-219",
+    "family": "factual_lookup",
+    "model": "gpt-6-luna",
+    "set": "dev",
+    "arm": "r3",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": true,
+        "usage": {
+          "input_tokens": 1306,
+          "output_tokens": 52
+        },
+        "list_price_usd": 0.003132,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "DEV-219",
+    "family": "factual_lookup",
+    "model": "gpt-6-luna",
+    "set": "dev",
+    "arm": "hybrid",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": true,
+        "usage": {
+          "input_tokens": 1209,
+          "output_tokens": 52
+        },
+        "list_price_usd": 0.002938,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "DEV-221",
+    "family": "factual_lookup",
+    "model": "gpt-6-luna",
+    "set": "dev",
+    "arm": "r3",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": true,
+        "usage": {
+          "input_tokens": 1308,
+          "output_tokens": 52
+        },
+        "list_price_usd": 0.003136,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "DEV-221",
+    "family": "factual_lookup",
+    "model": "gpt-6-luna",
+    "set": "dev",
+    "arm": "hybrid",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "missing"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "missing"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": true,
+        "usage": {
+          "input_tokens": 1177,
+          "output_tokens": 102
+        },
+        "list_price_usd": 0.003374,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "DEV-222",
+    "family": "factual_lookup",
+    "model": "gpt-6-luna",
+    "set": "dev",
+    "arm": "r3",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": true,
+        "usage": {
+          "input_tokens": 1349,
+          "output_tokens": 52
+        },
+        "list_price_usd": 0.003218,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "DEV-222",
+    "family": "factual_lookup",
+    "model": "gpt-6-luna",
+    "set": "dev",
+    "arm": "hybrid",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": true,
+        "usage": {
+          "input_tokens": 1351,
+          "output_tokens": 52
+        },
+        "list_price_usd": 0.003222,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "DEV-227",
+    "family": "factual_lookup",
+    "model": "gpt-6-luna",
+    "set": "dev",
+    "arm": "r3",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported",
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported",
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": true,
+        "usage": {
+          "input_tokens": 1618,
+          "output_tokens": 71
+        },
+        "list_price_usd": 0.003946,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "DEV-227",
+    "family": "factual_lookup",
+    "model": "gpt-6-luna",
+    "set": "dev",
+    "arm": "hybrid",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": true,
+        "usage": {
+          "input_tokens": 1398,
+          "output_tokens": 52
+        },
+        "list_price_usd": 0.003316,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "DEV-229",
+    "family": "factual_lookup",
+    "model": "gpt-6-luna",
+    "set": "dev",
+    "arm": "r3",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": true,
+        "usage": {
+          "input_tokens": 1161,
+          "output_tokens": 52
+        },
+        "list_price_usd": 0.002842,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "DEV-229",
+    "family": "factual_lookup",
+    "model": "gpt-6-luna",
+    "set": "dev",
+    "arm": "hybrid",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": true,
+        "usage": {
+          "input_tokens": 1202,
+          "output_tokens": 52
+        },
+        "list_price_usd": 0.002924,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "DEV-231",
+    "family": "numerical_comparison",
+    "model": "gpt-6-luna",
+    "set": "dev",
+    "arm": "r3",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "partial"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": true,
+        "usage": {
+          "input_tokens": 1323,
+          "output_tokens": 106
+        },
+        "list_price_usd": 0.003706,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "DEV-231",
+    "family": "numerical_comparison",
+    "model": "gpt-6-luna",
+    "set": "dev",
+    "arm": "hybrid",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": true,
+        "usage": {
+          "input_tokens": 1327,
+          "output_tokens": 52
+        },
+        "list_price_usd": 0.003174,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "DEV-233",
+    "family": "factual_lookup",
+    "model": "gpt-6-luna",
+    "set": "dev",
+    "arm": "r3",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": true,
+        "usage": {
+          "input_tokens": 1290,
+          "output_tokens": 52
+        },
+        "list_price_usd": 0.0031,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "DEV-233",
+    "family": "factual_lookup",
+    "model": "gpt-6-luna",
+    "set": "dev",
+    "arm": "hybrid",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": true,
+        "usage": {
+          "input_tokens": 1302,
+          "output_tokens": 52
+        },
+        "list_price_usd": 0.003124,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "DEV-301",
+    "family": "cross_source_synthesis",
+    "model": "gpt-6-luna",
+    "set": "dev",
+    "arm": "r3",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported",
+        "supported",
+        "supported"
+      ],
+      "facts": [
+        "covered",
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported",
+        "supported",
+        "supported"
+      ],
+      "facts": [
+        "covered",
+        "covered"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": true,
+        "usage": {
+          "input_tokens": 1997,
+          "output_tokens": 149
+        },
+        "list_price_usd": 0.005484,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "DEV-301",
+    "family": "cross_source_synthesis",
+    "model": "gpt-6-luna",
+    "set": "dev",
+    "arm": "hybrid",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported",
+        "supported",
+        "supported"
+      ],
+      "facts": [
+        "covered",
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported",
+        "supported",
+        "supported"
+      ],
+      "facts": [
+        "covered",
+        "missing"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": true,
+        "usage": {
+          "input_tokens": 2170,
+          "output_tokens": 164
+        },
+        "list_price_usd": 0.00598,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "DEV-302",
+    "family": "cross_source_synthesis",
+    "model": "gpt-6-luna",
+    "set": "dev",
+    "arm": "r3",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported",
+        "supported",
+        "supported"
+      ],
+      "facts": [
+        "covered",
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported",
+        "supported",
+        "supported"
+      ],
+      "facts": [
+        "covered",
+        "covered"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": true,
+        "usage": {
+          "input_tokens": 1781,
+          "output_tokens": 107
+        },
+        "list_price_usd": 0.004632,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "DEV-302",
+    "family": "cross_source_synthesis",
+    "model": "gpt-6-luna",
+    "set": "dev",
+    "arm": "hybrid",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported",
+        "partial",
+        "supported",
+        "supported"
+      ],
+      "facts": [
+        "covered",
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported",
+        "supported",
+        "supported",
+        "supported"
+      ],
+      "facts": [
+        "covered",
+        "covered"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": true,
+        "usage": {
+          "input_tokens": 1725,
+          "output_tokens": 126
+        },
+        "list_price_usd": 0.00471,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "DEV-313",
+    "family": "cross_source_synthesis",
+    "model": "gpt-6-luna",
+    "set": "dev",
+    "arm": "r3",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported",
+        "supported",
+        "supported",
+        "supported"
+      ],
+      "facts": [
+        "covered",
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported",
+        "partial",
+        "supported",
+        "supported"
+      ],
+      "facts": [
+        "covered",
+        "covered"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": true,
+        "usage": {
+          "input_tokens": 2100,
+          "output_tokens": 193
+        },
+        "list_price_usd": 0.00613,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "DEV-313",
+    "family": "cross_source_synthesis",
+    "model": "gpt-6-luna",
+    "set": "dev",
+    "arm": "hybrid",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported",
+        "partial",
+        "partial",
+        "partial"
+      ],
+      "facts": [
+        "covered",
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported",
+        "supported",
+        "supported",
+        "partial"
+      ],
+      "facts": [
+        "covered",
+        "covered"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": true,
+        "usage": {
+          "input_tokens": 2365,
+          "output_tokens": 163
+        },
+        "list_price_usd": 0.00636,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "DEV-315",
+    "family": "cross_source_synthesis",
+    "model": "gpt-6-luna",
+    "set": "dev",
+    "arm": "r3",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported",
+        "supported",
+        "supported"
+      ],
+      "facts": [
+        "covered",
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported",
+        "supported",
+        "supported"
+      ],
+      "facts": [
+        "covered",
+        "covered"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": true,
+        "usage": {
+          "input_tokens": 1948,
+          "output_tokens": 107
+        },
+        "list_price_usd": 0.004966,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "DEV-315",
+    "family": "cross_source_synthesis",
+    "model": "gpt-6-luna",
+    "set": "dev",
+    "arm": "hybrid",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported",
+        "partial"
+      ],
+      "facts": [
+        "covered",
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported",
+        "partial"
+      ],
+      "facts": [
+        "covered",
+        "covered"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": true,
+        "usage": {
+          "input_tokens": 1614,
+          "output_tokens": 135
+        },
+        "list_price_usd": 0.004578,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "DEV-316",
+    "family": "cross_source_synthesis",
+    "model": "gpt-6-luna",
+    "set": "dev",
+    "arm": "r3",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported",
+        "supported",
+        "supported"
+      ],
+      "facts": [
+        "covered",
+        "missing"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported",
+        "partial",
+        "supported"
+      ],
+      "facts": [
+        "covered",
+        "missing"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": true,
+        "usage": {
+          "input_tokens": 1718,
+          "output_tokens": 213
+        },
+        "list_price_usd": 0.005566,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "DEV-316",
+    "family": "cross_source_synthesis",
+    "model": "gpt-6-luna",
+    "set": "dev",
+    "arm": "hybrid",
+    "status": "judge_omitted",
+    "reason": "incomplete_or_duplicate_or_extra_indices",
+    "original": {
+      "claims": [
+        "supported",
+        "supported",
+        "supported"
+      ],
+      "facts": [
+        "covered",
+        "covered"
+      ]
+    },
+    "second": null,
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": true,
+        "usage": {
+          "input_tokens": 1951,
+          "output_tokens": 211
+        },
+        "list_price_usd": 0.006012,
+        "status": "invalid_indices",
+        "diagnostics": {
+          "claims": {
+            "expected": 3,
+            "returned": 4,
+            "indices": [
+              0,
+              1,
+              2,
+              2
+            ]
+          },
+          "facts": {
+            "expected": 2,
+            "returned": 2,
+            "indices": [
+              0,
+              1
+            ]
+          }
+        }
+      },
+      {
+        "attempt": 1,
+        "cached": false,
+        "usage": {
+          "input_tokens": 1951,
+          "output_tokens": 230
+        },
+        "list_price_usd": 0.006202,
+        "status": "invalid_indices",
+        "diagnostics": {
+          "claims": {
+            "expected": 3,
+            "returned": 4,
+            "indices": [
+              0,
+              1,
+              2,
+              2
+            ]
+          },
+          "facts": {
+            "expected": 2,
+            "returned": 2,
+            "indices": [
+              0,
+              1
+            ]
+          }
+        }
+      }
+    ]
+  },
+  {
+    "case_id": "DEV-318",
+    "family": "cross_source_synthesis",
+    "model": "gpt-6-luna",
+    "set": "dev",
+    "arm": "r3",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported",
+        "supported"
+      ],
+      "facts": [
+        "covered",
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported",
+        "supported"
+      ],
+      "facts": [
+        "covered",
+        "covered"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": false,
+        "usage": {
+          "input_tokens": 1520,
+          "output_tokens": 88
+        },
+        "list_price_usd": 0.00392,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "DEV-318",
+    "family": "cross_source_synthesis",
+    "model": "gpt-6-luna",
+    "set": "dev",
+    "arm": "hybrid",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported",
+        "partial"
+      ],
+      "facts": [
+        "covered",
+        "missing"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported",
+        "partial"
+      ],
+      "facts": [
+        "covered",
+        "missing"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": false,
+        "usage": {
+          "input_tokens": 1450,
+          "output_tokens": 190
+        },
+        "list_price_usd": 0.0048,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "DEV-327",
+    "family": "revision_conflict",
+    "model": "gpt-6-luna",
+    "set": "dev",
+    "arm": "r3",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported",
+        "partial"
+      ],
+      "facts": [
+        "covered",
+        "missing"
+      ]
+    },
+    "second": {
+      "claims": [
+        "partial",
+        "partial"
+      ],
+      "facts": [
+        "covered",
+        "missing"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": false,
+        "usage": {
+          "input_tokens": 1598,
+          "output_tokens": 208
+        },
+        "list_price_usd": 0.005276,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "DEV-327",
+    "family": "revision_conflict",
+    "model": "gpt-6-luna",
+    "set": "dev",
+    "arm": "hybrid",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported",
+        "supported",
+        "supported"
+      ],
+      "facts": [
+        "covered",
+        "missing"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported",
+        "supported",
+        "partial"
+      ],
+      "facts": [
+        "covered",
+        "missing"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": false,
+        "usage": {
+          "input_tokens": 1541,
+          "output_tokens": 186
+        },
+        "list_price_usd": 0.004942,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "DEV-328",
+    "family": "revision_conflict",
+    "model": "gpt-6-luna",
+    "set": "dev",
+    "arm": "r3",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "partial",
+        "partial",
+        "partial"
+      ],
+      "facts": [
+        "covered",
+        "missing",
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported",
+        "supported",
+        "supported"
+      ],
+      "facts": [
+        "covered",
+        "covered",
+        "missing"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": false,
+        "usage": {
+          "input_tokens": 1554,
+          "output_tokens": 156
+        },
+        "list_price_usd": 0.004668,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "DEV-328",
+    "family": "revision_conflict",
+    "model": "gpt-6-luna",
+    "set": "dev",
+    "arm": "hybrid",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported",
+        "supported",
+        "supported"
+      ],
+      "facts": [
+        "covered",
+        "missing",
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported",
+        "supported",
+        "supported"
+      ],
+      "facts": [
+        "covered",
+        "covered",
+        "missing"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": false,
+        "usage": {
+          "input_tokens": 1668,
+          "output_tokens": 154
+        },
+        "list_price_usd": 0.004876,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "DEV-331",
+    "family": "revision_conflict",
+    "model": "gpt-6-luna",
+    "set": "dev",
+    "arm": "r3",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "partial",
+        "partial",
+        "partial"
+      ],
+      "facts": [
+        "covered",
+        "covered",
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported",
+        "supported",
+        "partial"
+      ],
+      "facts": [
+        "covered",
+        "covered",
+        "covered"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": false,
+        "usage": {
+          "input_tokens": 1695,
+          "output_tokens": 176
+        },
+        "list_price_usd": 0.00515,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "DEV-331",
+    "family": "revision_conflict",
+    "model": "gpt-6-luna",
+    "set": "dev",
+    "arm": "hybrid",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported",
+        "partial"
+      ],
+      "facts": [
+        "covered",
+        "missing",
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported",
+        "partial"
+      ],
+      "facts": [
+        "covered",
+        "contradicted",
+        "covered"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": false,
+        "usage": {
+          "input_tokens": 1377,
+          "output_tokens": 201
+        },
+        "list_price_usd": 0.004764,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "DEV-334",
+    "family": "revision_conflict",
+    "model": "gpt-6-luna",
+    "set": "dev",
+    "arm": "r3",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported",
+        "supported",
+        "partial",
+        "supported",
+        "supported"
+      ],
+      "facts": [
+        "covered",
+        "covered",
+        "missing"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported",
+        "supported",
+        "supported",
+        "supported",
+        "supported"
+      ],
+      "facts": [
+        "covered",
+        "covered",
+        "missing"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": false,
+        "usage": {
+          "input_tokens": 2355,
+          "output_tokens": 197
+        },
+        "list_price_usd": 0.00668,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "DEV-334",
+    "family": "revision_conflict",
+    "model": "gpt-6-luna",
+    "set": "dev",
+    "arm": "hybrid",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported",
+        "supported",
+        "partial",
+        "supported"
+      ],
+      "facts": [
+        "covered",
+        "missing",
+        "missing"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported",
+        "supported",
+        "partial",
+        "supported"
+      ],
+      "facts": [
+        "covered",
+        "covered",
+        "missing"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": false,
+        "usage": {
+          "input_tokens": 1980,
+          "output_tokens": 227
+        },
+        "list_price_usd": 0.00623,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "DEV-429",
+    "family": "ambiguity_insufficient_causal",
+    "model": "gpt-6-luna",
+    "set": "dev",
+    "arm": "r3",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported",
+        "supported"
+      ],
+      "facts": [
+        "covered",
+        "covered",
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported",
+        "supported"
+      ],
+      "facts": [
+        "covered",
+        "covered",
+        "covered"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": false,
+        "usage": {
+          "input_tokens": 1832,
+          "output_tokens": 105
+        },
+        "list_price_usd": 0.004714,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "DEV-429",
+    "family": "ambiguity_insufficient_causal",
+    "model": "gpt-6-luna",
+    "set": "dev",
+    "arm": "hybrid",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "partial",
+        "supported"
+      ],
+      "facts": [
+        "covered",
+        "covered",
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported",
+        "supported"
+      ],
+      "facts": [
+        "covered",
+        "covered",
+        "covered"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": false,
+        "usage": {
+          "input_tokens": 1504,
+          "output_tokens": 105
+        },
+        "list_price_usd": 0.004058,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "DEV-432",
+    "family": "ambiguity_insufficient_causal",
+    "model": "gpt-6-luna",
+    "set": "dev",
+    "arm": "r3",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "partial",
+        "partial",
+        "partial"
+      ],
+      "facts": [
+        "contradicted",
+        "covered",
+        "missing",
+        "contradicted"
+      ]
+    },
+    "second": {
+      "claims": [
+        "partial",
+        "supported",
+        "supported"
+      ],
+      "facts": [
+        "contradicted",
+        "covered",
+        "covered",
+        "contradicted"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": false,
+        "usage": {
+          "input_tokens": 1563,
+          "output_tokens": 236
+        },
+        "list_price_usd": 0.005486,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "DEV-432",
+    "family": "ambiguity_insufficient_causal",
+    "model": "gpt-6-luna",
+    "set": "dev",
+    "arm": "hybrid",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported",
+        "supported",
+        "supported"
+      ],
+      "facts": [
+        "contradicted",
+        "covered",
+        "missing",
+        "missing"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported",
+        "supported",
+        "supported"
+      ],
+      "facts": [
+        "contradicted",
+        "covered",
+        "covered",
+        "missing"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": false,
+        "usage": {
+          "input_tokens": 1758,
+          "output_tokens": 199
+        },
+        "list_price_usd": 0.005506,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "DEV-502",
+    "family": "adversarial",
+    "model": "gpt-6-luna",
+    "set": "dev",
+    "arm": "r3",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered",
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered",
+        "covered"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": false,
+        "usage": {
+          "input_tokens": 1189,
+          "output_tokens": 101
+        },
+        "list_price_usd": 0.003388,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "DEV-502",
+    "family": "adversarial",
+    "model": "gpt-6-luna",
+    "set": "dev",
+    "arm": "hybrid",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered",
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered",
+        "covered"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": false,
+        "usage": {
+          "input_tokens": 1185,
+          "output_tokens": 93
+        },
+        "list_price_usd": 0.0033,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "DEV-505",
+    "family": "adversarial",
+    "model": "gpt-6-luna",
+    "set": "dev",
+    "arm": "r3",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": false,
+        "usage": {
+          "input_tokens": 1150,
+          "output_tokens": 52
+        },
+        "list_price_usd": 0.00282,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "DEV-505",
+    "family": "adversarial",
+    "model": "gpt-6-luna",
+    "set": "dev",
+    "arm": "hybrid",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": false,
+        "usage": {
+          "input_tokens": 1158,
+          "output_tokens": 52
+        },
+        "list_price_usd": 0.002836,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "DEV-512",
+    "family": "adversarial",
+    "model": "gpt-6-luna",
+    "set": "dev",
+    "arm": "r3",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered",
+        "missing"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered",
+        "covered"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": false,
+        "usage": {
+          "input_tokens": 1239,
+          "output_tokens": 69
+        },
+        "list_price_usd": 0.003168,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "DEV-512",
+    "family": "adversarial",
+    "model": "gpt-6-luna",
+    "set": "dev",
+    "arm": "hybrid",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered",
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered",
+        "covered"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": false,
+        "usage": {
+          "input_tokens": 1230,
+          "output_tokens": 69
+        },
+        "list_price_usd": 0.00315,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "DEV-513",
+    "family": "adversarial",
+    "model": "gpt-6-luna",
+    "set": "dev",
+    "arm": "r3",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": false,
+        "usage": {
+          "input_tokens": 1204,
+          "output_tokens": 52
+        },
+        "list_price_usd": 0.002928,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "DEV-513",
+    "family": "adversarial",
+    "model": "gpt-6-luna",
+    "set": "dev",
+    "arm": "hybrid",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": false,
+        "usage": {
+          "input_tokens": 1201,
+          "output_tokens": 52
+        },
+        "list_price_usd": 0.002922,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "DEV-526",
+    "family": "adversarial",
+    "model": "gpt-6-luna",
+    "set": "dev",
+    "arm": "r3",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported",
+        "partial",
+        "supported"
+      ],
+      "facts": [
+        "covered",
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported",
+        "supported",
+        "partial"
+      ],
+      "facts": [
+        "covered",
+        "covered"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": false,
+        "usage": {
+          "input_tokens": 1607,
+          "output_tokens": 152
+        },
+        "list_price_usd": 0.004734,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "DEV-526",
+    "family": "adversarial",
+    "model": "gpt-6-luna",
+    "set": "dev",
+    "arm": "hybrid",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered",
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered",
+        "covered"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": false,
+        "usage": {
+          "input_tokens": 1294,
+          "output_tokens": 69
+        },
+        "list_price_usd": 0.003278,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "DEV-609",
+    "family": "factual_lookup",
+    "model": "gpt-6-luna",
+    "set": "dev",
+    "arm": "r3",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": false,
+        "usage": {
+          "input_tokens": 1516,
+          "output_tokens": 52
+        },
+        "list_price_usd": 0.003552,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "DEV-609",
+    "family": "factual_lookup",
+    "model": "gpt-6-luna",
+    "set": "dev",
+    "arm": "hybrid",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": false,
+        "usage": {
+          "input_tokens": 1508,
+          "output_tokens": 52
+        },
+        "list_price_usd": 0.003536,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "DEV-613",
+    "family": "factual_lookup",
+    "model": "gpt-6-luna",
+    "set": "dev",
+    "arm": "r3",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported",
+        "supported"
+      ],
+      "facts": [
+        "missing"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported",
+        "supported"
+      ],
+      "facts": [
+        "missing"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": false,
+        "usage": {
+          "input_tokens": 1308,
+          "output_tokens": 110
+        },
+        "list_price_usd": 0.003716,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "DEV-613",
+    "family": "factual_lookup",
+    "model": "gpt-6-luna",
+    "set": "dev",
+    "arm": "hybrid",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported",
+        "supported"
+      ],
+      "facts": [
+        "missing"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported",
+        "supported"
+      ],
+      "facts": [
+        "missing"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": false,
+        "usage": {
+          "input_tokens": 1308,
+          "output_tokens": 110
+        },
+        "list_price_usd": 0.003716,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "DEV-616",
+    "family": "cross_source_synthesis",
+    "model": "gpt-6-luna",
+    "set": "dev",
+    "arm": "r3",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": false,
+        "usage": {
+          "input_tokens": 1443,
+          "output_tokens": 52
+        },
+        "list_price_usd": 0.003406,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "DEV-616",
+    "family": "cross_source_synthesis",
+    "model": "gpt-6-luna",
+    "set": "dev",
+    "arm": "hybrid",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported",
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported",
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": false,
+        "usage": {
+          "input_tokens": 1480,
+          "output_tokens": 71
+        },
+        "list_price_usd": 0.00367,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "DEV-621",
+    "family": "cross_source_synthesis",
+    "model": "gpt-6-luna",
+    "set": "dev",
+    "arm": "r3",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported",
+        "supported",
+        "supported"
+      ],
+      "facts": [
+        "missing",
+        "missing",
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported",
+        "supported",
+        "supported"
+      ],
+      "facts": [
+        "covered",
+        "covered",
+        "covered"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": false,
+        "usage": {
+          "input_tokens": 2370,
+          "output_tokens": 167
+        },
+        "list_price_usd": 0.00641,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "DEV-621",
+    "family": "cross_source_synthesis",
+    "model": "gpt-6-luna",
+    "set": "dev",
+    "arm": "hybrid",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported",
+        "supported",
+        "partial"
+      ],
+      "facts": [
+        "missing",
+        "missing",
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported",
+        "supported",
+        "partial"
+      ],
+      "facts": [
+        "missing",
+        "covered",
+        "covered"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": false,
+        "usage": {
+          "input_tokens": 2767,
+          "output_tokens": 212
+        },
+        "list_price_usd": 0.007654,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "DEV-625",
+    "family": "numerical_comparison",
+    "model": "gpt-6-luna",
+    "set": "dev",
+    "arm": "r3",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "partial"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": false,
+        "usage": {
+          "input_tokens": 1352,
+          "output_tokens": 52
+        },
+        "list_price_usd": 0.003224,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "DEV-625",
+    "family": "numerical_comparison",
+    "model": "gpt-6-luna",
+    "set": "dev",
+    "arm": "hybrid",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "partial",
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported",
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": false,
+        "usage": {
+          "input_tokens": 1178,
+          "output_tokens": 71
+        },
+        "list_price_usd": 0.003066,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "DEV-626",
+    "family": "numerical_comparison",
+    "model": "gpt-6-luna",
+    "set": "dev",
+    "arm": "r3",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported",
+        "supported"
+      ],
+      "facts": []
+    },
+    "second": {
+      "claims": [
+        "supported",
+        "supported"
+      ],
+      "facts": []
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": false,
+        "usage": {
+          "input_tokens": 1458,
+          "output_tokens": 54
+        },
+        "list_price_usd": 0.003456,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "DEV-626",
+    "family": "numerical_comparison",
+    "model": "gpt-6-luna",
+    "set": "dev",
+    "arm": "hybrid",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported",
+        "supported"
+      ],
+      "facts": []
+    },
+    "second": {
+      "claims": [
+        "supported",
+        "supported"
+      ],
+      "facts": []
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": false,
+        "usage": {
+          "input_tokens": 1441,
+          "output_tokens": 54
+        },
+        "list_price_usd": 0.003422,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "HO-V2-004",
+    "family": "factual_lookup",
+    "model": "gpt-6-luna",
+    "set": "fresh",
+    "arm": "r3",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": false,
+        "usage": {
+          "input_tokens": 1262,
+          "output_tokens": 52
+        },
+        "list_price_usd": 0.003044,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "HO-V2-004",
+    "family": "factual_lookup",
+    "model": "gpt-6-luna",
+    "set": "fresh",
+    "arm": "hybrid",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": false,
+        "usage": {
+          "input_tokens": 1289,
+          "output_tokens": 52
+        },
+        "list_price_usd": 0.003098,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "HO-V2-005",
+    "family": "factual_lookup",
+    "model": "gpt-6-luna",
+    "set": "fresh",
+    "arm": "r3",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": false,
+        "usage": {
+          "input_tokens": 1260,
+          "output_tokens": 52
+        },
+        "list_price_usd": 0.00304,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "HO-V2-005",
+    "family": "factual_lookup",
+    "model": "gpt-6-luna",
+    "set": "fresh",
+    "arm": "hybrid",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": false,
+        "usage": {
+          "input_tokens": 1269,
+          "output_tokens": 52
+        },
+        "list_price_usd": 0.003058,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "HO-V2-008",
+    "family": "factual_lookup",
+    "model": "gpt-6-luna",
+    "set": "fresh",
+    "arm": "r3",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": false,
+        "usage": {
+          "input_tokens": 1202,
+          "output_tokens": 52
+        },
+        "list_price_usd": 0.002924,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "HO-V2-008",
+    "family": "factual_lookup",
+    "model": "gpt-6-luna",
+    "set": "fresh",
+    "arm": "hybrid",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": false,
+        "usage": {
+          "input_tokens": 1205,
+          "output_tokens": 52
+        },
+        "list_price_usd": 0.00293,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "HO-V2-010",
+    "family": "factual_lookup",
+    "model": "gpt-6-luna",
+    "set": "fresh",
+    "arm": "r3",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": false,
+        "usage": {
+          "input_tokens": 1354,
+          "output_tokens": 52
+        },
+        "list_price_usd": 0.003228,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "HO-V2-010",
+    "family": "factual_lookup",
+    "model": "gpt-6-luna",
+    "set": "fresh",
+    "arm": "hybrid",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": false,
+        "usage": {
+          "input_tokens": 1361,
+          "output_tokens": 52
+        },
+        "list_price_usd": 0.003242,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "HO-V2-020",
+    "family": "factual_lookup",
+    "model": "gpt-6-luna",
+    "set": "fresh",
+    "arm": "r3",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": false,
+        "usage": {
+          "input_tokens": 1314,
+          "output_tokens": 52
+        },
+        "list_price_usd": 0.003148,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "HO-V2-020",
+    "family": "factual_lookup",
+    "model": "gpt-6-luna",
+    "set": "fresh",
+    "arm": "hybrid",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": false,
+        "usage": {
+          "input_tokens": 1269,
+          "output_tokens": 52
+        },
+        "list_price_usd": 0.003058,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "HO-V2-028",
+    "family": "numerical_comparison",
+    "model": "gpt-6-luna",
+    "set": "fresh",
+    "arm": "r3",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "missing",
+        "missing",
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "missing",
+        "missing",
+        "covered"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": false,
+        "usage": {
+          "input_tokens": 1419,
+          "output_tokens": 140
+        },
+        "list_price_usd": 0.004238,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "HO-V2-028",
+    "family": "numerical_comparison",
+    "model": "gpt-6-luna",
+    "set": "fresh",
+    "arm": "hybrid",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "missing",
+        "missing",
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "missing",
+        "missing",
+        "covered"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": false,
+        "usage": {
+          "input_tokens": 1621,
+          "output_tokens": 134
+        },
+        "list_price_usd": 0.004582,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "HO-V2-043",
+    "family": "cross_source_synthesis",
+    "model": "gpt-6-luna",
+    "set": "fresh",
+    "arm": "r3",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported",
+        "supported",
+        "supported"
+      ],
+      "facts": [
+        "missing",
+        "covered",
+        "covered",
+        "missing"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported",
+        "supported",
+        "supported"
+      ],
+      "facts": [
+        "covered",
+        "covered",
+        "covered",
+        "missing"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": false,
+        "usage": {
+          "input_tokens": 1817,
+          "output_tokens": 170
+        },
+        "list_price_usd": 0.005334,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "HO-V2-043",
+    "family": "cross_source_synthesis",
+    "model": "gpt-6-luna",
+    "set": "fresh",
+    "arm": "hybrid",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported",
+        "supported",
+        "supported"
+      ],
+      "facts": [
+        "missing",
+        "covered",
+        "covered",
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported",
+        "supported",
+        "supported"
+      ],
+      "facts": [
+        "covered",
+        "covered",
+        "covered",
+        "covered"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": false,
+        "usage": {
+          "input_tokens": 1812,
+          "output_tokens": 141
+        },
+        "list_price_usd": 0.005034,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "HO-V2-044",
+    "family": "cross_source_synthesis",
+    "model": "gpt-6-luna",
+    "set": "fresh",
+    "arm": "r3",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported",
+        "supported",
+        "supported"
+      ],
+      "facts": [
+        "missing"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported",
+        "supported",
+        "partial"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": false,
+        "usage": {
+          "input_tokens": 2095,
+          "output_tokens": 136
+        },
+        "list_price_usd": 0.00555,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "HO-V2-044",
+    "family": "cross_source_synthesis",
+    "model": "gpt-6-luna",
+    "set": "fresh",
+    "arm": "hybrid",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported",
+        "supported",
+        "supported"
+      ],
+      "facts": [
+        "missing"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported",
+        "partial",
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": false,
+        "usage": {
+          "input_tokens": 2145,
+          "output_tokens": 134
+        },
+        "list_price_usd": 0.00563,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "HO-V2-058",
+    "family": "adversarial",
+    "model": "gpt-6-luna",
+    "set": "fresh",
+    "arm": "r3",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": false,
+        "usage": {
+          "input_tokens": 1201,
+          "output_tokens": 52
+        },
+        "list_price_usd": 0.002922,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "HO-V2-058",
+    "family": "adversarial",
+    "model": "gpt-6-luna",
+    "set": "fresh",
+    "arm": "hybrid",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": false,
+        "usage": {
+          "input_tokens": 1549,
+          "output_tokens": 52
+        },
+        "list_price_usd": 0.003618,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "HO-003",
+    "family": "factual_lookup",
+    "model": "gpt-6-luna",
+    "set": "heldout",
+    "arm": "r3",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported",
+        "supported"
+      ],
+      "facts": [
+        "missing"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported",
+        "supported"
+      ],
+      "facts": [
+        "missing"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": false,
+        "usage": {
+          "input_tokens": 1402,
+          "output_tokens": 111
+        },
+        "list_price_usd": 0.003914,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "HO-003",
+    "family": "factual_lookup",
+    "model": "gpt-6-luna",
+    "set": "heldout",
+    "arm": "hybrid",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported",
+        "supported"
+      ],
+      "facts": [
+        "missing"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported",
+        "supported"
+      ],
+      "facts": [
+        "missing"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": false,
+        "usage": {
+          "input_tokens": 1306,
+          "output_tokens": 120
+        },
+        "list_price_usd": 0.003812,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "HO-010",
+    "family": "numerical_comparison",
+    "model": "gpt-6-luna",
+    "set": "heldout",
+    "arm": "r3",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "missing"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": false,
+        "usage": {
+          "input_tokens": 1182,
+          "output_tokens": 91
+        },
+        "list_price_usd": 0.003274,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "HO-010",
+    "family": "numerical_comparison",
+    "model": "gpt-6-luna",
+    "set": "heldout",
+    "arm": "hybrid",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "missing"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": false,
+        "usage": {
+          "input_tokens": 1334,
+          "output_tokens": 52
+        },
+        "list_price_usd": 0.003188,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "HO-011",
+    "family": "numerical_comparison",
+    "model": "gpt-6-luna",
+    "set": "heldout",
+    "arm": "r3",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": false,
+        "usage": {
+          "input_tokens": 1354,
+          "output_tokens": 52
+        },
+        "list_price_usd": 0.003228,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "HO-011",
+    "family": "numerical_comparison",
+    "model": "gpt-6-luna",
+    "set": "heldout",
+    "arm": "hybrid",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": false,
+        "usage": {
+          "input_tokens": 1359,
+          "output_tokens": 52
+        },
+        "list_price_usd": 0.003238,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "HO-012",
+    "family": "cross_source_synthesis",
+    "model": "gpt-6-luna",
+    "set": "heldout",
+    "arm": "r3",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported",
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported",
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": false,
+        "usage": {
+          "input_tokens": 1229,
+          "output_tokens": 71
+        },
+        "list_price_usd": 0.003168,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "HO-012",
+    "family": "cross_source_synthesis",
+    "model": "gpt-6-luna",
+    "set": "heldout",
+    "arm": "hybrid",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported",
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported",
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": false,
+        "usage": {
+          "input_tokens": 1381,
+          "output_tokens": 71
+        },
+        "list_price_usd": 0.003472,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "HO-018",
+    "family": "revision_conflict",
+    "model": "gpt-6-luna",
+    "set": "heldout",
+    "arm": "r3",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported",
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "partial",
+        "partial"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": false,
+        "usage": {
+          "input_tokens": 1342,
+          "output_tokens": 130
+        },
+        "list_price_usd": 0.003984,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "HO-018",
+    "family": "revision_conflict",
+    "model": "gpt-6-luna",
+    "set": "heldout",
+    "arm": "hybrid",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "partial",
+        "partial"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported",
+        "partial"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": false,
+        "usage": {
+          "input_tokens": 1333,
+          "output_tokens": 115
+        },
+        "list_price_usd": 0.003816,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "HO-023",
+    "family": "ambiguity_insufficient_causal",
+    "model": "gpt-6-luna",
+    "set": "heldout",
+    "arm": "r3",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported",
+        "supported",
+        "supported"
+      ],
+      "facts": [
+        "covered",
+        "covered",
+        "missing"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported",
+        "supported",
+        "supported"
+      ],
+      "facts": [
+        "covered",
+        "covered",
+        "covered"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": false,
+        "usage": {
+          "input_tokens": 2026,
+          "output_tokens": 124
+        },
+        "list_price_usd": 0.005292,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "HO-023",
+    "family": "ambiguity_insufficient_causal",
+    "model": "gpt-6-luna",
+    "set": "heldout",
+    "arm": "hybrid",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported",
+        "partial",
+        "supported"
+      ],
+      "facts": [
+        "covered",
+        "covered",
+        "missing"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported",
+        "partial",
+        "supported"
+      ],
+      "facts": [
+        "covered",
+        "covered",
+        "covered"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": false,
+        "usage": {
+          "input_tokens": 1643,
+          "output_tokens": 164
+        },
+        "list_price_usd": 0.004926,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "DEV-004",
+    "family": "numerical_comparison",
+    "model": "gpt-5.6-luna",
+    "set": "dev",
+    "arm": "r3",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": false,
+        "usage": {
+          "input_tokens": 1328,
+          "output_tokens": 52
+        },
+        "list_price_usd": 0.003176,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "DEV-004",
+    "family": "numerical_comparison",
+    "model": "gpt-5.6-luna",
+    "set": "dev",
+    "arm": "hybrid",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": true,
+        "usage": {
+          "input_tokens": 1328,
+          "output_tokens": 52
+        },
+        "list_price_usd": 0.003176,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "DEV-006",
+    "family": "numerical_comparison",
+    "model": "gpt-5.6-luna",
+    "set": "dev",
+    "arm": "r3",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": false,
+        "usage": {
+          "input_tokens": 1240,
+          "output_tokens": 52
+        },
+        "list_price_usd": 0.003,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "DEV-006",
+    "family": "numerical_comparison",
+    "model": "gpt-5.6-luna",
+    "set": "dev",
+    "arm": "hybrid",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": false,
+        "usage": {
+          "input_tokens": 1437,
+          "output_tokens": 52
+        },
+        "list_price_usd": 0.003394,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "DEV-014",
+    "family": "ambiguity_insufficient_causal",
+    "model": "gpt-5.6-luna",
+    "set": "dev",
+    "arm": "r3",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported",
+        "supported",
+        "supported"
+      ],
+      "facts": [
+        "covered",
+        "covered",
+        "missing"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported",
+        "supported",
+        "partial"
+      ],
+      "facts": [
+        "covered",
+        "covered",
+        "covered"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": false,
+        "usage": {
+          "input_tokens": 1941,
+          "output_tokens": 214
+        },
+        "list_price_usd": 0.006022,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "DEV-014",
+    "family": "ambiguity_insufficient_causal",
+    "model": "gpt-5.6-luna",
+    "set": "dev",
+    "arm": "hybrid",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported",
+        "supported",
+        "supported",
+        "partial"
+      ],
+      "facts": [
+        "covered",
+        "covered",
+        "missing"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported",
+        "supported",
+        "supported",
+        "partial"
+      ],
+      "facts": [
+        "covered",
+        "covered",
+        "covered"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": false,
+        "usage": {
+          "input_tokens": 1717,
+          "output_tokens": 185
+        },
+        "list_price_usd": 0.005284,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "DEV-021",
+    "family": "factual_lookup",
+    "model": "gpt-5.6-luna",
+    "set": "dev",
+    "arm": "r3",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported",
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported",
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": false,
+        "usage": {
+          "input_tokens": 1335,
+          "output_tokens": 71
+        },
+        "list_price_usd": 0.00338,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "DEV-021",
+    "family": "factual_lookup",
+    "model": "gpt-5.6-luna",
+    "set": "dev",
+    "arm": "hybrid",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported",
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported",
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": false,
+        "usage": {
+          "input_tokens": 1408,
+          "output_tokens": 71
+        },
+        "list_price_usd": 0.003526,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "DEV-023",
+    "family": "factual_lookup",
+    "model": "gpt-5.6-luna",
+    "set": "dev",
+    "arm": "r3",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": false,
+        "usage": {
+          "input_tokens": 1297,
+          "output_tokens": 52
+        },
+        "list_price_usd": 0.003114,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "DEV-023",
+    "family": "factual_lookup",
+    "model": "gpt-5.6-luna",
+    "set": "dev",
+    "arm": "hybrid",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": false,
+        "usage": {
+          "input_tokens": 1203,
+          "output_tokens": 52
+        },
+        "list_price_usd": 0.002926,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "DEV-024",
+    "family": "factual_lookup",
+    "model": "gpt-5.6-luna",
+    "set": "dev",
+    "arm": "r3",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported",
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported",
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": false,
+        "usage": {
+          "input_tokens": 1287,
+          "output_tokens": 71
+        },
+        "list_price_usd": 0.003284,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "DEV-024",
+    "family": "factual_lookup",
+    "model": "gpt-5.6-luna",
+    "set": "dev",
+    "arm": "hybrid",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "partial",
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported",
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": false,
+        "usage": {
+          "input_tokens": 1287,
+          "output_tokens": 71
+        },
+        "list_price_usd": 0.003284,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "DEV-034",
+    "family": "adversarial",
+    "model": "gpt-5.6-luna",
+    "set": "dev",
+    "arm": "r3",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported"
+      ],
+      "facts": []
+    },
+    "second": {
+      "claims": [
+        "supported"
+      ],
+      "facts": []
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": false,
+        "usage": {
+          "input_tokens": 1303,
+          "output_tokens": 35
+        },
+        "list_price_usd": 0.002956,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "DEV-034",
+    "family": "adversarial",
+    "model": "gpt-5.6-luna",
+    "set": "dev",
+    "arm": "hybrid",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported",
+        "supported"
+      ],
+      "facts": []
+    },
+    "second": {
+      "claims": [
+        "supported",
+        "supported"
+      ],
+      "facts": []
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": false,
+        "usage": {
+          "input_tokens": 1239,
+          "output_tokens": 54
+        },
+        "list_price_usd": 0.003018,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "DEV-106",
+    "family": "factual_lookup",
+    "model": "gpt-5.6-luna",
+    "set": "dev",
+    "arm": "r3",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": false,
+        "usage": {
+          "input_tokens": 1182,
+          "output_tokens": 52
+        },
+        "list_price_usd": 0.002884,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "DEV-106",
+    "family": "factual_lookup",
+    "model": "gpt-5.6-luna",
+    "set": "dev",
+    "arm": "hybrid",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": false,
+        "usage": {
+          "input_tokens": 1190,
+          "output_tokens": 52
+        },
+        "list_price_usd": 0.0029,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "DEV-132",
+    "family": "numerical_comparison",
+    "model": "gpt-5.6-luna",
+    "set": "dev",
+    "arm": "r3",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "partial"
+      ],
+      "facts": [
+        "missing",
+        "missing",
+        "covered",
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "partial"
+      ],
+      "facts": [
+        "missing",
+        "missing",
+        "covered",
+        "covered"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": false,
+        "usage": {
+          "input_tokens": 1381,
+          "output_tokens": 146
+        },
+        "list_price_usd": 0.004222,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "DEV-132",
+    "family": "numerical_comparison",
+    "model": "gpt-5.6-luna",
+    "set": "dev",
+    "arm": "hybrid",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "partial"
+      ],
+      "facts": [
+        "missing",
+        "missing",
+        "covered",
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "partial"
+      ],
+      "facts": [
+        "missing",
+        "missing",
+        "covered",
+        "covered"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": false,
+        "usage": {
+          "input_tokens": 1387,
+          "output_tokens": 143
+        },
+        "list_price_usd": 0.004204,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "DEV-133",
+    "family": "numerical_comparison",
+    "model": "gpt-5.6-luna",
+    "set": "dev",
+    "arm": "r3",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "partial"
+      ],
+      "facts": [
+        "missing",
+        "missing",
+        "missing",
+        "covered",
+        "missing",
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "partial"
+      ],
+      "facts": [
+        "missing",
+        "missing",
+        "missing",
+        "covered",
+        "missing",
+        "covered"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": false,
+        "usage": {
+          "input_tokens": 1509,
+          "output_tokens": 260
+        },
+        "list_price_usd": 0.005618,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "DEV-133",
+    "family": "numerical_comparison",
+    "model": "gpt-5.6-luna",
+    "set": "dev",
+    "arm": "hybrid",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "missing",
+        "missing",
+        "missing",
+        "covered",
+        "missing",
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "missing",
+        "missing",
+        "missing",
+        "covered",
+        "missing",
+        "covered"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": false,
+        "usage": {
+          "input_tokens": 1875,
+          "output_tokens": 215
+        },
+        "list_price_usd": 0.0059,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "DEV-201",
+    "family": "factual_lookup",
+    "model": "gpt-5.6-luna",
+    "set": "dev",
+    "arm": "r3",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": false,
+        "usage": {
+          "input_tokens": 1099,
+          "output_tokens": 52
+        },
+        "list_price_usd": 0.002718,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "DEV-201",
+    "family": "factual_lookup",
+    "model": "gpt-5.6-luna",
+    "set": "dev",
+    "arm": "hybrid",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": false,
+        "usage": {
+          "input_tokens": 1112,
+          "output_tokens": 52
+        },
+        "list_price_usd": 0.002744,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "DEV-209",
+    "family": "factual_lookup",
+    "model": "gpt-5.6-luna",
+    "set": "dev",
+    "arm": "r3",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported",
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported",
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": false,
+        "usage": {
+          "input_tokens": 1316,
+          "output_tokens": 71
+        },
+        "list_price_usd": 0.003342,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "DEV-209",
+    "family": "factual_lookup",
+    "model": "gpt-5.6-luna",
+    "set": "dev",
+    "arm": "hybrid",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported",
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported",
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": false,
+        "usage": {
+          "input_tokens": 1559,
+          "output_tokens": 71
+        },
+        "list_price_usd": 0.003828,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "DEV-213",
+    "family": "factual_lookup",
+    "model": "gpt-5.6-luna",
+    "set": "dev",
+    "arm": "r3",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": false,
+        "usage": {
+          "input_tokens": 1241,
+          "output_tokens": 52
+        },
+        "list_price_usd": 0.003002,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "DEV-213",
+    "family": "factual_lookup",
+    "model": "gpt-5.6-luna",
+    "set": "dev",
+    "arm": "hybrid",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "partial"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": false,
+        "usage": {
+          "input_tokens": 1152,
+          "output_tokens": 52
+        },
+        "list_price_usd": 0.002824,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "DEV-218",
+    "family": "factual_lookup",
+    "model": "gpt-5.6-luna",
+    "set": "dev",
+    "arm": "r3",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": false,
+        "usage": {
+          "input_tokens": 1295,
+          "output_tokens": 52
+        },
+        "list_price_usd": 0.00311,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "DEV-218",
+    "family": "factual_lookup",
+    "model": "gpt-5.6-luna",
+    "set": "dev",
+    "arm": "hybrid",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": false,
+        "usage": {
+          "input_tokens": 1288,
+          "output_tokens": 52
+        },
+        "list_price_usd": 0.003096,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "DEV-220",
+    "family": "factual_lookup",
+    "model": "gpt-5.6-luna",
+    "set": "dev",
+    "arm": "r3",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported",
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported",
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": false,
+        "usage": {
+          "input_tokens": 1169,
+          "output_tokens": 71
+        },
+        "list_price_usd": 0.003048,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "DEV-220",
+    "family": "factual_lookup",
+    "model": "gpt-5.6-luna",
+    "set": "dev",
+    "arm": "hybrid",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": false,
+        "usage": {
+          "input_tokens": 1129,
+          "output_tokens": 52
+        },
+        "list_price_usd": 0.002778,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "DEV-225",
+    "family": "factual_lookup",
+    "model": "gpt-5.6-luna",
+    "set": "dev",
+    "arm": "r3",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported",
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported",
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": false,
+        "usage": {
+          "input_tokens": 1391,
+          "output_tokens": 71
+        },
+        "list_price_usd": 0.003492,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "DEV-225",
+    "family": "factual_lookup",
+    "model": "gpt-5.6-luna",
+    "set": "dev",
+    "arm": "hybrid",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": false,
+        "usage": {
+          "input_tokens": 1222,
+          "output_tokens": 52
+        },
+        "list_price_usd": 0.002964,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "DEV-226",
+    "family": "factual_lookup",
+    "model": "gpt-5.6-luna",
+    "set": "dev",
+    "arm": "r3",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": false,
+        "usage": {
+          "input_tokens": 1287,
+          "output_tokens": 52
+        },
+        "list_price_usd": 0.003094,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "DEV-226",
+    "family": "factual_lookup",
+    "model": "gpt-5.6-luna",
+    "set": "dev",
+    "arm": "hybrid",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": false,
+        "usage": {
+          "input_tokens": 1301,
+          "output_tokens": 52
+        },
+        "list_price_usd": 0.003122,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "DEV-230",
+    "family": "factual_lookup",
+    "model": "gpt-5.6-luna",
+    "set": "dev",
+    "arm": "r3",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": false,
+        "usage": {
+          "input_tokens": 1286,
+          "output_tokens": 52
+        },
+        "list_price_usd": 0.003092,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "DEV-230",
+    "family": "factual_lookup",
+    "model": "gpt-5.6-luna",
+    "set": "dev",
+    "arm": "hybrid",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": false,
+        "usage": {
+          "input_tokens": 1209,
+          "output_tokens": 52
+        },
+        "list_price_usd": 0.002938,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "DEV-231",
+    "family": "numerical_comparison",
+    "model": "gpt-5.6-luna",
+    "set": "dev",
+    "arm": "r3",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported",
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported",
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": false,
+        "usage": {
+          "input_tokens": 1574,
+          "output_tokens": 71
+        },
+        "list_price_usd": 0.003858,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "DEV-231",
+    "family": "numerical_comparison",
+    "model": "gpt-5.6-luna",
+    "set": "dev",
+    "arm": "hybrid",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported",
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported",
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": false,
+        "usage": {
+          "input_tokens": 1549,
+          "output_tokens": 71
+        },
+        "list_price_usd": 0.003808,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "DEV-233",
+    "family": "factual_lookup",
+    "model": "gpt-5.6-luna",
+    "set": "dev",
+    "arm": "r3",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": false,
+        "usage": {
+          "input_tokens": 1321,
+          "output_tokens": 52
+        },
+        "list_price_usd": 0.003162,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "DEV-233",
+    "family": "factual_lookup",
+    "model": "gpt-5.6-luna",
+    "set": "dev",
+    "arm": "hybrid",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": false,
+        "usage": {
+          "input_tokens": 1322,
+          "output_tokens": 52
+        },
+        "list_price_usd": 0.003164,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "DEV-235",
+    "family": "factual_lookup",
+    "model": "gpt-5.6-luna",
+    "set": "dev",
+    "arm": "r3",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": false,
+        "usage": {
+          "input_tokens": 1340,
+          "output_tokens": 52
+        },
+        "list_price_usd": 0.0032,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "DEV-235",
+    "family": "factual_lookup",
+    "model": "gpt-5.6-luna",
+    "set": "dev",
+    "arm": "hybrid",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported",
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported",
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": false,
+        "usage": {
+          "input_tokens": 1518,
+          "output_tokens": 71
+        },
+        "list_price_usd": 0.003746,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "DEV-301",
+    "family": "cross_source_synthesis",
+    "model": "gpt-5.6-luna",
+    "set": "dev",
+    "arm": "r3",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported",
+        "supported",
+        "supported",
+        "partial"
+      ],
+      "facts": [
+        "covered",
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported",
+        "supported",
+        "supported",
+        "partial"
+      ],
+      "facts": [
+        "covered",
+        "covered"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": false,
+        "usage": {
+          "input_tokens": 2243,
+          "output_tokens": 163
+        },
+        "list_price_usd": 0.006116,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "DEV-301",
+    "family": "cross_source_synthesis",
+    "model": "gpt-5.6-luna",
+    "set": "dev",
+    "arm": "hybrid",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported",
+        "supported",
+        "supported",
+        "supported"
+      ],
+      "facts": [
+        "covered",
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported",
+        "supported",
+        "partial",
+        "supported"
+      ],
+      "facts": [
+        "covered",
+        "covered"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": false,
+        "usage": {
+          "input_tokens": 1987,
+          "output_tokens": 182
+        },
+        "list_price_usd": 0.005794,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "DEV-302",
+    "family": "cross_source_synthesis",
+    "model": "gpt-5.6-luna",
+    "set": "dev",
+    "arm": "r3",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported",
+        "supported",
+        "supported",
+        "supported"
+      ],
+      "facts": [
+        "covered",
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported",
+        "supported",
+        "supported",
+        "supported"
+      ],
+      "facts": [
+        "covered",
+        "covered"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": false,
+        "usage": {
+          "input_tokens": 2039,
+          "output_tokens": 155
+        },
+        "list_price_usd": 0.005628,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "DEV-302",
+    "family": "cross_source_synthesis",
+    "model": "gpt-5.6-luna",
+    "set": "dev",
+    "arm": "hybrid",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported",
+        "supported",
+        "supported",
+        "supported"
+      ],
+      "facts": [
+        "covered",
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported",
+        "supported",
+        "supported",
+        "supported"
+      ],
+      "facts": [
+        "covered",
+        "covered"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": false,
+        "usage": {
+          "input_tokens": 1711,
+          "output_tokens": 126
+        },
+        "list_price_usd": 0.004682,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "DEV-313",
+    "family": "cross_source_synthesis",
+    "model": "gpt-5.6-luna",
+    "set": "dev",
+    "arm": "r3",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported",
+        "unsupported",
+        "supported",
+        "supported",
+        "supported"
+      ],
+      "facts": [
+        "covered",
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported",
+        "partial",
+        "supported",
+        "supported",
+        "supported"
+      ],
+      "facts": [
+        "covered",
+        "covered"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": false,
+        "usage": {
+          "input_tokens": 1792,
+          "output_tokens": 202
+        },
+        "list_price_usd": 0.005604,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "DEV-313",
+    "family": "cross_source_synthesis",
+    "model": "gpt-5.6-luna",
+    "set": "dev",
+    "arm": "hybrid",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported",
+        "partial",
+        "partial",
+        "partial"
+      ],
+      "facts": [
+        "covered",
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported",
+        "supported",
+        "supported",
+        "partial"
+      ],
+      "facts": [
+        "covered",
+        "covered"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": false,
+        "usage": {
+          "input_tokens": 1861,
+          "output_tokens": 158
+        },
+        "list_price_usd": 0.005302,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "DEV-315",
+    "family": "cross_source_synthesis",
+    "model": "gpt-5.6-luna",
+    "set": "dev",
+    "arm": "r3",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported",
+        "partial",
+        "supported"
+      ],
+      "facts": [
+        "covered",
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported",
+        "partial",
+        "supported"
+      ],
+      "facts": [
+        "covered",
+        "covered"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": false,
+        "usage": {
+          "input_tokens": 1613,
+          "output_tokens": 151
+        },
+        "list_price_usd": 0.004736,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "DEV-315",
+    "family": "cross_source_synthesis",
+    "model": "gpt-5.6-luna",
+    "set": "dev",
+    "arm": "hybrid",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported",
+        "partial",
+        "partial"
+      ],
+      "facts": [
+        "covered",
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported",
+        "partial",
+        "supported"
+      ],
+      "facts": [
+        "covered",
+        "covered"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": false,
+        "usage": {
+          "input_tokens": 1639,
+          "output_tokens": 146
+        },
+        "list_price_usd": 0.004738,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "DEV-316",
+    "family": "cross_source_synthesis",
+    "model": "gpt-5.6-luna",
+    "set": "dev",
+    "arm": "r3",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported",
+        "supported",
+        "supported",
+        "supported",
+        "supported"
+      ],
+      "facts": [
+        "covered",
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported",
+        "supported",
+        "supported",
+        "supported",
+        "supported"
+      ],
+      "facts": [
+        "covered",
+        "covered"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": false,
+        "usage": {
+          "input_tokens": 1801,
+          "output_tokens": 198
+        },
+        "list_price_usd": 0.005582,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "DEV-316",
+    "family": "cross_source_synthesis",
+    "model": "gpt-5.6-luna",
+    "set": "dev",
+    "arm": "hybrid",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported",
+        "supported",
+        "partial",
+        "partial",
+        "supported"
+      ],
+      "facts": [
+        "covered",
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported",
+        "supported",
+        "supported",
+        "partial",
+        "supported"
+      ],
+      "facts": [
+        "covered",
+        "covered"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": false,
+        "usage": {
+          "input_tokens": 1756,
+          "output_tokens": 227
+        },
+        "list_price_usd": 0.005782,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "DEV-318",
+    "family": "cross_source_synthesis",
+    "model": "gpt-5.6-luna",
+    "set": "dev",
+    "arm": "r3",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported",
+        "supported"
+      ],
+      "facts": [
+        "covered",
+        "missing"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported",
+        "supported"
+      ],
+      "facts": [
+        "covered",
+        "covered"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": false,
+        "usage": {
+          "input_tokens": 1515,
+          "output_tokens": 88
+        },
+        "list_price_usd": 0.00391,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "DEV-318",
+    "family": "cross_source_synthesis",
+    "model": "gpt-5.6-luna",
+    "set": "dev",
+    "arm": "hybrid",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported",
+        "partial"
+      ],
+      "facts": [
+        "covered",
+        "missing"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported",
+        "partial"
+      ],
+      "facts": [
+        "covered",
+        "missing"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": false,
+        "usage": {
+          "input_tokens": 1527,
+          "output_tokens": 227
+        },
+        "list_price_usd": 0.005324,
+        "status": "invalid_indices",
+        "diagnostics": {
+          "claims": {
+            "expected": 2,
+            "returned": 3,
+            "indices": [
+              0,
+              1,
+              1
+            ]
+          },
+          "facts": {
+            "expected": 2,
+            "returned": 2,
+            "indices": [
+              0,
+              1
+            ]
+          }
+        }
+      },
+      {
+        "attempt": 1,
+        "cached": false,
+        "usage": {
+          "input_tokens": 1527,
+          "output_tokens": 200
+        },
+        "list_price_usd": 0.005054,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "DEV-323",
+    "family": "revision_conflict",
+    "model": "gpt-5.6-luna",
+    "set": "dev",
+    "arm": "r3",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "partial"
+      ],
+      "facts": [
+        "covered",
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "partial"
+      ],
+      "facts": [
+        "covered",
+        "covered"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": false,
+        "usage": {
+          "input_tokens": 1452,
+          "output_tokens": 124
+        },
+        "list_price_usd": 0.004144,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "DEV-323",
+    "family": "revision_conflict",
+    "model": "gpt-5.6-luna",
+    "set": "dev",
+    "arm": "hybrid",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "partial",
+        "partial",
+        "supported",
+        "partial"
+      ],
+      "facts": [
+        "covered",
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported",
+        "supported",
+        "supported",
+        "supported"
+      ],
+      "facts": [
+        "covered",
+        "covered"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": false,
+        "usage": {
+          "input_tokens": 1630,
+          "output_tokens": 126
+        },
+        "list_price_usd": 0.00452,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "DEV-326",
+    "family": "revision_conflict",
+    "model": "gpt-5.6-luna",
+    "set": "dev",
+    "arm": "r3",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "partial",
+        "supported",
+        "supported",
+        "partial"
+      ],
+      "facts": [
+        "covered",
+        "covered",
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "partial",
+        "supported",
+        "supported",
+        "partial"
+      ],
+      "facts": [
+        "covered",
+        "missing",
+        "covered"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": false,
+        "usage": {
+          "input_tokens": 2050,
+          "output_tokens": 302
+        },
+        "list_price_usd": 0.00712,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "DEV-326",
+    "family": "revision_conflict",
+    "model": "gpt-5.6-luna",
+    "set": "dev",
+    "arm": "hybrid",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "partial",
+        "supported",
+        "supported",
+        "partial"
+      ],
+      "facts": [
+        "covered",
+        "covered",
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported",
+        "supported",
+        "supported",
+        "supported"
+      ],
+      "facts": [
+        "covered",
+        "missing",
+        "covered"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": false,
+        "usage": {
+          "input_tokens": 1773,
+          "output_tokens": 170
+        },
+        "list_price_usd": 0.005246,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "DEV-327",
+    "family": "revision_conflict",
+    "model": "gpt-5.6-luna",
+    "set": "dev",
+    "arm": "r3",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported",
+        "supported",
+        "supported"
+      ],
+      "facts": [
+        "covered",
+        "missing"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported",
+        "supported",
+        "partial"
+      ],
+      "facts": [
+        "covered",
+        "covered"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": false,
+        "usage": {
+          "input_tokens": 1660,
+          "output_tokens": 240
+        },
+        "list_price_usd": 0.00572,
+        "status": "invalid_indices",
+        "diagnostics": {
+          "claims": {
+            "expected": 3,
+            "returned": 4,
+            "indices": [
+              0,
+              1,
+              2,
+              2
+            ]
+          },
+          "facts": {
+            "expected": 2,
+            "returned": 2,
+            "indices": [
+              0,
+              1
+            ]
+          }
+        }
+      },
+      {
+        "attempt": 1,
+        "cached": false,
+        "usage": {
+          "input_tokens": 1660,
+          "output_tokens": 197
+        },
+        "list_price_usd": 0.00529,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "DEV-327",
+    "family": "revision_conflict",
+    "model": "gpt-5.6-luna",
+    "set": "dev",
+    "arm": "hybrid",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "partial",
+        "supported",
+        "partial"
+      ],
+      "facts": [
+        "covered",
+        "missing"
+      ]
+    },
+    "second": {
+      "claims": [
+        "partial",
+        "supported",
+        "supported"
+      ],
+      "facts": [
+        "covered",
+        "missing"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": false,
+        "usage": {
+          "input_tokens": 1538,
+          "output_tokens": 182
+        },
+        "list_price_usd": 0.004896,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "DEV-328",
+    "family": "revision_conflict",
+    "model": "gpt-5.6-luna",
+    "set": "dev",
+    "arm": "r3",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported",
+        "supported",
+        "supported",
+        "supported"
+      ],
+      "facts": [
+        "covered",
+        "missing",
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported",
+        "partial",
+        "supported",
+        "supported"
+      ],
+      "facts": [
+        "covered",
+        "covered",
+        "missing"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": false,
+        "usage": {
+          "input_tokens": 2057,
+          "output_tokens": 242
+        },
+        "list_price_usd": 0.006534,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "DEV-328",
+    "family": "revision_conflict",
+    "model": "gpt-5.6-luna",
+    "set": "dev",
+    "arm": "hybrid",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "partial",
+        "partial",
+        "partial",
+        "partial"
+      ],
+      "facts": [
+        "covered",
+        "missing",
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported",
+        "supported",
+        "supported",
+        "supported"
+      ],
+      "facts": [
+        "covered",
+        "covered",
+        "covered"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": false,
+        "usage": {
+          "input_tokens": 1773,
+          "output_tokens": 184
+        },
+        "list_price_usd": 0.005386,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "DEV-429",
+    "family": "ambiguity_insufficient_causal",
+    "model": "gpt-5.6-luna",
+    "set": "dev",
+    "arm": "r3",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported",
+        "supported",
+        "supported",
+        "supported",
+        "partial"
+      ],
+      "facts": [
+        "covered",
+        "covered",
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported",
+        "supported",
+        "supported",
+        "supported",
+        "partial"
+      ],
+      "facts": [
+        "covered",
+        "covered",
+        "covered"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": false,
+        "usage": {
+          "input_tokens": 2037,
+          "output_tokens": 214
+        },
+        "list_price_usd": 0.006214,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "DEV-429",
+    "family": "ambiguity_insufficient_causal",
+    "model": "gpt-5.6-luna",
+    "set": "dev",
+    "arm": "hybrid",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "partial",
+        "partial",
+        "supported",
+        "partial",
+        "supported"
+      ],
+      "facts": [
+        "covered",
+        "covered",
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported",
+        "supported",
+        "supported",
+        "supported",
+        "partial"
+      ],
+      "facts": [
+        "covered",
+        "covered",
+        "covered"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": false,
+        "usage": {
+          "input_tokens": 1904,
+          "output_tokens": 203
+        },
+        "list_price_usd": 0.005838,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "DEV-432",
+    "family": "ambiguity_insufficient_causal",
+    "model": "gpt-5.6-luna",
+    "set": "dev",
+    "arm": "r3",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "partial",
+        "partial",
+        "supported"
+      ],
+      "facts": [
+        "contradicted",
+        "covered",
+        "covered",
+        "contradicted"
+      ]
+    },
+    "second": {
+      "claims": [
+        "partial",
+        "partial",
+        "supported"
+      ],
+      "facts": [
+        "contradicted",
+        "covered",
+        "covered",
+        "contradicted"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": false,
+        "usage": {
+          "input_tokens": 1662,
+          "output_tokens": 299
+        },
+        "list_price_usd": 0.006314,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "DEV-432",
+    "family": "ambiguity_insufficient_causal",
+    "model": "gpt-5.6-luna",
+    "set": "dev",
+    "arm": "hybrid",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "partial",
+        "supported",
+        "supported",
+        "supported"
+      ],
+      "facts": [
+        "contradicted",
+        "covered",
+        "missing",
+        "contradicted"
+      ]
+    },
+    "second": {
+      "claims": [
+        "partial",
+        "supported",
+        "supported",
+        "partial"
+      ],
+      "facts": [
+        "contradicted",
+        "covered",
+        "covered",
+        "contradicted"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": false,
+        "usage": {
+          "input_tokens": 1740,
+          "output_tokens": 300
+        },
+        "list_price_usd": 0.00648,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "DEV-501",
+    "family": "adversarial",
+    "model": "gpt-5.6-luna",
+    "set": "dev",
+    "arm": "r3",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered",
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered",
+        "covered"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": false,
+        "usage": {
+          "input_tokens": 1174,
+          "output_tokens": 87
+        },
+        "list_price_usd": 0.003218,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "DEV-501",
+    "family": "adversarial",
+    "model": "gpt-5.6-luna",
+    "set": "dev",
+    "arm": "hybrid",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered",
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered",
+        "covered"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": false,
+        "usage": {
+          "input_tokens": 1167,
+          "output_tokens": 69
+        },
+        "list_price_usd": 0.003024,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "DEV-503",
+    "family": "adversarial",
+    "model": "gpt-5.6-luna",
+    "set": "dev",
+    "arm": "r3",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": false,
+        "usage": {
+          "input_tokens": 1154,
+          "output_tokens": 52
+        },
+        "list_price_usd": 0.002828,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "DEV-503",
+    "family": "adversarial",
+    "model": "gpt-5.6-luna",
+    "set": "dev",
+    "arm": "hybrid",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": true,
+        "usage": {
+          "input_tokens": 1154,
+          "output_tokens": 52
+        },
+        "list_price_usd": 0.002828,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "DEV-510",
+    "family": "adversarial",
+    "model": "gpt-5.6-luna",
+    "set": "dev",
+    "arm": "r3",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered",
+        "missing"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered",
+        "missing"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": false,
+        "usage": {
+          "input_tokens": 1275,
+          "output_tokens": 100
+        },
+        "list_price_usd": 0.00355,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "DEV-510",
+    "family": "adversarial",
+    "model": "gpt-5.6-luna",
+    "set": "dev",
+    "arm": "hybrid",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered",
+        "missing"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered",
+        "missing"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": true,
+        "usage": {
+          "input_tokens": 1275,
+          "output_tokens": 100
+        },
+        "list_price_usd": 0.00355,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "DEV-511",
+    "family": "adversarial",
+    "model": "gpt-5.6-luna",
+    "set": "dev",
+    "arm": "r3",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": false,
+        "usage": {
+          "input_tokens": 1243,
+          "output_tokens": 52
+        },
+        "list_price_usd": 0.003006,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "DEV-511",
+    "family": "adversarial",
+    "model": "gpt-5.6-luna",
+    "set": "dev",
+    "arm": "hybrid",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": true,
+        "usage": {
+          "input_tokens": 1243,
+          "output_tokens": 52
+        },
+        "list_price_usd": 0.003006,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "DEV-524",
+    "family": "adversarial",
+    "model": "gpt-5.6-luna",
+    "set": "dev",
+    "arm": "r3",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported",
+        "supported"
+      ],
+      "facts": [
+        "covered",
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported",
+        "supported"
+      ],
+      "facts": [
+        "covered",
+        "covered"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": false,
+        "usage": {
+          "input_tokens": 1311,
+          "output_tokens": 88
+        },
+        "list_price_usd": 0.003502,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "DEV-524",
+    "family": "adversarial",
+    "model": "gpt-5.6-luna",
+    "set": "dev",
+    "arm": "hybrid",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "partial",
+        "partial"
+      ],
+      "facts": [
+        "covered",
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported",
+        "partial"
+      ],
+      "facts": [
+        "covered",
+        "covered"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": false,
+        "usage": {
+          "input_tokens": 1346,
+          "output_tokens": 115
+        },
+        "list_price_usd": 0.003842,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "DEV-526",
+    "family": "adversarial",
+    "model": "gpt-5.6-luna",
+    "set": "dev",
+    "arm": "r3",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported",
+        "supported",
+        "partial"
+      ],
+      "facts": [
+        "covered",
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported",
+        "supported",
+        "partial"
+      ],
+      "facts": [
+        "covered",
+        "covered"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": false,
+        "usage": {
+          "input_tokens": 1556,
+          "output_tokens": 151
+        },
+        "list_price_usd": 0.004622,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "DEV-526",
+    "family": "adversarial",
+    "model": "gpt-5.6-luna",
+    "set": "dev",
+    "arm": "hybrid",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered",
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered",
+        "covered"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": false,
+        "usage": {
+          "input_tokens": 1363,
+          "output_tokens": 69
+        },
+        "list_price_usd": 0.003416,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "DEV-611",
+    "family": "factual_lookup",
+    "model": "gpt-5.6-luna",
+    "set": "dev",
+    "arm": "r3",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "missing"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "missing"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": false,
+        "usage": {
+          "input_tokens": 1274,
+          "output_tokens": 89
+        },
+        "list_price_usd": 0.003438,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "DEV-611",
+    "family": "factual_lookup",
+    "model": "gpt-5.6-luna",
+    "set": "dev",
+    "arm": "hybrid",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "partial"
+      ],
+      "facts": [
+        "missing"
+      ]
+    },
+    "second": {
+      "claims": [
+        "partial"
+      ],
+      "facts": [
+        "missing"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": false,
+        "usage": {
+          "input_tokens": 1276,
+          "output_tokens": 127
+        },
+        "list_price_usd": 0.003822,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "DEV-616",
+    "family": "cross_source_synthesis",
+    "model": "gpt-5.6-luna",
+    "set": "dev",
+    "arm": "r3",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported",
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported",
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": false,
+        "usage": {
+          "input_tokens": 1483,
+          "output_tokens": 71
+        },
+        "list_price_usd": 0.003676,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "DEV-616",
+    "family": "cross_source_synthesis",
+    "model": "gpt-5.6-luna",
+    "set": "dev",
+    "arm": "hybrid",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported",
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported",
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": false,
+        "usage": {
+          "input_tokens": 1517,
+          "output_tokens": 71
+        },
+        "list_price_usd": 0.003744,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "DEV-621",
+    "family": "cross_source_synthesis",
+    "model": "gpt-5.6-luna",
+    "set": "dev",
+    "arm": "r3",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported",
+        "supported",
+        "supported",
+        "supported"
+      ],
+      "facts": [
+        "covered",
+        "missing",
+        "missing"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported",
+        "supported",
+        "partial",
+        "supported"
+      ],
+      "facts": [
+        "covered",
+        "covered",
+        "covered"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": false,
+        "usage": {
+          "input_tokens": 2534,
+          "output_tokens": 201
+        },
+        "list_price_usd": 0.007078,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "DEV-621",
+    "family": "cross_source_synthesis",
+    "model": "gpt-5.6-luna",
+    "set": "dev",
+    "arm": "hybrid",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported",
+        "supported",
+        "supported",
+        "supported"
+      ],
+      "facts": [
+        "missing",
+        "missing",
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported",
+        "supported",
+        "partial",
+        "supported"
+      ],
+      "facts": [
+        "covered",
+        "covered",
+        "covered"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": false,
+        "usage": {
+          "input_tokens": 2557,
+          "output_tokens": 241
+        },
+        "list_price_usd": 0.007524,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "DEV-625",
+    "family": "numerical_comparison",
+    "model": "gpt-5.6-luna",
+    "set": "dev",
+    "arm": "r3",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "partial",
+        "partial",
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported",
+        "supported",
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": false,
+        "usage": {
+          "input_tokens": 1433,
+          "output_tokens": 90
+        },
+        "list_price_usd": 0.003766,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "DEV-625",
+    "family": "numerical_comparison",
+    "model": "gpt-5.6-luna",
+    "set": "dev",
+    "arm": "hybrid",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported",
+        "supported",
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported",
+        "supported",
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": false,
+        "usage": {
+          "input_tokens": 1283,
+          "output_tokens": 90
+        },
+        "list_price_usd": 0.003466,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "DEV-626",
+    "family": "numerical_comparison",
+    "model": "gpt-5.6-luna",
+    "set": "dev",
+    "arm": "r3",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported"
+      ],
+      "facts": []
+    },
+    "second": {
+      "claims": [
+        "supported"
+      ],
+      "facts": []
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": false,
+        "usage": {
+          "input_tokens": 1281,
+          "output_tokens": 35
+        },
+        "list_price_usd": 0.002912,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "DEV-626",
+    "family": "numerical_comparison",
+    "model": "gpt-5.6-luna",
+    "set": "dev",
+    "arm": "hybrid",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported",
+        "supported"
+      ],
+      "facts": []
+    },
+    "second": {
+      "claims": [
+        "supported",
+        "supported"
+      ],
+      "facts": []
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": false,
+        "usage": {
+          "input_tokens": 1778,
+          "output_tokens": 54
+        },
+        "list_price_usd": 0.004096,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "HO-V2-004",
+    "family": "factual_lookup",
+    "model": "gpt-5.6-luna",
+    "set": "fresh",
+    "arm": "r3",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": false,
+        "usage": {
+          "input_tokens": 1278,
+          "output_tokens": 52
+        },
+        "list_price_usd": 0.003076,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "HO-V2-004",
+    "family": "factual_lookup",
+    "model": "gpt-5.6-luna",
+    "set": "fresh",
+    "arm": "hybrid",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": false,
+        "usage": {
+          "input_tokens": 1281,
+          "output_tokens": 52
+        },
+        "list_price_usd": 0.003082,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "HO-V2-005",
+    "family": "factual_lookup",
+    "model": "gpt-5.6-luna",
+    "set": "fresh",
+    "arm": "r3",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": false,
+        "usage": {
+          "input_tokens": 1265,
+          "output_tokens": 52
+        },
+        "list_price_usd": 0.00305,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "HO-V2-005",
+    "family": "factual_lookup",
+    "model": "gpt-5.6-luna",
+    "set": "fresh",
+    "arm": "hybrid",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": false,
+        "usage": {
+          "input_tokens": 1260,
+          "output_tokens": 52
+        },
+        "list_price_usd": 0.00304,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "HO-V2-008",
+    "family": "factual_lookup",
+    "model": "gpt-5.6-luna",
+    "set": "fresh",
+    "arm": "r3",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": false,
+        "usage": {
+          "input_tokens": 1715,
+          "output_tokens": 52
+        },
+        "list_price_usd": 0.00395,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "HO-V2-008",
+    "family": "factual_lookup",
+    "model": "gpt-5.6-luna",
+    "set": "fresh",
+    "arm": "hybrid",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": false,
+        "usage": {
+          "input_tokens": 1706,
+          "output_tokens": 52
+        },
+        "list_price_usd": 0.003932,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "HO-V2-018",
+    "family": "factual_lookup",
+    "model": "gpt-5.6-luna",
+    "set": "fresh",
+    "arm": "r3",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": false,
+        "usage": {
+          "input_tokens": 1178,
+          "output_tokens": 52
+        },
+        "list_price_usd": 0.002876,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "HO-V2-018",
+    "family": "factual_lookup",
+    "model": "gpt-5.6-luna",
+    "set": "fresh",
+    "arm": "hybrid",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": false,
+        "usage": {
+          "input_tokens": 1276,
+          "output_tokens": 52
+        },
+        "list_price_usd": 0.003072,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "HO-V2-020",
+    "family": "factual_lookup",
+    "model": "gpt-5.6-luna",
+    "set": "fresh",
+    "arm": "r3",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": false,
+        "usage": {
+          "input_tokens": 1323,
+          "output_tokens": 52
+        },
+        "list_price_usd": 0.003166,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "HO-V2-020",
+    "family": "factual_lookup",
+    "model": "gpt-5.6-luna",
+    "set": "fresh",
+    "arm": "hybrid",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": false,
+        "usage": {
+          "input_tokens": 1269,
+          "output_tokens": 52
+        },
+        "list_price_usd": 0.003058,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "HO-V2-021",
+    "family": "factual_lookup",
+    "model": "gpt-5.6-luna",
+    "set": "fresh",
+    "arm": "r3",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": false,
+        "usage": {
+          "input_tokens": 1325,
+          "output_tokens": 52
+        },
+        "list_price_usd": 0.00317,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "HO-V2-021",
+    "family": "factual_lookup",
+    "model": "gpt-5.6-luna",
+    "set": "fresh",
+    "arm": "hybrid",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": false,
+        "usage": {
+          "input_tokens": 1540,
+          "output_tokens": 52
+        },
+        "list_price_usd": 0.0036,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "HO-V2-028",
+    "family": "numerical_comparison",
+    "model": "gpt-5.6-luna",
+    "set": "fresh",
+    "arm": "r3",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "missing",
+        "missing",
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "missing",
+        "missing",
+        "covered"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": false,
+        "usage": {
+          "input_tokens": 1406,
+          "output_tokens": 86
+        },
+        "list_price_usd": 0.003672,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "HO-V2-028",
+    "family": "numerical_comparison",
+    "model": "gpt-5.6-luna",
+    "set": "fresh",
+    "arm": "hybrid",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "missing",
+        "missing",
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "missing",
+        "missing",
+        "covered"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": false,
+        "usage": {
+          "input_tokens": 1413,
+          "output_tokens": 140
+        },
+        "list_price_usd": 0.004226,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "HO-V2-043",
+    "family": "cross_source_synthesis",
+    "model": "gpt-5.6-luna",
+    "set": "fresh",
+    "arm": "r3",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported",
+        "supported",
+        "supported"
+      ],
+      "facts": [
+        "missing",
+        "covered",
+        "covered",
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported",
+        "supported",
+        "supported"
+      ],
+      "facts": [
+        "covered",
+        "covered",
+        "covered",
+        "covered"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": false,
+        "usage": {
+          "input_tokens": 1952,
+          "output_tokens": 141
+        },
+        "list_price_usd": 0.005314,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "HO-V2-043",
+    "family": "cross_source_synthesis",
+    "model": "gpt-5.6-luna",
+    "set": "fresh",
+    "arm": "hybrid",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported",
+        "supported",
+        "supported"
+      ],
+      "facts": [
+        "missing",
+        "covered",
+        "covered",
+        "missing"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported",
+        "supported",
+        "supported"
+      ],
+      "facts": [
+        "covered",
+        "covered",
+        "covered",
+        "missing"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": false,
+        "usage": {
+          "input_tokens": 1808,
+          "output_tokens": 170
+        },
+        "list_price_usd": 0.005316,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "HO-V2-044",
+    "family": "cross_source_synthesis",
+    "model": "gpt-5.6-luna",
+    "set": "fresh",
+    "arm": "r3",
+    "status": "judge_omitted",
+    "reason": "incomplete_or_duplicate_or_extra_indices",
+    "original": {
+      "claims": [
+        "supported",
+        "supported",
+        "supported",
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "second": null,
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": false,
+        "usage": {
+          "input_tokens": 2488,
+          "output_tokens": 200
+        },
+        "list_price_usd": 0.006976,
+        "status": "invalid_indices",
+        "diagnostics": {
+          "claims": {
+            "expected": 4,
+            "returned": 5,
+            "indices": [
+              0,
+              1,
+              2,
+              3,
+              4
+            ]
+          },
+          "facts": {
+            "expected": 1,
+            "returned": 1,
+            "indices": [
+              0
+            ]
+          }
+        }
+      },
+      {
+        "attempt": 1,
+        "cached": false,
+        "usage": {
+          "input_tokens": 2488,
+          "output_tokens": 213
+        },
+        "list_price_usd": 0.007106,
+        "status": "invalid_indices",
+        "diagnostics": {
+          "claims": {
+            "expected": 4,
+            "returned": 5,
+            "indices": [
+              0,
+              1,
+              2,
+              3,
+              4
+            ]
+          },
+          "facts": {
+            "expected": 1,
+            "returned": 1,
+            "indices": [
+              0
+            ]
+          }
+        }
+      }
+    ]
+  },
+  {
+    "case_id": "HO-V2-044",
+    "family": "cross_source_synthesis",
+    "model": "gpt-5.6-luna",
+    "set": "fresh",
+    "arm": "hybrid",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported",
+        "supported",
+        "supported",
+        "partial"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported",
+        "supported",
+        "supported",
+        "partial"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": false,
+        "usage": {
+          "input_tokens": 2067,
+          "output_tokens": 147
+        },
+        "list_price_usd": 0.005604,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "HO-V2-058",
+    "family": "adversarial",
+    "model": "gpt-5.6-luna",
+    "set": "fresh",
+    "arm": "r3",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": false,
+        "usage": {
+          "input_tokens": 1207,
+          "output_tokens": 52
+        },
+        "list_price_usd": 0.002934,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "HO-V2-058",
+    "family": "adversarial",
+    "model": "gpt-5.6-luna",
+    "set": "fresh",
+    "arm": "hybrid",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": false,
+        "usage": {
+          "input_tokens": 1310,
+          "output_tokens": 52
+        },
+        "list_price_usd": 0.00314,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "HO-003",
+    "family": "factual_lookup",
+    "model": "gpt-5.6-luna",
+    "set": "heldout",
+    "arm": "r3",
+    "status": "judge_omitted",
+    "reason": "incomplete_or_duplicate_or_extra_indices",
+    "original": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "missing"
+      ]
+    },
+    "second": null,
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": false,
+        "usage": {
+          "input_tokens": 1298,
+          "output_tokens": 180
+        },
+        "list_price_usd": 0.004396,
+        "status": "invalid_indices",
+        "diagnostics": {
+          "claims": {
+            "expected": 1,
+            "returned": 2,
+            "indices": [
+              0,
+              0
+            ]
+          },
+          "facts": {
+            "expected": 1,
+            "returned": 1,
+            "indices": [
+              0
+            ]
+          }
+        }
+      },
+      {
+        "attempt": 1,
+        "cached": false,
+        "usage": {
+          "input_tokens": 1298,
+          "output_tokens": 200
+        },
+        "list_price_usd": 0.004596,
+        "status": "invalid_indices",
+        "diagnostics": {
+          "claims": {
+            "expected": 1,
+            "returned": 2,
+            "indices": [
+              0,
+              1
+            ]
+          },
+          "facts": {
+            "expected": 1,
+            "returned": 1,
+            "indices": [
+              0
+            ]
+          }
+        }
+      }
+    ]
+  },
+  {
+    "case_id": "HO-003",
+    "family": "factual_lookup",
+    "model": "gpt-5.6-luna",
+    "set": "heldout",
+    "arm": "hybrid",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported",
+        "supported"
+      ],
+      "facts": [
+        "missing"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported",
+        "supported"
+      ],
+      "facts": [
+        "missing"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": false,
+        "usage": {
+          "input_tokens": 1323,
+          "output_tokens": 115
+        },
+        "list_price_usd": 0.003796,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "HO-010",
+    "family": "numerical_comparison",
+    "model": "gpt-5.6-luna",
+    "set": "heldout",
+    "arm": "r3",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": false,
+        "usage": {
+          "input_tokens": 1342,
+          "output_tokens": 52
+        },
+        "list_price_usd": 0.003204,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "HO-010",
+    "family": "numerical_comparison",
+    "model": "gpt-5.6-luna",
+    "set": "heldout",
+    "arm": "hybrid",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported",
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported",
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": false,
+        "usage": {
+          "input_tokens": 1361,
+          "output_tokens": 71
+        },
+        "list_price_usd": 0.003432,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "HO-011",
+    "family": "numerical_comparison",
+    "model": "gpt-5.6-luna",
+    "set": "heldout",
+    "arm": "r3",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": false,
+        "usage": {
+          "input_tokens": 1358,
+          "output_tokens": 52
+        },
+        "list_price_usd": 0.003236,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "HO-011",
+    "family": "numerical_comparison",
+    "model": "gpt-5.6-luna",
+    "set": "heldout",
+    "arm": "hybrid",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": false,
+        "usage": {
+          "input_tokens": 1362,
+          "output_tokens": 52
+        },
+        "list_price_usd": 0.003244,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "HO-012",
+    "family": "cross_source_synthesis",
+    "model": "gpt-5.6-luna",
+    "set": "heldout",
+    "arm": "r3",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported",
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported",
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": false,
+        "usage": {
+          "input_tokens": 1353,
+          "output_tokens": 71
+        },
+        "list_price_usd": 0.003416,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "HO-012",
+    "family": "cross_source_synthesis",
+    "model": "gpt-5.6-luna",
+    "set": "heldout",
+    "arm": "hybrid",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported",
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported",
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": false,
+        "usage": {
+          "input_tokens": 1367,
+          "output_tokens": 71
+        },
+        "list_price_usd": 0.003444,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "HO-017",
+    "family": "revision_conflict",
+    "model": "gpt-5.6-luna",
+    "set": "heldout",
+    "arm": "r3",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported",
+        "partial",
+        "supported",
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported",
+        "supported",
+        "supported",
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": false,
+        "usage": {
+          "input_tokens": 1618,
+          "output_tokens": 152
+        },
+        "list_price_usd": 0.004756,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "HO-017",
+    "family": "revision_conflict",
+    "model": "gpt-5.6-luna",
+    "set": "heldout",
+    "arm": "hybrid",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "partial",
+        "partial",
+        "partial"
+      ],
+      "facts": [
+        "contradicted"
+      ]
+    },
+    "second": {
+      "claims": [
+        "partial",
+        "partial",
+        "supported"
+      ],
+      "facts": [
+        "contradicted"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": false,
+        "usage": {
+          "input_tokens": 1458,
+          "output_tokens": 211
+        },
+        "list_price_usd": 0.005026,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "HO-023",
+    "family": "ambiguity_insufficient_causal",
+    "model": "gpt-5.6-luna",
+    "set": "heldout",
+    "arm": "r3",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported",
+        "supported",
+        "supported"
+      ],
+      "facts": [
+        "covered",
+        "covered",
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported",
+        "supported",
+        "supported"
+      ],
+      "facts": [
+        "covered",
+        "covered",
+        "covered"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": false,
+        "usage": {
+          "input_tokens": 2243,
+          "output_tokens": 124
+        },
+        "list_price_usd": 0.005726,
+        "status": "valid"
+      }
+    ]
+  },
+  {
+    "case_id": "HO-023",
+    "family": "ambiguity_insufficient_causal",
+    "model": "gpt-5.6-luna",
+    "set": "heldout",
+    "arm": "hybrid",
+    "status": "valid",
+    "original": {
+      "claims": [
+        "supported",
+        "partial",
+        "partial"
+      ],
+      "facts": [
+        "covered",
+        "covered",
+        "missing"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported",
+        "supported",
+        "partial"
+      ],
+      "facts": [
+        "covered",
+        "covered",
+        "missing"
+      ]
+    },
+    "attempts": [
+      {
+        "attempt": 0,
+        "cached": false,
+        "usage": {
+          "input_tokens": 1757,
+          "output_tokens": 204
+        },
+        "list_price_usd": 0.005554,
+        "status": "valid"
+      }
+    ]
+  }
+]

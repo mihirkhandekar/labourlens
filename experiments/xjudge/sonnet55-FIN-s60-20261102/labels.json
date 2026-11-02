@@ -1,0 +1,1323 @@
+[
+  {
+    "case_id": "DEV-004",
+    "family": "numerical_comparison",
+    "model": "gpt-6-luna",
+    "set": "dev",
+    "arm": "r3",
+    "original": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    }
+  },
+  {
+    "case_id": "DEV-004",
+    "family": "numerical_comparison",
+    "model": "gpt-6-luna",
+    "set": "dev",
+    "arm": "hybrid",
+    "original": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "missing"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    }
+  },
+  {
+    "case_id": "DEV-006",
+    "family": "numerical_comparison",
+    "model": "gpt-6-luna",
+    "set": "dev",
+    "arm": "r3",
+    "original": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    }
+  },
+  {
+    "case_id": "DEV-006",
+    "family": "numerical_comparison",
+    "model": "gpt-6-luna",
+    "set": "dev",
+    "arm": "hybrid",
+    "original": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    }
+  },
+  {
+    "case_id": "DEV-014",
+    "family": "ambiguity_insufficient_causal",
+    "model": "gpt-6-luna",
+    "set": "dev",
+    "arm": "r3",
+    "original": {
+      "claims": [
+        "partial",
+        "partial"
+      ],
+      "facts": [
+        "covered",
+        "covered",
+        "missing"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported",
+        "supported"
+      ],
+      "facts": [
+        "covered",
+        "covered",
+        "covered"
+      ]
+    }
+  },
+  {
+    "case_id": "DEV-014",
+    "family": "ambiguity_insufficient_causal",
+    "model": "gpt-6-luna",
+    "set": "dev",
+    "arm": "hybrid",
+    "original": {
+      "claims": [
+        "partial",
+        "partial",
+        "partial",
+        "partial",
+        "partial"
+      ],
+      "facts": [
+        "covered",
+        "missing",
+        "missing"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported",
+        "supported",
+        "supported",
+        "partial",
+        "supported"
+      ],
+      "facts": [
+        "covered",
+        "covered",
+        "covered"
+      ]
+    }
+  },
+  {
+    "case_id": "DEV-021",
+    "family": "factual_lookup",
+    "model": "gpt-6-luna",
+    "set": "dev",
+    "arm": "r3",
+    "original": {
+      "claims": [
+        "supported",
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported",
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    }
+  },
+  {
+    "case_id": "DEV-021",
+    "family": "factual_lookup",
+    "model": "gpt-6-luna",
+    "set": "dev",
+    "arm": "hybrid",
+    "original": {
+      "claims": [
+        "supported",
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported",
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    }
+  },
+  {
+    "case_id": "DEV-023",
+    "family": "factual_lookup",
+    "model": "gpt-6-luna",
+    "set": "dev",
+    "arm": "r3",
+    "original": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    }
+  },
+  {
+    "case_id": "DEV-023",
+    "family": "factual_lookup",
+    "model": "gpt-6-luna",
+    "set": "dev",
+    "arm": "hybrid",
+    "original": {
+      "claims": [
+        "supported",
+        "partial"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported",
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    }
+  },
+  {
+    "case_id": "DEV-024",
+    "family": "factual_lookup",
+    "model": "gpt-6-luna",
+    "set": "dev",
+    "arm": "r3",
+    "original": {
+      "claims": [
+        "partial"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    }
+  },
+  {
+    "case_id": "DEV-024",
+    "family": "factual_lookup",
+    "model": "gpt-6-luna",
+    "set": "dev",
+    "arm": "hybrid",
+    "original": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    }
+  },
+  {
+    "case_id": "DEV-034",
+    "family": "adversarial",
+    "model": "gpt-6-luna",
+    "set": "dev",
+    "arm": "r3",
+    "original": {
+      "claims": [
+        "supported",
+        "partial"
+      ],
+      "facts": []
+    },
+    "second": {
+      "claims": [
+        "supported",
+        "partial"
+      ],
+      "facts": []
+    }
+  },
+  {
+    "case_id": "DEV-034",
+    "family": "adversarial",
+    "model": "gpt-6-luna",
+    "set": "dev",
+    "arm": "hybrid",
+    "original": {
+      "claims": [
+        "supported"
+      ],
+      "facts": []
+    },
+    "second": {
+      "claims": [
+        "supported"
+      ],
+      "facts": []
+    }
+  },
+  {
+    "case_id": "DEV-106",
+    "family": "factual_lookup",
+    "model": "gpt-6-luna",
+    "set": "dev",
+    "arm": "r3",
+    "original": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    }
+  },
+  {
+    "case_id": "DEV-106",
+    "family": "factual_lookup",
+    "model": "gpt-6-luna",
+    "set": "dev",
+    "arm": "hybrid",
+    "original": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    }
+  },
+  {
+    "case_id": "DEV-115",
+    "family": "factual_lookup",
+    "model": "gpt-6-luna",
+    "set": "dev",
+    "arm": "r3",
+    "original": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "partial"
+      ],
+      "facts": [
+        "covered"
+      ]
+    }
+  },
+  {
+    "case_id": "DEV-115",
+    "family": "factual_lookup",
+    "model": "gpt-6-luna",
+    "set": "dev",
+    "arm": "hybrid",
+    "original": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    }
+  },
+  {
+    "case_id": "DEV-128",
+    "family": "numerical_comparison",
+    "model": "gpt-6-luna",
+    "set": "dev",
+    "arm": "r3",
+    "original": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "missing",
+        "missing",
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "missing",
+        "missing",
+        "covered"
+      ]
+    }
+  },
+  {
+    "case_id": "DEV-128",
+    "family": "numerical_comparison",
+    "model": "gpt-6-luna",
+    "set": "dev",
+    "arm": "hybrid",
+    "original": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "missing",
+        "missing",
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "missing",
+        "missing",
+        "covered"
+      ]
+    }
+  },
+  {
+    "case_id": "DEV-130",
+    "family": "numerical_comparison",
+    "model": "gpt-6-luna",
+    "set": "dev",
+    "arm": "r3",
+    "original": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "missing",
+        "missing",
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "missing",
+        "missing",
+        "covered"
+      ]
+    }
+  },
+  {
+    "case_id": "DEV-130",
+    "family": "numerical_comparison",
+    "model": "gpt-6-luna",
+    "set": "dev",
+    "arm": "hybrid",
+    "original": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "missing",
+        "missing",
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "missing",
+        "missing",
+        "covered"
+      ]
+    }
+  },
+  {
+    "case_id": "DEV-131",
+    "family": "numerical_comparison",
+    "model": "gpt-6-luna",
+    "set": "dev",
+    "arm": "r3",
+    "original": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "missing",
+        "missing",
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "missing",
+        "missing",
+        "covered"
+      ]
+    }
+  },
+  {
+    "case_id": "DEV-131",
+    "family": "numerical_comparison",
+    "model": "gpt-6-luna",
+    "set": "dev",
+    "arm": "hybrid",
+    "original": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "missing",
+        "missing",
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "missing",
+        "missing",
+        "covered"
+      ]
+    }
+  },
+  {
+    "case_id": "DEV-208",
+    "family": "factual_lookup",
+    "model": "gpt-6-luna",
+    "set": "dev",
+    "arm": "r3",
+    "original": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "missing"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    }
+  },
+  {
+    "case_id": "DEV-208",
+    "family": "factual_lookup",
+    "model": "gpt-6-luna",
+    "set": "dev",
+    "arm": "hybrid",
+    "original": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "missing"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    }
+  },
+  {
+    "case_id": "DEV-211",
+    "family": "factual_lookup",
+    "model": "gpt-6-luna",
+    "set": "dev",
+    "arm": "r3",
+    "original": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    }
+  },
+  {
+    "case_id": "DEV-211",
+    "family": "factual_lookup",
+    "model": "gpt-6-luna",
+    "set": "dev",
+    "arm": "hybrid",
+    "original": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    }
+  },
+  {
+    "case_id": "DEV-217",
+    "family": "factual_lookup",
+    "model": "gpt-6-luna",
+    "set": "dev",
+    "arm": "r3",
+    "original": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    }
+  },
+  {
+    "case_id": "DEV-217",
+    "family": "factual_lookup",
+    "model": "gpt-6-luna",
+    "set": "dev",
+    "arm": "hybrid",
+    "original": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    }
+  },
+  {
+    "case_id": "DEV-219",
+    "family": "factual_lookup",
+    "model": "gpt-6-luna",
+    "set": "dev",
+    "arm": "r3",
+    "original": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    }
+  },
+  {
+    "case_id": "DEV-219",
+    "family": "factual_lookup",
+    "model": "gpt-6-luna",
+    "set": "dev",
+    "arm": "hybrid",
+    "original": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    }
+  },
+  {
+    "case_id": "DEV-221",
+    "family": "factual_lookup",
+    "model": "gpt-6-luna",
+    "set": "dev",
+    "arm": "r3",
+    "original": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    }
+  },
+  {
+    "case_id": "DEV-221",
+    "family": "factual_lookup",
+    "model": "gpt-6-luna",
+    "set": "dev",
+    "arm": "hybrid",
+    "original": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "missing"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "missing"
+      ]
+    }
+  },
+  {
+    "case_id": "DEV-222",
+    "family": "factual_lookup",
+    "model": "gpt-6-luna",
+    "set": "dev",
+    "arm": "r3",
+    "original": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    }
+  },
+  {
+    "case_id": "DEV-222",
+    "family": "factual_lookup",
+    "model": "gpt-6-luna",
+    "set": "dev",
+    "arm": "hybrid",
+    "original": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    }
+  },
+  {
+    "case_id": "DEV-227",
+    "family": "factual_lookup",
+    "model": "gpt-6-luna",
+    "set": "dev",
+    "arm": "r3",
+    "original": {
+      "claims": [
+        "supported",
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported",
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    }
+  },
+  {
+    "case_id": "DEV-227",
+    "family": "factual_lookup",
+    "model": "gpt-6-luna",
+    "set": "dev",
+    "arm": "hybrid",
+    "original": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    }
+  },
+  {
+    "case_id": "DEV-229",
+    "family": "factual_lookup",
+    "model": "gpt-6-luna",
+    "set": "dev",
+    "arm": "r3",
+    "original": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    }
+  },
+  {
+    "case_id": "DEV-229",
+    "family": "factual_lookup",
+    "model": "gpt-6-luna",
+    "set": "dev",
+    "arm": "hybrid",
+    "original": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    }
+  },
+  {
+    "case_id": "DEV-231",
+    "family": "numerical_comparison",
+    "model": "gpt-6-luna",
+    "set": "dev",
+    "arm": "r3",
+    "original": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "partial"
+      ],
+      "facts": [
+        "covered"
+      ]
+    }
+  },
+  {
+    "case_id": "DEV-231",
+    "family": "numerical_comparison",
+    "model": "gpt-6-luna",
+    "set": "dev",
+    "arm": "hybrid",
+    "original": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    }
+  },
+  {
+    "case_id": "DEV-233",
+    "family": "factual_lookup",
+    "model": "gpt-6-luna",
+    "set": "dev",
+    "arm": "r3",
+    "original": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    }
+  },
+  {
+    "case_id": "DEV-233",
+    "family": "factual_lookup",
+    "model": "gpt-6-luna",
+    "set": "dev",
+    "arm": "hybrid",
+    "original": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported"
+      ],
+      "facts": [
+        "covered"
+      ]
+    }
+  },
+  {
+    "case_id": "DEV-301",
+    "family": "cross_source_synthesis",
+    "model": "gpt-6-luna",
+    "set": "dev",
+    "arm": "r3",
+    "original": {
+      "claims": [
+        "supported",
+        "supported",
+        "supported"
+      ],
+      "facts": [
+        "covered",
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported",
+        "supported",
+        "supported"
+      ],
+      "facts": [
+        "covered",
+        "covered"
+      ]
+    }
+  },
+  {
+    "case_id": "DEV-301",
+    "family": "cross_source_synthesis",
+    "model": "gpt-6-luna",
+    "set": "dev",
+    "arm": "hybrid",
+    "original": {
+      "claims": [
+        "supported",
+        "supported",
+        "supported"
+      ],
+      "facts": [
+        "covered",
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported",
+        "supported",
+        "supported"
+      ],
+      "facts": [
+        "covered",
+        "missing"
+      ]
+    }
+  },
+  {
+    "case_id": "DEV-302",
+    "family": "cross_source_synthesis",
+    "model": "gpt-6-luna",
+    "set": "dev",
+    "arm": "r3",
+    "original": {
+      "claims": [
+        "supported",
+        "supported",
+        "supported"
+      ],
+      "facts": [
+        "covered",
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported",
+        "supported",
+        "supported"
+      ],
+      "facts": [
+        "covered",
+        "covered"
+      ]
+    }
+  },
+  {
+    "case_id": "DEV-302",
+    "family": "cross_source_synthesis",
+    "model": "gpt-6-luna",
+    "set": "dev",
+    "arm": "hybrid",
+    "original": {
+      "claims": [
+        "supported",
+        "partial",
+        "supported",
+        "supported"
+      ],
+      "facts": [
+        "covered",
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported",
+        "supported",
+        "supported",
+        "supported"
+      ],
+      "facts": [
+        "covered",
+        "covered"
+      ]
+    }
+  },
+  {
+    "case_id": "DEV-313",
+    "family": "cross_source_synthesis",
+    "model": "gpt-6-luna",
+    "set": "dev",
+    "arm": "r3",
+    "original": {
+      "claims": [
+        "supported",
+        "supported",
+        "supported",
+        "supported"
+      ],
+      "facts": [
+        "covered",
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported",
+        "partial",
+        "supported",
+        "supported"
+      ],
+      "facts": [
+        "covered",
+        "covered"
+      ]
+    }
+  },
+  {
+    "case_id": "DEV-313",
+    "family": "cross_source_synthesis",
+    "model": "gpt-6-luna",
+    "set": "dev",
+    "arm": "hybrid",
+    "original": {
+      "claims": [
+        "supported",
+        "partial",
+        "partial",
+        "partial"
+      ],
+      "facts": [
+        "covered",
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported",
+        "supported",
+        "supported",
+        "partial"
+      ],
+      "facts": [
+        "covered",
+        "covered"
+      ]
+    }
+  },
+  {
+    "case_id": "DEV-315",
+    "family": "cross_source_synthesis",
+    "model": "gpt-6-luna",
+    "set": "dev",
+    "arm": "r3",
+    "original": {
+      "claims": [
+        "supported",
+        "supported",
+        "supported"
+      ],
+      "facts": [
+        "covered",
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported",
+        "supported",
+        "supported"
+      ],
+      "facts": [
+        "covered",
+        "covered"
+      ]
+    }
+  },
+  {
+    "case_id": "DEV-315",
+    "family": "cross_source_synthesis",
+    "model": "gpt-6-luna",
+    "set": "dev",
+    "arm": "hybrid",
+    "original": {
+      "claims": [
+        "supported",
+        "partial"
+      ],
+      "facts": [
+        "covered",
+        "covered"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported",
+        "partial"
+      ],
+      "facts": [
+        "covered",
+        "covered"
+      ]
+    }
+  },
+  {
+    "case_id": "DEV-316",
+    "family": "cross_source_synthesis",
+    "model": "gpt-6-luna",
+    "set": "dev",
+    "arm": "r3",
+    "original": {
+      "claims": [
+        "supported",
+        "supported",
+        "supported"
+      ],
+      "facts": [
+        "covered",
+        "missing"
+      ]
+    },
+    "second": {
+      "claims": [
+        "supported",
+        "partial",
+        "supported"
+      ],
+      "facts": [
+        "covered",
+        "missing"
+      ]
+    }
+  }
+]

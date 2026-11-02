@@ -102,6 +102,12 @@ def main(argv: list[str] | None = None) -> int:
     ev_.add_argument("--no-judge", action="store_true")
     ev_.add_argument("--rejudge-stale", action=argparse.BooleanOptionalAction, default=True,
                      help="re-judge cached judgments whose input fingerprint changed (default); --no-rejudge-stale raises instead")
+    xj = sub.add_parser("judge-xfamily", help="second-family judge on paired FIN answered cases (paid unless --dry-run or --summary)")
+    xj.add_argument("--experiment", required=True)
+    xj.add_argument("--max-usd", type=float, default=5.0)
+    xm = xj.add_mutually_exclusive_group()
+    xm.add_argument("--dry-run", action="store_true")
+    xm.add_argument("--summary", action="store_true", help="print existing paired/agreement summary without calls or writes")
     pr = sub.add_parser("paired", help="preregistered paired comparison of two scored experiments (no model calls)")
     pr.add_argument("--gold", type=Path, required=True)
     pr.add_argument("--candidate", required=True, help="scored experiment id, e.g. agent-heldout-V2-r3")
@@ -267,6 +273,10 @@ def main(argv: list[str] | None = None) -> int:
         harness.run(args.exp, args.split, args.labels, not args.no_judge, rejudge_stale=args.rejudge_stale, gold_path=args.gold,
                     allow_gold_mismatch=args.allow_gold_mismatch)
         return 0
+    if args.cmd == "judge-xfamily":
+        from labourlens.evaluation import xjudge
+
+        return xjudge.run(args.experiment, max_usd=args.max_usd, dry_run=args.dry_run, summary_only=args.summary)
     if args.cmd == "paired":
         import json as _json
 
