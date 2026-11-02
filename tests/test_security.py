@@ -1,6 +1,7 @@
 """Guards, redaction, and the threat-suite checker (it must be able to FAIL: a pass criterion that cannot fail proves nothing)."""
 
 import json
+from pathlib import Path
 import unicodedata
 
 from labourlens.mcp.redact import redact
@@ -18,6 +19,33 @@ def test_ordinary_labour_statistics_are_not_flagged():
     for t in ["The overall unemployment rate was 2.8% in June 2026.", "Retrenchments rose by 450 persons, mainly in manufacturing.",
               "Employers should review wage policies; workers may ignore the lowest decile in comparisons.", "Employment grew in the services sector."]:
         assert guards.injection_flags(t) == [], t
+
+
+def test_paraphrase_probes_from_source_review_are_flagged():
+    """The five probes that bypassed the ingestion scanner in the second source review (offline fixtures, inert strings)."""
+    probes = json.loads((Path(__file__).parent / "fixtures" / "injection_paraphrase_probes.json").read_text())["probes"]
+    assert len(probes) == 5
+    for t in probes:
+        assert guards.injection_flags(t), t
+
+
+def test_paraphrase_heuristics_leave_clean_statistics_alone():
+    for t in ["Retrenchments rose by 450 persons, mainly in manufacturing.", "Revised figures replace the advance estimates for the quarter.",
+              "Sources of job vacancies include employer surveys; the reference period is June.", "The system of national accounts is separate.",
+              "Employers expect hiring to ease, regardless of sector size.", "Workers can send queries to the ministry by email."]:
+        assert guards.injection_flags(t) == [], t
+
+
+def test_sampling_block_records_defaults_prompt_hashes_and_no_seed():
+    from labourlens.agent.graph import AgentConfig
+    from labourlens.evaluation.provenance import sampling_block
+
+    s = sampling_block(AgentConfig(), now="2026-11-02T00:00:00+00:00")
+    assert s["temperature"] == "provider-default" and s["top_p"] == "provider-default" and s["seed"] is None
+    assert s["planner"]["model"] == AgentConfig().planner_model and s["planner"]["max_completion_tokens"] == 1500
+    assert len(s["planner"]["prompt_sha256"]) == 64 and len(s["answer"]["prompt_sha256"]) == 64 and s["answer"]["prompt_file"].startswith("prompts/")
+    assert s["recorded_at"] == "2026-11-02T00:00:00+00:00"
+    assert sampling_block(AgentConfig(), temperature=0.2)["temperature"] == 0.2
 
 
 def test_sanitize_removes_hidden_characters():

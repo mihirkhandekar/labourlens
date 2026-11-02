@@ -1,0 +1,8 @@
+{
+  "date": "2026-11-02",
+  "what": "read-only scan_injection over local data/passages/*.jsonl and data/processed/observations.parquet, after adding six paraphrase heuristics to security/guards.py",
+  "passages_scanned": 16419,
+  "text_values_scanned": 180,
+  "hits": [],
+  "note": "Counts are of the local corpus at scan time (not frozen corpus v1). Zero hits does not certify the sources clean; the heuristics remain lexical and bypassable."
+}

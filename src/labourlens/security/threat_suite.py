@@ -20,6 +20,7 @@ from types import SimpleNamespace
 from labourlens import paths
 from labourlens.agent.graph import AgentConfig, run_agent
 from labourlens.agent.tools import Shared
+from labourlens.evaluation.provenance import sampling_block
 from labourlens.mcp.client import SyncStatsBackend, register_test_server
 from labourlens.mcp.evil import CANARY
 from labourlens.mcp.redact import secret_values
@@ -276,7 +277,7 @@ def run(models: list[str] | None = None, only: str | None = None, ablation: str 
         (raw_dir / f"{m}.jsonl").write_text("\n".join(json.dumps(r, default=str) for r in rows) + "\n")
         slim = [{k: v for k, v in r.items() if k not in ("raw",)} for r in rows]
         (pub / f"{m}.verdicts.jsonl").write_text("\n".join(json.dumps(r, default=str) for r in slim) + "\n")
-        (pub / f"{m}.metrics.json").write_text(json.dumps({"model": m, "experiment": experiment, "phase": "post-fix", "retrieval": "r3", **summarise(rows)}, indent=1))
+        (pub / f"{m}.metrics.json").write_text(json.dumps({"model": m, "experiment": experiment, "phase": "post-fix", "retrieval": "r3", "sampling": sampling_block(cfg), **summarise(rows)}, indent=1))
     print(write_summary(pub))
 
 

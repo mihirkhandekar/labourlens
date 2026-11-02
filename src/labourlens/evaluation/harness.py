@@ -243,7 +243,8 @@ def run(exp: str = "agent-dev-A1", split: str = "dev", labels: list[str] | None 
         if len(configs) != 1:
             raise ValueError(f"Mixed AgentConfig keys in {f}")
         provenance = snapshot(next(iter(configs)), len(rows), len(cases), gold_path=gold_path)
-        (pub / f"{label}.metrics.json").write_text(json.dumps({"label": label, "judge": JUDGE_MODEL, "provenance": provenance,
+        sampling = next(((r.get("generation_provenance") or {})["sampling"] for r in recs if (r.get("generation_provenance") or {}).get("sampling")), None)
+        (pub / f"{label}.metrics.json").write_text(json.dumps({"label": label, "judge": JUDGE_MODEL, "provenance": provenance, **({"generation_sampling": sampling} if sampling else {}),
             "metric_definitions": {"cases_with_ungrounded_numbers": "fraction of all scored cases with an ungrounded numeric warning",
                                    "answers_with_ungrounded_numbers": "legacy alias of cases_with_ungrounded_numbers; denominator is all scored cases"},
             "metrics": agg, "by_family": by_family(rows)}, indent=1))

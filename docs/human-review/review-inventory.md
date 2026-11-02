@@ -30,7 +30,7 @@ Labelling and verdict streams together (gold, held-out v2, saved answers, source
 
 ## Technical facts about the recorded decisions
 
-The page records `owner_manual` for any click or key, so the label shows that the interface received an input. Agreement with a suggestion is not accuracy. The 40 answer verdicts equal the independent AI review’s counts (25/6/9); the redo changed 0 of 23; agreement with the AI suggestion is 198/198 for gold, with four change-clicks, none applied. Strongest human evidence: the first pack (17 answer verdicts, J1 to J10, 3 gold cards), the four change-clicks, J10 and the owner’s written policy decisions (D-031, D-034, D-035, D-036, D-047). Final source checks: 18 matches and 12 minor differences (the first export had 19 and 11). Not independent inter-rater evidence; evaluations were not rescored on v3.7.
+The page records `owner_manual` for any click or key, so the label shows that the interface received an input. Agreement with a suggestion is not accuracy. The 40 answer verdicts equal the independent AI review’s counts (25/6/9); the redo changed 0 of 23; agreement with the AI suggestion is 198/198 for gold, with four change-clicks, none applied. Strongest human evidence: the first pack (17 answer verdicts, J1 to J10, 3 gold cards), the four change-clicks, J10 and the owner’s written policy decisions (D-031, D-034, D-035, D-036, D-047). Final source checks: 18 matches and 12 minor differences (the first export had 19 and 11). Not independent inter-rater evidence; earlier evaluations were not rescored on v3.7 (the final consolidated run, D-056, was).
 
 ## Pending items
 

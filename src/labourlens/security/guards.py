@@ -26,6 +26,13 @@ _INJECTION = [
     (r"\b(call|invoke|execute|run)\b[^.\n]{0,30}\b(tool|function|command|shell|sql|script)\b", "tool_invocation"),
     (r"<\s*/?\s*(system|assistant|tool|passage|evidence|instructions?)\b", "markup_spoofing"),
     (r"\bBEGIN\s+(SYSTEM|INSTRUCTIONS?)\b|\[/?INST\]|<\|im_(start|end)\|>", "chat_template_spoofing"),
+    # Added 2 Nov 2026 after five paraphrase probes bypassed the scanner (docs/human-review/independent-ai-review-m1-2.md). Still lexical.
+    (r"\b(send|transmit|forward|upload|email|exfiltrate)\b[^.\n]{0,60}\b(conversation|chat history|credentials?|secrets?|passwords?|api[ _-]?keys?|(its|their|the) contents?)\b[^.\n]{0,40}\b(to|at)\b|\b(send|transmit|forward|upload|exfiltrate)\b[^.\n]{0,60}https?://", "data_exfiltration"),
+    (r"(~|\$HOME)/\.[a-z]|\.(aws|ssh)/|/etc/(passwd|shadow)\b|\bid_rsa\b", "sensitive_path"),
+    (r"(?m)^\s*(assistant|system|developer)\s*:", "role_prefix_spoofing"),
+    (r"\b(discard|drop|disable|turn off|remove)\b[^.\n]{0,30}\b(safeguards?|guardrails?|safety (rules|checks)|restrictions)\b|\b(highest|supreme|overriding)\s+(authority|priority)\b", "authority_claim"),
+    (r"\b(scorer|grader|evaluator|judge)\b[^.\n]{0,30}\bexpects?\b|\b(replace|substitute|overwrite|falsify)\b[^.\n]{0,30}\b(evidence|source)\s+(values?|figures?|data)\b", "evidence_tampering"),
+    (r"\b(omit|skip|hide|suppress)\b[^.\n]{0,20}\b(source|citation|reference)s?\b|\bregardless of (the )?(figures?|evidence|data|sources?)\b", "citation_or_evidence_override"),
 ]
 INJECTION_RES = [(re.compile(p, re.I), name) for p, name in _INJECTION]
 _FLAG = {"Cf"}  # zero-width and bidi-override characters can hide text from a reviewer; flagged

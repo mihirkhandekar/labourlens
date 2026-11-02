@@ -2,6 +2,8 @@
 
 Exact commands from a fresh clone. Each step says what it needs. Costs are from the saved metrics files, not estimates for your account; model prices are in `specs/prices.yaml`.
 
+**Reruns are not bit-reproducible.** The model requests set no temperature, top_p or seed, so a rerun can differ from a saved run. Historic runs did not record sampling values; new `agent-exp` and `threat-test` runs write a `sampling` block (model, prompt files and SHA-256, max tokens, `provider-default` where unset, no seed, timestamp) into their metrics files.
+
 ```bash
 git clone <repository-url> labourlens && cd labourlens
 make setup        # uv sync --frozen: Python 3.12 and the locked dependencies (needs the package index once)

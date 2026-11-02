@@ -537,7 +537,7 @@ def inventory_markdown(root: Path, st: State) -> str:
               'Agreement with a suggestion is not accuracy. '
               'The 40 answer verdicts equal the independent AI review’s counts (25/6/9); the redo changed 0 of 23; agreement with the AI suggestion is 198/198 for gold, with four change-clicks, none applied. '
               'Strongest human evidence: the first pack (17 answer verdicts, J1 to J10, 3 gold cards), the four change-clicks, J10 and the owner’s written policy decisions (D-031, D-034, D-035, D-036, D-047). '
-              'Final source checks: 18 matches and 12 minor differences (the first export had 19 and 11). Not independent inter-rater evidence; evaluations were not rescored on v3.7.', '',
+              'Final source checks: 18 matches and 12 minor differences (the first export had 19 and 11). Not independent inter-rater evidence; earlier evaluations were not rescored on v3.7 (the final consolidated run, D-056, was).', '',
               '## Pending items', '']
     for name, ids in inv['pending'].items():
         lines.append(f'### {name} ({len(ids)})')
@@ -900,8 +900,8 @@ def final_summary(root: Path, st: State, export: PendingExport, export_sha: str,
         lines.append(f'| {STREAM_LABEL[s]} | {b} | {a}' + (f' ({a / b:.0%})' if b else '') + ' |')
     lines += ['', 'This is agreement, not accuracy. Small counts: read the numbers, not the percentages.', '',
               '## Exact wording for the report', ''] + [f'> {w}' for w in wording_lines] + ['',
-              '## Rescoring on gold v3.7 (separate offline step, no model calls)', '',
-              'The saved evaluations stay scored on v3.5/v3.6 and keep their hashes. ' + ('Gold v3.7 has the same questions, labels, facts and evidence as v3.6 and differs only in review provenance fields, so a rescoring changes no behaviour or score; it only records the all-reviewed status against the v3.7 hash. ' if not report['changed'] and not report['dropped'] else 'To measure the effect of the v3.7 changes, ') + 'If you rescore, do it from the saved runs without the judge, one experiment at a time, '
+              '## Rescoring on gold v3.7 (separate offline step for saved runs, no model calls)', '',
+              'The earlier saved evaluations stay scored on v3.5/v3.6 and keep their hashes; the final consolidated run (D-056, which ran new generation, on v3.6) was scored on v3.7 for development and the registered held-out set. ' + ('Gold v3.7 has the same questions, labels, facts and evidence as v3.6 and differs only in review provenance fields, so a rescoring changes no behaviour or score; it only records the all-reviewed status against the v3.7 hash. ' if not report['changed'] and not report['dropped'] else 'To measure the effect of the v3.7 changes, ') + 'If you rescore, do it from the saved runs without the judge, one experiment at a time, '
               'for example (this rewrites `experiments/eval/<exp>/`, so run it on a copy or a scratch checkout, never over a frozen result):', '',
               '```', f'uv run labourlens eval --exp agent-dev-A1 --split dev --gold {GOLD_V37} --allow-gold-mismatch --no-judge', '```', '',
               'Report the result as a post-hoc sensitivity analysis next to, never instead of, the original scores.', '']

@@ -18,7 +18,7 @@ from labourlens.agent.graph import AgentConfig, run_agent
 from labourlens.agent.tools import Shared, compute_change
 from labourlens.answer import experiments as ae
 from labourlens.retrieval import evaluate as ev
-from labourlens.evaluation.provenance import snapshot
+from labourlens.evaluation.provenance import sampling_block, snapshot
 
 WORKERS = 3
 MODEL_PAIRS = {"gpt-6-luna": ("gpt-6-luna", "gpt-6-luna"), "gpt-5.6-luna": ("gpt-5.6-luna", "gpt-5.6-luna"), "gpt-4.1-mini": ("gpt-4.1-mini", "gpt-4.1-mini")}
@@ -160,7 +160,7 @@ def run(split: str = "dev", pairs: list[str] | None = None, answer_prompt: str =
     for label in pairs or MODEL_PAIRS:
         pm, am = MODEL_PAIRS[label]
         cfg = AgentConfig(planner_model=pm, answer_model=am, answer_prompt=answer_prompt, retrieval=retrieval, planner_prompt=planner_prompt, tool_set=tool_set)
-        provenance = snapshot(cfg.key(), len(cases), len(cases), gold_path=gold_path)
+        provenance = {**snapshot(cfg.key(), len(cases), len(cases), gold_path=gold_path), "sampling": sampling_block(cfg)}
         print(f"[agent] {label} on {len(cases)} cases", flush=True)
         with ThreadPoolExecutor(WORKERS) as ex:
             results = list(ex.map(lambda c: (c, run_agent(c["question"], shared, cfg)), cases))
