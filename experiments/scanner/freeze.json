@@ -1,0 +1,21 @@
+{
+  "declaration": "docs/experiments/injection-scanner-v2.md",
+  "public_path": "tests/fixtures/scanner_v2.jsonl",
+  "public_sha256": "a3f4cb9b5963785e981114f9960dc05bd7b31bb9bfa43c32965c49f3fbd875ea",
+  "private_path": "data/scanner/benign-v2.jsonl",
+  "private_sha256": "0245afec5d90ddc34cc47c6944fe8c8f8206568fe4976ccbd6fe64b47ac58161",
+  "counts": {
+    "dev": {
+      "malicious": 30,
+      "synthetic_benign": 15,
+      "private_benign": 15
+    },
+    "test": {
+      "malicious": 30,
+      "synthetic_benign": 15,
+      "private_benign": 15
+    }
+  },
+  "selection": "SHA-256 ordering of passage_id + :scanner-v2 among 100..1800 character passages matching policy keywords; no scanner-based rejection",
+  "private_candidate_count": 779
+}

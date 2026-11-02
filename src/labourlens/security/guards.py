@@ -6,6 +6,7 @@ from __future__ import annotations
 
 import os
 import re
+import html
 import unicodedata
 
 # Ablation switch for the threat-suite baseline ONLY: LABOURLENS_GUARDS=off disables the heuristic guards.
@@ -48,11 +49,50 @@ def sanitize_text(text: str) -> str:
     return "".join(c for c in unicodedata.normalize("NFKC", text) if c in "\n\t" or unicodedata.category(c) not in _STRIP)
 
 
-def injection_flags(text: str) -> list[str]:
+_LEET = str.maketrans({"0": "o", "1": "i", "3": "e", "4": "a", "5": "s", "7": "t"})
+_CUE_WORDS = frozenset({"ignore", "disregard", "reveal", "print", "show", "output", "reply", "answer", "you",
+                        "are", "must", "should", "will", "now", "only", "always", "never", "run", "execute",
+                        "invoke", "call", "discard", "disable", "safeguards", "instructions", "rules"})
+_MARKUP = re.compile(r"<!--[\s\S]*?-->|</?[A-Za-z][^>]{0,1000}>")
+_WORD = re.compile(r"\b[a-zA-Z0-9]+\b")
+SCANNER_PROFILES = ("baseline", "markup", "leet", "window")
+
+
+def scanner_views(text: str, profile: str) -> list[str]:
+    """Cumulative normalisation ablations, not a semantic classifier. Preserve the original view as well.
+
+    Leet decoding is restricted to known cue words to avoid turning published numbers into language.
+    Window matching joins at most two adjacent fragments, each no more than 240 characters.
+    """
+    if profile not in SCANNER_PROFILES:
+        raise ValueError(f"unknown scanner profile: {profile}")
+    clean = sanitize_text(text)
+    views = [clean]
+    if profile == "baseline":
+        return views
+    plain = _MARKUP.sub("", html.unescape(clean))
+    plain = re.sub(r"(\*\*|__|`)", "", plain)
+    views.append(plain)
+    if profile == "markup":
+        return views
+
+    def decode(match: re.Match) -> str:
+        word = match.group()
+        decoded = word.lower().translate(_LEET)
+        return decoded if any(c.isdigit() for c in word) and decoded in _CUE_WORDS else word
+
+    decoded = _WORD.sub(decode, plain)
+    views.append(decoded)
+    if profile == "window":
+        fragments = [s.strip() for s in re.split(r"[.!?\n|]+", decoded) if s.strip()]
+        views.extend(f"{a} {b}" for a, b in zip(fragments, fragments[1:]) if len(a) <= 240 and len(b) <= 240)
+    return views
+
+
+def injection_flags(text: str, *, profile: str = "window") -> list[str]:
     if not guards_on():
         return []
-    clean = sanitize_text(text)  # catches instructions split by zero-width characters
-    flags = sorted({name for rx, name in INJECTION_RES if rx.search(clean)})
+    flags = sorted({name for view in scanner_views(text, profile) for rx, name in INJECTION_RES if rx.search(view)})
     if has_hidden_characters(text):
         flags.append("hidden_characters")
     return flags

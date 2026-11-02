@@ -85,6 +85,10 @@ def main(argv: list[str] | None = None) -> int:
     th.add_argument("--source-experiment", help="saved raw experiment to rescore into a new id; . selects original pre-guard runs")
     th.add_argument("--only", help="a category or case id")
     th.add_argument("--experiment", help="new post-fix experiment id; required for generation (frozen results cannot be overwritten)")
+    se = sub.add_parser("scanner-eval", help="offline passage scanner recall and false positives on frozen inputs (no API calls)")
+    se.add_argument("--split", required=True, choices=["dev", "test"])
+    se.add_argument("--experiment", required=True, help="new output id under experiments/scanner; never overwritten")
+    se.add_argument("--profile", choices=["baseline", "markup", "leet", "window"], help="cumulative normalisation ablation; default is the current production scanner")
     tc = sub.add_parser("triage-check", help="measure the D-051 scope-triage prompt on all gold, v2, threat and off-topic questions (calls the OpenAI API with --yes)")
     tc.add_argument("--experiment", required=True, help="new experiment id; written to experiments/triage/<id>/ and never overwritten")
     tc.add_argument("--yes", action="store_true", help="actually spend: without it only the plan is printed")
@@ -156,6 +160,15 @@ def main(argv: list[str] | None = None) -> int:
                 return code
         except ValueError as exc:
             print(f"Review error: {exc}", file=sys.stderr)
+            return 2
+        return 0
+    if args.cmd == "scanner-eval":
+        from labourlens.security import scanner_eval
+
+        try:
+            scanner_eval.run(args.split, args.experiment, args.profile)
+        except (ValueError, FileNotFoundError, FileExistsError) as exc:
+            print(f"Scanner evaluation error: {exc}", file=sys.stderr)
             return 2
         return 0
     if args.cmd in ("v2-approve", "v2-run"):

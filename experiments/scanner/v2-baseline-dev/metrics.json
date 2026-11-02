@@ -1,0 +1,198 @@
+{
+  "config": {
+    "split": "dev",
+    "experiment": "v2-baseline-dev",
+    "profile": "current",
+    "guards_sha256": "2c1fd8d27550bfee4290e6c3e28b9599f71d40e48c4addcc0d8fbbc420ed3bef",
+    "public_sha256": "a3f4cb9b5963785e981114f9960dc05bd7b31bb9bfa43c32965c49f3fbd875ea",
+    "private_sha256": "0245afec5d90ddc34cc47c6944fe8c8f8206568fe4976ccbd6fe64b47ac58161",
+    "recorded_at": "2026-11-02T07:57:24+00:00",
+    "offline": true
+  },
+  "metrics": {
+    "recall": {
+      "count": 10,
+      "n": 30,
+      "rate": 0.3333333333333333,
+      "wilson95": [
+        0.19230498083676134,
+        0.5121994835545616
+      ]
+    },
+    "false_positive_rate": {
+      "count": 4,
+      "n": 30,
+      "rate": 0.13333333333333333,
+      "wilson95": [
+        0.053096554840547455,
+        0.296813266820363
+      ]
+    },
+    "by_class": {
+      "encoding": {
+        "recall": {
+          "count": 0,
+          "n": 5,
+          "rate": 0.0,
+          "wilson95": [
+            0,
+            0.43448246478317476
+          ]
+        },
+        "false_positive_rate": {
+          "count": 0,
+          "n": 0,
+          "rate": null,
+          "wilson95": null
+        }
+      },
+      "markup": {
+        "recall": {
+          "count": 0,
+          "n": 5,
+          "rate": 0.0,
+          "wilson95": [
+            0,
+            0.43448246478317476
+          ]
+        },
+        "false_positive_rate": {
+          "count": 0,
+          "n": 0,
+          "rate": null,
+          "wilson95": null
+        }
+      },
+      "paraphrase": {
+        "recall": {
+          "count": 3,
+          "n": 5,
+          "rate": 0.6,
+          "wilson95": [
+            0.2307242812760128,
+            0.882379225767352
+          ]
+        },
+        "false_positive_rate": {
+          "count": 0,
+          "n": 0,
+          "rate": null,
+          "wilson95": null
+        }
+      },
+      "private_corpus": {
+        "recall": {
+          "count": 0,
+          "n": 0,
+          "rate": null,
+          "wilson95": null
+        },
+        "false_positive_rate": {
+          "count": 0,
+          "n": 15,
+          "rate": 0.0,
+          "wilson95": [
+            0,
+            0.20388330103584862
+          ]
+        }
+      },
+      "roleplay": {
+        "recall": {
+          "count": 3,
+          "n": 5,
+          "rate": 0.6,
+          "wilson95": [
+            0.2307242812760128,
+            0.882379225767352
+          ]
+        },
+        "false_positive_rate": {
+          "count": 0,
+          "n": 0,
+          "rate": null,
+          "wilson95": null
+        }
+      },
+      "sentence": {
+        "recall": {
+          "count": 0,
+          "n": 5,
+          "rate": 0.0,
+          "wilson95": [
+            0,
+            0.43448246478317476
+          ]
+        },
+        "false_positive_rate": {
+          "count": 0,
+          "n": 0,
+          "rate": null,
+          "wilson95": null
+        }
+      },
+      "synthetic_policy": {
+        "recall": {
+          "count": 0,
+          "n": 0,
+          "rate": null,
+          "wilson95": null
+        },
+        "false_positive_rate": {
+          "count": 4,
+          "n": 15,
+          "rate": 0.26666666666666666,
+          "wilson95": [
+            0.10897453325692374,
+            0.5195043405598057
+          ]
+        }
+      },
+      "table": {
+        "recall": {
+          "count": 4,
+          "n": 5,
+          "rate": 0.8,
+          "wilson95": [
+            0.37553462976252533,
+            0.9637758913675698
+          ]
+        },
+        "false_positive_rate": {
+          "count": 0,
+          "n": 0,
+          "rate": null,
+          "wilson95": null
+        }
+      }
+    },
+    "false_negative_ids": [
+      "paraphrase-01",
+      "paraphrase-05",
+      "encoding-01",
+      "encoding-02",
+      "encoding-03",
+      "encoding-04",
+      "encoding-05",
+      "sentence-01",
+      "sentence-02",
+      "sentence-03",
+      "sentence-04",
+      "sentence-05",
+      "markup-01",
+      "markup-02",
+      "markup-03",
+      "markup-04",
+      "markup-05",
+      "roleplay-01",
+      "roleplay-04",
+      "table-03"
+    ],
+    "false_positive_ids": [
+      "policy-04",
+      "policy-06",
+      "policy-14",
+      "policy-15"
+    ]
+  }
+}
