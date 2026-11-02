@@ -1,6 +1,6 @@
 {
   "schema_version": "report-1.0",
-  "generated_at": "2026-11-02T05:01:51.252984+00:00",
+  "generated_at": "2026-11-02T05:09:40.550532+00:00",
   "summary": {
     "title": "LabourLens research workbench",
     "scope": [
@@ -62890,7 +62890,7 @@
     "status": "available",
     "summary": "Protocol checks and direct-call comparison.",
     "metrics": {
-      "connection_seconds": 1.68,
+      "connection_seconds": 1.84,
       "identical_datasets": 23,
       "compared_datasets": 36,
       "matching_refusals": 13,
@@ -62899,16 +62899,16 @@
     "rows": [
       {
         "metric": "latency_p50_ms",
-        "direct": 4.6,
-        "mcp": 37.0,
+        "direct": 4.5,
+        "mcp": 36.1,
         "provenance": [
           "docs/mcp-demo-transcript.md"
         ]
       },
       {
         "metric": "latency_p95_ms",
-        "direct": 5.2,
-        "mcp": 49.1,
+        "direct": 4.9,
+        "mcp": 47.3,
         "provenance": [
           "docs/mcp-demo-transcript.md"
         ]
@@ -77269,6 +77269,38 @@
         "date": "1 Nov 2026",
         "alternatives": "private repo with invites, emailed export",
         "summary": "MEASURED RESULT (behaviour accuracy, filter then rerank against hybrid)."
+      },
+      {
+        "id": "D-060",
+        "title": "Versioned T-I06 scorer and immutable rescoring",
+        "status": "",
+        "date": "2 Nov 2026",
+        "alternatives": "retain only brittle v1 (audit continuity but known false failures); overwrite the refined scorer (hides provenance and changes historical meaning); selectable v2 with new ids (chosen, explicit semantics and preserved registered results, at the cost of two rep…",
+        "summary": "Alternatives: retain only brittle v1 (audit continuity but known false failures); overwrite the refined scorer (hides provenance and changes historical meaning); selectable v2 with new ids (chosen, explicit semantics an…"
+      },
+      {
+        "id": "D-059",
+        "title": "Isolated tagged retrieval development re-runs",
+        "status": "",
+        "date": "2 Nov 2026",
+        "alternatives": "overwrite frozen results (rejected by D-016); globally change legacy paths/cache semantics (breaks historical reproduction); opt-in isolated namespace (chosen, additive with no algorithm change)",
+        "summary": "VERIFIED FACT (source audit): legacy matrix filenames hash chunk IDs, query-vector keys hash only questions, and rerank cache keys omit the full corpus"
+      },
+      {
+        "id": "D-058",
+        "title": "Shared served-chain evaluation harness",
+        "status": "",
+        "date": "2 Nov 2026",
+        "alternatives": "duplicate app orchestration (simple initially, risks evaluation drift); evaluate only runagent and label it served (does not exercise front steps or MCP); share the existing orchestration (chosen, small refactor and offline regression coverage, unchanged web…",
+        "summary": "Alternatives: duplicate app orchestration (simple initially, risks evaluation drift); evaluate only runagent and label it served (does not exercise front steps or MCP); share the existing orchestration (chosen, small re…"
+      },
+      {
+        "id": "D-061",
+        "title": "Final evaluation headline is the mean of two runs; FIN2 replicate, retrieval v3.1, served chain, T-I06 v2",
+        "status": "OWNER REQUEST / MEASURED RESULT",
+        "date": "2 Nov 2026",
+        "alternatives": "",
+        "summary": "DECISION. The owner amended FIN2 before any replicate result was scored or read (generation was underway): headline the mean of FIN and FIN2 per arm and show both single runs"
       }
     ],
     "milestones": [
@@ -77377,7 +77409,7 @@
     "The population basis of the dataset employment series is unverified."
   ],
   "provenance": {
-    "commit": "7e44dc265d5412c25d39484d1d5851f4ce82d888",
+    "commit": "c6c89022f4243a449c64157eb8fd4bca08aeff7c",
     "artifacts": [
       {
         "path": "data/export/sources.json",
@@ -78372,7 +78404,7 @@
       {
         "path": "docs/mcp-demo-transcript.md",
         "status": "available",
-        "sha256": "bbd31ab51cab3e937a700d2804db40120ec0ef18dc582fc1c8d508a221b5a701"
+        "sha256": "e882e00df5201834f80860c084108f2bf2157a93a7d9c0aef10187fc95e08b45"
       },
       {
         "path": "data/processed/observations.parquet",
@@ -78552,12 +78584,12 @@
       {
         "path": "docs/decisions.md",
         "status": "available",
-        "sha256": "c015bfef1fff7464f6c6af89913db222124f8f6d4fbf2b691a6b0d17fd36d280"
+        "sha256": "0eb479978f16508bc06a7a5cff681c95703146144e3f3b467ba1d35f06c170a4"
       },
       {
         "path": "docs/progress.md",
         "status": "available",
-        "sha256": "0b7bef6c1ea3e3d21a3761d0d44c082839b6ee1271ff65b3f7178d69d5fd17d1"
+        "sha256": "ea616d056e2ee3fecacb1624caf7129d48c237d06032a27eed4ae1e2a38e90d2"
       }
     ],
     "policy": "Committed artifacts only; numeric fields only."
