@@ -3,6 +3,7 @@
 *
 !pyproject.toml
 !uv.lock
+!LICENSE
 !src
 !specs
 !prompts
