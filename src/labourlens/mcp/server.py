@@ -5,13 +5,19 @@ subprocess) and loopback streamable HTTP with a bearer token (see labourlens.mcp
 Tools: get_statistic (rows), list_datasets, describe_dataset, get_dimension_values, latest_value, compare_periods, series_summary,
 get_revisions, get_provenance. The logic of the added tools lives in labourlens.mcp.analysis so tests can compare it with direct calls.
 
+Agent profile (`--agent-tools`, off by default). The live web app starts the server this way so that all three of its tools run over MCP:
+search_reports (report passages), calculate_change and calculate_from_text_values (exact arithmetic), plus describe_corpus (identity of the
+report corpus). Logic: labourlens.mcp.agent_tools. This profile serves MOM report text and loads the corpus, so the plain server, the
+HTTP sidecar and the demos never get it. It still needs no API key: the caller embeds the query and the server only reads the vector cache.
+
 Security posture
-- Least privilege: read-only, no network, no retriever, no API key. The server process only needs the observations table; the
-  client starts it with a minimal environment (see labourlens.mcp.client), so it cannot see OPENAI_API_KEY even if compromised.
+- Least privilege: read-only, no network, no API key. The plain server only needs the observations table; the agent profile also reads
+  the passages, the BM25 index and the vector cache. The client starts it with a minimal environment (see labourlens.mcp.client), so
+  it cannot see OPENAI_API_KEY even if compromised.
 - Inputs are validated twice: by the JSON schema derived from the type annotations (enum source_id, patterned periods and
   observation ids, length caps) and by the shared rules in StatsData.query / mcp.analysis (scope, row caps, known dimensions).
-- Outputs are marked `trust: untrusted_data`. The server serves statistics and catalogue metadata only: no MOM report text.
-  get_provenance accepts observation ids only; passage ids are rejected by pattern.
+- Outputs are marked `trust: untrusted_data`. The plain server serves statistics and catalogue metadata only: no MOM report text.
+  get_provenance accepts observation ids only; passage ids are rejected by pattern. Only the agent profile serves report text.
 - Logging goes to stderr with argument names and counts, never values, and passes through the redaction filter.
 - Anticipated failures raise ToolError (the model sees a short message); unexpected ones are reported only as
   "Error executing tool <name>" by the SDK, with the traceback kept in the server log.
@@ -34,8 +40,10 @@ from labourlens.agent.tools import ADJUSTMENTS, SCOPE_HI, SCOPE_LO, StatsData
 from labourlens.data import catalog
 from labourlens.mcp import analysis
 from labourlens.mcp.analysis import AnalysisError
-from labourlens.mcp.models import (UNTRUSTED_NOTE, ComparePeriodsResult, DescribeDatasetResult, DimensionValuesResult, LatestValueResult,
-                                   ListDatasetsResult, Observation, ProvenanceResult, RevisionsResult, SeriesSummaryResult, StatisticResult)
+from labourlens.mcp.models import (EMBEDDING_DIMENSION, MAX_K, MAX_QUERY_CHARS, MAX_QUESTION_CHARS, UNTRUSTED_NOTE, VECTOR_B64_CHARS, CalculateChangeResult,
+                                   ComparePeriodsResult, DescribeCorpusResult, DescribeDatasetResult, DimensionValuesResult, LatestValueResult,
+                                   ListDatasetsResult, Observation, ProvenanceResult, RevisionsResult, SearchReportsResult, SeriesSummaryResult,
+                                   StatisticResult, TextChangeResult)
 from labourlens.mcp.redact import RedactingFilter
 
 log = logging.getLogger("labourlens.mcp.server")
@@ -169,9 +177,10 @@ def _catalogue() -> dict:
                          "licence": "Singapore Open Data Licence v1.0 (attribution required; no endorsement implied)",
                          "periods_in_scope": [g.period.min(), g.period.max()],
                          "series": sorted({f"{r.indicator_id} [{r.unit}; {r.population}; {r.adjustment}]" for r in g.itertuples()})})
+    served_documents = {p["source_id"] for p in world().passages.values()} if AGENT_PROFILE else set()
     documents = [{"source_id": e["source_id"], "title": e["title"], "publisher": e.get("publisher"), "publication_date": e.get("publication_date"),
                   "release_stage": e.get("release_stage"), "canonical_url": e.get("canonical_url"), "rights_status": e.get("rights_status"),
-                  "text_served_by_this_server": False} for e in catalog.documents()]
+                  "text_served_by_this_server": AGENT_PROFILE and e["source_id"] in served_documents} for e in catalog.documents()]
     return {"trust": "untrusted_data", "note": UNTRUSTED_NOTE, "datasets": datasets, "documents": documents}
 
 
@@ -200,6 +209,85 @@ def compare_quarters(source_id: Annotated[SourceId, Field(description="Dataset i
             "If the two periods differ in any of those, or have no published number, say so instead of comparing.")
 
 
+# ---- agent profile (--agent-tools) -------------------------------------------------------------------------------------------------
+FreeText = Annotated[str, Field(max_length=2000)]
+AGENT_TOOLS = ("search_reports", "calculate_change", "calculate_from_text_values", "describe_corpus")
+AGENT_PROFILE = False
+_world = None
+
+
+def world():
+    """The report corpus (BM25 index, cached vectors, cited passages), loaded once. Never embeds, needs no API key."""
+    global _world
+    if _world is None:
+        from labourlens.mcp import agent_tools
+
+        t0 = time.perf_counter()
+        _world = agent_tools.load()
+        log.info("report corpus loaded passages=%d chunks=%d ms=%s", len(_world.passages), len(_world.chunks), round((time.perf_counter() - t0) * 1000, 1))
+    return _world
+
+
+def _run(name: str, fn, *args):
+    """Like _call for functions that bring their own data: correctable problems become a ToolError carrying {error_kind, message}."""
+    t0 = time.perf_counter()
+    try:
+        res = fn(*args)
+    except AnalysisError as e:
+        log.info("%s rejected kind=%s ms=%s", name, e.kind, round((time.perf_counter() - t0) * 1000, 1))
+        raise ToolError(json.dumps({"error_kind": e.kind, "message": e.message})) from None
+    log.info("%s ok ms=%s", name, round((time.perf_counter() - t0) * 1000, 1))
+    return res
+
+
+def register_agent_tools() -> None:
+    """Register the agent profile on the module's server. Imports the retrieval stack, which the default server does not load."""
+    global AGENT_PROFILE
+    from labourlens.mcp import agent_tools as at
+
+    AGENT_PROFILE = True
+
+    @mcp.tool(name="search_reports", annotations=_tool_annotations("Search report passages"))
+    def search_reports(
+        query: Annotated[str, Field(min_length=1, max_length=MAX_QUERY_CHARS, description="Search phrase written by the planner")],
+        query_vector_b64: Annotated[str, Field(min_length=VECTOR_B64_CHARS, max_length=VECTOR_B64_CHARS, pattern=r"^[A-Za-z0-9+/]+={0,2}$",
+                                               description=f"The query embedded by the caller (text-embedding-3-large): {EMBEDDING_DIMENSION} L2-normalised float32 values, little-endian, base64. The server cannot embed.")],
+        question: Annotated[str, Field(max_length=MAX_QUESTION_CHARS, description="The user's original question; its period and release hints are unioned with the query's")] = "",
+        retrieval: Annotated[Literal["hybrid", "r3", "r3w"], Field(description="r3: filter by period/release, fuse BM25 and dense rankings, return the 30-chunk rerank pool; hybrid: fused top k")] = "r3",
+        k: Annotated[int, Field(ge=1, le=MAX_K, description="Chunks wanted by the caller")] = 8,
+    ) -> SearchReportsResult:
+        """Candidate report chunks and their passages for a query (BM25 + dense fusion, optional period/release filter). Read-only, no model call. The caller reranks and keeps the best k."""
+        return _run("search_reports", lambda: at.search_reports(world(), query, question, retrieval, k, query_vector_b64))
+
+    @mcp.tool(name="calculate_change", annotations=_tool_annotations("Exact change between two observations"))
+    def calculate_change(
+        observation_id_a: Annotated[str, Field(pattern=r"^[0-9a-f]{16}$", description="Earlier or base observation id from a statistics tool")],
+        observation_id_b: Annotated[str, Field(pattern=r"^[0-9a-f]{16}$", description="Later observation id of the SAME series")],
+        kind: Annotated[str, Field(max_length=40, description="difference or percent_change")] = "difference",
+    ) -> CalculateChangeResult:
+        """Exact Decimal change from observation A to observation B, computed from this server's own table; refuses different series, the same period, or a missing number."""
+        return _run("calculate_change", at.calculate_change, data(), observation_id_a, observation_id_b, kind)
+
+    @mcp.tool(name="calculate_from_text_values", annotations=_tool_annotations("Exact change between two report figures"))
+    def calculate_from_text_values(
+        passage_a: Annotated[str, Field(max_length=40, description="Caller's label of passage A (used in messages)")], value_a: FreeText, unit_a: Annotated[str, Field(max_length=40)],
+        basis_a: FreeText, period_a: FreeText,
+        passage_b: Annotated[str, Field(max_length=40, description="Caller's label of passage B (used in messages)")], value_b: FreeText, unit_b: Annotated[str, Field(max_length=40)],
+        basis_b: FreeText, period_b: FreeText,
+        passage_id_a: Annotated[str | None, Field(max_length=200, description="Id of passage A from search_reports; the figure must occur in its text")] = None,
+        passage_id_b: Annotated[str | None, Field(max_length=200, description="Id of passage B from search_reports")] = None,
+        kind: Annotated[str, Field(max_length=40, description="difference or percent_change")] = "difference",
+    ) -> TextChangeResult:
+        """Exact Decimal change between two figures printed in report passages: each figure must occur in the text of its passage, units and bases must match. The result is computed, never supplied."""
+        return _run("calculate_from_text_values", lambda: at.calculate_from_text_values(
+            world(), passage_a, passage_id_a, value_a, unit_a, basis_a, period_a, passage_b, passage_id_b, value_b, unit_b, basis_b, period_b, kind))
+
+    @mcp.tool(name="describe_corpus", annotations=_tool_annotations("Describe the report corpus"))
+    def describe_corpus() -> DescribeCorpusResult:
+        """Identity of the report corpus this server searches: fingerprint hashes, passage and chunk counts, chunking and embedding model."""
+        return _run("describe_corpus", lambda: at.describe_corpus(world()))
+
+
 def _configure_logging() -> None:
     handler = logging.StreamHandler(sys.stderr)
     handler.addFilter(RedactingFilter())
@@ -214,8 +302,13 @@ def main(argv: list[str] | None = None) -> None:
     ap.add_argument("--host", default="127.0.0.1", help="http only; loopback unless --allow-nonloopback")
     ap.add_argument("--port", type=int, default=8765, help="http only")
     ap.add_argument("--allow-nonloopback", action="store_true", help="http only; needs TLS and a real auth layer in front, see docs/deploy.md")
+    ap.add_argument("--agent-tools", action="store_true", help="also serve the live agent's report search, exact calculations and corpus identity "
+                    "(loads the report corpus: serves MOM report text to the client, so it is off by default and never started for the HTTP sidecar)")
     args = ap.parse_args(argv)
     _configure_logging()
+    if args.agent_tools:
+        register_agent_tools()
+        world()  # load before serving: the first request must not pay for it and a missing cache must fail the start, not a request
     if args.transport == "stdio":
         mcp.run("stdio")
         return

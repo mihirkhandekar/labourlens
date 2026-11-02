@@ -59,3 +59,19 @@ def load_world():
         require_complete_cache(chunks)
     retr = dn.HybridIndex(BM25Index.build(chunks, BM25Config()), dn.DenseIndex(chunks, dn.DenseConfig(EMBEDDING_MODEL)))
     return retr, {c.chunk_id: c for c in chunks}, {p["passage_id"]: p for p in passages}
+
+
+def load_search_world():
+    """For the MCP server: (retriever, chunks_by_id, passages_by_id, corpus fingerprint). Unlike load_world it never embeds anything,
+    whatever LABOURLENS_ALLOW_EMBED says (the server has no API key and must not need one): a chunk without a cached vector is an error.
+    Only passages a chunk cites are kept (the answer path never reads the others); the fingerprint is taken over all of them first, so it
+    equals the one load_world's callers compute."""
+    passages = ck.load_passages()
+    chunks = ck.build_chunks(ck.CONFIGS[CHUNK_CONFIG], passages)
+    chunks_by_id = {c.chunk_id: c for c in chunks}
+    corpus = corpus_fingerprint({p["passage_id"]: p for p in passages}, chunks_by_id)
+    cited = {pid for c in chunks for pid in c.source_passage_ids}
+    passages_by_id = {p["passage_id"]: p for p in passages if p["passage_id"] in cited}
+    del passages
+    retr = dn.HybridIndex(BM25Index.build(chunks, BM25Config()), dn.DenseIndex.from_cache(chunks, dn.DenseConfig(EMBEDDING_MODEL)))
+    return retr, chunks_by_id, passages_by_id, corpus

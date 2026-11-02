@@ -11,6 +11,7 @@ calculate_from_text_values only accepts a figure that is verifiably present in t
 from __future__ import annotations
 
 import contextvars
+import functools
 import hashlib
 import re
 import time
@@ -51,6 +52,15 @@ class TransientToolError(Exception):
     """A recoverable failure (timeout, temporary resource problem). The graph retries once."""
 
 
+
+class _SearchRejected(Exception):
+    """Carries the typed ToolResult of a search_reports call the MCP server rejected (invalid arguments), out of _search."""
+
+    def __init__(self, result: "ToolResult") -> None:
+        super().__init__(result.message)
+        self.result = result
+
+
 @dataclass
 class ToolResult:
     ok: bool
@@ -59,6 +69,19 @@ class ToolResult:
     error_kind: str | None = None  # invalid_arguments | not_found | too_large
     retrieval_trace: dict = field(default_factory=dict)
     usage: dict = field(default_factory=dict)
+    transport: str | None = None  # "mcp" when the call ran on the MCP server; set by Tools, never by a tool's own logic
+
+
+def _transported(fn):
+    """Public tool method: afterwards mark the ToolResult with transport "mcp" if the call used the MCP backend."""
+    @functools.wraps(fn)
+    def wrapper(self, *args, **kwargs):
+        self._mcp_used = False
+        res = fn(self, *args, **kwargs)
+        if self._mcp_used and isinstance(res, ToolResult):
+            res.transport = "mcp"
+        return res
+    return wrapper
 
 
 class StatsData:
@@ -136,6 +159,8 @@ class Shared:
         self.obs, self.titles = self.stats.obs, self.stats.titles
         # Optional replacement for the direct statistics lookup, e.g. an MCP client. Same contract as StatsData.query.
         self.stats_backend = None
+        # Agent tools (besides get_series, which follows stats_backend) that also run on that MCP backend: the transport flag (agent.served).
+        self.mcp_routed: frozenset[str] = frozenset()
 
     def catalogue_text(self) -> str:
         return self.stats.catalogue_text()
@@ -213,6 +238,83 @@ def compute_change(value_a: float, value_b: float, kind: str, unit: str) -> tupl
     return res, f"{res:f}", label, formula
 
 
+def observation_change(a: dict, b: dict, kind: str):
+    """The checks and arithmetic of calculate_change on two observation records (keys source_id, indicator_id, population, adjustment,
+    dimension, unit, period, value). Returns a ToolResult error or (result, result as string, unit label, formula). Serves the in-process
+    tool and the MCP server's calculate_change, so the two routes cannot disagree."""
+    if kind not in CHANGE_KINDS:
+        return ToolResult(False, message=f"kind must be one of {CHANGE_KINDS}", error_kind="invalid_arguments")
+    same = [k for k in ("source_id", "indicator_id", "population", "adjustment", "dimension", "unit") if a[k] != b[k]]
+    if same:
+        return ToolResult(False, message=f"observations are different series (differ in {same}); a change is only defined within one series", error_kind="invalid_arguments")
+    if a["period"] == b["period"]:
+        return ToolResult(False, message="both observations are the same period", error_kind="invalid_arguments")
+    if a["value"] is None or b["value"] is None:
+        return ToolResult(False, message="one observation has no published number", error_kind="not_found")
+    try:
+        return compute_change(a["value"], b["value"], kind, a["unit"])
+    except ZeroDivisionError:
+        return ToolResult(False, message="percent change from zero is undefined", error_kind="invalid_arguments")
+
+
+@dataclass
+class TextChange:
+    """A validated change between two report figures: the two passages (anything with label, passage_id, source_id, stage, title), the
+    figures as Decimals, the input unit, the normalised basis and periods, and compute_change's output."""
+    ia: object
+    ib: object
+    va: Decimal
+    vb: Decimal
+    unit_in: str
+    basis: str
+    period_a: str
+    period_b: str
+    kind: str
+    formula: str
+    shown: str
+    unit: str
+
+
+def text_change(resolve, passage_a: str, value_a: str, unit_a: str, basis_a: str, period_a: str,
+                passage_b: str, value_b: str, unit_b: str, basis_b: str, period_b: str, kind: str = "difference"):
+    """The checks and arithmetic of calculate_from_text_values. `resolve(side, label)` returns the passage (attributes text, flags,
+    label, passage_id, source_id, stage, title) or None; the checks run side a then side b, as before. Returns a ToolResult error or a
+    TextChange. Serves the in-process tool and the MCP server's calculate_from_text_values."""
+    if kind not in CHANGE_KINDS:
+        return ToolResult(False, message=f"kind must be one of {CHANGE_KINDS}", error_kind="invalid_arguments")
+    legs = []
+    for side, passage, value, unit, basis, period in (("a", passage_a, value_a, unit_a, basis_a, period_a), ("b", passage_b, value_b, unit_b, basis_b, period_b)):
+        item = resolve(side, passage)
+        if item is None:
+            return ToolResult(False, message=f"passage_{side} {passage!r} must be a passage label (P1, P2, ...) returned by search_reports in this run", error_kind="invalid_arguments")
+        if item.flags:
+            return ToolResult(False, message=f"passage {passage} is flagged as containing instructions and cannot be used as a source of figures", error_kind="invalid_arguments")
+        if unit not in TEXT_UNITS:
+            return ToolResult(False, message=f"unit_{side} must be one of {TEXT_UNITS}", error_kind="invalid_arguments")
+        text_value = str(value).strip().replace(",", "").replace("\u2212", "-")
+        if not _VALUE.match(text_value):
+            return ToolResult(False, message=f"value_{side} must be one plain number such as 2.9 or 1250 (no unit, no words)", error_kind="invalid_arguments")
+        basis, period = " ".join(str(basis or "").split()), " ".join(str(period or "").split())
+        if not 1 <= len(basis) <= 120 or not _FREE.match(basis) or not 1 <= len(period) <= 40 or not _FREE.match(period):
+            return ToolResult(False, message=f"basis_{side} (1 to 120 characters) and period_{side} (1 to 40 characters) must be short plain descriptions", error_kind="invalid_arguments")
+        number = Decimal(text_value)
+        if number not in _signed_numbers(item.text):
+            return ToolResult(False, message=f"value_{side} {text_value} does not appear in passage {passage}; copy the figure exactly as the passage prints it", error_kind="invalid_arguments")
+        legs.append((item, number, unit, basis, period))
+    (ia, va, ua, ba, pa), (ib, vb, ub, bb, pb) = legs
+    if ua != ub:
+        return ToolResult(False, message=f"unit_a ({ua}) and unit_b ({ub}) differ; a change is only defined between figures in the same unit", error_kind="invalid_arguments")
+    if re.sub(r"\W+", " ", ba).strip().casefold() != re.sub(r"\W+", " ", bb).strip().casefold():
+        return ToolResult(False, message="basis_a and basis_b differ; a change is only defined between figures of the same measure, population and adjustment. Use identical wording for both", error_kind="invalid_arguments")
+    if (ia.passage_id, va) == (ib.passage_id, vb) and pa.casefold() == pb.casefold():
+        return ToolResult(False, message="both figures are the same figure from the same passage", error_kind="invalid_arguments")
+    try:
+        res, shown, unit, formula = compute_change(str(va), str(vb), kind, ua)
+    except ZeroDivisionError:
+        return ToolResult(False, message="percent change from zero is undefined", error_kind="invalid_arguments")
+    return TextChange(ia, ib, va, vb, ua, ba, pa, pb, kind, formula, shown, unit)
+
+
 class Tools:
     """One instance per agent run: holds the evidence registries for that run."""
 
@@ -251,6 +353,22 @@ class Tools:
     def _note(self, text: str) -> None:
         if text not in self.notes and len(self.notes) < MAX_NOTES:
             self.notes.append(text)
+
+    def routed(self, tool: str) -> bool:
+        """True when this agent tool runs on the MCP server (transport mcp_all; get_series also in mcp_stats)."""
+        if getattr(self.sh, "stats_backend", None) is None:
+            return False
+        return tool == "get_series" or tool in getattr(self.sh, "mcp_routed", ())
+
+    def _invoke(self, tool: str, **args):
+        """Run an agent tool on the MCP backend. Records that this tool call used MCP (the trace says transport=mcp) and re-attaches the run's
+        visitor tag: this runs in a pool thread that does not inherit the request context."""
+        self._mcp_used = True
+        token = CALLER_SESSION.set(self.caller)
+        try:
+            return self.sh.stats_backend.invoke(tool, **args)
+        finally:
+            CALLER_SESSION.reset(token)
 
     def _vintage_note(self, source_id: str) -> None:
         """Advance and final releases of the same quarter in one evidence set: flag that the final supersedes."""
@@ -302,43 +420,67 @@ class Tools:
         return it
 
     # ---- search_reports -------------------------------------------------------------------------------------------
-    def _search(self, query: str, k: int) -> tuple[list, dict, dict]:
-        """Union the planner-query and original-question period/stage hints.
+    def _search(self, query: str, k: int) -> tuple[list, dict, dict, dict, dict]:
+        """Returns (ranked, trace, usage, chunks_by_id, passages_by_id); the last two resolve the ranked chunks to passages.
 
-        Quarters are unioned; conflicting stages disable the stage restriction.
-        R3w widens when fewer than 8 fused chunks survive or the best filtered
-        BM25 score is below 0.5 times the unfiltered best positive BM25 score.
-        These fixed thresholds were not tuned on dev cases. Default uses the old path.
-        """
+        Union of the planner-query and original-question period/stage hints (retrieval.candidates.select). Default (hybrid) uses
+        the old path. The rerank step is shared by both routes (_rerank_stage)."""
+        if self.routed("search_reports"):
+            return self._search_mcp(query, k)
+        sh = self.sh
         if self.retrieval == "hybrid":
-            return self.sh.retriever.search(query, k), {}, {}
-        from labourlens.retrieval import dense, period, rerank
+            return sh.retriever.search(query, k), {}, {}, sh.chunks_by_id, sh.passages_by_id
+        from labourlens.retrieval import candidates
 
         started = time.perf_counter()
-        a, b = period.parse(query), period.parse(self.question)
-        stages = {h.stage for h in (a, b) if h.stage}
-        conflict = a.stage_conflict or b.stage_conflict or len(stages) > 1
-        hints = period.Hints(a.quarters | b.quarters, next(iter(stages)) if stages and not conflict else None, conflict)
-        allowed = period.matching_sources(hints)
-        retr, chunks = self.sh.retriever, self.sh.chunks_by_id
-        n = len(chunks)
-        bm = retr.bm25.search(query, n if allowed else retr.depth)
-        de = retr.dense.search(query, n if allowed else retr.depth)
-        filtered_bm = [x for x in bm if chunks[x[0]].source_id in allowed] if allowed else bm
-        filtered_de = [x for x in de if chunks[x[0]].source_id in allowed] if allowed else de
-        ranked = dense.rrf([filtered_bm[:retr.depth], filtered_de[:retr.depth]], n, retr.c)
-        trace = {"retrieval": self.retrieval,
-                 "hints": {"quarters": [f"{y}-Q{q}" for y, q in sorted(hints.quarters)], "stage": hints.stage, "stage_conflict": conflict},
-                 "filter_applied": allowed is not None,
-                 "filtered_documents": len({chunks[cid].source_id for cid, _ in filtered_bm + filtered_de}),
-                 "filtered_chunks": len(ranked), "widened": False,
-                 "reranked": False, "rerank_fallback": False, "rerank_seconds": 0.0, "rerank_cost_usd": 0.0}
-        if self.retrieval == "r3w" and allowed and (
-            len(ranked) < 8 or (bm and bm[0][1] > 0 and (not filtered_bm or filtered_bm[0][1] < 0.5 * bm[0][1]))
-        ):
-            # Search BM25 at its original depth: tied scores can depend on requested k.
-            ranked = dense.rrf([retr.bm25.search(query, retr.depth), de[:retr.depth]], n, retr.c)
-            trace["widened"] = True
+        retr, chunks = sh.retriever, sh.chunks_by_id
+        ranked, trace = candidates.select(retr, chunks, query, self.question, self.retrieval, lambda depth: retr.dense.search(query, depth))
+        ranked, trace, usage = self._rerank_stage(query, ranked, trace, [chunks[cid] for cid, _ in ranked[:candidates.POOL]], started, k)
+        return ranked, trace, usage, chunks, sh.passages_by_id
+
+    def _search_mcp(self, query: str, k: int) -> tuple[list, dict, dict, dict, dict]:
+        """search_reports on the MCP server. The query vector is embedded HERE (this process holds the API key; the server never does) and
+        sent as base64 float32; the server filters, fuses and returns the candidate chunks with their passages; reranking stays here
+        because it calls a model. Same trace as the in-process route."""
+        import base64
+
+        import numpy as np
+
+        from labourlens.retrieval import dense
+        from labourlens.retrieval.runtime import EMBEDDING_MODEL
+
+        started = time.perf_counter()
+        vec = dense.embed(EMBEDDING_MODEL, [query], purpose="queries")[0]
+        reply, err = self._invoke(
+            "search_reports", query=query, question=self.question, retrieval=self.retrieval, k=k,
+            query_vector_b64=base64.b64encode(np.asarray(vec, dtype="<f4").tobytes()).decode("ascii"))
+        if err is not None:
+            raise _SearchRejected(err)
+        r = reply.result
+        if reply.quarantined:
+            self._note(f"{reply.quarantined} report excerpt(s) of this search were withheld by the MCP client as instruction-like text. Evidence may be "
+                       "incomplete because of a security event, not because the reports lack it. Do not estimate missing figures.")
+        passages = {p.passage_id: p.model_dump() for p in r.passages}
+        usable = []
+        for c in r.chunks:  # the server omits a chunk's text when it is the newline-joined text of its passages; a chunk with a passage the client withheld is dropped
+            text = c.text if c.text is not None else ("\n".join(passages[pid]["text"] for pid in c.source_passage_ids) if all(pid in passages for pid in c.source_passage_ids) else None)
+            if text is not None:
+                usable.append(c.model_copy(update={"text": text}))
+        chunks = {c.chunk_id: c for c in usable}
+        for pid, p in passages.items():  # remember the metadata the web card needs (never the text) for evidence cited later
+            self.sh.passages_by_id[pid] = {x: p[x] for x in ("document_title", "publication_date", "release_stage", "locator", "source_id")}
+        ranked = [(c.chunk_id, c.score) for c in usable]
+        if self.retrieval == "hybrid":
+            return ranked[:k], {}, {}, chunks, passages
+        from labourlens.retrieval.candidates import POOL
+
+        ranked, trace, usage = self._rerank_stage(query, ranked, r.trace.model_dump(), usable[:POOL], started, k)
+        return ranked, trace, usage, chunks, passages
+
+    def _rerank_stage(self, query: str, ranked: list, trace: dict, candidates: list, started: float, k: int) -> tuple[list, dict, dict]:
+        from labourlens.retrieval import rerank
+
+        trace.update(reranked=False, rerank_fallback=False, rerank_seconds=0.0, rerank_cost_usd=0.0)
         usage = {}
         if ranked:
             t0 = time.perf_counter()
@@ -346,8 +488,7 @@ class Tools:
                 remaining = self.tool_timeout_s - (t0 - started) - 0.25
                 if remaining <= 0:
                     raise TimeoutError("retrieval exhausted tool budget")
-                result = rerank.rerank(query, [chunks[cid] for cid, _ in ranked[:rerank.POOL]],
-                                       model=rerank.MODEL, use_cache=False, timeout_s=remaining)
+                result = rerank.rerank(query, candidates, model=rerank.MODEL, use_cache=False, timeout_s=remaining)
                 trace.update(reranked=result.ok, rerank_fallback=not result.ok, rerank_cost_usd=result.cost_usd)
                 if result.ok:
                     ranked = [ranked[i] for i in result.order] + ranked[rerank.POOL:]
@@ -359,6 +500,7 @@ class Tools:
             trace["rerank_seconds"] = round(time.perf_counter() - t0, 3)
         return ranked[:k], trace, usage
 
+    @_transported
     def search_reports(self, query: str, k: int = 8) -> ToolResult:
         q = (query or "").strip()
         if not q or len(q) > MAX_QUERY_CHARS:
@@ -366,10 +508,13 @@ class Tools:
         if not isinstance(k, int) or not 1 <= k <= MAX_K:
             return ToolResult(False, message=f"k must be an integer from 1 to {MAX_K}", error_kind="invalid_arguments")
         new = []
-        ranked, retrieval_trace, usage = self._search(q, k)
+        try:
+            ranked, retrieval_trace, usage, chunks_by_id, passages_by_id = self._search(q, k)
+        except _SearchRejected as e:
+            return e.result
         for cid, _ in ranked:
-            for pid in self.sh.chunks_by_id[cid].source_passage_ids:
-                p = self.sh.passages_by_id.get(pid)
+            for pid in chunks_by_id[cid].source_passage_ids:
+                p = passages_by_id.get(pid)
                 if p:
                     it = self._add("P", pid, p["source_id"], p["document_title"], p["publication_date"], p["release_stage"], p["locator"], p["text"])
                     if it:
@@ -378,9 +523,11 @@ class Tools:
                           retrieval_trace=retrieval_trace, usage=usage)
 
     # ---- get_series -----------------------------------------------------------------------------------------------
+    @_transported
     def get_series(self, source_id: str, period_from: str, period_to: str, dimension: str | None = None,
                    adjustment: str | None = None, indicator_id: str | None = None) -> ToolResult:
         backend = self.sh.stats_backend or self.sh.stats
+        self._mcp_used = self.sh.stats_backend is not None
         token = CALLER_SESSION.set(self.caller)  # this runs in a pool thread that does not inherit the request context; re-attach the run's visitor tag
         try:
             rows, err = backend.query(source_id, period_from, period_to, dimension, adjustment, indicator_id)
@@ -428,23 +575,20 @@ class Tools:
         return ToolResult(False, message=msg[:1800], error_kind="not_found")
 
     # ---- calculate_change -----------------------------------------------------------------------------------------
+    @_transported
     def calculate_change(self, obs_a: str, obs_b: str, kind: str = "difference") -> ToolResult:
         if kind not in CHANGE_KINDS:
             return ToolResult(False, message=f"kind must be one of {CHANGE_KINDS}", error_kind="invalid_arguments")
         a, b = self._obs.get(obs_a), self._obs.get(obs_b)
         if a is None or b is None:
             return ToolResult(False, message="obs_a and obs_b must be observation labels returned by get_series in this run", error_kind="invalid_arguments")
-        same = [k for k in ("source_id", "indicator_id", "population", "adjustment", "dimension", "unit") if a[k] != b[k]]
-        if same:
-            return ToolResult(False, message=f"observations are different series (differ in {same}); a change is only defined within one series", error_kind="invalid_arguments")
-        if a["period"] == b["period"]:
-            return ToolResult(False, message="both observations are the same period", error_kind="invalid_arguments")
-        if a["value"] is None or b["value"] is None:
-            return ToolResult(False, message="one observation has no published number", error_kind="not_found")
-        try:
-            res, shown, unit, formula = compute_change(a["value"], b["value"], kind, a["unit"])
-        except ZeroDivisionError:
-            return ToolResult(False, message="percent change from zero is undefined", error_kind="invalid_arguments")
+        if self.routed("calculate_change"):
+            out = self._change_mcp(a, b, kind)
+        else:
+            out = observation_change(a, b, kind)
+        if isinstance(out, ToolResult):
+            return out
+        res, shown, unit, formula = out
         cid = "calc:" + hashlib.sha256(f"{a['id']}|{b['id']}|{kind}".encode()).hexdigest()[:12]
         text = (f"Calculated {kind.replace('_', ' ')} of {a['indicator_id']} ({a['dimension'] or 'all'}; {a['population']}, {a['adjustment']}) "
                 f"from {a['period']} to {b['period']}: {formula} = {shown} {unit}. Inputs {obs_a} ({a['period']}) and {obs_b} ({b['period']}).")
@@ -453,7 +597,19 @@ class Tools:
             return ToolResult(True, message="this calculation was already done")
         return ToolResult(True, [it], f"{it.label} = {shown} {unit}")
 
+    def _change_mcp(self, a: dict, b: dict, kind: str):
+        """The server recomputes the change from its own observations table, given the two observation ids; the result is the same
+        (res, shown, unit, formula) tuple as observation_change, or a ToolResult error."""
+        reply, err = self._invoke("calculate_change", observation_id_a=a["id"], observation_id_b=b["id"], kind=kind)
+        if err is not None:
+            return err
+        r = reply.result
+        if (r.observation_id_a, r.observation_id_b, r.kind) != (a["id"], b["id"], kind):
+            raise RuntimeError("mcp malformed: calculation reply does not match the request")
+        return Decimal(r.value), r.value, r.unit, r.formula
+
     # ---- calculate_from_text_values (tool set v2) -----------------------------------------------------------------
+    @_transported
     def calculate_from_text_values(self, passage_a: str, value_a: str, unit_a: str, basis_a: str, period_a: str,
                                    passage_b: str, value_b: str, unit_b: str, basis_b: str, period_b: str,
                                    kind: str = "difference") -> ToolResult:
@@ -462,43 +618,44 @@ class Tools:
         Each value must be the figure as a plain number (`2.9`, `-0.3`, `1,250`; no unit, no words) and must occur in the
         text of the cited passage (label P1, P2, ...) after normalisation (thousands separators, trailing zeros). Units and
         bases must be identical. The model never supplies a result: it is computed by compute_change, the function that
-        also serves calculate_change, so rounding (half-up, 2 places) and unit labels (percentage points for percent) match."""
-        if kind not in CHANGE_KINDS:
-            return ToolResult(False, message=f"kind must be one of {CHANGE_KINDS}", error_kind="invalid_arguments")
-        legs = []
-        for side, passage, value, unit, basis, period in (("a", passage_a, value_a, unit_a, basis_a, period_a), ("b", passage_b, value_b, unit_b, basis_b, period_b)):
-            item = next((i for i in self.items if i.label == passage and i.label[0] == "P"), None)
-            if item is None:
-                return ToolResult(False, message=f"passage_{side} {passage!r} must be a passage label (P1, P2, ...) returned by search_reports in this run", error_kind="invalid_arguments")
-            if item.flags:
-                return ToolResult(False, message=f"passage {passage} is flagged as containing instructions and cannot be used as a source of figures", error_kind="invalid_arguments")
-            if unit not in TEXT_UNITS:
-                return ToolResult(False, message=f"unit_{side} must be one of {TEXT_UNITS}", error_kind="invalid_arguments")
-            text_value = str(value).strip().replace(",", "").replace("\u2212", "-")
-            if not _VALUE.match(text_value):
-                return ToolResult(False, message=f"value_{side} must be one plain number such as 2.9 or 1250 (no unit, no words)", error_kind="invalid_arguments")
-            basis, period = " ".join(str(basis or "").split()), " ".join(str(period or "").split())
-            if not 1 <= len(basis) <= 120 or not _FREE.match(basis) or not 1 <= len(period) <= 40 or not _FREE.match(period):
-                return ToolResult(False, message=f"basis_{side} (1 to 120 characters) and period_{side} (1 to 40 characters) must be short plain descriptions", error_kind="invalid_arguments")
-            number = Decimal(text_value)
-            if number not in _signed_numbers(item.text):
-                return ToolResult(False, message=f"value_{side} {text_value} does not appear in passage {passage}; copy the figure exactly as the passage prints it", error_kind="invalid_arguments")
-            legs.append((item, number, unit, basis, period))
-        (ia, va, ua, ba, pa), (ib, vb, ub, bb, pb) = legs
-        if ua != ub:
-            return ToolResult(False, message=f"unit_a ({ua}) and unit_b ({ub}) differ; a change is only defined between figures in the same unit", error_kind="invalid_arguments")
-        if re.sub(r"\W+", " ", ba).strip().casefold() != re.sub(r"\W+", " ", bb).strip().casefold():
-            return ToolResult(False, message="basis_a and basis_b differ; a change is only defined between figures of the same measure, population and adjustment. Use identical wording for both", error_kind="invalid_arguments")
-        if (ia.passage_id, va) == (ib.passage_id, vb) and pa.casefold() == pb.casefold():
-            return ToolResult(False, message="both figures are the same figure from the same passage", error_kind="invalid_arguments")
-        try:
-            res, shown, unit, formula = compute_change(str(va), str(vb), kind, ua)
-        except ZeroDivisionError:
-            return ToolResult(False, message="percent change from zero is undefined", error_kind="invalid_arguments")
-        cid = "calc:" + hashlib.sha256(f"text|{ia.passage_id}|{va}|{ib.passage_id}|{vb}|{kind}".encode()).hexdigest()[:12]
-        text = (f"Calculated {kind.replace('_', ' ')} of {ba} from report figures: {formula} = {shown} {unit}. "
-                f"Inputs {ia.label} ({_fmt(float(va), ua)}, {pa}; {ia.source_id}, {ia.stage}) and {ib.label} ({_fmt(float(vb), ua)}, {pb}; {ib.source_id}, {ib.stage}).")
-        it = self._add("C", cid, ia.source_id, f"Calculation on {ia.title}", None, "calculated", f"{ia.label},{ib.label}", text)
+        also serves calculate_change, so rounding (half-up, 2 places) and unit labels (percentage points for percent) match.
+        The checks live in text_change, shared with the MCP server's calculate_from_text_values tool."""
+        args = (passage_a, value_a, unit_a, basis_a, period_a, passage_b, value_b, unit_b, basis_b, period_b, kind)
+        if self.routed("calculate_from_text_values"):
+            return self._text_change_mcp(*args)
+
+        def resolve(side: str, label: str):
+            return next((i for i in self.items if i.label == label and i.label[0] == "P"), None)
+
+        out = text_change(resolve, *args)
+        if isinstance(out, ToolResult):
+            return out
+        return self._text_change_item(out)
+
+    def _text_change_item(self, c: TextChange) -> ToolResult:
+        cid = "calc:" + hashlib.sha256(f"text|{c.ia.passage_id}|{c.va}|{c.ib.passage_id}|{c.vb}|{c.kind}".encode()).hexdigest()[:12]
+        text = (f"Calculated {c.kind.replace('_', ' ')} of {c.basis} from report figures: {c.formula} = {c.shown} {c.unit}. "
+                f"Inputs {c.ia.label} ({_fmt(float(c.va), c.unit_in)}, {c.period_a}; {c.ia.source_id}, {c.ia.stage}) and {c.ib.label} ({_fmt(float(c.vb), c.unit_in)}, {c.period_b}; {c.ib.source_id}, {c.ib.stage}).")
+        it = self._add("C", cid, c.ia.source_id, f"Calculation on {c.ia.title}", None, "calculated", f"{c.ia.label},{c.ib.label}", text)
         if it is None:
             return ToolResult(True, message="this calculation was already done")
-        return ToolResult(True, [it], f"{it.label} = {shown} {unit}")
+        return ToolResult(True, [it], f"{it.label} = {c.shown} {c.unit}")
+
+    def _text_change_mcp(self, passage_a, value_a, unit_a, basis_a, period_a, passage_b, value_b, unit_b, basis_b, period_b, kind) -> ToolResult:
+        """The same checks and arithmetic on the MCP server, which holds the passage text. The app sends passage ids (None for a label
+        it does not know, so the server reports that in the same order as the in-process checks) and builds the evidence item itself."""
+        def pid(label):
+            return next((i.passage_id for i in self.items if i.label == label and i.label[0] == "P"), None)
+
+        reply, err = self._invoke(
+            "calculate_from_text_values", passage_a=passage_a, passage_id_a=pid(passage_a), value_a=value_a, unit_a=unit_a, basis_a=basis_a, period_a=period_a,
+            passage_b=passage_b, passage_id_b=pid(passage_b), value_b=value_b, unit_b=unit_b, basis_b=basis_b, period_b=period_b, kind=kind)
+        if err is not None:
+            return err
+        r = reply.result
+        by_label = {i.label: i for i in self.items if i.label[0] == "P"}
+        ia, ib = by_label.get(passage_a), by_label.get(passage_b)
+        if ia is None or ib is None or (r.passage_id_a, r.passage_id_b) != (ia.passage_id, ib.passage_id):
+            raise RuntimeError("mcp malformed: calculation reply does not match the request")
+        c = TextChange(ia, ib, Decimal(r.value_a), Decimal(r.value_b), r.unit_in, r.basis, r.period_a, r.period_b, kind, r.formula, r.value, r.unit)
+        return self._text_change_item(c)

@@ -41,9 +41,9 @@ from pydantic import BaseModel, ValidationError
 
 from labourlens.agent.tools import CALLER_SESSION, ToolResult, TransientToolError
 from labourlens.mcp.http_server import MIN_TOKEN_CHARS, TOKEN_ENV, is_loopback
-from labourlens.mcp.models import (RESULT_MODELS, ComparePeriodsResult, DescribeDatasetResult, DimensionValuesResult, LatestValueResult, ListDatasetsResult,
-                                   ProvenanceResult, RevisionsResult, SeriesSummaryResult)
-from labourlens.mcp.server import ALL_TOOLS, SERVER_NAME, SERVER_VERSION, SOURCE_IDS, TOOL_NAME
+from labourlens.mcp.models import (AGENT_RESULT_MODELS, RESULT_MODELS, ComparePeriodsResult, DescribeDatasetResult, DimensionValuesResult, LatestValueResult,
+                                   ListDatasetsResult, ProvenanceResult, RevisionsResult, SeriesSummaryResult)
+from labourlens.mcp.server import AGENT_TOOLS, ALL_TOOLS, SERVER_NAME, SERVER_VERSION, SOURCE_IDS, TOOL_NAME
 from labourlens.security.guards import injection_flags, sanitize_text
 
 _COMMON = {"expected_name": SERVER_NAME, "allowed_versions": {SERVER_VERSION}, "required_tools": {TOOL_NAME}, "allowed_tools": set(ALL_TOOLS)}
@@ -51,6 +51,11 @@ ALLOWED_SERVERS: dict[str, dict] = {
     "labourlens-stats": {"transport": "stdio", "command": sys.executable, "args": ["-m", "labourlens.mcp.server"], **_COMMON},
     # Same server over loopback streamable HTTP. Start it yourself (see docs/deploy.md); the token is read from LABOURLENS_MCP_TOKEN.
     "labourlens-stats-http": {"transport": "http", "url": "http://127.0.0.1:8765/mcp", "token_env": TOKEN_ENV, **_COMMON},
+    # The live app's server (D-066): the same server started with --agent-tools, so the agent's three tools all run over MCP. It loads the
+    # report corpus (a few seconds), hence the longer connect timeout, and it serves report text, which the resource check must allow.
+    "labourlens-stats-agent": {"transport": "stdio", "command": sys.executable, "args": ["-m", "labourlens.mcp.server", "--agent-tools"], **_COMMON,
+                               "required_tools": {TOOL_NAME, *AGENT_TOOLS}, "allowed_tools": set(ALL_TOOLS) | set(AGENT_TOOLS),
+                               "connect_timeout_s": 60.0, "serves_report_text": True},
 }
 CONNECT_TIMEOUT_S, CALL_TIMEOUT_S, MAX_RESPONSE_BYTES = 20.0, 8.0, 200_000
 RECENT_CALLS = 20
@@ -141,7 +146,7 @@ def screen_result(model: BaseModel) -> tuple[dict, int]:
     return d, quarantined
 
 
-def _resource_schema(uri: str) -> dict:
+def _resource_schema(uri: str, serves_text: bool = False) -> dict:
     def entry(fields, extra):
         props = {k: {"type": "string"} for k in fields}
         props.update({k: {"type": ["string", "null"]} for k in ("publisher", "canonical_url")})
@@ -153,7 +158,7 @@ def _resource_schema(uri: str) -> dict:
         "series": {"type": "array", "items": {"type": "string"}}})
     document = entry(("source_id", "title"), {
         **{k: {"type": ["string", "null"]} for k in ("publication_date", "release_stage", "rights_status")},
-        "text_served_by_this_server": {"const": False}})
+        "text_served_by_this_server": {"type": "boolean"} if serves_text else {"const": False}})
     props = {"trust": {"const": "untrusted_data"}}
     if uri == "labourlens://sources":
         props.update(note={"type": "string"}, datasets={"type": "array", "items": dataset},
@@ -200,10 +205,11 @@ def _error_payload(res) -> dict | None:
 
 
 class McpStatsClient:
-    def __init__(self, server: str = "labourlens-stats", call_timeout_s: float = CALL_TIMEOUT_S, connect_timeout_s: float = CONNECT_TIMEOUT_S) -> None:
+    def __init__(self, server: str = "labourlens-stats", call_timeout_s: float = CALL_TIMEOUT_S, connect_timeout_s: float | None = None) -> None:
         if server not in ALLOWED_SERVERS:
             raise McpClientError("not_allowed", f"server {server!r} is not on the allow-list")
-        self.spec, self.call_timeout_s, self.connect_timeout_s = ALLOWED_SERVERS[server], call_timeout_s, connect_timeout_s
+        self.spec, self.call_timeout_s = ALLOWED_SERVERS[server], call_timeout_s
+        self.connect_timeout_s = connect_timeout_s if connect_timeout_s is not None else self.spec.get("connect_timeout_s", CONNECT_TIMEOUT_S)
         if self.spec.get("transport", "stdio") == "http":
             _check_http_url(self.spec["url"])
         self.session: ClientSession | None = None
@@ -334,7 +340,7 @@ class McpStatsClient:
         return {"name": name, "text": text}
 
     async def read_resource(self, uri: str) -> dict:
-        schema = _resource_schema(uri)
+        schema = _resource_schema(uri, bool(self.spec.get("serves_report_text")))
         self._require("resources")
         t0 = time.perf_counter()
         try:
@@ -418,7 +424,7 @@ class McpStatsClient:
             msg = sanitize_text(str(msg))[:600]
             self.transcript.append({"step": "tools/call", "tool": tool, "arg_names": sorted(args), "outcome": f"rejected:{kind}", "seconds": round(dt, 3)})
             raise McpClientError(kind if kind in CORRECTABLE else "tool_error", msg)
-        model_cls = RESULT_MODELS[tool]
+        model_cls = RESULT_MODELS.get(tool) or AGENT_RESULT_MODELS[tool]
         out_schema = self.output_schemas.get(tool)
         try:
             if out_schema is not None:  # the server's own advertised contract, then the client's typed model
@@ -490,6 +496,7 @@ class SyncStatsBackend:
 
     def __init__(self, server: str = "labourlens-stats", call_timeout_s: float = CALL_TIMEOUT_S) -> None:
         self.server, self.call_timeout_s = server, call_timeout_s
+        self.connect_timeout_s = ALLOWED_SERVERS[server].get("connect_timeout_s", CONNECT_TIMEOUT_S) if server in ALLOWED_SERVERS else CONNECT_TIMEOUT_S
         self.loop = asyncio.new_event_loop()
         self.thread = threading.Thread(target=self.loop.run_forever, daemon=True, name="mcp-client")
         self.thread.start()
@@ -539,7 +546,7 @@ class SyncStatsBackend:
             self._stop = asyncio.Event()
             self._task = self.loop.create_task(self._serve(ready, self._stop))
             try:
-                return await asyncio.wait_for(ready, CONNECT_TIMEOUT_S)
+                return await asyncio.wait_for(ready, self.connect_timeout_s)
             except BaseException:
                 self._task.cancel()
                 await self._stop_session()
@@ -561,10 +568,10 @@ class SyncStatsBackend:
             self.thread.join(timeout=12)
 
     def _drop(self, expected=None) -> None:
-        self._run(self._disconnect(expected), CONNECT_TIMEOUT_S + 5)
+        self._run(self._disconnect(expected), self.connect_timeout_s + 5)
 
     def _record(self, tool: str, args: dict, t0: float, ok: bool, attempt: int, quarantined: int = 0, kind: str | None = None) -> None:
-        entry = {"tool": tool, "arguments": {k: v for k, v in args.items() if v is not None}, "ms": round((time.perf_counter() - t0) * 1000, 1), "ok": ok,
+        entry = {"tool": tool, "arguments": _loggable(args), "ms": round((time.perf_counter() - t0) * 1000, 1), "ok": ok,
                  "attempt": attempt, "quarantined": quarantined}
         if kind:
             entry["kind"] = kind
@@ -581,7 +588,7 @@ class SyncStatsBackend:
         for attempt in range(2):
             c = None
             try:
-                c = self._run(self._connect(), CONNECT_TIMEOUT_S + 5)
+                c = self._run(self._connect(), self.connect_timeout_s + 5)
                 reply = self._run(c.call(tool, **args), self.call_timeout_s + 5)
                 self._record(tool, args, t0, True, attempt, reply.quarantined)
                 return reply
@@ -602,7 +609,7 @@ class SyncStatsBackend:
         Discovered once through the live session and cached; raises McpClientError / TimeoutError when not reachable."""
         if self._described is not None:
             return self._described
-        c = self._run(self._connect(), CONNECT_TIMEOUT_S + 5)
+        c = self._run(self._connect(), self.connect_timeout_s + 5)
         self._described = self._run(self._discover(c), self.call_timeout_s + 5)
         return self._described
 
@@ -625,18 +632,21 @@ class SyncStatsBackend:
             "prompts": [{"name": p.name, "description": sanitize_text(p.description or "")[:400]} for p in prompts],
         }
 
-    def query(self, source_id, period_from, period_to, dimension=None, adjustment=None, indicator_id=None):
-        args = dict(source_id=source_id, period_from=period_from, period_to=period_to, dimension=dimension, adjustment=adjustment, indicator_id=indicator_id)
+    def _guarded(self, tool: str, args: dict, call):
+        """One tool call with the agent's failure rules. `call(client)` builds the coroutine. Returns (reply, None), or (None, ToolResult) for a
+        problem the caller can correct (invalid_arguments, not_found, too_large). A lost connection is retried once on a fresh session; a
+        first timeout raises TransientToolError (the graph retries the tool once); anything else raises RuntimeError, which the graph reports
+        as an operational failure, never as missing evidence. There is no fallback to the in-process tools: it would hide the failure."""
         t0 = time.perf_counter()
         for attempt in range(2):
             c = None
             try:
-                c = self._run(self._connect(), CONNECT_TIMEOUT_S + 5)
-                reply = self._run(c.get_statistic(**args), self.call_timeout_s + 5)
-                self._record(TOOL_NAME, args, t0, True, attempt, reply.quarantined)
-                return _Rows(reply.rows, reply.quarantined), None
+                c = self._run(self._connect(), self.connect_timeout_s + 5)
+                reply = self._run(call(c), self.call_timeout_s + 5)
+                self._record(tool, args, t0, True, attempt, reply.quarantined)
+                return reply, None
             except McpClientError as e:
-                self._record(TOOL_NAME, args, t0, False, attempt, kind=e.kind)
+                self._record(tool, args, t0, False, attempt, kind=e.kind)
                 if e.kind in ("invalid_arguments", "not_found", "too_large"):
                     return None, ToolResult(False, message=e.message or e.kind, error_kind=e.kind)
                 if e.kind == "unavailable" and attempt == 0:
@@ -649,6 +659,25 @@ class SyncStatsBackend:
             except (TimeoutError, FutureTimeoutError) as e:
                 raise TransientToolError("timeout") from e
         raise RuntimeError("mcp unavailable")
+
+    def invoke(self, tool: str, **args):
+        """An agent tool on the MCP server (search_reports, calculate_change, calculate_from_text_values): (ToolReply, None) or (None, ToolResult)."""
+        return self._guarded(tool, args, lambda c: c.call(tool, **args))
+
+    def query(self, source_id, period_from, period_to, dimension=None, adjustment=None, indicator_id=None):
+        args = dict(source_id=source_id, period_from=period_from, period_to=period_to, dimension=dimension, adjustment=adjustment, indicator_id=indicator_id)
+        reply, err = self._guarded(TOOL_NAME, args, lambda c: c.get_statistic(**args))
+        return (None, err) if err is not None else (_Rows(reply.rows, reply.quarantined), None)
+
+
+def _loggable(args: dict) -> dict:
+    """Arguments as the visitor's call log shows them: no None values, no embedding vector (16 KB of base64), long strings cut."""
+    out = {}
+    for k, v in args.items():
+        if v is None:
+            continue
+        out[k] = "[omitted]" if k == "query_vector_b64" else (v[:300] + "…" if isinstance(v, str) and len(v) > 300 else v)
+    return out
 
 
 def _trim_schema(schema: dict | None) -> dict:

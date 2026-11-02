@@ -73,10 +73,12 @@ def main(argv: list[str] | None = None) -> int:
     sx.add_argument("--pairs", nargs="+", choices=["gpt-6-luna", "gpt-5.6-luna", "gpt-4.1-mini"])
     sx.add_argument("--tag", required=True, help="new experiment label; existing ids are never overwritten")
     sx.add_argument("--retrieval", choices=["hybrid", "r3", "r3w"], default="r3")
-    sx.add_argument("--route", choices=["mcp", "direct"], default="mcp")
+    sx.add_argument("--route", choices=["mcp", "direct", "mcp-all"], default="mcp",
+                    help="mcp: only get_series over MCP (D-053); direct: all tools in process; mcp-all: all three tools over MCP (D-066)")
     sx.add_argument("--web-steps", choices=["on", "off"], default="on")
     sx.add_argument("--limit", type=int)
     sx.add_argument("--case-ids", nargs="+", help="restrict to these case ids before applying --limit")
+    sx.add_argument("--dry-run", action="store_true", help="validate, print the plan and a cost estimate; creates nothing and makes no model, embedding or MCP call")
     th = sub.add_parser("threat-test", help="run the adversarial threat suite through the agent (calls the OpenAI API)")
     th.add_argument("--models", nargs="*")
     th.add_argument("--ablation", choices=["naive"], help="run with every defence off, as a baseline")
@@ -261,7 +263,7 @@ def main(argv: list[str] | None = None) -> int:
         from labourlens.evaluation import served_exp
 
         served_exp.run(args.split, args.gold, args.pairs, args.tag, args.retrieval, args.route,
-                       args.web_steps, args.limit, args.case_ids)
+                       args.web_steps, args.limit, args.case_ids, **({"dry_run": True} if args.dry_run else {}))
         return 0
     if args.cmd == "triage-check":
         from labourlens.evaluation import triage_check

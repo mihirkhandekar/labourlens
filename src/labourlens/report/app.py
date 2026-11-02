@@ -37,6 +37,19 @@ RUN_RESERVATION_USD = 0.05
 RIGHTS_NOTICE = "Text withheld: excessive verbatim overlap with source evidence."
 
 
+def _tool_transport_from_env() -> str:
+    """LABOURLENS_MCP=false (the D-053 switch) means direct; otherwise LABOURLENS_TOOL_TRANSPORT (direct | mcp_stats | mcp_all, default mcp_all).
+    An unknown value stops the start-up rather than quietly choosing a route."""
+    from labourlens.agent.served import DEFAULT_TRANSPORT, TRANSPORTS
+
+    if os.getenv("LABOURLENS_MCP", "true").lower() == "false":
+        return "direct"
+    value = os.getenv("LABOURLENS_TOOL_TRANSPORT", DEFAULT_TRANSPORT).strip().lower()
+    if value not in TRANSPORTS:
+        raise ValueError(f"LABOURLENS_TOOL_TRANSPORT must be one of {TRANSPORTS}, got {value!r}")
+    return value
+
+
 @dataclass
 class Settings:
     access_codes: tuple[str, ...] = ()
@@ -56,7 +69,11 @@ class Settings:
     feedback_dir: Path = field(default_factory=lambda: paths.DATA / "audit")
     triage_enabled: bool = True        # D-051: LLM scope check in front of the agent, web app only
     contextualise_enabled: bool = True # D-054: follow-up and relative-date rewrite before triage, web app only
-    mcp_enabled: bool = True           # D-053: the agent's statistics lookups go through the local MCP server (LABOURLENS_MCP=false for direct calls)
+    tool_transport: str = "mcp_all"    # D-066: how the agent's three tools reach their data: mcp_all (live default), mcp_stats (get_series only, D-053) or direct (LABOURLENS_TOOL_TRANSPORT)
+
+    @property
+    def mcp_enabled(self) -> bool:
+        return self.tool_transport != "direct"
 
     @classmethod
     def from_env(cls):
@@ -65,7 +82,7 @@ class Settings:
                    demo_enabled=os.getenv("LABOURLENS_DEMO_ENABLED", "true").lower() != "false",
                    triage_enabled=os.getenv("LABOURLENS_TRIAGE", "true").lower() != "false",
                    contextualise_enabled=os.getenv("LABOURLENS_CONTEXTUALISE", "true").lower() != "false",
-                   mcp_enabled=os.getenv("LABOURLENS_MCP", "true").lower() != "false",
+                   tool_transport=_tool_transport_from_env(),
                    daily_budget_usd=float(os.getenv("LABOURLENS_DAILY_BUDGET_USD", "2.0")))
 
     @property
@@ -274,7 +291,7 @@ def create_app(settings: Settings | None = None, runner=None, shared_factory=Non
     if shared_factory is None:
         from labourlens.agent.served import make_shared
 
-        shared_factory = lambda: make_shared(cfg.mcp_enabled)
+        shared_factory = lambda: make_shared(cfg.tool_transport)
     counters = defaultdict(deque)
     tasks = set()
     budget_file = cfg.feedback_dir / "budget.json"
@@ -537,7 +554,7 @@ def create_app(settings: Settings | None = None, runner=None, shared_factory=Non
         sid = authorize(request)
         hit(("mcp", sid.rsplit("~", 1)[-1]), cfg.session_limit * 6)
         from labourlens.mcp.client import McpClientError
-        from labourlens.mcp.server import ALL_TOOLS, TOOL_NAME
+        from labourlens.mcp.server import AGENT_TOOLS, ALL_TOOLS, TOOL_NAME
         backend = mcp_backend()
         out = {"enabled": backend is not None and cfg.mcp_enabled, "connected": False, "message": "", "server": None, "tools": [], "resources": [], "prompts": [],
                "used_by_agent": [], "not_given_to_agent": [], "recent_calls": [], "examples": []}
@@ -545,9 +562,13 @@ def create_app(settings: Settings | None = None, runner=None, shared_factory=Non
             out["message"] = "MCP is switched off in this deployment: the agent reads statistics directly from the local table."
             return out
         out["recent_calls"] = [{k: v for k, v in c.items() if k != "session"} for c in list(backend.calls) if c.get("session") == sid][-20:]  # this visitor's lookups only
-        out["used_by_agent"] = [TOOL_NAME]
+        routed = getattr(app.state.shared, "mcp_routed", ()) or ()  # what this process really routes over MCP besides get_series (set by make_shared)
+        agent_map = {TOOL_NAME: "get_series", **{t: t for t in ("search_reports", "calculate_change") if t in routed}}  # the base tool set; v2's text calculation is not offered by the app
+        used = list(agent_map)
+        out["used_by_agent"] = used
         out["agent_tool_name"] = "get_series"
-        out["not_given_to_agent"] = [t for t in ALL_TOOLS if t != TOOL_NAME]
+        out["agent_tools"] = agent_map  # MCP tool name -> the agent tool that calls it
+        out["not_given_to_agent"] = [t for t in (*ALL_TOOLS, *(AGENT_TOOLS if routed else ())) if t not in used]
         out["examples"] = [{"id": k, "label": v["label"], "tool": v["tool"], "arguments": v["arguments"]} for k, v in MCP_EXAMPLES.items()]
         out["connected"] = backend.client is not None
         if not out["connected"]:
@@ -566,7 +587,7 @@ def create_app(settings: Settings | None = None, runner=None, shared_factory=Non
             return out
         out.update(found)
         for tool in out["tools"]:
-            tool["used_by_agent"] = tool["name"] == TOOL_NAME
+            tool["used_by_agent"] = tool["name"] in used
         return redact_values(out, list(cfg.access_codes) + [cfg.session_secret])
 
     @app.post("/api/mcp/try")

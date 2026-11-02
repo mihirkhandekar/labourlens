@@ -264,10 +264,11 @@ def build_graph(shared: Shared, tools: Tools, cfg: AgentConfig):
             if ops_err:
                 ops += 1
                 errors.append(f"{call['tool']}: operational failure, tool unavailable")
-                events += _ev("execute_tool", "operational_failure", tool=call["tool"], args=args, error=ops_err, seconds=dt)
+                events += _ev("execute_tool", "operational_failure", tool=call["tool"], args=args, error=ops_err, seconds=dt,
+                              **({"transport": "mcp"} if tools.routed(call["tool"]) else {}))
             elif res.ok:
                 events += _ev("execute_tool", "ok", tool=call["tool"], args=args, result=res.message[:300], new_items=[i.label for i in res.items], seconds=dt,
-                              **({"transport": "mcp"} if call["tool"] == "get_series" and getattr(shared, "stats_backend", None) is not None else {}),
+                              **({"transport": res.transport} if res.transport else {}),
                               **res.retrieval_trace)
                 for key, value in res.usage.items():
                     usage[key] = usage.get(key, 0) + value
@@ -275,7 +276,8 @@ def build_graph(shared: Shared, tools: Tools, cfg: AgentConfig):
                     usage["rerank_cost_usd"] = round(usage.get("rerank_cost_usd", 0) + res.usage["cost_usd"], 6)
             else:
                 errors.append(f"{call['tool']}({args}): {res.error_kind}: {res.message}")
-                events += _ev("execute_tool", "error", tool=call["tool"], args=args, error_kind=res.error_kind, message=res.message[:300], seconds=dt)
+                events += _ev("execute_tool", "error", tool=call["tool"], args=args, error_kind=res.error_kind, message=res.message[:300], seconds=dt,
+                              **({"transport": res.transport} if res.transport else {}))
                 if cfg.tool_set == "v2" and is_unknown_dimension(res) and not s.get("bonus_rounds"):
                     bonus = BONUS_ROUNDS
                     events += _ev("execute_tool", "bonus_round_granted", reason="unknown_dimension", rounds_allowed=MAX_ROUNDS + bonus)

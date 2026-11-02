@@ -180,8 +180,24 @@ class DenseIndex:
         self.cfg, self.chunk_ids = cfg, [c.chunk_id for c in chunks]
         self.matrix = embed(cfg.model, [embed_text(c, cfg.header) for c in chunks], purpose="chunks")
 
+    @classmethod
+    def from_cache(cls, chunks: list[Chunk], cfg: DenseConfig) -> "DenseIndex":
+        """The same matrix as the constructor, built from the vector cache only. Never calls the embeddings API and never needs a key:
+        a chunk without a cached vector is an error. Used by the MCP server, which has no secrets."""
+        cache = VectorCache(cfg.model)
+        rows = [cache.get(_h(cfg.model, embed_text(c, cfg.header))) for c in chunks]
+        missing = sum(1 for r in rows if r is None)
+        if missing:
+            raise EmbeddingError(f"embedding cache incomplete: {missing} of {len(chunks)} chunks have no cached vector (this loader never embeds)")
+        self = cls.__new__(cls)
+        self.cfg, self.chunk_ids, self.matrix = cfg, [c.chunk_id for c in chunks], np.vstack(rows)
+        return self
+
     def search(self, query: str, k: int = 10) -> list[tuple[str, float]]:
-        q = embed(self.cfg.model, [query], purpose="queries")[0]
+        return self.search_vector(embed(self.cfg.model, [query], purpose="queries")[0], k)
+
+    def search_vector(self, q: np.ndarray, k: int = 10) -> list[tuple[str, float]]:
+        """Rank chunks for an already embedded (L2-normalised float32) query vector."""
         s = self.matrix @ q
         top = np.argsort(-s)[:k]
         return [(self.chunk_ids[int(i)], float(s[i])) for i in top]
@@ -202,6 +218,9 @@ class HybridIndex:
 
     def search(self, query: str, k: int = 10) -> list[tuple[str, float]]:
         return rrf([self.bm25.search(query, self.depth), self.dense.search(query, self.depth)], k, self.c)
+
+    def search_vector(self, query: str, q: np.ndarray, k: int = 10) -> list[tuple[str, float]]:
+        return rrf([self.bm25.search(query, self.depth), self.dense.search_vector(q, self.depth)], k, self.c)
 
 
 def usage_totals(model: str) -> dict:

@@ -27,6 +27,7 @@ class RecordingBackend:
         self.backend = backend
         self.records = []
         self.unlogged_failures = []
+        self.tool_records = []
 
     def __getattr__(self, name):
         return getattr(self.backend, name)
@@ -53,6 +54,32 @@ class RecordingBackend:
         finally:
             self.records.append(record)
 
+    def invoke(self, tool, **args):
+        """Record one agent-tool call (search_reports, calculate_change, calculate_from_text_values) on the MCP backend: what was asked
+        (the query vector is left out) and a compact, comparable summary of what came back."""
+        from labourlens.mcp.client import _loggable
+
+        record = {"tool": tool, "arguments": _loggable(args), "ok": None, "error": None, "summary": None}
+        attempts = getattr(self.backend, "calls", None)
+        previous = attempts[-1] if attempts else None
+        try:
+            reply, error = self.backend.invoke(tool, **args)
+            record["ok"], record["error"] = error is None, error.error_kind if error is not None else None
+            if reply is not None:
+                r = reply.result
+                record["summary"] = ({"chunk_ids": [c.chunk_id for c in r.chunks], "passage_ids": [p.passage_id for p in r.passages],
+                                      "quarantined": reply.quarantined} if tool == "search_reports"
+                                     else {"value": r.value, "unit": r.unit, "formula": r.formula})
+            return reply, error
+        except Exception as exc:
+            record["ok"], record["error"] = False, type(exc).__name__
+            if attempts is not None and (attempts[-1] if attempts else None) is previous:
+                self.unlogged_failures.append({"tool": tool, "arguments": record["arguments"], "ok": False, "kind": type(exc).__name__,
+                                               "unlogged_backend_failure": True})
+            raise
+        finally:
+            self.tool_records.append(record)
+
 
 def evaluate_case(case, shared, config, *, route="mcp", web_steps=True):
     steps = {s: {"seconds": 0.0, "cost_usd": 0.0, "executed": False} for s in STEPS}
@@ -60,12 +87,14 @@ def evaluate_case(case, shared, config, *, route="mcp", web_steps=True):
     def observe(step, info):
         steps[step] = {**info, "executed": True}
 
-    recorder = shared.stats_backend if route == "mcp" else shared.stats
+    mcp = route in ("mcp", "mcp-all")  # the statistics (and for mcp-all every tool) go through the MCP backend
+    recorder = shared.stats_backend if mcp else shared.stats
     if isinstance(recorder, RecordingBackend):
         recorder.records.clear()
+        recorder.tool_records.clear()
         recorder.unlogged_failures.clear()
     backend = getattr(shared, "stats_backend", None)
-    if route == "mcp":
+    if mcp:
         backend.calls.clear()
     runner = make_runner(config, web_steps=web_steps, save_trace=False, observer=observe)
     start = time.perf_counter()
@@ -77,14 +106,15 @@ def evaluate_case(case, shared, config, *, route="mcp", web_steps=True):
     result["question"] = case["question"]
     result["config"] = config.key()
     result["seconds"] = round(time.perf_counter() - start, 6)
-    calls = list(backend.calls) if route == "mcp" else []
-    if route == "mcp" and isinstance(recorder, RecordingBackend):
+    calls = list(backend.calls) if mcp else []
+    if mcp and isinstance(recorder, RecordingBackend):
         calls.extend(recorder.unlogged_failures)
     diverted = any(steps[s].get("diverted", False) for s in ("smalltalk", "triage"))
     result["served"] = {"route": route, "web_steps": web_steps, "steps": steps, "diverted": diverted,
                         "agent_called": steps["agent"]["executed"], "mcp_calls": len(calls),
                         "mcp_errors": sum(not c["ok"] for c in calls), "mcp_attempts": calls,
-                        "statistics_calls": list(recorder.records) if isinstance(recorder, RecordingBackend) else []}
+                        "statistics_calls": list(recorder.records) if isinstance(recorder, RecordingBackend) else [],
+                        **({"tool_calls": list(recorder.tool_records)} if route == "mcp-all" and isinstance(recorder, RecordingBackend) else {})}
     return result
 
 
@@ -138,9 +168,28 @@ def select_cases(cases, limit=None, case_ids=None):
     return cases
 
 
-def run(split="dev", gold_path=None, pairs=None, tag=None, retrieval="r3", route="mcp", web_steps="on", limit=None, case_ids=None):
+ROUTES = {"mcp": "mcp_stats", "direct": "direct", "mcp-all": "mcp_all"}  # served-exp route -> agent.served transport
+REFERENCE_ARM = "served-dev-S65-mcp-on"  # an existing arm whose measured cost per case anchors the --dry-run estimate
+
+
+def estimate_cost(labels, n_cases: int, reference: str = REFERENCE_ARM) -> dict:
+    """Dry-run cost estimate: n_cases times the measured cost per case of the same model in an existing arm (provider usage priced from
+    specs/prices.yaml), or None when that arm is not on disk. A forecast from a different arm, not a measurement of this one."""
+    out = {}
+    for label in labels:
+        f = paths.EXPERIMENTS / "runs" / reference / f"{label}.metrics.json"
+        per_case = json.loads(f.read_text())["metrics"]["all"]["cost_per_case_usd"] if f.exists() else None
+        out[label] = {"reference": reference, "cost_per_case_usd": per_case, "estimate_usd": None if per_case is None else round(per_case * n_cases, 4)}
+    known = [v["estimate_usd"] for v in out.values() if v["estimate_usd"] is not None]
+    out["total_estimate_usd"] = round(sum(known), 4) if len(known) == len(labels) else None
+    return out
+
+
+def run(split="dev", gold_path=None, pairs=None, tag=None, retrieval="r3", route="mcp", web_steps="on", limit=None, case_ids=None, dry_run=False):
     if not tag or not re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9._-]*", tag):
         raise ValueError("--tag must be a new path-safe experiment label")
+    if route not in ROUTES:
+        raise ValueError(f"--route must be one of {sorted(ROUTES)}")
     labels = pairs or list(agx.MODEL_PAIRS)
     if len(set(labels)) != len(labels) or any(label not in agx.MODEL_PAIRS for label in labels):
         raise ValueError("--pairs must contain distinct agent-exp model labels")
@@ -153,13 +202,24 @@ def run(split="dev", gold_path=None, pairs=None, tag=None, retrieval="r3", route
     today = str(singapore_today())
     if any(c.get("fixture_date", today) != today for c in cases):
         raise ValueError("Registered probes have a different Singapore date; use a newly registered fixture")
+    transport = ROUTES[route]
+    if dry_run:  # no directory, no MCP server, no model, no embedding call: validation and a printed plan only
+        plan = {"dry_run": True, "experiment": exp, "route": route, "tool_transport": transport, "retrieval": retrieval, "web_steps": web_steps,
+                "models": {label: dict(zip(("planner", "answer"), agx.MODEL_PAIRS[label])) for label in labels}, "cases": len(cases),
+                "families": {f: sum(c.get("family") == f for c in cases) for f in sorted({c.get("family") for c in cases if c.get("family")})},
+                "probes": sum(bool(c.get("not_part_of_gold")) for c in cases), "outputs": [str(pub), str(raw)],
+                "paid_calls_per_case": "smalltalk (no model), contextualise, triage, planner x1-3, rerank x1 per search, answer x1-2; query embedding only for uncached queries",
+                "cost_estimate": estimate_cost(labels, len(cases)),
+                "price_table": str(paths.SPECS / "prices.yaml")}
+        print(json.dumps(plan, indent=2), flush=True)
+        return plan
     pub.mkdir(parents=True, exist_ok=False)  # reserve id before startup or paid calls
     raw.mkdir(parents=True, exist_ok=False)
     started = time.perf_counter()
-    shared = make_shared(route == "mcp")
+    shared = make_shared(transport)
     startup = time.perf_counter() - started
     backend = getattr(shared, "stats_backend", None)
-    if route == "mcp":
+    if route != "direct":
         shared.stats_backend = RecordingBackend(backend)
     else:
         shared.stats = RecordingBackend(shared.stats)
@@ -168,7 +228,7 @@ def run(split="dev", gold_path=None, pairs=None, tag=None, retrieval="r3", route
             pm, am = agx.MODEL_PAIRS[label]
             cfg = AgentConfig(planner_model=pm, answer_model=am, retrieval=retrieval, run_deadline_s=80.0)
             provenance = {**snapshot(cfg.key(), len(cases), len(available), gold_path=gold_path), "sampling": sampling_block(cfg),
-                          "served": {"route": route, "web_steps": web_steps, "order": list(STEPS), "singapore_date": today,
+                          "served": {"route": route, "tool_transport": transport, "web_steps": web_steps, "order": list(STEPS), "singapore_date": today,
                                      "shared_startup_seconds": startup, "case_ids": [c["case_id"] for c in cases],
                                      "contextualise_model": "gpt-6-luna", "triage_model": "gpt-6-luna",
                                      "contextualise_prompt_sha256": file_hash(paths.ROOT / "prompts/contextualise_v1.md"),

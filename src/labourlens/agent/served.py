@@ -1,22 +1,47 @@
-"""The web and experiment entry point share orchestration and statistics transport."""
+"""The web and experiment entry point share orchestration and tool transport."""
 from __future__ import annotations
 
 import logging
 import time
 
+# How the agent's tools reach their data (D-066):
+#   direct     all three tools run in this process (the evaluated configuration of every frozen experiment);
+#   mcp_stats  only get_series goes over MCP (D-053), to the plain `labourlens-stats` server;
+#   mcp_all    get_series, search_reports and calculate_change (and calculate_from_text_values) go over MCP, to the same server
+#              started with --agent-tools. The live app default.
+TRANSPORTS = ("direct", "mcp_stats", "mcp_all")
+DEFAULT_TRANSPORT = "mcp_all"
+AGENT_SERVER = "labourlens-stats-agent"
+MCP_ALL_ROUTED = frozenset({"search_reports", "calculate_change", "calculate_from_text_values"})
 
-def make_shared(mcp_enabled=True):
+
+def make_shared(transport: str = DEFAULT_TRANSPORT):
+    """Shared read-only state for one process. `transport` is one of TRANSPORTS.
+
+    mcp_all does not load the report corpus here: the MCP server holds the passages, the index and the vectors, so this process keeps the
+    observations table (the planner schema and unknown-dimension help read it), the API key and the query embedding. A server that is not
+    reachable at startup is logged and retried by the first tool call; it never switches the agent to the in-process tools."""
     from labourlens.agent.tools import Shared
 
-    sh = Shared()
-    if mcp_enabled:
-        from labourlens.mcp.client import SyncStatsBackend
+    if transport not in TRANSPORTS:
+        raise ValueError(f"transport must be one of {TRANSPORTS}")
+    if transport == "direct":
+        return Shared()
+    from labourlens.mcp.client import SyncStatsBackend
 
-        sh.stats_backend = backend = SyncStatsBackend()
-        try:
-            backend._run(backend._connect(), 30)
-        except Exception as e:  # query reconnects once; persistent faults become tool failures
-            logging.getLogger(__name__).warning("MCP statistics server not reachable at startup: %s", type(e).__name__)
+    all_tools = transport == "mcp_all"
+    sh = Shared(world=(None, {}, {})) if all_tools else Shared()
+    sh.tool_transport = transport
+    sh.stats_backend = backend = SyncStatsBackend(AGENT_SERVER if all_tools else "labourlens-stats")
+    if all_tools:
+        sh.mcp_routed = MCP_ALL_ROUTED
+        sh.corpus = None  # the server owns the corpus; filled in below once it answers
+    try:
+        backend._run(backend._connect(), backend.connect_timeout_s + 10)  # query reconnects once; persistent faults become tool failures
+        if all_tools:
+            sh.corpus = backend.call_tool("describe_corpus").result.corpus.model_dump()
+    except Exception as e:
+        logging.getLogger(__name__).warning("MCP server not reachable at startup: %s", type(e).__name__)
     return sh
 
 
