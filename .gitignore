@@ -42,3 +42,12 @@ data/snapshots/value_added_per_worker_quarterly/
 data/snapshots/avg_weekly_paid_hours_quarterly/
 
 artifacts/screenshots/
+
+# Formerly public working materials; copies retained under private/docs-local/
+docs/archive/
+docs/process/repository-audit.md
+docs/submission-audit.md
+docs/fresh-clone-check.md
+docs/human-review/OWNER-REVIEW-GUIDE.md
+docs/human-review/numbers-audit.md
+docs/demo-script.md

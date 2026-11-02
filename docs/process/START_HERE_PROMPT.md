@@ -1,4 +1,6 @@
 > **Historical process record (30 Oct 2026).** The kick-off prompt given to the coding agent at the start of the project. Status statements in it describe that date. Current state: [`docs/progress.md`](../progress.md).
+>
+> Packaging note (2 Nov 2026): the planning documents named below are kept locally, not in the repository. Their path mentions are historical plain text, not public links.
 
 # Kickoff prompt for Claude Code — LabourLens (copy everything below this line)
 

@@ -1213,3 +1213,44 @@ th[aria-sort="descending"] .pr-sort::after { content: " \2193"; }
 .deck-slide .owner-mcp .owner-mcp-tool { min-height: 64px; padding-top: 10px; padding-bottom: 10px; }
 .tm-models.is-two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 .fc-cols.is-two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+
+/* Explain the two stores and the three question sets without card stacks. */
+.ex-stores { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 88px; align-content: center; height: 100%; }
+.ex-store { display: grid; gap: 24px; align-content: start; border-top: 4px solid var(--accent); padding-top: 24px; min-width: 0; }
+.ex-store:last-child { border-top-color: var(--c3); }
+.ex-store h3, .ex-set h3 { font-size: 38px; line-height: 1.15; font-weight: 600; }
+.ex-store-count { font-size: 28px; color: var(--ink-2); }
+.ex-store-path { display: grid; gap: 0; }
+.ex-store-step { display: grid; gap: 10px; padding: 26px 0; border-top: 1px solid var(--line-strong); }
+.ex-store-step strong { font-size: 34px; font-weight: 600; }
+.ex-store-step > span:not(.deck-tip) { font-size: 27px; color: var(--ink-2); }
+.ex-store-tool { border-top: 2px solid var(--line-strong); padding-top: 22px; color: var(--accent); font-size: 27px; width: fit-content; }
+.ex-store:last-child .ex-store-tool { color: var(--c3); }
+.ex-sets { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 56px; align-content: center; height: 100%; }
+.ex-set { display: grid; grid-template-rows: auto auto 1fr 1fr; gap: 28px; border-top: 4px solid var(--accent); padding-top: 24px; min-width: 0; }
+.ex-set-count { font-size: 94px; line-height: 1; font-weight: 600; letter-spacing: -0.04em; }
+.ex-set-job { font-size: 31px; line-height: 1.3; min-height: 88px; }
+.ex-set-limit { border-top: 1px solid var(--line-strong); padding-top: 24px; color: var(--warn); font-size: 28px; line-height: 1.3; min-height: 100px; }
+.ex-tuning { color: var(--accent); font-size: 26px; text-decoration: underline dotted; text-underline-offset: 6px; width: fit-content; margin-top: 18px; }
+.ex-tools { display: grid; font-size: 23px; line-height: 1.25; }
+.ex-tools-row { display: grid; grid-template-columns: 1.1fr 1.35fr 0.8fr 1.25fr; gap: 24px; padding: 14px 0; border-top: 1px solid var(--line-strong); }
+.ex-tools-row.is-head { color: var(--muted); font-size: 20px; padding-top: 10px; padding-bottom: 10px; }
+.ex-tools-row:not(.is-head) > :first-child { color: var(--accent); font-weight: 600; }
+.owner-agent:has(.ex-tools) .owner-agent-svg { max-height: 400px; }
+.owner-agent:has(.ex-tools) .owner-agent-bounds { padding: 8px 0; font-size: 21px; }
+.owner-agent:has(.ex-tools) .owner-agent-title { font-size: 27px; }
+.owner-agent:has(.ex-tools) .owner-agent-sub { font-size: 23px; }
+.ex-stores .deck-tip, .ex-sets .deck-tip, .ex-tools .deck-tip { max-width: 640px; font-size: 23px; }
+.ex-store:last-child .deck-tip, .ex-set:last-child .deck-tip { left: auto; right: 0; }
+.ex-tuning.has-tip > .deck-tip { left: 0; right: auto; }
+@media (max-width: 800px) {
+  .ex-stores, .ex-sets { grid-template-columns: 1fr; gap: 32px; }
+  .ex-store h3, .ex-set h3 { font-size: 24px; }
+  .ex-store-count, .ex-store-tool, .ex-store-step > span:not(.deck-tip), .ex-set-job, .ex-set-limit, .ex-tuning { font-size: 18px; min-height: 0; }
+  .ex-store-step strong { font-size: 22px; }
+  .ex-set-count { font-size: 54px; }
+  .ex-tools { font-size: 14px; }
+  .ex-tools-row { grid-template-columns: 1fr 1.2fr; gap: 12px; }
+  .ex-tools-row.is-head { display: none; }
+  .ex-stores .deck-tip, .ex-sets .deck-tip, .ex-tools .deck-tip { font-size: 16px; }
+}

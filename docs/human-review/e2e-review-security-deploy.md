@@ -77,7 +77,7 @@ Report of the security, privacy and deployment area of the end-to-end review (31
 
 ## Limits
 
-- Git history was not searched. The repository-wide secret search is recorded separately in [`docs/process/repository-audit.md`](../process/repository-audit.md).
+- Git history was not searched. The repository-wide secret search is recorded separately in `docs/process/repository-audit.md` (kept locally, not in the repository).
 - The reviewer's search of `.git/index` for `.env` could not tell `.env` from `.env.example`, so it is inconclusive; the later history check found `.env` was never tracked.
 - A search by the reviewer displayed the contents of the local, untracked `.env` in its own session output. Nothing was committed. The key should be rotated if that transcript is retained, and the server should use its own restricted key, as `docs/deploy.md` advises.
 - Not checked, because they need the provider control panels: the DigitalOcean firewall, the GitHub `production` environment rules and the OpenAI project spend cap.

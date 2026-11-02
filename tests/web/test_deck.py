@@ -117,9 +117,9 @@ def test_every_slide_has_a_heading_and_speaker_notes():
     assert "el('aside', 'notes')" in builder and "if (!notes.children.length) notes.append(" in builder
     main = _slides_main_section()
     specs = re.findall(r"\badd\(\{", main)
-    assert len(specs) == 28, len(specs)
+    assert len(specs) == 30, len(specs)
     total = len(re.findall(r"\badd\(\{", (STATIC / "presentation" / "slides.js").read_text()))
-    assert total == 42  # 28 main slides, appendix index, and references A to M
+    assert total == 44  # 30 main slides, appendix index, and references A to M
     for block in re.split(r"\badd\(\{", main)[1:]:
         assert "notes:" in block, block[:100]
         assert "title:" in block, block[:100]
@@ -145,8 +145,8 @@ def test_no_bridge_sentences_or_pills_on_faces():
 
 
 REQUIRED_TITLES = [
-    "Assignment", "My project", "Agentic system", "Choosing the data", "Data findings", "Retrenchments rose, data gives no cause", "Advance and final figures differ", "Challenges with the data", "Success criteria and failure modes",
-    "Reading reports", "Retrieval Strategies", "Does filtering help?", "Agent loop", "Choosing models", "MCP server", "GenAI concepts in this build", "Ensuring Reliable Sources", "Agent Workbench",
+    "Assignment", "My project", "Agentic system", "Choosing the data", "Data findings", "Retrenchments rose, data gives no cause", "Advance and final figures differ", "Two kinds of evidence", "Challenges with the data", "Success criteria and failure modes",
+    "Reading reports", "Retrieval Strategies", "Does filtering help?", "Agent loop", "Choosing models", "MCP server", "GenAI concepts in this build", "Ensuring Reliable Sources", "Agent Workbench", "How the question sets work",
     "How I measured", "Human Review of Dataset", "Experiment ladder", "Why it missed", "Fixing the calculation gap", "Attacks and defences", "Planted wrong figure", "How I built it", "Summary",
 ]
 
@@ -161,7 +161,7 @@ def test_main_deck_follows_the_navigation_flow_and_has_short_plain_titles():
     main = _slides_main_section()
     defined = set(re.findall(r"\btitle: '([^']+)'", main))
     rows = _flow_rows()
-    assert len(rows) == 28
+    assert len(rows) == 30
     assert [r[0] for r in rows[1:]] == REQUIRED_TITLES
     for title, _, _ in rows:
         assert title in defined or "Singapore AI Agent" in title, title
@@ -174,7 +174,7 @@ def test_main_deck_follows_the_navigation_flow_and_has_short_plain_titles():
     assert "['Sources', 'Processing', 'Retrieval', 'Agent', 'Answer', 'Checks']" in (STATIC / "presentation" / "deck.js").read_text()
     for title in [r[0] for r in rows][1:]:
         assert len(title.split()) <= 9, title
-    assert len(re.findall(r"\badd\(\{", main)) == 28
+    assert len(re.findall(r"\badd\(\{", main)) == 30
 
 
 def test_removed_slides_stay_removed_and_summary_keeps_limitations():
@@ -265,7 +265,7 @@ def test_method_detail_is_in_popovers_and_notes_not_in_boxes():
     assert ".has-tip:focus" in css and ".deck-tip" in css
     for needle in ("k1=1.5, b=0.75", "text-embedding-3-large", "reciprocal rank fusion, c=60", "ranks the top 30 and returns up to 10"):
         assert needle in main or needle in graphics, needle
-    assert "Hybrid baseline: 53.9% hit@8" in main and "same 128 development questions as the previous slide" in main
+    assert "Hybrid baseline: 53.9% hit@8" in main and "Same 128 report-answerable development questions" in main
 
 
 def test_title_slide_has_no_graphic_and_structure_labels_are_plain():
@@ -398,7 +398,7 @@ def test_every_graphic_used_by_the_slides_and_report_is_imported():
     exported = set(re.findall(r"export (?:function|const) (\w+)", graphics))
     for path in (STATIC / "presentation" / "slides.js", STATIC / "js" / "report-story.js"):
         text = path.read_text()
-        imported = set(re.findall(r"[\w$]+", re.search(r"import \{([^}]*)\} from '[./]*(?:presentation/)?graphics\.js'", text).group(1)))
+        imported = {name for names in re.findall(r"import \{([^}]*)\} from '[./]*(?:presentation/)?graphics\.js'", text) for name in re.findall(r"[\w$]+", names)}
         body = re.sub(r"import \{[^}]*\} from [^\n]*", "", text)
         used = {name for name in exported if re.search(rf"(?<![\w.]){name}\(", body) or re.search(rf"safe\([^)]*, {name}\)", body)}
         assert used <= imported, (path.name, sorted(used - imported))
@@ -474,3 +474,57 @@ def test_report_processing_path_matches_the_runtime_and_discloses_table_limits()
     assert "does not turn this report table into a trusted row chunk" in block
     assert "no publisher or observation-period field" in block
     assert "visual: flattening(m)" in (STATIC / "presentation" / "slides.js").read_text(encoding="utf-8")
+
+
+def _graphics_block(graphics, start, end):
+    return graphics.split(start, 1)[1].split(end, 1)[0]
+
+
+def test_evidence_stores_keeps_statistics_free_of_chunks_and_sources_report_counts_from_corpus():
+    graphics = (STATIC / "presentation" / "graphics.js").read_text(encoding="utf-8")
+    block = _graphics_block(graphics, "export function evidenceStores(m)", "export function questionSets(m)")
+    assert "serving').corpus" in block, "report counts must read the serving.corpus section, not hard-coded numbers"
+    assert "No chunking or embeddings" in block, "the statistics lane must state there is no chunk/embedding path"
+    assert "corpus.quality_flags?.all_after?.table_unreliable" in block and "table_unreliable" in block
+    assert "source.observations" in block and "source.by_type?.dataset_csv" in block
+    assert "get_series → MCP → get_statistic" in block and "search_reports → passages" in block
+
+
+def test_question_sets_show_three_equal_sets_with_known_evidence_limits():
+    graphics = (STATIC / "presentation" / "graphics.js").read_text(encoding="utf-8")
+    block = _graphics_block(graphics, "export function questionSets(m)", "export function retrievalTuning()")
+    assert "finalEvaluation?.splits" in block, "set counts must come from the final evaluation, not literals"
+    assert "sets.find(s => s.id === id)?.n" in block
+    css = (STATIC / "css" / "presentation.css").read_text(encoding="utf-8")
+    assert ".ex-sets { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr))" in css
+    for title in ("'Development'", "'Original test'", "'Fresh questions'"):
+        assert title in block, title
+    assert "25 of 31 share development evidence" in block
+    assert "six newer sources" in block
+
+
+def test_tool_legend_lists_the_three_tools_with_inputs_outputs_where_and_why():
+    graphics = (STATIC / "presentation" / "graphics.js").read_text(encoding="utf-8")
+    block = _graphics_block(graphics, "export function toolLegend()", "export function buildTimeline(m)")
+    assert "['Tool', 'Input → output', 'Runs in', 'Why']" in block
+    for tool in ("search_reports", "get_series", "calculate_change"):
+        assert f"['{tool}'," in block, tool
+    for exchange in ("Question → passages", "Series + period → rows", "Two returned rows → change"):
+        assert exchange in block, exchange
+    for where in ("'App'", "'MCP server'", "'App, plain code'"):
+        assert where in block, where
+    assert "not proof of equivalence" in block and "the base tool does not calculate from report-only figures" in block
+
+
+def test_retrieval_tuning_states_fixed_numbers_and_advance_constant():
+    graphics = (STATIC / "presentation" / "graphics.js").read_text(encoding="utf-8")
+    block = _graphics_block(graphics, "export function retrievalTuning()", "export function toolLegend()")
+    for needle in ("200 words, 40-word overlap", "pool of 30", "60 was fixed in advance, not searched", "I chose chunk size and overlap"):
+        assert needle in block, needle
+
+
+def test_report_numeric_contract_pins_total_and_in_scope_observations():
+    report = json.loads((STATIC / "data" / "report.json").read_text(encoding="utf-8"))
+    metrics = report["sources"]["metrics"]
+    assert metrics["observations"] == 52020 and metrics["in_scope_observations"] == 4300, metrics
+    assert metrics["by_type"]["dataset_csv"] == 36

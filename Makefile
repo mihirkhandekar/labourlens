@@ -4,7 +4,7 @@
 UV ?= uv
 RIGHTS_FLAGS ?=
 
-.PHONY: help setup lint format test test-corpus rights-scan secrets-scan docs-check report serve verify clean
+.PHONY: help setup lint format test test-corpus notebooks rights-scan secrets-scan docs-check report serve verify clean
 
 help:
 	@echo "setup         install the locked dependencies (uv sync --frozen)"
@@ -12,6 +12,7 @@ help:
 	@echo "format        apply ruff's safe automatic fixes for those rules; no code formatter is enforced"
 	@echo "test          pytest without the corpus-marked tests (offline, no API key)"
 	@echo "test-corpus   the corpus-marked tests; needs the private local corpus"
+	@echo "notebooks     execute and save offline walkthroughs using optional Jupyter packages (no API key or private corpus)"
 	@echo "rights-scan   quote check against local MOM/MTI text; prints NOT CHECKED without it (RIGHTS_FLAGS=--require-corpus to fail instead)"
 	@echo "secrets-scan  tracked-file leak guard, plus gitleaks over history when installed"
 	@echo "docs-check    relative links and heading anchors in the tracked Markdown files"
@@ -34,6 +35,9 @@ test:
 
 test-corpus:
 	$(UV) run pytest -q -p no:cacheprovider -m corpus
+
+notebooks:
+	$(UV) run --with jupyter --with nbconvert jupyter nbconvert --to notebook --execute --inplace --ExecutePreprocessor.timeout=180 notebooks/01_data_and_eda.ipynb notebooks/02_evaluation_walkthrough.ipynb
 
 rights-scan:
 	$(UV) run labourlens rights-scan $(RIGHTS_FLAGS)

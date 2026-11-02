@@ -5,6 +5,7 @@
 import {fmt, finite} from '../charts.js';
 import {model, metricOf, contextSentence} from '../presentation/model.js';
 import {assignmentBrief, excerptTable, myProject, architectureDiagram, twoSources, buildTimeline, flattening, hardParts, challengeGrid, costBars, retrievalStaircase, keywordVsMeaning, agentLoop, experimentStaircase, freshQuestions, errorBars, toolFixBars, evidenceTrace, mcpMap, conceptGrid, plantedFlow, reviewStreams, measureCards, workbenchShot, cardRow, modelChoice, threatMatrix, failureModes, HYPOTHESES, RESPONSIBLE_AI, contentMetricsText, finalComparison, finalSentence, finalCostFacts, provenanceTable, secondJudgeSentence, SUPPORT_LABEL} from '../presentation/graphics.js';
+import {evidenceStores, questionSets} from '../presentation/graphics.js';
 import {dataTable} from '../presentation/ui.js';
 import {el, band, stage, chartBox, sub, more, group, rows, statRow, table, commands, link, note} from './report-kit.js';
 import {cta} from './dom.js';
@@ -113,6 +114,7 @@ export function buildBands(report) {
     lede: ['The structured records are quarterly statistical observations from official datasets, including unemployment, vacancies, retrenchments and employment changes. The unstructured sources are MOM labour market reports and release pages. Reports add context and definitions; dataset observations supply answerable numbers. The statistics are fetched from data.gov.sg as immutable snapshots with hashes, normalised into one Parquet table with provenance on every row, and read with pandas. The reports are extracted into passages with page and section, merged into chunks of about 200 words, and indexed with BM25 and text-embedding-3-large vectors cached by content. MOM report PDFs and raw MOM and MTI files stay on my machine because their notices restrict reproduction. Each corpus build is identified so results remain tied to the data version used.']
   });
   data.visual.append(stage(safe('Sources', () => twoSources(m))));
+  data.visual.append(sub('Two kinds of evidence', 'The statistics store is not embedded or chunked. Reports use a separate text index. Hover or focus a step for coverage, quality flags and tool access.', stage(safe('Two kinds of evidence', () => evidenceStores(m)))));
   bands.data = data;
 
   // ---------- hard parts ----------
@@ -184,6 +186,7 @@ export function buildBands(report) {
   const fc = finalCostFacts(m);
   const hasSecondJudge = Boolean(pool.take('evaluation', '.sj')); // the graphic itself is drawn once, with the measures in the review band
   agent.visual.append(
+    sub('How the question sets work', 'I use development questions to choose settings, an original test frozen before registered runs, and fresh questions written blind on six newer sources. Each has a different weakness.', stage(safe('Question-set jobs and limits', () => questionSets(m)))),
     sub('Final system, hybrid against filter then rerank', `${finalSentence(m)} Filter then rerank gains a modest, consistent amount on the development questions, which shaped the design, and reduces over-abstention. It shows no gain on the 31 registered held-out questions and a small loss for gpt-6-luna on the 65 fresh questions, with no demonstrated gain.${fc ? ` It costs ${fc.costRatio.toFixed(1)} times as much per question and takes ${fc.latRatio.toFixed(1)} times as long.` : ''} Both development runs agree on direction for both models, but two runs are not a variance estimate. The earlier 90.3% uses earlier build and gold, not comparable to the final run. The web-only steps and the MCP route were not in these runs, and retrieval hit rates were re-run on corpus v3.1 (128 development text cases).`, stage(safe('Final comparison', () => finalComparison(m)), {design: 1500})),
     group('Provenance table', safe('Provenance table', () => provenanceTable(m))),
     sub('Bounded agent loop', 'The planner chooses among three tools during the loop: search_reports returns report chunks, get_series returns statistics rows, and calculate_change computes exact differences in code. Report search uses BM25 and embeddings with period/release filtering and reranking. Only the live get_series path crosses the MCP client/server; it sends a source, period range and dimension to get_statistic and receives validated rows. Retrieval does not happen before the agent.', stage(safe('Agent loop', agentLoop))),
@@ -343,15 +346,15 @@ export function buildBands(report) {
     ['Written contract', 'A standing instruction that sets the order explore, compare, recommend, discuss, approve, implement, verify, document, with two to four options, a plain baseline and one recommendation at each decision.', 'CLAUDE.md'],
     ['Milestone gates', 'Ingestion was approved by name before any code, and each later phase needed approval. Domain, scope and a single bounded agent were fixed in two architecture decision records.', 'docs/decisions.md, docs/decisions/'],
     ['Decision log', `${finite(nDecisions) ? nDecisions : 'Many'} entries with date, alternatives, why, who approved and how reversible. An entry with no approver recorded is labelled an assistant decision within the protocol.`, 'docs/decisions.md'],
-    ['State in files', 'Progress, decisions and handoff notes are updated at each step, so an interrupted agent can resume.', 'docs/progress.md, docs/agent-logs.md'],
+    ['State in files', 'Progress, decisions and handoff notes are updated at each step, so an interrupted agent can resume. Detailed working notes are now kept locally.', 'docs/progress.md, docs/ai-assisted-development.md'],
     ['Independent reviews', 'Blind AI reviewers checked the gold labels, the saved answers and the extracted sources. Five AI reviewers then traced the whole flow end to end: 75 findings across data, runtime, evaluation, security and deployment, and deliverables. Each was checked before a fix; some were narrowed, deferred with a reason or left to me.', 'docs/human-review/e2e-review-summary.md'],
-    ['Pre-registration and frozen results', 'The fresh-question rule, code and data hashes were signed before the run. Experiment runs refuse to overwrite without a flag, and scoring refuses a gold file whose hash differs from the one recorded with the run.', 'experiments/heldout-v2/FREEZE.md, docs/agent-logs.md'],
+    ['Pre-registration and frozen results', 'The fresh-question rule, code and data hashes were signed before the run. Experiment runs refuse to overwrite without a flag, and scoring refuses a gold file whose hash differs from the one recorded with the run.', 'experiments/heldout-v2/FREEZE.md, docs/ai-assisted-development.md'],
     ['New ids for later work', 'Changing labels or overwriting runs alongside a data fix was rejected because it confounds the result. Later work got new ids: X1, X2, X3 and a diagnostic set.', 'docs/decisions.md'],
     ['Negative results', 'Tool set v2 failed its criteria and was not adopted. X1 was not claimed as an improvement. The fresh-set gain is called a small effect that did not replicate.', 'docs/decisions.md'],
-    ['Secrets', 'Keys live in a gitignored .env; the templates hold empty values. A scan of the full history found no secret, only dataset identifiers that look like keys. Runtime output passes a redaction step. One AI reviewer\u2019s search printed the local .env into its own session; nothing was committed, and the report advises rotating the key if that transcript is kept.', 'SECURITY.md, docs/process/repository-audit.md, docs/agent-logs.md'],
-    ['Rights and private folders', 'A scan fails if a tracked file repeats more than six consecutive words of local MOM text. Private notes and study notes are gitignored and were never in the history.', 'SECURITY.md, docs/process/repository-audit.md'],
+    ['Secrets', 'Keys live in a gitignored .env; the templates hold empty values. A scan of the full history found no secret, only dataset identifiers that look like keys. Runtime output passes a redaction step. One AI reviewer’s search printed the local .env into its own session; nothing was committed, and the report advises rotating the key if that transcript is kept.', 'SECURITY.md, docs/ai-assisted-development.md'],
+    ['Rights and private folders', 'A scan fails if a tracked file repeats more than six consecutive words of local MOM text. Detailed working notes have been moved to local-only storage; that does not remove earlier public copies from history.', 'SECURITY.md, docs/ai-assisted-development.md'],
     ['Least privilege', 'The agent\u2019s tools are read-only and typed. A $0.05 reservation is saved before any paid call, a persistent ledger tracks the daily budget, and a run deadline caps each question.', 'docs/audit-and-logging.md, docs/deploy.md'],
-    ['Writes', 'The source manifest and hashes are written by one code path. There is no lock against two writers, which a review flagged and I deferred.', 'docs/agent-logs.md, docs/human-review/e2e-review-summary.md']
+    ['Writes', 'The source manifest and hashes are written by one code path. There is no lock against two writers, which a review flagged and I deferred.', 'docs/ai-assisted-development.md, docs/human-review/e2e-review-summary.md']
   ])), more('Work log: milestones, experiment registry, decisions and problems', pool.rest('work')));
   bands.process = process;
 
@@ -376,12 +379,12 @@ export function buildBands(report) {
   );
   run.visual.append(repositoryButton());
   const links = el('ul', 'rp-links reveal');
-  [['The presentation', 'The same story as slides, with speaker notes.', '/deck', false], ['The workbench', 'Ask a question and inspect the evidence, citations and activity trace.', '/workbench', false]].forEach(([label, text, href]) => {
+  [['The presentation', 'The same story as slides, with speaker notes.', '/deck', false], ['The workbench', 'Ask a question and inspect the evidence, citations and activity trace.', '/workbench', false], ['Innovation and next steps', 'What is new, the measured limits and a proposed government workbench.', '/innovation', false]].forEach(([label, text, href]) => {
     const li = el('li'); li.append(link(label, href), el('span', '', text)); links.append(li);
   });
   run.visual.append(links);
   const docs = el('ul', 'rp-doclist');
-  [['README', 'README.md'], ['Architecture', 'docs/architecture.md'], ['Evaluation report', 'docs/evaluation-report.md'], ['System card', 'docs/system-card.md'], ['Data sheet', 'docs/data-sheet.md'], ['Threat model', 'docs/threat-model.md'], ['Innovation assessment', 'docs/innovation.md'], ['Demo script', 'docs/demo-script.md'], ['Requirements matrix', 'docs/requirements-matrix.md'], ['Decision log', 'docs/decisions.md'], ['How the agents were used', 'docs/agent-logs.md'], ['Reproduce each artefact', 'docs/reproduce.md']].forEach(([label, path]) => {
+  [['README', 'README.md'], ['Architecture', 'docs/architecture.md'], ['Evaluation report', 'docs/evaluation-report.md'], ['System card', 'docs/system-card.md'], ['Data sheet', 'docs/data-sheet.md'], ['Threat model', 'docs/threat-model.md'], ['Innovation assessment', 'docs/innovation.md'], ['Demo plan', 'docs/demo-plan.md'], ['Requirements matrix', 'docs/requirements-matrix.md'], ['Decision log', 'docs/decisions.md'], ['How the agents were used', 'docs/ai-assisted-development.md'], ['Reproduce each artefact', 'docs/reproduce.md']].forEach(([label, path]) => {
     const li = el('li'); li.append(link(label, `${REPO}${path}`, {external: true})); docs.append(li);
   });
   run.visual.append(group('In the repository', docs));

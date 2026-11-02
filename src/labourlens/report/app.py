@@ -658,6 +658,9 @@ def create_app(settings: Settings | None = None, runner=None, shared_factory=Non
     @app.get("/deck.html")
     async def deck():
         return FileResponse(root / "deck.html")
+    @app.get("/innovation")
+    async def innovation():
+        return FileResponse(root / "innovation.html")
     @app.get("/presentation")
     async def presentation():
         return RedirectResponse("/deck", status_code=307)

@@ -10,20 +10,20 @@ Read in this order. Everything here is dated; where a later document supersedes 
 4. [Fresh-questions result](experiments/m7-heldout-v2-result.md): the pre-registered comparison on the 65 fresh questions and its inconclusive outcome.
 5. [`human-review/README.md`](human-review/README.md) and [`human-review/owner-review-final-summary.md`](human-review/owner-review-final-summary.md): what was reviewed, by whom, and what that does not show.
 6. [`threat-model.md`](threat-model.md): attacks tested, controls, residual risk.
-7. [`agent-logs.md`](agent-logs.md): how AI agents were used, the approval record, the controls, the mistakes caught.
+7. [`ai-assisted-development.md`](ai-assisted-development.md): how AI agents were used, the approval record, the controls, the mistakes caught.
 
 ## The rest
 
 | Topic | Documents |
 |---|---|
 | Requirements and traceability | [`requirements-matrix.md`](requirements-matrix.md) |
-| AI-assisted development | [`ai-assisted-development.md`](ai-assisted-development.md), [`agent-logs.md`](agent-logs.md) |
+| AI-assisted development | [`ai-assisted-development.md`](ai-assisted-development.md) |
 | Data | [`data-sheet.md`](data-sheet.md), [`data-processing-log.md`](data-processing-log.md), [`storage.md`](storage.md), [`adding-sources.md`](adding-sources.md) |
 | Model and system | [`system-card.md`](system-card.md), [`concepts.md`](concepts.md), [`audit-and-logging.md`](audit-and-logging.md), [`innovation.md`](innovation.md) |
 | MCP | [`mcp-demo-transcript.md`](mcp-demo-transcript.md), [`../artifacts/mcp-agent-demo.md`](../artifacts/mcp-agent-demo.md) |
-| Demonstration | [`demo-script.md`](demo-script.md): 28 main slides, 42 total; Summary on slide 28, appendix index on 29, references A to M. Current-build detail remains on slide 11. |
+| Demonstration | [`demo-plan.md`](demo-plan.md): 20-minute agenda, guaranteed demonstrations, questions, fallbacks and requirement coverage. |
 | Decisions | [`decisions.md`](decisions.md) (dated log with approvals; entry ids such as D-056 are explained in the [glossary](glossary.md)), [`decisions/`](decisions/) (architecture decision records: scope, LangGraph, structured data) |
 | Experiments | [`experiments/`](experiments/) (one record per experiment; raw scores in `../experiments/`) |
 | Operations | [`deploy.md`](deploy.md), [`security-review-web.md`](security-review-web.md), [`../SECURITY.md`](../SECURITY.md) |
-| Reproducing | [`reproduce.md`](reproduce.md), [`fresh-clone-check.md`](fresh-clone-check.md), [`../tests/README.md`](../tests/README.md) |
-| State and history | [`progress.md`](progress.md) (current state), [`archive/progress-log.md`](archive/progress-log.md), [`archive/planning/`](archive/planning/) (pre-implementation drafts), [`process/`](process/) (initial plan and prompt, repository audit), [`glossary.md`](glossary.md) |
+| Reproducing | [`reproduce.md`](reproduce.md), [`../tests/README.md`](../tests/README.md); dated fresh-clone working record kept locally, not in the repository |
+| State and history | [`progress.md`](progress.md) (current state), [`process/`](process/) (initial plan and prompt), [`glossary.md`](glossary.md); superseded planning and progress logs kept locally, not in the repository |

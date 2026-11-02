@@ -81,7 +81,7 @@ After each approved milestone, update these **target files** (create only when a
 - `docs/data-sheet.md`: source manifests, provenance, licensing, quality checks, transformations and revisions.
 - `experiments/`: versioned configurations, case IDs, raw outputs, numeric results, cost assumptions, analysis.
 - `docs/evaluation-report.md`: hypotheses, methodology, baseline, human review, failures, conclusions.
-- `docs/architecture.md`, `docs/system-card.md`, `docs/innovation.md`, `docs/demo-script.md`.
+- `docs/architecture.md`, `docs/system-card.md`, `docs/innovation.md`, `docs/demo-plan.md`.
 - `study/`: glossary, why-we-chose-this, alternatives-rejected, meaningful failure postmortems, interview Q&A, questions the author should rehearse. **Study notes are not automatically part of the submitted package**; keep them distinguishable from public deliverables.
 
 Every study note should answer: **what it is; why this project needs it; alternative approaches; trade-offs; how we tested it; what to say in an interview.** Avoid passive textbook dumps and unsupported production claims.

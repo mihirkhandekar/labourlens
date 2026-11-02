@@ -9,7 +9,7 @@ import re
 from bs4 import BeautifulSoup
 from pydantic import ValidationError
 
-from labourlens.review.pack import EXTRA, ROOT, ReviewExport, build_pack, endorsement_statement, ingest_review, load_tiebreak
+from labourlens.review.pack import EXTRA, ROOT, ReviewExport, build_pack, endorsement_statement, ingest_review, load_tiebreak, owner_material
 
 
 def put(root, name, value):
@@ -56,6 +56,20 @@ def fixture_root(tmp_path):
     put(tmp_path, 'docs/human-review/statistical-spot-check.md', '\n'.join(f'| {n} | test | Q2 | - | 2.9 | percent | row2 | `obs1` | link |' for n in range(1, 15)))
     put(tmp_path, 'docs/human-review/ai-verification-of-pre-reviews.md', '## 4. Checklist\n' + '\n'.join(f'{n}. Synthetic check {n}' for n in range(1, 13)) + '\n## 5. Limits')
     return tmp_path
+
+
+def test_owner_material_reads_optional_local_guide(tmp_path):
+    guide = put(tmp_path, 'private/docs-local/docs/human-review/OWNER-REVIEW-GUIDE.md',
+                'Synthetic local guide <script>not executable</script>')
+    rendered = owner_material(tmp_path)
+    assert 'Synthetic local guide &lt;script&gt;not executable&lt;/script&gt;' in rendered
+    assert not (tmp_path / 'docs/human-review/OWNER-REVIEW-GUIDE.md').exists()
+    guide.unlink()
+    rendered = owner_material(tmp_path)
+    assert 'No local legacy owner guide is present' in rendered
+    assert 'What the statuses mean' in rendered
+    assert 'How to verify' in rendered
+    assert 'Labelling rule' in rendered
 
 
 def export_data():

@@ -18,7 +18,7 @@ LABOURLENS_DEMO_ENABLED=false make serve
 
 Open `http://127.0.0.1:8000/`, `/deck` and `/workbench`. Without make, install with `uv sync --frozen`; the direct app command is `LABOURLENS_DEMO_ENABLED=false uv run labourlens serve --host 127.0.0.1 --port 8000`.
 
-`make verify` needs no key or paid call. In a public clone the rights scan prints `NOT CHECKED` (not a pass); history scanning is conditional on installed gitleaks. The clean-clone audit of `d8a0b0e` on 2 Nov 2026 recorded 1,100 passed, 1 skipped, 57 deselected; counts and durations are not acceptance targets. See the [fresh-clone record](fresh-clone-check.md). The documentation checker validates tracked relative links and anchors, not external URL availability, CLI flags or prose accuracy.
+`make verify` needs no key or paid call. In a public clone the rights scan prints `NOT CHECKED` (not a pass); history scanning is conditional on installed gitleaks. The clean-clone audit of `d8a0b0e` on 2 Nov 2026 recorded 1,100 passed, 1 skipped, 57 deselected; counts and durations are not acceptance targets. The detailed fresh-clone working record is kept locally, not in the repository. The documentation checker validates tracked relative links and anchors, not external URL availability, CLI flags or prose accuracy.
 
 ## What each artefact needs
 
@@ -160,3 +160,9 @@ Follow [deploy.md](deploy.md). Deployment needs Docker Engine and Compose, SSH/s
 ## Packaging
 
 Hand over by GitHub URL, a fresh clone or `git archive HEAD`, never zip or copy the working folder: ignored secrets, private corpus and assessment material share that folder.
+
+## Updating the innovation page
+
+Edit [`innovation-page.json`](innovation-page.json), especially the `roadmap` groups and their `items`. Each item has `title`, `why` (the evidence gap and why it matters for policy use), and `status`, which must be `proposal`. The builder rejects missing fields, non-proposal roadmap statuses and forbidden presentation copy. Keep proposals separate from measured results; changing a status to built requires a reviewed implementation and a deliberate projection change, not a copy edit.
+
+Run `uv run labourlens build-report` to project this editorial source into `web/static/data/report.json`, then `uv run pytest -q tests/web/test_innovation.py`. Open `/innovation` on the local report server. Commit the JSON source and regenerated report together. The page reads only this build output; it does not fetch Markdown or private experiment files in the browser. Measurements are selected from the existing committed-artifact report projection, never copied from roadmap prose. Editorial copy uses the working-tree JSON during the build so it can be previewed before commit; its source hash is recorded separately from the measurement evidence commit. The separate short submission remains [`innovation.md`](innovation.md).

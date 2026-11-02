@@ -74,3 +74,5 @@ It does not make the system independent of the evaluation design, does not valid
 1. The owner recorded decisions on the 65 cases (59 own decisions in the signing export, 6 agreeing with an AI suggestion) and approved them unchanged.
 2. The five AI-article cases were kept as `answer` (D-031); the MTI-free sensitivity is in the result report.
 3. The rule and fingerprints in `experiments/heldout-v2/FREEZE.md` were signed and the paid run was authorised and executed.
+
+**Packaging note (2 Nov 2026).** The owner-review guide named above is kept locally, not in the repository. The public evaluation report retains the review rubric and process; the historical design record above is unchanged.

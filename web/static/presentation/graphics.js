@@ -141,6 +141,76 @@ export function twoSources(m) {
   return wrap;
 }
 
+/** Two evidence stores, with no chunking or embedding path from statistics. */
+export function evidenceStores(m) {
+  const source = m.section('sources').metrics || {}, corpus = m.section('serving').corpus || {};
+  const wrap = el('div', 'ex-stores');
+  const lane = (title, count, stages, tool, detail) => {
+    const col = el('div', 'ex-store');
+    col.append(el('h3', '', title), el('p', 'ex-store-count', count));
+    const path = el('div', 'ex-store-path');
+    stages.forEach(([head, sub, tip]) => {
+      const step = el('div', 'ex-store-step');
+      step.append(el('strong', '', head), el('span', '', sub));
+      path.append(withTip(step, tip, 'is-down'));
+    });
+    col.append(path, withTip(el('p', 'ex-store-tool', tool), detail, 'is-up'));
+    return col;
+  };
+  const history = 'The statistics store covers 1980 to Q2 2026, with Q1 2024 to Q2 2026 as the answer scope and 4,300 in-scope rows. It includes unemployment rates and counts for overall, resident and citizen populations; vacancies by industry and occupation and the vacancy-to-unemployed ratio; recruitment and resignation; retrenchment by type; employment change by sector; paid hours; re-entry at 6 and 12 months; unit labour cost; and value added per worker. Units, population, adjustment and provenance stay on each row.';
+  wrap.append(
+    lane('Statistics tables', `${fmt.int(source.by_type?.dataset_csv)} MOM tables`, [
+      ['One structured store', `${fmt.int(source.observations)} observation rows`, history],
+      ['No chunking or embeddings', 'Filter rows by series and period', 'Immutable hashed source snapshots are normalised to Parquet. The live statistics tool reads the shared validated observation store, not the report index. History outside the answer scope is not an invitation to answer out-of-scope questions.']
+    ], 'get_series → MCP → get_statistic', 'Input: source, period range and dimension. Output: validated rows with value, unit, population, adjustment and provenance. The server filters the statistics store. ' + history),
+    lane('Reports', `${fmt.int(corpus.document_files)} documents`, [
+      [`${fmt.int(corpus.passages)} passages`, 'PDF pages and web sections', `${fmt.int(corpus.quality_flags?.all_after?.table_unreliable)} table-like PDF passages are flagged table_unreliable and excluded from default chunks. They remain available for audit, not silently converted into trusted rows.`],
+      [`${fmt.int(corpus.chunks)} chunks`, 'BM25 plus embeddings', 'Eligible neighbouring passages merge into roughly 200-word chunks with 40-word overlap. BM25 and text-embedding-3-large vectors search the same chunks. Raw MOM and MTI files and report-derived indexes remain local, never published.']
+    ], 'search_reports → passages', 'Input: a question and optional result limit. Runs in the app against the passage index and stored embeddings, filters period and release, reranks, and returns labelled chunks with source passages. The planner never sees passage text; evidence goes to the answer writer.')
+  );
+  return wrap;
+}
+
+/** Equal visual weight for the three sets, not a performance comparison. */
+export function questionSets(m) {
+  const sets = m.finalEvaluation?.splits || [];
+  const count = id => sets.find(s => s.id === id)?.n;
+  const wrap = el('div', 'ex-sets');
+  [
+    ['dev', 'Development', 'Choose settings and fix errors', 'Tuned on, so optimistic', 'These 237 questions shaped filters, prompts and tool limits. Development scores measure fit to the cases I inspected, not independent generalisation. No model weights were trained.'],
+    ['registered', 'Original test', 'Frozen before the registered runs', '25 of 31 share development evidence', 'The gold file, prompts, prices and run commands were hash-frozen before registered runs. But 25 of 31 questions share at least one evidence passage with development. This is a small, only partly independent test.'],
+    ['fresh', 'Fresh questions', 'Written blind on six newer sources', 'Now known and partly reused', 'The 65 questions were written blind on six new sources, with no evidence-id overlap against the original reference set at the pre-run audit. They were closest to unseen questions at first use. Once run they became known, and were reused for diagnostics and the second run.']
+  ].forEach(([id, title, job, weakness, detail]) => {
+    const col = el('div', 'ex-set');
+    col.append(el('h3', '', title), el('p', 'ex-set-count num', fmt.int(count(id))), el('p', 'ex-set-job', job), el('p', 'ex-set-limit', weakness));
+    wrap.append(withTip(col, detail, 'is-down'));
+  });
+  return wrap;
+}
+
+export function retrievalTuning() {
+  return withTip(el('p', 'ex-tuning', 'What I tuned'), 'I chose chunk size and overlap (about 200 words, 40-word overlap), compared a hard period/release filter with a soft bonus, reranked a pool of 30, and changed prompts and tool limits. Reciprocal rank fusion constant 60 was fixed in advance, not searched. These choices used development scores; questions often name a quarter and release, which favours the filter.', 'is-up is-wide');
+}
+
+/** The fixed tool vocabulary, presented as equal rows rather than extra panels. */
+export function toolLegend() {
+  const wrap = el('div', 'ex-tools');
+  wrap.setAttribute('role', 'table'); wrap.setAttribute('aria-label', 'Agent tools: input, output, execution and reason');
+  const head = el('div', 'ex-tools-row is-head'); head.setAttribute('role', 'row');
+  ['Tool', 'Input → output', 'Runs in', 'Why'].forEach(t => { const cell = el('span', '', t); cell.setAttribute('role', 'columnheader'); head.append(cell); });
+  wrap.append(head);
+  [
+    ['search_reports', 'Question → passages', 'App', 'Find report evidence', 'The app searches the passage index and embeddings, filters period and release and reranks. The planner never sees passage text: its catalogue and evidence summaries are separate from the answer writer’s cited passages.'],
+    ['get_series', 'Series + period → rows', 'MCP server', 'Share validated statistics', 'The agent calls get_series; the MCP client calls server tool get_statistic with source, periods and dimension. Output rows keep definitions and provenance. The served sample measured equal accuracy to direct calls: no observed loss and no demonstrated gain, not proof of equivalence.'],
+    ['calculate_change', 'Two returned rows → change', 'App, plain code', 'Do not invent figures', 'Deterministic Decimal arithmetic checks compatible units and definitions on previously returned observations. It computes an exact difference or percentage change. It cannot invent input values; the base tool does not calculate from report-only figures.']
+  ].forEach(([tool, exchange, where, why, detail]) => {
+    const row = el('div', 'ex-tools-row'); row.setAttribute('role', 'row');
+    [tool, exchange, where, why].forEach(t => { const cell = el('span', '', t); cell.setAttribute('role', 'cell'); row.append(cell); });
+    wrap.append(withTip(row, detail, 'is-up is-wide'));
+  });
+  return wrap;
+}
+
 /** G3: the document builds, read from the report data (`corpus_builds`). The current build says what was re-run on it, or that nothing was. */
 export function buildTimeline(m) {
   const builds = m?.section('corpus_builds')?.rows || [];
@@ -499,7 +569,7 @@ const LOOP_TIPS = [
 ];
 /** G6: the agent loop, drawn from the fixed design. Labels are plain words. */
 export function agentLoop() {
-  const W = 1560, H = 680;
+  const W = 1560, H = 450, yScale = H / 680;
   const wrap = el('div', 'owner-agent');
   const svg = svgEl('svg', {viewBox: `0 0 ${W} ${H}`, class: 'owner-agent-svg', role: 'group'});
   svg.setAttribute('aria-label', 'Bounded research agent. The planner branches to report retrieval, structured statistics through MCP, deterministic calculation, or stop gathering. Returned evidence informs another plan within budget, then evidence assessment, answer generation and validation. One answer repair is allowed.');
@@ -508,13 +578,14 @@ export function agentLoop() {
   const marker = svgEl('marker', {id: markerId, viewBox: '0 0 10 10', refX: 9, refY: 5, markerWidth: 7, markerHeight: 7, orient: 'auto'});
   marker.append(svgEl('path', {d: 'M0 0 10 5 0 10z', class: 'owner-agent-head'}));
   defs.append(marker); svg.append(defs);
-  const edge = (d, loop = false) => svg.append(svgEl('path', {d, class: `owner-agent-edge${loop ? ' is-return' : ''}`, 'marker-end': `url(#${markerId})`}));
-  const label = (x, y, text, cls = '') => svg.append(svgEl('text', {x, y, class: `owner-agent-label ${cls}`, 'text-anchor': 'middle'}, text));
+  const edge = (d, loop = false) => svg.append(svgEl('path', {d, transform: `scale(1 ${yScale})`, class: `owner-agent-edge${loop ? ' is-return' : ''}`, 'marker-end': `url(#${markerId})`}));
+  const label = (x, y, text, cls = '') => svg.append(svgEl('text', {x, y: y * yScale, class: `owner-agent-label ${cls}`, 'text-anchor': 'middle'}, text));
   const parts = [];
   const node = (x, y, w, h, lines, detail, cls = '') => {
+    y *= yScale; h *= yScale;
     const g = svgEl('g', {class: `owner-agent-node ${cls}`});
     g.append(svgEl('rect', {x, y, width: w, height: h, rx: 12}));
-    lines.forEach((text, i) => g.append(svgEl('text', {x: x + w / 2, y: y + h / 2 + 10 + (i - (lines.length - 1) / 2) * 35, 'text-anchor': 'middle', class: i ? 'owner-agent-sub' : 'owner-agent-title'}, text)));
+    lines.forEach((text, i) => g.append(svgEl('text', {x: x + w / 2, y: y + h / 2 + 9 + (i - (lines.length - 1) / 2) * 26, 'text-anchor': 'middle', class: i ? 'owner-agent-sub' : 'owner-agent-title'}, text)));
     const title = svgEl('title'); title.textContent = detail; g.append(title);
     svg.append(g);
     parts.push({node: g, at: (x + w / 2) / W, label: lines.join('. '), text: detail});
@@ -537,7 +608,7 @@ export function agentLoop() {
   node(25, 240, 230, 110, ['Planner', 'Choose actions'], 'Input validation runs first. The planner sees the question, dataset catalogue, prior evidence summaries and tool errors. The base tool names and argument schemas are fixed in code: search_reports, get_series and calculate_change. It may request up to three calls in a round or stop gathering. It does not discover or choose freely among all MCP server tools.', 'is-planner');
   node(345, 35, 480, 130, ['Search reports', 'BM25 + embeddings', 'Filter, rerank, return passages'], LOOP_TIPS[1]);
   node(345, 205, 480, 120, ['Structured statistics', ''], LOOP_TIPS[2], 'is-mcp');
-  svg.append(svgEl('path', {d: 'M605 250 V315', class: 'owner-agent-boundary'}));
+  svg.append(svgEl('path', {d: 'M605 250 V315', transform: `scale(1 ${yScale})`, class: 'owner-agent-boundary'}));
   label(470, 302, 'Client →', 'is-mcp-detail');
   label(715, 302, 'MCP server → rows', 'is-mcp-detail');
   node(345, 380, 480, 90, ['Calculate in code', 'Returned observations → change'], 'calculate_change uses deterministic Decimal arithmetic on previously collected, compatible observation rows. The model does not calculate the change. It runs in the app in the live system. The separately configured v2 experiment adds passage-value calculation; it is not part of the base three-tool choice.');
@@ -556,7 +627,7 @@ export function agentLoop() {
     ['10 s per call', 'Default agent tool deadline is ten seconds. A timed-out worker is not retried and its late result is not committed. The MCP client has its own eight-second default call deadline and twenty-second connect deadline.'],
     ['Bounded retries', 'One retry for a JSON parsing failure in planner output. A finished TransientToolError may be retried once; a timed-out tool is not retried. The persistent MCP backend reconnects once after a lost connection. One answer repair is allowed. These are separate controls, not a blanket retry policy.'],
   ].forEach(([text, detail]) => bounds.append(withTip(el('span', '', text), detail, 'is-up is-wide')));
-  wrap.append(bounds);
+  wrap.append(bounds, toolLegend());
   return wrap;
 }
 

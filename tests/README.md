@@ -9,7 +9,9 @@ Run from the repository root.
 
 ## Markers
 
-`corpus` is the only marker (registered in `pyproject.toml`). Mark a test with `@pytest.mark.corpus`, or set `pytestmark` at module level, when it reads any file that is not tracked in git. `tests/conftest.py` also marks a short list of tests by name; prefer the explicit marker for new tests.
+`corpus` (registered in `pyproject.toml`) marks tests that require locally acquired data. Mark a test with `@pytest.mark.corpus`, or set `pytestmark` at module level, when it reads any file that is not tracked in git. `tests/conftest.py` also marks a short list of tests by name; prefer the explicit marker for new tests.
+
+`offline` marks tests that run without provider calls or private corpus. `tests/test_notebooks.py` executes the committed notebooks with optional `nbclient` and `ipykernel`; without those tools it skips with an installation command. `make notebooks` installs the execution tools in a temporary uv environment and saves notebook outputs without adding main dependencies.
 
 ## What is skipped without the private data
 

@@ -4,7 +4,7 @@
 import {el, add, icon} from './js/dom.js';
 import {renderHome} from './js/home.js';
 
-const PAGES = [['/', 'Report'], ['/deck', 'Presentation'], ['/workbench', 'Workbench']];
+const PAGES = [['/', 'Report'], ['/deck', 'Presentation'], ['/workbench', 'Workbench'], ['/innovation', 'Innovation']];
 if (location.hash === '#workbench') location.replace('/workbench');
 if (/^#presentation/.test(location.hash)) location.replace('/deck');
 const root = document.querySelector('#app');

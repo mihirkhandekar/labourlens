@@ -96,7 +96,7 @@ Every source has a manifest entry: original URL, publisher, title, publication a
 5. Nothing is forecast or imputed.
 
 ## 5. Things a reader must know
-**Three employment-change numbers per quarter.** For 2026-Q2: MOM advance release 10,700; MOM final report 11,400; sector dataset total 14,700. Advance versus final is a revision. Dataset versus final differs by 3,100 to 5,100 persons in every quarter we checked. MOM's headline excludes migrant domestic workers; the dataset's basis is unverified. That the gap is a migrant-domestic-worker effect is an **inference**, not a verified fact. See `docs/archive/planning/presentation-plan.md` section 3 and `artifacts/figures/fig3_employment_change_reconciliation.png`.
+**Three employment-change numbers per quarter.** For 2026-Q2: MOM advance release 10,700; MOM final report 11,400; sector dataset total 14,700. Advance versus final is a revision. Dataset versus final differs by 3,100 to 5,100 persons in every quarter we checked. MOM's headline excludes migrant domestic workers; the dataset's basis is unverified. That the gap is a migrant-domestic-worker effect is an **inference**, not a verified fact. See [reconciliation evidence](../artifacts/data-quality/reconciliation.json) and `artifacts/figures/fig3_employment_change_reconciliation.png`; the earlier presentation-planning discussion is kept locally, not in the repository.
 
 **Reconciliation and revisions rest on little.** `reconcile.py` checks four hand-verified quarters. `artifacts/data-quality/revisions.json` reports `baseline_only_no_earlier_snapshot` for every dataset: only one snapshot of each exists, so **no dataset revision has been observed**, and none can be ruled out.
 
@@ -115,6 +115,25 @@ Every source has a manifest entry: original URL, publisher, title, publication a
 **Corpus-v3 PDFs.** `mom-wage-practices2025`: 32 pages, 174 passages (151 `ok`, 23 `table_unreliable`). `mom-nwc-lower-wage2025`: 18 pages, 112 passages (all `ok`); its publication date, 2026-10-23, is the PDF creation date and is **not confirmed** against the publisher's newsroom. `mti-2026-q2-feature-ai-employment`: 23 pages, 218 passages (v3.1: 175 `ok`, 43 `table_unreliable`, 0 `garbled`; v3: 163, 15, 40); the MTI running page header is kept as a passage on some pages and `printed_page_label` is empty for all of them, so citations show the PDF page number.
 
 **Low-yield PDF.** The Labour Force 2025 survey-findings PDF yields 250 passages over 80 pages after extraction corrections (198 on frozen corpus v1). Image-heavy content is a possible explanation, not a verified diagnosis.
+
+## Exclusions
+
+| Excluded material | Reason and boundary |
+|---|---|
+| Foreign-workforce dataset candidates | The source-selection record found them stale for the 2026 reconciliation question; they were not added. See the early source comparison in [decisions](decisions.md). |
+| Holiday and leave datasets | Outside the labour-market research questions, so not selected. |
+| Trade-union and arbitration datasets | Outside the selected analytical domain, so not selected. |
+| MTI GDP advance releases and Economic Survey GDP pairs | The owner selected labour-specific evidence instead; GDP revision pairs were not added. See the corpus-v3 decision and [source specification](../specs/sources.d/heldout-v2-expansion.yaml). The selected MTI employment feature article is a separate included source. |
+| `table_unreliable` and `garbled` passages | Retained with provenance in the local passage store but excluded from default retrieval chunks. Figures for calculation must come from validated observations, not guessed PDF tables. |
+| Answer figures outside 2024-Q1 through 2026-Q2 | Stored historical rows and earlier reports can supply context, but cannot extend the answer period. A comparison needing an out-of-scope endpoint must abstain. |
+| Restricted reports and documents with unresolved rights | Original documents, extracted text and indexes stay local and are excluded from public packaging, not silently removed from the author's research corpus. Rights uncertainty is not permission to redistribute. |
+| Retrenchments per 1,000 employees and imputed values | No verified denominator supports that derived indicator; missing and suppressed cells are never replaced with invented values. |
+
+The three assumed-licence datasets are **not** excluded from the committed processed store: section 9 explains the 8,358 retained rows and why raw-file exclusion is not licence clearance.
+
+## Known quality issues
+
+Sections [5](#5-things-a-reader-must-know) and [6](#6-quality-checks-and-known-warnings) detail unresolved population definitions, missing-value markers, adjustment basis, ratio discrepancies, extraction flags and build warnings. Sections 8 and 9 cover review limits, single-snapshot revision history and unresolved rights.
 
 ## 6. Quality checks and known warnings
 `artifacts/data-quality/validation.json` and `quality-report.md` agree: **276 checks = 269 passes + 7 warnings + 0 failures**. The seven warnings: unresolved rights for 23 sources (22 HTML releases and the MTI PDF; kept local-only); undefined dash markers in five tables (47 retrenchment-by-industry, 50 permanent-by-industry, 288 term-contract-by-industry, 3 term-contract-by-occupation and 28 short-workweek/temporary-layoff-by-industry in-scope cells); and the recomputed vacancy-ratio discrepancy. These are observed offline-build results, not proof of human verification.

@@ -108,12 +108,12 @@ On 31 Oct 2026 five separate AI reviewers (not human review; one model family, s
 
 | Historical pending item | Later evidence and limit |
 |---|---|
-| MTI garbled rule not applied | D-052 and [v3.1 diff](../../experiments/corpus-snapshots/v3.1-diff.json): refined rule applied, reindex/re-embed recorded in [archived progress](../archive/progress-log-2.md). This does not repair every unreliable table. |
+| MTI garbled rule not applied | D-052 and [v3.1 diff](../../experiments/corpus-snapshots/v3.1-diff.json): refined rule applied, reindex/re-embed recorded in archived progress, kept locally, not in the repository. This does not repair every unreliable table. |
 | v2 freeze sign-off pending | [Signed freeze](../../experiments/heldout-v2/FREEZE.md), 31 Oct; signing-time 59 manual / six AI agreements remains unchanged. Later rapid redo is separate provenance, not independent annotation. |
 | MCP-backed answer to record | [Recorded agent answer](../../artifacts/mcp-agent-demo.md), 1 Nov; one demonstration, not evaluation. D-058/D-061 later measures a 65-case served-chain sample, not full-set or browser admission. |
 | No exported diagram | [Rendered SVG](../img/architecture.svg) and [architecture](../architecture.md) now exist; no PNG requirement is inferred. |
 | D-030 owner default confirmation pending | Initial assistant choice remains history. D-056/D-061 record the later owner default/reporting choices; not retrospective approval. |
 | Judge one-family limitation | [Second-family sensitivity](../experiments/second-judge.md), D-062, partly addresses family dependence but remains AI judging and finds support disagreement. |
-| Fresh-clone evidence pending | [Dated clone checks](../fresh-clone-check.md) distinguish offline checks from unavailable private-corpus work. NOT CHECKED rights scans are not rights passes. |
+| Fresh-clone evidence pending | Dated clone checks, kept locally, not in the repository, distinguish offline checks from unavailable private-corpus work. NOT CHECKED rights scans are not rights passes. |
 
 Deferred findings above remain deferred unless a later linked record states a disposition. This appendix does not claim that every review issue was fixed.

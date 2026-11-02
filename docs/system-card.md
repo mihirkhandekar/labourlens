@@ -16,9 +16,11 @@ The live web app differs from the system the experiments measured. The web runne
 
 Sources: [registration](experiments/served-chain-eval.md), [metrics](../experiments/runs/served-dev-S65-mcp-on/), [web-on route comparison](../experiments/served/paired-S65-direct-on.json). The complete probe requirement is not met (one context probe); aggregate accuracy does not establish either pre-declared criterion (within three points of the first run on the same 51 questions; matched numerical records).
 
-## Intended use and users
+## Intended use
 
 LabourLens supports Singapore policy researchers and labour-market analysts. It retrieves official evidence, compares published quarterly statistics and produces cited summaries with uncertainty. The answer scope is 2024-Q1 through 2026-Q2; source coverage varies. The supported-period rule makes this a hard boundary: earlier documents are context only, and requests for earlier-period figures or mixed-period comparisons requiring an earlier endpoint must abstain. Timeless definitions remain answerable. Users should inspect source definitions, publication stage and citations before using an answer in research. Scope: `docs/decisions/ADR-001-scope.md`, extended by the scope and corpus-expansion decisions in `docs/decisions.md`.
+
+## Out-of-scope use
 
 Forecasting, unsupported causal attribution, individual employment advice and unrestricted web research are out of scope. The system is not an official government service or an autonomous policy decision-maker. It must not receive confidential, personal or classified information.
 
@@ -113,7 +115,22 @@ Sources: `experiments/eval/agent-heldout-H-{r3,hybrid}/{gpt-6-luna,gpt-5.6-luna}
 
 **The regression check on v3 (MEASURED RESULT, 237 development questions, gold v3.6).** It ran with corpus v3, the 14 runtime changes in `docs/experiments/m7-e2e-fixes.md`, the cross-check on, filter then rerank, `planner_v1` and `answer_v3`, one run per model. Several factors changed together relative to the filter-then-rerank run and the extraction-fix run, so this is a regression check of the served system, not an ablation. Sources: `experiments/eval/agent-dev-X2/*.metrics.json` against the metrics files of the filter-then-rerank run and the extraction-fix run. Behaviour accuracy: gpt-6-luna 0.903 [0.865, 0.941] (the filter-then-rerank run 0.903, extraction-fix run 0.886); gpt-5.6-luna 0.916 [0.878, 0.949] (the filter-then-rerank run 0.903, extraction-fix run 0.911). False-answer rate 0.026 for both; over-abstention 0.025 and 0.021; key-number recall 0.836 and 0.845; calculation correctness 0.750 for both (n=24). None of these moved beyond overlapping intervals. Judge-supported claims: 0.860 [0.817, 0.904] and 0.794 [0.742, 0.846], against 0.887 and 0.874 in the filter-then-rerank run, intervals overlapping. Cases with ungrounded numbers: 0.105 [0.068, 0.143] (the filter-then-rerank run 0.076) and 0.165 [0.118, 0.215] (the filter-then-rerank run 0.051 [0.025, 0.080]); the second pair of intervals **does not overlap**. One runtime fix widened the check to the summary and caveats, so this is a measurement change as well as a possible behaviour change, and the runs cannot separate them. The flag is soft and also fires on figures the model derived itself. p95 latency (nearest-rank): 40.9 s and 33.8 s (the filter-then-rerank run 37.0 and 34.7). Cost per case: $0.00285 and $0.00463 (the filter-then-rerank run $0.00212 and $0.00360). No human review of these runs.
 
-## Risks, controls and oversight
+## Limitations
+
+This is a research prototype, not a production service. The answer boundary is fixed and source coverage is uneven. Report-only arithmetic is not supported by the default tools; extraction flags remove unreliable tables from retrieval. A deterministic calculation can still use the wrong population, definition or period.
+
+The performance sections above separate corpus versions, development from test questions, the served sample from full-set evaluation, and single runs from the two-run mean. Original-test evidence overlaps development; fresh-question outcomes are now known. Two runs do not estimate model variance. Gold and answer review used one owner after AI pre-review; the second-family judge is not human review. Rights, provider data-use terms and the employment-series population basis remain unresolved as described above.
+
+## Risks and mitigations
+
+| Risk | Control | Evidence and residual limit |
+|---|---|---|
+| Wrong evidence or period | Metadata filtering, provenance and source inspection | [Retrieval results](evaluation-report.md#current-corpus-retrieval-re-run); filters can miss later restatements. |
+| Unsupported answer or wrong inputs | Structured validators, deterministic arithmetic and source-conflict check | [Error investigation](evaluation-report.md#error-investigation-remaining-failures-of-the-filter-then-rerank-run); citation mechanics do not prove support. |
+| Instructions in source text | Untrusted-text isolation, scanner, read-only catalogue-constrained tools | [Threat evaluation](evaluation-report.md#responsible-ai-evaluation); detection misses and unstable false-figure handling remain. |
+| Runaway calls or service failure | Graph bounds, tool timeouts, bounded retries and traced errors | [MCP transcript](mcp-demo-transcript.md); bounds are not a provider spending cap. |
+| Personal data, secrets or restricted text | Environment-based keys, redaction and local-only report material | [Audit policy](audit-and-logging.md), [data sheet](data-sheet.md); redaction is not anonymisation or rights clearance. |
+
 
 - **Wrong or incomplete evidence:** period filters can exclude a later report restating an earlier quarter; retrieval misses and over-abstention remain possible. Inspect cited passages and definitions. Rerank failure falls back to available ranked evidence and is traced (`src/labourlens/agent/tools.py`).
 - **Unsupported or misleading claims:** structured validation checks format and citation mechanics. Semantic support, omitted facts and causal overreach still need review. A correct arithmetic tool can receive the wrong series or periods.

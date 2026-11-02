@@ -1,4 +1,6 @@
 > **Historical process record (30 Oct 2026).** The consolidated initial plan, superseded by the decision log. Status statements in it describe that date. Current state: [`docs/progress.md`](../progress.md).
+>
+> Packaging note (2 Nov 2026): the individual planning documents named below are kept locally, not in the repository. Their path mentions are historical plain text, not public links.
 
 # LabourLens — consolidated planning and architecture document
 

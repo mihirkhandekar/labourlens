@@ -4,11 +4,13 @@
 
 LabourLens was built with Claude Code and AI review passes: agents drafted implementation, experiments, reference labels and documents under a written collaboration contract. The owner remains responsible for the submission. Recorded owner approvals and inputs are not the same as agent recommendations, and AI review is not human review. The intended sequence was explore, compare, recommend, discuss, approve, implement, verify, document; the deviations below mean this is a contract, not evidence that it was always followed. Sources: `CLAUDE.md`, [decision log](decisions.md), [review inventory](human-review/review-inventory.md).
 
-There are **403 recorded confirmations/sign-offs**, across 268 gold questions, 65 fresh questions, 40 saved answers and 30 source checks, not 403 independent verifications. The final 330 decisions took 6.2 minutes with a median gap of 0.39 s; 59 pre-freeze decisions took 1.9 minutes, median 0.8 s. The interface's `owner_manual` label records input, not reading or cognition. Stronger human evidence is the first pack's 17 answer verdicts, J1–J10 and three gold cards, plus written policy decisions. Evidence: [timing audit, section 3](human-review/numbers-audit.md#3-human-review-evidence-what-the-timestamps-show-priority), [final owner summary](human-review/owner-review-final-summary.md), `experiments/gold/gold_v3.7-final-provenance.json`.
+There are **403 recorded confirmations/sign-offs**, across 268 gold questions, 65 fresh questions, 40 saved answers and 30 source checks, not 403 independent verifications. The recorded confirmations were fast; the detailed timing audit is kept locally, not in the repository. The interface's `owner_manual` label records input, not reading or cognition. Stronger human evidence is the first pack's 17 answer verdicts, J1–J10 and three gold cards, plus written policy decisions. Public evidence: [final owner summary](human-review/owner-review-final-summary.md), `experiments/gold/gold_v3.7-final-provenance.json`.
 
 ## Recorded decision gates
 
 Dates and approvals below are those attributed in repository records, not independently authenticated transcripts. Agents prepared alternatives and recommendations; this was not human-only preparation. Evidence: [decision log](decisions.md), [ADRs](decisions/), [signed freeze](../experiments/heldout-v2/FREEZE.md).
+
+Historical progress logs, planning drafts, repository/submission/fresh-clone audits, the owner-review guide and detailed numbers audit are kept locally, not in the repository. Path mentions below identify those working records, not downloadable public evidence. They were public until this packaging change and remain in Git history. The public [demo plan](demo-plan.md) replaces the full rehearsal script, retained only in local study notes. [D-067](decisions.md#d-067---public-deliverables-and-local-working-material-owner-decision-2-nov-2026) records the boundary; this document is the canonical AI-development account, replacing the removed agent-logs pointer.
 
 | Date, 2026 | Recorded owner contribution | Record |
 |---|---|---|
@@ -58,7 +60,7 @@ Earlier blind reviewers were one model family: withholding previous opinions doe
 | Manifest | Sorted serialisation is centralised, but there is no lock, compare-and-swap or atomic replace. Single-writer operation is policy, not mutual exclusion. | `src/labourlens/data/raw_store.py`; historical e2e data P2-2 |
 | Rights scan | Exact-word overlap against local passages, with numeric, suffix, size and 21 allowlist exclusions. Without corpus it says NOT CHECKED and normally exits zero, including fresh-clone CI. Not permission, a history scan or complete copyright enforcement. | `src/labourlens/data/rights_scan.py`; `specs/rights-scan-allowlist.txt`; [data-sheet section 9](data-sheet.md#9-open-licence-items-and-what-the-rights-scan-covers) |
 | Experiments and threats | D-016 one-factor-at-a-time is policy, not a general automatic validator; X2 is multi-factor regression. Poison-delivery checks and exercised-only denominators are code-backed; the repeated 36-case suite is not adaptive security validation. | `docs/decisions.md`, D-016/D-044; `src/labourlens/security/threat_suite.py`; `tests/test_security.py` |
-| Engineering | Locked install, offline/corpus test split, docs checks and secret-path/history checks exist. A fresh-clone scan cannot certify absent source text; CI configuration is not an observed CI result. | `Makefile`, `.github/workflows/ci.yml`, `tests/README.md`, [dated clone evidence](fresh-clone-check.md) |
+| Engineering | Locked install, offline/corpus test split, docs checks and secret-path/history checks exist. A fresh-clone scan cannot certify absent source text; CI configuration is not an observed CI result. | `Makefile`, `.github/workflows/ci.yml`, `tests/README.md`; dated clone evidence kept locally, not in the repository |
 
 ## Verification loops and current dispositions
 
@@ -79,7 +81,7 @@ These are recorded outcomes, not new model runs or independent human judgements.
 
 ## Reproduction and ownership
 
-Use `make verify` for the supported offline workflow; corpus-dependent work has separate prerequisites in [reproduction](reproduce.md) and `tests/README.md`. Saved command outcomes are dated in [fresh-clone evidence](fresh-clone-check.md), not a timeless test total. Private report text, raw answers and caches are not supplied by package installation. The repository does not prove interview rehearsal, completion of tutoring or owner understanding: the author must still explain an answer end-to-end, one metric and one meaningful failure. Evidence: [demo plan](demo-script.md), [requirements matrix](requirements-matrix.md), `docs/process/START_HERE_PROMPT.md`.
+Use `make verify` for the supported offline workflow; corpus-dependent work has separate prerequisites in [reproduction](reproduce.md) and `tests/README.md`. Saved command outcomes are dated in the fresh-clone working record, kept locally, not in the repository; they are not a timeless test total. Private report text, raw answers and caches are not supplied by package installation. The repository does not prove interview rehearsal, completion of tutoring or owner understanding: the author must still explain an answer end-to-end, one metric and one meaningful failure. Evidence: [demo plan](demo-plan.md), [requirements matrix](requirements-matrix.md), `docs/process/START_HERE_PROMPT.md`.
 
 ## How I would run this differently next time
 

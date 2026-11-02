@@ -364,7 +364,12 @@ def _sources(artifacts: _Artifacts) -> dict:
         if row.get("source_id"):
             rows.append(row)
     counts = Counter(row.get("type", row.get("source_type", "unknown")) for row in rows)
-    return _section("Metadata for official sources.", rows, provenance, metrics={"sources": len(rows), "by_type": dict(counts)})
+    metrics = {"sources": len(rows), "by_type": dict(counts)}
+    observations = _observations(artifacts)
+    if observations is not None:
+        metrics.update(observations.attrs["report_metrics"])
+        provenance.append(_OBSERVATIONS)
+    return _section("Metadata for official sources.", rows, provenance, metrics=metrics)
 
 
 def _charts(artifacts: _Artifacts) -> list:
@@ -930,6 +935,8 @@ _OBSERVATIONS = "data/processed/observations.parquet"
 
 def _observations(artifacts: _Artifacts):
     """The committed observation table, read from the commit (never the working tree). None when it is not available."""
+    if _OBSERVATIONS in artifacts.cache:
+        return artifacts.cache[_OBSERVATIONS]
     entry = {"path": _OBSERVATIONS, "status": "missing"}
     frame = None
     try:
@@ -938,10 +945,16 @@ def _observations(artifacts: _Artifacts):
         raw = artifacts._git("show", f"{artifacts.commit}:{_OBSERVATIONS}")
         entry.update(sha256=hashlib.sha256(raw).hexdigest(), status="available")
         frame = pd.read_parquet(io.BytesIO(raw))
+        metrics = {"observations": len(frame), "in_scope_observations": int(frame["in_answer_scope"].sum())}
+        if not frame.empty:
+            metrics.update(period_from=str(frame["period"].min()), period_to=str(frame["period"].max()))
         frame = frame[frame["in_answer_scope"]]
+        frame.attrs["report_metrics"] = metrics
     except Exception:  # missing file, missing git object or unreadable table: the excerpts are then left out
         entry["status"] = "unavailable"
+        frame = None
     artifacts.provenance[_OBSERVATIONS] = entry
+    artifacts.cache[_OBSERVATIONS] = frame
     return frame
 
 
@@ -1331,6 +1344,9 @@ def run(root: Path | str | None = None, output: Path | str | None = None) -> int
     repository = Path(root) if root is not None else Path(__file__).resolve().parents[3]
     destination = Path(output) if output is not None else repository / "web/static/data/report.json"
     report = _no_dashes(build_report(repository))
+    from labourlens.report.innovation import project_innovation
+
+    report["innovation"] = project_innovation(repository, report)
     destination.parent.mkdir(parents=True, exist_ok=True)
     destination.write_text(json.dumps(report, indent=2, ensure_ascii=False, allow_nan=False) + "\n", encoding="utf-8")
     print(f"Report written: {destination}")

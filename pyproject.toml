@@ -43,7 +43,7 @@ packages = ["src/labourlens"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
-markers = ["corpus: requires locally acquired source corpus or built data artifacts"]
+markers = ["corpus: requires locally acquired source corpus or built data artifacts", "offline: runs without provider calls or private corpus"]
 
 [tool.ruff]
 line-length = 160

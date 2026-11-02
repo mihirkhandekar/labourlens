@@ -1,6 +1,6 @@
 {
   "schema_version": "report-1.0",
-  "generated_at": "2026-11-02T13:14:25.548514+00:00",
+  "generated_at": "2026-11-02T13:49:18.382196+00:00",
   "summary": {
     "title": "LabourLens research workbench",
     "scope": [
@@ -119,7 +119,11 @@
         "dataset_csv": 36,
         "report_pdf": 27,
         "release_html": 22
-      }
+      },
+      "observations": 52020,
+      "in_scope_observations": 4300,
+      "period_from": "1980-Q1",
+      "period_to": "2026-Q2"
     },
     "rows": [
       {
@@ -1150,7 +1154,8 @@
       }
     ],
     "provenance": [
-      "data/export/sources.json"
+      "data/export/sources.json",
+      "data/processed/observations.parquet"
     ]
   },
   "charts": [
@@ -78597,12 +78602,17 @@
     "The population basis of the dataset employment series is unverified."
   ],
   "provenance": {
-    "commit": "a83fbfc1be790bdd289bda679d6177981e896da5",
+    "commit": "69c1d9287705a5cb97198c51728c448f9530ed5d",
     "artifacts": [
       {
         "path": "data/export/sources.json",
         "status": "available",
         "sha256": "5f5f7333e56ef67efc3af11b1945f2b5d7866611865d8865c706f8880a60b3a9"
+      },
+      {
+        "path": "data/processed/observations.parquet",
+        "status": "available",
+        "sha256": "bb5d14d8df1c5eaaa8e18a8979dab4b6eb40eaf4059002f4884b04975165b7d3"
       },
       {
         "path": "data/export/series.json",
@@ -79605,11 +79615,6 @@
         "sha256": "e882e00df5201834f80860c084108f2bf2157a93a7d9c0aef10187fc95e08b45"
       },
       {
-        "path": "data/processed/observations.parquet",
-        "status": "available",
-        "sha256": "bb5d14d8df1c5eaaa8e18a8979dab4b6eb40eaf4059002f4884b04975165b7d3"
-      },
-      {
         "path": "experiments/corpus-snapshots/v1.json",
         "status": "available",
         "sha256": "928fa0feaa100bc5ab3eac472ec702359fcfb24502c03d06fe25620d38f9696e"
@@ -79820,5 +79825,259 @@
       }
     ],
     "policy": "Committed artifacts only; numeric fields only."
+  },
+  "innovation": {
+    "content": {
+      "title": "Evidence first. Judgement stays human.",
+      "intro": "What LabourLens contributes today, what the results actually show, and what I would add before policy makers could rely on it.",
+      "contribution_intro": "The contribution is not a new model. It is a way of keeping a research answer connected to its evidence, its calculation and its limits.",
+      "contributions": [
+        {
+          "title": "Answers with an evidence trail",
+          "text": "Validated statistical records and source passages sit behind the answer, with claim citations and observation lineage for inspection.",
+          "detail": "Numbers should come from validated tables or deterministic code. Citation checks establish mechanics, not that every claim is semantically supported."
+        },
+        {
+          "title": "The right quarter, the right release",
+          "text": "Period and release filters narrow the evidence before reranking, keeping preliminary and final releases distinguishable.",
+          "detail": "A later report can restate an earlier quarter. A hard period filter can still exclude useful evidence; conflict caveats do not guarantee that every revision is resolved."
+        },
+        {
+          "title": "Arithmetic outside the model",
+          "text": "Typed, read-only tools retrieve series and calculate changes in code rather than asking the model to do the sums.",
+          "detail": "Deterministic arithmetic can still use the wrong series or periods. Report-table arithmetic remains a weakness; the attempted tool extension failed its criteria and was not adopted."
+        },
+        {
+          "title": "An agent with boundaries",
+          "text": "A bounded research graph uses typed state, read-only tools, stopping conditions and visible task traces, with abstention when evidence is missing.",
+          "detail": "A working MCP server exposes evidence capabilities. The live route sends the statistics tool over MCP; all three tools over MCP is a measured option, not the live route."
+        },
+        {
+          "title": "Experiments that keep the losses",
+          "text": "Pre-registered comparisons, frozen outputs, gold hashes and three question sets make the design decisions inspectable.",
+          "detail": "Development questions shaped the system. The original test shares evidence with development; the fresh questions use different sources, but their outcomes are now known. Negative results stay in the record."
+        },
+        {
+          "title": "Defence in layers",
+          "text": "Untrusted-text isolation, an ingestion scanner, constrained tools and attack tests reduce the authority given to retrieved text.",
+          "detail": "The scanner is a warning layer, not a safety boundary. The attack suite is hand-written and shows no general defence effect; a planted false figure is not handled consistently across runs."
+        }
+      ],
+      "roadmap_title": "From research tool to government workbench",
+      "roadmap_intro": "Six questions from the assessment shape this plan. Every addition below is a proposal, not a shipped feature. I assume public data only, an analyst in the decision loop and a government-approved deployment; none is evidence of production readiness.",
+      "roadmap": [
+        {
+          "name": "Improve retrieval and answer quality",
+          "purpose": "Fix missing numerical evidence before adding more model complexity.",
+          "items": [
+            {
+              "title": "Start with the observed failures",
+              "why": "Current retrieval hit@8 rises from 0.539 to 0.969 on 128 development questions, but neither final test set demonstrates an answer-quality gain. Historical fresh-set numerical comparisons scored 0.214 (3 of 14); the attempted tool extension failed its criteria and was not adopted.",
+              "status": "proposal"
+            },
+            {
+              "title": "Extract tables with verified definitions",
+              "why": "Validate PDF table cells, units, populations and row/column lineage before making them calculable. Treat table_unreliable passages as insufficient evidence rather than letting a model infer the cells; test period restatements so a later report is not excluded by a hard period filter.",
+              "status": "proposal"
+            },
+            {
+              "title": "Expand only after a quality gate",
+              "why": "Add missing quarters, MOM, MTI and SingStat series and languages only with reviewed provenance, revision history and language-specific evaluation. Wider coverage is useful only if definitions and uncertainty remain visible.",
+              "status": "proposal"
+            }
+          ]
+        },
+        {
+          "name": "Detect and respond to change",
+          "purpose": "Hold a release when changing evidence or behaviour causes an unexplained regression.",
+          "items": [
+            {
+              "title": "Version inputs and rerun the gate",
+              "why": "Extend corpus fingerprints and gold-hash checks into release control: check schemas, missing quarters and revisions, then rerun evaluation on every corpus, prompt or model change. Retain the previous version and roll back on an unexplained regression.",
+              "status": "proposal"
+            },
+            {
+              "title": "Watch retrieval, answers and providers",
+              "why": "Track retrieval hit rate on reviewed probes, abstention, citation validity, grounded-number rate, latency and cost per question. Use a fixed embedding probe set, pin model versions where available and alert on provider changes; daily canaries would detect drift between releases.",
+              "status": "proposal"
+            },
+            {
+              "title": "Watch researchers' changing needs",
+              "why": "Sample minimised, pseudonymised audit logs and feedback for changing question families, clarification rates and unsupported requests. Analysts would review the shift before changing coverage; pseudonymisation does not remove all privacy risk.",
+              "status": "proposal"
+            }
+          ]
+        },
+        {
+          "name": "Support confidence and human review",
+          "purpose": "Show evidence and disagreement, not an invented confidence probability.",
+          "items": [
+            {
+              "title": "Make each answer inspectable",
+              "why": "Build on passage citations, observation lineage, abstention reasons, conflict flags, the evidence drawer and tool-call traces. Add table-row locators, side-by-side sources and evidence-coverage indicators, not hidden reasoning or a model self-rating.",
+              "status": "proposal"
+            },
+            {
+              "title": "Turn feedback into reviewed cases",
+              "why": "Existing feedback capture would feed an analyst queue: classify the failure, draft a regression case, adjudicate it and rerun one controlled change. Saved analyses, exportable cited briefings and revision alerts would preserve that trail for policy work.",
+              "status": "proposal"
+            },
+            {
+              "title": "Check quality independently",
+              "why": "Several reviewers would label before seeing AI suggestions, measure agreement and adjudicate disagreements. Add a second-family judge at full scale and repeated runs; today's AI-drafted gold, one reviewer and same-family main judge cannot establish independent accuracy.",
+              "status": "proposal"
+            }
+          ]
+        },
+        {
+          "name": "Manage privacy and third-party risk",
+          "purpose": "Replace demo admission with accountable access and an approved processing boundary.",
+          "items": [
+            {
+              "title": "Clear rights and protect identities",
+              "why": "Review data licences, report rights and publisher agreements, then replace shared demo access codes with government SSO and role-based source permissions. Set approved audit retention, restricted log access and pseudonymised records; use only public or approved synthetic data in this prototype.",
+              "status": "proposal"
+            },
+            {
+              "title": "Approve hosting and model use",
+              "why": "Data residency and private model endpoints require government approval; the current external model route is not an approved replacement. Provider data-use terms remain unverified. Review processing terms and keep a vendor exit plan with exportable evidence, a tested alternative endpoint and evaluation before switching.",
+              "status": "proposal"
+            },
+            {
+              "title": "Keep untrusted content untrusted",
+              "why": "Retain read-only tools, bounded calls and the MCP trust boundary; add an independently tested injection classifier, server allow-lists, incident ownership and recurring red-team checks. Scanner detections rose from 10 to 23 of 30, with 9 of 30 benign flags unchanged; it remains a warning layer.",
+              "status": "proposal"
+            },
+            {
+              "title": "Fail safely, without fake services",
+              "why": "On provider failure, return an explicit unavailable result or previously approved cached analysis, never an unvalidated model fallback. No live service on this page is mocked; hostile-server fixtures are synthetic tests, not government identity or hosting. Production replacements need approved SSO, private infrastructure and a reviewed provider contract.",
+              "status": "proposal"
+            }
+          ]
+        },
+        {
+          "name": "Control latency and cost",
+          "purpose": "Keep the expensive steps only when their measured quality benefit justifies them.",
+          "items": [
+            {
+              "title": "Use the measured budget, not a promise",
+              "why": "Primary development filter-then-rerank means are 14.35 s for run medians and $0.002845 per question; run p95 values are 35.4 s and 34.1 s. Costs are list-price estimates. All-three-tools MCP scored 0.877 versus 0.908 for the live statistics-only route, with median 14.3 versus 12.4 s and p95 51.4 versus 34.7 s: slower, no demonstrated gain, not live.",
+              "status": "proposal"
+            },
+            {
+              "title": "Cache and route under quality tests",
+              "why": "Retain embedding caches and test version-keyed retrieval or answer caches, filter-only routing and smaller models for triage or reranking. Cache invalidation must follow source revisions; cheaper routing must preserve citation support, numerical correctness and abstention behaviour.",
+              "status": "proposal"
+            },
+            {
+              "title": "Set budgets and stop on overruns",
+              "why": "Add per-question token, call, latency and cost budgets, p95 alerts and provider spending limits with named response owners. Proposed acceptance is p95 under 40 s and mean cost under $0.005 per question on the approved evaluation mix, with no quality regression; application reservations alone are not provider caps.",
+              "status": "proposal"
+            }
+          ]
+        },
+        {
+          "name": "Prioritise two measurable improvements",
+          "purpose": "First make report figures usable; then establish an independent estimate of quality.",
+          "items": [
+            {
+              "title": "First: validated report-table arithmetic",
+              "why": "Pre-register a single extraction-and-tool change. Use the known 14 fresh-set numerical questions as a regression set, not new-test evidence: target at least 0.50 accuracy versus the historical 0.214, no rise in all-question false-answer rate on a fixed paired suite, and unchanged definition/citation checks. Confirm on newly written blind numerical questions; reject the change if the safety or quality gate fails.",
+              "status": "proposal"
+            },
+            {
+              "title": "Second: independent review and a blind set",
+              "why": "Have at least three analysts independently label a stratified, newly written blind set before seeing AI outputs, then adjudicate. Target Fleiss' kappa at least 0.70 on behaviour labels and a 95% case-bootstrap headline accuracy interval no wider than 0.10; pre-register sampling and expand the sample if needed. Report disagreement, claim support, numerical correctness and run variance separately, without tuning on this set.",
+              "status": "proposal"
+            }
+          ]
+        }
+      ],
+      "limits": [
+        "I would not call this production ready for government or a substitute for an analyst's judgement.",
+        "Gold was AI-drafted and reviewed by one person after AI pre-review and scoring, not independently labelled by several analysts.",
+        "The main judge is from the same model family. The three question sets are only partially independent, and neither final test set demonstrates a retrieval-driven answer-quality gain.",
+        "A citation is not proof of truth, a correct calculation is not proof of the right inputs, and a scanner pass is not proof of safety.",
+        "Rights clearance, provider data-use terms and the population basis of the employment series remain unverified."
+      ]
+    },
+    "measurements": {
+      "retrieval": {
+        "n": 128,
+        "R0": 0.5391,
+        "R3": 0.9688
+      },
+      "splits": [
+        {
+          "id": "dev",
+          "n": 237,
+          "arms": [
+            {
+              "arm": "r3",
+              "accuracy": 0.8966244725738397,
+              "latency": 14.35,
+              "cost": 0.0028450000000000003
+            },
+            {
+              "arm": "hybrid",
+              "accuracy": 0.8270042194092827,
+              "latency": 10.05,
+              "cost": 0.001695
+            }
+          ]
+        },
+        {
+          "id": "registered",
+          "n": 31,
+          "arms": [
+            {
+              "arm": "r3",
+              "accuracy": 0.8387096774193549,
+              "latency": 13.850000000000001,
+              "cost": 0.002525
+            },
+            {
+              "arm": "hybrid",
+              "accuracy": 0.8064516129032258,
+              "latency": 10.55,
+              "cost": 0.00154
+            }
+          ]
+        },
+        {
+          "id": "fresh",
+          "n": 65,
+          "arms": [
+            {
+              "arm": "r3",
+              "accuracy": 0.7153846153846154,
+              "latency": 17.35,
+              "cost": 0.00325
+            },
+            {
+              "arm": "hybrid",
+              "accuracy": 0.7461538461538462,
+              "latency": 11.0,
+              "cost": 0.00169
+            }
+          ]
+        }
+      ],
+      "scanner": {
+        "before": 10,
+        "after": 23
+      },
+      "mcp": {
+        "compared_datasets": 36,
+        "different_outputs": 0,
+        "identical_datasets": 23,
+        "matching_refusals": 13
+      }
+    },
+    "source": {
+      "path": "docs/innovation-page.json",
+      "sha256": "f0db3f22e99a6b0708224e6b685f035b2467801029d88182bfb6cd15f2d39800",
+      "evidence_commit": "69c1d9287705a5cb97198c51728c448f9530ed5d"
+    }
   }
 }

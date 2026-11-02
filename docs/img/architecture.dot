@@ -1,74 +1,86 @@
-// Source of docs/img/architecture.svg. Same content as the Mermaid diagram in docs/architecture.md section 2.
+// Source of architecture.svg and architecture.png; complements the Mermaid overview in docs/architecture.md.
 // Render: dot -Tsvg docs/img/architecture.dot -o docs/img/architecture.svg
-digraph labourlens {
-  rankdir=TB; compound=true; newrank=true; nodesep=0.25; ranksep=0.4;
-  graph [fontname="Helvetica", fontsize=13, labeljust=l, style="rounded", color="#8a8f98", bgcolor="white", pad=0.2];
-  node  [fontname="Helvetica", fontsize=11, shape=box, style="rounded,filled", fillcolor="#f4f6f8", color="#5b6470"];
-  edge  [fontname="Helvetica", fontsize=9, color="#5b6470", arrowsize=0.7];
+// Rasterise: rsvg-convert docs/img/architecture.svg -o docs/img/architecture.png
+ digraph labourlens {
+  rankdir=TB; compound=true; newrank=true; nodesep=0.24; ranksep=0.42;
+  graph [fontname="Helvetica", fontsize=16, label="LabourLens | Evidence, research and evaluation", labelloc=t,
+         labeljust=l, style="rounded", color="#a7b3c1", bgcolor="white", pad=0.25];
+  node [fontname="Helvetica", fontsize=11, shape=box, style="rounded,filled", margin="0.13,0.10",
+        fillcolor="#f5f7fa", color="#66788c", fontcolor="#15283d"];
+  edge [fontname="Helvetica", fontsize=9, color="#61758c", fontcolor="#40546b", arrowsize=0.65];
 
-  subgraph cluster_data { label="Acquisition and evidence stores";
-    SOURCE [label="Official CSV / PDF / HTML"];
-    SNAP   [label="Immutable hashed snapshots"];
-    PARSE  [label="Normalise observations /\nextract passages"];
-    SCAN   [label="Ingestion injection scan\nheuristics + review allow-list"];
-    STORE  [label="Validated observations\n+ passages", shape=cylinder];
-    INDEX  [label="BM25 + dense index", shape=cylinder];
-    SOURCE -> SNAP -> PARSE; PARSE -> SCAN; PARSE -> STORE -> INDEX;
-    SCAN -> STORE [style=dashed, label="quality report /\nreview"];
+  subgraph cluster_data {
+    label="1  Acquisition and evidence stores"; fontsize=14; bgcolor="#f5f9fd";
+    SOURCE [label="Official public sources\ndata.gov.sg / MOM / SingStat / MTI\nCSV + PDF + HTML"];
+    SNAP [label="Immutable snapshots\nSHA-256 + source / date / rights manifest", shape=cylinder, fillcolor="#e5effa"];
+    PARSE [label="Normalise observations\nExtract passages + page / section locators"];
+    SCAN [label="Ingestion injection scanner\nHeuristics + review allow-list\nQuality flags, not a proof of safety", fillcolor="#e6f3eb"];
+    STORE [label="Validated observation table (Parquet)\nPassages with quality flags (JSONL)\nProvenance + units + release status", shape=cylinder, fillcolor="#e5effa"];
+    CHUNK [label="Eligible passages to merge200 chunks\nSame source / section; passage IDs retained"];
+    EMBED [label="EMBEDDINGS API call\ntext-embedding-3-large\nContent- and model-keyed local cache", fillcolor="#eee8fa"];
+    INDEX [label="BM25 keyword index + dense vectors\nSame chunks; corpus fingerprint checks", shape=cylinder, fillcolor="#e5effa"];
+    RIGHTS [label="Public packaging boundary\nMOM / MTI reports and extracted text\nstay local; links and metadata in Git", shape=note];
+    SOURCE -> SNAP -> PARSE -> SCAN -> STORE -> CHUNK;
+    CHUNK -> EMBED -> INDEX;
+    CHUNK -> INDEX [label="BM25", constraint=false];
+    SNAP -> RIGHTS [style=dotted, constraint=false];
   }
-  subgraph cluster_runtime { label="Bounded research workflow";
-    USER   [label="Research question"];
-    ADMIT  [label="Authentication +\nbudget / rate limit"];
-    INPUT  [label="Input guard\nlength checks + injection flags"];
-    PLAN   [label="Planner\nquestion + catalogue, no passage text"];
-    SEARCH [label="search_reports\nBM25 + dense, filter / rerank"];
-    SERIES [label="get_series\nvalidated observation rows"];
-    CALC   [label="calculate_change\nDecimal arithmetic on returned rows"];
-    DIRECT [label="Direct statistics function\nfull-set evaluations"];
-    OBS    [label="Observation rows\nunits + provenance"];
-    ASSESS [label="Assess evidence\n+ source-conflict cross-check: annotate"];
-    ANSWER [label="Generate structured answer"];
-    VALID  [label="Quote / citation / status validator\n+ source-conflict cross-check: enforce"];
-    REDACT [label="Output blocking + redaction"];
-    OUT    [label="Cited answer + activity timeline"];
-    USER -> ADMIT -> INPUT -> PLAN;
-    PLAN -> SEARCH [label="tool call"];
-    PLAN -> SERIES [label="tool call"];
-    PLAN -> CALC [label="tool call"];
-    SEARCH -> ASSESS [label="report chunks"];
-    OBS -> ASSESS [label="validated rows"];
-    SERIES -> DIRECT [label="direct backend"];
-    DIRECT -> OBS;
-    CALC -> ASSESS [label="calculated result"];
-    ASSESS -> ANSWER;
+
+  subgraph cluster_runtime {
+    label="2  Research workflow | one bounded LangGraph agent"; fontsize=14; bgcolor="#fafbfd";
+    USER [label="Research question / web workspace"];
+    ADMIT [label="Authentication + budget / rate limits\nRequest bounds", fillcolor="#e6f3eb"];
+    WEBONLY [label="SERVED ONLY\nSmall-talk fast path (no model)\nContextualise when needed: MODEL call\nScope triage: MODEL call\nRewrite / triage errors pass to agent", fillcolor="#eee8fa"];
+    INPUT [label="Input guard\nLength checks + injection flags", fillcolor="#e6f3eb"];
+    PLAN [label="PLANNER model call\nQuestion + catalogue, never passage text\nChoose from three typed read-only tools", fillcolor="#eee8fa"];
+    SEARCH [label="search_reports\nIn process in live / full evaluation"];
+    SERIES [label="get_series\nValidated statistical observations"];
+    CALC [label="calculate_change\nDeterministic Decimal arithmetic\non returned observation rows"];
+    RETR [label="BM25 + dense candidate retrieval\nQuery EMBEDDINGS API call\nPeriod / release filter + fusion\nTop-30 RERANK model call", fillcolor="#eee8fa"];
+    MCP [label="LIVE: get_series via MCP get_statistic\nLocal stdio client / read-only server\nSchema checks, deadlines, size caps, quarantine\nFULL EVAL: direct statistics function"];
+    ISOLATE [label="Untrusted-text isolation\nEvidence registry separate from planner state\nReports are data, never instructions", fillcolor="#e6f3eb"];
+    ASSESS [label="Assess evidence + data notes\nAnnotate source conflicts\n2 rounds / 6 tool calls; 10 s per tool\n1 transient retry; failures stay operational"];
+    ANSWER [label="ANSWER model call\nStructured claims + passage / row citations\nAnswer / abstain / clarify / refuse", fillcolor="#eee8fa"];
+    VALID [label="Deterministic validators\nSchema / quote / citation / status checks\nSource-conflict enforcement; 1 answer repair", fillcolor="#e6f3eb"];
+    OUT [label="Output guard: block / redact\nCited answer + evidence + activity timeline", fillcolor="#e6f3eb"];
+    AUDIT [label="Redacted audit + local run traces\nTool outcomes, model / prompt versions\nEvidence IDs, usage, latency, cost\nPrivate files, not public report text", shape=cylinder, fillcolor="#e5effa"];
+    USER -> ADMIT -> WEBONLY -> INPUT -> PLAN;
+    PLAN -> SEARCH; PLAN -> SERIES; PLAN -> CALC;
+    {rank=same; SEARCH; SERIES; CALC;}
+    SEARCH -> RETR -> ISOLATE;
+    SERIES -> MCP -> ISOLATE;
+    CALC -> ISOLATE [label="calculated result"];
+    ISOLATE -> ASSESS -> ANSWER -> VALID -> OUT -> AUDIT;
     ASSESS -> PLAN [label="bounded next round", constraint=false];
-    VALID  -> ANSWER [label="one repair", constraint=false];
-    ANSWER -> VALID -> REDACT -> OUT;
+    VALID -> ANSWER [label="one repair", constraint=false];
   }
-  subgraph cluster_mcp { label="Live statistics transport only";
-    CLIENT [label="MCP client\nschema checks + quarantine"];
-    SERVER [label="MCP server\nget_statistic; 9 tools / 2 resources / 1 prompt"];
-    CLIENT -> SERVER;
-  }
-  SERIES -> CLIENT [style=dashed, label="live app only"];
-  SERVER -> STORE [label="read-only query"];
-  DIRECT -> STORE [style=dotted, label="direct query"];
-  STORE -> OBS;
 
-  subgraph cluster_eval { label="Offline evaluation, separate from serving";
-    GOLD    [label="Versioned gold\ndevelopment / held-out split"];
-    RUNS    [label="Saved answers + traces"];
-    HARNESS [label="Evaluation harness"];
-    DETER   [label="Deterministic metrics"];
-    JUDGE   [label="LLM judge\nsupport + fact coverage"];
-    HUMAN   [label="Owner review: 403 items, one reviewer,\nafter AI pre-review; not independent"];
-    REPORT  [label="Versioned metrics + error analysis"];
-    GOLD -> HARNESS; RUNS -> HARNESS; HARNESS -> DETER -> REPORT; HARNESS -> JUDGE -> REPORT;
-    HARNESS -> HUMAN; HUMAN -> REPORT [style=dashed, label="selected cards, not\npopulation accuracy"];
+  subgraph cluster_eval {
+    label="3  Offline evaluation | separate from serving"; fontsize=14; bgcolor="#fbf8f2";
+    GOLD [label="Versioned gold + expected evidence IDs\nDevelopment / original test / fresh cases\nFrozen cases and configurations"];
+    ENTRY [label="Full-evaluation agent entry\nNo small-talk / contextualise / scope triage\nAll three tools direct, not MCP"];
+    RUNS [label="Saved answers + evidence IDs + traces\nCorpus / prompt / model / config metadata"];
+    HARNESS [label="Evaluation harness\nRaw run artefacts retained; no live feedback"];
+    SCORERS [label="Deterministic scorers\nRetrieval recall / ranking; behaviour\nNumbers / citations / tool failures\nLatency + token use + cost"];
+    JUDGE [label="JUDGE model calls (offline)\nClaim support + reference-fact coverage\nSeparate cross-model judge checks\nAI judgement, not human review", fillcolor="#eee8fa"];
+    HUMAN [label="Owner human review\nOne reviewer after AI pre-review\nNot independent / population accuracy"];
+    THREAT [label="Threat cases + separate direct-agent runs\nInjection / poisoned passages / false figures\nSecrets / unsafe tools / MCP hostile fixtures\nDeterministic verdicts + guard ablations", fillcolor="#e6f3eb"];
+    REPORT [label="Versioned metrics + error analysis\nStratified findings + limitations\nNo changes to live answers"];
+    TRANSPORT [label="MCP transport comparison, not live\nmcp_all routes search_reports, get_series\nand calculate_change through local MCP\nQuery embeddings / rerank remain app-side", shape=note];
+    LEGEND [label="Reading the diagram\nPurple: model / embeddings API calls\nGreen: guards or threat checks\nBlue cylinders: local evidence / audit stores\nDashed links: alternate entry / read route", shape=note, fillcolor="white"];
+    GOLD -> ENTRY -> RUNS -> HARNESS;
+    HARNESS -> SCORERS -> REPORT;
+    HARNESS -> JUDGE -> REPORT;
+    HARNESS -> HUMAN -> REPORT;
+    {rank=same; SCORERS; JUDGE; HUMAN;}
+    THREAT -> REPORT [label="saved verdicts", constraint=false];
+    REPORT -> THREAT [style=invis];
+    THREAT -> TRANSPORT [style=invis];
+    TRANSPORT -> LEGEND [style=invis];
   }
-  WEB   [label="Research workspace"];
-  AUDIT [label="Redacted audit + local traces", shape=cylinder];
 
-  INDEX -> SEARCH [label="query when tool is called"];
-  OUT -> RUNS; OUT -> WEB; OUT -> AUDIT;
-}
+  {rank=same; SOURCE; USER; GOLD;}
+  INDEX -> RETR [label="read index", constraint=false];
+  STORE -> MCP [label="read observations", style=dashed, constraint=false];
+  ENTRY -> INPUT [label="bypass served-only stages", style=dashed, constraint=false];
+ }

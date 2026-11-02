@@ -56,7 +56,7 @@ export function renderScope(m, ctx) {
   const nDocs = (m.section('sources').metrics?.by_type?.report_pdf || 0) + (m.section('sources').metrics?.by_type?.release_html || 0);
   const ch = chapter({
     id: 'scope',
-    title: `The analysis window is ${nQ} quarters, ${fmt.quarter(m.scope[0])} to ${fmt.quarter(m.scope[1])}, over four datasets and ${nDocs} MOM documents`,
+    title: `The analysis window is ${nQ} quarters, ${fmt.quarter(m.scope[0])} to ${fmt.quarter(m.scope[1])}, over ${m.section('sources').metrics?.by_type?.dataset_csv} datasets and ${nDocs} MOM and MTI documents`,
     bullets: ['Users: policy researchers comparing statistics with MOM commentary.', 'Output: cited answer, clarification, abstention or refusal.', 'The evaluation measures where that behaviour fails.']
   });
   const [from, to] = m.scope;
