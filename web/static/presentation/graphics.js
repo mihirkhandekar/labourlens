@@ -311,6 +311,121 @@ export function finalCostFacts(m) {
     over: c.over_abstention_rate?.rate, overBase: h.over_abstention_rate?.rate, falseRate: c.false_answer_rate?.rate, falseBase: h.false_answer_rate?.rate};
 }
 
+/** The wording the owner fixed for the claim-support gain. It stays attached to every statement of that gain. */
+export const SUPPORT_LABEL = 'judge-measured; a second judge did not reproduce it for gpt-5.6-luna';
+const SJ_MODELS = ['gpt-6-luna', 'gpt-5.6-luna'];
+const SJ_SETS = [['dev', 'development'], ['heldout', 'original test'], ['fresh', 'fresh']];
+const signed = v => `${v >= 0 ? '+' : '-'}${Math.abs(v * 100).toFixed(1)}`;
+
+/** The second-judge check as plain facts, read from report.json evaluation.second_judge. Null when the section is absent or incomplete. */
+export function secondJudgeFacts(m) {
+  const s = m.secondJudge, a = s?.analysis;
+  if (!a?.agreement?.claim_labels || !a.paired) return null;
+  const pair = (model, set, metric) => {
+    const p = a.paired[model]?.[set]?.[metric], o = p?.judges?.original, c = p?.judges?.second;
+    if (!finite(o?.pooled_r3_minus_hybrid) || !finite(c?.pooled_r3_minus_hybrid)) return null;
+    const flip = typeof p.sign_flip?.pooled_r3_minus_hybrid === 'boolean' ? p.sign_flip.pooled_r3_minus_hybrid : o.pooled_r3_minus_hybrid * c.pooled_r3_minus_hybrid < 0;
+    return {orig: o.pooled_r3_minus_hybrid, second: c.pooled_r3_minus_hybrid, origMean: o.mean_paired_r3_minus_hybrid, secondMean: c.mean_paired_r3_minus_hybrid, n: o.n_pairs, flip};
+  };
+  const models = SJ_MODELS.map(model => {
+    const claim = pair(model, 'all', 'claim_support'), fact = pair(model, 'all', 'fact_coverage');
+    if (!claim || !fact) return null;
+    return {model, claim, fact, den: a.denominators?.[`${model}/all`] || {}, sets: SJ_SETS.map(([id, label]) => ({label, claim: pair(model, id, 'claim_support'), fact: pair(model, id, 'fact_coverage')})).filter(x => x.claim && x.fact)};
+  }).filter(Boolean);
+  if (!models.length) return null;
+  const den = models.map(x => x.den);
+  return {s, judge: s.model || 'the second judge', original: s.original_judge || 'the original judge', agreement: a.agreement, omitted: a.judge_omitted || {}, models,
+    sampled: den.every(d => finite(d.sampled_items)) ? den.reduce((t, d) => t + d.sampled_items, 0) : null};
+}
+
+const kappaText = v => (finite(v) ? v.toFixed(2) : 'not recorded');
+
+/** One paragraph for notes, popovers and the report. Every number is read from the data. */
+export function secondJudgeSentence(m) {
+  const f = secondJudgeFacts(m);
+  if (!f) return '';
+  const diffs = key => f.models.map(x => `${x.model} ${signed(x[key].orig)} under ${f.original} and ${signed(x[key].second)} under ${f.judge} (${fmt.int(x[key].n)} valid pairs)`).join('; ');
+  const c = f.agreement.claim_labels, k = f.agreement.any_contradicted, u = f.agreement.any_unsupported;
+  const omitted = finite(f.omitted.count) ? ` The second judge could not label ${fmt.int(f.omitted.count)}${finite(f.sampled) ? ` of ${fmt.int(f.sampled)}` : ''} sampled answers after one retry; they are left out and not filled in.` : '';
+  return `Second judge check. The claim-support gain is ${SUPPORT_LABEL}. Filter then rerank minus hybrid, pooled, in percentage points: claim support ${diffs('claim')}. Fact coverage ${diffs('fact')}. Agreement between the judges on claim labels: ${fmt.pct(c.raw_agreement)} raw, kappa ${kappaText(c.kappa)} (${fmt.int(c.n)} claims); on contradicted facts kappa ${kappaText(k?.kappa)}; on unsupported claims raw ${fmt.pct(u?.raw_agreement)} but kappa ${kappaText(u?.kappa)}, which is uninformative when positives are rare.${omitted} Rates are conditional on valid pairs, from one saved run. This is not a human review.`;
+}
+
+function pairTip(f, model, label, p, extra) {
+  const lines = [`${model}, ${label}. Filter then rerank minus hybrid, pooled: ${signed(p.orig)} points under ${f.original}, ${signed(p.second)} under ${f.judge}. Mean of the per-answer differences: ${finite(p.origMean) ? signed(p.origMean) : 'not recorded'} and ${finite(p.secondMean) ? signed(p.secondMean) : 'not recorded'}. ${fmt.int(p.n)} valid pairs.${p.flip ? ' The sign differs between the two judges.' : ''}`];
+  if (extra.length) lines.push(`By question set, ${f.original} then ${f.judge}: ${extra.map(x => `${x.label} ${signed(x.p.orig)} and ${signed(x.p.second)} (${fmt.int(x.p.n)} pairs)`).join('; ')}.`);
+  return lines.join('\n');
+}
+
+/** The second judge, compact: agreement between the judges, and the filter-then-rerank difference under each. Detail on hover or focus. */
+export function secondJudge(m) {
+  const f = secondJudgeFacts(m);
+  if (!f) return null;
+  const wrap = el('div', 'sj');
+  wrap.setAttribute('role', 'group'); wrap.setAttribute('aria-label', secondJudgeSentence(m));
+
+  const left = el('div', 'sj-col');
+  left.append(el('h3', 'sj-head', 'How far the two judges agree'), el('p', 'sj-sub', 'Agreement beyond chance (kappa), 1 is perfect and 0 is chance. The tick marks 0.4.'));
+  [['claim_labels', 'Claim support labels', 'claims'], ['any_contradicted', 'Contradicts a reference fact', 'answers'], ['any_unsupported', 'Has an unsupported claim', 'answers']].forEach(([key, label, unit]) => {
+    const a = f.agreement[key];
+    if (!a || !finite(a.kappa)) return;
+    const row = el('div', 'sj-row'); const track = el('div', 'sj-track'); const bar = el('div', 'sj-bar'); bar.style.setProperty('--w', `${Math.round(Math.max(0, Math.min(1, a.kappa)) * 100)}%`);
+    track.append(bar);
+    const name = el('span', 'sj-label', label);
+    const rare = finite(a.raw_agreement) && a.raw_agreement >= 0.95 && a.kappa < 0.4;
+    row.append(name, track, el('span', 'sj-val num', a.kappa.toFixed(2)));
+    withTip(row, `${label}: ${fmt.int(a.n)} ${unit} judged by both. Raw agreement ${fmt.pct(a.raw_agreement)}, kappa ${a.kappa.toFixed(2)}.${rare ? ' Raw agreement is high but kappa is low because almost every item gets the same label, so kappa says little here.' : ''}${key === 'claim_labels' && a.kappa < 0.4 ? ' This is below the 0.4 level I set as a problem.' : ''}`, 'is-up is-wide');
+    left.append(row);
+  });
+
+  const all = f.models.flatMap(x => [x.claim.orig, x.claim.second, x.fact.orig, x.fact.second]);
+  const dom = Math.max(0.1, Math.ceil(Math.max(...all.map(Math.abs)) * 1.1 / 0.05) * 0.05);
+  const pos = v => 50 + Math.max(-1, Math.min(1, v / dom)) * 50;
+  const right = el('div', 'sj-col sj-pairs');
+  right.append(el('h3', 'sj-head', 'Filter then rerank minus hybrid, in points'));
+  const key = el('p', 'sj-key');
+  const k1 = el('span', 'sj-k is-orig'), k2 = el('span', 'sj-k is-new');
+  key.append(k1, document.createTextNode(` ${f.original}   `), k2, document.createTextNode(` ${f.judge}`));
+  right.append(key);
+  f.models.forEach(x => {
+    const block = el('div', 'sj-model'); block.append(el('p', 'sj-name', x.model));
+    [['Claim support', 'claim'], ['Fact coverage', 'fact']].forEach(([label, k]) => {
+      const p = x[k], row = el('div', 'sj-row');
+      const track = el('div', 'sj-diverge'); track.style.setProperty('--a', `${pos(p.orig)}%`); track.style.setProperty('--b', `${pos(p.second)}%`);
+      track.append(el('span', 'sj-seg'), el('span', 'sj-dot is-orig'), el('span', 'sj-dot is-new'));
+      const vals = el('span', 'sj-vals num'); vals.append(el('span', 'sj-v', signed(p.orig)), document.createTextNode(' / '), el('span', `sj-v${p.flip ? ' is-flip' : ''}`, signed(p.second)));
+      row.append(el('span', 'sj-label', label), track, vals);
+      withTip(row, pairTip(f, x.model, label.toLowerCase(), p, x.sets.map(s => ({label: s.label, p: s[k]}))), 'is-up is-wide');
+      block.append(row);
+    });
+    right.append(block);
+  });
+  const axis = el('div', 'sj-axis num'); axis.append(el('span', '', `-${Math.round(dom * 100)}`), el('span', '', '0'), el('span', '', `+${Math.round(dom * 100)}`));
+  right.append(axis);
+
+  const cols = el('div', 'sj-cols'); cols.append(left, right);
+  const pairs = f.models.map(x => finite(x.den.analysed_pairs) && finite(x.den.sampled_pairs) ? `${x.model} ${fmt.int(x.den.analysed_pairs)} of ${fmt.int(x.den.sampled_pairs)}` : null).filter(Boolean);
+  const foot = el('p', 'sj-foot', `Valid pairs, same questions in both retrieval arms: ${pairs.join(', ')}.${finite(f.omitted.count) ? ` The second judge could not label ${fmt.int(f.omitted.count)} sampled answers, so I left them out.` : ''} Underlined: the sign differs between judges. Not a human review.`);
+  const s = f.s;
+  const spend = finite(s.new_spend_list_price_usd) ? ` New spend at list prices $${s.new_spend_list_price_usd.toFixed(2)}, an estimate and not an invoice.` : '';
+  withTip(foot, `${f.judge} re-judged the answers with the same judge prompt, input and output schema as ${f.original}. ${finite(f.sampled) ? `${fmt.int(f.sampled)} sampled answers` : 'Sampled answers'}${finite(s.n_calls) ? `, ${fmt.int(s.n_calls)} calls` : ''}, drawn without replacement${finite(s.seed) ? ` with seed ${s.seed}` : ''}, in proportion to question set and family, from questions both retrieval arms answered with claims. ${finite(s.semantic_retries) ? `${fmt.int(s.semantic_retries)} retries for malformed output. ` : ''}${finite(s.cached_calls) ? `${fmt.int(s.cached_calls)} cached calls reused. ` : ''}One saved generation run, conditional on those valid pairs.${spend}\n${secondJudgeSentence(m)}`, 'is-up is-wide');
+  wrap.append(cols, foot);
+  return wrap;
+}
+
+/** Speaker-note paragraph that explains the second-judge graphic. Empty when the data is absent. */
+export function secondJudgeNote(m) {
+  const f = secondJudgeFacts(m);
+  if (!f) return '';
+  const sizes = f.models.map(x => `${finite(x.den.sampled_pairs) ? fmt.int(x.den.sampled_pairs) : 'some'} for ${x.model}`).join(' and ');
+  return `The graphic is the second-judge check. ${f.judge} re-judged answers that both retrieval arms answered with claims, the same questions in both arms (${sizes}), drawn once at random from the first final run only. Hover a row for the pooled and per-answer differences, the pairs behind them and the question-set breakdown. It shows how sensitive the support labels are to the judge. It is not a human review and not ground truth. ${secondJudgeSentence(m)}`;
+}
+
+/** A question and answer for the notes: did the second judge confirm the support gain. Null when the data is absent. */
+export function secondJudgeQa(m) {
+  const sentence = secondJudgeSentence(m);
+  return sentence ? ['Did a second judge confirm that filter then rerank improves claim support?', `Not for gpt-5.6-luna. The claim-support gain is ${SUPPORT_LABEL}. ${sentence}`] : null;
+}
+
 /** The headline result: per question set and model, hybrid against filter then rerank, with the paired difference. Detail on hover or focus. */
 export function finalComparison(m) {
   const f = finalFacts(m);
@@ -333,6 +448,7 @@ export function finalComparison(m) {
       const x = r3.metrics, y = hy.metrics, ci = a => (a?.ci95 ? ` [${fmt.pct(a.ci95[0])} to ${fmt.pct(a.ci95[1])}]` : '');
       tipLines.push(`${model}: mean of two runs. Filter then rerank ${fmt.pct(r3rate)}, first ${fmt.pct(r3.runs?.run1)}, second ${fmt.pct(r3.runs?.run2)}. Hybrid ${fmt.pct(hyrate)}, first ${fmt.pct(hy.runs?.run1)}, second ${fmt.pct(hy.runs?.run2)}. ${p?.interval ? `Paired mean difference ${pointsText(p.paired_difference)}, 95% case-bootstrap interval ${(p.interval[0] * 100).toFixed(1)} to ${(p.interval[1] * 100).toFixed(1)} points. Direction agrees across runs: ${p.sign_agrees ? 'yes' : 'no'}. ` : ''}False-answer and over-abstention shares here use all ${s.n} questions, not an answerable-only denominator: ${fmt.pct(x.false_answer_rate?.rate)} / ${fmt.pct(x.over_abstention_rate?.rate)} against ${fmt.pct(y.false_answer_rate?.rate)} / ${fmt.pct(y.over_abstention_rate?.rate)}. Mean cost $${x.cost_per_case_usd?.toFixed(5)} against $${y.cost_per_case_usd?.toFixed(5)}. Mean of run medians ${x.latency_p50_s?.toFixed(1)} s against ${y.latency_p50_s?.toFixed(1)} s. Two runs are not a variance estimate.`);
     });
+    if (s.id === 'dev') { const sj = secondJudgeSentence(m); if (sj) tipLines.push(sj); }
     withTip(col, tipLines.join('\n'), 'is-down is-wide');
     cols.append(col);
   });
@@ -976,13 +1092,19 @@ export function contentMetricsText(m) {
   const strata = Object.entries(a3.strata || {}).filter(([, v]) => finite(v.behaviour_accuracy));
   const weak = strata.sort((p, q) => p[1].behaviour_accuracy - q[1].behaviour_accuracy)[0];
   const base = a1?.metrics;
-  return `Beyond behaviour accuracy, on the ${fmt.int(x.n_cases)} development questions in the first final-system run (FIN, not the two-run mean), gpt-6-luna with filter then rerank: ${rate('claim_supported_rate')} of ${fmt.int(x.claims_judged)} claims were supported by their cited passage (an AI judge), the gold passage was cited in ${rate('gold_cited_any')} of answers that needed one, fact coverage was ${rate('fact_coverage')} and key-number recall ${rate('key_number_recall')}. Median ${x.latency_p50_s} s, 95th percentile ${x.latency_p95_s} s and ${fmt.money(x.cost_per_case_usd)} a question${base ? `, against ${base.latency_p50_s} s and ${fmt.money(base.cost_per_case_usd)} for hybrid` : ''}.${weak ? ` By question type: ${strata.map(([k, v]) => `${k.replace(/_/g, ' ')} ${fmt.pct(v.behaviour_accuracy)} of ${fmt.int(v.n)}`).join(', ')}.` : ''}`;
+  const second = secondJudgeSentence(m);
+  return `Beyond behaviour accuracy, on the ${fmt.int(x.n_cases)} development questions in the first final-system run (FIN, not the two-run mean), gpt-6-luna with filter then rerank: ${rate('claim_supported_rate')} of ${fmt.int(x.claims_judged)} claims were supported by their cited passage (one AI judge, gpt-6.1-terra; claim support is judge-measured), the gold passage was cited in ${rate('gold_cited_any')} of answers that needed one, fact coverage was ${rate('fact_coverage')} and key-number recall ${rate('key_number_recall')}. Median ${x.latency_p50_s} s, 95th percentile ${x.latency_p95_s} s and ${fmt.money(x.cost_per_case_usd)} a question${base ? `, against ${base.latency_p50_s} s and ${fmt.money(base.cost_per_case_usd)} for hybrid` : ''}.${weak ? ` By question type: ${strata.map(([k, v]) => `${k.replace(/_/g, ' ')} ${fmt.pct(v.behaviour_accuracy)} of ${fmt.int(v.n)}`).join(', ')}.` : ''}${second ? ` ${second}` : ''}`;
 }
 
 export function measureCards(m) {
   const dev = m.evalRow('dev-A3', 'gpt-6-luna')?.metrics?.n_cases, held = m.heldRow('r3', 'gpt-6-luna')?.metrics?.n_cases, v2 = m.section('evaluation').heldout_v2?.paired?.['gpt-6-luna']?.n_gold_cases;
   const referenceCount = finite(dev) && finite(held) ? fmt.int(dev + held) : 'not recorded';
-  return cardRow([{icon: 'stack', head: 'Reference questions', line: `${referenceCount} questions written for development and testing.`, tip: HYPOTHESES}, {icon: 'chart-line', head: 'Fresh questions', line: `${fmt.int(v2)} questions on sources no earlier question uses. Run once, never tuned on.`}, {icon: 'check-circle', head: 'Human reviewed', line: 'I signed off the labels on both sets, 40 saved answers and 30 source checks.', tip: contentMetricsText(m)}]);
+  const cards = cardRow([{icon: 'stack', head: 'Reference questions', line: `${referenceCount} questions written for development and testing.`, tip: HYPOTHESES}, {icon: 'chart-line', head: 'Fresh questions', line: `${fmt.int(v2)} questions on sources no earlier question uses. Run once, never tuned on.`}, {icon: 'check-circle', head: 'Human reviewed', line: 'I signed off the labels on both sets, 40 saved answers and 30 source checks.', tip: contentMetricsText(m)}]);
+  const second = secondJudge(m);
+  if (!second) return cards;
+  cards.classList.add('is-compact');
+  const wrap = el('div', 'g-measure'); wrap.append(cards, second);
+  return wrap;
 }
 
 /** The development loop with the written guardrails around it, and three counts: the decision log (computed from the report data), five end-to-end reviewers, the rights scan result. */

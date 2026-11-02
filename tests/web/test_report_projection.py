@@ -804,3 +804,55 @@ def test_builder_text_has_no_unsupported_review_wording():
     assert "signed off on every case, answer verdict and source check" in source
     assert "quick confirmation" not in source and "owner-confirmed" not in source
     assert "not independent inter-rater evidence" in source
+
+
+_XJ = "experiments/xjudge/sonnet55-FIN-s60-b-20261102/summary.json"
+
+
+def _xjudge_fixture():
+    return SyntheticArtifacts({_XJ: {
+        "original_judge": "gpt-6.1-terra", "model": "claude-sonnet-5-5", "status": "completed",
+        "seed": 20261102, "n_calls": 240, "completed_calls": 240, "semantic_retries": 3,
+        "new_spend_list_price_usd": 0.57, "api_key": "PRIVATE_KEY",
+        "analysis": {
+            "agreement": {"claim_labels": {"n": 432, "raw_agreement": 0.84, "kappa": 0.44},
+                          "any_contradicted": {"n": 226, "raw_agreement": 0.99, "kappa": 0.91}},
+            "paired": {"gpt-5.6-luna": {"all": {"claim_support": {
+                "judges": {"original": {"pooled_r3_minus_hybrid": 0.168, "n_pairs": 58},
+                           "second": {"pooled_r3_minus_hybrid": 0.005, "n_pairs": 58}},
+                "sign_flip": {"pooled_r3_minus_hybrid": False}}}}},
+            "denominators": {"gpt-5.6-luna/all": {"sampled_items": 120, "judge_omitted_items": 2}},
+            "judge_omitted": {"count": 3, "by_family": {"factual_lookup": 1},
+                              "by_arm": {"gpt-5.6-luna/r3": 2},
+                              "items": [{"case_id": "PRIVATE_CASE", "reason": "PRIVATE_TEXT"}]},
+            "disagreements_by_family": {"factual_lookup": [{"case_id": "PRIVATE_CASE"}]},
+            "sign_flip_problem": True, "low_kappa_problem": True, "omission_problem": True,
+        },
+    }})
+
+
+def test_second_judge_projection_keeps_aggregates_only():
+    from labourlens.report.build import _second_judge
+
+    section = _second_judge(_xjudge_fixture())
+    analysis = section["analysis"]
+    assert section["model"] == "claude-sonnet-5-5" and section["original_judge"] == "gpt-6.1-terra"
+    assert section["n_calls"] == 240 and section["seed"] == 20261102
+    assert analysis["agreement"]["claim_labels"] == {"n": 432, "raw_agreement": 0.84, "kappa": 0.44}
+    paired = analysis["paired"]["gpt-5.6-luna"]["all"]["claim_support"]
+    assert paired["judges"]["original"]["pooled_r3_minus_hybrid"] == 0.168
+    assert paired["judges"]["second"]["pooled_r3_minus_hybrid"] == 0.005
+    assert analysis["judge_omitted"] == {"count": 3, "by_family": {"factual_lookup": 1}, "by_arm": {"gpt-5.6-luna/r3": 2}}
+    assert analysis["sign_flip_problem"] and analysis["low_kappa_problem"] and analysis["omission_problem"]
+    assert "conditional on valid pairs" in analysis["incompleteness_warning"]
+    text = json.dumps(section)
+    for private in ("PRIVATE_KEY", "PRIVATE_CASE", "PRIVATE_TEXT", "disagreements"):
+        assert private not in text
+    assert section["provenance"] == [_XJ]
+
+
+def test_second_judge_missing_summary_is_none_and_artifact_is_allowlisted():
+    from labourlens.report.build import _second_judge
+
+    assert _second_judge(SyntheticArtifacts({})) is None
+    assert _Artifacts._allowed(_XJ)

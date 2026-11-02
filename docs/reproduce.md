@@ -100,3 +100,14 @@ uv run labourlens threat-test --models gpt-6-luna gpt-5.6-luna --ablation naive 
 ```
 
 The first three commands need private saved answers, no model calls; outputs are post-hoc diagnostics. The last two make paid calls on the known 36-case suite and save both scorer verdicts. V1 remains default and all registered historical scores stay unchanged. [Rule declaration](experiments/t-i06-scorer-v2-rule.md), [fresh results](../experiments/threats/ti06-v2-fresh-20261102/SUMMARY.md). A fresh clone can inspect committed metrics/scores, but cannot reproduce raw-answer diagnostics without the private outputs.
+
+## Second-family judge check (D-062)
+
+The [declaration and continuation amendment](experiments/second-judge.md) describe the saved `sonnet55-FIN-s60-b-20261102` experiment. This documentation pass did not run these commands. A clone can read the committed [summary](../experiments/xjudge/sonnet55-FIN-s60-b-20261102/SUMMARY.md) and `summary.json`; a new judging run needs the private saved raw outputs, `ANTHROPIC_API_KEY` and a new experiment ID.
+
+```sh
+uv run labourlens judge-xfamily --experiment sonnet55-FIN-s60-b-20261102 --summary
+uv run labourlens judge-xfamily --experiment <new-id> --dry-run
+```
+
+The summary command reads saved paired and agreement output only. The dry-run makes no API call and prints a token and list-price heuristic, not a bill. A paid execution is deliberately not part of the reproduction path here; if it is needed, use a new immutable ID and an explicit `--max-usd`, never overwrite an existing ID.

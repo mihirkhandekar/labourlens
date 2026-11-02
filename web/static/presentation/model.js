@@ -43,6 +43,7 @@ export function model(report) {
     devX2RegressionCheck: section('evaluation').dev_x2_regression_check && typeof section('evaluation').dev_x2_regression_check === 'object' ? section('evaluation').dev_x2_regression_check : null,
     ladder: section('retrieval').ladder || null,
     paired: Array.isArray(section('evaluation').paired) ? section('evaluation').paired : [],
+    secondJudge: section('evaluation').second_judge && typeof section('evaluation').second_judge === 'object' ? section('evaluation').second_judge : null,
     pairedCorpusV2Diagnostic: section('evaluation').corpus_v2_diagnostic && typeof section('evaluation').corpus_v2_diagnostic === 'object' ? section('evaluation').corpus_v2_diagnostic : null,
     trace: Array.isArray(section('agent').trace) ? section('agent').trace : [],
     events: Array.isArray(section('agent').events) ? section('agent').events : [],

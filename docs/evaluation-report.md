@@ -75,7 +75,7 @@ Sources: [metrics](../experiments/runs/served-dev-S65-mcp-on/), [MCP/direct web-
 
 **What was not measured.** Run-to-run variance (two final runs are too few), independent generalisation, nDCG, held-out retrieval metrics, multi-human-reviewer agreement, real user traffic and the full 237/31/65 served web/MCP chain. The 65-case served sample is now measured. New runs record sampling defaults, but older runs lack that provenance block; no model seed was set.
 
-**Limits that change how to read the numbers.** AI-drafted gold and same-provider judge; one-person post-score review; development-shaped design; original-test evidence overlap and post-freeze label changes; fresh questions already known for replication. Current-corpus evidence is FIN/FIN2 plus tagged retrieval and served-chain samples; earlier builds remain labelled history.
+**Limits that change how to read the numbers.** AI-drafted gold; primary same-provider judge, now partly checked with a second-family FIN sample (D-062, below), with judge-dependent claim support; one-person post-score review; development-shaped design; original-test evidence overlap and post-freeze label changes; fresh questions already known for replication. Current-corpus evidence is FIN/FIN2 plus tagged retrieval and served-chain samples; earlier builds remain labelled history.
 
 **Status: dev and held-out saved outputs rescored on gold v3.5; owner decisions recorded on all items.** Gold labels were drafted by AI. I then went through them in the review interface and signed off on every case, answer verdict and source check (four separate streams, 403 items in total: 268 gold questions, 65 held-out v2 questions, 40 saved system answers and 30 source checks; only the first two are questions). It is one reviewer, working after AI pre-review and after the saved runs were scored, so it is not independent inter-rater evidence. The items are 268 gold cases, 65 held-out v2 cases, 40 saved-answer verdicts and 30 source checks. Gold v3.7 adds review provenance only, so no score changes and the earlier saved evaluations were not rescored on it; only the final FIN/FIN2 evaluations (D-056, D-061) were scored on v3.7 (generation on v3.6). v3.5 figures are history, shown with original v3.2-v3.4 sensitivity separately.
 
@@ -106,7 +106,7 @@ The assessment asks for measurable success criteria and key failure modes. This 
 | Right behaviour (answer, abstain, clarify or refuse) | Behaviour accuracy against gold status | **No absolute threshold.** Relative rules only: original held-out, a gain counts only if the paired interval excludes zero (D-033 protocol, above); held-out v2, the D-042 rule (primary model, one-sided 95% lower bound above zero under case and component bootstrap, at least 20 evidence components, no added false answer) | Dev (D-061) mean 0.897 against 0.827 (+7.0); original-test 31 mean 0.839 against 0.806, unresolved; earlier A3 0.903 and v3.5 held-out are history; held-out v2 rule met on three cases |
 | No false answers | False-answer rate (answered where gold says abstain, clarify or refuse) | Only as a veto inside D-042 (r3 adds no false answer) and a cap in D-046/D-048 (at most 6 false-answer cases on dev for the tool-set test) | Dev X2 6 of 237 for `gpt-6-luna`; r3 0 against hybrid 1 on held-out v2 |
 | No needless abstention | Over-abstention rate | No | A1 0.157, A3 0.030 |
-| Citation validity | Schema, citation-label and quote-containment validator on every answer; claim support from the AI judge | The validator is a hard gate, not a rate. No threshold on claim support | Claim support 0.887 on dev A3 (judge is the same provider as the generators); quote presence is not semantic support |
+| Citation validity | Schema, citation-label and quote-containment validator on every answer; claim support from the AI judge | The validator is a hard gate, not a rate. No threshold on claim support | Claim support 0.887 on dev A3 (primary judge is the same provider as the generators; a later second-family sample shows judge-dependent support, D-062); quote presence is not semantic support |
 | Numbers grounded in tools or sources | Calculation correctness; ungrounded-number cases; key-number recall | Ungrounded numbers only inside the D-046/D-048 criteria (at most the X2 upper bound, none in cases that used the new tool) | calc_correct 0.75 (n=24); tool set v2 failed its criteria |
 | Retrieval finds the evidence | hit@k, MRR@10, pool recall on dev | Rules written before measuring for the retrieval ablation (D-029, `docs/experiments/m6-retrieval-improvements.md`); the BM25 baseline is the reference | Current v3.1 hit@8 0.539 to 0.969; frozen v1 0.570 to 0.969 |
 | Threat resistance | Pass rate on 36 hand-written cases with deterministic checks (Wilson intervals) | **No overall pass mark.** Each case has its own deterministic pass condition | 31 Oct 36/36 and 35/36; fresh 2 Nov all configurations 35/36 under both scorers |
@@ -186,7 +186,52 @@ The judge is **`gpt-6.1-terra`**, with prompt `prompts/judge_v1.md` and structur
 
 Agent-report intervals are **95% case-bootstrap intervals using 2,000 resamples and seed 7** (`harness.py`). Claim/fact ratios resample whole cases so claims in the same answer are not treated as independent. Retrieval-study intervals use **2,000 resamples and seed 0**, with paired differences where the same cases were run (`docs/experiments/m6-retrieval-improvements.md`). Do not interpret overlapping marginal intervals as an equivalence test. We make no paired significance claim across A1 and A3 populations of different sizes.
 
-The judge shares a provider and related model family with generators/reranker. Its judgments can contain correlated errors or favour familiar phrasing. A zero unsupported-claim rate has a finite, selected denominator and does not prove safety.
+The primary judge shares a provider and related model family with generators/reranker. Its judgments can contain correlated errors or favour familiar phrasing. The D-062 second-family check above partly addresses that limitation on one FIN sample, but it still uses AI judges and did not agree enough on claim labels to validate either. A zero unsupported-claim rate has a finite, selected denominator and does not prove safety.
+
+### Second-family judge sensitivity: saved FIN answers (D-062)
+
+**MEASURED RESULT (2 Nov 2026).** The completed [summary](../experiments/xjudge/sonnet55-FIN-s60-b-20261102/SUMMARY.md) and [machine-readable analysis](../experiments/xjudge/sonnet55-FIN-s60-b-20261102/summary.json) compare `claude-sonnet-5-5` with the original `gpt-6.1-terra` on the same saved answers, cited evidence, reference facts, prompt and label schema. Anthropic native JSON-schema output is a provider-specific transport difference. The [advance declaration and continuation amendment](experiments/second-judge.md) record what was fixed before results and what changed after the first abort.
+
+**Sample and denominators.** FIN run 1 only, not FIN2 or the two-run headline: 60 case IDs per generator, selected without replacement with seed 20261102, proportional largest-remainder allocation by question set and family. Each ID appears in both r3 and hybrid, giving 240 sampled items. Eligibility requires an answer with claims in both arms; asymmetric answering is excluded and the generators have different eligible populations. Completion means all 240 items were processed, not all received valid verdicts.
+
+| Generator / set | Sampled items | Valid items | Judge-omitted items | Analysed / sampled pairs |
+|---|---:|---:|---:|---:|
+| `gpt-6-luna`, development | 90 | 89 | 1 | 44 / 45 |
+| `gpt-6-luna`, original test | 12 | 12 | 0 | 6 / 6 |
+| `gpt-6-luna`, fresh | 18 | 18 | 0 | 9 / 9 |
+| `gpt-6-luna`, all | 120 | 119 | 1 | 59 / 60 |
+| `gpt-5.6-luna`, development | 88 | 88 | 0 | 44 / 44 |
+| `gpt-5.6-luna`, original test | 12 | 11 | 1 | 5 / 6 |
+| `gpt-5.6-luna`, fresh | 20 | 19 | 1 | 9 / 10 |
+| `gpt-5.6-luna`, all | 120 | 118 | 2 | 58 / 60 |
+
+Both judges are analysed on exactly the same valid pairs: 117 pairs, 234 answers. The three valid partners of omitted items are excluded, not counted as additional omissions. Agreement on contradiction further requires reference facts.
+
+| Label comparison | Denominator | Raw agreement | Cohen kappa |
+|---|---:|---:|---:|
+| Supported / partial / unsupported claim | 432 claims | 84.26% | 0.4360 |
+| Any unsupported claim | 234 answers | 99.57% | 0.0000 |
+| Any contradicted reference fact | 226 answers with facts | 99.56% | 0.9068 |
+
+The unsupported-claim flag is nearly always negative. Its high raw agreement and zero kappa are uninformative about rare-positive detection, not evidence that either judge detects unsupported content reliably. The pre-declared low-kappa problem is therefore reported rather than suppressed.
+
+**Paired differences.** All entries below are r3 minus hybrid in percentage points, conditional on valid pairs. Pooled rates divide total supported claims by all claims or covered facts by all facts; mean paired differences instead give each eligible answer pair equal weight. These are descriptive, with no significance or equivalence claim.
+
+| Generator | Pairs: support / facts | Pooled support: original / Claude | Mean paired support: original / Claude | Pooled fact coverage: original / Claude | Mean paired fact coverage: original / Claude |
+|---|---:|---:|---:|---:|---:|
+| `gpt-6-luna` | 59 / 57 | +2.8 / -1.1 | -1.0 / -3.5 | +4.3 / +4.3 | +4.8 / +4.2 |
+| `gpt-5.6-luna` | 58 / 56 | +16.8 / +0.5 | +10.5 / -0.1 | +4.2 / +4.2 | +3.3 / +4.0 |
+
+The second judge **did not reproduce the claim-support gain for `gpt-5.6-luna`**: its development pooled difference changes from +16.4 to -2.7 points, and its overall mean paired difference changes sign. For `gpt-6-luna`, the overall pooled support difference changes sign; the original-test mean paired difference changes from +22.2 to -2.8 points on only six pairs. Zero versus nonzero differences, such as the primary original-test pooled +27.3 versus 0.0, are not called sign flips. All set-level rates and family-grouped disagreements are in `summary.json`. Fact-coverage pooled differences agree between judges on this sample, but that does not validate the reference facts independently.
+
+**Amendment and omissions.** The first immutable ID stopped after 53 items when a response repeated a claim index. It was not observed token truncation. Before continuation, the protocol was amended to allow one fresh retry with the identical prompt, payload, schema and 6,000-token limit, preserving initial caches separately. Five semantic retries were processed; two recovered and three remained `judge_omitted` (an umbrella for missing, duplicate or extra indices). These are `DEV-316`, primary hybrid, and `HO-V2-044`, second-generator r3 (cross-source synthesis), plus `HO-003`, second-generator r3 (factual lookup). The corresponding valid partners are excluded from both judges' rate calculations. No verdict was deduplicated or imputed. Omissions, low kappa and sign flips all trigger the declared problem flags. **Incompleteness warning: rates and agreement are conditional on valid pairs; omitted items are not imputed.** The continuation is a disclosed post-observation operational amendment, not an unchanged original protocol.
+
+**Cost and provenance.** The completed continuation records 245 processed judge attempts, including 58 cached attempts, 187 new attempts and five semantic retries. Token totals including cached attempts are 363,778 input and 25,529 output. New list-price spend is **$0.767506**, and charged budget accounting including uncertain-attempt reservations is **$0.767506**, against the saved **$4.00** cap; these are distinct source fields, not invoice charges. The earlier aborted ID recorded $0.20278 separately; do not present continuation new spend as the whole project's cost. The $3.318388 dry-run was a coarse heuristic, not observed spending. Public evidence contains IDs, hashes, labels, counts and rates, not source quotations, raw payloads or judge prose.
+
+**Consequence and limitations.** Same-family sensitivity is partly addressed, not eliminated. Claim support remains **judge-measured and judge-dependent**, not independently validated accuracy. This is AI agreement on one saved generation run, selected answered cases and valid pairs, with AI-drafted gold and small test strata. It is not human review, independent ground truth, full-population coverage, unseen generalisation or repeated-run variance. No preferred judge is selected to rescue a gain. Behaviour status, false-answer and over-abstention flags, key-number recall and calculation correctness are deterministic and unchanged; frozen evaluations, answers and the D-061 behaviour headline are not rewritten.
+
+
+### Judge versus owner verdicts
 
 **Judge versus the owner's verdicts (additional evidence, `docs/human-review/judge-vs-owner.md`).** On the 40 saved A1 answers with owner verdicts (25 right, 6 partly, 9 wrong; failure-enriched sample), the judge flagged no unsupported claim or contradicted fact in any answer. The 9 owner-wrong answers are all non-answers with no judged claims, so no agreement estimate for claim-level detection exists (the formal kappa of 0.00 is uninformative: the judge never fired). On the 23 answers with judged claims the owner marked none wrong, and the judge's stricter fact-coverage view called 8 of 18 owner-right answers partly. A derived verdict that also uses deterministic behaviour scoring matches the owner on 31/40 (kappa 0.64). One reviewer, 40 answers; the judge remains an AI model of the same provider family. Its ability to catch unsupported claims is **not** validated by these human verdicts.
 

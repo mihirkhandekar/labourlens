@@ -44,6 +44,7 @@ _TOOLFIX_PAIRED = {"toolset": "experiments/heldout-v2/paired-postfix-toolset.jso
 _TOOLFIX_EVAL = re.compile(r"experiments/eval/agent-(?:dev-X3|heldout-V2post-(?:r3|hybrid))/gpt-(?:6|5\.6)-luna\.(?:metrics\.json|cases\.jsonl)")
 _E2EFIX_DIR = "experiments/threats/m7-e2efix-20261031/"
 _E2EFIX_EXPERIMENT = "m7-e2efix-20261031"
+_SECOND_JUDGE_SUMMARY = "experiments/xjudge/sonnet55-FIN-s60-b-20261102/summary.json"
 
 
 def _corpus_version(path: str) -> str:
@@ -1192,6 +1193,40 @@ def _corpus_builds(artifacts: _Artifacts, final: dict | None = None) -> dict:
     return _section("Document builds: passage counts from the committed corpus snapshots.", rows, [row["provenance"][0] for row in rows])
 
 
+def _second_judge(artifacts: _Artifacts) -> dict | None:
+    """Project only aggregate measurements, never judge payloads or disagreement text."""
+    data = artifacts.mapping(_SECOND_JUDGE_SUMMARY)
+    analysis = data.get("analysis")
+    if not isinstance(analysis, dict):
+        return None
+    projected = {
+        key: _numeric(analysis.get(key, {}))
+        for key in ("agreement", "paired", "denominators")
+    }
+    projected.update({
+        key: analysis[key]
+        for key in ("sign_flip_problem", "low_kappa_problem", "omission_problem")
+        if isinstance(analysis.get(key), bool)
+    })
+    omitted = analysis.get("judge_omitted", {})
+    projected["judge_omitted"] = {
+        "count": omitted.get("count") if _number(omitted.get("count")) else None,
+        "by_family": _numeric(omitted.get("by_family", {})),
+        "by_arm": _numeric(omitted.get("by_arm", {})),
+    }
+    projected["incompleteness_warning"] = (
+        "Rates and agreement are conditional on valid pairs; omitted items are not imputed."
+    )
+    return {
+        **{key: _label(data.get(key)) for key in ("original_judge", "model", "status")},
+        **_selected(data, ("seed", "n_calls", "completed_calls", "cached_calls",
+                          "new_judge_attempts", "semantic_retries",
+                          "estimated_usd", "new_spend_list_price_usd")),
+        "analysis": projected,
+        "provenance": [_SECOND_JUDGE_SUMMARY],
+    }
+
+
 def build_report(root: Path) -> dict:
     artifacts = _Artifacts(root)
     sources = _sources(artifacts)
@@ -1218,8 +1253,9 @@ def build_report(root: Path) -> dict:
     v2_held = _heldout_v2(artifacts)
     v31_held = _heldout_v31(artifacts)
     final_eval = _final_evaluation(artifacts)
+    second_judge = _second_judge(artifacts)
     tool_v2 = _tool_set_v2(artifacts)
-    eval_paths = eval_paths + list((tool_v2 or {}).get("provenance", []))
+    eval_paths = eval_paths + list((tool_v2 or {}).get("provenance", [])) + list((second_judge or {}).get("provenance", []))
     trace, trace_paths, errors = _agent_trace(artifacts)
     quality_path = "data/export/quality.json"
     quality_data = artifacts.mapping(quality_path)
@@ -1245,7 +1281,7 @@ def build_report(root: Path) -> dict:
         "reconciliation": reconciliation,
         "security": _section("Threat-suite measurements, with frozen v1 results and separately labelled v2 diagnostics and fresh rerun.", security_rows, security_paths + postfix_paths + e2efix_paths, postfix=postfix_rows, e2efix=_e2efix(e2efix_rows), scorer_v2=_threat_v2(artifacts)),
         "evaluation": _section("Development A1–A5 and registered held-out H-r3/H-hybrid luna runs. Measurements retain their recorded gold versions. Owner review, 1 Nov 2026: Gold labels were drafted by AI. The owner then went through them in the review interface and signed off on every case, answer verdict and source check (four separate streams, 403 items in total: 268 gold questions, 65 held-out v2 questions, 40 saved system answers and 30 source checks; only the first two are questions). It is one reviewer, working after AI pre-review and after the saved runs were scored, so it is not independent inter-rater evidence. The judge is an AI (gpt-6.1-terra); behaviour status, key-number recall, calculation correctness, false-answer and over-abstention are deterministic code. Gold v3.5 development and all four registered held-out rescoring runs are complete on existing generated outputs; held-out stale judge entries were rejudged. `paired` holds the registered corpus-v1 comparison, current first, with v3.2–v3.4 history; `corpus_v2_diagnostic` is a separate extraction-only diagnostic; `dev_x2_regression_check` labels the corpus-v3 dev X2 rows (a regression check, not an ablation). Rows with `diagnostic: true` and `registered: false` (agent-heldout-X-*) are post-freeze diagnostics, not registered held-out evidence. `heldout_v2` is the signed held-out v2 run on corpus v3, reported separately and never pooled with the registered held-out.", eval_rows, eval_paths + [path for entry in paired + ([paired_v2] if paired_v2 else []) for path in entry["provenance"]] + list((v2_held or {}).get("provenance", [])),
-                               errors={"scope": "rescored case records (experiments/eval, gold as recorded in each metrics file)", "counts": errors, "provenance": trace_paths}, paired=paired, corpus_v2_diagnostic=paired_v2, dev_x2_regression_check=_x2_check(x2_rows), heldout_v2=v2_held, tool_set_v2=tool_v2,
+                               errors={"scope": "rescored case records (experiments/eval, gold as recorded in each metrics file)", "counts": errors, "provenance": trace_paths}, paired=paired, corpus_v2_diagnostic=paired_v2, dev_x2_regression_check=_x2_check(x2_rows), heldout_v2=v2_held, tool_set_v2=tool_v2, second_judge=second_judge,
                                limitations=["Gold labels were drafted by AI. The owner then went through them in the review interface and signed off on every case, answer verdict and source check (four separate streams, 403 items in total: 268 gold questions, 65 held-out v2 questions, 40 saved system answers and 30 source checks; only the first two are questions). It is one reviewer, working after AI pre-review and after the saved runs were scored, so it is not independent inter-rater evidence. Four change-clicks were not applied under the out-of-period policy (D-047), so labels are unchanged in gold v3.7.", "One reviewer, after AI pre-review and after the saved runs were scored: not independent annotation or inter-rater evidence. The judge is an AI (gpt-6.1-terra); behaviour status, key-number recall, calculation correctness, false-answer and over-abstention are deterministic code, not the judge.", "Current v3.5 and historical paired intervals include zero; the comparison is inconclusive under the registered rule.", "Five held-out cases changed after the v3.2 freeze (HO-029 in v3.3; HO-027, HO-023 and HO-004 in v3.4; HO-022 in v3.5); rescoring is post-run adjudication, not a fresh frozen-gold experiment.", "Metric definitions differ between evaluation stages.", "Dev X2 (corpus v3, gold v3.6, crosscheck on, 14 runtime changes) is a regression check of the served system, not an ablation: several factors changed at once, and the ungrounded-number check was widened, so that metric is not comparable with A3 or X1."]),
         "quality": _section("Validation outcomes, including warnings.", quality_rows, [quality_path], metrics=_numeric(quality_data.get("summary", {}))),
         "work": _work(artifacts),

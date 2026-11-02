@@ -50,6 +50,7 @@ def main(argv: list[str] | None = None) -> int:
     r2x.add_argument("--split", default="dev", choices=["dev"])
     r2x.add_argument("--no-rerank", action="store_true", help="skip reranking; missing dense/query embeddings still require the API")
     r2x.add_argument("--tag", help="new output/cache namespace, e.g. V31; preserves frozen R-series")
+    r2x.add_argument("--methods", action="store_true", help="with --tag: BM25 / dense / hybrid on the same cases from cached vectors (no API call)")
     ax = sub.add_parser("answer-exp", help="run answer-generation model comparison (calls the OpenAI API)")
     ax.add_argument("--split", default="dev", choices=["dev", "heldout"])
     ax.add_argument("--exp", default="G1", choices=["G1", "G0", "G3", "G4"])
@@ -222,6 +223,11 @@ def main(argv: list[str] | None = None) -> int:
     if args.cmd == "retrieval-exp2":
         from labourlens.retrieval import experiments_rerank
 
+        if args.methods:
+            if not args.tag:
+                raise SystemExit("--methods requires --tag")
+            experiments_rerank.run_methods(args.tag)
+            return 0
         experiments_rerank.run(args.split, not args.no_rerank, tag=args.tag)
         return 0
     if args.cmd == "answer-exp":

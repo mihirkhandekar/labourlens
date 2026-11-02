@@ -1,3 +1,4 @@
+import {secondJudge, secondJudgeFacts, secondJudgeSentence, SUPPORT_LABEL} from './graphics.js';
 import {el, fmt, finite, quantile, figure, lineChart, dotPlot, dumbbell, heatmap, boxStrip, scatter} from '../charts.js';
 import {chapter, section, grid, stat, details, dataTable, callout} from './ui.js';
 import {FAMILIES, FAMILY_LABEL, metricOf, runLabel, goldOf} from './model.js';
@@ -278,6 +279,32 @@ function regressionSection(m) {
   return sec;
 }
 
+const pointsCell = v => (finite(v) ? `${v >= 0 ? '+' : '-'}${Math.abs(v * 100).toFixed(1)}` : 'not recorded');
+const SJ_METRIC = {claim_support: 'Claim support', fact_coverage: 'Fact coverage'};
+const SJ_SET = {all: 'All sampled', dev: 'Development', heldout: 'Original test', fresh: 'Fresh'};
+
+/** The second-judge check: the compact graphic, then every number behind it in tables. All values come from report.json evaluation.second_judge. */
+function secondJudgeSection(m) {
+  const g = secondJudge(m), f = secondJudgeFacts(m);
+  if (!g || !f) return null;
+  const a = m.secondJudge.analysis;
+  const sec = section(`The claim-support gain is ${SUPPORT_LABEL}`, [`${f.judge} re-judged a sample with the same prompt and schema as ${f.original}.`, 'One saved run, conditional on valid pairs. Not a human review.']);
+  sec.append(g);
+  sec.append(el('p', 'pr-small', secondJudgeSentence(m)));
+  const agreement = dataTable('Agreement between the two judges', ['Measure', 'Items', 'Raw agreement', 'Kappa'], Object.entries(a.agreement).map(([key, v]) => [key.replace(/_/g, ' '), v.n, v.raw_agreement, v.kappa]));
+  const paired = dataTable('Filter then rerank minus hybrid, percentage points', ['Model', 'Set', 'Measure', f.original, f.judge, `${f.original}, mean per answer`, `${f.judge}, mean per answer`, 'Valid pairs', 'Sign differs'],
+    Object.entries(a.paired).flatMap(([model, sets]) => Object.entries(sets).flatMap(([set, metrics]) => Object.entries(metrics).map(([metric, p]) => [model, SJ_SET[set] || set, SJ_METRIC[metric] || metric, pointsCell(p.judges?.original?.pooled_r3_minus_hybrid), pointsCell(p.judges?.second?.pooled_r3_minus_hybrid), pointsCell(p.judges?.original?.mean_paired_r3_minus_hybrid), pointsCell(p.judges?.second?.mean_paired_r3_minus_hybrid), p.judges?.original?.n_pairs ?? '', p.sign_flip?.pooled_r3_minus_hybrid ? 'yes' : 'no']))));
+  const denominators = dataTable('Sampled, valid and omitted', ['Generator and set', 'Sampled items', 'Valid items', 'Omitted items', 'Sampled pairs', 'Analysed pairs', 'Excluded pairs'],
+    Object.entries(a.denominators || {}).map(([key, d]) => [key, d.sampled_items, d.valid_items, d.judge_omitted_items, d.sampled_pairs, d.analysed_pairs, d.excluded_pairs]));
+  const omitted = a.judge_omitted || {};
+  const flags = [['Kappa below 0.4 somewhere', a.low_kappa_problem], ['Sign differs between judges somewhere', a.sign_flip_problem], ['Judge omitted items', a.omission_problem]].filter(x => typeof x[1] === 'boolean');
+  sec.append(details('Second judge: agreement, paired differences, denominators and problem flags', agreement, paired, denominators,
+    el('p', 'pr-small', `Judge-omitted items after one retry: ${finite(omitted.count) ? fmt.int(omitted.count) : 'not recorded'}${omitted.by_family ? `. By family: ${Object.entries(omitted.by_family).map(([k, v]) => `${k.replace(/_/g, ' ')} ${v}`).join(', ')}` : ''}${omitted.by_arm ? `. By arm: ${Object.entries(omitted.by_arm).map(([k, v]) => `${k} ${v}`).join(', ')}` : ''}. ${a.incompleteness_warning || ''}`),
+    el('p', 'pr-small', `Problem flags the pre-declared protocol raises: ${flags.map(([k, v]) => `${k}: ${v ? 'yes' : 'no'}`).join('; ')}. A flag is a finding to discuss and is not a reason to prefer one judge. Kappa for unsupported claims is uninformative when positives are rare.`),
+    el('p', 'pr-small', `Source: report.json \u203a evaluation.second_judge \u00b7 experiments/xjudge/*/summary.json. Costs: ${finite(m.secondJudge.new_spend_list_price_usd) ? `$${m.secondJudge.new_spend_list_price_usd.toFixed(2)} new list-price spend` : 'not recorded'}, an estimate and not an invoice.`)));
+  return sec;
+}
+
 export function renderEvaluation(m, ctx) {
   const a3 = m.evalRow('dev-A3', 'gpt-6-luna'), r3 = m.heldRow('r3', 'gpt-6-luna');
   const ch = chapter({
@@ -287,7 +314,7 @@ export function renderEvaluation(m, ctx) {
       'Gold set: 268 cases, 237 development and 31 held out.',
       `Development scored on ${goldOf(a3).label}; held-out on ${goldOf(r3).label}.`,
       'Labels began as AI drafts; the owner then reviewed every case.',
-      'An AI judge scores claim support.'
+      m.secondJudge ? 'An AI judge scores claim support; a second judge rechecks a sample.' : 'An AI judge scores claim support.'
     ]
   });
   const stats = el('div', 'pr-stats');
@@ -304,6 +331,8 @@ export function renderEvaluation(m, ctx) {
   ch.body.append(dev);
   const x2 = regressionSection(m);
   if (x2) ch.body.append(x2);
+  const sj = secondJudgeSection(m);
+  if (sj) ch.body.append(sj);
 
   const pa = m.paired[0]?.models?.['gpt-6-luna'];
   const held = section(r3 ? `Held-out: r3 scores ${fmt.pct(metricOf(r3.metrics.behaviour_accuracy).rate)} on ${fmt.int(r3.metrics.n_cases)} cases${pa ? `, and the gain over hybrid is ${pa.ci95[0] <= 0 ? 'not demonstrated' : 'outside the interval around zero'}` : ''}` : 'Held-out results', ['One run on a frozen configuration, scored afterwards.', 'Comparison: r3 against hybrid retrieval.']);

@@ -33,7 +33,7 @@ Fresh-clone run, with the observed output: [`docs/fresh-clone-check.md`](docs/fr
 ## Limitations
 
 1. Gold labels were drafted by AI. One person reviewed them after the saved runs were scored: not independent, not blind to model output. Gold v3.7 changes no label. The earlier saved evaluations were not rescored on it; only the final FIN/FIN2 evaluations (D-056, D-061) were scored on v3.7 for the development and registered held-out sets, with `--allow-gold-mismatch` because generation ran on v3.6.
-2. The AI judge is an AI; the threat suite and automatic checks are not human review.
+2. The AI judge is an AI; the threat suite and automatic checks are not human review. A second-family check on one saved FIN sample (D-062: 117 valid pairs, three omitted items, claim-label kappa 0.436) partly addresses same-provider judging, but claim support remains judge-dependent and the `gpt-5.6-luna` support gain was not reproduced.
 3. The original held-out set shares evidence with development; its gain over hybrid retrieval is not demonstrated. Gold labels for five of its cases changed after the freeze; all versions are kept.
 4. Final-system headline (D-061, corpus v3.1) is the mean of two runs per arm: development r3/hybrid 0.897/0.827 and 0.897/0.844, +7.0 [3.6, 10.6] / +5.3 [1.9, 8.9] points (95% case intervals). No gain is demonstrated on original test 31 (0.839/0.806 and 0.839/0.823) or fresh 65 (0.715/0.746 and 0.731/0.738). The earlier rule met on three cases remains labelled history, not confirmation. Both single runs remain visible in the README.
 5. Numerical comparisons score low (0.214 on held-out v2) because tools cannot do arithmetic on figures printed in reports; the fix was tested and not adopted.

@@ -81,7 +81,8 @@ class BudgetExceeded(RuntimeError):
 
 
 class World:
-    def __init__(self, run_paths: RunPaths | None = None) -> None:
+    def __init__(self, run_paths: RunPaths | None = None, offline: bool = False) -> None:
+        self.offline = offline  # True: a missing cached vector stops the run instead of calling the embeddings API
         self.passages = ck.load_passages()
         chunks = ck.build_chunks(ck.CONFIGS[rt.CHUNK_CONFIG], self.passages)
         self.chunks = {c.chunk_id: c for c in chunks}
@@ -103,6 +104,8 @@ class World:
             d = object.__new__(dn.DenseIndex)
             d.cfg, d.chunk_ids, d.matrix = cfg, ids, np.load(f)
             return d
+        if self.offline:
+            raise SystemExit(f"offline: frozen dense matrix missing at {f}; not calling the API")
         d = dn.DenseIndex(chunks, cfg)
         f.parent.mkdir(parents=True, exist_ok=True)
         np.save(f, d.matrix)
@@ -115,6 +118,8 @@ class World:
         if not hasattr(self, "_qv"):
             self._qv = json.loads(self.qv_file.read_text()) if self.qv_file.exists() else {}
         key = hashlib.sha256(question.encode()).hexdigest()
+        if key not in self._qv and self.offline:
+            raise SystemExit(f"offline: no cached query vector for {question[:60]!r} in {self.qv_file}; not calling the API")
         if key not in self._qv:
             self._qv[key] = dn.embed(rt.EMBEDDING_MODEL, [question], purpose="queries")[0].tolist()
             self.qv_file.write_text(json.dumps(self._qv))
@@ -395,3 +400,81 @@ def run(split: str = "dev", rerank_on: bool = True, tag: str | None = None) -> N
     L += ["", f"Rerank spend on new API calls this run: ${total_cost:.4f}. Wall time {time.time() - t_start:.0f}s.", ""]
     run_paths.summary(markdown=True).write_text("\n".join(L) + "\n")
     print("\n".join(L))
+
+
+METHODS = ("bm25", "dense", "hybrid")
+METHOD_LABEL = {"bm25": "BM25 only", "dense": "Dense only", "hybrid": "Hybrid (RRF, = R0)"}
+
+
+def methods_dir(tag: str) -> Path:
+    return RUNS / f"dev-R-{tag}-methods"
+
+
+def method_hits(rows: list[dict], k: int) -> np.ndarray:
+    return np.array([1.0 if r["first_relevant_rank"] and r["first_relevant_rank"] <= k else 0.0 for r in rows])
+
+
+def run_methods(tag: str) -> dict:
+    """BM25, dense and hybrid on the same dev cases and corpus, from cached vectors only (rules: docs/experiments/retrieval-v31-rerun.md)."""
+    RunPaths(tag)  # validates the tag
+    out_dir = methods_dir(tag)
+    if out_dir.exists():
+        raise SystemExit(f"{out_dir} already exists; choose a new tag")
+    w = World(RunPaths(tag), offline=True)
+    gold_sha = hashlib.sha256((ev.GOLD / "draft_cases.jsonl").read_bytes()).hexdigest()
+    prov = provenance(list(w.chunks.values()), gold_sha)
+    cases = ev.text_cases(ev.load_cases("dev"))
+    rowsets: dict[str, list[dict]] = {m: [] for m in METHODS}
+    for c in cases:
+        bm, de = w.full_rankings(c["question"])
+        lists = {"bm25": [x[0] for x in bm[0]], "dense": [x[0] for x in de[:DEPTH]], "hybrid": [x[0] for x in fuse(bm, de, None, w.chunks)]}
+        for m in METHODS:
+            rowsets[m].append(score_row(c, lists[m], w.chunks, lists[m]))
+    r0 = [json.loads(line) for line in (RUNS / f"dev-R-{tag}-R0" / "scores.jsonl").read_text().splitlines() if line]
+    r0_rank = {r["case_id"]: r["first_relevant_rank"] for r in r0}
+    r0_match = sum(r["first_relevant_rank"] == r0_rank.get(r["case_id"], "absent") for r in rowsets["hybrid"])
+    rng = np.random.default_rng(0)
+    metrics_out: dict = {}
+    for m in METHODS:
+        rows, fr = rowsets[m], [r["first_relevant_rank"] for r in rowsets[m]]
+        entry: dict = {"n_cases": len(rows), "mrr@10": round(sum(1 / f for f in fr if f and f <= 10) / len(rows), 4)}
+        for k in (8, 10):
+            h = method_hits(rows, k)
+            lo, hi = bootstrap(h, rng)
+            entry[f"hit@{k}"], entry[f"hit@{k}_ci95"] = round(float(h.mean()), 4), [round(lo, 4), round(hi, 4)]
+        metrics_out[m] = entry
+    paired = {}
+    for other in ("bm25", "dense"):
+        d = method_hits(rowsets["hybrid"], 8) - method_hits(rowsets[other], 8)
+        lo, hi = bootstrap(d, rng)
+        paired[f"hybrid_minus_{other}_hit@8"] = {"diff": round(float(d.mean()), 4), "ci95": [round(lo, 4), round(hi, 4)], "better_worse": [int((d > 0).sum()), int((d < 0).sum())]}
+    r0_hit8 = json.loads((RUNS / f"dev-R-{tag}-R0" / "metrics.json").read_text())["metrics"]["hit@8"]
+    result = {"config": {"split": "dev", "chunks": rt.CHUNK_CONFIG, "embedding": rt.EMBEDDING_MODEL, "depth": DEPTH, "rrf_c": RRF_C, "bootstrap": "2000 percentile resamples, seed 0", **prov},
+              "metrics": metrics_out, "paired": paired,
+              "hybrid_matches_R0_first_relevant_rank": {"matching_cases": r0_match, "of": len(cases), "R0_hit@8": r0_hit8}}
+    out_dir.mkdir(parents=True)
+    (out_dir / "metrics.json").write_text(json.dumps(result, indent=1))
+    per_case = [{"case_id": c["case_id"], "family": c["family"], **{f"{m}_first_relevant_rank": rowsets[m][i]["first_relevant_rank"] for m in METHODS}} for i, c in enumerate(cases)]
+    (out_dir / "scores.jsonl").write_text("\n".join(json.dumps(r) for r in per_case) + "\n")
+    n = len(cases)
+
+    def cell(m: str, k: int) -> str:
+        e = metrics_out[m]
+        return f"{e[f'hit@{k}']:.3f} [{e[f'hit@{k}_ci95'][0]:.3f}, {e[f'hit@{k}_ci95'][1]:.3f}]"
+    L = [f"# BM25, dense and hybrid on the same {n} development cases (corpus {prov['corpus_version']}, {prov['chunk_count']:,} chunks)", "",
+         f"Generated by `labourlens retrieval-exp2 --tag {tag} --methods`. Rules were declared before running in `docs/experiments/retrieval-v31-rerun.md`. "
+         f"Gold file sha256 `{gold_sha}`; code commit `{prov['code_commit']}`. Cached vectors only; no API call. 95% intervals: case bootstrap.", "",
+         "| method | hit@8 [95% CI] | hit@10 [95% CI] | MRR@10 |", "|---|---|---|---|"]
+    L += [f"| {METHOD_LABEL[m]} | {cell(m, 8)} | {cell(m, 10)} | {metrics_out[m]['mrr@10']} |" for m in METHODS]
+    L += ["", f"Hybrid equals the R0 row of `dev-R-{tag}-R0` on {r0_match} of {n} cases by first relevant rank (R0 hit@8 {r0_hit8}).", "",
+          "Paired hit@8, hybrid minus the single method: " + "; ".join(
+              f"{k.split('_')[2]}: {v['diff']:+.3f} [{v['ci95'][0]:+.3f}, {v['ci95'][1]:+.3f}] ({v['better_worse'][0]} better, {v['better_worse'][1]} worse)" for k, v in paired.items()) + ".", "",
+          "## Why the early deck figure differs", "",
+          f"The early comparison reported hit@10 on 24 cases over a 46-document corpus; the later hybrid (R0) hit@8 is on these {n} cases over {prov['chunk_count']:,} chunks of the current build. The two differ in three ways at once: "
+          "(1) the cutoff, hit@10 against hit@8 (the table above gives both for the same cases, so the effect of k alone is visible); "
+          "(2) the case pool, 24 early cases against the larger development set, which includes harder question families; "
+          "(3) the corpus, 46 documents against the current build, where many more near-duplicate and period-confusable passages compete with the right one. "
+          "The method is the same; the numbers are not comparable across those settings. This table is the like-for-like version.", ""]
+    (out_dir / "SUMMARY.md").write_text("\n".join(L) + "\n")
+    print("\n".join(L))
+    return result

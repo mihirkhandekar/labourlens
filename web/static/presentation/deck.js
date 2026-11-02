@@ -165,15 +165,13 @@ function main(report) {
   const next = button('caret-right', 'Next slide', () => deck.next(), 'Right arrow');
   const counter = el('span', 'deck-counter'); counter.setAttribute('aria-hidden', 'true');
   const chapter = el('span', 'deck-chapter');
-  const notesBtn = button('note', 'Speaker notes', () => toggleNotes(), 'S');
-  notesBtn.setAttribute('aria-pressed', 'false');
   const overviewBtn = button('squares-four', 'Slide overview', () => deck.toggleOverview(), 'O or Escape');
   const themeBtn = button('sun', 'Switch between dark and light theme', () => toggleTheme(), 'T');
   const fsBtn = button('arrows-out-simple', 'Enter fullscreen', () => toggleFullscreen(), 'F');
   const group = el('div', 'deck-group');
   group.append(prev, counter, next);
   const tools = el('div', 'deck-group');
-  tools.append(notesBtn, overviewBtn, themeBtn);
+  tools.append(overviewBtn, themeBtn);
   if (document.fullscreenEnabled) tools.append(fsBtn);
   bar.append(group, chapter, tools);
   root.append(bar);
@@ -185,7 +183,6 @@ function main(report) {
   function toggleNotes(force) {
     const open = force ?? drawer.hidden;
     drawer.hidden = !open;
-    notesBtn.setAttribute('aria-pressed', String(open));
     root.classList.toggle('notes-open', open);
     if (open) renderNotes();
     requestAnimationFrame(fitAll);
@@ -211,7 +208,15 @@ function main(report) {
     fsBtn.title = on ? 'Exit fullscreen (F)' : 'Enter fullscreen (F)';
     fsBtn.querySelector('.deck-ico').className = `deck-ico ico-${on ? 'arrows-in-simple' : 'arrows-out-simple'}`;
   });
-  deck.addKeyBinding({keyCode: 83, key: 'S', description: 'Speaker notes'}, () => toggleNotes());
+  // Speaker notes: press X twice quickly to show or hide the drawer. There is no button for it.
+  let lastX = 0;
+  document.addEventListener('keydown', event => {
+    if (event.key.toLowerCase() !== 'x' || event.repeat || event.ctrlKey || event.metaKey || event.altKey) return;
+    const target = event.target;
+    if (target instanceof HTMLElement && (target.isContentEditable || ['INPUT', 'TEXTAREA', 'SELECT'].includes(target.tagName))) return;
+    const now = performance.now();
+    if (now - lastX < 450) { lastX = 0; toggleNotes(); } else lastX = now;
+  });
   deck.addKeyBinding({keyCode: 84, key: 'T', description: 'Light or dark theme'}, toggleTheme);
 
   // ---------- slide entry effects ----------

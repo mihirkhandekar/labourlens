@@ -1,0 +1,88 @@
+{
+ "config": {
+  "split": "dev",
+  "chunks": "merge200",
+  "embedding": "text-embedding-3-large",
+  "depth": 50,
+  "rrf_c": 60,
+  "bootstrap": "2000 percentile resamples, seed 0",
+  "corpus_version": "v3.1",
+  "chunk_count": 1847,
+  "corpus_hash": "f3a5734cf43dc93e1712a11b72d00d8eff6baa3b35556c366b8b18e1cf19c7b1",
+  "gold_file_sha256": "6169a9deca78cb5908c584bdf7d17b1c8dd9a15ff7840b3752f3bbb4febb2f9b",
+  "code_commit": "00da4ab8ebccd4ab488e002dd1b88aa71990f0ff"
+ },
+ "metrics": {
+  "bm25": {
+   "n_cases": 128,
+   "mrr@10": 0.258,
+   "hit@8": 0.4766,
+   "hit@8_ci95": [
+    0.3906,
+    0.5625
+   ],
+   "hit@10": 0.5312,
+   "hit@10_ci95": [
+    0.4453,
+    0.6172
+   ]
+  },
+  "dense": {
+   "n_cases": 128,
+   "mrr@10": 0.2234,
+   "hit@8": 0.3672,
+   "hit@8_ci95": [
+    0.2891,
+    0.4531
+   ],
+   "hit@10": 0.3984,
+   "hit@10_ci95": [
+    0.3125,
+    0.4844
+   ]
+  },
+  "hybrid": {
+   "n_cases": 128,
+   "mrr@10": 0.3116,
+   "hit@8": 0.5391,
+   "hit@8_ci95": [
+    0.4531,
+    0.625
+   ],
+   "hit@10": 0.5547,
+   "hit@10_ci95": [
+    0.4688,
+    0.6406
+   ]
+  }
+ },
+ "paired": {
+  "hybrid_minus_bm25_hit@8": {
+   "diff": 0.0625,
+   "ci95": [
+    -0.0234,
+    0.1484
+   ],
+   "better_worse": [
+    20,
+    12
+   ]
+  },
+  "hybrid_minus_dense_hit@8": {
+   "diff": 0.1719,
+   "ci95": [
+    0.1016,
+    0.2422
+   ],
+   "better_worse": [
+    23,
+    1
+   ]
+  }
+ },
+ "hybrid_matches_R0_first_relevant_rank": {
+  "matching_cases": 128,
+  "of": 128,
+  "R0_hit@8": 0.5391
+ }
+}

@@ -1,6 +1,6 @@
 {
   "schema_version": "report-1.0",
-  "generated_at": "2026-11-02T05:09:40.550532+00:00",
+  "generated_at": "2026-11-02T05:53:37.225838+00:00",
   "summary": {
     "title": "LabourLens research workbench",
     "scope": [
@@ -73599,7 +73599,8 @@
       "experiments/heldout/paired-v3.3.txt",
       "experiments/heldout/paired-v3.4.txt",
       "experiments/heldout/paired.txt",
-      "experiments/tool-fix/criteria.json"
+      "experiments/tool-fix/criteria.json",
+      "experiments/xjudge/sonnet55-FIN-s60-b-20261102/summary.json"
     ],
     "errors": {
       "scope": "rescored case records (experiments/eval, gold as recorded in each metrics file)",
@@ -76726,6 +76727,432 @@
         "experiments/tool-fix/criteria.json"
       ]
     },
+    "second_judge": {
+      "original_judge": "gpt-6.1-terra",
+      "model": "claude-sonnet-5-5",
+      "status": "complete",
+      "seed": 20261102,
+      "n_calls": 240,
+      "completed_calls": 240,
+      "cached_calls": 58,
+      "new_judge_attempts": 187,
+      "semantic_retries": 5,
+      "estimated_usd": 3.318388,
+      "new_spend_list_price_usd": 0.7675060000000005,
+      "analysis": {
+        "agreement": {
+          "claim_labels": {
+            "n": 432,
+            "raw_agreement": 0.8425925925925926,
+            "kappa": 0.43603133159268914
+          },
+          "any_unsupported": {
+            "n": 234,
+            "raw_agreement": 0.9957264957264957,
+            "kappa": 0.0
+          },
+          "any_contradicted": {
+            "n": 226,
+            "raw_agreement": 0.995575221238938,
+            "kappa": 0.9068425391591094
+          }
+        },
+        "paired": {
+          "gpt-5.6-luna": {
+            "all": {
+              "claim_support": {
+                "judges": {
+                  "original": {
+                    "pooled_r3_minus_hybrid": 0.16756635177687818,
+                    "mean_paired_r3_minus_hybrid": 0.10517241379310344,
+                    "n_pairs": 58
+                  },
+                  "second": {
+                    "pooled_r3_minus_hybrid": 0.00494826810616289,
+                    "mean_paired_r3_minus_hybrid": -0.001436781609195402,
+                    "n_pairs": 58
+                  }
+                },
+                "sign_flip": {
+                  "pooled_r3_minus_hybrid": false,
+                  "mean_paired_r3_minus_hybrid": true
+                }
+              },
+              "fact_coverage": {
+                "judges": {
+                  "original": {
+                    "pooled_r3_minus_hybrid": 0.04166666666666674,
+                    "mean_paired_r3_minus_hybrid": 0.03273809523809524,
+                    "n_pairs": 56
+                  },
+                  "second": {
+                    "pooled_r3_minus_hybrid": 0.04166666666666663,
+                    "mean_paired_r3_minus_hybrid": 0.04017857142857143,
+                    "n_pairs": 56
+                  }
+                },
+                "sign_flip": {
+                  "pooled_r3_minus_hybrid": false,
+                  "mean_paired_r3_minus_hybrid": false
+                }
+              }
+            },
+            "dev": {
+              "claim_support": {
+                "judges": {
+                  "original": {
+                    "pooled_r3_minus_hybrid": 0.16361556064073224,
+                    "mean_paired_r3_minus_hybrid": 0.10643939393939394,
+                    "n_pairs": 44
+                  },
+                  "second": {
+                    "pooled_r3_minus_hybrid": -0.026544622425629272,
+                    "mean_paired_r3_minus_hybrid": -0.024621212121212124,
+                    "n_pairs": 44
+                  }
+                },
+                "sign_flip": {
+                  "pooled_r3_minus_hybrid": true,
+                  "mean_paired_r3_minus_hybrid": true
+                }
+              },
+              "fact_coverage": {
+                "judges": {
+                  "original": {
+                    "pooled_r3_minus_hybrid": 0.013333333333333308,
+                    "mean_paired_r3_minus_hybrid": 0.005952380952380952,
+                    "n_pairs": 42
+                  },
+                  "second": {
+                    "pooled_r3_minus_hybrid": 0.013333333333333308,
+                    "mean_paired_r3_minus_hybrid": 0.015873015873015872,
+                    "n_pairs": 42
+                  }
+                },
+                "sign_flip": {
+                  "pooled_r3_minus_hybrid": false,
+                  "mean_paired_r3_minus_hybrid": false
+                }
+              }
+            },
+            "heldout": {
+              "claim_support": {
+                "judges": {
+                  "original": {
+                    "pooled_r3_minus_hybrid": 0.36363636363636365,
+                    "mean_paired_r3_minus_hybrid": 0.2833333333333333,
+                    "n_pairs": 5
+                  },
+                  "second": {
+                    "pooled_r3_minus_hybrid": 0.2727272727272727,
+                    "mean_paired_r3_minus_hybrid": 0.2,
+                    "n_pairs": 5
+                  }
+                },
+                "sign_flip": {
+                  "pooled_r3_minus_hybrid": false,
+                  "mean_paired_r3_minus_hybrid": false
+                }
+              },
+              "fact_coverage": {
+                "judges": {
+                  "original": {
+                    "pooled_r3_minus_hybrid": 0.2857142857142857,
+                    "mean_paired_r3_minus_hybrid": 0.2666666666666667,
+                    "n_pairs": 5
+                  },
+                  "second": {
+                    "pooled_r3_minus_hybrid": 0.2857142857142857,
+                    "mean_paired_r3_minus_hybrid": 0.2666666666666667,
+                    "n_pairs": 5
+                  }
+                },
+                "sign_flip": {
+                  "pooled_r3_minus_hybrid": false,
+                  "mean_paired_r3_minus_hybrid": false
+                }
+              }
+            },
+            "fresh": {
+              "claim_support": {
+                "judges": {
+                  "original": {
+                    "pooled_r3_minus_hybrid": 0.0,
+                    "mean_paired_r3_minus_hybrid": 0.0,
+                    "n_pairs": 9
+                  },
+                  "second": {
+                    "pooled_r3_minus_hybrid": 0.0,
+                    "mean_paired_r3_minus_hybrid": 0.0,
+                    "n_pairs": 9
+                  }
+                },
+                "sign_flip": {
+                  "pooled_r3_minus_hybrid": false,
+                  "mean_paired_r3_minus_hybrid": false
+                }
+              },
+              "fact_coverage": {
+                "judges": {
+                  "original": {
+                    "pooled_r3_minus_hybrid": 0.0714285714285714,
+                    "mean_paired_r3_minus_hybrid": 0.027777777777777776,
+                    "n_pairs": 9
+                  },
+                  "second": {
+                    "pooled_r3_minus_hybrid": 0.0714285714285714,
+                    "mean_paired_r3_minus_hybrid": 0.027777777777777776,
+                    "n_pairs": 9
+                  }
+                },
+                "sign_flip": {
+                  "pooled_r3_minus_hybrid": false,
+                  "mean_paired_r3_minus_hybrid": false
+                }
+              }
+            }
+          },
+          "gpt-6-luna": {
+            "all": {
+              "claim_support": {
+                "judges": {
+                  "original": {
+                    "pooled_r3_minus_hybrid": 0.028019801980197934,
+                    "mean_paired_r3_minus_hybrid": -0.010451977401129943,
+                    "n_pairs": 59
+                  },
+                  "second": {
+                    "pooled_r3_minus_hybrid": -0.011089108910891099,
+                    "mean_paired_r3_minus_hybrid": -0.03474576271186441,
+                    "n_pairs": 59
+                  }
+                },
+                "sign_flip": {
+                  "pooled_r3_minus_hybrid": true,
+                  "mean_paired_r3_minus_hybrid": false
+                }
+              },
+              "fact_coverage": {
+                "judges": {
+                  "original": {
+                    "pooled_r3_minus_hybrid": 0.042553191489361764,
+                    "mean_paired_r3_minus_hybrid": 0.04824561403508772,
+                    "n_pairs": 57
+                  },
+                  "second": {
+                    "pooled_r3_minus_hybrid": 0.04255319148936165,
+                    "mean_paired_r3_minus_hybrid": 0.042397660818713455,
+                    "n_pairs": 57
+                  }
+                },
+                "sign_flip": {
+                  "pooled_r3_minus_hybrid": false,
+                  "mean_paired_r3_minus_hybrid": false
+                }
+              }
+            },
+            "dev": {
+              "claim_support": {
+                "judges": {
+                  "original": {
+                    "pooled_r3_minus_hybrid": -0.002904989747095077,
+                    "mean_paired_r3_minus_hybrid": -0.04431818181818182,
+                    "n_pairs": 44
+                  },
+                  "second": {
+                    "pooled_r3_minus_hybrid": -0.014524948735475052,
+                    "mean_paired_r3_minus_hybrid": -0.0428030303030303,
+                    "n_pairs": 44
+                  }
+                },
+                "sign_flip": {
+                  "pooled_r3_minus_hybrid": false,
+                  "mean_paired_r3_minus_hybrid": false
+                }
+              },
+              "fact_coverage": {
+                "judges": {
+                  "original": {
+                    "pooled_r3_minus_hybrid": 0.06944444444444442,
+                    "mean_paired_r3_minus_hybrid": 0.07142857142857142,
+                    "n_pairs": 42
+                  },
+                  "second": {
+                    "pooled_r3_minus_hybrid": 0.06944444444444453,
+                    "mean_paired_r3_minus_hybrid": 0.0634920634920635,
+                    "n_pairs": 42
+                  }
+                },
+                "sign_flip": {
+                  "pooled_r3_minus_hybrid": false,
+                  "mean_paired_r3_minus_hybrid": false
+                }
+              }
+            },
+            "heldout": {
+              "claim_support": {
+                "judges": {
+                  "original": {
+                    "pooled_r3_minus_hybrid": 0.2727272727272727,
+                    "mean_paired_r3_minus_hybrid": 0.22222222222222224,
+                    "n_pairs": 6
+                  },
+                  "second": {
+                    "pooled_r3_minus_hybrid": 0.0,
+                    "mean_paired_r3_minus_hybrid": -0.027777777777777773,
+                    "n_pairs": 6
+                  }
+                },
+                "sign_flip": {
+                  "pooled_r3_minus_hybrid": false,
+                  "mean_paired_r3_minus_hybrid": true
+                }
+              },
+              "fact_coverage": {
+                "judges": {
+                  "original": {
+                    "pooled_r3_minus_hybrid": 0.0,
+                    "mean_paired_r3_minus_hybrid": 0.0,
+                    "n_pairs": 6
+                  },
+                  "second": {
+                    "pooled_r3_minus_hybrid": 0.0,
+                    "mean_paired_r3_minus_hybrid": 0.0,
+                    "n_pairs": 6
+                  }
+                },
+                "sign_flip": {
+                  "pooled_r3_minus_hybrid": false,
+                  "mean_paired_r3_minus_hybrid": false
+                }
+              }
+            },
+            "fresh": {
+              "claim_support": {
+                "judges": {
+                  "original": {
+                    "pooled_r3_minus_hybrid": 0.0,
+                    "mean_paired_r3_minus_hybrid": 0.0,
+                    "n_pairs": 9
+                  },
+                  "second": {
+                    "pooled_r3_minus_hybrid": 0.0,
+                    "mean_paired_r3_minus_hybrid": 0.0,
+                    "n_pairs": 9
+                  }
+                },
+                "sign_flip": {
+                  "pooled_r3_minus_hybrid": false,
+                  "mean_paired_r3_minus_hybrid": false
+                }
+              },
+              "fact_coverage": {
+                "judges": {
+                  "original": {
+                    "pooled_r3_minus_hybrid": -0.0714285714285714,
+                    "mean_paired_r3_minus_hybrid": -0.027777777777777776,
+                    "n_pairs": 9
+                  },
+                  "second": {
+                    "pooled_r3_minus_hybrid": -0.0714285714285714,
+                    "mean_paired_r3_minus_hybrid": -0.027777777777777776,
+                    "n_pairs": 9
+                  }
+                },
+                "sign_flip": {
+                  "pooled_r3_minus_hybrid": false,
+                  "mean_paired_r3_minus_hybrid": false
+                }
+              }
+            }
+          }
+        },
+        "denominators": {
+          "gpt-5.6-luna/all": {
+            "sampled_items": 120,
+            "valid_items": 118,
+            "judge_omitted_items": 2,
+            "sampled_pairs": 60,
+            "analysed_pairs": 58,
+            "excluded_pairs": 2
+          },
+          "gpt-5.6-luna/dev": {
+            "sampled_items": 88,
+            "valid_items": 88,
+            "judge_omitted_items": 0,
+            "sampled_pairs": 44,
+            "analysed_pairs": 44,
+            "excluded_pairs": 0
+          },
+          "gpt-5.6-luna/heldout": {
+            "sampled_items": 12,
+            "valid_items": 11,
+            "judge_omitted_items": 1,
+            "sampled_pairs": 6,
+            "analysed_pairs": 5,
+            "excluded_pairs": 1
+          },
+          "gpt-5.6-luna/fresh": {
+            "sampled_items": 20,
+            "valid_items": 19,
+            "judge_omitted_items": 1,
+            "sampled_pairs": 10,
+            "analysed_pairs": 9,
+            "excluded_pairs": 1
+          },
+          "gpt-6-luna/all": {
+            "sampled_items": 120,
+            "valid_items": 119,
+            "judge_omitted_items": 1,
+            "sampled_pairs": 60,
+            "analysed_pairs": 59,
+            "excluded_pairs": 1
+          },
+          "gpt-6-luna/dev": {
+            "sampled_items": 90,
+            "valid_items": 89,
+            "judge_omitted_items": 1,
+            "sampled_pairs": 45,
+            "analysed_pairs": 44,
+            "excluded_pairs": 1
+          },
+          "gpt-6-luna/heldout": {
+            "sampled_items": 12,
+            "valid_items": 12,
+            "judge_omitted_items": 0,
+            "sampled_pairs": 6,
+            "analysed_pairs": 6,
+            "excluded_pairs": 0
+          },
+          "gpt-6-luna/fresh": {
+            "sampled_items": 18,
+            "valid_items": 18,
+            "judge_omitted_items": 0,
+            "sampled_pairs": 9,
+            "analysed_pairs": 9,
+            "excluded_pairs": 0
+          }
+        },
+        "sign_flip_problem": true,
+        "low_kappa_problem": true,
+        "omission_problem": true,
+        "judge_omitted": {
+          "count": 3,
+          "by_family": {
+            "cross_source_synthesis": 2,
+            "factual_lookup": 1
+          },
+          "by_arm": {
+            "gpt-6-luna/hybrid": 1,
+            "gpt-5.6-luna/r3": 2
+          }
+        },
+        "incompleteness_warning": "Rates and agreement are conditional on valid pairs; omitted items are not imputed."
+      },
+      "provenance": [
+        "experiments/xjudge/sonnet55-FIN-s60-b-20261102/summary.json"
+      ]
+    },
     "limitations": [
       "Gold labels were drafted by AI. The owner then went through them in the review interface and signed off on every case, answer verdict and source check (four separate streams, 403 items in total: 268 gold questions, 65 held-out v2 questions, 40 saved system answers and 30 source checks; only the first two are questions). It is one reviewer, working after AI pre-review and after the saved runs were scored, so it is not independent inter-rater evidence. Four change-clicks were not applied under the out-of-period policy (D-047), so labels are unchanged in gold v3.7.",
       "One reviewer, after AI pre-review and after the saved runs were scored: not independent annotation or inter-rater evidence. The judge is an AI (gpt-6.1-terra); behaviour status, key-number recall, calculation correctness, false-answer and over-abstention are deterministic code, not the judge.",
@@ -77301,6 +77728,14 @@
         "date": "2 Nov 2026",
         "alternatives": "",
         "summary": "DECISION. The owner amended FIN2 before any replicate result was scored or read (generation was underway): headline the mean of FIN and FIN2 per arm and show both single runs"
+      },
+      {
+        "id": "D-062",
+        "title": "Second-family judge sensitivity check",
+        "status": "OWNER REQUEST / IMPLEMENTED",
+        "date": "2 Nov 2026",
+        "alternatives": "retain only the same-provider judge (free but leaves correlated-family bias unchecked); human independent review (stronger ground truth but not this task and requires actual reviewers); paired second-family sample (chosen, checks sensitivity without regenerat…",
+        "summary": "DECISION. Implement the owner's second-family judge check, pre-declared in second-judge.md before code, with its pre-paid native-output amendment"
       }
     ],
     "milestones": [
@@ -77409,7 +77844,7 @@
     "The population basis of the dataset employment series is unverified."
   ],
   "provenance": {
-    "commit": "c6c89022f4243a449c64157eb8fd4bca08aeff7c",
+    "commit": "00da4ab8ebccd4ab488e002dd1b88aa71990f0ff",
     "artifacts": [
       {
         "path": "data/export/sources.json",
@@ -78287,6 +78722,11 @@
         "sha256": "575ed81c26e4c62166e00a9c43ebbfd8dfa22cfb9729f8e2c7fa353388442965"
       },
       {
+        "path": "experiments/xjudge/sonnet55-FIN-s60-b-20261102/summary.json",
+        "status": "available",
+        "sha256": "36a9bf1754f237e7ffc469db5d2d86e29e8d4d8b1a7397bdfb1928c52169ae8c"
+      },
+      {
         "path": "experiments/tool-fix/criteria.json",
         "status": "available",
         "sha256": "351f809a83a8b7380fbcdb08d0d515326ce392edf994be437f75b345a6966904"
@@ -78584,12 +79024,12 @@
       {
         "path": "docs/decisions.md",
         "status": "available",
-        "sha256": "0eb479978f16508bc06a7a5cff681c95703146144e3f3b467ba1d35f06c170a4"
+        "sha256": "8298db5ea8bd4f52e10a0387956e554583fbf205b13b817ce934cd2e924a09aa"
       },
       {
         "path": "docs/progress.md",
         "status": "available",
-        "sha256": "ea616d056e2ee3fecacb1624caf7129d48c237d06032a27eed4ae1e2a38e90d2"
+        "sha256": "a19305188a340f99fe4a17da27afd21c83d4c569b61034cd802a1391c9aa4c6e"
       }
     ],
     "policy": "Committed artifacts only; numeric fields only."

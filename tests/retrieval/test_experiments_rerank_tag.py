@@ -79,3 +79,40 @@ def test_tagged_run_writes_all_outputs_without_touching_frozen(tmp_path, monkeyp
     assert json.loads(tagged.summary().read_text())["corpus_version"] == "v3.1"
     assert "v3.1 re-run" in tagged.summary(True).read_text()
     assert "Changed versus the frozen R-series" in tagged.summary(True).read_text()
+
+
+def test_methods_run_is_offline_isolated_and_matches_r0(tmp_path, monkeypatch):
+    monkeypatch.setattr(exp, "RUNS", tmp_path / "runs")
+    r0 = exp.RunPaths("T").config("R0")
+    r0.mkdir(parents=True)
+    (r0 / "scores.jsonl").write_text(json.dumps({"case_id": "DEV-1", "first_relevant_rank": 2}) + "\n")
+    (r0 / "metrics.json").write_text(json.dumps({"metrics": {"hit@8": 1.0}}))
+    frozen = {p: p.read_bytes() for p in exp.RUNS.rglob("*") if p.is_file()}
+    gold = tmp_path / "gold"
+    gold.mkdir()
+    (gold / "draft_cases.jsonl").write_text("synthetic gold\n")
+    monkeypatch.setattr(exp.ev, "GOLD", gold)
+    case = {"case_id": "DEV-1", "family": "lookup", "question": "q"}
+    monkeypatch.setattr(exp.ev, "load_cases", lambda _: [case])
+    monkeypatch.setattr(exp.ev, "text_cases", lambda cases: cases)
+    monkeypatch.setattr(exp.ev, "gold_passages", lambda _: {"p"})
+    chunks = {"a": SimpleNamespace(source_passage_ids=["x"]), "b": SimpleNamespace(source_passage_ids=["p"])}
+    seen = {}
+
+    def world(run_paths, offline=False):
+        seen["offline"] = offline
+        return SimpleNamespace(chunks=chunks, n=2, full_rankings=lambda _: (([("a", 1.0), ("b", 0.5)], []), [("b", 0.9), ("a", 0.1)]))
+    monkeypatch.setattr(exp, "World", world)
+    monkeypatch.setattr(exp, "fuse", lambda *args: [("a", 1.0), ("b", 0.9)])
+    monkeypatch.setattr(exp, "provenance", lambda c, sha: {"corpus_version": "v3.1", "chunk_count": 1847, "corpus_hash": "h", "gold_file_sha256": sha, "code_commit": "c"})
+    out = exp.run_methods("T")
+    assert seen["offline"] is True
+    d = exp.methods_dir("T")
+    assert d == exp.RUNS / "dev-R-T-methods" and d != exp.RunPaths("T").config("R0")
+    assert out["metrics"]["bm25"]["hit@8"] == 1.0 and out["hybrid_matches_R0_first_relevant_rank"]["matching_cases"] == 1
+    row = json.loads((d / "scores.jsonl").read_text())
+    assert (row["bm25_first_relevant_rank"], row["dense_first_relevant_rank"], row["hybrid_first_relevant_rank"]) == (2, 1, 2)
+    assert "Why the early deck figure differs" in (d / "SUMMARY.md").read_text()
+    assert all(p.read_bytes() == c for p, c in frozen.items())
+    with pytest.raises(SystemExit, match="already exists"):
+        exp.run_methods("T")
