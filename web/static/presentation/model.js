@@ -85,7 +85,13 @@ const REWRITE = [
   [/Right kind of response at least 205 and 209 of 237/g, 'Right kind of response at least 205 of 237'],
   [/Cases with an ungrounded number at most 34 and 51/g, 'Cases with an ungrounded number at most 34'],
   [/Main model/g, 'gpt-6-luna'],
-  [/held-out/gi, 'Original test'],
+  // The 65 fresh questions and the registered 31 are different sets: name them apart before the generic rule.
+  [/\b(a|the) held-out test\b/gi, '$1 test'],
+  [/\b(\d+ )?held-out v2 (questions|cases|set)\b/gi, (m, n = '') => `${n}${/^[A-Z]/.test(m) ? 'Fresh' : 'fresh'} ${m.split(' ').pop()}`],
+  [/\b(Evidence-disjoint |evidence-disjoint )?held-out v2 (design|result|run|acceptance rule|evaluation|test)\b/gi, (m, pre = '', what) => (pre ? `${pre}fresh-question ${what}` : `${/^[A-Z]/.test(m) ? 'Fresh' : 'fresh'}-question ${what}`)],
+  [/\bheld-out v2\b/gi, m => (/^[A-Z]/.test(m) ? 'The fresh questions' : 'the fresh questions')],
+  [/\boriginal held-out\b/gi, m => (/^[A-Z]/.test(m) ? 'Original test' : 'original test')],
+  [/held-out/gi, m => (/^[A-Z]/.test(m) ? 'Original test' : 'original test')],
   [/the primary filtered arm/g, 'the filtered arm']
 ];
 /** Drop every sentence or clause that names the second model or relies on there being two; what remains is true for gpt-6-luna alone. */

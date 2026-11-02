@@ -10,7 +10,7 @@ toggle.addEventListener('click', () => {
   themeLabel();
 });
 themeLabel();
-const repo = 'https://github.com/mihirkhandekar/labourlens/blob/main/';
+const repo = 'https://github.com/mihirkhandekar/labourlens/blob/master/';
 const rateFormat = new Intl.NumberFormat('en-SG', {minimumFractionDigits: 3, maximumFractionDigits: 3});
 const rate = n => typeof n === 'number' ? rateFormat.format(n) : 'Not recorded';
 const interval = values => Array.isArray(values) ? `[${values.map(rate).join(', ')}]` : 'Not recorded';

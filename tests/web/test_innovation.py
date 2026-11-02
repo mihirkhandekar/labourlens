@@ -112,3 +112,18 @@ def test_document_layout_keeps_tables_references_feedback_and_print_without_deco
         assert token not in css
     assert "@media print" in css and "@page" in css
     assert "max-width" in css and "72ch" in css
+
+
+def test_every_github_link_on_the_innovation_page_points_to_a_tracked_file():
+    import subprocess
+    script = (WEB / "static/js/innovation.js").read_text()
+    bases = re.findall(r"https://github\.com/[\w.-]+/[\w.-]+/blob/([\w.-]+)/", script)
+    assert bases == ["master"], "The default branch is master; a blob/main link returns 404"
+    assert "/blob/master/" in (WEB / "static/js/report-story.js").read_text()
+    try:
+        tracked = set(subprocess.run(["git", "ls-files"], cwd=ROOT, capture_output=True, text=True, check=True).stdout.splitlines())
+    except (OSError, subprocess.CalledProcessError):
+        pytest.skip("not a git checkout")
+    paths = [reference["path"] for reference in json.loads((ROOT / CONTENT).read_text())["references"]]
+    assert paths
+    assert [path for path in paths if path not in tracked] == []

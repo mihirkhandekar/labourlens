@@ -95,7 +95,7 @@ export function buildBands(report) {
 
   const problem = band({
     id: 'problem', title: 'My project', layout: 'split',
-    lede: [`I chose the Singapore labour market because official quarterly statistics and reports give checkable revisions, ambiguity and calculation questions. The agent is for policy researchers and analysts. Public transport was not among the recorded alternatives, so I did not evaluate transit data. The answer period is fixed at ${fmt.quarter(from)} to ${fmt.quarter(to)}${nQuarters ? `, ${nQuarters} quarters` : ''}, and earlier figures are out of scope.`]
+    lede: [`I chose the Singapore labour market because official quarterly statistics and reports give checkable revisions, ambiguity and calculation questions. The agent is for policy researchers and analysts. The answer period is fixed at ${fmt.quarter(from)} to ${fmt.quarter(to)}${nQuarters ? `, ${nQuarters} quarters` : ''}, and earlier figures are out of scope.`]
   });
   problem.visual.append(stage(safe('My project', myProject), {design: 1100}));
   problem.node.append(more('Other domains I considered', group('', 'Recorded alternatives were housing affordability, which has confounded transaction-level data, and cost of living, which has index methods and causal complexity. They are not on the slide face.')));
@@ -238,7 +238,7 @@ export function buildBands(report) {
     group('MCP boundary and client checks', rows([
       ['Server capabilities', 'Nine read-only statistical tools, two source-catalogue resources and one prompt. The server does not expose report text.'],
       ['Client checks', 'The client checks its server allow-list and protocol version, validates tool arguments and results against schemas, applies time and response-size limits, and treats returned text as untrusted.'],
-      ['Comparison', 'The protocol demo compares MCP results with direct data calls. The live application accepts that added latency for its statistics lookups; the full final comparisons used direct calls; a separate 65-case sample measures the served chain. Taking the statistics tool away drops accuracy from 90.8% to 69.2% on the same 65 questions; routing it through MCP changes nothing.'],
+      ['Comparison', 'The protocol demo compares MCP results with direct data calls. The live application accepts that added latency for its statistics lookups; the full final comparisons used direct calls; a separate 65-case sample measures the served chain. Taking the statistics tool away drops accuracy from 90.8% to 69.2% on these 65 questions; MCP and direct calls tie on this set.'],
       ['Who calls it', 'A recorded session of real calls in a fixed order: 17 steps, 6 client refusals and 10 hostile-server cases, recorded 2 Nov 2026. Also, one agent question answered over MCP, and the 10 hostile-server cases in the threat suite. The live application uses MCP for statistics lookups only; the served chain is measured on a 65-case sample, not the full final evaluation.']
     ]), note('MCP client and server behaviour is recorded in the protocol demo and report data.')),
     dataTable('Served chain, 2 Nov 2026: one run per route and model', ['Route', 'Model', 'All 65', 'Gold 51', 'Median seconds', 'p95 seconds', 'USD per question', 'MCP calls / lookup errors'],
@@ -288,7 +288,7 @@ export function buildBands(report) {
   const review = band({
     id: 'review', title: 'Human Review of Dataset',
     lede: ['I signed off four separate review streams. Two are sets of questions: 268 reference questions and 65 fresh questions, each approved, changed or rejected. Two are outputs I checked: 40 saved system answers rated right, partly right or wrong (25, 6 and 9), and 30 source checks against the original pages (18 match, 12 minor). Labels were drafted and checked in three separate AI review passes from the same model family. I went through them after the AI pre-review and after the saved runs were scored.',
-      'The 65 fresh questions are evidence and source disjoint from the earlier questions by pre-run audit, the decision rule was signed before the run, and they were used once, not for tuning. The saved answers are failure-enriched outputs, so they are not a sample of typical answers.']
+      'The 65 fresh questions are evidence and source disjoint from the earlier questions by pre-run audit, the decision rule was signed before the first run, and they were not used for tuning the default system. They have since been run five times per arm (first run, corpus v3.1 rerun, post-fix diagnostic, final evaluation and its replicate), so they are no longer untouched. The saved answers are failure-enriched outputs, so they are not a sample of typical answers.']
   });
   review.visual.append(
     stage(safe('The review streams', reviewStreams)),

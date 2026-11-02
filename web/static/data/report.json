@@ -1,6 +1,6 @@
 {
   "schema_version": "report-1.0",
-  "generated_at": "2026-11-02T15:20:41.994038+00:00",
+  "generated_at": "2026-11-02T15:51:52.983718+00:00",
   "summary": {
     "title": "LabourLens research workbench",
     "scope": [
@@ -78928,8 +78928,16 @@
         "title": "One final evaluation as the headline; keep filter then rerank as the served default",
         "status": "OWNER REQUEST / MEASURED",
         "date": "1 Nov 2026",
-        "alternatives": "private repo with invites, emailed export",
+        "alternatives": "",
         "summary": "MEASURED RESULT (behaviour accuracy, filter then rerank against hybrid)."
+      },
+      {
+        "id": "D-057",
+        "title": "Repository is public",
+        "status": "",
+        "date": "2 Nov 2026",
+        "alternatives": "private repo with invites, emailed export",
+        "summary": ""
       },
       {
         "id": "D-060",
@@ -79043,7 +79051,7 @@
     "The population basis of the dataset employment series is unverified."
   ],
   "provenance": {
-    "commit": "ff3613619fe795750f4428e2b65942e3b66d23b6",
+    "commit": "c52b7c0d3ebf93655278172634f82640bb2daa9e",
     "artifacts": [
       {
         "path": "data/export/sources.json",
@@ -80418,7 +80426,7 @@
             {
               "title": "Access and processing controls",
               "gap": "Demo access and external model processing lack government approval.",
-              "measure": "Clear licences, rights and publisher agreements. Add SSO/source roles; approve residency, private endpoints, retention and audit access. Review provider terms; retain exportable evidence and a tested vendor exit plan.",
+              "measure": "Clear licences, rights and publisher agreements. Add SSO/source roles, with an access label on every document and chunk applied as a pre-filter in BM25, vector search and the statistics tools so restricted text never reaches the model (the corpus is public today, so none exists now); approve residency, private endpoints, retention and audit access. Review provider terms; retain exportable evidence and a tested vendor exit plan.",
               "threshold": "No sensitive deployment before approval. Provider failure returns unavailable or approved cached analysis, never an unvalidated fallback.",
               "status": "proposal"
             },
@@ -80437,7 +80445,7 @@
           "summary": "Accept cheaper routing only after quality checks.",
           "paragraphs": [
             {
-              "text": "All-tools MCP scored 0.877 (57/65) versus statistics-only 0.908 (59/65); median latency 14.3/12.4 s, p95 51.4/34.7 s. It was rejected. Removing the statistics tool dropped accuracy to 0.692: the data adds about 21 points, MCP none.",
+              "text": "All-tools MCP scored 0.877 (57/65) versus statistics-only 0.908 (59/65); median latency 14.3/12.4 s, p95 51.4/34.7 s. It was rejected. Removing the statistics tool dropped accuracy from 0.908 to 0.692 on that sample, partly because calculation then loses its input; MCP against direct tied, which does not show it has no effect.",
               "refs": [
                 "final",
                 "mcp",
@@ -80705,8 +80713,8 @@
     },
     "source": {
       "path": "docs/innovation-page.json",
-      "sha256": "81fddf42756a9ba931d4320fdb8a4646f425a5b8d3eed5d6e2e8332a9b492681",
-      "evidence_commit": "ff3613619fe795750f4428e2b65942e3b66d23b6"
+      "sha256": "4b26c85c3de316b706fc3fd3344afec898727a39dd4276bd24ae1c0eee80ed3c",
+      "evidence_commit": "c52b7c0d3ebf93655278172634f82640bb2daa9e"
     }
   }
 }

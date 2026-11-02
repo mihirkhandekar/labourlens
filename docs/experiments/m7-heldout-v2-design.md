@@ -1,6 +1,6 @@
 # M7 — Evidence-disjoint held-out v2 (design A on corpus v3)
 
-**31 October 2026. Status: run once on corpus v3 (65 cases, owner-approved gold, signed in `experiments/heldout-v2/FREEZE.md`). The pre-registered rule is met for the primary model; the effect is three cases; I would not call it a confirmed gain; the second model shows none. Result and error analysis: [`m7-heldout-v2-result.md`](m7-heldout-v2-result.md), D-045.** The sections below are the design as written before the run.
+**31 October 2026. Status: first run on corpus v3 on 31 October (65 cases, owner-approved gold, signed in `experiments/heldout-v2/FREEZE.md`); the set was run again afterwards, five runs per arm in all (the corpus v3.1 rerun, the post-freeze diagnostic, the final evaluation and its replicate), so it is no longer untouched. The pre-registered rule is met for the primary model; the effect is three cases; I would not call it a confirmed gain; the second model shows none. Result and error analysis: [`m7-heldout-v2-result.md`](m7-heldout-v2-result.md), D-045.** The sections below are the design as written before the run.
 
 ## 1. Why a new set (VERIFIED FACT)
 

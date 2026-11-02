@@ -154,6 +154,6 @@ def run() -> None:
         f"{', '.join(f'{v:,}' for v in f3['dataset_minus_final'])} persons. The consistent gap is **consistent with** a migrant-domestic-worker "
         "definition difference but that is an inference, not a verified fact. Figure: `artifacts/figures/fig3_employment_change_reconciliation.png`.",
         "",
-        "Human review: figures and findings have NOT been reviewed by the project owner yet.",
+        "Human review: these findings and figures have not been separately reviewed by a person. The 14 statistical source checks in `docs/human-review/` compare a sample of the underlying values with the publisher, not these findings.",
     ]
     (paths.ARTIFACTS / "eda-findings.md").write_text("\n".join(findings) + "\n")

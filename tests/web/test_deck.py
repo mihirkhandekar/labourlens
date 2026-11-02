@@ -362,7 +362,7 @@ def test_mcp_slide_labels_the_all_tools_arm_as_tested_and_not_live():
     live = (STATIC / "presentation" / "slides.js").read_text()
     assert "the live app does not use it" in live and "not used live" in live
     face = (STATIC / "presentation" / "graphics.js").read_text()
-    assert "Taking the statistics tool away drops accuracy from 90.8% to 69.2% on the same 65 questions; routing it through MCP changes nothing." in face
+    assert "Taking the statistics tool away drops accuracy from 90.8% to 69.2% on these 65 questions; MCP and direct calls tie on this set." in face
     assert "-21.5 points" in live and "first attempt stopped at 44 of 65" in live and "gpt-5.6" not in face.split("Taking the statistics tool away")[1][:1500]
 
 
@@ -622,3 +622,14 @@ def test_retained_calculation_experiment_explains_its_rejection_once():
     assert (result["x2"]["false_answers"], result["x3"]["false_answers"]) == (6, 7)
     assert result["criteria"]["2_false_answers"]["threshold"] == 6
     assert result["criteria"]["2_false_answers"]["pass"] is False and result["all_pass"] is False
+
+
+def test_deck_names_the_fresh_questions_apart_from_the_original_test():
+    model = (STATIC / "presentation" / "model.js").read_text()
+    fresh = model.index("held-out v2 (questions|cases|set)")
+    generic = model.index("[/held-out/gi")
+    assert fresh < generic, "held-out v2 must be renamed before the generic held-out rule"
+    assert "the fresh questions" in model and "original test" in model
+    sources = {f.name: f.read_text() for f in (STATIC / "presentation").glob("*.js")}
+    assert "S shows these notes" not in sources["slides.js"] and "X twice" in sources["slides.js"]
+    assert "Run held-out v2 once" not in sources["ch8-limits.js"] and "were run once" not in sources["graphics.js"]

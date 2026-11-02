@@ -77,8 +77,7 @@ def test_hero_has_name_pitch_and_three_buttons():
     assert "Public repository." in STORY
 
 def test_report_copy_explains_transit_system_and_sources():
-    assert "Public transport was not among the recorded alternatives" in STORY
-    assert "so I did not evaluate transit data" in STORY
+    assert "Public transport" not in STORY and "transit data" not in STORY
     assert "Agentic system" in STORY
     assert "Only the live get_series path crosses the MCP client/server" in STORY
     assert "Passage retrieval is not run before the agent" in STORY
@@ -110,7 +109,7 @@ def test_review_wording_is_the_honest_wording_and_has_no_timing():
                    "40 saved system answers", "30 source checks",
                    "three separate AI review passes from the same model family", "A later diagnostic reused the 65 fresh questions",
                    "Human review was done by me alone", "not independent inter-rater evidence",
-                   "in 25 cases", "represented in development for 15", "signed before the run", "not for tuning"):
+                   "in 25 cases", "represented in development for 15", "signed before the first run", "not used for tuning the default system", "no longer untouched"):
         assert phrase in STORY, phrase
     assert "One reviewer" not in STORY
     assert "V2post" not in STORY

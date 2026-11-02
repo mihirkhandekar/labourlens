@@ -8,7 +8,7 @@ I built a Singapore labour-market research assistant for the GenAI Engineer take
 2. [Architecture](docs/architecture.md)
 3. [Evaluation report](docs/evaluation-report.md)
 4. [AI-assisted development](docs/ai-assisted-development.md)
-5. [Requirements matrix](docs/requirements-matrix.md)
+5. [Requirements matrix](docs/requirements-matrix.md). `partial` there means my sign-off or an external check is still open, not that work is missing.
 
 ## Run it
 
@@ -38,7 +38,7 @@ Open <http://127.0.0.1:8000>, `/deck` or `/workbench`. These commands make no pa
 
 - AI drafted the reference answers. I reviewed them after scoring, as the only reviewer.
 - The main judge is from the same model family. A second-family check did not reproduce every gain.
-- The headline averages two runs: 0.897 versus 0.827 on 237 development questions for matching answer status. Two runs do not estimate variance.
+- The headline averages two runs: 0.897 versus 0.827 on 237 development questions for matching answer status. Two runs do not estimate variance, but identical reruns flip 11 to 18 of 237 development cases and 1 to 3 of 65 fresh cases. A rule that always answers would score 0.768, 0.774 and 0.738 on the three sets, so the fresh-set results are within about three points of it.
 - Neither test set demonstrates a gain: 0.839 versus 0.806 on the original 31 questions, 0.715 versus 0.746 on 65 fresh questions.
 - Test sets are partly independent. Original questions share development evidence; fresh questions were later reused for diagnostics.
 - The served chain scored 90.8% on 65 cases, mostly reused development questions. The full evaluation bypasses web stages and MCP.

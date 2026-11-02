@@ -1,0 +1,116 @@
+{
+ "note": "Computed by scripts/floors_and_noise.py from committed gold and score rows; no model calls.",
+ "sets": {
+  "dev": {
+   "n": 237,
+   "always_answer": {
+    "correct": 182,
+    "rate": 0.7679
+   },
+   "always_abstain": {
+    "correct": 25,
+    "rate": 0.1055
+   },
+   "flips": {
+    "gpt-6-luna/r3": {
+     "flipped": 13,
+     "n": 237,
+     "correct_in_both": 206,
+     "wrong_in_both": 18
+    },
+    "gpt-6-luna/hybrid": {
+     "flipped": 18,
+     "n": 237,
+     "correct_in_both": 187,
+     "wrong_in_both": 32
+    },
+    "gpt-5.6-luna/r3": {
+     "flipped": 11,
+     "n": 237,
+     "correct_in_both": 207,
+     "wrong_in_both": 19
+    },
+    "gpt-5.6-luna/hybrid": {
+     "flipped": 16,
+     "n": 237,
+     "correct_in_both": 192,
+     "wrong_in_both": 29
+    }
+   }
+  },
+  "registered": {
+   "n": 31,
+   "always_answer": {
+    "correct": 24,
+    "rate": 0.7742
+   },
+   "always_abstain": {
+    "correct": 2,
+    "rate": 0.0645
+   },
+   "flips": {
+    "gpt-6-luna/r3": {
+     "flipped": 2,
+     "n": 31,
+     "correct_in_both": 25,
+     "wrong_in_both": 4
+    },
+    "gpt-6-luna/hybrid": {
+     "flipped": 2,
+     "n": 31,
+     "correct_in_both": 24,
+     "wrong_in_both": 5
+    },
+    "gpt-5.6-luna/r3": {
+     "flipped": 0,
+     "n": 31,
+     "correct_in_both": 26,
+     "wrong_in_both": 5
+    },
+    "gpt-5.6-luna/hybrid": {
+     "flipped": 3,
+     "n": 31,
+     "correct_in_both": 24,
+     "wrong_in_both": 4
+    }
+   }
+  },
+  "fresh": {
+   "n": 65,
+   "always_answer": {
+    "correct": 48,
+    "rate": 0.7385
+   },
+   "always_abstain": {
+    "correct": 8,
+    "rate": 0.1231
+   },
+   "flips": {
+    "gpt-6-luna/r3": {
+     "flipped": 3,
+     "n": 65,
+     "correct_in_both": 45,
+     "wrong_in_both": 17
+    },
+    "gpt-6-luna/hybrid": {
+     "flipped": 3,
+     "n": 65,
+     "correct_in_both": 47,
+     "wrong_in_both": 15
+    },
+    "gpt-5.6-luna/r3": {
+     "flipped": 1,
+     "n": 65,
+     "correct_in_both": 47,
+     "wrong_in_both": 17
+    },
+    "gpt-5.6-luna/hybrid": {
+     "flipped": 2,
+     "n": 65,
+     "correct_in_both": 47,
+     "wrong_in_both": 16
+    }
+   }
+  }
+ }
+}

@@ -4,7 +4,7 @@ I built LabourLens for the GenAI Engineer take-home. Singapore labour-market res
 
 ## Result
 
-The default model is `gpt-6-luna`. Averaged over two runs, filter then rerank scored 0.897 against hybrid search's 0.827 on 237 development questions for matching the expected answer status. On the original 31 test questions it scored 0.839 against 0.806; on 65 fresh questions, 0.715 against 0.746. Neither test set demonstrates a gain. The [evaluation report](docs/evaluation-report.md) has both runs, intervals and content-quality scores.
+The default model is `gpt-6-luna`. Averaged over two runs, filter then rerank scored 0.897 against hybrid search's 0.827 on 237 development questions for matching the expected answer status. On the original 31 test questions it scored 0.839 against 0.806; on 65 fresh questions, 0.715 against 0.746. Neither test set demonstrates a gain. For scale, a rule that never reads the question and always answers would score 0.768, 0.774 and 0.738 on the three sets (computed from the gold labels), so on the 65 fresh questions both arms sit within three points of that floor. The [evaluation report](docs/evaluation-report.md) has both runs, intervals and content-quality scores.
 
 ## Quick start
 
@@ -75,11 +75,11 @@ Only statistics lookup crosses MCP in the live app. The all-three-tools MCP rout
 
 - Immutable source snapshots, observation lineage and data contracts.
 - Report extraction with page locators and quality flags.
-- BM25 and embedding retrieval; filter then rerank hit@8 was .969 against hybrid .539 on 128 development questions.
+- BM25 and embedding retrieval; filter then rerank hit@8 was .969 against hybrid .539 on 128 development questions, counting a hit when a gold passage is in the top eight chunks; counting only the first eight distinct passages it was .719 against .258.
 - One bounded LangGraph agent with read-only tools and deterministic arithmetic.
 - A statistics MCP server with tools, resources and a client that checks server responses.
 - A cited-answer workbench with evidence cards and an activity timeline.
-- An evaluation harness; the served chain scored 90.8% on a 65-case sample.
+- An evaluation harness; the served chain scored 90.8% on a 65-case sample (51 reused development cases and 14 of my own probes; 88 to 90% on the gold cases alone).
 - A 36-case attack suite, plus scanner tests that improved detection from 10 of 30 to 23 of 30 attacks.
 
 ## Repository map
@@ -114,7 +114,7 @@ The app uses v3.1: 85 sources, 52,020 observations, 16,419 passages and 1,847 ch
 ## Limits
 
 - AI drafted the reference answers; I reviewed them after scoring, as the sole reviewer. The main judge is from the same model family; a second-family check did not reproduce every gain.
-- The question sets are only partly independent: the original test shares development evidence, and the fresh set was reused for diagnostics. Two runs do not estimate run-to-run variance; the served-chain sample reuses development cases.
+- The question sets are only partly independent: the original test shares development evidence, and the fresh set was reused for diagnostics. Two runs do not estimate run-to-run variance, but identical reruns flip 11 to 18 of 237 development cases and 1 to 3 of 65 fresh cases, so differences of a few cases are inside the noise; the served-chain sample reuses development cases.
 - Report-only figures cannot enter deterministic calculations; PDF tables can extract poorly. The tested arithmetic extension was not adopted.
 - The scanner is a warning layer. It still misses attacks and flags benign text; the fresh attack suite scored 35/36 in all four settings, including with defences off. Citation checks do not prove claim support.
 - Extracted report text and raw model answers are local-only. Three dataset licences are unverified and 23 document rights are unresolved. Without the private corpus, the rights scan says `NOT CHECKED`.

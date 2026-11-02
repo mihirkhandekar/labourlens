@@ -46,7 +46,7 @@ A `D-0nn` id is an entry in the [decision log](decisions.md); every other id is 
 
 ## Decision log ids
 
-The decision log ([decisions.md](decisions.md)) numbers its entries `D-000` to `D-069`. Only the ones that public documents still need are listed.
+The decision log ([decisions.md](decisions.md)) numbers its entries from `D-000` onward. Only the ones that public documents still need are listed.
 
 | Plain name | Id |
 |---|---|

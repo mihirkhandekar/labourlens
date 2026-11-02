@@ -1,6 +1,6 @@
 # Served chain without statistics lookup — PRE-REGISTRATION
 
-**Registered:** 2 November 2026, before any run of this arm. **Status:** pre-registration only; no results recorded. Owner approved a one-factor ablation under D-016. This is an experiment-only route, not a live-app setting.
+**Registered:** 2 November 2026, before any run of this arm (but see the ordering disclosure in the Result section: the commit came later). **Status:** pre-registration only; no results recorded. Owner approved a one-factor ablation under D-016. This is an experiment-only route, not a live-app setting.
 
 ## Question and hypothesis
 
@@ -55,6 +55,12 @@ The pre-registration above is unchanged. This section records what happened. Sou
 
 The first attempt, tag `S65-nostats`, was stopped by a 25-minute command timeout set by the person running it, after 44 of 65 cases. The harness cannot resume a run, so one complete run was made under the new tag `S65-nostats-b` with identical settings (same model, route, retrieval, web steps, fixture and prompts). This is an operational rerun of an incomplete run, not a rerun to change a result. The 44 interrupted rows were not scored, not paired and not used anywhere; they remain only as an unscored raw file in the local ignored `data/runs/served-dev-S65-nostats/`, and no `experiments/` directory exists for them. The pre-registered commands and tag in this file still show `S65-nostats`; the evidence uses `-b`.
 
+### Ordering and provenance disclosure
+
+- **The pre-registration commit came after the first attempt started.** The registration and the `no-stats` route code were committed together in `f11afd2` at 22:47:20 on 2 November 2026. The first attempt (`S65-nostats`) began at 22:11 and the complete run (`S65-nostats-b`) at 22:36, so the commit was made after the first, interrupted attempt started and while the second was running. Git therefore does not show that the registration came first. The only evidence of order is local file times: this file was created at 22:09:57, before the first attempt's output folder (22:11:19). File times are local and editable, so treat that as weak evidence.
+- **The recorded `git_head` predates the route code.** The run provenance records `1b549cd` (21:59:21), which does not contain the `no-stats` route; `f11afd2` does. The run used code that was not yet committed, and the provenance has no dirty-tree flag.
+- **Other pre-registrations.** For the FIN2 replicate (`7e44dc2`) and scanner v2 (`8edb968`), the registration text and the results were also committed together, so git timestamps do not prove that the text came first there either. For FIN2 the local registration file was created at 09:48:05 and the first FIN2 run folder at 10:08:53; the amendment to a mean-of-two headline was last written at 10:18:03, after generation had started, as the amendment says. For scanner v2 the file times in this checkout were all rewritten (16:25:04), so no file time shows the order; it rests on the declaration's own wording and on the input hashes recorded in `experiments/scanner/freeze.json`.
+
 ### Headline
 
 | Measure | Statistics tool removed (`nostats-b`) | Direct `get_series` (`direct-on`) | `get_series` over MCP (`mcp-on`) |
@@ -100,7 +106,7 @@ Cases that got worse than direct-on, by family (descriptive, from the paired fil
 
 ### Interpretation
 
-Taking the statistics tool away drops behaviour accuracy from 90.8% to 69.2% on the same 65 questions: about 21 points, with a paired interval that excludes zero against both arms. Routing the same tool through MCP instead of calling it directly changes nothing measurable (both 0.908; one case better and one worse in the earlier comparison). So the answer to "does MCP help?" is that the data helps and the transport neither helps nor hurts. The structured statistics store carries the numerical and revision questions: the report text did not give the model what it needed for them, and the model mostly abstained (15 over-abstentions, 6 of them in the 7 numerical cases) rather than guess. This answers the objection that the report chunks already hold the tables: with the store removed, accuracy fell by 21 points, so they did not substitute for it on these questions.
+On this 65-question sample, taking the statistics tool away lowers behaviour accuracy from 90.8% to 69.2%: about 21 points, with a paired interval that excludes zero against both arms. Read it with three limits. Removal also removes the only source of the observation labels that `calculate_change` needs, so "0 of 6 correct" and most of the numerical-family drop follow almost by construction; the arm tests "no structured lookup and no calculation input", not "report text in place of the data". It is one run, on 51 reused development cases and 14 of my own probes. And MCP against direct is a tie here (both 0.908; one case better and one worse in the earlier comparison), which is not evidence that the transport has no effect: one run each cannot show equivalence. Within those limits, the structured store carries the numerical and revision questions in this sample: the retrieved report text did not give the model what it needed, and the model mostly abstained (15 over-abstentions, 6 of them in the 7 numerical cases) rather than guess.
 
 Not every loss is an abstention. Answers contradicting a reference fact rose from 1 to 4, so removal also produced some wrong content, not only refusals. False answers, as counted by the evaluation report, stayed at 3 in every arm.
 

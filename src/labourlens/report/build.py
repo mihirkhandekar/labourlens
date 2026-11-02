@@ -688,7 +688,7 @@ def _paired_corpus_v2(artifacts: _Artifacts) -> dict | None:
     return {**entry, "diagnostic": True} if entry else None
 
 
-_DECISION = re.compile(r"^### (D-\d{3}) (?:\u2014|-) (.+)$", re.M)
+_DECISION = re.compile(r"^### (D-\d{3})(?: (?:\u2014|-)|:) (.+)$", re.M)
 _DATE = re.compile(r"(\d{1,2} (?:Oct|Nov) 2026)")
 _MILESTONE = re.compile(r"^\| (M\d(?:\.\d)?) \| ([^|]+) \| ([^|]+) \|", re.M)
 
