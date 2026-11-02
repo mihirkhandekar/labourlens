@@ -1,6 +1,6 @@
 {
   "schema_version": "report-1.0",
-  "generated_at": "2026-11-02T01:31:18.313686+00:00",
+  "generated_at": "2026-11-02T01:45:23.036395+00:00",
   "summary": {
     "title": "LabourLens research workbench",
     "scope": [
@@ -70076,7 +70076,7 @@
       {
         "id": "M6.1",
         "name": "Evaluation harness and dev comparisons",
-        "status": "A1-A5 saved outputs rescored against v3.5 using --no-judge; no new model calls; prior v3.2 history preserved"
+        "status": "A1-A5 saved outputs rescored against v3.5 using --no-judge; no new model calls in this step (D-056 was a separate generated run, 2 Nov); prior v3.2 history preserved"
       },
       {
         "id": "M6.2",
@@ -70123,7 +70123,7 @@
     "The population basis of the dataset employment series is unverified."
   ],
   "provenance": {
-    "commit": "c723116c8c82bd5cb02abe8f5fa15d9287bfc22b",
+    "commit": "683f64db41b44c86c1f6c1a0bcec6e05f1161b80",
     "artifacts": [
       {
         "path": "data/export/sources.json",
@@ -71103,12 +71103,12 @@
       {
         "path": "docs/decisions.md",
         "status": "available",
-        "sha256": "b98e219455834098d92f27649df6ca7b0592059c6d35b22fb4d9875291c3b1fe"
+        "sha256": "c015bfef1fff7464f6c6af89913db222124f8f6d4fbf2b691a6b0d17fd36d280"
       },
       {
         "path": "docs/progress.md",
         "status": "available",
-        "sha256": "040455b126e57569bc510f9a01fa23102f26ddb8ba344bade127309c669226a5"
+        "sha256": "0b7bef6c1ea3e3d21a3761d0d44c082839b6ee1271ff65b3f7178d69d5fd17d1"
       }
     ],
     "policy": "Committed artifacts only; numeric fields only."
