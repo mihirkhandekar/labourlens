@@ -1,6 +1,6 @@
 {
   "schema_version": "report-1.0",
-  "generated_at": "2026-11-02T13:49:18.382196+00:00",
+  "generated_at": "2026-11-02T13:59:18.969636+00:00",
   "summary": {
     "title": "LabourLens research workbench",
     "scope": [
@@ -78585,6 +78585,22 @@
         "date": "2 Nov 2026",
         "alternatives": ".",
         "summary": "- The server gains an agent profile, started only with --agent-tools (mcp/agenttools.py, mcp/server.py): searchreports, calculatechange, calculatefromtextvalues and describecorpus"
+      },
+      {
+        "id": "D-067",
+        "title": "Public deliverables and local working material",
+        "status": "OWNER DECISION",
+        "date": "2 Nov 2026",
+        "alternatives": "were keeping all working material public (more clutter) or deleting its local copies (loses useful author records); local copies plus a short public deliverable were chosen",
+        "summary": "DECISION. Keep public deliverables focused on reproducible implementation, evaluation and evidence"
+      },
+      {
+        "id": "D-068",
+        "title": "Submission completeness and offline notebooks",
+        "status": "OWNER REQUEST",
+        "date": "2 Nov 2026",
+        "alternatives": "and rationale",
+        "summary": "DECISION. Map each repository-package bullet in the assessment PDF to an opened file and named section in submission checklist, keeping document presence separate from scientific validity and owner acceptance"
       }
     ],
     "milestones": [],
@@ -78602,7 +78618,7 @@
     "The population basis of the dataset employment series is unverified."
   ],
   "provenance": {
-    "commit": "69c1d9287705a5cb97198c51728c448f9530ed5d",
+    "commit": "87e54f08251efd3272d02d2dddeeca7f47db7375",
     "artifacts": [
       {
         "path": "data/export/sources.json",
@@ -79816,12 +79832,12 @@
       {
         "path": "docs/decisions.md",
         "status": "available",
-        "sha256": "a7e724ee92b0a485b6a46a461a912529f88d2597ab8ce3a87a885b51ac268c48"
+        "sha256": "3bf4f9d15518aba319ddc0c0ba148d8cbaa0637ccba41dc96d0676121e126b96"
       },
       {
         "path": "docs/progress.md",
         "status": "available",
-        "sha256": "39c8b0bed8c5f24386de4768730a6430a63973cd38a51addf8b8918ef1983535"
+        "sha256": "8ae4137ba9ede75a23c1d1a833f7712c0bcb79849453122b43b3d423f3f01c0d"
       }
     ],
     "policy": "Committed artifacts only; numeric fields only."
@@ -80077,7 +80093,7 @@
     "source": {
       "path": "docs/innovation-page.json",
       "sha256": "f0db3f22e99a6b0708224e6b685f035b2467801029d88182bfb6cd15f2d39800",
-      "evidence_commit": "69c1d9287705a5cb97198c51728c448f9530ed5d"
+      "evidence_commit": "87e54f08251efd3272d02d2dddeeca7f47db7375"
     }
   }
 }
