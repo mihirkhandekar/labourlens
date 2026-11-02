@@ -20,8 +20,8 @@ GRAPHICS = (STATIC / "presentation" / "graphics.js").read_text(encoding="utf-8")
 HOME = (STATIC / "js" / "home.js").read_text(encoding="utf-8")
 
 REQUIRED_STEPS = {
-    "assignment": "The assignment", "problem": "My project", "system": "The Agentic System", "data": "The data",
-    "eda": "What the data showed", "hard": "Challenges with the data", "build": "Document build", "retrieval": "Retrieval Strategies", "agent": "The agent",
+    "assignment": "Assignment", "problem": "My project", "system": "Agentic system", "data": "Choosing the data",
+    "eda": "Data findings", "hard": "Challenges with the data", "build": "Report processing", "retrieval": "Retrieval Strategies", "agent": "Agent",
     "models": "Models", "tools": "Tools and MCP", "ops": "Agent Workbench", "review": "Human Review of Dataset", "safety": "Safety", "process": "How I built it",
     "limits": "Limits", "run": "Run it",
 }
@@ -79,9 +79,9 @@ def test_hero_has_name_pitch_and_three_buttons():
 def test_report_copy_explains_transit_system_and_sources():
     assert "Public transport was not among the recorded alternatives" in STORY
     assert "so I did not evaluate transit data" in STORY
-    assert "The Agentic System" in STORY
-    assert "MCP exposes read only statistics and source metadata" in STORY
-    assert "Evaluation measures retrieval, expected answer behaviour and safety on development and held-out cases" in STORY
+    assert "Agentic system" in STORY
+    assert "Only the live get_series path crosses the MCP client/server" in STORY
+    assert "Passage retrieval is not run before the agent" in STORY
     assert "The structured records are quarterly statistical observations" in STORY
     assert "Statistics give the numbers and reports give the explanations" not in STORY
     assert "One answer, each part cited" not in STORY
@@ -91,14 +91,15 @@ def test_report_copy_explains_transit_system_and_sources():
 
 
 def test_technical_panels_explain_methods_prompts_and_charts():
-    for excerpt in ("k1 1.5 and b 0.75", "text-embedding-3-large", "reciprocal rank", "top 30", "95% bootstrap intervals",
+    for excerpt in ("k1 1.5 and b 0.75", "text-embedding-3-large", "reciprocal rank", "top 30", "95% percentile-bootstrap intervals",
                     "prompts/rerank_v1.md", "prompts/planner_v1.md", "calculate_from_text_values", "prompts/planner_v3.md",
                     "prompts/answer_v5.md", "Direct prompt injection", "Poisoned report passage", "Sensitive-data requests",
                     "Unsafe tool use", "Unsupported claims", "MCP server failure", "Wilson interval"):
         assert excerpt in STORY, excerpt
-    assert "24 development questions and reports hit@5 and hit@10" in STORY
-    assert "128 development questions and hit@8" in STORY
-    assert "ladder headline is now the corpus v3.1 rerun" in STORY
+    assert "current methods chart uses hit@8, 128 cases and 85 sources" in STORY
+    assert "Methods chart: BM25 .477, dense .367 and hybrid .539 hit@8" in STORY
+    assert "The ladder starts at that same hybrid .539 baseline" in STORY
+    assert "The original 24-question screen used hit@10" in STORY and "not comparable to the current chart" in STORY
     assert "How to read this" in STORY and "Source: report data" in STORY
 
 
@@ -190,6 +191,13 @@ def test_every_number_the_copy_reads_is_in_report_json():
     for model in ("gpt-6-luna", "gpt-5.6-luna"):
         paired = v2["paired"][model]
         assert {"better", "worse", "paired_difference", "n_gold_cases"} <= set(paired)
+    methods = report["retrieval"]["methods"]
+    assert methods["n_cases"] == 128 and methods["corpus_version"] == "v3.1"
+    assert methods["methods"]["bm25"]["hit@8"] == 0.4766
+    assert methods["methods"]["dense"]["hit@8"] == 0.3672
+    assert methods["methods"]["hybrid"]["hit@8"] == 0.5391
+    assert methods["paired"]["hybrid_minus_bm25_hit@8"]["diff"] == 0.0625
+    assert methods["paired"]["hybrid_minus_dense_hit@8"]["diff"] == 0.1719
     assert {"n_mismatches_primary_r3", "n_cases", "over_abstentions_primary_r3"} <= set(v2["error_analysis"])
     assert len(report["work"]["decisions"]) >= 40
     assert {"sources", "by_type"} <= set(report["sources"]["metrics"])

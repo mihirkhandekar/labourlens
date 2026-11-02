@@ -593,6 +593,20 @@ def _saved_replay(artifacts: _Artifacts) -> list[dict]:
 
 
 
+_METHODS = "experiments/runs/dev-R-V31-methods/metrics.json"
+
+
+def _retrieval_methods(artifacts: _Artifacts) -> dict:
+    """BM25, dense and hybrid on the same 128 development cases (corpus v3.1): hit@8 and hit@10 with intervals, and the paired differences."""
+    data = artifacts.mapping(_METHODS)
+    metrics = _numeric(data.get("metrics"))
+    if not metrics:
+        return {}
+    config = data.get("config", {}) if isinstance(data.get("config"), dict) else {}
+    return {"corpus_version": "v3.1", "n_cases": metrics.get("hybrid", {}).get("n_cases"), "chunks": config.get("chunk_count") if _number(config.get("chunk_count")) else None,
+            "methods": metrics, "paired": _numeric(data.get("paired")), "provenance": [_METHODS]}
+
+
 def _ladder(artifacts: _Artifacts, path: str = "experiments/runs/dev-R-V31/summary.json") -> dict:
     """Retrieval ladder R0-R3 (128 dev cases): numeric measurements only."""
     data = artifacts.mapping(path)
@@ -1236,6 +1250,7 @@ def build_report(root: Path) -> dict:
     v2_rows, v2_paths = _experiments(artifacts, "experiments/runs/extraction-v2-X1/dev-")
     retrieval_rows, retrieval_paths = retrieval_rows + v2_rows, retrieval_paths + v2_paths
     ladder = _ladder(artifacts)
+    methods_v31 = _retrieval_methods(artifacts)
     ladder_v1 = _ladder(artifacts, "experiments/runs/dev-R-summary.json")
     ladder_v2 = _ladder(artifacts, "experiments/runs/extraction-v2-X1/dev-R-summary.json")
     paired = _paired(artifacts)
@@ -1272,7 +1287,7 @@ def build_report(root: Path) -> dict:
         "corpus_builds": _corpus_builds(artifacts, final_eval),
         "heldout_v31": v31_held,
         "final_evaluation": final_eval,
-        "retrieval": _section("Current corpus v3.1 retrieval rerun; earlier builds retained as history.", retrieval_rows, retrieval_paths + ladder.get("provenance", []) + ladder_v2.get("provenance", []) + ladder_v1.get("provenance", []), ladder=ladder, ladder_corpus_v1=ladder_v1, ladder_corpus_v2=ladder_v2),
+        "retrieval": _section("Current corpus v3.1 retrieval rerun; earlier builds retained as history.", retrieval_rows, retrieval_paths + methods_v31.get("provenance", []) + ladder.get("provenance", []) + ladder_v2.get("provenance", []) + ladder_v1.get("provenance", []), ladder=ladder, ladder_corpus_v1=ladder_v1, ladder_corpus_v2=ladder_v2, methods=methods_v31),
         "answers": _section("Saved answer metrics. Model outputs are not published.", answer_rows, answer_paths,
                             limitations=["Costs that were not recorded are not estimated."]),
         "agent": _section("Bounded workflow measurements on statistics-only traces.", agent_rows, agent_paths + trace_paths, trace=trace, events=_saved_replay(artifacts)),

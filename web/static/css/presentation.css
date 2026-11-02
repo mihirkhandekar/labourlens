@@ -1094,3 +1094,20 @@ th[aria-sort="descending"] .pr-sort::after { content: " \2193"; }
   .rpipeline-flow { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .rpipeline-examples { grid-template-columns: 1fr; }
 }
+/* Agent loop tool routes and architecture path note. */
+.g6-tools { display: grid; grid-template-columns: minmax(0, 1fr); gap: 8px; }
+.g6-tools h3 { font-size: 23px; color: var(--muted); font-weight: 500; }
+.g6-tool { display: grid; grid-template-columns: minmax(180px, 0.7fr) minmax(0, 1.3fr); gap: 12px; align-items: baseline; border-top: 1px solid var(--line); padding: 8px 0; font-size: 21px; }
+.g6-tool strong { color: var(--ink); font-weight: 600; }
+.g6-tool > span:not(.deck-tip) { color: var(--ink-2); }
+.g17 { grid-template-rows: 1fr auto auto; gap: 20px; }
+.g17-flow-note { border-left: 3px solid var(--accent); padding-left: 16px; color: var(--ink-2); font-size: 24px; }
+@media (max-width: 800px) { .g6-tool { grid-template-columns: 1fr; gap: 3px; font-size: 15px; } .g6-tools h3 { font-size: 17px; } .g17-flow-note { font-size: 15px; } }
+.ma-exchange { display: grid; grid-template-columns: 1fr 32px 1fr; gap: 16px; align-items: center; border-left: 3px solid var(--c3); padding-left: 20px; }
+.ma-payload { display: grid; gap: 4px; min-width: 0; }
+.ma-payload > strong { font-size: 22px; color: var(--muted); font-weight: 500; }
+.ma-payload > span:not(.deck-tip) { font-size: 25px; color: var(--ink); }
+.ma-exchange > .deck-ico { width: 28px; height: 28px; color: var(--accent); }
+.g6-tools { min-width: 0; }
+.g17-flow-note { max-width: 80ch; }
+@media (max-width: 800px) { .ma-exchange { grid-template-columns: 1fr 24px 1fr; } .ma-payload > span:not(.deck-tip) { font-size: 16px; } .ma-payload > strong { font-size: 15px; } }

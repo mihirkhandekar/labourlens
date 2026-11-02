@@ -144,6 +144,10 @@ Every row came from a live call; none is stored as a repo artifact yet. M1.1 mus
 
 ## Log (newest first)
 
+### 2026-11-02 — Deck flow and same-set retrieval comparison (D-063)
+
+- **DONE:** Deck/report/demo order updated to 29 main slides/50 total; the build slide is appendix N7 and its v3.1 facts sit on slide 11. The planner calls `search_reports`, `get_series` or `calculate_change` inside the loop; only live `get_series` uses MCP. Existing same-set v3.1 retrieval check: BM25 .477, dense .367, hybrid .539 hit@8; hybrid over BM25 not demonstrated. Fixed an undefined report-flow container found in browser review; final 1440x900 slides and report rendered without console errors or external requests. No experiment changed.
+
 ### 2026-11-02 — Scanner paraphrase heuristics and sampling-config recording (free fixes)
 
 - **DONE (no paid calls):** six conservative patterns added to `security/guards.py`; the five paraphrase probes from the second source review are persisted as an offline fixture (`tests/fixtures/injection_paraphrase_probes.json`) with regression tests; clean-statistics sentences stay unflagged. Read-only scan of the local corpus (16,419 passages, 180 text values): 0 hits (`artifacts/data-quality/injection-scan-2026-11-02-extended-heuristics.json`). Residual stays in `docs/threat-model.md` Known gaps 4: still lexical and bypassable; threat suite not re-run.

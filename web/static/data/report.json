@@ -1,6 +1,6 @@
 {
   "schema_version": "report-1.0",
-  "generated_at": "2026-11-02T05:53:37.225838+00:00",
+  "generated_at": "2026-11-02T07:04:48.076392+00:00",
   "summary": {
     "title": "LabourLens research workbench",
     "scope": [
@@ -10591,6 +10591,7 @@
       "experiments/runs/dev-E3-bm25-params/k1=2.0.metrics.json",
       "experiments/runs/dev-E4-combined/merge200+stopwords_off+b=0.4.metrics.json",
       "experiments/runs/dev-E4-combined/merge200+stopwords_off.metrics.json",
+      "experiments/runs/dev-R-V31-methods/metrics.json",
       "experiments/runs/dev-R-V31/summary.json",
       "experiments/runs/dev-R-summary.json",
       "experiments/runs/dev-dense-E5/bm25_baseline.metrics.json",
@@ -12318,6 +12319,82 @@
       },
       "provenance": [
         "experiments/runs/extraction-v2-X1/dev-R-summary.json"
+      ]
+    },
+    "methods": {
+      "corpus_version": "v3.1",
+      "n_cases": 128,
+      "chunks": 1847,
+      "methods": {
+        "bm25": {
+          "n_cases": 128,
+          "mrr@10": 0.258,
+          "hit@8": 0.4766,
+          "hit@8_ci95": [
+            0.3906,
+            0.5625
+          ],
+          "hit@10": 0.5312,
+          "hit@10_ci95": [
+            0.4453,
+            0.6172
+          ]
+        },
+        "dense": {
+          "n_cases": 128,
+          "mrr@10": 0.2234,
+          "hit@8": 0.3672,
+          "hit@8_ci95": [
+            0.2891,
+            0.4531
+          ],
+          "hit@10": 0.3984,
+          "hit@10_ci95": [
+            0.3125,
+            0.4844
+          ]
+        },
+        "hybrid": {
+          "n_cases": 128,
+          "mrr@10": 0.3116,
+          "hit@8": 0.5391,
+          "hit@8_ci95": [
+            0.4531,
+            0.625
+          ],
+          "hit@10": 0.5547,
+          "hit@10_ci95": [
+            0.4688,
+            0.6406
+          ]
+        }
+      },
+      "paired": {
+        "hybrid_minus_bm25_hit@8": {
+          "diff": 0.0625,
+          "ci95": [
+            -0.0234,
+            0.1484
+          ],
+          "better_worse": [
+            20,
+            12
+          ]
+        },
+        "hybrid_minus_dense_hit@8": {
+          "diff": 0.1719,
+          "ci95": [
+            0.1016,
+            0.2422
+          ],
+          "better_worse": [
+            23,
+            1
+          ]
+        }
+      },
+      "provenance": [
+        "experiments/runs/dev-R-V31-methods/metrics.json"
       ]
     }
   },
@@ -77844,7 +77921,7 @@
     "The population basis of the dataset employment series is unverified."
   ],
   "provenance": {
-    "commit": "00da4ab8ebccd4ab488e002dd1b88aa71990f0ff",
+    "commit": "d8a0b0ee873ca38015ad909df1b7ab776cb48572",
     "artifacts": [
       {
         "path": "data/export/sources.json",
@@ -78015,6 +78092,11 @@
         "path": "experiments/runs/dev-R-V31/summary.json",
         "status": "available",
         "sha256": "b571fdfe9d509d87b009a5c3afe08f70c54340054e92aecd044db8f1f09d01df"
+      },
+      {
+        "path": "experiments/runs/dev-R-V31-methods/metrics.json",
+        "status": "available",
+        "sha256": "6c982dadaa08da5db74e0f1c198de4525190e422710c7f12f82ae37bbb54588f"
       },
       {
         "path": "experiments/runs/dev-R-summary.json",
@@ -79024,12 +79106,12 @@
       {
         "path": "docs/decisions.md",
         "status": "available",
-        "sha256": "8298db5ea8bd4f52e10a0387956e554583fbf205b13b817ce934cd2e924a09aa"
+        "sha256": "ecb167c2bbbcf580a857ec73cf357901d839d1a12ea38c78b85b56646fd48e03"
       },
       {
         "path": "docs/progress.md",
         "status": "available",
-        "sha256": "a19305188a340f99fe4a17da27afd21c83d4c569b61034cd802a1391c9aa4c6e"
+        "sha256": "2bea70ae64ea6a3537591119ca8f006ed5d8f588fd9628580da1e2355de1f536"
       }
     ],
     "policy": "Committed artifacts only; numeric fields only."

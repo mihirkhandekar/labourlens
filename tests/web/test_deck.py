@@ -145,13 +145,9 @@ def test_no_bridge_sentences_or_pills_on_faces():
 
 
 REQUIRED_TITLES = [
-    "The assignment", "My project", "The Agentic System", "Success criteria and failure modes",
-    "Choosing the data", "What the data showed", "Retrenchments rose but the data does not say why", "Advance and final figures differ", "Challenges with the data",
-    "Reading the reports", "One current document build", "Retrieval Strategies", "Does filtering help?",
-    "The agent loop", "Choosing the models", "The MCP server", "GenAI concepts in this build",
-    "Ensuring Reliable Sources", "Agent Workbench",
-    "How I measured", "Human Review of Dataset", "The experiment ladder", "Why it missed", "Fixing the calculation gap", "Attacks and defences", "A planted wrong figure",
-    "How I built it", "Limits and next steps", "Summary",
+    "Assignment", "My project", "Agentic system", "Choosing the data", "Data findings", "Retrenchments rose, data gives no cause", "Advance and final figures differ", "Challenges with the data", "Success criteria and failure modes",
+    "Reading reports", "Retrieval Strategies", "Does filtering help?", "Agent loop", "Choosing models", "MCP server", "GenAI concepts in this build", "Ensuring Reliable Sources", "Agent Workbench",
+    "How I measured", "Human Review of Dataset", "Experiment ladder", "Why it missed", "Fixing the calculation gap", "Attacks and defences", "Planted wrong figure", "How I built it", "Limits and next steps", "Summary",
 ]
 
 
@@ -165,11 +161,10 @@ def test_main_deck_follows_the_navigation_flow_and_has_short_plain_titles():
     main = _slides_main_section()
     defined = set(re.findall(r"\btitle: '([^']+)'", main))
     rows = _flow_rows()
-    assert len(rows) == 30
+    assert len(rows) == 29
     assert [r[0] for r in rows[1:]] == REQUIRED_TITLES
     for title, _, _ in rows:
         assert title in defined or "Singapore AI Agent" in title, title
-    # Each slide's stage sits in the top navigation order: Sources, Processing, Retrieval, Agent, Answer, Checks.
     stages = [int(s) for _, s, _ in rows if s.isdigit()]
     assert stages == sorted(stages) and set(stages) == {0, 1, 2, 3, 4, 5}
     names = ["Sources", "Processing", "Retrieval", "Agent", "Answer", "Checks"]
@@ -245,9 +240,9 @@ def test_method_detail_is_in_popovers_and_notes_not_in_boxes():
     assert "notes.append(el('p', '', `${spec.detail.label" in deck
     assert "export function withTip" in graphics and "function svgTips" in graphics and "aria-describedby" in graphics and "role', 'tooltip'" in graphics
     assert ".has-tip:focus" in css and ".deck-tip" in css
-    for needle in ("k1=1.5, b=0.75", "text-embedding-3-large", "reciprocal rank fusion, c=60", "ranks top 30 candidates, returns up to 10"):
+    for needle in ("k1=1.5, b=0.75", "text-embedding-3-large", "reciprocal rank fusion, c=60", "ranks the top 30 and returns up to 10"):
         assert needle in main or needle in graphics, needle
-    assert "re-ran retrieval on the current build" in main and "24-question screen" in main and "128" in main
+    assert "Hybrid baseline: 53.9% hit@8" in main and "same 128 development questions as the previous slide" in main
 
 
 def test_title_slide_has_no_graphic_and_structure_labels_are_plain():
@@ -285,8 +280,8 @@ def test_model_choice_is_read_from_the_screen_metrics():
     assert (luna["false_answer_rate"], luna["cost_per_case_usd"], luna["over_abstention_rate"]) == (0.0, 0.00051, 0.417)
     assert luna56["behavior_accuracy"] > luna["behavior_accuracy"] and luna56["false_answer_rate"] == 0.0
     main = _slides_main_section()
-    assert "no false answers at the lowest cost" in main and "not a ranking" in main and "fresh questions" in main
-    assert "ties at 89.7% for both models" in main and "costs about 60% as much" in main and "not because it is more accurate" in main
+    assert "no false answers at the lowest cost" in main and "not a ranking" in main and "33% of questions that should not be answered" in main
+    assert "Final means: both models .897 on development" in main and "gpt-6-luna costs about 60% as much" in main
 
 
 def test_mcp_slide_states_where_mcp_sits():
@@ -295,9 +290,11 @@ def test_mcp_slide_states_where_mcp_sits():
     for needle in ("Model Context Protocol", "Live agent", "MCP client", "MCP server", "get_statistic", "labourlens://sources", "compare_quarters", "10 hostile-server cases", "${lat.direct} ms direct, ${lat.mcp} ms over MCP", "outputSchema", "stdio", "No third-party host"):
         assert needle in block, needle
     main = _slides_main_section()
-    assert "full served chain on 65 cases" in main and "no observed loss against direct calls" in main and "not the full final evaluation" in main
-    assert "['MCP server\\nseries only', false]" in graphics or "['MCP server\\nseries only', false]".replace("\n", "\\n") in graphics
-    assert "step('wrench', 'MCP client'" in graphics and "step('path', 'MCP server'" in graphics and "Row returned to the client" in graphics
+    assert "full final accuracy comparison used direct data functions" in main and "separate served-chain sample and MCP/direct comparison are reported here" in main
+    assert "65-case sample: no observed loss; no gain demonstrated" in graphics
+    assert "['MCP server\\nseries only', false]" in graphics
+    assert "step('wrench', 'Agent sends a series request'" in graphics and "step('path', 'MCP server returns rows'" in graphics and "Rows returned to the agent" in graphics
+    assert "calculate_change" in graphics and "Search reports" in graphics and "Only the live get_series path crosses" in (STATIC / "js" / "report-story.js").read_text()
 
 
 def test_threat_slide_reads_counts_from_the_report_data_and_labels_runs():

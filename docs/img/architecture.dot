@@ -20,22 +20,41 @@ digraph labourlens {
     USER   [label="Research question"];
     ADMIT  [label="Authentication +\nbudget / rate limit"];
     INPUT  [label="Input guard\nlength checks + injection flags"];
-    PLAN   [label="Plan research"];
-    TOOLS  [label="Typed read-only tools\nsearch / series / deterministic change"];
+    PLAN   [label="Planner\nquestion + catalogue, no passage text"];
+    SEARCH [label="search_reports\nBM25 + dense, filter / rerank"];
+    SERIES [label="get_series\nvalidated observation rows"];
+    CALC   [label="calculate_change\nDecimal arithmetic on returned rows"];
+    DIRECT [label="Direct statistics function\nfull-set evaluations"];
+    OBS    [label="Observation rows\nunits + provenance"];
     ASSESS [label="Assess evidence\n+ source-conflict cross-check: annotate"];
     ANSWER [label="Generate structured answer"];
     VALID  [label="Quote / citation / status validator\n+ source-conflict cross-check: enforce"];
     REDACT [label="Output blocking + redaction"];
     OUT    [label="Cited answer + activity timeline"];
-    USER -> ADMIT -> INPUT -> PLAN -> TOOLS -> ASSESS -> ANSWER -> VALID -> REDACT -> OUT;
-    ASSESS -> PLAN   [label="bounded next round", constraint=false];
+    USER -> ADMIT -> INPUT -> PLAN;
+    PLAN -> SEARCH [label="tool call"];
+    PLAN -> SERIES [label="tool call"];
+    PLAN -> CALC [label="tool call"];
+    SEARCH -> ASSESS [label="report chunks"];
+    OBS -> ASSESS [label="validated rows"];
+    SERIES -> DIRECT [label="direct backend"];
+    DIRECT -> OBS;
+    CALC -> ASSESS [label="calculated result"];
+    ASSESS -> ANSWER;
+    ASSESS -> PLAN [label="bounded next round", constraint=false];
     VALID  -> ANSWER [label="one repair", constraint=false];
+    ANSWER -> VALID -> REDACT -> OUT;
   }
-  subgraph cluster_mcp { label="Statistics transport (served default; evaluations called statistics directly)";
+  subgraph cluster_mcp { label="Live statistics transport only";
     CLIENT [label="MCP client\nschema checks + quarantine"];
-    SERVER [label="MCP server\n9 tools / 2 resources / 1 prompt"];
+    SERVER [label="MCP server\nget_statistic; 9 tools / 2 resources / 1 prompt"];
     CLIENT -> SERVER;
   }
+  SERIES -> CLIENT [style=dashed, label="live app only"];
+  SERVER -> STORE [label="read-only query"];
+  DIRECT -> STORE [style=dotted, label="direct query"];
+  STORE -> OBS;
+
   subgraph cluster_eval { label="Offline evaluation, separate from serving";
     GOLD    [label="Versioned gold\ndevelopment / held-out split"];
     RUNS    [label="Saved answers + traces"];
@@ -50,8 +69,6 @@ digraph labourlens {
   WEB   [label="Research workspace"];
   AUDIT [label="Redacted audit + local traces", shape=cylinder];
 
-  INDEX -> TOOLS; STORE -> TOOLS;
-  TOOLS -> CLIENT [style=dashed, label="live get_series"];
-  SERVER -> STORE;
+  INDEX -> SEARCH [label="query when tool is called"];
   OUT -> RUNS; OUT -> WEB; OUT -> AUDIT;
 }

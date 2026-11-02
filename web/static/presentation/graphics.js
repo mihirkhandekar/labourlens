@@ -164,6 +164,8 @@ export function buildTimeline(m) {
 /** Source reports become quality-flagged passages, eligible chunks and two indexes. Table conversion below remains an honest schematic, not a claim of repaired tables. */
 export function flattening(m) {
   const corpus = m?.section('serving')?.corpus || {};
+  const sources = finite(corpus.sources) ? corpus.sources : m?.sources?.length || 0;
+  const documents = finite(corpus.document_files) ? corpus.document_files : 0;
   const wrap = el('div', 'rpipeline');
   const flow = el('div', 'rpipeline-flow');
   const node = (head, sub, tip) => {
@@ -172,7 +174,7 @@ export function flattening(m) {
   };
   node('Source report', 'PDF or web page', 'Raw MOM and MTI PDF and HTML files stay local in data/raw, never in public Git. The committed data/manifests/manifest.json records source snapshots, hashes and acquisition metadata.');
   node('Parse layout', 'Read blocks and sections', 'Parser extract-0.3: PyMuPDF reads PDF blocks with bounding boxes and column-aware ordering; BeautifulSoup reads HTML sections. Page, heading, source and release metadata are kept. This is not a reliable table-to-rows parser: table-like blocks can flatten and are flagged table_unreliable rather than silently repaired.');
-  node('Passages', `${fmt.int(corpus.passages)} across ${fmt.int(m?.sources?.length)} sources`, 'Corpus v3.1 has 16,419 passages and 85 sources in its source inventory, including 49 documents. Extracted report passages are local JSONL files in data/passages. Only quality_flag=ok enters default retrieval; table_unreliable and garbled blocks remain available for inspection, not default retrieval.');
+  node('Passages', `${fmt.int(corpus.passages)} · ${fmt.int(sources)} sources`, `Corpus v3.1 has ${fmt.int(sources)} sources: ${fmt.int(sources - documents)} statistical datasets and ${fmt.int(documents)} report documents, with ${fmt.int(corpus.passages)} passages. v3.1 relabelled 40 passages in one MTI article; source and passage totals did not change. Extracted report passages are local JSONL files in data/passages. Only quality_flag=ok enters default retrieval; table_unreliable and garbled blocks remain available for inspection, not default retrieval.`);
   node('Merge chunks', `${fmt.int(corpus.chunks)} · about 200 words`, 'The live runtime uses merge200, not the earlier merge120 experiment: adjacent eligible passages within one source and section, target 200 words and up to 40 words of whole-passage overlap. Chunks are rebuilt in memory at startup. JSONL export is supported under data/index/chunks. That directory and all report-derived indexes are gitignored.');
   const forms = el('div', 'rpipeline-indexes');
   const form = (head, sub, tip) => { const n = el('div', 'rpipeline-index'); n.append(el('h3', '', head), el('p', '', sub)); withTip(n, tip, 'is-down'); forms.append(n); };
@@ -481,20 +483,20 @@ export function provenanceTable(m) {
 }
 
 const LOOP_TIPS = [
-  'The question is capped at 1,000 characters and checked, then the planner chooses evidence calls. The planner sees the question and catalogue, never passage text. Its three-tool list is fixed in code.',
-  'Choose a report search, series lookup or calculation. Report search and calculation stay in process. Only the live series lookup takes the MCP path shown next.',
-  'Live statistics path: the MCP client sends tools/call get_statistic over stdio. The server validates arguments, reads the catalogue and observation table, and returns structured content. The client validates outputSchema and its own typed model, with size and time caps. Report search and calculation bypass this node.',
-  'Assess the returned evidence. Code adds notes about missing periods, mixed series and advance against final figures. Gather evidence again only when needed, up to two rounds.',
-  'Every claim must cite items by label and include a short verbatim quote. The model does no arithmetic.',
-  'Checks the answer schema, the citation labels, that each quote appears in its passage, and that reported numbers appear in the evidence.',
-  'The answer is returned as answered, abstained, clarifying or refused.'
+  'The planner sees the question and a dataset catalogue, not report passages. Its three-tool list is fixed in code.',
+  'Inside the agent loop, the planner chooses one tool. search_reports runs BM25 plus dense embeddings, filters by period and release, reranks and returns chunks for evidence checking. Retrieval is not a pre-step.',
+  'Only get_series uses MCP in the live app. The client sends tools/call get_statistic over stdio with source, period range and dimension. The server validates the request, reads validated observations and returns structured rows. The client checks outputSchema, its typed model, size and time limits. Search and calculation bypass MCP.',
+  'Assess data returned by the chosen tool. Search returns report chunks; statistics returns validated rows. If there is a gap, make another tool call, up to two rounds.',
+  'Write a structured answer with claims tied to evidence. The model does not do arithmetic.',
+  'Check the answer schema, citation labels, quote presence and numbers against evidence.',
+  'Return an answer, clarification, abstention or refusal.'
 ];
 /** G6: the agent loop, drawn from the fixed design. Labels are plain words. */
 export function agentLoop() {
   const W = 1560, H = 420;
   const svg = svgEl('svg', {viewBox: `0 0 ${W} ${H}`, class: 'g6-svg', role: 'img', focusable: 'false'});
-  svg.setAttribute('aria-label', 'Live agent loop: check and plan, call a tool, statistics through the MCP server, check evidence, write answer, check answer, done. Report search and calculation bypass MCP. Evidence gathering can repeat for two rounds and the answer can be repaired once.');
-  const boxes = [['Check and\nplan', true], ['Tool\ncall', false], ['MCP server\nseries only', false], ['Check\nevidence', true], ['Write\nanswer', false], ['Check\nanswer', true], ['Done', false]];
+  svg.setAttribute('aria-label', 'Agent loop: check and plan, choose one of three tools, the live series path crosses the MCP server, check evidence returned by the chosen tool, write and check an answer, then finish. Report search and calculation do not use MCP. Retrieval is called inside the loop, not before the agent. Evidence gathering can repeat for two rounds and the answer can be repaired once.');
+  const boxes = [['Check and\nplan', true], ['Choose a\ntool', false], ['MCP server\nseries only', false], ['Check\nevidence', true], ['Write\nanswer', false], ['Check\nanswer', true], ['Done', false]];
   const bw = 170, bh = 110, y0 = 150, gap = (W - 40 - bw * boxes.length) / (boxes.length - 1);
   const xs = boxes.map((_, i) => 20 + i * (bw + gap));
   const defs = svgEl('defs'); const mk = svgEl('marker', {id: 'g6-arrow', viewBox: '0 0 10 10', refX: 8, refY: 5, markerWidth: 9, markerHeight: 9, orient: 'auto'});
@@ -520,8 +522,17 @@ export function agentLoop() {
   const wrap = el('div', 'g6'); wrap.append(svg);
   svgTips(wrap, parts);
   const chips = el('ul', 'g6-chips');
-  ['6 tool calls', '10 seconds per call', '1 retry', 'Three read-only tools: search reports, get a series (through MCP in the live app), calculate a change'].forEach(t => chips.append(el('li', '', t)));
+  ['6 tool calls', '10 seconds per call', '1 retry'].forEach(t => chips.append(el('li', '', t)));
   wrap.append(chips);
+  const toolLegend = el('div', 'g6-tools');
+  toolLegend.append(el('h3', '', 'Three tools the agent can choose'));
+  const toolRows = [
+    ['Search reports', 'Chunks go to evidence checking.', 'Exact tool: search_reports. Retrieval runs during this agent loop: BM25 plus dense embeddings, period/release filter, rerank, then return report chunks. The planner does not receive chunks until the tool responds. This does not use MCP.'],
+    ['Get a series', 'Statistics rows with units and source.', 'Exact agent tool: get_series. On the live app it calls MCP tool get_statistic with source_id, period_from, period_to and dimension; validated observation rows return with value, unit, period, source and release metadata. Only this tool uses MCP.'],
+    ['Calculate a change', 'Exact arithmetic on returned rows.', 'Exact tool: calculate_change. Deterministic code computes the change from validated observation rows returned by a previous call. No model arithmetic and no MCP.']
+  ];
+  toolRows.forEach(([label, short, tip]) => { const item = el('div', 'g6-tool'); item.append(el('strong', '', label), el('span', '', short)); withTip(item, tip, 'is-up is-wide'); toolLegend.append(item); });
+  wrap.append(toolLegend);
   return wrap;
 }
 
@@ -536,9 +547,9 @@ export function evidenceTrace(m) {
   let stepNo = 0;
   const step = (icon, head, body, cls = '') => { const li = el('li', `g7-step ${cls}`.trim()); li.style.setProperty('--i', String(stepNo++)); const t = el('div', 'g7-text'); t.append(el('p', 'g7-head', head), el('p', 'g7-body', body)); li.append(ico(icon), t); wrap.append(li); };
   step('question', 'Question', `What was resident unemployment in ${fmt.quarter(card.period)}, and how did it change?`);
-  step('wrench', 'MCP client', `Request ${card.label.toLowerCase()} for ${fmt.quarter(card.period)}.`);
-  step('path', 'MCP server', 'Validate the lookup, then read the statistics. Report search and calculation stay in process.');
-  step('table', 'Row returned to the client', `${pctS(now)}, seasonally adjusted, from ${src?.publisher || 'MOM'} via data.gov.sg. Check the schema before use.`);
+  step('wrench', 'Agent sends a series request', `The live get_series tool sends a source, quarter range and dimension through the MCP client.`);
+  step('path', 'MCP server returns rows', 'The server calls get_statistic on validated data.gov.sg observations. The client checks the structured reply against its output schema and limits before returning rows to the agent. Search reports and calculation do not use MCP.');
+  step('table', 'Rows returned to the agent', `${pctS(now)} · percent · ${fmt.quarter(card.period)} · seasonally adjusted · ${src?.publisher || 'MOM'} source · release and snapshot metadata checked.`);
   step('calculator', 'Calculation, in code', finite(prev) ? `${pctS(now)} minus ${pctS(prev)} = ${fmt.signed(Math.round((now - prev) * 10) / 10, 1)} points` : 'Change not recorded');
   step('chat-text', 'Answer', `Resident unemployment was ${pctS(now)} in ${fmt.quarter(card.period)} [1].`);
   step('check-circle', 'Citation [1]', `${src?.publisher || 'MOM'}, ${card.label}. Quote found in the source.`, 'is-ok');
@@ -675,11 +686,11 @@ export function mcpMap(m) {
   const mx = m.section('mcp').metrics || {};
   const lat = (m.section('mcp').rows || []).find(r => r.metric === 'latency_p50_ms') || {};
   const wrap = el('div', 'ma');
-  wrap.append(el('p', 'ma-lead', 'Model Context Protocol connects my agent to a read-only statistics server.'));
+  wrap.append(el('p', 'ma-lead', 'Model Context Protocol links the live statistics route; full-set accuracy runs called the same functions directly.'));
   const flow = el('div', 'ma-flow');
   [
     ['Live agent', 'Series lookup', 'The planner has three fixed tools. Only get_series uses MCP, through get_statistic. Report search and calculation stay in process.'],
-    ['MCP client', 'Checks the boundary', 'Over stdio, initialize negotiates protocol revision 2025-11-25 and capabilities. Discovery verifies the fixed tool list, not the planner prompt. The client checks input schemas, outputSchema and its own typed models. Replies are untrusted data, screened and capped at 200 KB. Default call deadline: 8 s; connect: 20 s.'],
+    ['MCP client', 'Checks the boundary', 'Over stdio, initialize negotiates protocol revision 2025-11-25 and capabilities. Protocol checks cover initialization and discovery; client fault tests cover bad arguments, timeouts, crashes, malformed and oversized replies, and unexpected tools. The threat suite includes ten hostile-server failure cases. The client checks input schemas, outputSchema and its own typed models. Replies are untrusted data, screened and capped at 200 KB. Default call deadline: 8 s; connect: 20 s.'],
     ['MCP server', 'Validates and reads', 'tools/call get_statistic validates the arguments, reads the catalogue and observations, then returns structured content with provenance. Invalid inputs return errors; timeouts or unavailable servers stay operational failures, never no data. No silent direct-call fallback.'],
     ['Statistics', 'Rows with provenance', 'Read-only official observations. No network, writes or model arithmetic in the server.'],
   ].forEach(([head, sub, tip], i) => {
@@ -687,6 +698,12 @@ export function mcpMap(m) {
     const n = el('div', 'ma-node'); n.append(el('strong', '', head), el('span', '', sub)); withTip(n, tip, 'is-down'); flow.append(n);
   });
   wrap.append(flow);
+  const exchange = el('div', 'ma-exchange');
+  const sent = el('div', 'ma-payload'); sent.append(el('strong', '', 'Agent sends'), el('span', '', 'Source · quarter range · dimension'));
+  withTip(sent, 'get_series passes source_id, period_from, period_to and dimension to the MCP client. The client calls the server tool get_statistic with those arguments.', 'is-down');
+  const returned = el('div', 'ma-payload'); returned.append(el('strong', '', 'Client receives'), el('span', '', 'Value · unit · quarter · source'));
+  withTip(returned, 'The server returns structured observation rows, including value, unit, period and provenance. The client validates against the advertised outputSchema and its local typed model, screens untrusted content and enforces size and time limits before the agent uses the rows.', 'is-down');
+  exchange.append(sent, ico('arrow-right'), returned); wrap.append(exchange);
   const api = el('div', 'ma-api');
   const tools = el('div', 'ma-tools'); tools.append(el('h3', '', 'Tools to call'));
   const list = el('dl', 'ma-tool-list');
@@ -702,19 +719,19 @@ export function mcpMap(m) {
     ['get_provenance', 'Trace one observation', 'Source URL, publisher, snapshot checksum, licence and transformations. Not report passages.'],
   ].forEach(([name, desc, tip], i) => {
     const item = el('div', `ma-tool${i === 0 ? ' is-used' : ''}`);
-    item.append(el('dt', '', name), el('dd', '', `${desc}${i === 0 ? ' · used by my agent' : ''}`));
-    withTip(item, tip, 'is-up'); list.append(item);
+    item.append(el('dt', '', desc), el('dd', '', i === 0 ? 'Used for the live series lookup' : 'Available to other MCP hosts'));
+    withTip(item, `Server tool ${name}. ${tip}`, 'is-up'); list.append(item);
   });
   tools.append(list);
   const context = el('div', 'ma-context');
   context.append(el('h3', '', 'Resources to read'));
-  [['labourlens://sources', 'Source catalogue'], ['labourlens://source/{source_id}', 'One catalogue entry']].forEach(([name, desc]) => {
-    const r = el('div', 'ma-resource'); r.append(el('strong', '', name), el('span', '', desc));
-    withTip(r, 'Application-driven catalogue metadata, not report text. MOM report rights are why passages are not exposed as resources.', 'is-up'); context.append(r);
+  [['Source catalogue', 'All catalogue metadata', 'Resource URI: labourlens://sources. Application-driven metadata: source IDs, publishers, URLs, rights and coverage.'], ['One source record', 'Catalogue entry by source ID', 'Resource template: labourlens://source/{source_id}. Application chooses which read-only catalogue entry to load. It carries no report text. Rights to redistribute MOM report passages are why passage resources are not exposed.']].forEach(([label, desc, tip]) => {
+    const r = el('div', 'ma-resource'); r.append(el('strong', '', label), el('span', '', desc));
+    withTip(r, tip, 'is-up'); context.append(r);
   });
   context.append(el('h3', '', 'Prompt to choose'));
-  const prompt = el('div', 'ma-resource'); prompt.append(el('strong', '', 'compare_quarters'), el('span', '', 'Ask for a like-for-like comparison'));
-  withTip(prompt, 'A user-controlled template that asks the host to call compare_periods rather than subtract in the model. It is exercised by the protocol demo; my agent does not use prompts or resources.', 'is-up'); context.append(prompt);
+  const prompt = el('div', 'ma-resource'); prompt.append(el('strong', '', 'Quarter comparison'), el('span', '', 'Ask for a like-for-like comparison'));
+  withTip(prompt, 'Prompt name: compare_quarters. User-controlled template; my agent does not use prompts or resources.', 'is-up'); context.append(prompt);
   context.append(el('p', 'ma-hosts', 'Other MCP hosts could use this API. No third-party host has been connected.'));
   api.append(tools, context); wrap.append(api);
   const facts = el('div', 'ma-facts');
@@ -726,7 +743,10 @@ export function mcpMap(m) {
     withTip(fact, `Served chain, recorded 2 Nov 2026. Gold only: ${fmt.pct(g.behavior_accuracy)} on 51. Diversion probes: 8/8; context probes: ${row.model === 'gpt-6-luna' ? '5' : '6'}/6. False diversions: ${a.false_diversions}. Median ${a.latency_p50_s.toFixed(1)} s, p95 ${a.latency_p95_s.toFixed(1)} s, $${a.cost_per_case_usd.toFixed(5)} per question. ${a.mcp_call_count} MCP calls, ${a.mcp_error_count} agent-level lookup errors (unknown dimension labels, not transport failures). ${served.limits}`, 'is-up is-wide');
     facts.append(fact);
   });
-  facts.append(el('span', '', 'MCP vs direct: no observed loss'));
+  facts.append(el('span', '', '65-case sample: no observed loss; no gain demonstrated'));
+  const testFact = el('span', '', 'Protocol checks, timeouts and 10 server-failure cases');
+  withTip(testFact, 'Protocol checks cover initialization and discovery. MCP client fault tests cover bad arguments, timeouts, crashes, malformed and oversized replies, and unexpected tools. Ten hostile-server failure cases appear in the threat suite. These exercise the interface boundary, not an accuracy gain.', 'is-up is-wide');
+  facts.append(testFact);
   withTip(facts, 'Both routes keep web steps on. gpt-6-luna: 0.0 points, 1 better / 1 worse. gpt-5.6-luna: +3.1 points [0.0, 6.2], 2 better / 0 worse (90% paired case-bootstrap interval). This sample does not establish equivalence. The steps-off control changes both route and web steps; its eight diversion probes fail by design. One recorded session of real calls in a fixed order: 17 steps, 6 client refusals, 10 hostile-server cases. Recorded 2 Nov 2026.', 'is-up is-wide');
   withTip(flow, `${lat.direct} ms direct, ${lat.mcp} ms over MCP per warm call. About ${mx.connection_seconds} s to connect once. The served-chain medians include the full question, not just MCP transport.`, 'is-down');
   wrap.append(facts);
@@ -820,7 +840,7 @@ export function pairPanels(panels) {
 /** The system, its stages and the three cross-cutting bars: guardrails, evaluation and the MCP interface. */
 export function architectureDiagram() {
   const wrap = el('div', 'g17');
-  const stages = [['database', 'Sources', ['Quarterly statistics', 'MOM reports and an MTI article']], ['file-text', 'Processing', ['Parse and clean', 'Create passages', 'Validate observations']], ['magnifying-glass', 'Retrieval', ['BM25 and embeddings', 'Filter period/release', 'Rerank candidates']], ['wrench', 'Agent', ['Plan and assess evidence', 'Series lookup through MCP', 'Search and calculate in code']], ['check-circle', 'Answer', ['Cited, validated output', 'Or clarify, decline, refuse']]];
+  const stages = [['database', 'Sources', ['Quarterly statistics', 'MOM reports and an MTI article']], ['file-text', 'Processing', ['Parse and clean', 'Create passages', 'Validate observations']], ['magnifying-glass', 'Report-search tool', ['BM25 + dense embeddings', 'Filter period and release', 'Rerank and return chunks']], ['wrench', 'Agent loop', ['Planner chooses among 3 tools', 'get_series uses MCP live', 'calculate_change in code']], ['check-circle', 'Answer', ['Cited, validated output', 'Or clarify, decline, refuse']]];
   const row = el('div', 'g17-row');
   stages.forEach(([icon, name, lines], i) => {
     if (i) { const arrow = el('div', 'g17-arrow'); arrow.append(ico('arrow-right')); row.append(arrow); }
@@ -828,7 +848,7 @@ export function architectureDiagram() {
     const head = el('div', 'g12-head'); head.append(ico(icon), el('h3', '', name));
     const ul = el('ul'); lines.forEach(t => ul.append(el('li', '', t)));
     box.append(head, ul);
-    if (name === 'Agent') {
+    if (name === 'Agent loop') {
       const mcp = el('div', 'g17-mcp');
       mcp.append(ico('path'), el('strong', '', 'MCP server'), el('span', 'g17-mcp-sub', 'Read-only statistics'));
       withTip(mcp, 'The live agent uses an MCP client and a local statistics server. Only series lookups cross this process boundary. The server validates the call and returns typed rows; report search and calculation stay in process.', 'is-up');
@@ -836,12 +856,13 @@ export function architectureDiagram() {
     }
     row.append(box);
   });
+  const flowNote = el('p', 'g17-flow-note', 'The agent calls report search during its loop. Returned chunks go to the agent evidence check; retrieval is not a pre-step.');
   const bars = el('div', 'g17-bars');
   bars.style.setProperty('grid-template-columns', 'repeat(3, minmax(0, 1fr))');
   [['shield', 'Guardrails', 'Retrieved text is untrusted. Tools are read-only and calls are bounded.'], ['chart-line', 'Evaluation', 'Development and fresh cases, human review and attack tests.'], ['path', 'MCP', 'Model Context Protocol: a read-only statistics server with tools to call, catalogue resources to read and a comparison prompt to choose.']].forEach(([icon, name, text]) => {
     const bar = el('div', 'g17-bar'); bar.append(ico(icon), el('strong', '', name), el('span', '', text)); bars.append(bar);
   });
-  wrap.append(row, bars);
+  wrap.append(row, flowNote, bars);
   return wrap;
 }
 
@@ -921,18 +942,33 @@ export function failureModes(m) {
   return wrap;
 }
 
-/** Early retrieval comparison on 24 development questions: keyword, meaning, both. Each bar has a popover with the settings and a worked example. */
+/** Same-set comparison of keyword, dense and hybrid retrieval on 128 development questions. */
 export function keywordVsMeaning(m) {
-  const hit = name => m.retrievalRow('dev-dense-E6', name)?.metrics?.['hit@10'];
+  const x = m.methodsV31;
+  const methods = x?.methods;
+  if (!methods?.bm25 || !methods?.dense || !methods?.hybrid) return null;
   const question = 'Example question: What was the seasonally adjusted overall unemployment rate in Q4 2024?';
   const rrf = rank => 1 / (60 + rank);
   const both = rrf(1) + rrf(4), one = rrf(2);
+  const pp = d => `${d >= 0 ? '+' : '-'}${Math.abs(d * 100).toFixed(1)} points`;
+  const pair = key => x.paired?.[key];
+  const range = c => (c?.ci95 ? ` [${fmt.pct(c.ci95[0])} to ${fmt.pct(c.ci95[1])}]` : '');
+  const pairText = (key, name) => { const p = pair(key); return p ? `Hybrid minus ${name}: ${pp(p.diff)}, 95% interval ${(p.ci95[0] * 100).toFixed(1)} to ${(p.ci95[1] * 100).toFixed(1)} points (${p.better_worse[0]} questions better, ${p.better_worse[1]} worse).` : ''; };
+  const hit = k => methods[k]['hit@8'], ci = k => methods[k]['hit@8_ci95'];
+  const history = 'History: an early 24-question comparison on a 46-document corpus gave 58.3%, 66.7% and 70.8% at the top ten. It differs for three reasons at once: it counted the top ten and not the top eight, it used 24 questions and not 128, and the corpus then had 46 documents, not 85 sources with many look-alike quarterly reports. This chart is the like-for-like version.';
   const items = [
-    ['merge120 bm25', 'Keyword', 'plain', `BM25 with k1=1.5 and b=0.75; stop words on, stemming off, quarter normalisation on.\n${question}\nIt matches the exact words: unemployment, seasonally adjusted and Q4 2024. A passage that says jobless rate instead has no word in common and is not found.`],
-    ['merge120 dense', 'Meaning', 'plain', `text-embedding-3-large vectors.\n${question}\nIt also finds a passage that says jobless rate, because the vectors capture meaning. It can also pull in passages about nearby quarters.`],
-    ['merge120 hybrid-rrf', 'Both together', 'accent', `Reciprocal rank fusion with c=60, from the top 50 of each list.\n${question}\nEach list gives a passage 1 divided by (60 plus its rank). A passage ranked 1st by keyword and 4th by meaning scores ${rrf(1).toFixed(4)} plus ${rrf(4).toFixed(4)}, which is ${both.toFixed(4)}. A passage ranked 2nd in only one list scores ${one.toFixed(4)}, so the passage both lists like comes first.`]
-  ].map(([k, label, kind, tip]) => ({label, value: hit(k), kind, tip})).filter(i => finite(i.value));
-  return items.length === 3 ? staircase(items, {domain: [0, 1]}) : null;
+    {label: 'Keyword\nsearch', value: hit('bm25'), ci: ci('bm25'), kind: 'plain', tag: 'BM25', tip: `BM25 with k1=1.5 and b=0.75; stop words on, stemming off, quarter normalisation on. ${fmt.pct(hit('bm25'))}${range(methods.bm25)} of ${x.n_cases} questions had a relevant passage in the top eight.\n${question}\nIt matches exact words: unemployment, seasonally adjusted and Q4 2024. A passage that says jobless rate instead has no word in common and is not found. On these questions it beats meaning search on its own, which is why fusing the two helps.\n${pairText('hybrid_minus_bm25_hit@8', 'keyword search')}`},
+    {label: 'Meaning\nsearch', value: hit('dense'), ci: ci('dense'), kind: 'plain', tag: 'text-embedding-3-large\nvectors', tip: `text-embedding-3-large vectors of about 200-word chunks. ${fmt.pct(hit('dense'))}${range(methods.dense)}.
+${question}
+It also finds a passage that says jobless rate, because vectors capture meaning. It can pull in passages about nearby quarters, which costs it here.
+${pairText('hybrid_minus_dense_hit@8', 'meaning search')}`},
+    {label: 'Both\ntogether', value: hit('hybrid'), ci: ci('hybrid'), kind: 'accent', tag: 'Hybrid RRF\nBM25 + embeddings', tip: `Hybrid: reciprocal rank fusion with c=60 over the top 50 of each list. ${fmt.pct(hit('hybrid'))}${range(methods.hybrid)}. This is the baseline bar on the next slide.
+${question}
+Each list gives a passage 1 divided by (60 plus its rank). A passage ranked 1st by keyword and 4th by meaning scores ${rrf(1).toFixed(4)} plus ${rrf(4).toFixed(4)}, which is ${both.toFixed(4)}; one ranked 2nd in a single list scores ${one.toFixed(4)}.
+Hybrid over keyword search is not demonstrated: the interval includes zero.
+${history}`}
+  ];
+  return staircase(items, {domain: [0, 1]});
 }
 
 

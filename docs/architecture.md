@@ -11,7 +11,7 @@ Two kinds of source feed the system.
 - **Structured data.** Quarterly datasets from data.gov.sg, published by MOM and SingStat. They are fetched as immutable snapshots, normalised into one observation table and checked by data contracts (ADR-003, D-003).
 - **Reports.** MOM labour-market reports and advance releases. They are parsed into passages with page or section locators. The PDFs are all-rights-reserved, so they and their text stay out of Git (D-001).
 
-One bounded LangGraph agent reads both through three read-only tools. Code does all arithmetic. A deterministic validator checks every answer before it is returned. The answer has one of four statuses: answered, abstained, clarify or refused (D-024).
+One bounded LangGraph agent chooses among exactly three read-only tools inside its loop: `search_reports` retrieves report chunks, `get_series` returns structured statistical observations, and `calculate_change` performs deterministic arithmetic. Search is not run before the agent. In the live app, only `get_series` crosses the MCP client to server tool `get_statistic`; report search and calculation stay in process. The planner sees the question and a catalogue, never passage text. A deterministic validator checks every answer before it is returned. The answer has one of four statuses: answered, abstained, clarify or refused (D-024).
 
 The README (`README.md`) states the current data counts. The data sheet (`docs/data-sheet.md`) records sources, licences and checks.
 
@@ -37,42 +37,52 @@ flowchart TB
     SOURCE[Official CSV / PDF / HTML] --> SNAP[Immutable hashed snapshots]
     SNAP --> PARSE[Normalize observations / extract passages]
     PARSE --> SCAN[Ingestion injection scan<br/>heuristics + review allow-list]
-    PARSE --> STORE[(Validated observations + passages)]
-    STORE --> INDEX[(BM25 + dense index)]
+    PARSE --> STORE[(Validated observations + quality-flagged passages)]
+    STORE --> CHUNK[Eligible passages merged into chunks]
+    CHUNK --> BM25[BM25 keyword index]
+    CHUNK --> DENSE[Dense embedding vectors]
     SCAN -. quality report / review .-> STORE
   end
-  subgraph Runtime["Bounded research workflow"]
+  subgraph Runtime["Bounded agent loop"]
     USER[Research question] --> ADMIT[Authentication + budget / rate limit]
     ADMIT --> INPUT[Input guard<br/>length checks + injection flags]
-    INPUT --> PLAN[Plan research]
-    PLAN --> TOOLS[Typed read-only tools<br/>search / series / deterministic change]
-    TOOLS --> ASSESS[Assess evidence<br/>+ source-conflict cross-check: annotate]
-    ASSESS -->|bounded next round| PLAN
+    INPUT --> PLAN[Plan from question + catalogue<br/>no passage text]
+    PLAN --> CHOOSE{Choose one of 3 tools}
+    CHOOSE --> SEARCH[search_reports<br/>report-search tool]
+    SEARCH --> FUSE[BM25 + dense fusion<br/>period/release filter + rerank]
+    BM25 --> FUSE
+    DENSE --> FUSE
+    FUSE -->|ranked chunks returned|ASSESS[Assess evidence + data notes]
+    CHOOSE --> SERIES[get_series<br/>structured statistics tool]
+    SERIES --> DIRECT[In-process statistics function]
+    DIRECT --> OBS[Observation rows with units + provenance]
+    OBS --> ASSESS
+    CHOOSE --> CALC[calculate_change<br/>deterministic code]
+    CALC --> ASSESS
+    ASSESS -->|next tool call, up to 2 rounds|PLAN
     ASSESS --> ANSWER[Generate structured answer]
-    ANSWER --> VALID[Quote / citation / status validator<br/>+ source-conflict cross-check: enforce]
-    VALID -->|one repair| ANSWER
+    ANSWER --> VALID[Quote / citation / status validator<br/>+ source-conflict cross-check]
+    VALID -->|one repair|ANSWER
     VALID --> REDACT[Output blocking + redaction]
     REDACT --> OUT[Cited answer + activity timeline]
   end
-  subgraph MCP["Statistics transport (served default)"]
+  subgraph MCP["Served statistics route only"]
     CLIENT[MCP client<br/>schema checks + quarantine]
-    SERVER[MCP server<br/>9 tools / 2 resources / 1 prompt]
+    SERVER[MCP server<br/>get_statistic]
     CLIENT --> SERVER
   end
-  subgraph Evaluation["Offline evaluation - separate from serving"]
-    GOLD[Versioned gold<br/>development / held-out split] --> HARNESS[Evaluation harness]
+  subgraph Evaluation["Offline evaluation, separate from serving"]
+    GOLD[Versioned gold<br/>development / original test / fresh sets] --> HARNESS[Evaluation harness]
     RUNS[Saved answers + traces] --> HARNESS
     HARNESS --> DETER[Deterministic metrics]
     HARNESS --> JUDGE[LLM judge<br/>support + fact coverage]
-    HARNESS --> HUMAN[Owner review: decisions recorded on 403 items, one reviewer<br/>after AI pre-review, later rounds confirmation, not independent]
+    HARNESS --> HUMAN[Owner review, one reviewer<br/>AI-drafted labels, not independent]
     DETER --> REPORT[Versioned metrics + error analysis]
     JUDGE --> REPORT
     HUMAN -. selected-card decisions, not population accuracy .-> REPORT
   end
-  INDEX --> TOOLS
-  STORE --> TOOLS
-  TOOLS -. live get_series .-> CLIENT
-  SERVER --> STORE
+  SERIES -. live app only .-> CLIENT
+  SERVER --> OBS
   OUT --> RUNS
   OUT --> WEB[Research workspace]
   OUT --> AUDIT[(Redacted audit + local traces)]
@@ -84,9 +94,9 @@ flowchart TB
 2. **Normalise.** `data/normalize.py` reads each dataset using its spec in `specs/datasets/*.yaml` and writes one long table, `data/processed/observations.parquet`. Every row keeps indicator, population, seasonal adjustment, unit, release stage and an observation id that leads back to the raw cell (`labourlens trace <id>`).
 3. **Validate.** `data/validate.py` runs the data contracts and writes `artifacts/data-quality/quality-report.md`. A dataset that fails its contract is dropped and reported (D-005).
 4. **Extract.** `pdf_extract.py` and `html_extract.py` split reports into passages. Each passage has an id, a page or section locator and a quality flag. Output is `data/passages/*.jsonl`.
-5. **Chunk and index.** `retrieval/chunk.py` merges adjacent good passages into chunks of about 200 words (config `merge200`, D-015). `bm25_index.py` builds a persisted BM25 index and `dense.py` builds OpenAI embeddings cached on disk. `retrieval/runtime.py` combines them with reciprocal rank fusion. The chunk size, embedding model and fusion method are candidate defaults and are not frozen (D-023, D-026).
-6. **Plan.** The planner model receives the question, the tool catalogue and labels of evidence gathered so far. It never receives passage text. It returns a JSON plan whose source ids, indicator ids, adjustments and change kinds are enums built from the catalogue.
-7. **Execute.** Tools in `agent/tools.py` check every argument, run the query or calculation and return items with labels P (passage), O (observation) or C (calculation). Code writes data-quality notes about missing periods, null values, mixed series and advance-versus-final conflicts.
+5. **Chunk and index.** `retrieval/chunk.py` merges adjacent `ok` passages within one source and section into `merge200` chunks, targeting about 200 words with up to 40 words of whole-passage overlap. Corpus v3.1 has 16,419 passages and 1,847 chunks. BM25 and text-embedding-3-large vectors index the same chunks. The embedding cache is local and content-keyed; per-build index and corpus metadata identify which chunks the cache represents.
+6. **Plan.** The planner receives the question and dataset catalogue, never passage text. It chooses one of exactly three fixed tools; it does not retrieve a pack before the agent loop. After each call, returned chunks or rows become evidence for the next decision.
+7. **Execute one tool inside the loop.** `search_reports` runs hybrid BM25+dense retrieval, period/release filtering and reranking, then returns report chunks. `get_series` returns structured observations; in the live app only, the MCP client calls server tool `get_statistic` over stdio with source, period range and dimension, then returns validated rows. The full final evaluations call the same statistics functions directly. `calculate_change` performs Decimal arithmetic on observation rows already returned. All three tool results return to the agent's evidence check.
 8. **Answer.** `answer/context.py` renders items and notes into the prompt. The model returns a structured answer with claim-level citations, each with a verbatim quote (`answer/schema.py`).
 9. **Validate.** `answer/validate.py` rejects an answer when a cited label is not in the context, a quote is not verbatim in the cited item, a quote exceeds 40 words, a flagged item is cited or the status contradicts the content. One repair attempt follows. Numbers in a claim that do not appear in the cited text are reported as ungrounded.
 10. **Finalize.** The output guard in `security/guards.py` blocks answers that contain a known secret or system-prompt text. The page shows the answer, the evidence behind each citation and the tool timeline.
@@ -194,6 +204,6 @@ The evaluation branch consumes saved runs rather than changing live answers. Dev
 | Planner never sees passage text | Injected text cannot steer tool choice. | D-027, D-028 |
 | Operational failures end the run and are never "no data" | A tool outage must not look like an absence of evidence. | ADR-002, D-028 |
 | MCP server with nine read-only tools and a screening client | The server is treated as untrusted even when local. | D-028 |
-| Served app uses MCP for `get_series`; evaluations used direct calls | The owner wanted the live app to exercise the protocol end to end; it costs latency and adds a failure mode, with no measured accuracy gain. Switch back with `LABOURLENS_MCP=false`. | D-028, D-053 |
+| Served app uses MCP for `get_series`; full-set FIN/FIN2 statistics calls stay direct | The live app exercises the protocol end to end; it adds a typed interface, latency and an operational failure mode. D-058/D-061 measured the served chain on one 65-case sample: no observed accuracy loss against direct, but no demonstrated gain, full-set evaluation or equivalence. Switch back with `LABOURLENS_MCP=false`. | D-028, D-053, D-058, D-061 |
 | Structured data scope of 36 datasets through a spec-driven adapter (33 until corpus v3) | One adapter and a spec per dataset keep the cost of each addition low. | ADR-003, D-003, D-040 |
 | Labels follow what the evidence supports | One rule makes abstain, refuse and answer cases consistent. | `experiments/gold/CHANGELOG.md`, section v3 |

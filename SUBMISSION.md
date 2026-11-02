@@ -1,6 +1,7 @@
 # LabourLens: where to start
 
-An evidence-grounded research assistant for Singapore labour-market questions: official statistics (data.gov.sg) plus MOM reports, passage-level citations, deterministic arithmetic, abstention, one bounded LangGraph agent, a read-only MCP statistics server and an evaluation harness.
+An evidence-grounded research assistant for Singapore labour-market questions: official statistics (data.gov.sg) plus MOM reports, passage-level citations, deterministic arithmetic, abstention, one bounded LangGraph agent, a read-only MCP statistics server and an evaluation harness. Inside the loop the planner chooses among three tools: report search returns ranked chunks, series lookup returns structured observations, and calculation uses deterministic code. In the live app only the statistics lookup goes through MCP.
+The deck has 29 main slides plus appendix. Press X twice quickly for speaker notes; no notes button is shown.
 
 ## Read first
 
@@ -42,3 +43,4 @@ Fresh-clone run, with the observed output: [`docs/fresh-clone-check.md`](docs/fr
 8. Three datasets are under an assumed, unverified licence; 23 documents have unresolved rights; MOM and MTI text is local-only.
 9. Table extraction from PDFs is unreliable; numbers come from the datasets, text supplies explanation.
 10. The served chain is now measured on a 65-case sample (51 reused dev gold plus 14 hand-written probes): 90.8% both models, no observed MCP/direct accuracy loss with web steps on. It is one run, not independent or a non-inferiority proof; one primary context probe failed. Full-set final evaluation still omits web steps and MCP. Open items in [`docs/progress.md`](docs/progress.md) and [`docs/data-sheet.md`](docs/data-sheet.md) section 9 include the unverified provider spend cap and deferred review findings.
+11. Same-set retrieval check (D-063, corpus v3.1, 128 development report questions): hit@8 BM25 .477 [.391, .562], dense .367 [.289, .453], hybrid .539 [.453, .625]. BM25 alone beats dense. Hybrid over BM25 is not demonstrated (+.062 [-.023, .148]); hybrid over dense is +.172 [.102, .242]. The early 24-question, hit@10 result remains labelled history. Retrieval is the agent's `search_reports` tool inside its loop, not a pre-agent input; only the live `get_series` statistics tool uses MCP.
