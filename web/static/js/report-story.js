@@ -247,7 +247,7 @@ export function buildBands(report) {
   // ---------- safety ----------
   const safety = band({
     id: 'safety', title: 'Attacks and defences',
-    lede: [`The 31 Oct threat run passed ${fmt.int(m.section('security').e2efix?.rows?.find(row => row.label === 'gpt-6-luna')?.metrics?.passed)} of ${fmt.int(m.section('security').e2efix?.rows?.find(row => row.label === 'gpt-6-luna')?.metrics?.n_scored)} cases for gpt-6-luna. It covers direct prompt injection, poisoned passages, sensitive-data requests, unsafe tool use, unsupported claims and MCP server failures. The 2 Nov fresh rerun scored 35/36 for all four configurations under both scorers, with T-I06 failing again. The three saved-output v2 rescoring runs are post-hoc diagnostics, not new evidence. This is a small hand-written suite, not a guarantee; the separate scanner missed all five paraphrased probes.`]
+    lede: ['The fresh 2 Nov threat rerun scored 35/36 for all four configurations, with the planted-figure case failing again. This small hand-written suite does not establish a defence effect. A separate frozen scanner test improved from 10/30 to 23/30 attacks flagged (95% Wilson interval 59 to 88%); benign flags stayed at 9/30, all among the 15 synthetic hard negatives, and 0/15 real report passages. Paraphrase, role-play and non-English bypasses remain. This is a warning layer beside isolation and schema-bound output, not a security boundary.']
   });
   const latestThreats = m.section('security').scorer_v2?.fresh?.rows?.find(row => row.label === 'gpt-6-luna')?.metrics;
   const threatResult = key => {
@@ -261,7 +261,7 @@ export function buildBands(report) {
     stage(safe('Final-code threat run', () => pool.fig('fig-e2efix'))),
     rows([
       ['Direct prompt injection', `Instructions in user text are ignored; ${threatResult('direct_injection')}.`],
-      ['Poisoned report passage', `Retrieved text is untrusted and flagged passages are excluded; ${threatResult('indirect_injection_passage')}. The scanner missed five paraphrases.`],
+      ['Poisoned report passage', `Retrieved text is untrusted and flagged passages are excluded; ${threatResult('indirect_injection_passage')}. The separate scanner flags 23/30 test attacks, with 9/30 benign false alarms.`],
       ['Sensitive-data requests', `The answer rules refuse personal data about named people; ${threatResult('sensitive_data')}.`],
       ['Unsafe tool use', `Tools are typed, read only and limited by call and time budgets; ${threatResult('unsafe_tool_use')}.`],
       ['Unsupported claims', `Answers require cited evidence and grounded numbers; ${threatResult('unsupported_claims')}. Quote presence does not prove that a quote supports a claim.`],
@@ -358,9 +358,9 @@ export function buildBands(report) {
   // ---------- limits ----------
   const limits = band({
     id: 'limits', title: 'Limits and next steps',
-    lede: ['The labels were AI-drafted and signed off by me. Filter then rerank did not help on the held-out questions in the final run. The attack scanner missed all five paraphrased probes. Next I would add independent review, test the calculation change on unseen questions and verify a provider spend cap.']
+    lede: ['The labels were AI-drafted and signed off by me. Filter then rerank did not help on the held-out questions in the final run. The scanner catches 23/30 test attacks but misses semantic and non-English instructions and flags 9/30 benign test passages. Next I would add independent review, test the calculation change on unseen questions and verify a provider spend cap.']
   });
-  limits.visual.append(stage(safe('The limits', () => cardRow([{icon: 'warning', head: 'AI-drafted labels', line: 'I signed off every item.'}, {icon: 'warning', head: 'No gain on new questions', line: 'Filter then rerank helps on development questions only. It did not help on the questions it was not built on.'}, {icon: 'warning', head: 'Weak attack scanner', line: 'It missed all five paraphrased probes.'}, {icon: 'arrow-right', head: 'Redo the review', line: 'A sample with independent reviewers.'}, {icon: 'arrow-right', head: 'Retest the fix', line: 'On questions I have not seen.'}, {icon: 'arrow-right', head: 'Cap the spend', line: 'Verify a limit on the provider account.'}]))));
+  limits.visual.append(stage(safe('The limits', () => cardRow([{icon: 'warning', head: 'AI-drafted labels', line: 'I signed off every item.'}, {icon: 'warning', head: 'No gain on new questions', line: 'Filter then rerank helps on development questions only. It did not help on the questions it was not built on.'}, {icon: 'warning', head: 'Warning layer, not a boundary', line: '23/30 test attacks flagged; 9/30 benign false alarms.'}, {icon: 'arrow-right', head: 'Redo the review', line: 'A sample with independent reviewers.'}, {icon: 'arrow-right', head: 'Retest the fix', line: 'On questions I have not seen.'}, {icon: 'arrow-right', head: 'Cap the spend', line: 'Verify a limit on the provider account.'}]))));
   limits.node.append(more('Every recorded limit and the six next experiments', pool.rest('limits'), pool.rest('next'), pool.rest('summary')));
   bands.limits = limits;
 

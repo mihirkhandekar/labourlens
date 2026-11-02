@@ -4,7 +4,7 @@
 
 **Where things are.** Slides: `/deck`, one-based slide numbers (`/deck#/10` opens slide 10; press X twice quickly for the speaker notes, there is no button). Hover or keyboard-focus the dotted items for worked examples and real dataset rows. The deck is built for a laptop or projector (checked at 1440 by 900); on a 390 px phone screen several slides clip, so use the report page there. Report page: `/`. Live workbench: **`/workbench`** (its own page; sign in with an access code). Live site: <https://labourlens.navig.me>, or `http://127.0.0.1:8000` locally. Check `/healthz` before the talk and use one environment for the whole talk.
 
-**Final slide numbers used below** (main deck, 1 to 29; appendix from 30, 50 slides in all). The order follows the top navigation stages: Sources, Processing, Retrieval, Agent, Answer, Checks.
+**Final slide numbers used below** (main deck, 1 to 28; appendix from 29, 42 slides in all). The appendix contains its index and references A to M only. Limitations and next steps remain in Summary and the existing evaluation/attack notes; slide 11 retains the current-build facts. The report is unchanged. The order follows the top navigation stages: Sources, Processing, Retrieval, Agent, Answer, Checks.
 
 | # | Slide | Stage | # | Slide | Stage |
 |---|---|---|---|---|---|
@@ -20,9 +20,9 @@
 | 10 | Success criteria and failure modes | Sources | 25 | Attacks and defences | Checks |
 | 11 | Reading reports | Processing | 26 | Planted wrong figure | Checks |
 | 12 | Retrieval Strategies | Retrieval | 27 | How I built it | close |
-| 13 | Does filtering help? | Retrieval | 28 | Limits and next steps | close |
-| 14 | Agent loop | Agent | 29 | Summary | close |
-| 15 | Choosing models | Agent | 30 | Appendix index (A to M, then N1 to N7) | |
+| 13 | Does filtering help? | Retrieval | 28 | Summary | close |
+| 14 | Agent loop | Agent | 29 | Appendix index (A to M) | |
+| 15 | Choosing models | Agent | | | |
 
 ## Timed plan (total 20:00)
 
@@ -33,7 +33,7 @@
 | 2:00 to 3:00 | 4 | System overview: source and processing stages, report search inside the agent loop, MCP for live statistics, cited answer. |
 | 3:00 to 3:30 | 5 to 7, 9, 10 | Source choices, two EDA findings and failure criteria; one sentence per slide. |
 | 3:30 to 4:30 | 8 | **Guaranteed conflicting-source demonstration.** Show 2026-Q2 employment change: 10,700 advance versus 11,400 final; distinguish the sector dataset's 14,700 and its unverified basis. Open the reconciliation record and provenance links; never silently select or combine definitions. See the prepared evidence below. |
-| 4:30 to 5:15 | 11 | Report-to-retrieval path: layout parsing, quality-flagged passages, chunks, BM25 and vectors. Table-like blocks are flagged, not silently repaired. |
+| 4:30 to 5:15 | 11 | Report-to-retrieval path: layout parsing, quality-flagged passages, chunks, BM25 and vectors. Current v3.1: 85 sources, 16,419 passages, 1,847 chunks; 40 passages relabelled, not new evidence. Table-like blocks are flagged, not silently repaired. |
 | 5:15 to 6:15 | 12, 13 | Keyword, meaning and hybrid on the same questions, then filtering and reranking. The agent calls report search during its loop. |
 | 6:15 to 7:00 | 14, 15 | Three agent tools, with the live series lookup through MCP; early model screen and its cost trade-off. |
 | 7:00 to 8:00 | 16 | MCP server API, the request and returned rows; open the MCP tab in the Workbench. Transcript sections 1 to 6. |
@@ -42,8 +42,8 @@
 | 13:30 to 15:00 | 20 to 23 | Measurement, human sign-off, final comparison and why it missed. |
 | 15:00 to 16:00 | 24 | Calculation fix: a fourth tool that failed rules set before the run and was not adopted. |
 | 16:00 to 17:30 | 25, 26 | Attacks and defences, then the planted wrong figure. Scenario 7: run the fixture command. |
-| 17:30 to 19:00 | 27, 28 | How I worked with a coding agent under a written contract; limits and next steps. |
-| 19:00 to 20:00 | 29 | Summary and `docs/innovation.md`. |
+| 17:30 to 19:00 | 27 | How I worked with a coding agent under a written contract. |
+| 19:00 to 20:00 | 28 | Summary, limitations and next steps; `docs/innovation.md`. |
 
 There is no slack. The conflict demonstration at 3:30, mixed-source answer at 8:30 and calculation at 10:30 are required slots, not optional questions. If live requests fail, switch once to the prepared records within the same slot; shorten slide 24 to one sentence rather than dropping required coverage.
 

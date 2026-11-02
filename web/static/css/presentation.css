@@ -1111,3 +1111,98 @@ th[aria-sort="descending"] .pr-sort::after { content: " \2193"; }
 .g6-tools { min-width: 0; }
 .g17-flow-note { max-width: 80ch; }
 @media (max-width: 800px) { .ma-exchange { grid-template-columns: 1fr 24px 1fr; } .ma-payload > span:not(.deck-tip) { font-size: 16px; } .ma-payload > strong { font-size: 15px; } }
+
+/* Owner redraw: bounded choices and the MCP capability boundary. */
+.owner-agent { position: relative; display: grid; gap: 12px; width: 100%; align-content: center; }
+.owner-agent-svg { display: block; width: 100%; max-height: 650px; overflow: visible; font-family: var(--font-sans); }
+.owner-agent .owner-agent-edge { fill: none; stroke: var(--line-strong); stroke-width: 2.5; stroke-linejoin: round; }
+.owner-agent .owner-agent-edge.is-return { stroke: var(--accent); stroke-dasharray: 8 7; }
+.owner-agent .owner-agent-head { fill: var(--ink-2); }
+.owner-agent .owner-agent-node rect { fill: var(--paper-2); stroke: var(--line-strong); stroke-width: 2; }
+.owner-agent .owner-agent-node.is-planner rect, .owner-agent .owner-agent-node.is-finish rect { fill: var(--accent-soft); stroke: var(--accent); }
+.owner-agent .owner-agent-node.is-mcp rect { stroke: var(--c3); stroke-width: 3; }
+.owner-agent .owner-agent-node.is-guard rect { stroke: var(--accent); }
+.owner-agent .owner-agent-title { fill: var(--ink); font-size: 29px; font-weight: 600; }
+.owner-agent .owner-agent-sub { fill: var(--ink-2); font-size: 25px; }
+.owner-agent .owner-agent-node.is-mcp .owner-agent-sub { fill: var(--c3); }
+.owner-agent .owner-agent-label { fill: var(--muted); font-size: 22px; }
+.owner-agent .owner-agent-label.is-return { fill: var(--accent); }
+.owner-agent .owner-agent-node:focus-visible rect { stroke: var(--ink); stroke-width: 4; }
+.owner-agent .owner-agent-bounds { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 14px 30px; padding: 16px 0; border-top: 1px solid var(--line-strong); color: var(--ink-2); font-size: 23px; }
+.owner-agent .deck-tip, .owner-mcp .deck-tip { font-size: 21px; line-height: 1.35; font-weight: 400; letter-spacing: 0; text-align: left; max-width: 620px; }
+.owner-agent .owner-agent-bounds > :last-child > .deck-tip { left: auto; right: 0; }
+.owner-mcp { display: grid; gap: 28px; align-content: center; min-width: 0; height: 100%; }
+.owner-mcp .owner-mcp-flow { display: grid; grid-template-columns: minmax(190px, 0.85fr) 44px minmax(650px, 2.9fr) 44px minmax(190px, 0.85fr); gap: 22px; align-items: center; }
+.owner-mcp .owner-mcp-host { display: grid; gap: 28px; min-width: 0; }
+.owner-mcp h3 { font-size: 30px; line-height: 1.2; font-weight: 600; }
+.owner-mcp .owner-mcp-client { border: 2px solid var(--c3); border-radius: 12px; padding: 24px 18px; font-size: 28px; color: var(--c3); }
+.owner-mcp .owner-mcp-arrow { color: var(--c3); display: flex; justify-content: center; }
+.owner-mcp .owner-mcp-arrow .deck-ico { width: 36px; height: 36px; }
+.owner-mcp .owner-mcp-server { min-width: 0; border: 2px solid var(--c3); border-radius: 12px; padding: 26px; background: var(--paper-2); }
+.owner-mcp .owner-mcp-server h3 { margin-bottom: 24px; color: var(--c3); }
+.owner-mcp .owner-mcp-label { color: var(--muted); font-size: 22px; margin-bottom: 12px; width: fit-content; }
+.owner-mcp .owner-mcp-tools { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin-bottom: 24px; }
+.owner-mcp .owner-mcp-tool { display: flex; align-items: center; min-width: 0; min-height: 76px; padding: 15px 12px; border: 1px solid var(--line-strong); border-radius: 12px; font-size: 24px; line-height: 1.2; }
+.owner-mcp .owner-mcp-tool.is-active { background: var(--accent-soft); border: 2px solid var(--accent); color: var(--accent); font-weight: 600; }
+.owner-mcp .owner-mcp-resources { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.owner-mcp .owner-mcp-resource { padding: 14px 12px; border-top: 1px solid var(--line-strong); font-size: 24px; color: var(--ink-2); }
+.owner-mcp .owner-mcp-store { border-top: 3px solid var(--accent); border-bottom: 1px solid var(--line-strong); padding: 30px 4px; font-size: 30px; line-height: 1.25; font-weight: 600; }
+.owner-mcp .owner-mcp-exchange { display: flex; justify-content: space-between; gap: 30px; border-top: 1px solid var(--line-strong); padding-top: 20px; color: var(--ink-2); font-size: 24px; }
+.owner-mcp .owner-mcp-exchange > :first-child::after { content: ' →'; color: var(--c3); }
+.owner-mcp .owner-mcp-exchange > :last-child::before { content: '← '; color: var(--accent); }
+.owner-mcp .owner-mcp-evidence { width: fit-content; color: var(--muted); font-size: 21px; text-decoration: underline dotted; text-underline-offset: 5px; }
+.owner-mcp .owner-mcp-store > .deck-tip, .owner-mcp .owner-mcp-exchange > :last-child > .deck-tip, .owner-mcp .owner-mcp-tool:nth-child(3n) > .deck-tip { left: auto; right: 0; }
+@media (max-width: 900px) {
+  .owner-agent .owner-agent-bounds { font-size: 16px; gap: 12px; }
+  .owner-agent .deck-tip, .owner-mcp .deck-tip { font-size: 16px; max-width: min(620px, 85vw); }
+  .owner-mcp .owner-mcp-flow { grid-template-columns: 1fr; gap: 16px; }
+  .owner-mcp .owner-mcp-host { grid-template-columns: 1fr 1fr; align-items: center; gap: 20px; }
+  .owner-mcp .owner-mcp-arrow { transform: rotate(90deg); }
+  .owner-mcp .owner-mcp-server { padding: 20px; }
+  .owner-mcp h3, .owner-mcp .owner-mcp-store { font-size: 24px; }
+  .owner-mcp .owner-mcp-client { font-size: 22px; padding: 16px; }
+  .owner-mcp .owner-mcp-tool, .owner-mcp .owner-mcp-resource { font-size: 18px; min-height: 60px; }
+  .owner-mcp .owner-mcp-label, .owner-mcp .owner-mcp-exchange, .owner-mcp .owner-mcp-evidence { font-size: 16px; }
+}
+
+/* Distinguish the prototype screen from the final-system decision. */
+.owner-models { display: grid; gap: 14px; align-content: center; }
+.owner-models .owner-model-heading { font-size: 28px; font-weight: 600; }
+.owner-models .mc-row { min-height: 44px; padding: 6px 0; }
+.owner-models .mc-name { font-size: 23px; }
+.owner-models .mc-head, .owner-models .mc-val, .owner-models .mc-seg { font-size: 20px; }
+.owner-models .mc-stack, .owner-models .mc-track { height: 30px; }
+.owner-model-final { border-top: 3px solid var(--accent); padding-top: 18px; margin-top: 10px; }
+.owner-model-sub { font-size: 20px; color: var(--muted); margin: 6px 0 10px; }
+.owner-model-final-row { display: grid; grid-template-columns: 1.4fr repeat(4, 1fr); gap: 18px; padding: 10px 0; font-size: 23px; border-top: 1px solid var(--line); }
+.owner-model-final-row > span { font-size: 20px; color: var(--muted); }
+.owner-retrieval { display: grid; grid-template-columns: 1fr 1fr; gap: 100px; align-items: center; }
+.owner-retrieval-paths { display: grid; gap: 40px; }
+.owner-retrieval-method { border-top: 3px solid var(--c3); padding: 24px 0; display: grid; grid-template-columns: 1fr auto; gap: 12px; }
+.owner-retrieval-method h3, .owner-retrieval-merge h3 { font-size: 38px; }
+.owner-retrieval-method p { grid-row: 2; color: var(--muted); font-size: 25px; }
+.owner-retrieval-method strong { grid-column: 2; grid-row: 1 / 3; align-self: center; font-size: 48px; }
+.owner-retrieval-merge { border-top: 3px solid var(--accent); padding: 24px 0; display: grid; gap: 24px; }
+.owner-retrieval-merge > span, .owner-retrieval-merge > p { font-size: 26px; color: var(--muted); }
+.owner-retrieval-merge > strong { font-size: 86px; color: var(--accent); }
+.owner-calc { display: grid; gap: 56px; align-content: center; }
+.owner-calc-steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 48px; }
+.owner-calc-step { border-top: 3px solid var(--c3); padding-top: 24px; }
+.owner-calc-step h3 { font-size: 34px; }
+.owner-calc-result { text-align: center; border-top: 1px solid var(--line); padding-top: 34px; }
+.owner-calc-result h3 { font-size: 36px; }
+.owner-calc-change { font-size: 96px; color: var(--c2); margin: 16px 0; }
+.owner-calc-result > p:last-of-type, .owner-calc-verdict { font-size: 30px; text-align: center; }
+
+.tm:has(.owner-scanner) { gap: 8px; }
+.tm:has(.owner-scanner) .tm-row { padding-top: 5px; padding-bottom: 5px; min-height: 48px; }
+.owner-scanner { margin-top: 18px; padding-top: 18px; border-top: 2px solid var(--accent); display: grid; gap: 12px; font-size: 23px; line-height: 1.25; }
+.owner-scanner-pairs { display: grid; grid-template-columns: 1fr 1fr; gap: 56px; }
+.owner-scanner-pair { display: grid; gap: 6px; }
+.owner-scanner-row { display: grid; grid-template-columns: 70px 1fr 64px; align-items: center; gap: 14px; font-size: 20px; }
+.owner-scanner-track { background: var(--line); height: 14px; }
+.owner-scanner-track > i { display: block; height: 100%; width: var(--w); background: var(--accent); }
+.owner-agent-boundary { stroke: var(--c3); stroke-width: 2; stroke-dasharray: 5 5; }
+.owner-agent-label.is-mcp-detail { fill: var(--c3); font-size: 24px; }
+.owner-model-early .mc-row > .deck-tip { max-width: 900px; width: 900px; font-size: 22px; }
+.owner-mcp .owner-mcp-evidence { font-size: 24px; color: var(--accent); }

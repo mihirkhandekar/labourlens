@@ -117,9 +117,9 @@ def test_every_slide_has_a_heading_and_speaker_notes():
     assert "el('aside', 'notes')" in builder and "if (!notes.children.length) notes.append(" in builder
     main = _slides_main_section()
     specs = re.findall(r"\badd\(\{", main)
-    assert 28 <= len(specs) <= 32, len(specs)
+    assert len(specs) == 28, len(specs)
     total = len(re.findall(r"\badd\(\{", (STATIC / "presentation" / "slides.js").read_text()))
-    assert total - len(specs) >= 10  # appendix slides
+    assert total == 42  # 28 main slides, appendix index, and references A to M
     for block in re.split(r"\badd\(\{", main)[1:]:
         assert "notes:" in block, block[:100]
         assert "title:" in block, block[:100]
@@ -147,7 +147,7 @@ def test_no_bridge_sentences_or_pills_on_faces():
 REQUIRED_TITLES = [
     "Assignment", "My project", "Agentic system", "Choosing the data", "Data findings", "Retrenchments rose, data gives no cause", "Advance and final figures differ", "Challenges with the data", "Success criteria and failure modes",
     "Reading reports", "Retrieval Strategies", "Does filtering help?", "Agent loop", "Choosing models", "MCP server", "GenAI concepts in this build", "Ensuring Reliable Sources", "Agent Workbench",
-    "How I measured", "Human Review of Dataset", "Experiment ladder", "Why it missed", "Fixing the calculation gap", "Attacks and defences", "Planted wrong figure", "How I built it", "Limits and next steps", "Summary",
+    "How I measured", "Human Review of Dataset", "Experiment ladder", "Why it missed", "Fixing the calculation gap", "Attacks and defences", "Planted wrong figure", "How I built it", "Summary",
 ]
 
 
@@ -161,7 +161,7 @@ def test_main_deck_follows_the_navigation_flow_and_has_short_plain_titles():
     main = _slides_main_section()
     defined = set(re.findall(r"\btitle: '([^']+)'", main))
     rows = _flow_rows()
-    assert len(rows) == 29
+    assert len(rows) == 28
     assert [r[0] for r in rows[1:]] == REQUIRED_TITLES
     for title, _, _ in rows:
         assert title in defined or "Singapore AI Agent" in title, title
@@ -174,13 +174,36 @@ def test_main_deck_follows_the_navigation_flow_and_has_short_plain_titles():
     assert "['Sources', 'Processing', 'Retrieval', 'Agent', 'Answer', 'Checks']" in (STATIC / "presentation" / "deck.js").read_text()
     for title in [r[0] for r in rows][1:]:
         assert len(title.split()) <= 9, title
-    assert 28 <= len(re.findall(r"\badd\(\{", main)) <= 32
+    assert len(re.findall(r"\badd\(\{", main)) == 28
+
+
+def test_removed_slides_stay_removed_and_summary_keeps_limitations():
+    slides = (STATIC / "presentation" / "slides.js").read_text()
+    assert "id: 'limits'" not in slides
+    assert "Limits and next steps" not in slides
+    assert not re.search(r"title: 'N[1-7]\.", slides)
+    assert not re.search(r"appendixIndex\.push\(\['N", slides)
+    summary = _slides_main_section().split("title: 'Summary'", 1)[1]
+    for caveat in ("one human reviewer", "no demonstrated gain", "23/30 attacks flagged", "provider-side spend cap", "Next:"):
+        assert caveat in summary
+    graphics = (STATIC / "presentation" / "graphics.js").read_text()
+    assert "10 of 30 test attacks caught before, 23 of 30 after" in graphics
+    assert "not a security boundary" in graphics and "five test attacks each" in graphics
+    for wording in ("markup 0 to 5", "sentence 0 to 5", "encoding 0 to 3", "paraphrase 3 to 3", "role-play 3 to 3", "table 4 to 4"):
+        assert wording in graphics
+
+
+def test_reading_reports_keeps_current_build_facts():
+    main = _slides_main_section()
+    reading = main.split("title: 'Reading reports'", 1)[1].split("\n  });", 1)[0]
+    for fact in ("85 sources", "16,419", "1,847", "v3.1 relabelled 40"):
+        assert fact in reading
 
 
 def test_calculation_fix_slide_states_the_failure_and_the_graphics_exist():
     main = _slides_main_section()
     assert main.count("Fixing the calculation gap") == 1
-    assert "failed rules I set before the run" in main and "optimistic" in main and "not adopted" in main.lower()
+    assert "failed its adoption rule" in main and "optimistic" in main and "not adopted" in main.lower()
     assert "calculate_from_text_values" in main and ("do not establish why" in main or "does not establish why" in main)
     graphics = (STATIC / "presentation" / "graphics.js").read_text()
     for name in ("threeAnswers", "twoSources", "buildTimeline", "flattening", "retrievalStaircase", "agentLoop", "evidenceTrace", "experimentStaircase", "costBars", "toolFixBars", "toolFixFlow", "assignmentBrief", "challengeGrid", "modelChoice", "architectureDiagram", "myProject", "hardParts", "failureModes", "keywordVsMeaning", "reviewStreams", "threatMatrix", "threatRuns", "mcpMap", "workbenchShot", "conceptGrid", "measureCards", "plantedFlow", "buildProcess", "excerptTable", "rowsAffordance", "withTip"):
@@ -280,19 +303,27 @@ def test_model_choice_is_read_from_the_screen_metrics():
     assert (luna["false_answer_rate"], luna["cost_per_case_usd"], luna["over_abstention_rate"]) == (0.0, 0.00051, 0.417)
     assert luna56["behavior_accuracy"] > luna["behavior_accuracy"] and luna56["false_answer_rate"] == 0.0
     main = _slides_main_section()
-    assert "no false answers at the lowest cost" in main and "not a ranking" in main and "33% of questions that should not be answered" in main
-    assert "Final means: both models .897 on development" in main and "gpt-6-luna costs about 60% as much" in main
+    assert "Early screen on 30 questions" in block and "Final two on 237 questions" in block
+    assert "95% Wilson interval" in block and "wilson(right, n)" in block and "runs.run1" in block and "runs.run2" in block
+    assert "Tied on final accuracy" in main and "about 60% as much" in main and "No run shows either is more accurate" in main
+    final = next(s for s in report["final_evaluation"]["splits"] if s["id"] == "dev")
+    arms = {a["model"]: a for a in final["arms"] if a["arm"] == "r3"}
+    assert arms["gpt-6-luna"]["runs"]["mean"] == arms["gpt-5.6-luna"]["runs"]["mean"]
+    for arm in arms.values():
+        for key, metric in [("false_answer", "false_answer_rate"), ("over_abstain", "over_abstention_rate")]:
+            assert arm["metrics"][metric]["rate"] == sum(arm["runs"][key]) / 2
 
 
 def test_mcp_slide_states_where_mcp_sits():
     graphics = (STATIC / "presentation" / "graphics.js").read_text()
     block = graphics.split("export function mcpMap", 1)[1].split("return wrap;", 1)[0]
-    for needle in ("Model Context Protocol", "Live agent", "MCP client", "MCP server", "get_statistic", "labourlens://sources", "compare_quarters", "10 hostile-server cases", "${lat.direct} ms direct, ${lat.mcp} ms over MCP", "outputSchema", "stdio", "No third-party host"):
+    for needle in ("LabourLens host", "MCP client", "MCP server", "get_statistic", "labourlens://sources", "compare_quarters", "outputSchema", "stdio", "Nine read-only tools", "2 resources"):
         assert needle in block, needle
-    main = _slides_main_section()
-    assert "full final accuracy comparison used direct data functions" in main and "separate served-chain sample and MCP/direct comparison are reported here" in main
-    assert "65-case sample: no observed loss; no gain demonstrated" in graphics
-    assert "['MCP server\\nseries only', false]" in graphics
+    assert "not in the base planner schema" in block and "Full-set accuracy evaluations used direct calls" in block
+    loop = graphics.split("export function agentLoop", 1)[1].split("return wrap;", 1)[0]
+    for needle in ("Search reports", "BM25 + embeddings", "Structured statistics", "Calculate in code", "Stop gathering", "Review returned evidence", "2 rounds", "6 calls", "10 s per call"):
+        assert needle in loop, needle
+    assert "series only" not in loop
     assert "step('wrench', 'Agent sends a series request'" in graphics and "step('path', 'MCP server returns rows'" in graphics and "Rows returned to the agent" in graphics
     assert "calculate_change" in graphics and "Search reports" in graphics and "Only the live get_series path crosses" in (STATIC / "js" / "report-story.js").read_text()
 

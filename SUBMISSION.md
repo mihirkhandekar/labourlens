@@ -1,7 +1,7 @@
 # LabourLens: where to start
 
 An evidence-grounded research assistant for Singapore labour-market questions: official statistics (data.gov.sg) plus MOM reports, passage-level citations, deterministic arithmetic, abstention, one bounded LangGraph agent, a read-only MCP statistics server and an evaluation harness. Inside the loop the planner chooses among three tools: report search returns ranked chunks, series lookup returns structured observations, and calculation uses deterministic code. In the live app only the statistics lookup goes through MCP.
-The deck has 29 main slides plus appendix. Press X twice quickly for speaker notes; no notes button is shown.
+The deck has 28 main slides, 42 total including the appendix index and references A to M. Limitations and next steps remain in Summary and the evaluation/attack material; current-build facts are on slide 11. Press X twice quickly for speaker notes; no notes button is shown.
 
 ## Read first
 

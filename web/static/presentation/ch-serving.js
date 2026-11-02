@@ -78,7 +78,7 @@ export function knownLimits(m) {
     'The judge and the answer models come from one provider family, so their errors may correlate.',
     'The final comparisons use two runs per arm; this is not a run-to-run variance estimate. Other experiments have one run unless labelled otherwise.',
     'Temperature and reasoning effort were not varied. New runs record provider-default temperature and top_p, no seed, prompt hashes and completion limits; older runs lack that sampling block.',
-    'The ingestion scanner missed all five paraphrased injection probes. Zero hits does not show a source is safe.',
+    'The scanner flags 23/30 test attacks after improvement, with 9/30 benign false alarms and 0/15 on real report passages. Semantic and non-English bypasses remain; zero flags never establishes source safety.',
     'A provider-side spend cap is not verified; the app\u2019s own daily budget is an estimate.',
     r.datasets_unverified != null ? `Licences are unverified for ${fmt.int(r.datasets_unverified)} datasets (assumed open) and ${fmt.int(r.sources_unresolved)} documents (rights unresolved). All of them stay local and none is committed.` : 'Licence status is not recorded.',
     'The live app differs from the evaluated system (small-talk reply, scope check, MCP route, build v3.1), and a separate 65-case sample measures the served configuration, not the full final sets.'

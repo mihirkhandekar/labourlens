@@ -21,7 +21,7 @@ Read in this order. Everything here is dated; where a later document supersedes 
 | Data | [`data-sheet.md`](data-sheet.md), [`data-processing-log.md`](data-processing-log.md), [`storage.md`](storage.md), [`adding-sources.md`](adding-sources.md) |
 | Model and system | [`system-card.md`](system-card.md), [`concepts.md`](concepts.md), [`audit-and-logging.md`](audit-and-logging.md), [`innovation.md`](innovation.md) |
 | MCP | [`mcp-demo-transcript.md`](mcp-demo-transcript.md), [`../artifacts/mcp-agent-demo.md`](../artifacts/mcp-agent-demo.md) |
-| Demonstration | [`demo-script.md`](demo-script.md) |
+| Demonstration | [`demo-script.md`](demo-script.md): 28 main slides, 42 total; Summary on slide 28, appendix index on 29, references A to M. Current-build detail remains on slide 11. |
 | Decisions | [`decisions.md`](decisions.md) (log, with approvals), [`decisions/`](decisions/) (ADR-001 scope, ADR-002 LangGraph, ADR-003 structured data) |
 | Experiments | [`experiments/`](experiments/) (one record per experiment; raw scores in `../experiments/`) |
 | Operations | [`deploy.md`](deploy.md), [`security-review-web.md`](security-review-web.md), [`../SECURITY.md`](../SECURITY.md) |

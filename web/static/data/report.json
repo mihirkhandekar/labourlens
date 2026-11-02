@@ -1,6 +1,6 @@
 {
   "schema_version": "report-1.0",
-  "generated_at": "2026-11-02T07:49:38.378263+00:00",
+  "generated_at": "2026-11-02T08:22:47.493265+00:00",
   "summary": {
     "title": "LabourLens research workbench",
     "scope": [
@@ -69114,6 +69114,324 @@
         ],
         "diagnostic_only": false
       }
+    },
+    "scanner": {
+      "before": {
+        "recall": {
+          "count": 10,
+          "n": 30,
+          "rate": 0.3333333333333333,
+          "wilson95": [
+            0.19230498083676134,
+            0.5121994835545616
+          ]
+        },
+        "false_positive_rate": {
+          "count": 9,
+          "n": 30,
+          "rate": 0.3,
+          "wilson95": [
+            0.16664748268243793,
+            0.47875787458714947
+          ]
+        },
+        "by_class": {
+          "encoding": {
+            "recall": {
+              "count": 0,
+              "n": 5,
+              "rate": 0.0,
+              "wilson95": [
+                0,
+                0.43448246478317476
+              ]
+            },
+            "false_positive_rate": {
+              "count": 0,
+              "n": 0,
+              "rate": null,
+              "wilson95": null
+            }
+          },
+          "markup": {
+            "recall": {
+              "count": 0,
+              "n": 5,
+              "rate": 0.0,
+              "wilson95": [
+                0,
+                0.43448246478317476
+              ]
+            },
+            "false_positive_rate": {
+              "count": 0,
+              "n": 0,
+              "rate": null,
+              "wilson95": null
+            }
+          },
+          "paraphrase": {
+            "recall": {
+              "count": 3,
+              "n": 5,
+              "rate": 0.6,
+              "wilson95": [
+                0.2307242812760128,
+                0.882379225767352
+              ]
+            },
+            "false_positive_rate": {
+              "count": 0,
+              "n": 0,
+              "rate": null,
+              "wilson95": null
+            }
+          },
+          "private_corpus": {
+            "recall": {
+              "count": 0,
+              "n": 0,
+              "rate": null,
+              "wilson95": null
+            },
+            "false_positive_rate": {
+              "count": 0,
+              "n": 15,
+              "rate": 0.0,
+              "wilson95": [
+                0,
+                0.20388330103584862
+              ]
+            }
+          },
+          "roleplay": {
+            "recall": {
+              "count": 3,
+              "n": 5,
+              "rate": 0.6,
+              "wilson95": [
+                0.2307242812760128,
+                0.882379225767352
+              ]
+            },
+            "false_positive_rate": {
+              "count": 0,
+              "n": 0,
+              "rate": null,
+              "wilson95": null
+            }
+          },
+          "sentence": {
+            "recall": {
+              "count": 0,
+              "n": 5,
+              "rate": 0.0,
+              "wilson95": [
+                0,
+                0.43448246478317476
+              ]
+            },
+            "false_positive_rate": {
+              "count": 0,
+              "n": 0,
+              "rate": null,
+              "wilson95": null
+            }
+          },
+          "synthetic_policy": {
+            "recall": {
+              "count": 0,
+              "n": 0,
+              "rate": null,
+              "wilson95": null
+            },
+            "false_positive_rate": {
+              "count": 9,
+              "n": 15,
+              "rate": 0.6,
+              "wilson95": [
+                0.357468301206246,
+                0.8017550385865841
+              ]
+            }
+          },
+          "table": {
+            "recall": {
+              "count": 4,
+              "n": 5,
+              "rate": 0.8,
+              "wilson95": [
+                0.37553462976252533,
+                0.9637758913675698
+              ]
+            },
+            "false_positive_rate": {
+              "count": 0,
+              "n": 0,
+              "rate": null,
+              "wilson95": null
+            }
+          }
+        }
+      },
+      "after": {
+        "recall": {
+          "count": 23,
+          "n": 30,
+          "rate": 0.7666666666666667,
+          "wilson95": [
+            0.5907167384187784,
+            0.8820761185551049
+          ]
+        },
+        "false_positive_rate": {
+          "count": 9,
+          "n": 30,
+          "rate": 0.3,
+          "wilson95": [
+            0.16664748268243793,
+            0.47875787458714947
+          ]
+        },
+        "by_class": {
+          "encoding": {
+            "recall": {
+              "count": 3,
+              "n": 5,
+              "rate": 0.6,
+              "wilson95": [
+                0.2307242812760128,
+                0.882379225767352
+              ]
+            },
+            "false_positive_rate": {
+              "count": 0,
+              "n": 0,
+              "rate": null,
+              "wilson95": null
+            }
+          },
+          "markup": {
+            "recall": {
+              "count": 5,
+              "n": 5,
+              "rate": 1.0,
+              "wilson95": [
+                0.5655175352168251,
+                1
+              ]
+            },
+            "false_positive_rate": {
+              "count": 0,
+              "n": 0,
+              "rate": null,
+              "wilson95": null
+            }
+          },
+          "paraphrase": {
+            "recall": {
+              "count": 3,
+              "n": 5,
+              "rate": 0.6,
+              "wilson95": [
+                0.2307242812760128,
+                0.882379225767352
+              ]
+            },
+            "false_positive_rate": {
+              "count": 0,
+              "n": 0,
+              "rate": null,
+              "wilson95": null
+            }
+          },
+          "private_corpus": {
+            "recall": {
+              "count": 0,
+              "n": 0,
+              "rate": null,
+              "wilson95": null
+            },
+            "false_positive_rate": {
+              "count": 0,
+              "n": 15,
+              "rate": 0.0,
+              "wilson95": [
+                0,
+                0.20388330103584862
+              ]
+            }
+          },
+          "roleplay": {
+            "recall": {
+              "count": 3,
+              "n": 5,
+              "rate": 0.6,
+              "wilson95": [
+                0.2307242812760128,
+                0.882379225767352
+              ]
+            },
+            "false_positive_rate": {
+              "count": 0,
+              "n": 0,
+              "rate": null,
+              "wilson95": null
+            }
+          },
+          "sentence": {
+            "recall": {
+              "count": 5,
+              "n": 5,
+              "rate": 1.0,
+              "wilson95": [
+                0.5655175352168251,
+                1
+              ]
+            },
+            "false_positive_rate": {
+              "count": 0,
+              "n": 0,
+              "rate": null,
+              "wilson95": null
+            }
+          },
+          "synthetic_policy": {
+            "recall": {
+              "count": 0,
+              "n": 0,
+              "rate": null,
+              "wilson95": null
+            },
+            "false_positive_rate": {
+              "count": 9,
+              "n": 15,
+              "rate": 0.6,
+              "wilson95": [
+                0.357468301206246,
+                0.8017550385865841
+              ]
+            }
+          },
+          "table": {
+            "recall": {
+              "count": 4,
+              "n": 5,
+              "rate": 0.8,
+              "wilson95": [
+                0.37553462976252533,
+                0.9637758913675698
+              ]
+            },
+            "false_positive_rate": {
+              "count": 0,
+              "n": 0,
+              "rate": null,
+              "wilson95": null
+            }
+          }
+        }
+      }
     }
   },
   "evaluation": {
@@ -77821,100 +78139,17 @@
         "date": "2 Nov 2026",
         "alternatives": ". Keep the old order (success criteria before the data findings that motivate them; build details repeated before retrieval); leave the 24-question retrieval chart as the headline (cheap and familiar, but not like-for-like with the next slide); or show the cu…",
         "summary": "DECISION. Reorder and retitle the 29-slide main story: project, system overview, Sources, success criteria after data challenges, Processing, Retrieval, Agent, Answer, Checks and close"
+      },
+      {
+        "id": "D-064",
+        "title": "Submission audit fixes and control boundaries",
+        "status": "OWNER REQUEST / IMPLEMENTED",
+        "date": "2 Nov 2026",
+        "alternatives": "and rationale",
+        "summary": "DECISION. Apply the owner-requested fixes to every BLOCKER and SHOULD finding in the submission audit, without paid calls or changing frozen results, gold, hashes, freeze records, the rights-truncation sidecar or publis…"
       }
     ],
-    "milestones": [
-      {
-        "id": "M1.0",
-        "name": "Repo hygiene: .gitignore, private/public doc split, handoff docs",
-        "status": "done"
-      },
-      {
-        "id": "M1.1",
-        "name": "Verify sources, rights, schemas; freeze manifest",
-        "status": "done"
-      },
-      {
-        "id": "M1.2",
-        "name": "Models, manifest, acquisition with throttle and hashes",
-        "status": "done"
-      },
-      {
-        "id": "M1.3",
-        "name": "Dataset normalizers, Parquet, DuckDB read layer",
-        "status": "done"
-      },
-      {
-        "id": "M1.4",
-        "name": "PDF and HTML passage extraction with quality flags",
-        "status": "done"
-      },
-      {
-        "id": "M1.5",
-        "name": "Quality report, advance/final/dataset reconciliation",
-        "status": "done"
-      },
-      {
-        "id": "M1.6",
-        "name": "Clean-room run, data sheet, study note, commit proposal",
-        "status": "historical execution recorded; decisions recorded on all 30 source checks (1 Nov; final 18 matches / 12 minor, first export 19 / 11); rights/basis gaps remain"
-      },
-      {
-        "id": "M2",
-        "name": "BM25 baseline and gold",
-        "status": "implemented; gold v3.7 has a recorded owner decision on all 268 cases (AI-drafted, signed off by the owner; one reviewer, after the runs); historical held-out freeze/execution recorded separately"
-      },
-      {
-        "id": "M3",
-        "name": "Dense/hybrid retrieval and cited generation",
-        "status": "implemented; dev comparisons recorded"
-      },
-      {
-        "id": "M4",
-        "name": "Bounded research agent and deterministic tools",
-        "status": "implemented; dev results recorded"
-      },
-      {
-        "id": "M5",
-        "name": "MCP and responsible-AI controls",
-        "status": "implemented; final corrected-fixture paired r3 threat runs recorded; planted-figure and subtle-instruction failures remain"
-      },
-      {
-        "id": "M6.1",
-        "name": "Evaluation harness and dev comparisons",
-        "status": "A1-A5 saved outputs rescored against v3.5 using --no-judge; no new model calls in this step (D-056 was a separate generated run, 2 Nov); prior v3.2 history preserved"
-      },
-      {
-        "id": "M6.2",
-        "name": "Gold and owner adjudication",
-        "status": "v3.5 (31 Oct): 268 cases, 237 dev/31 held-out; HO-022 answer and DEV-018 clarify confirmed by chat (D-036); all evidence IDs retained"
-      },
-      {
-        "id": "M6.3",
-        "name": "Answer-review sample",
-        "status": "40 per-card owner verdicts complete: 25 correct, six partly correct, nine incorrect; not a blind population estimate or independent inter-rater evidence"
-      },
-      {
-        "id": "M6.4",
-        "name": "Freeze protocol and held-out evaluation",
-        "status": "original v3.2 generation preserved; v3.3/v3.4 sensitivities historical; five held-out cases changed after the freeze (HO-029 v3.3; HO-027, HO-023, HO-004 v3.4; HO-022 v3.5); v3.5 saved-output rescori…"
-      },
-      {
-        "id": "M7.1",
-        "name": "Report application, live research and audit/feedback",
-        "status": "implemented; the web tests pass on the current checkout (count and command under Verified checks)"
-      },
-      {
-        "id": "M7.2",
-        "name": "Deployment setup",
-        "status": "deployed: the live site answers /healthz and serves corpus v3.1 (observed by the independent audit on 1 Nov 2026)"
-      },
-      {
-        "id": "M7.3",
-        "name": "Written submission and demo materials",
-        "status": "written and refreshed after each change; the owner's final completeness review is pending"
-      }
-    ],
+    "milestones": [],
     "provenance": [
       "docs/decisions.md",
       "docs/progress.md"
@@ -77929,7 +78164,7 @@
     "The population basis of the dataset employment series is unverified."
   ],
   "provenance": {
-    "commit": "929a93619405a3cbfe16fb63d16bdf2c632c771a",
+    "commit": "8edb9683a04258567932fb3a6d31af2d919fa566",
     "artifacts": [
       {
         "path": "data/export/sources.json",
@@ -79112,14 +79347,24 @@
         "sha256": "4f69e37eb5803ea60ffb081528982913fc3ceb43bdddc19c8c853cd080aad0b5"
       },
       {
+        "path": "experiments/scanner/v2-baseline-test/metrics.json",
+        "status": "available",
+        "sha256": "27126e89a8613cbd141921df838b184250b38b1744ac6799ce508a4193906f4f"
+      },
+      {
+        "path": "experiments/scanner/v2-selected-test/metrics.json",
+        "status": "available",
+        "sha256": "d6e41f7afc20b88804de683443da40ef9c76a5a79ade59c36e3fa8ee37d0f2dd"
+      },
+      {
         "path": "docs/decisions.md",
         "status": "available",
-        "sha256": "d06d25452eef33f4800b80864298f069919640cf0ac7d2a346c3dc860dd32eae"
+        "sha256": "ca89a012976805380d043f100a3f70824d6209316e9374f491b5906bcb3c4cde"
       },
       {
         "path": "docs/progress.md",
         "status": "available",
-        "sha256": "f92bffe5d481d0c013c60fd2c4eb3ba2af9d8e4efe64be79368ee624eb44f112"
+        "sha256": "54ab13eee4b49815f93cba440d827af16ca28f6366a6ee2bb9bf9d2151f3129f"
       }
     ],
     "policy": "Committed artifacts only; numeric fields only."

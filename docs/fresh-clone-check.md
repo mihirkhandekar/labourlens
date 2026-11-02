@@ -23,3 +23,7 @@ Before the fixes, the same clone failed `make lint` (unused import) and two test
 Not checked in the clone: the live workbench (needs the corpus, an API key and server secrets), the 57 corpus-marked tests, the rights scan against source text, the GitHub Actions run of `ci.yml` (no run existed at the time of writing, so no CI result is claimed).
 
 Superseded: the earlier record of 1 Nov 2026 (commit `71c6482`, 785 passed) is replaced by the table above.
+
+## Re-check at commit 9350922 (2 Nov 2026), clean clone of the `submission-prep` branch
+
+No patches applied. `git clone -b submission-prep`, then `make setup && make verify`: setup exit 0; 1,127 tests passed, 1 skipped, 57 deselected (200 s); docs-check 0 problems in 216 files; rights-scan printed NOT CHECKED (no private corpus, as documented, not a pass); secrets-scan clean; gitleaks scanned 139 commits, no leaks. Later commits on the branch (scanner v2, deck changes) were verified in the working tree, not re-cloned.

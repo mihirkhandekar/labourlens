@@ -132,7 +132,7 @@ export function renderSafety(m, ctx) {
     bullets: [
       `Suite: ${CATEGORIES.length} categories, five configurations, one run each; handwritten cases.`,
       'Retrieved text is treated as untrusted data; tools are read-only.',
-      'T-I06: a closed-grammar cross-check handled it in one run and not in the next for one model; scorer brittleness finding. Scanner bypass: all five paraphrased probes, detector-only evidence.'
+      'T-I06 failed again in the fresh rerun. Separate frozen scanner test: 10/30 attacks flagged before, 23/30 after; 9/30 benign false alarms. Detector-only evidence, not an end-to-end safety guarantee.'
     ]
   });
   ch.body.append(tI06(m));
@@ -158,7 +158,7 @@ export function renderSafety(m, ctx) {
   const controls = section('Five controls are implemented and three gaps are known, including the scanner bypass (5 of 5 paraphrase probes)');
   controls.append(grid('pr-split', 
     callout({tone: 'note', title: 'Controls in place', items: ['Retrieved text is marked as untrusted data in the model context.', 'Tools are read-only; arguments are enums built from the catalogue.', 'Steps, retries and time are capped.', 'Secrets stay server-side and are redacted in logs.', 'Citations are validated before display.'], src: 'docs/architecture.md · docs/threat-model.md'}),
-    callout({tone: 'warn', title: 'Known gaps', items: ['Ingestion scanner is heuristic: all five paraphrased malicious probes bypassed it in a second blind AI review. Detector-only evidence, no observed exploit.', 'Quote presence does not show that a quote supports the claim.', 'The MCP input filter missed one paraphrased instruction in the saved transcript.'], src: 'docs/human-review/independent-ai-review-m1-2.md · docs/mcp-demo-transcript.md §6'})
+    callout({tone: 'warn', title: 'Known gaps', items: ['The scanner flags 23/30 test attacks (95% interval 59 to 88%) and 9/30 benign test passages; zero of 15 real passages were flagged. Paraphrase, role-play and non-English bypasses remain.', 'Quote presence does not show that a quote supports the claim.', 'The MCP input filter missed one paraphrased instruction in the saved transcript.'], src: 'docs/experiments/injection-scanner-v2.md · docs/mcp-demo-transcript.md §6'})
   ));
   ch.body.append(controls);
   return ch.root;

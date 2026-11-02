@@ -21,7 +21,7 @@ def test_selected_profile_catches_normalised_and_split_forms_but_baseline_does_n
 
 def test_benign_policy_and_numbers_stay_unflagged():
     for text in ["Employment rose to 1.5 million in 2025, with 3,670 retrenchments.", "Employers should review wage policies each year.",
-                 "The method note explains revised figures and cites the survey.", "Workers who switched industries experienced favourable wage outcomes."]:
+                 "The method note explains revised figures and cites the survey.", "Average pay for workers changing jobs grew steadily."]:
         assert guards.injection_flags(text) == [], text
 
 
