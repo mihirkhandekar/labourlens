@@ -108,7 +108,7 @@ Final source checks: 18 matches and 12 minor differences (the first export, now 
 
 ## Rescoring on gold v3.7 (separate offline step, no model calls)
 
-The saved evaluations stay scored on v3.5/v3.6 and keep their hashes. Gold v3.7 has the same questions, labels, facts and evidence as v3.6 and differs only in review provenance fields, so a rescoring changes no behaviour or score; it only records the all-reviewed status against the v3.7 hash. If you rescore, do it from the saved runs without the judge, one experiment at a time, for example (this rewrites `experiments/eval/<exp>/`, so run it on a copy or a scratch checkout, never over a frozen result):
+The earlier saved evaluations stay scored on v3.5/v3.6 and keep their hashes; the final consolidated run (D-056) was scored on v3.7 for development and the registered held-out set. Gold v3.7 has the same questions, labels, facts and evidence as v3.6 and differs only in review provenance fields, so a rescoring changes no behaviour or score; it only records the all-reviewed status against the v3.7 hash. If you rescore, do it from the saved runs without the judge, one experiment at a time, for example (this rewrites `experiments/eval/<exp>/`, so run it on a copy or a scratch checkout, never over a frozen result):
 
 ```
 uv run labourlens eval --exp agent-dev-A1 --split dev --gold experiments/gold/gold_v3.7.jsonl --allow-gold-mismatch --no-judge

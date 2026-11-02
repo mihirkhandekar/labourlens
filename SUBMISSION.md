@@ -32,7 +32,7 @@ Fresh-clone run, with the observed output: [`docs/fresh-clone-check.md`](docs/fr
 
 ## Limitations
 
-1. Gold labels were drafted by AI. One person reviewed them after the saved runs were scored: not independent, not blind to model output. Gold v3.7 records this and changes no label; no evaluation was rescored on it.
+1. Gold labels were drafted by AI. One person reviewed them after the saved runs were scored: not independent, not blind to model output. Gold v3.7 changes no label. The earlier saved evaluations were not rescored on it; only the final consolidated run (D-056) was scored on v3.7 for the development and registered held-out sets, with `--allow-gold-mismatch` because generation ran on v3.6.
 2. The AI judge is an AI; the threat suite and automatic checks are not human review.
 3. The original held-out set shares evidence with development; its gain over hybrid retrieval is not demonstrated. Gold labels for five of its cases changed after the freeze; all versions are kept.
 4. On the final system (corpus v3.1, one run per arm), filter then rerank gains 4 to 6 points on the development questions that shaped it and shows no gain on either held-out set (26 of 31 in both arms; 0.708 against 0.754 on the 65 fresh questions for `gpt-6-luna`, within noise) at about 1.7 times the cost. The earlier held-out v2 run met its pre-registered rule on three cases for one model, and is kept as history: not a confirmed gain.
