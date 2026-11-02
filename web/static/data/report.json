@@ -1,6 +1,6 @@
 {
   "schema_version": "report-1.0",
-  "generated_at": "2026-11-02T08:22:47.493265+00:00",
+  "generated_at": "2026-11-02T08:24:58.885050+00:00",
   "summary": {
     "title": "LabourLens research workbench",
     "scope": [
@@ -78147,6 +78147,14 @@
         "date": "2 Nov 2026",
         "alternatives": "and rationale",
         "summary": "DECISION. Apply the owner-requested fixes to every BLOCKER and SHOULD finding in the submission audit, without paid calls or changing frozen results, gold, hashes, freeze records, the rights-truncation sidecar or publis…"
+      },
+      {
+        "id": "D-065",
+        "title": "Scanner v2: pre-registered offline evaluation and normalisation factors",
+        "status": "OWNER REQUEST / MEASURED",
+        "date": "2 Nov 2026",
+        "alternatives": "",
+        "summary": "DECISION. Evaluate the passage scanner on its own with a declared protocol written before improvement code, and keep three predeclared normalisation factors that raised development recall without adding development fals…"
       }
     ],
     "milestones": [],
@@ -78164,7 +78172,7 @@
     "The population basis of the dataset employment series is unverified."
   ],
   "provenance": {
-    "commit": "8edb9683a04258567932fb3a6d31af2d919fa566",
+    "commit": "dc8eaa42415276b716f798e63865f088c4ad6f65",
     "artifacts": [
       {
         "path": "data/export/sources.json",
@@ -79359,12 +79367,12 @@
       {
         "path": "docs/decisions.md",
         "status": "available",
-        "sha256": "ca89a012976805380d043f100a3f70824d6209316e9374f491b5906bcb3c4cde"
+        "sha256": "81c325b774bba9548a421648990e1e3281a207a7e822c6f897359b610777ff5b"
       },
       {
         "path": "docs/progress.md",
         "status": "available",
-        "sha256": "54ab13eee4b49815f93cba440d827af16ca28f6366a6ee2bb9bf9d2151f3129f"
+        "sha256": "75776fe86b670e2b4b7dcc7051db5ea4801774e82c10d5898cc4d3dffa7ee871"
       }
     ],
     "policy": "Committed artifacts only; numeric fields only."
