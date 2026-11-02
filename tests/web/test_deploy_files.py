@@ -18,7 +18,7 @@ def test_dockerignore_is_an_allow_list_that_never_includes_the_corpus():
     rules = [x for x in lines(".dockerignore") if x and not x.startswith("#")]
     assert rules[0] == "*"  # everything excluded first
     allowed = {r[1:] for r in rules if r.startswith("!")}
-    assert allowed == {"pyproject.toml", "uv.lock", "src", "specs", "prompts", "web"}
+    assert allowed == {"pyproject.toml", "uv.lock", "LICENSE", "src", "specs", "prompts", "web"}
     for needed in ("data", "**/*.pdf", "**/.env", "**/.env.*"):
         assert needed in rules
     assert rules.index("data") > max(i for i, r in enumerate(rules) if r.startswith("!"))  # re-excluded last
