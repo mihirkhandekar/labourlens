@@ -1,6 +1,6 @@
 {
   "schema_version": "report-1.0",
-  "generated_at": "2026-11-02T15:17:57.006619+00:00",
+  "generated_at": "2026-11-02T15:20:41.994038+00:00",
   "summary": {
     "title": "LabourLens research workbench",
     "scope": [
@@ -64568,6 +64568,192 @@
               }
             }
           }
+        },
+        {
+          "route": "no-stats",
+          "model": "gpt-6-luna",
+          "metrics": {
+            "all": {
+              "n": 65,
+              "n_answer_cases": 42,
+              "n_nonanswer_cases": 23,
+              "valid_rate": 0.969,
+              "repair_rate": 0.323,
+              "operational_failures": 0,
+              "behavior_accuracy": 0.692,
+              "answer_case_behavior": 0.643,
+              "nonanswer_case_behavior": 0.783,
+              "over_abstention_rate": 0.357,
+              "false_answer_rate": 0.13,
+              "numbers_complete_rate": 0.476,
+              "gold_in_context_rate": 0.643,
+              "gold_cited_rate": 0.333,
+              "gold_cited_given_in_context": 0.52,
+              "key_number_recall": 0.404,
+              "answers_with_ungrounded_numbers": 0.143,
+              "latency_p50_s": 34.596316,
+              "latency_max_s": 58.545042,
+              "prompt_tokens_mean": 27966,
+              "completion_tokens_mean": 1400,
+              "total_tokens": 1908794,
+              "calc_correct_rate": 0.0,
+              "n_calc_cases": 6,
+              "tool_calls_mean": 1.58,
+              "tool_error_rate": 0.015,
+              "cost_per_case_usd": 0.0035,
+              "gold_cited_any_rate": 0.31,
+              "false_diversions": 0,
+              "answerable_gold_n": 39,
+              "false_diversion_rate": 0.0,
+              "mcp_call_count": 0,
+              "mcp_error_count": 0,
+              "latency_p95_s": 54.369858,
+              "steps": {
+                "smalltalk": {
+                  "executed_n": 65,
+                  "latency_mean_s": 9.529295807274489e-05,
+                  "cost_mean_usd": 0.0,
+                  "failure_n": 0
+                },
+                "contextualise": {
+                  "executed_n": 61,
+                  "latency_mean_s": 0.21002188584982204,
+                  "cost_mean_usd": 1.0261538461538462e-05,
+                  "failure_n": 0
+                },
+                "triage": {
+                  "executed_n": 61,
+                  "latency_mean_s": 1.4678988948965874,
+                  "cost_mean_usd": 0.00011523076923076923,
+                  "failure_n": 0
+                },
+                "agent": {
+                  "executed_n": 57,
+                  "latency_mean_s": 28.870070948143706,
+                  "cost_mean_usd": 0.0033712923076923075,
+                  "failure_n": 0
+                }
+              }
+            },
+            "gold": {
+              "n": 51,
+              "n_answer_cases": 39,
+              "n_nonanswer_cases": 12,
+              "valid_rate": 0.961,
+              "repair_rate": 0.353,
+              "operational_failures": 0,
+              "behavior_accuracy": 0.608,
+              "answer_case_behavior": 0.615,
+              "nonanswer_case_behavior": 0.583,
+              "over_abstention_rate": 0.385,
+              "false_answer_rate": 0.25,
+              "numbers_complete_rate": 0.436,
+              "gold_in_context_rate": 0.643,
+              "gold_cited_rate": 0.333,
+              "gold_cited_given_in_context": 0.52,
+              "key_number_recall": 0.404,
+              "answers_with_ungrounded_numbers": 0.154,
+              "latency_p50_s": 37.350599,
+              "latency_max_s": 58.545042,
+              "prompt_tokens_mean": 33127,
+              "completion_tokens_mean": 1658,
+              "total_tokens": 1774063,
+              "calc_correct_rate": 0.0,
+              "n_calc_cases": 6,
+              "tool_calls_mean": 1.9,
+              "tool_error_rate": 0.02,
+              "cost_per_case_usd": 0.00414,
+              "gold_cited_any_rate": 0.31,
+              "false_diversions": 0,
+              "answerable_gold_n": 39,
+              "false_diversion_rate": 0.0,
+              "mcp_call_count": 0,
+              "mcp_error_count": 0,
+              "latency_p95_s": 54.52089,
+              "steps": {
+                "smalltalk": {
+                  "executed_n": 51,
+                  "latency_mean_s": 0.00011425245297597904,
+                  "cost_mean_usd": 0.0,
+                  "failure_n": 0
+                },
+                "contextualise": {
+                  "executed_n": 51,
+                  "latency_mean_s": 0.0012598209831790597,
+                  "cost_mean_usd": 0.0,
+                  "failure_n": 0
+                },
+                "triage": {
+                  "executed_n": 51,
+                  "latency_mean_s": 1.5396209951015372,
+                  "cost_mean_usd": 0.00012215686274509805,
+                  "failure_n": 0
+                },
+                "agent": {
+                  "executed_n": 51,
+                  "latency_mean_s": 34.151898671649214,
+                  "cost_mean_usd": 0.004019843137254902,
+                  "failure_n": 0
+                }
+              }
+            },
+            "probes": {
+              "n": 14,
+              "n_answer_cases": 3,
+              "n_nonanswer_cases": 11,
+              "valid_rate": 1.0,
+              "repair_rate": 0.214,
+              "operational_failures": 0,
+              "behavior_accuracy": 1.0,
+              "answer_case_behavior": 1.0,
+              "nonanswer_case_behavior": 1.0,
+              "over_abstention_rate": 0.0,
+              "false_answer_rate": 0.0,
+              "numbers_complete_rate": 1.0,
+              "answers_with_ungrounded_numbers": 0.0,
+              "latency_p50_s": 2.258079,
+              "latency_max_s": 35.336511,
+              "prompt_tokens_mean": 9163,
+              "completion_tokens_mean": 460,
+              "total_tokens": 134731,
+              "n_calc_cases": 0,
+              "tool_calls_mean": 0.43,
+              "tool_error_rate": 0.0,
+              "cost_per_case_usd": 0.00115,
+              "gold_cited_any_rate": 0.0,
+              "false_diversions": 0,
+              "answerable_gold_n": 0,
+              "mcp_call_count": 0,
+              "mcp_error_count": 0,
+              "latency_p95_s": 35.336511,
+              "steps": {
+                "smalltalk": {
+                  "executed_n": 14,
+                  "latency_mean_s": 2.6226226639534745e-05,
+                  "cost_mean_usd": 0.0,
+                  "failure_n": 0
+                },
+                "contextualise": {
+                  "executed_n": 10,
+                  "latency_mean_s": 0.9705122650068786,
+                  "cost_mean_usd": 4.764285714285714e-05,
+                  "failure_n": 0
+                },
+                "triage": {
+                  "executed_n": 10,
+                  "latency_mean_s": 1.2066255298642707,
+                  "cost_mean_usd": 8.999999999999999e-05,
+                  "failure_n": 0
+                },
+                "agent": {
+                  "executed_n": 6,
+                  "latency_mean_s": 9.629127098230779,
+                  "cost_mean_usd": 0.0010087142857142857,
+                  "failure_n": 0
+                }
+              }
+            }
+          }
         }
       ],
       "paired": {
@@ -65250,6 +65436,234 @@
             },
             "demonstrated_gain": false
           }
+        },
+        "nostats-vs-direct-on": {
+          "gpt-6-luna": {
+            "n_gold_cases": 65,
+            "complete": true,
+            "seed": 20261031,
+            "n_boot": 20000,
+            "level": 0.9,
+            "behaviour_accuracy": {
+              "candidate": 0.6923,
+              "baseline": 0.9077
+            },
+            "paired_difference": -0.2154,
+            "better": 0,
+            "worse": 14,
+            "mcnemar_exact_p": 0.0001,
+            "case_bootstrap_interval": [
+              -0.3077,
+              -0.1385
+            ],
+            "component_bootstrap_interval": [
+              -0.2969,
+              -0.1333
+            ],
+            "n_components": 55,
+            "n_evidence_components": 32,
+            "source_group_sensitivity_interval": [
+              -0.2154,
+              -0.2154
+            ],
+            "n_source_groups": 1,
+            "guardrails": {
+              "false_answers": {
+                "candidate": 3,
+                "baseline": 3
+              },
+              "answers_with_contradicted_fact": {
+                "candidate": 4,
+                "baseline": 1
+              }
+            },
+            "by_family_descriptive": {
+              "factual_lookup": {
+                "n": 15,
+                "better": 0,
+                "worse": 2
+              },
+              "cross_source_synthesis": {
+                "n": 8,
+                "better": 0,
+                "worse": 2
+              },
+              "adversarial": {
+                "n": 8,
+                "better": 0,
+                "worse": 2
+              },
+              "revision_conflict": {
+                "n": 4,
+                "better": 0,
+                "worse": 3
+              },
+              "numerical_comparison": {
+                "n": 7,
+                "better": 0,
+                "worse": 5
+              },
+              "ambiguity_insufficient_causal": {
+                "n": 9,
+                "better": 0,
+                "worse": 0
+              },
+              "served_diversion_probe": {
+                "n": 8,
+                "better": 0,
+                "worse": 0
+              },
+              "served_context_probe": {
+                "n": 6,
+                "better": 0,
+                "worse": 0
+              }
+            },
+            "sensitivity_descriptive": {
+              "without_mti_ai_feature_group": {
+                "n": 65,
+                "paired_difference": -0.2154,
+                "better": 0,
+                "worse": 14,
+                "case_bootstrap_interval": [
+                  -0.3077,
+                  -0.1385
+                ]
+              },
+              "report_text_evidence_cases_only": {
+                "n": 29,
+                "paired_difference": -0.2069,
+                "better": 0,
+                "worse": 6,
+                "case_bootstrap_interval": [
+                  -0.3448,
+                  -0.1034
+                ]
+              }
+            },
+            "conditions": {
+              "complete_paired_data": true,
+              "case_bootstrap_lower_above_zero": false,
+              "component_bootstrap_lower_above_zero": false,
+              "enough_evidence_components": true,
+              "no_added_false_answers": true
+            },
+            "demonstrated_gain": false
+          }
+        },
+        "nostats-vs-mcp-on": {
+          "gpt-6-luna": {
+            "n_gold_cases": 65,
+            "complete": true,
+            "seed": 20261031,
+            "n_boot": 20000,
+            "level": 0.9,
+            "behaviour_accuracy": {
+              "candidate": 0.6923,
+              "baseline": 0.9077
+            },
+            "paired_difference": -0.2154,
+            "better": 1,
+            "worse": 15,
+            "mcnemar_exact_p": 0.0005,
+            "case_bootstrap_interval": [
+              -0.3077,
+              -0.1231
+            ],
+            "component_bootstrap_interval": [
+              -0.3036,
+              -0.1228
+            ],
+            "n_components": 55,
+            "n_evidence_components": 32,
+            "source_group_sensitivity_interval": [
+              -0.2154,
+              -0.2154
+            ],
+            "n_source_groups": 1,
+            "guardrails": {
+              "false_answers": {
+                "candidate": 3,
+                "baseline": 3
+              },
+              "answers_with_contradicted_fact": {
+                "candidate": 4,
+                "baseline": 1
+              }
+            },
+            "by_family_descriptive": {
+              "factual_lookup": {
+                "n": 15,
+                "better": 0,
+                "worse": 2
+              },
+              "cross_source_synthesis": {
+                "n": 8,
+                "better": 0,
+                "worse": 2
+              },
+              "adversarial": {
+                "n": 8,
+                "better": 0,
+                "worse": 2
+              },
+              "revision_conflict": {
+                "n": 4,
+                "better": 0,
+                "worse": 3
+              },
+              "numerical_comparison": {
+                "n": 7,
+                "better": 0,
+                "worse": 6
+              },
+              "ambiguity_insufficient_causal": {
+                "n": 9,
+                "better": 0,
+                "worse": 0
+              },
+              "served_diversion_probe": {
+                "n": 8,
+                "better": 0,
+                "worse": 0
+              },
+              "served_context_probe": {
+                "n": 6,
+                "better": 1,
+                "worse": 0
+              }
+            },
+            "sensitivity_descriptive": {
+              "without_mti_ai_feature_group": {
+                "n": 65,
+                "paired_difference": -0.2154,
+                "better": 1,
+                "worse": 15,
+                "case_bootstrap_interval": [
+                  -0.3077,
+                  -0.1231
+                ]
+              },
+              "report_text_evidence_cases_only": {
+                "n": 29,
+                "paired_difference": -0.2069,
+                "better": 0,
+                "worse": 6,
+                "case_bootstrap_interval": [
+                  -0.3448,
+                  -0.1034
+                ]
+              }
+            },
+            "conditions": {
+              "complete_paired_data": true,
+              "case_bootstrap_lower_above_zero": false,
+              "component_bootstrap_lower_above_zero": false,
+              "enough_evidence_components": true,
+              "no_added_false_answers": true
+            },
+            "demonstrated_gain": false
+          }
         }
       },
       "provenance": [
@@ -65260,10 +65674,13 @@
         "experiments/runs/served-dev-S65-direct-off/gpt-6-luna.metrics.json",
         "experiments/runs/served-dev-S65-direct-off/gpt-5.6-luna.metrics.json",
         "experiments/runs/served-dev-S65-mcpall/gpt-6-luna.metrics.json",
+        "experiments/runs/served-dev-S65-nostats-b/gpt-6-luna.metrics.json",
         "experiments/served/paired-S65-direct-on.json",
         "experiments/served/paired-S65-direct-off.json",
         "experiments/served/paired-S65-mcpall-vs-direct-on.json",
-        "experiments/served/paired-S65-mcpall-vs-mcp-on.json"
+        "experiments/served/paired-S65-mcpall-vs-mcp-on.json",
+        "experiments/served/paired-S65-nostats-vs-direct-on.json",
+        "experiments/served/paired-S65-nostats-vs-mcp-on.json"
       ],
       "limits": "65 cases: 51 development gold cases, 8 diversion probes and 6 context probes. One run, same judge family, hand-written probes, date fixed to 2 Nov 2026. Not independent evidence. The web-steps-off control changes two factors."
     }
@@ -78601,6 +79018,14 @@
         "date": "2 Nov 2026",
         "alternatives": "and rationale",
         "summary": "DECISION. Map each repository-package bullet in the assessment PDF to an opened file and named section in submission checklist, keeping document presence separate from scientific validity and owner acceptance"
+      },
+      {
+        "id": "D-069",
+        "title": "Statistics-tool ablation: remove getseries from the served chain",
+        "status": "OWNER REQUEST / MEASURED RESULT",
+        "date": "2 Nov 2026",
+        "alternatives": ". Compare only direct against MCP (already done: both 0.908, so it cannot show whether the data or the transport matters); add a report-figure arithmetic tool as a workaround (rejected: it changes a second factor); run both models (rejected: cost and the owne…",
+        "summary": "MEASURED RESULT (gpt-6-luna, 65 questions, one run)"
       }
     ],
     "milestones": [],
@@ -78618,7 +79043,7 @@
     "The population basis of the dataset employment series is unverified."
   ],
   "provenance": {
-    "commit": "db9db143fe9382bf22dbefdbb1793a2ada1cba61",
+    "commit": "ff3613619fe795750f4428e2b65942e3b66d23b6",
     "artifacts": [
       {
         "path": "data/export/sources.json",
@@ -79716,7 +80141,8 @@
       },
       {
         "path": "experiments/runs/served-dev-S65-nostats-b/gpt-6-luna.metrics.json",
-        "status": "unavailable"
+        "status": "available",
+        "sha256": "c1058a6548e639e6ce02c7eacee2fa1c527d561a0373582806375b5a4c63bc79"
       },
       {
         "path": "experiments/runs/served-dev-S65-nostats-b/gpt-5.6-luna.metrics.json",
@@ -79744,11 +80170,13 @@
       },
       {
         "path": "experiments/served/paired-S65-nostats-vs-direct-on.json",
-        "status": "unavailable"
+        "status": "available",
+        "sha256": "8bf54ef2d22337b0eb0424a9fc49c59c1808dd1d7334a9169ba10bd9e37f5948"
       },
       {
         "path": "experiments/served/paired-S65-nostats-vs-mcp-on.json",
-        "status": "unavailable"
+        "status": "available",
+        "sha256": "6bf7e201c615c79bbb89f4e6fc50c50d28a9cbcec5081deaa1650fc9f2333aed"
       },
       {
         "path": "experiments/threats/ti06-v2-original-20261102/runs/gpt-4.1-mini+naive.metrics.json",
@@ -79848,12 +80276,12 @@
       {
         "path": "docs/decisions.md",
         "status": "available",
-        "sha256": "3bf4f9d15518aba319ddc0c0ba148d8cbaa0637ccba41dc96d0676121e126b96"
+        "sha256": "23d18ba98351e651d1d7511e8358d2c3f84e2000a5919cc70ef3489f7ff26f72"
       },
       {
         "path": "docs/progress.md",
         "status": "available",
-        "sha256": "971e30b39661954b2257f3e2bdd24a32891151a1d6fbaff0b7f64e5579da5974"
+        "sha256": "8438b808f99580d6df18369d0d9083226094bdb8e839b414e039e240c51617fa"
       }
     ],
     "policy": "Committed artifacts only; numeric fields only."
@@ -80278,7 +80706,7 @@
     "source": {
       "path": "docs/innovation-page.json",
       "sha256": "81fddf42756a9ba931d4320fdb8a4646f425a5b8d3eed5d6e2e8332a9b492681",
-      "evidence_commit": "db9db143fe9382bf22dbefdbb1793a2ada1cba61"
+      "evidence_commit": "ff3613619fe795750f4428e2b65942e3b66d23b6"
     }
   }
 }
