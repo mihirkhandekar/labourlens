@@ -7,6 +7,7 @@ from __future__ import annotations
 import hashlib
 import json
 from dataclasses import dataclass
+from pathlib import Path
 from xml.sax.saxutils import escape, quoteattr
 
 from labourlens import paths, prices
@@ -77,11 +78,12 @@ class RerankResult:
 
 
 def rerank(question: str, candidates: list[Chunk], model: str = MODEL, use_cache: bool = True,
-           timeout_s: float | None = None) -> RerankResult:
+           timeout_s: float | None = None, cache_dir: Path | None = None) -> RerankResult:
     n = len(candidates)
     system, user_t, phash = load_prompt()
     key = hashlib.sha256(json.dumps([model, phash, question, [c.chunk_id for c in candidates]]).encode()).hexdigest()[:24]
-    cf = CACHE_DIR / f"{key}.json"
+    cache_dir = CACHE_DIR if cache_dir is None else cache_dir
+    cf = cache_dir / f"{key}.json"
     if use_cache and cf.exists():
         d = json.loads(cf.read_text())
         r = RerankResult(**{**d["result"], "cached": True})
@@ -97,6 +99,6 @@ def rerank(question: str, candidates: list[Chunk], model: str = MODEL, use_cache
     r = RerankResult(merge_order(chosen or [], n), res.seconds, cost, res.prompt_tokens, res.completion_tokens, res.reasoning_tokens,
                      ok=bool(chosen), note="" if chosen else "no usable ranking; incoming order kept")
     if use_cache:
-        CACHE_DIR.mkdir(parents=True, exist_ok=True)
+        cache_dir.mkdir(parents=True, exist_ok=True)
         cf.write_text(json.dumps({"question_sha": hashlib.sha256(question.encode()).hexdigest()[:12], "raw": res.content, "result": r.__dict__ | {"cached": False}}))
     return r

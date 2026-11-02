@@ -1,0 +1,259 @@
+{
+ "gold": "experiments/served/mixed-sample.jsonl",
+ "candidate": "served-dev-S65-mcp-on",
+ "baseline": "served-dev-S65-direct-off",
+ "per_model": {
+  "gpt-6-luna": {
+   "n_gold_cases": 65,
+   "complete": true,
+   "missing": {
+    "candidate": [],
+    "baseline": []
+   },
+   "unexpected": {
+    "candidate": [],
+    "baseline": []
+   },
+   "seed": 20261031,
+   "n_boot": 20000,
+   "level": 0.9,
+   "behaviour_accuracy": {
+    "candidate": 0.9077,
+    "baseline": 0.7538
+   },
+   "paired_difference": 0.1538,
+   "better": 12,
+   "worse": 2,
+   "mcnemar_exact_p": 0.0129,
+   "case_bootstrap_interval": [
+    0.0615,
+    0.2462
+   ],
+   "component_bootstrap_interval": [
+    0.0645,
+    0.2537
+   ],
+   "n_components": 55,
+   "n_evidence_components": 32,
+   "source_group_sensitivity_interval": [
+    0.1538,
+    0.1538
+   ],
+   "n_source_groups": 1,
+   "guardrails": {
+    "false_answers": {
+     "candidate": 3,
+     "baseline": 2
+    },
+    "answers_with_contradicted_fact": {
+     "candidate": 1,
+     "baseline": 1
+    }
+   },
+   "by_family_descriptive": {
+    "factual_lookup": {
+     "n": 15,
+     "better": 0,
+     "worse": 0
+    },
+    "cross_source_synthesis": {
+     "n": 8,
+     "better": 0,
+     "worse": 0
+    },
+    "adversarial": {
+     "n": 8,
+     "better": 1,
+     "worse": 0
+    },
+    "revision_conflict": {
+     "n": 4,
+     "better": 0,
+     "worse": 0
+    },
+    "numerical_comparison": {
+     "n": 7,
+     "better": 2,
+     "worse": 0
+    },
+    "ambiguity_insufficient_causal": {
+     "n": 9,
+     "better": 0,
+     "worse": 1
+    },
+    "served_diversion_probe": {
+     "n": 8,
+     "better": 8,
+     "worse": 0
+    },
+    "served_context_probe": {
+     "n": 6,
+     "better": 1,
+     "worse": 1
+    }
+   },
+   "sensitivity_descriptive": {
+    "without_mti_ai_feature_group": {
+     "n": 65,
+     "paired_difference": 0.1538,
+     "better": 12,
+     "worse": 2,
+     "case_bootstrap_interval": [
+      0.0615,
+      0.2462
+     ]
+    },
+    "report_text_evidence_cases_only": {
+     "n": 29,
+     "paired_difference": 0.0345,
+     "better": 1,
+     "worse": 0,
+     "case_bootstrap_interval": [
+      0.0,
+      0.1034
+     ]
+    }
+   },
+   "conditions": {
+    "complete_paired_data": true,
+    "case_bootstrap_lower_above_zero": true,
+    "component_bootstrap_lower_above_zero": true,
+    "enough_evidence_components": true,
+    "no_added_false_answers": false
+   },
+   "demonstrated_gain": false
+  },
+  "gpt-5.6-luna": {
+   "n_gold_cases": 65,
+   "complete": true,
+   "missing": {
+    "candidate": [],
+    "baseline": []
+   },
+   "unexpected": {
+    "candidate": [],
+    "baseline": []
+   },
+   "seed": 20261031,
+   "n_boot": 20000,
+   "level": 0.9,
+   "behaviour_accuracy": {
+    "candidate": 0.9077,
+    "baseline": 0.7231
+   },
+   "paired_difference": 0.1846,
+   "better": 12,
+   "worse": 0,
+   "mcnemar_exact_p": 0.0005,
+   "case_bootstrap_interval": [
+    0.1077,
+    0.2615
+   ],
+   "component_bootstrap_interval": [
+    0.1077,
+    0.2759
+   ],
+   "n_components": 55,
+   "n_evidence_components": 32,
+   "source_group_sensitivity_interval": [
+    0.1846,
+    0.1846
+   ],
+   "n_source_groups": 1,
+   "guardrails": {
+    "false_answers": {
+     "candidate": 2,
+     "baseline": 4
+    },
+    "answers_with_contradicted_fact": {
+     "candidate": 1,
+     "baseline": 1
+    }
+   },
+   "by_family_descriptive": {
+    "factual_lookup": {
+     "n": 15,
+     "better": 0,
+     "worse": 0
+    },
+    "cross_source_synthesis": {
+     "n": 8,
+     "better": 0,
+     "worse": 0
+    },
+    "adversarial": {
+     "n": 8,
+     "better": 0,
+     "worse": 0
+    },
+    "revision_conflict": {
+     "n": 4,
+     "better": 0,
+     "worse": 0
+    },
+    "numerical_comparison": {
+     "n": 7,
+     "better": 1,
+     "worse": 0
+    },
+    "ambiguity_insufficient_causal": {
+     "n": 9,
+     "better": 1,
+     "worse": 0
+    },
+    "served_diversion_probe": {
+     "n": 8,
+     "better": 8,
+     "worse": 0
+    },
+    "served_context_probe": {
+     "n": 6,
+     "better": 2,
+     "worse": 0
+    }
+   },
+   "sensitivity_descriptive": {
+    "without_mti_ai_feature_group": {
+     "n": 65,
+     "paired_difference": 0.1846,
+     "better": 12,
+     "worse": 0,
+     "case_bootstrap_interval": [
+      0.1077,
+      0.2615
+     ]
+    },
+    "report_text_evidence_cases_only": {
+     "n": 29,
+     "paired_difference": 0.0,
+     "better": 0,
+     "worse": 0,
+     "case_bootstrap_interval": [
+      0.0,
+      0.0
+     ]
+    }
+   },
+   "conditions": {
+    "complete_paired_data": true,
+    "case_bootstrap_lower_above_zero": true,
+    "component_bootstrap_lower_above_zero": true,
+    "enough_evidence_components": true,
+    "no_added_false_answers": true
+   },
+   "demonstrated_gain": true
+  }
+ },
+ "decision": {
+  "demonstrated_gain_primary": false,
+  "primary_model": "gpt-6-luna",
+  "replication_models": {
+   "gpt-5.6-luna": true
+  },
+  "models": [
+   "gpt-5.6-luna",
+   "gpt-6-luna"
+  ],
+  "statement": "R3 gain NOT demonstrated for the primary model gpt-6-luna under the preregistered rule; report descriptively."
+ }
+}

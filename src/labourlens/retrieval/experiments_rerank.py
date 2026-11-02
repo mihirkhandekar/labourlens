@@ -11,8 +11,12 @@ import hashlib
 import json
 import statistics
 import time
+import re
+import subprocess
 from collections import Counter
 from concurrent.futures import ThreadPoolExecutor, as_completed
+from dataclasses import dataclass
+from pathlib import Path
 
 import numpy as np
 
@@ -36,28 +40,65 @@ MATRIX_FILE = paths.ROOT / "data" / "runs" / "dev-R0" / "dense_matrix.npy"
 QV_FILE = paths.ROOT / "data" / "runs" / "dev-R0" / "query_vectors.json"
 
 
+@dataclass(frozen=True)
+class RunPaths:
+    tag: str | None = None
+
+    def __post_init__(self) -> None:
+        if self.tag is not None and not re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9_-]*", self.tag):
+            raise ValueError("tag must contain only letters, digits, underscores and hyphens, starting with a letter or digit")
+
+    def config(self, name: str) -> Path:
+        return RUNS / (f"dev-R-{self.tag}-{name}" if self.tag is not None else f"dev-{name}")
+
+    def summary(self, markdown: bool = False) -> Path:
+        if self.tag is not None:
+            return RUNS / f"dev-R-{self.tag}" / ("SUMMARY.md" if markdown else "summary.json")
+        return RUNS / ("dev-R-SUMMARY.md" if markdown else "dev-R-summary.json")
+
+    def cache(self, corpus_hash: str) -> Path:
+        identity = hashlib.sha256(f"{corpus_hash}:{rt.EMBEDDING_MODEL}:{rt.CHUNK_CONFIG}".encode()).hexdigest()
+        return paths.ROOT / "data" / "runs" / f"dev-R-{self.tag}" / identity
+
+    def refuse_existing(self) -> None:
+        if self.tag is not None:
+            outputs = [self.summary().parent, *(self.config(n) for n in ("R0", "R1a", "R1b", "R1b_x0.5", "R1b_x2", "R2", "R3"))]
+            if any(p.exists() for p in outputs):
+                raise SystemExit(f"retrieval tag {self.tag!r} already exists; choose a new tag")
+
+
+def provenance(chunks: list, gold_sha: str) -> dict:
+    corpus_hash = ck.corpus_hash(chunks)
+    snapshot = json.loads((paths.EXPERIMENTS / "corpus-snapshots" / "v3.1.json").read_text())
+    version = "v3.1" if snapshot["chunk_corpus_sha256"] == corpus_hash and snapshot["chunks"] == len(chunks) else "unregistered"
+    commit = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=paths.ROOT, text=True).strip()
+    return {"corpus_version": version, "chunk_count": len(chunks), "corpus_hash": corpus_hash,
+            "gold_file_sha256": gold_sha, "code_commit": commit}
+
+
 class BudgetExceeded(RuntimeError):
     pass
 
 
 class World:
-    def __init__(self) -> None:
+    def __init__(self, run_paths: RunPaths | None = None) -> None:
         self.passages = ck.load_passages()
         chunks = ck.build_chunks(ck.CONFIGS[rt.CHUNK_CONFIG], self.passages)
         self.chunks = {c.chunk_id: c for c in chunks}
         self.bm25 = BM25Index.build(chunks, BM25Config())
+        self.cache_dir = run_paths.cache(ck.corpus_hash(chunks)) if run_paths is not None and run_paths.tag is not None else None
+        self.qv_file = self.cache_dir / "query_vectors.json" if self.cache_dir is not None else QV_FILE
         self.dense = self._frozen_dense(chunks)
         self.passages_by_id = {p["passage_id"]: p for p in self.passages}
         self.n = len(chunks)
 
-    @staticmethod
-    def _frozen_dense(chunks) -> dn.DenseIndex:
+    def _frozen_dense(self, chunks) -> dn.DenseIndex:
         """Chunk vectors frozen per corpus on first use (same reason as query vectors): the shared embedding cache can lose entries to a concurrent
         writer and the hosted API re-embeds them with tiny differences, which flips near-ties between runs."""
         cfg = dn.DenseConfig(rt.EMBEDDING_MODEL)
         ids = [c.chunk_id for c in chunks]
         tag = hashlib.sha256("|".join(ids).encode()).hexdigest()[:16]
-        f = MATRIX_FILE.with_name(f"dense_matrix_{tag}.npy")
+        f = self.cache_dir / "dense_matrix.npy" if self.cache_dir is not None else MATRIX_FILE.with_name(f"dense_matrix_{tag}.npy")
         if f.exists():
             d = object.__new__(dn.DenseIndex)
             d.cfg, d.chunk_ids, d.matrix = cfg, ids, np.load(f)
@@ -70,13 +111,13 @@ class World:
     def query_vector(self, question: str) -> np.ndarray:
         """Query vectors are frozen on first use (data/runs, gitignored): the hosted embedding API is not bit-identical across calls and the shared
         embedding cache can be rewritten by a concurrent process, either of which re-orders near-ties between runs of the same experiment."""
-        QV_FILE.parent.mkdir(parents=True, exist_ok=True)
+        self.qv_file.parent.mkdir(parents=True, exist_ok=True)
         if not hasattr(self, "_qv"):
-            self._qv = json.loads(QV_FILE.read_text()) if QV_FILE.exists() else {}
+            self._qv = json.loads(self.qv_file.read_text()) if self.qv_file.exists() else {}
         key = hashlib.sha256(question.encode()).hexdigest()
         if key not in self._qv:
             self._qv[key] = dn.embed(rt.EMBEDDING_MODEL, [question], purpose="queries")[0].tolist()
-            QV_FILE.write_text(json.dumps(self._qv))
+            self.qv_file.write_text(json.dumps(self._qv))
         return np.asarray(self._qv[key], dtype=np.float32)
 
     def full_rankings(self, question: str):
@@ -188,12 +229,15 @@ def fmt_ci(m: dict) -> str:
     return f"{m['hit@8']:.3f} [{m['hit@8_ci95'][0]:.3f}, {m['hit@8_ci95'][1]:.3f}]"
 
 
-def run(split: str = "dev", rerank_on: bool = True) -> None:
+def run(split: str = "dev", rerank_on: bool = True, tag: str | None = None) -> None:
     if split != "dev":
         raise SystemExit("retrieval-exp2 runs on the dev split only (held-out stays untouched)")
+    run_paths = RunPaths(tag)
+    run_paths.refuse_existing()
     t_start = time.time()
-    w = World()
+    w = World(run_paths) if tag is not None else World()
     gold_sha = hashlib.sha256((ev.GOLD / "draft_cases.jsonl").read_bytes()).hexdigest()  # recorded with the results: the gold file is still being corrected
+    run_provenance = provenance(list(w.chunks.values()), gold_sha) if tag is not None else {}
     cases = ev.text_cases(ev.load_cases("dev"))
     by_case = {c["case_id"]: c for c in cases}
     print(f"{len(cases)} dev text cases, {w.n} chunks")
@@ -252,7 +296,8 @@ def run(split: str = "dev", rerank_on: bool = True) -> None:
             pools.append((c, hints, [x[0] for x in pool_fn(hints, bm, de)]))
         out: dict[str, rr.RerankResult] = {}
         with ThreadPoolExecutor(max_workers=6) as ex:
-            futs = {ex.submit(rr.rerank, c["question"], [w.chunks[i] for i in ids[:rr.POOL]]): (c, ids) for c, _, ids in pools}
+            cache_kwargs = {"cache_dir": w.cache_dir / "rerank"} if tag is not None else {}
+            futs = {ex.submit(rr.rerank, c["question"], [w.chunks[i] for i in ids[:rr.POOL]], **cache_kwargs): (c, ids) for c, _, ids in pools}
             for f in as_completed(futs):
                 c, _ = futs[f]
                 out[c["case_id"]] = f.result()
@@ -301,9 +346,9 @@ def run(split: str = "dev", rerank_on: bool = True) -> None:
 
     names = [n for n in ("R0", "R1a", "R1b", "R2", "R3") if n in results]
     for n in names + ["R1b_x0.5", "R1b_x2"]:
-        write(f"dev-{n}", results[n], rowsets[n], {"split": "dev", "chunks": rt.CHUNK_CONFIG, "embedding": rt.EMBEDDING_MODEL, "depth": DEPTH, "rrf_c": RRF_C,
+        write(run_paths.config(n).name, results[n], rowsets[n], {"split": "dev", "chunks": rt.CHUNK_CONFIG, "embedding": rt.EMBEDDING_MODEL, "depth": DEPTH, "rrf_c": RRF_C,
                                                   "gold_file_sha256": gold_sha, "soft_bonus": BONUS if n.startswith("R1b") or n == "R3" else None, "rerank_model": rr.MODEL if n in ("R2", "R3") else None,
-                                                  "rerank_prompt_hash": rr.load_prompt()[2] if n in ("R2", "R3") else None, "pool": rr.POOL if n in ("R2", "R3") else None})
+                                                  "rerank_prompt_hash": rr.load_prompt()[2] if n in ("R2", "R3") else None, "pool": rr.POOL if n in ("R2", "R3") else None, **run_provenance})
     candidates = [n for n in ("R1a", "R1b", "R2", "R3") if n in results]
     best = max(candidates, key=lambda n: (results[n]["hit@8"], results[n]["mrr@10"]))
     cov = [coverage_check("R0", rowsets["R0"], by_case, w), coverage_check(best, rowsets[best], by_case, w)]
@@ -315,11 +360,23 @@ def run(split: str = "dev", rerank_on: bool = True) -> None:
                                  "period_hint_but_no_document_in_period": sum(1 for c, h, *_ in prep if h.quarters and not any(pr.period_match(d, h) for d in pr.catalogue())),
                                  "hint_but_no_filter": sum(1 for c, h, *_ in prep if h.any() and pr.matching_sources(h) is None)},
                "first_relevant_rank_histogram": {n: dict(sorted(Counter(r["first_relevant_rank"] or 0 for r in rowsets[n]).items())) for n in names}}
-    (RUNS / "dev-R-summary.json").write_text(json.dumps(summary, indent=1))
+    if tag is not None:
+        summary.update(run_provenance)
+        summary["tag"] = tag
+        summary["changes_vs_frozen_R_series"] = "Current corpus and gold, current code, isolated corpus-and-model-keyed caches; same development comparison and conditional R3 rule. Not new held-out evidence."
+    run_paths.summary().parent.mkdir(parents=True, exist_ok=True)
+    run_paths.summary().write_text(json.dumps(summary, indent=1))
     L = [f"# Retrieval improvement experiments R0-R3, dev text cases (n={len(cases)})", "",
          f"Generated by `labourlens retrieval-exp2`; numbers come from `experiments/runs/dev-R*/metrics.json`. Gold file sha256 `{gold_sha}`.", "",
          "| config | hit@3 | hit@5 | hit@8 [95% CI] | hit@10 | MRR@10 | gold-passage coverage@8 | pool recall@30 / @50 | hit@8 diff vs R0 [95% CI] | paired hit@8 better/worse | added latency p50 ms | cost $/query |",
          "|---|---|---|---|---|---|---|---|---|---|---|---|"]
+    if tag is not None:
+        L[2] = (f"Generated by `labourlens retrieval-exp2 --tag {tag}`; configuration metrics in "
+                f"`experiments/runs/dev-R-{tag}-R*/metrics.json`. Gold file sha256 `{gold_sha}`.")
+        L[4:4] = [f"## {run_provenance['corpus_version']} re-run", "",
+                  f"Corpus: {run_provenance['chunk_count']:,} chunks; hash `{run_provenance['corpus_hash']}`. Code commit `{run_provenance['code_commit']}`.",
+                  "", "Changed versus the frozen R-series: " + summary["changes_vs_frozen_R_series"],
+                  "Frozen R-series files are unchanged. Historical differences are not a controlled estimate of a retrieval-only effect.", ""]
     for n in names + ["R1b_x0.5", "R1b_x2"]:
         m = results[n]
         diff = "-" if n == "R0" else f"{m['hit@8_diff_vs_R0']:+.3f} [{m['hit@8_diff_ci95'][0]:+.3f}, {m['hit@8_diff_ci95'][1]:+.3f}]"
@@ -336,5 +393,5 @@ def run(split: str = "dev", rerank_on: bool = True) -> None:
           "| config | gold passage in the context built from the top-8 chunks | gold passage in the first 8 context passages |", "|---|---|---|"]
     L += [f"| {c['config']} | {c['gold_in_context_of_top8_chunks']} | {c['gold_in_first8_context_passages']} |" for c in cov]
     L += ["", f"Rerank spend on new API calls this run: ${total_cost:.4f}. Wall time {time.time() - t_start:.0f}s.", ""]
-    (RUNS / "dev-R-SUMMARY.md").write_text("\n".join(L) + "\n")
+    run_paths.summary(markdown=True).write_text("\n".join(L) + "\n")
     print("\n".join(L))

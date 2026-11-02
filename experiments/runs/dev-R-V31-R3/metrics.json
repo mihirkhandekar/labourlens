@@ -1,0 +1,103 @@
+{
+ "config": {
+  "split": "dev",
+  "chunks": "merge200",
+  "embedding": "text-embedding-3-large",
+  "depth": 50,
+  "rrf_c": 60,
+  "gold_file_sha256": "6169a9deca78cb5908c584bdf7d17b1c8dd9a15ff7840b3752f3bbb4febb2f9b",
+  "soft_bonus": 0.00819672131147541,
+  "rerank_model": "gpt-6-luna",
+  "rerank_prompt_hash": "72d28ca899a0",
+  "pool": 30,
+  "corpus_version": "v3.1",
+  "chunk_count": 1847,
+  "corpus_hash": "f3a5734cf43dc93e1712a11b72d00d8eff6baa3b35556c366b8b18e1cf19c7b1",
+  "code_commit": "41ec2da10433dfa633ac0c535e16d66560612fd8"
+ },
+ "metrics": {
+  "n_cases": 128,
+  "hit@3": 0.9375,
+  "hit@5": 0.9453,
+  "hit@8": 0.9688,
+  "hit@10": 0.9688,
+  "mrr@10": 0.8231,
+  "gold_passage_coverage@8": 0.9151,
+  "pool_recall@30": 0.9766,
+  "pool_recall@50": 0.9844,
+  "hit@8_ci95": [
+   0.9375,
+   0.9922
+  ],
+  "hit@8_diff_vs_R0": 0.4297,
+  "hit@8_diff_ci95": [
+   0.3438,
+   0.5234
+  ],
+  "paired_hit@8_better_worse": [
+   56,
+   1
+  ],
+  "paired_rank_better_worse_same": [
+   95,
+   2,
+   31
+  ],
+  "by_family_hit@8": {
+   "adversarial": {
+    "n": 13,
+    "hit@8": 1.0
+   },
+   "ambiguity_insufficient_causal": {
+    "n": 2,
+    "hit@8": 1.0
+   },
+   "cross_source_synthesis": {
+    "n": 34,
+    "hit@8": 0.941
+   },
+   "factual_lookup": {
+    "n": 50,
+    "hit@8": 1.0
+   },
+   "numerical_comparison": {
+    "n": 10,
+    "hit@8": 0.9
+   },
+   "revision_conflict": {
+    "n": 19,
+    "hit@8": 0.947
+   }
+  },
+  "by_hint_hit@8": {
+   "has_hint": {
+    "n": 96,
+    "hit@8": 0.969
+   },
+   "no_hint": {
+    "n": 32,
+    "hit@8": 0.969
+   }
+  },
+  "added_latency_ms_p50": 3511.7,
+  "added_latency_ms_p95": 7490.38,
+  "retrieval_fuse_ms_p50": 0.08,
+  "cost_usd_per_query_mean": 0.001064,
+  "cost_usd_total": 0.13621,
+  "rerank_failures": 0,
+  "rerank_latency_s_p50_p95": [
+   3.51,
+   7.49
+  ],
+  "r1_component": "R1a",
+  "hit@8_diff_vs_R2": 0.2266,
+  "hit@8_diff_vs_R2_ci95": [
+   0.1562,
+   0.3047
+  ],
+  "paired_hit@8_vs_R2_better_worse": [
+   30,
+   1
+  ]
+ }
+}

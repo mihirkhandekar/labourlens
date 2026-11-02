@@ -1,0 +1,93 @@
+{
+ "config": {
+  "split": "dev",
+  "chunks": "merge200",
+  "embedding": "text-embedding-3-large",
+  "depth": 50,
+  "rrf_c": 60,
+  "gold_file_sha256": "6169a9deca78cb5908c584bdf7d17b1c8dd9a15ff7840b3752f3bbb4febb2f9b",
+  "soft_bonus": null,
+  "rerank_model": "gpt-6-luna",
+  "rerank_prompt_hash": "72d28ca899a0",
+  "pool": 30,
+  "corpus_version": "v3.1",
+  "chunk_count": 1847,
+  "corpus_hash": "f3a5734cf43dc93e1712a11b72d00d8eff6baa3b35556c366b8b18e1cf19c7b1",
+  "code_commit": "41ec2da10433dfa633ac0c535e16d66560612fd8"
+ },
+ "metrics": {
+  "n_cases": 128,
+  "hit@3": 0.7344,
+  "hit@5": 0.7422,
+  "hit@8": 0.7422,
+  "hit@10": 0.7422,
+  "mrr@10": 0.637,
+  "gold_passage_coverage@8": 0.6826,
+  "pool_recall@30": 0.7422,
+  "pool_recall@50": 0.8125,
+  "hit@8_ci95": [
+   0.6641,
+   0.8127
+  ],
+  "hit@8_diff_vs_R0": 0.2031,
+  "hit@8_diff_ci95": [
+   0.1404,
+   0.2734
+  ],
+  "paired_hit@8_better_worse": [
+   26,
+   0
+  ],
+  "paired_rank_better_worse_same": [
+   67,
+   3,
+   58
+  ],
+  "by_family_hit@8": {
+   "adversarial": {
+    "n": 13,
+    "hit@8": 0.615
+   },
+   "ambiguity_insufficient_causal": {
+    "n": 2,
+    "hit@8": 0.5
+   },
+   "cross_source_synthesis": {
+    "n": 34,
+    "hit@8": 0.618
+   },
+   "factual_lookup": {
+    "n": 50,
+    "hit@8": 0.88
+   },
+   "numerical_comparison": {
+    "n": 10,
+    "hit@8": 0.9
+   },
+   "revision_conflict": {
+    "n": 19,
+    "hit@8": 0.632
+   }
+  },
+  "by_hint_hit@8": {
+   "has_hint": {
+    "n": 96,
+    "hit@8": 0.667
+   },
+   "no_hint": {
+    "n": 32,
+    "hit@8": 0.969
+   }
+  },
+  "added_latency_ms_p50": 3666.11,
+  "added_latency_ms_p95": 8094.39,
+  "retrieval_fuse_ms_p50": 0.08,
+  "cost_usd_per_query_mean": 0.001141,
+  "cost_usd_total": 0.14606,
+  "rerank_failures": 2,
+  "rerank_latency_s_p50_p95": [
+   3.67,
+   8.09
+  ]
+ }
+}

@@ -1,0 +1,86 @@
+{
+ "config": {
+  "split": "dev",
+  "chunks": "merge200",
+  "embedding": "text-embedding-3-large",
+  "depth": 50,
+  "rrf_c": 60,
+  "gold_file_sha256": "6169a9deca78cb5908c584bdf7d17b1c8dd9a15ff7840b3752f3bbb4febb2f9b",
+  "soft_bonus": 0.00819672131147541,
+  "rerank_model": null,
+  "rerank_prompt_hash": null,
+  "pool": null,
+  "corpus_version": "v3.1",
+  "chunk_count": 1847,
+  "corpus_hash": "f3a5734cf43dc93e1712a11b72d00d8eff6baa3b35556c366b8b18e1cf19c7b1",
+  "code_commit": "41ec2da10433dfa633ac0c535e16d66560612fd8"
+ },
+ "metrics": {
+  "n_cases": 128,
+  "hit@3": 0.5547,
+  "hit@5": 0.6797,
+  "hit@8": 0.8047,
+  "hit@10": 0.8125,
+  "mrr@10": 0.4471,
+  "gold_passage_coverage@8": 0.7034,
+  "pool_recall@30": 0.875,
+  "pool_recall@50": 0.8828,
+  "hit@8_ci95": [
+   0.7344,
+   0.875
+  ],
+  "hit@8_diff_vs_R0": 0.2656,
+  "hit@8_diff_ci95": [
+   0.1953,
+   0.3438
+  ],
+  "paired_hit@8_better_worse": [
+   34,
+   0
+  ],
+  "paired_rank_better_worse_same": [
+   52,
+   1,
+   75
+  ],
+  "by_family_hit@8": {
+   "adversarial": {
+    "n": 13,
+    "hit@8": 0.692
+   },
+   "ambiguity_insufficient_causal": {
+    "n": 2,
+    "hit@8": 0.5
+   },
+   "cross_source_synthesis": {
+    "n": 34,
+    "hit@8": 0.647
+   },
+   "factual_lookup": {
+    "n": 50,
+    "hit@8": 0.98
+   },
+   "numerical_comparison": {
+    "n": 10,
+    "hit@8": 0.9
+   },
+   "revision_conflict": {
+    "n": 19,
+    "hit@8": 0.684
+   }
+  },
+  "by_hint_hit@8": {
+   "has_hint": {
+    "n": 96,
+    "hit@8": 0.771
+   },
+   "no_hint": {
+    "n": 32,
+    "hit@8": 0.906
+   }
+  },
+  "added_latency_ms_p50": 0.25,
+  "added_latency_ms_p95": 1.03,
+  "retrieval_fuse_ms_p50": 0.347
+ }
+}

@@ -48,7 +48,8 @@ def main(argv: list[str] | None = None) -> int:
     dx.add_argument("--split", default="dev", choices=["dev", "heldout"])
     r2x = sub.add_parser("retrieval-exp2", help="retrieval improvements R0-R3 (query metadata, LLM rerank); dev only; calls the OpenAI API for rerank")
     r2x.add_argument("--split", default="dev", choices=["dev"])
-    r2x.add_argument("--no-rerank", action="store_true", help="run only the API-free configurations")
+    r2x.add_argument("--no-rerank", action="store_true", help="skip reranking; missing dense/query embeddings still require the API")
+    r2x.add_argument("--tag", help="new output/cache namespace, e.g. V31; preserves frozen R-series")
     ax = sub.add_parser("answer-exp", help="run answer-generation model comparison (calls the OpenAI API)")
     ax.add_argument("--split", default="dev", choices=["dev", "heldout"])
     ax.add_argument("--exp", default="G1", choices=["G1", "G0", "G3", "G4"])
@@ -63,10 +64,22 @@ def main(argv: list[str] | None = None) -> int:
     ag.add_argument("--planner-prompt", default="planner_v1")
     ag.add_argument("--retrieval", choices=["hybrid", "r3", "r3w"], default="hybrid")
     ag.add_argument("--tool-set", choices=["base", "v2"], default="base", help="v2 (D-046) needs --planner-prompt planner_v3 --answer-prompt answer_v5")
+    sx = sub.add_parser("served-exp", help="evaluate the served web chain (calls the OpenAI API)")
+    sx.add_argument("--split", choices=["dev", "heldout"], default="dev")
+    sx.add_argument("--gold", type=Path)
+    sx.add_argument("--pairs", nargs="+", choices=["gpt-6-luna", "gpt-5.6-luna", "gpt-4.1-mini"])
+    sx.add_argument("--tag", required=True, help="new experiment label; existing ids are never overwritten")
+    sx.add_argument("--retrieval", choices=["hybrid", "r3", "r3w"], default="r3")
+    sx.add_argument("--route", choices=["mcp", "direct"], default="mcp")
+    sx.add_argument("--web-steps", choices=["on", "off"], default="on")
+    sx.add_argument("--limit", type=int)
+    sx.add_argument("--case-ids", nargs="+", help="restrict to these case ids before applying --limit")
     th = sub.add_parser("threat-test", help="run the adversarial threat suite through the agent (calls the OpenAI API)")
     th.add_argument("--models", nargs="*")
     th.add_argument("--ablation", choices=["naive"], help="run with every defence off, as a baseline")
     th.add_argument("--rescore", action="store_true", help="recompute verdicts from saved raw runs, no API calls")
+    th.add_argument("--scorer", choices=["v1", "v2"], default="v1", help="v1 registered checks (default); v2 advance-declared T-I06 rule")
+    th.add_argument("--source-experiment", help="saved raw experiment to rescore into a new id; . selects original pre-guard runs")
     th.add_argument("--only", help="a category or case id")
     th.add_argument("--experiment", help="new post-fix experiment id; required for generation (frozen results cannot be overwritten)")
     tc = sub.add_parser("triage-check", help="measure the D-051 scope-triage prompt on all gold, v2, threat and off-topic questions (calls the OpenAI API with --yes)")
@@ -203,7 +216,7 @@ def main(argv: list[str] | None = None) -> int:
     if args.cmd == "retrieval-exp2":
         from labourlens.retrieval import experiments_rerank
 
-        experiments_rerank.run(args.split, not args.no_rerank)
+        experiments_rerank.run(args.split, not args.no_rerank, tag=args.tag)
         return 0
     if args.cmd == "answer-exp":
         from labourlens.answer import experiments as ae
@@ -214,6 +227,12 @@ def main(argv: list[str] | None = None) -> int:
         from labourlens.agent import experiments as agx
 
         agx.run(args.split, args.pairs, args.answer_prompt, args.tag, args.retrieval, args.planner_prompt, gold_path=args.gold, force=args.force, tool_set=args.tool_set)
+        return 0
+    if args.cmd == "served-exp":
+        from labourlens.evaluation import served_exp
+
+        served_exp.run(args.split, args.gold, args.pairs, args.tag, args.retrieval, args.route,
+                       args.web_steps, args.limit, args.case_ids)
         return 0
     if args.cmd == "triage-check":
         from labourlens.evaluation import triage_check
@@ -226,7 +245,12 @@ def main(argv: list[str] | None = None) -> int:
     if args.cmd == "threat-test":
         from labourlens.security import threat_suite
 
-        threat_suite.rescore(args.experiment) if args.rescore else threat_suite.run(args.models, args.only, args.ablation, args.experiment)
+        if args.rescore:
+            threat_suite.rescore(args.experiment, args.source_experiment, args.scorer)
+        else:
+            if args.source_experiment:
+                p.error("--source-experiment requires --rescore")
+            threat_suite.run(args.models, args.only, args.ablation, args.experiment, args.scorer)
         return 0
     if args.cmd == "mcp-agent-demo":
         from labourlens.mcp import agent_demo
