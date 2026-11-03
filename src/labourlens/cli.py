@@ -106,6 +106,17 @@ def main(argv: list[str] | None = None) -> int:
     da.add_argument("--triage", type=Path, required=True, help="triage experiment directory")
     da.add_argument("--support", type=Path, required=True, help="support experiment directory")
     da.add_argument("--out", type=Path, default=Path("experiments/eval/decisions-api-results.json"))
+    tv2 = sub.add_parser("decisions-triage-tune", help="dev-only Decisions prompt iteration, dry run unless --yes")
+    tv2.add_argument("--iteration", type=int, choices=range(1, 6), required=True)
+    tv2.add_argument("--prompt", type=Path, required=True)
+    tv2.add_argument("--yes", action="store_true")
+    sub.add_parser("decisions-triage-freeze", help="freeze the dev-selected prompt and threshold, offline; never overwrites")
+    fv2 = sub.add_parser("decisions-triage-fresh", help="paired fresh routing trial, dry run unless --yes")
+    fv2.add_argument("--experiment", required=True)
+    fv2.add_argument("--yes", action="store_true")
+    av2 = sub.add_parser("decisions-triage-v2-analyse", help="offline immutable v2 paired analysis")
+    av2.add_argument("--experiment", type=Path, required=True)
+    av2.add_argument("--out", type=Path, default=Path("experiments/eval/decisions-api-v2-results.json"))
     cc = sub.add_parser("context-check", help="measure the D-054 conversation-context rewrite: free pass-through audit, then 30 conversation cases (calls the OpenAI API with --yes)")
     cc.add_argument("--experiment", required=True, help="new experiment id; written to experiments/context/<id>/ and never overwritten")
     cc.add_argument("--yes", action="store_true", help="actually spend: without it only the plan and the free pass-through audit are printed")
@@ -298,6 +309,22 @@ def main(argv: list[str] | None = None) -> int:
 
         analyse(args.triage, args.support, args.out)
         return 0
+    if args.cmd in ("decisions-triage-tune", "decisions-triage-freeze", "decisions-triage-fresh", "decisions-triage-v2-analyse"):
+        from labourlens.evaluation import decisions_v2
+
+        try:
+            if args.cmd == "decisions-triage-tune":
+                return decisions_v2.tune(args.iteration, args.prompt, args.yes)
+            if args.cmd == "decisions-triage-freeze":
+                return decisions_v2.freeze()
+            if args.cmd == "decisions-triage-fresh":
+                return decisions_v2.score(args.experiment, args.yes)
+            from labourlens.evaluation.decisions_v2_analysis import analyse
+            analyse(args.experiment, args.out)
+            return 0
+        except (ValueError, FileExistsError, FileNotFoundError) as exc:
+            print(f"Decisions v2: {exc}", file=sys.stderr)
+            return 2
     if args.cmd == "context-check":
         from labourlens.evaluation import context_check
 
