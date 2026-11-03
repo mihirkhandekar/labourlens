@@ -686,6 +686,8 @@ def build_graph(shared: Shared, tools: Tools, cfg: AgentConfig, emit=None):
             conflicts = crosscheck.annotate(selected_view(s) if cfg.tool_set == "annual" else tools, original) if enabled else []
             evidence = selected_items(s)
             checked = crosscheck.enforce(original, evidence, conflicts)
+            if cfg.tool_set == "annual":
+                checked = validate.annual_missing_quarter_abstention(checked, s.get("trace") or [])
             rep = validate.check(checked, evidence)
             if cfg.tool_set == "annual":
                 rep.errors += validate.missing_period_errors(checked, evidence)

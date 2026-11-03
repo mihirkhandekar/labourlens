@@ -13,6 +13,37 @@ MAX_QUOTE_WORDS = 40
 _NUM = re.compile(r"\d{1,3}(?:,\d{3})+(?:\.\d+)?|\d+\.\d+|\d+")
 _YEAR = re.compile(r"^(?:19|20)\d\d$")
 
+
+def annual_missing_quarter_abstention(answer: Answer, trace: list[dict]) -> Answer:
+    """Make a served annual abstention explain a tool's specific incomplete-year refusal.
+
+    Only typed not_found annual_average errors with the missing-quarters marker
+    qualify. Ignore a failure superseded by a successful call with the same filters.
+    Never rewrite an answered/refused/clarify reply or infer unpublished quarters.
+    """
+    if answer.status != "abstained":
+        return answer
+    failures: dict[str, set[str]] = {}
+    for event in trace:
+        detail = event.get("detail") or {}
+        if event.get("node") != "execute_tool" or detail.get("tool") != "annual_average":
+            continue
+        key = repr(sorted((detail.get("args") or {}).items()))
+        if event.get("event") == "ok":
+            failures.pop(key, None)
+        elif event.get("event") == "error" and detail.get("error_kind") == "not_found":
+            message = str(detail.get("message") or "")
+            if "missing quarters:" in message:
+                missing = re.findall(r"\b20\d\d-Q[1-4]\b", message.split("missing quarters:", 1)[1])
+                if missing:
+                    failures[key] = set(missing)
+    quarters = sorted(set().union(*failures.values())) if failures else []
+    if not quarters:
+        return answer
+    reason = (f"Missing quarterly rates: {', '.join(quarters)}. "
+              "No annual-average figure can be computed until those quarterly rates are published; a partial-year average is not used.")
+    return answer.model_copy(update={"reason": reason})
+
 # Served annual rights boundary (shared by the validator and the web projection): no RIGHTS_RUN_WORDS consecutive normalised words
 # of a report passage may appear in the model's own prose. Tokens are letters and digits only, NFKC case-folded.
 RIGHTS_RUN_WORDS = 7
