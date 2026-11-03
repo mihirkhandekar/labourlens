@@ -32,23 +32,25 @@
     ADMIT [label="Authentication + budget / rate limits\nRequest bounds", fillcolor="#e6f3eb"];
     WEBONLY [label="SERVED ONLY\nSmall-talk fast path (no model)\nContextualise when needed: MODEL call\nScope triage: MODEL call\nRewrite / triage errors pass to agent", fillcolor="#eee8fa"];
     INPUT [label="Input guard\nLength checks + injection flags", fillcolor="#e6f3eb"];
-    PLAN [label="PLANNER model call\nQuestion + catalogue, never passage text\nChoose from typed read-only tools (three evaluated, four served)", fillcolor="#eee8fa"];
+    PLAN [label="PLANNER model call\nQuestion + catalogue, never passage text\nChoose from four typed read-only tools", fillcolor="#eee8fa"];
     SEARCH [label="search_reports\nIn process in live / full evaluation"];
     SERIES [label="get_series\nValidated statistical observations"];
     CALC [label="calculate_change\nDeterministic Decimal arithmetic\non returned observation rows"];
+    ANNUAL [label="annual_average\nDerived mean of four quarterly percent rates\nComplete year and consistent series only"];
     RETR [label="BM25 + dense candidate retrieval\nQuery EMBEDDINGS API call\nPeriod / release filter + fusion\nTop-30 RERANK model call", fillcolor="#eee8fa"];
-    MCP [label="LIVE: get_series via MCP get_statistic\nLocal stdio client / read-only server\nSchema checks, deadlines, size caps, quarantine\nFULL EVAL: direct statistics function"];
+    MCP [label="LIVE: get_series via get_statistic + annual_average\nLocal MCP client / read-only server\nSchema checks, deadlines, size caps, quarantine\nFULL EVAL: direct statistics function, no annual tool"];
     ISOLATE [label="Untrusted-text isolation\nEvidence registry separate from planner state\nReports are data, never instructions", fillcolor="#e6f3eb"];
-    ASSESS [label="Assess evidence + data notes\nAnnotate source conflicts\n2 rounds / 6 tool calls; 10 s per tool\n1 transient retry; failures stay operational"];
+    ASSESS [label="Assess evidence + data notes\nAnnotate source conflicts\n2 rounds / 6 calls / at most 3 per round\n10 s per tool; served search 25 s + one timeout retry\nFailures stay operational"];
     ANSWER [label="ANSWER model call\nStructured claims + passage / row citations\nAnswer / abstain / clarify / refuse", fillcolor="#eee8fa"];
     VALID [label="Deterministic validators\nSchema / quote / citation / status checks\nSource-conflict enforcement; 1 answer repair", fillcolor="#e6f3eb"];
     OUT [label="Output guard: block / redact\nCited answer + evidence + activity timeline", fillcolor="#e6f3eb"];
     AUDIT [label="Redacted audit + local run traces\nTool outcomes, model / prompt versions\nEvidence IDs, usage, latency, cost\nPrivate files, not public report text", shape=cylinder, fillcolor="#e5effa"];
     USER -> ADMIT -> WEBONLY -> INPUT -> PLAN;
-    PLAN -> SEARCH; PLAN -> SERIES; PLAN -> CALC;
-    {rank=same; SEARCH; SERIES; CALC;}
+    PLAN -> SEARCH; PLAN -> SERIES; PLAN -> CALC; PLAN -> ANNUAL;
+    {rank=same; SEARCH; SERIES; CALC; ANNUAL;}
     SEARCH -> RETR -> ISOLATE;
     SERIES -> MCP -> ISOLATE;
+    ANNUAL -> MCP;
     CALC -> ISOLATE [label="calculated result"];
     ISOLATE -> ASSESS -> ANSWER -> VALID -> OUT -> AUDIT;
     ASSESS -> PLAN [label="bounded next round", constraint=false];
