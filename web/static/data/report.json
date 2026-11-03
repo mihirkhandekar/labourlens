@@ -1,6 +1,6 @@
 {
   "schema_version": "report-1.0",
-  "generated_at": "2026-11-03T11:11:49.829424+00:00",
+  "generated_at": "2026-11-03T14:18:30.308410+00:00",
   "summary": {
     "title": "LabourLens research workbench",
     "scope": [
@@ -80933,6 +80933,62 @@
         "date": "3 Nov 2026",
         "alternatives": "considered: retain the old order; put MCP after the agent; keep each evaluation-method slide separate; present more experiment tables",
         "summary": "The owner approved a data-first story: project and scope, system map, data and its quality issues, report processing and retrieval, the statistics MCP path, then the agent and answer checks"
+      },
+      {
+        "id": "D-083",
+        "title": "Served annual-average rate calculation",
+        "status": "OWNER APPROVED",
+        "date": "3 Nov 2026",
+        "alternatives": "",
+        "summary": "DECISION: add annualaverage to the served planner and the read-only MCP statistics server"
+      },
+      {
+        "id": "D-084",
+        "title": "Faithful abstention reasons",
+        "status": "OWNER APPROVED",
+        "date": "3 Nov 2026",
+        "alternatives": "",
+        "summary": "DECISION: an abstention must identify what is missing: observations, report commentary, or a supported computation"
+      },
+      {
+        "id": "D-085",
+        "title": "Bounded resolved conversation context",
+        "status": "OWNER APPROVED",
+        "date": "3 Nov 2026",
+        "alternatives": "were sending full answers and passages, or keeping only question text",
+        "summary": "VERIFIED CODE FINDINGS: the browser sent only question/status/summary and used rewritten wording as the question, losing the original wording and answer period/series metadata"
+      },
+      {
+        "id": "D-086",
+        "title": "Publisher explanations and actionable report-search errors",
+        "status": "OWNER APPROVED / OFFLINE FINDINGS",
+        "date": "3 Nov 2026",
+        "alternatives": "",
+        "summary": "Options: blanket-decline why questions; let the model infer causes from rates; or retrieve and attribute the publisher's stated interpretation"
+      },
+      {
+        "id": "D-087",
+        "title": "Served answer-text rights projection trims spans instead of withholding fields",
+        "status": "OWNER APPROVED",
+        "date": "3 Nov 2026",
+        "alternatives": "",
+        "summary": "Finding: the browser projection withheld a whole summary, reason, caveat or claim when it matched a 13-word window or 80 compact letters of any report passage"
+      },
+      {
+        "id": "D-088",
+        "title": "Served answer evidence budget and 2Q 2026 explanation check",
+        "status": "OWNER APPROVED",
+        "date": "3 Nov 2026",
+        "alternatives": "",
+        "summary": "In annual mode at most 20 report passages enter generation, validation and the returned evidence across all rounds, ranked by search rank, deduplicated by id and text within a release, with at most eight per source in t…"
+      },
+      {
+        "id": "D-089",
+        "title": "Served latency changes",
+        "status": "OWNER APPROVED",
+        "date": "3 Nov 2026",
+        "alternatives": "",
+        "summary": "Live trace: 51.6 s total; triage 2.2 s; getseries 0.07 s; four report searches of 6.4 to 9.8 s (round-2 calls ran one after another); 53k prompt tokens"
       }
     ],
     "milestones": [],
@@ -80950,7 +81006,7 @@
     "The population basis of the dataset employment series is unverified."
   ],
   "provenance": {
-    "commit": "08bfeafd296618847cfee13d319a6df4cec7a675",
+    "commit": "ec174c65b21bc8b5eedc1a6d6ec3899668b5063b",
     "artifacts": [
       {
         "path": "data/export/sources.json",
@@ -81960,7 +82016,7 @@
       {
         "path": "docs/mcp-demo-transcript.md",
         "status": "available",
-        "sha256": "e882e00df5201834f80860c084108f2bf2157a93a7d9c0aef10187fc95e08b45"
+        "sha256": "ec69901ce1709e26b64d3b5f6eb047d397494f9b80591aaff7fc55b5669132fd"
       },
       {
         "path": "experiments/corpus-snapshots/v1.json",
@@ -82188,12 +82244,12 @@
       {
         "path": "docs/decisions.md",
         "status": "available",
-        "sha256": "943c90d75c99f4fe71e74b6843d4ce06b5bf93ab7eb6ff10e150cacf731fba05"
+        "sha256": "0e711fb08ae0bdb9d4630621c4754eb7daac904893b1ca452c86c482f4fb49d6"
       },
       {
         "path": "docs/progress.md",
         "status": "available",
-        "sha256": "b49572a0bafc96e6b8521ef50e16b7208be5e2e31458ce949776eac9592f03d7"
+        "sha256": "0478f18fd00e89f25efc9d40e21f6984de50acc0b06ade56acbd35bba6afeff1"
       }
     ],
     "policy": "Committed artifacts only; numeric fields only."
@@ -82206,8 +82262,9 @@
       "approach": [
         "Collected official statistics and reports. Each statistical row records its measure, unit, period, population, release and source. Reports become searchable passages; uncertain tables are flagged rather than guessed.",
         "Compared exact-word keyword search with meaning search based on text embeddings, then combined their results. Period and release filters remove mismatched evidence; a second ranking pass orders what remains.",
-        "Built one bounded agent with three read-only tools: search reports, look up statistics through the Model Context Protocol (MCP), and calculate changes from returned rows in code.",
+        "Built one bounded agent, historically evaluated with three read-only tools. The current served set has four: report search, statistics lookup, change calculation and rates-only annual_average. The last is a simple mean of four non-null quarterly rates from one series, not an official annual rate; it has not been re-evaluated.",
         "Answers have a fixed structure, citations and short quotations. Code checks citation labels, quotations, reported numbers and answer status. These checks cannot prove that a quotation supports a claim.",
+        "The current served prompts are planner_v6, answer_v8, triage_v4 and contextualise_v3. Resolved questions and bounded series/period context support follow-ups as untrusted data. Reasons questions seek attributed MOM commentary, not inferred causation; abstention distinguishes missing observations from missing method or commentary. These changes are unevaluated.",
         "Tested retrieval, a fixed workflow against the agent, model candidates, report-table calculation, direct and MCP routes, and synthetic attacks. Separate development, original and fresh question sets show what improved and what did not."
       ],
       "sections": [
@@ -82218,22 +82275,15 @@
           "paragraphs": [
             {
               "text": "I compared BM25 keyword search, embedding-based meaning search and a hybrid on the same development questions. Filtering by period and release, then reranking the candidates, raised the share of relevant passages in the first eight results from 54% to 97%. This measures passage retrieval, not answer accuracy.",
-              "refs": [
-                "retrieval"
-              ]
+              "refs": []
             },
             {
               "text": "Filtering and reranking also found the known passage more often on small original and fresh test subsets. Full-system comparisons did not show a reliable answer gain on either set. Development shaped the design, the original test shares evidence with it, and fresh questions have since been reused. Treat these as diagnostics, not proof of general improvement.",
-              "refs": [
-                "final",
-                "heldout_retrieval"
-              ]
+              "refs": []
             },
             {
               "text": "I also tested arithmetic on figures extracted from report text. The extension failed pre-set development checks and was not adopted. The current calculator uses validated statistical rows; report tables still need reliable cell, unit and row-to-column extraction before they can be calculation inputs.",
-              "refs": [
-                "tools"
-              ]
+              "refs": []
             }
           ],
           "tables": [
@@ -82263,9 +82313,7 @@
           "paragraphs": [
             {
               "text": "The data pipeline stores versioned snapshots and provenance. An operator still has to acquire and rebuild the data; scheduled refresh, automatic drift alerts and rollback have not been implemented. The expanded source corpus and newer served planner were not re-evaluated, so the older scores do not describe those changes.",
-              "refs": [
-                "system"
-              ]
+              "refs": []
             }
           ],
           "tables": [],
@@ -82293,10 +82341,7 @@
           "paragraphs": [
             {
               "text": "The workbench shows source links, cited passages, answer status and tool activity. Feedback is stored with the run, but it does not yet change the system. A citation validator confirms that labels and quotations came from supplied evidence; it cannot determine whether the evidence entails the claim.",
-              "refs": [
-                "system",
-                "audit"
-              ]
+              "refs": []
             }
           ],
           "tables": [],
@@ -82324,9 +82369,7 @@
           "paragraphs": [
             {
               "text": "The agent has typed, read-only tools, bounded calls and validated MCP replies. Retrieved passages are evidence, not instructions. In one three-repeat synthetic attack comparison, the guarded configuration passed 50 of 54 attack cases, compared with 42 of 54 for the naive configuration. The answer prompt and guards changed together, so this does not identify which defence helped. Both configurations also failed three of eight harmless look-alike cases. These tests do not establish resistance to adaptive attacks or a specific defence layer's effect.",
-              "refs": [
-                "threat_v2"
-              ]
+              "refs": []
             }
           ],
           "tables": [],
@@ -82349,49 +82392,42 @@
         },
         {
           "id": "cost",
-          "title": "Latency and cost",
-          "summary": "Keep the smallest system that meets the evidence and safety requirements.",
+          "title": "How I would improve it",
+          "summary": "Proposed changes, why they matter and the checks required before adoption.",
           "paragraphs": [
             {
-              "text": "The live agent sends only statistical lookup through MCP. Direct and MCP routes use the same local observations and query code, so the comparison tests transport rather than access to a different source. Moving report search and calculation into an all-tools MCP variant was slower and showed no answer-quality gain in a one-run, 65-question sample; it was not adopted. Removing statistics access also removed the calculator's input, so that was not a fair substitute for the full tool set.",
-              "refs": [
-                "mcp",
-                "nostats"
-              ]
+              "text": "The live agent sends statistics lookup and annual averaging through MCP. The default server has ten read-only tools, two used by the agent. Direct and MCP routes use the same local observations and deterministic operations, not different sources. The historical three-tool all-MCP variant was slower with no demonstrated quality gain in a one-run, 65-question sample and was not adopted. Removing statistics also removed calculator inputs. Those measurements do not evaluate annual averaging or the current served prompts.",
+              "refs": []
             },
             {
               "text": "The public prototype currently runs on one DigitalOcean Droplet behind Caddy, with Docker Compose and a GitHub Actions deployment. It uses one application worker. Budget and audit state are local files, and request limits are in memory. Government identity, provider-side spend caps, load behaviour and rollback are not verified.",
-              "refs": [
-                "system"
-              ]
+              "refs": []
+            },
+            {
+              "text": "Evaluated median answer time was about 14 seconds, with chained model calls. A served native-tool, reasoning-off smoke took 29.8, 7.8 and 9.1 seconds versus 53.1, 8.6 and 12.8 for structured planning: three questions, once each, accuracy unmeasured. Streaming is shipped to show progress, not to shorten full-answer time.",
+              "refs": []
+            },
+            {
+              "text": "Neither Decisions API trial was adopted. In v1, the primary router matched 397/409 routes per repeat, diverted one legitimate question and recalled only 19/30 non-in-scope cases; the verifier falsely supported 44/58 partially supported claims. Dev-tuned v2 matched 414/450 repeat rows, diverted two distinct in-scope questions and returned provider refusals on all 30 serious-harm presentations. Its case-median p50/p95 was 0.362/0.426 seconds versus chat's 1.392/1.847, but speed did not repair failed safety, quality and operational gates. These are AI-labelled screens, not human accuracy or an end-to-end speedup.",
+              "refs": []
             }
           ],
           "tables": [],
           "proposals": [
             {
-              "title": "Deploy and scale in controlled steps",
-              "gap": "The single-worker prototype has local state and has not been load-tested.",
-              "measure": "Keep the current deployment shape until a representative load test shows a bottleneck. Separate scheduled ingestion and index builds from question serving. Publish versioned data and indexes atomically, with a tested rollback. Before adding app replicas, move budgets, rate limits and audit state to shared services and make the approved corpus read-only to query workers. Measure latency, failures and cost by question type; test caches and smaller routing or reranking models against the same quality checks.",
-              "threshold": "Set service and cost limits from an approved workload baseline. Any faster or cheaper configuration must preserve citations, numerical results, abstention and safety checks.",
+              "title": "Reduce waiting without lowering answer quality",
+              "gap": "Chained calls dominate the evaluated median; the three-question smoke does not measure accuracy.",
+              "measure": "Compare each change with the served baseline on the same 237 development questions: parallel triage with first retrieval/planning; cache query embeddings and repeated series lookups; test prompt and permission-scoped response caching; shorten contextualisation or skip it without history; use a smaller triage model; and speculate independent read-only tools within three calls per round and the existing total budget. Only validated in-scope work may supply an answer. Bound wasted work, cancel or discard unused results, and key caches by permissions, corpus, prompts and model.",
+              "threshold": "Before adoption, report paired p50/p95 full-answer latency, accuracy, false answers, citations, numerical correctness, abstention, safety and cost on development. Require both latency percentiles to improve without lower accuracy or weaker guardrails; confirm on fresh blind questions before claiming general improvement.",
               "status": "proposal"
-            }
-          ]
-        },
-        {
-          "id": "priorities",
-          "title": "Priorities and measurement",
-          "summary": "Fix the largest evidence gap, then improve the strength of the evaluation.",
-          "paragraphs": [
+            },
             {
-              "text": "The next work should address report-table arithmetic first, then independent review. Each change needs a pre-written test, an explicit acceptance rule and a fresh evaluation that was not used to tune it. Do not treat a better retrieval score as proof of better policy answers.",
-              "refs": [
-                "tools",
-                "final"
-              ]
-            }
-          ],
-          "tables": [],
-          "proposals": [
+              "title": "Third Decisions attempt: preregistered two-way scope gate",
+              "gap": "The four-way design failed; a two-way scope gate has not been tested.",
+              "measure": "Registration, 3 November 2026; untested and no paid execution authorised. Compare frozen chat with Decisions in_scope/out_of_scope only, retaining existing harm and small-talk handling before the scope gate and agent fallback. Freeze prompts, the 0.70 confidence threshold, model and 150 fresh independently human-labelled cases before calls: 90 in-scope, 30 out-of-scope, 15 harm and 15 small-talk. Run each case three times with interleaved arms; low confidence, refusal or error goes to the existing path. Do not tune on this set. Report case-clustered accuracy and latency intervals, harmful/harmless strata, failures, cost and downstream safety.",
+              "threshold": "Each repeat: zero legitimate in-scope diversions, at least 148/150 correct final routes and 29/30 out-of-scope recalls; at most 1% operational failures over 450 scheduled classifications per arm, with gate bypasses and HTTP failures reported separately. Require both case-median p50 and p95 at most 80% of chat, and no downstream safety regression. All gates must pass; preserve failures, do not substitute a diagnostic threshold, and require owner approval before execution or adoption.",
+              "status": "proposal"
+            },
             {
               "title": "First: report-table arithmetic",
               "gap": "The current calculator cannot safely use figures that appear only in report tables.",
@@ -82405,6 +82441,83 @@
               "measure": "Have three analysts label a stratified blind set before AI suggestions, then adjudicate. Never tune on it. Report semantic support, numerical correctness and run-to-run variation separately.",
               "threshold": "Target Fleiss kappa of at least 0.70 and an accuracy interval no wider than 0.10.",
               "status": "proposal"
+            },
+            {
+              "title": "Evaluate annual averaging and new tools",
+              "gap": "The served annual_average tool and changed prompts have not been re-evaluated; report-only figures still lack safe calculation inputs.",
+              "measure": "Evaluate all four served tools end to end. Check four-quarter completeness, nulls, consistent series/units and period boundaries; distinguish the simple mean from an official annual rate. Add other tools only for a demonstrated evidence gap, with typed read-only contracts and provenance.",
+              "threshold": "Pass deterministic boundary cases and compare answer accuracy, false answers, citations, latency and cost with the three-tool baseline before claiming a gain.",
+              "status": "proposal"
+            },
+            {
+              "title": "Blind re-review and per-layer ablations",
+              "gap": "AI-drafted labels and bundled prompt/guard changes obscure correctness and individual defence effects.",
+              "measure": "Have independent analysts re-review a blind stratified set before AI suggestions. Separately remove or add each retrieval filter, reranker, prompt guard and output check while holding cases, model and budgets fixed; include harmless look-alikes.",
+              "threshold": "Report agreement, semantic support, numerical correctness, attack misses and false alarms per layer; preserve negative results and confirm improvements on new blind cases.",
+              "status": "proposal"
+            },
+            {
+              "title": "Build gold cases for 2020 to 2023",
+              "gap": "The served answer window includes 2020 to 2023, but evaluated questions cover 2024 to 2026 only.",
+              "measure": "Write and independently review fresh 2020 to 2023 questions with expected evidence, definitions, revisions and abstention labels before running the system. Keep development and blind cases separate.",
+              "threshold": "Report retrieval and answer accuracy by year and question family, with uncertainty and failure analysis; do not extrapolate the old scores to the widened window.",
+              "status": "proposal"
+            }
+          ]
+        },
+        {
+          "id": "priorities",
+          "title": "Making it ready for government use across departments",
+          "summary": "A proposed operating model, not a deployment or compliance claim.",
+          "paragraphs": [
+            {
+              "text": "Built today: a DigitalOcean Droplet behind Caddy, access-code gating, a rights scan, synthetic threat-suite checks and audit IDs. These provide prototype evidence, not government SSO, production assurance or legal approval. The following design requires departmental security, legal and operational review.",
+              "refs": []
+            }
+          ],
+          "tables": [],
+          "proposals": [
+            {
+              "title": "Production architecture, not deployed",
+              "gap": "The single-worker prototype cannot establish government identity, shared-state reliability or production scale.",
+              "measure": "Use edge/WAF and SSO before a load balancer and stateless API replicas. A bounded queue feeds research workers; an SSE event store supports progress and reconnects. Separate scheduled ingestion and index builds, publish immutable object storage snapshots, and mount approved search indexes and DuckDB snapshots read-only. Isolate MCP with narrow permissions. Use shared budgets, rate limits and audit state, a secrets manager, and an approved LLM gateway enforcing endpoints, spend and retention. Apply source permissions before retrieval. Add observability, CI quality/security/rights gates, versioned rollback and encrypted backups with restore drills.",
+              "threshold": "Approve identity, rights and model processing first. Demonstrate load, queue exhaustion, reconnect, timeout, rollback and restore behaviour before replicas serve users.",
+              "status": "proposal"
+            },
+            {
+              "title": "Identity, data protection and security",
+              "gap": "Shared codes and public-source tests do not establish per-user authorisation or sensitive-data readiness.",
+              "measure": "Use SSO and per-user RBAC with department and source classifications applied before search, statistics tools and caches. Review residency and provider data use, retention and PDPA obligations with authorised legal/privacy teams. Manage secrets centrally; add WAF and shared rate limits, tamper-evident audit retention, injection controls and allow-listed egress. Review dependencies and images, generate a supply-chain inventory and commission penetration testing.",
+              "threshold": "Demonstrate cross-user access denial, no restricted evidence in caches or prompts, audit integrity, secret rotation and blocked egress. Close assessed critical findings before restricted data is admitted.",
+              "status": "proposal"
+            },
+            {
+              "title": "Governance and human accountability",
+              "gap": "Model outputs are fallible and the current evaluation is not independent ground truth.",
+              "measure": "Use the Singapore Model AI Governance Framework as a review reference, not a certification. Record a risk and impact assessment, accountable owners and permitted uses. Require human-in-the-loop review for consequential policy decisions. Maintain a model/system card, change control, CI evaluation gates and drift monitoring for corpus, prompts, tools and model changes.",
+              "threshold": "Department owners approve risk controls and acceptance criteria; reviewers can inspect evidence, override outputs and report incidents. No claim of framework alignment or compliance is complete without an authorised assessment.",
+              "status": "proposal"
+            },
+            {
+              "title": "Department boundaries and shared evidence services",
+              "gap": "A shared service can leak evidence or silently mix incompatible departmental definitions.",
+              "measure": "Isolate tenants, department corpora, roles, caches and audit access. Share MCP services only through authenticated, authorised read-only contracts. Define ingestion specifications for provenance, units, revisions, classifications and validation. Keep a licence register and source owner for each acquisition; promote approved snapshots atomically.",
+              "threshold": "Test cross-tenant isolation in search, tools, caches and logs; verify source permissions and licence restrictions before onboarding each department.",
+              "status": "proposal"
+            },
+            {
+              "title": "Reliability and sustainable operations",
+              "gap": "One worker and local state have no verified availability or disaster-recovery baseline.",
+              "measure": "Agree SLOs from measured workloads, assign on-call ownership and incident procedures, enforce provider and tenant cost caps, and monitor quality, latency, failures and spend. Test encrypted backups, disaster recovery, failover, queue limits, cancellation and rollback without replaying uncertain work.",
+              "threshold": "Approve recovery objectives and service limits; demonstrate restore and failover drills, budget exhaustion and alert delivery before expanding access.",
+              "status": "proposal"
+            },
+            {
+              "title": "Roll out by evidence, not dates",
+              "gap": "A broad launch would extend unverified operational and data assumptions.",
+              "measure": "Start with a public-data analyst pilot and human review. Move to hardened beta only after identity, security, evaluation and recovery gates pass. Roll out department by department after data-owner approval, isolation tests, training and support readiness.",
+              "threshold": "Record acceptance evidence and accountable sign-off at each stage; retain rollback and stop criteria. No fixed timeline, production-readiness or compliance claim is implied.",
+              "status": "proposal"
             }
           ]
         }
@@ -82417,73 +82530,32 @@
       ],
       "components": [
         {
-          "component": "Identity and permissions",
-          "current": "The demo uses shared access codes and public sources.",
-          "replacement": "Government identity, source roles and permission checks before retrieval."
+          "component": "Access and API",
+          "current": "Shared demo codes; Caddy and one application worker.",
+          "replacement": "Proposed: edge/WAF, SSO, load balancer and stateless API replicas; source roles checked before retrieval."
         },
         {
-          "component": "Model processing",
-          "current": "External model route; residency and provider terms are unverified.",
-          "replacement": "Approved private endpoints, processing terms, retention and audit controls."
+          "component": "Research execution",
+          "current": "Request-scoped agent and streamed progress; no durable queue.",
+          "replacement": "Proposed: bounded queue, research workers and SSE event store; shared budget, rate-limit and audit state."
         },
         {
-          "component": "Data updates",
-          "current": "Versioned snapshots exist; scheduled refresh and automatic rollback do not.",
-          "replacement": "Scheduled acquisition, validation gates and versioned promotion with a tested rollback."
+          "component": "Evidence and MCP",
+          "current": "Local snapshots, search indexes, DuckDB and read-only MCP.",
+          "replacement": "Proposed: separate ingestion; immutable object storage; versioned read-only search and DuckDB snapshots; isolated MCP service."
         },
         {
-          "component": "Scale and operations",
-          "current": "One application worker; local budget and audit files; in-memory request limits.",
-          "replacement": "Measure first. Before multiple app replicas, move shared state to managed services and separate ingestion from serving."
+          "component": "Secrets and model processing",
+          "current": "External model route; residency and provider terms unverified.",
+          "replacement": "Proposed: secrets manager and approved LLM gateway enforcing endpoints, spend, retention and audit controls."
+        },
+        {
+          "component": "Release and recovery",
+          "current": "GitHub Actions deployment; production load, rollback and restore unverified.",
+          "replacement": "Proposed: observability, CI quality/security/rights gates, atomic promotion, rollback, encrypted backups and restore drills."
         }
       ],
-      "references": [
-        {
-          "id": "retrieval",
-          "label": "Current-corpus retrieval",
-          "path": "docs/experiments/retrieval-v31-rerun.md"
-        },
-        {
-          "id": "final",
-          "label": "Final evaluation",
-          "path": "docs/evaluation-report.md"
-        },
-        {
-          "id": "tools",
-          "label": "Rejected report-calculation extension",
-          "path": "docs/experiments/m7-tool-fix.md"
-        },
-        {
-          "id": "system",
-          "label": "System card and deployed limits",
-          "path": "docs/system-card.md"
-        },
-        {
-          "id": "audit",
-          "label": "Audit and feedback",
-          "path": "docs/audit-and-logging.md"
-        },
-        {
-          "id": "threat_v2",
-          "label": "Synthetic threat-suite results",
-          "path": "docs/experiments/threat-v2-results.md"
-        },
-        {
-          "id": "heldout_retrieval",
-          "label": "Original and fresh retrieval diagnostics",
-          "path": "docs/experiments/heldout-retrieval-metrics-results.md"
-        },
-        {
-          "id": "mcp",
-          "label": "MCP comparison",
-          "path": "docs/experiments/served-chain-mcp-all.md"
-        },
-        {
-          "id": "nostats",
-          "label": "Statistics-tool ablation",
-          "path": "docs/experiments/served-chain-no-stats.md"
-        }
-      ]
+      "references": []
     },
     "measurements": {
       "retrieval": {
@@ -82627,8 +82699,8 @@
     },
     "source": {
       "path": "docs/innovation-page.json",
-      "sha256": "4245cf254b922ed9ad22102159873b404040a9bc19a9008c584573ac6a8ae8c4",
-      "evidence_commit": "08bfeafd296618847cfee13d319a6df4cec7a675"
+      "sha256": "4e4b848441cd6eed2746cb8245f07057ba0c7ae07a62cf2b72a5223bd86ca6b7",
+      "evidence_commit": "ec174c65b21bc8b5eedc1a6d6ec3899668b5063b"
     }
   }
 }
