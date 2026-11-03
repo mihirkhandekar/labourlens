@@ -1,67 +1,79 @@
 # Innovation assessment
 
-LabourLens helps Singapore labour-market analysts check public statistics against MOM reports and an MTI employment article. It covers Q1 2020 to Q2 2026, returns cited answers and calculates changes in code. It is a research prototype, not approved for government production.
+LabourLens helps policy researchers check Singapore labour-market figures against official reports from early 2020 to mid-2026, bringing evidence together so analysts can spend less time searching and more time checking what it means.
 
 ## Current approach
 
-Statistics retain measure, unit, period, population, release and source. Reports become searchable passages; uncertain tables are flagged. Keyword and meaning search are combined, filtered by period/release and reranked. One bounded agent retrieves evidence and calculates changes. Code checks structure, citation labels, quotations and numbers, not whether evidence supports a claim.
+It searches official reports, looks up statistics and calculates changes using checked records, showing sources or declining when evidence is missing.
 
-The four-tool served agent adds `annual_average`: a simple mean of four non-null quarterly rates from one series, never a partial average or official annual rate. Statistics lookup and averaging use two of the default MCP server's ten tools. Current prompts are `planner_v7`, `answer_v9`, `triage_v4` and `contextualise_v3`. Follow-ups carry bounded context as untrusted data. Why questions seek attributed MOM commentary, not inferred causation; abstention separates missing observations from missing method/commentary. These changes are unevaluated.
+Dates, definitions and release versions stay attached to figures, and an annual average requires four complete quarterly rates rather than claiming to be an official annual rate.
+
+Recent changes remain unevaluated, and better search did not demonstrate reliably better answers.
 
 ## How I would improve it
 
-Every item is a proposal, not a demonstrated gain.
+Every change below is a proposal, not built or shown to work.
 
-### Retrieval and answer quality
+### Shorter waits
 
-Filtering then reranking raised passage hit@8 from 54% to 97% on 128 development report questions. Full-system evaluation did not demonstrate an answer gain on either test set. Development shaped the design; the original test shares evidence with it, and fresh questions have since been reused. Report-table arithmetic failed its pre-set checks and was not adopted.
+**Change:** reuse permitted lookups, shorten preparation and run independent work together.
 
-### Drift detection
+**Why:** the evaluated middle answer time was about 14 seconds, and showing progress does not shorten the wait.
 
-Snapshots and provenance make rebuilds traceable. Acquisition still needs an operator; scheduled refresh, drift alerts and rollback are not implemented.
+**Check:** compare typical and slow answers on the same questions without losing accuracy or safety.
 
-### Latency
+### Retry the question-routing idea
 
-Evaluated median answer time was about 14 seconds, with chained calls. A native-tool, reasoning-off smoke took 29.8/7.8/9.1 seconds versus structured planning's 53.1/8.6/12.8: three questions, accuracy unmeasured. Streaming shows progress; it does not shorten full-answer time. Moving all historical tools into MCP was slower without a quality gain.
+**Change:** test a simpler choice between supported and unsupported topics while retaining harmful-question handling and the normal research fallback.
 
-**Change:** triage in parallel with first retrieval/planning; cache embeddings, repeated series lookups, prompts and permission-scoped responses; skip contextualisation without history; try smaller triage models and parallel read-only tools within three calls per round. Key caches by permissions, corpus, prompts and model. **Check:** paired full-answer p50/p95, accuracy, safety and cost on the same 237 development questions, then fresh blind cases.
+**Why:** two faster earlier trials misdirected legitimate questions and failed safety or reliability checks.
 
-### Third Decisions gate
+**Check:** set rules before fresh reviewed questions and reject changes that wrongly exclude legitimate research.
 
-Neither Decisions API trial was adopted. V1 matched 397/409 routes per repeat, recalled 19/30 non-in-scope cases and falsely supported 44/58 partially supported claims. V2 matched 414/450 repeat rows, diverted two distinct in-scope questions and refused all 30 serious-harm presentations. Case-median p50/p95 was 0.362/0.426 seconds versus chat's 1.392/1.847, yet safety, quality and operational gates failed.
+### Broader evaluation and useful calculations
 
-The third preregistered attempt is untested, with no paid execution authorised: a two-way in-scope/out-of-scope gate after harm and small-talk handling, with agent fallback. Freeze prompts, model, confidence 0.70 and 150 fresh human-labelled cases (90 in-scope, 30 out-of-scope, 15 harm, 15 small-talk); three interleaved repeats; no tuning. Each repeat needs zero legitimate diversions, 148/150 correct routes, 29/30 out-of-scope recalls, failures at most 1% of 450 scheduled classifications per arm, p50/p95 within 80% of chat and no downstream safety regression. Owner approval comes first.
+**Change:** use independent reviewers and unseen questions, including 2020 to 2023, and check annual averages against complete, consistent inputs.
 
-### Tools, review and coverage
+**Why:** earlier questions cover only 2024 to 2026, while new calculations remain unevaluated and a report-table calculation attempt failed.
 
-- **annual_average:** evaluate completeness, nulls and citations end to end; add other typed tools only for demonstrated gaps.
-- **Report tables:** verify cell, row/column, unit and population lineage; target 0.50 accuracy without more false answers, then confirm blind.
-- **Blind re-review and ablations:** three analysts label a blind set before AI suggestions (kappa at least 0.70, interval no wider than 0.10); test each filter, reranker, guard and output check separately.
-- **2020 to 2023 gold:** independently reviewed fresh cases with expected evidence and abstention; report by year.
-- **Refresh and coverage:** immutable scheduled snapshots validated for schema, rights and revisions; new sources evaluated before serving.
+**Check:** report errors and reviewer disagreement, test protections separately and refuse uncertain inputs rather than guessing.
+
+### Careful source updates
+
+**Change:** retain source versions and check definitions, coverage and reuse rights before publishing updates.
+
+**Why:** new releases can make an old answer misleading.
+
+**Check:** block failed updates, label stale evidence and test answers before adding sources.
 
 ## Production deployment and security
 
-All of this is proposed. Built today: one DigitalOcean Droplet, Caddy, Docker Compose, GitHub Actions, an access-code gate, rights-scan checks, a synthetic threat suite and audit IDs. Budget and audit state are local; limits are in memory.
+The prototype runs on one server with shared codes, source-rights checks, simulated attack tests and activity records, not a government production service.
 
-### Provenance, explainability and review
+All replacements below are proposed, not built.
 
-The workbench shows sources, passages, status and tool activity. Feedback stays with its run but does not change the system. **Proposal:** review every thumbs-down and sample thumbs-up, write expected-evidence tests, change one thing at a time, pseudonymise comments and never treat votes as ground truth.
+| Today | Proposed replacement |
+| --- | --- |
+| Shared codes | Individual government sign-in and source permissions |
+| One server and local records | Replaceable workers, shared limits and activity records |
+| Local evidence copies | Protected versioned storage and isolated data access |
+| Unverified outside processing | Approved providers and enforced processing rules |
+| Unverified recovery | Release checks, backups and tested restoration |
 
-### Security, privacy and third-party risk
+**Security:** add secure credentials, attack filtering, limits on use and outside connections, software-supplier review and independent security testing.
 
-Tools are typed, read-only and bounded; retrieved content is untrusted. Across three synthetic attack repeats, guarded passed 50/54 versus naive 42/54; both failed 3/8 harmless look-alikes. Prompt and guards changed together, so no individual defence effect is established, and adaptive attacks are untested.
+**Privacy:** obtain legal review of provider data use, location and retention before restricted information is admitted.
 
-**Production proposals:** edge/WAF and SSO, load balancer, stateless API replicas, bounded queue, research workers and SSE event store; separate ingestion, immutable object storage, read-only versioned search/DuckDB snapshots and isolated MCP; per-user RBAC with classifications enforced before retrieval and caching; secrets manager, WAF and shared rate limits; tamper-evident audit retention; injection and allow-listed egress controls; supply-chain review and penetration testing; legal and PDPA review of residency and provider data use; an approved LLM gateway for endpoints, spend and retention; observability, CI gates, rollback and encrypted backups; SLOs, on-call ownership, cost caps, restore and failover drills. Move from a public-data pilot to hardened beta only after these gates pass.
-
-### Mocked or unverified components and their production replacements
-
-No live capability is mocked; hostile-server cases are synthetic. Shared codes, one worker and local state are replaced by SSO and roles, queued workers with shared state, immutable versioned evidence with isolated MCP, a secrets manager with an approved gateway, and gated release with tested recovery.
+**Operations:** assign support owners, agree service and spending limits, review reported failures and demonstrate alerts, restoration and switching to a spare service.
 
 ## Making it ready for government use across departments
 
-Proposed only; no compliance claim. Use the Singapore Model AI Governance Framework as a review reference: risk and impact assessment, accountable owners, human-in-the-loop review of consequential decisions, model and system cards, change control, CI evaluation gates and drift monitoring. For several departments, isolate tenants and corpora, share MCP only through authenticated read-only contracts, and keep ingestion specifications and a licence register. Roll out department by department after data-owner approval, isolation tests, training and support readiness, without time promises.
+**Governance:** use Singapore's Model AI Governance Framework as a review reference, assess risks and impacts, require human review of consequential decisions and record approved changes without implying certification or compliance.
 
-## Limitations and threats to validity
+**Departments:** separate collections and permissions, share only approved read-only capabilities, and maintain source-collection rules and a source-rights register.
 
-Labels were AI-drafted and signed off by one human; the primary judge shares the generator's provider family. Few runs do not establish stability. Expanded sources, served changes and production controls remain unevaluated. Faster classification is not an end-to-end speedup or evidence of safer answers.
+**Rollout:** move from a public-data pilot to a controlled trial and then department-by-department use only after data-owner approval, isolation checks, staff preparation and support readiness, without promising dates.
+
+## Limitations
+
+Reused questions and automatic judging are not independent human proof, citations can support the wrong interpretation, and expanded sources, recent changes and proposed controls have not been fully evaluated.

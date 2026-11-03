@@ -1,6 +1,6 @@
 # LabourLens architecture
 
-This document describes the system as built on 1 November 2026. Decision ids (D-nnn) refer to `docs/decisions.md`. Evaluation results are not in this document. See the evaluation report (`docs/evaluation-report.md`), the deck at `/deck` and `experiments/eval/`.
+This document describes the system as built on 3 November 2026. Decision ids (D-nnn) refer to `docs/decisions.md`. Evaluation results are not in this document. See the evaluation report (`docs/evaluation-report.md`), the deck at `/deck` and `experiments/eval/`.
 
 ## 1. Overview
 
@@ -51,7 +51,7 @@ flowchart TB
     USER[Research question] --> ADMIT[Authentication + budget / rate limit]
     ADMIT --> INPUT[Input guard<br/>length checks + injection flags]
     INPUT --> PLAN[Plan from question + catalogue<br/>no passage text]
-    PLAN --> CHOOSE{Choose one of 3 tools}
+    PLAN --> CHOOSE{Choose a tool<br/>3 evaluated, 4 when served}
     CHOOSE --> SEARCH[search_reports<br/>report-search tool]
     SEARCH --> FUSE[BM25 + dense fusion<br/>period/release filter + rerank]
     BM25 --> FUSE
@@ -63,6 +63,8 @@ flowchart TB
     OBS --> ASSESS
     CHOOSE --> CALC[calculate_change<br/>deterministic code]
     CALC --> ASSESS
+    CHOOSE --> ANNUAL[annual_average, served only<br/>mean of four quarterly rates]
+    ANNUAL --> ASSESS
     ASSESS -->|next tool call, up to 2 rounds|PLAN
     ASSESS --> ANSWER[Generate structured answer]
     ANSWER --> VALID[Quote / citation / status validator<br/>+ source-conflict cross-check]
@@ -100,9 +102,9 @@ flowchart TB
 4. **Extract.** `pdf_extract.py` and `html_extract.py` split reports into passages. Each passage has an id, a page or section locator and a quality flag. Output is `data/passages/*.jsonl`.
 5. **Chunk and index.** `retrieval/chunk.py` merges adjacent `ok` passages within one source and section into `merge200` chunks, targeting about 200 words with up to 40 words of whole-passage overlap. Corpus v4 has 29,760 passages and 3,632 chunks (v3.1, the evaluated build: 16,419 and 1,847). BM25 and text-embedding-3-large vectors index the same chunks. The embedding cache is local and content-keyed; per-build index and corpus metadata identify which chunks the cache represents. `labourlens embed-corpus` fills the missing vectors (dry run by default; `--yes` makes the paid call).
 6. **Plan.** The planner receives the question and dataset catalogue, never passage text. It chooses among four fixed tools when served, or the historical three-tool base set under frozen evaluated configuration. It does not retrieve before the loop. Native function calling uses strict schemas, `tool_choice` auto and up to three parallel calls per round; no tool call means finish. Tool messages are untrusted summaries without passage text. Malformed, unknown, wrongly typed or duplicate calls become `invalid_arguments` errors and count against the call budget. Structured-output mode remains the library default and was used by every evaluated run.
-7. **Execute tools inside the loop.** `search_reports` returns hybrid-retrieved, filtered and reranked chunks. `get_series` returns validated observations. `calculate_change` computes Decimal changes from returned rows. The served set adds `annual_average`, a simple mean of four non-null quarterly percentage rates from one series. Lookup and annual averaging cross MCP; search and change calculation stay in process. The historical, non-live all-three-tools variant routed its then-current three tools over MCP. No historical comparison evaluates annual averaging.
+7. **Execute tools inside the loop.** `search_reports` returns hybrid-retrieved, filtered and reranked chunks. `get_series` returns validated observations. `calculate_change` computes Decimal changes from returned rows. The served set adds `annual_average`, a simple mean of four non-null quarterly percentage rates from one series. Lookup and annual averaging cross MCP; search and change calculation stay in process. The historical, non-live all-three-tools variant routed its then-current three tools over MCP. No historical comparison evaluates annual averaging. In the served app, tool calls within a round run in parallel, a short-lived cache keyed to the corpus reuses repeated searches, and at most 20 report passages reach the answer prompt per run (D-083 to D-091, unevaluated).
 8. **Answer.** `answer/context.py` renders items and notes into the prompt. The model returns a structured answer with claim-level citations, each with a verbatim quote (`answer/schema.py`).
-9. **Validate.** `answer/validate.py` rejects an answer when a cited label is not in the context, a quote is not verbatim in the cited item, a quote exceeds 40 words, a flagged item is cited or the status contradicts the content. One repair attempt follows. Numbers in a claim that do not appear in the cited text are reported as ungrounded.
+9. **Validate.** `answer/validate.py` rejects an answer when a cited label is not in the context, a quote is not verbatim in the cited item, a quote exceeds 40 words, a flagged item is cited or the status contradicts the content. One repair attempt follows. Numbers in a claim that do not appear in the cited text are reported as ungrounded. Served answers must paraphrase publisher text; when a quote overlaps the source too closely the repair step runs once, and if it still overlaps the clause is dropped with a copyright note (D-090).
 10. **Finalize.** The output guard in `security/guards.py` blocks answers that contain a known secret or system-prompt text. The page shows the answer, the evidence behind each citation and the tool timeline.
 
 ### Browser pages and public API
@@ -134,7 +136,7 @@ Bounds, all constants or fields in `graph.py`:
 |---|---|
 | Evidence-gathering rounds | 2 |
 | Tool calls per run | 6, at most 3 per round |
-| Time per tool call | 10 s |
+| Time per tool call | 10 s; 25 s for `search_reports` in the served app, with one retry after a timeout (D-091) |
 | Retry for a transient tool failure | 1 |
 | Retry for malformed planner output | 1 (structured-output mode only; in function-calling mode a malformed call is an `invalid_arguments` tool error that counts against the call budget) |
 | Repair of an invalid answer | 1 |
@@ -205,7 +207,7 @@ The evaluation branch consumes saved runs rather than changing live answers. The
 | Hosted OpenAI embeddings and models, chosen by experiment | Candidates are compared on our own cases and costs. | Embeddings and model selection |
 | Claim-level citations with verbatim quotes | A reviewer can check each claim against its quote. | Answer format |
 | Prefer declining to a wrong answer | A wrong figure does more harm in policy work than a decline. | Abstention policy |
-| One bounded agent, three typed tools, enum-constrained planner | Fewer moving parts and a measurable failure surface. | LangGraph and agent design |
+| One bounded agent, three typed tools when evaluated (four when served), enum-constrained planner | Fewer moving parts and a measurable failure surface. | LangGraph and agent design |
 | Code computes every difference and percentage | The model is not trusted with arithmetic. | Agent design |
 | Planner never sees passage text | Injected text cannot steer tool choice. | Agent design; MCP and threat controls |
 | Operational failures end the run and are never "no data" | A tool outage must not look like an absence of evidence. | LangGraph; MCP and threat controls |

@@ -177,9 +177,7 @@ Catalogued in `specs/sources.d/documents-2020-2022.yaml`; fetched with `labourle
 
 **Extraction failures (flagged, not repaired).** Four PDFs yield zero passages because the extractor reads no text from them (hidden or glyph-image text layer): the Labour Force 2021 survey findings, survey highlights and coverage and methodology, and the Labour Force 2020 coverage and methodology. The 2020 Wage Practices PDF is image-based and yields 94 passages, 5 of them `garbled`. The 2020 to 2022 quarterly reports are about 40 to 45 per cent `table_unreliable`, like the 2023 to 2026 ones; numbers for calculation still come from the statistics, not these tables.
 
-**Embeddings and serving.** 1,285 of the 3,632 chunks have no cached vector yet. The owner runs `uv run labourlens embed-corpus` (a free dry run) and then `OPENAI_API_KEY=... uv run labourlens embed-corpus --yes` (about 288,000 tokens, about $0.04 at list price, an estimate), then ships `data/index/embeddings/text-embedding-3-large/cache.npz` and the 57 new passage files as listed in `deploy/runtime-data.txt`. Until then the live container (`LABOURLENS_ALLOW_EMBED=0`) will not start on the new passages.
-
-**Not evaluated.** Gold and every frozen result were measured on corpus v3.1 (49 documents). More documents now compete in retrieval, and answers about 2020 to 2022 reports are unevaluated.
+**Embeddings and serving.** Vectors for all 3,632 chunks are cached (a dry run of `uv run labourlens embed-corpus` reports zero tokens still to embed) and shipped with the deploy listed in `deploy/runtime-data.txt`. The live container never embeds at startup (`LABOURLENS_ALLOW_EMBED=0`).
 
 ## 8. Limits
 - Extraction quality for tables is not reliable; numbers come from datasets, text supplies explanation.

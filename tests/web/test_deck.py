@@ -117,10 +117,10 @@ def test_every_slide_has_a_heading_and_speaker_notes():
     assert "el('aside', 'notes')" in builder and "if (!notes.children.length) notes.append(" in builder
     main = _slides_main_section()
     specs = re.findall(r"\badd\(\{", main)
-    assert len(specs) == 29, len(specs)
+    assert len(specs) == 28, len(specs)
     total = len(re.findall(r"\badd\(\{", (STATIC / "presentation" / "slides.js").read_text()))
-    assert total == 45  # 29 main slides, appendix index, and references A to O
-    assert total - len(specs) == 16
+    assert total == 45  # 28 main slides, appendix index, and references A to P
+    assert total - len(specs) == 17
     for block in re.split(r"\badd\(\{", main)[1:]:
         assert "notes:" in block, block[:100]
         assert "title:" in block, block[:100]
@@ -152,7 +152,7 @@ def test_no_bridge_sentences_or_pills_on_faces():
 REQUIRED_TITLES = [
     "Assignment", "My project", "Assumptions, constraints and scope", "System architecture", "Choosing the data", "Two kinds of evidence", "Data findings", "Retrenchments rose, data gives no cause", "Advance and final figures differ", "Challenges with the data",
     "Processing reports", "Retrieval Strategies", "Does filtering help?", "Statistics lookup through MCP", "Agent loop", "Three example runs", "Checking the answer", "How I evaluated", "Choosing models",
-    "Does better retrieval improve answers?", "Where the system still fails", "Attacks and defences", "Agent Workbench", "How I built it", "Next steps", "Improve the system", "Deploy in production", "Summary",
+    "Does better retrieval improve answers?", "Attacks and defences", "Agent Workbench", "How I built it", "Next steps", "Improve the system", "Deploy in production", "Summary",
 ]
 
 
@@ -166,7 +166,7 @@ def test_main_deck_follows_the_navigation_flow_and_has_short_plain_titles():
     main = _slides_main_section()
     defined = set(re.findall(r"\btitle: '([^']+)'", main))
     rows = _flow_rows()
-    assert len(rows) == 29
+    assert len(rows) == 28
     assert [r[0] for r in rows[1:]] == REQUIRED_TITLES
     for title, _, _ in rows:
         assert title in defined or "Singapore AI Agent" in title, title
@@ -179,7 +179,7 @@ def test_main_deck_follows_the_navigation_flow_and_has_short_plain_titles():
     assert "['Sources', 'Processing', 'Retrieval', 'Agent', 'Answer', 'Checks']" in (STATIC / "presentation" / "deck.js").read_text()
     for title in [r[0] for r in rows][1:]:
         assert len(title.split()) <= 9, title
-    assert len(re.findall(r"\badd\(\{", main)) == 29
+    assert len(re.findall(r"\badd\(\{", main)) == 28
 
 
 def test_removed_slides_stay_removed_and_summary_keeps_limitations():
@@ -748,8 +748,8 @@ def test_decisions_api_is_exactly_one_final_appendix_slide_with_frozen_results()
     assert "Trying the Decisions API" not in _slides_main_section()
     assert slides.count("title: 'Trying the Decisions API'") == 1
     appendix = slides.split("// ---------- appendix", 1)[1].split("// Appendix index lists", 1)[0]
-    assert len(re.findall(r"\badd\(\{", appendix)) == 16
-    last_slide = appendix.rsplit("add({", 1)[1]
+    assert len(re.findall(r"\badd\(\{", appendix)) == 17
+    last_slide = appendix.split("appendix('O', 'Trying the Decisions API'", 1)[1].split("appendix('P'", 1)[0]
     assert "id: 'decisions-api'" in last_slide
     assert "title: 'Trying the Decisions API'" in last_slide
     assert "visual: decisionsExperiment()" in last_slide
@@ -904,8 +904,8 @@ def test_failure_modes_routing_trial_does_not_replace_live_baseline():
     source = (repo / "docs/experiments/decisions-api-v2-results.md").read_text()
     assert "F2-070 and F2-072" in source and "diverted in every repeat" in source
     slides = (STATIC / "presentation/slides.js").read_text()
-    declaration = slides.split("title: 'Where the system still fails'", 1)[1].split("  });", 1)[0]
-    assert "failureResults(m)" in declaration and "FAILURE_NOTES" in declaration
+    declaration = slides.split("title: 'P. Where the system still fails'", 1)[1].split("  });", 1)[0]
+    assert "failureResults(m)" in declaration and "FAILURE_NOTES" in declaration and "chapter: 'Appendix'" in slides.split("appendix('P'", 1)[1][:200]
     graphics = (STATIC / "presentation/graphics.js").read_text()
     assert "Do not pool with the earlier live-baseline 0/333" in graphics and "6/270 in-scope presentations, two distinct questions" in graphics
     assert "No observed instance in the runs" in graphics
@@ -1032,7 +1032,8 @@ def test_owner_removals_and_new_follow_through_slides():
     for removed in ("Not solved by either arm", "Typed read-only tools, the MCP checks", "Other topics"):
         assert removed not in flows
     assert "rights-scan hits on my machine" not in graphics
-    assert "failureResults(m)" in main and "failureModes(m)" not in main
+    assert "failureResults(m)" not in main and "failureModes(m)" not in main
+    assert "title: 'P. Where the system still fails'" in (STATIC / "presentation/slides.js").read_text()
     assert "title: 'Improve the system'" in main and "title: 'Deploy in production'" in main
     assert "three-per-round cap" in main and "29.8, 7.8 and 9.1" in main
     assert "Preregister" in flows and "untested" in flows
@@ -1067,3 +1068,17 @@ def test_production_destination_is_complete_and_not_claimed_built():
         assert label in code
     assert "Built today" in code and "Proposed, not implemented or load-tested" in code
     assert "production-mobile" in code and "innerHTML" not in code
+
+
+def test_process_slide_is_graphic_first_and_commands_come_from_the_docs():
+    graphics = (STATIC / "presentation/graphics.js").read_text()
+    block = graphics.split("export function buildProcess", 1)[1].split("return wrap;", 1)[0]
+    for text in ("Read brief", "Planned before any code", "Three harnesses", "Every experiment decision", "Steps to try",
+                 "Written project contract", "signed off by one reviewer", "negative results kept"):
+        assert text in block, text
+    docs = (WEB.parent / "README.md").read_text() + (WEB.parent / "docs/reproduce.md").read_text() + (WEB.parent / "Makefile").read_text()
+    for command in ("LABOURLENS_DEMO_ENABLED=false make serve", "make verify", "uv run labourlens rights-scan",
+                    "uv run python scripts/final_mean.py", "uv run labourlens mcp-demo"):
+        assert command in block and (command in docs or command.replace("uv run labourlens ", "labourlens ") in docs), command
+    for dash in ("\u2013", "\u2014"):
+        assert dash not in block

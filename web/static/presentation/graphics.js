@@ -1449,24 +1449,48 @@ export function measureCards(m) {
   return wrap;
 }
 
-/** The development loop with the written guardrails around it, and three counts: the decision log (computed from the report data), five end-to-end reviewers, the rights scan result. */
+/** How the project was planned, built and checked: a loop, three harnesses, the experiment rules and steps to try. Counts come from the report data and records. */
 export function buildProcess(decisionCount) {
   const wrap = el('div', 'g24');
   const loop = el('div', 'g24-loop');
-  ['Propose', 'Compare', 'Approve', 'Build', 'Verify', 'Record'].forEach((name, i) => {
+  [['Read brief', 'Me'], ['Plan', 'Agent'], ['Compare', 'Agent'], ['Approve', 'Me'], ['Build', 'Agent'], ['Verify', 'Gates'], ['Record', 'Files']].forEach(([name, who], i) => {
     if (i) { const a = el('span', 'g24-arrow'); a.append(ico('arrow-right')); loop.append(a); }
     const step = el('div', `g24-step${name === 'Approve' ? ' is-owner' : ''}`); step.style.setProperty('--i', String(i));
-    step.append(el('p', 'g24-name', name), el('p', 'g24-who', name === 'Approve' ? 'Me' : name === 'Record' ? 'Files' : 'Agent'));
+    step.append(el('p', 'g24-name', name), el('p', 'g24-who', who));
     loop.append(step);
   });
-  const lanes = el('ul', 'g24-lanes');
-  [['Written contract', 'Options and trade-offs first. No next phase without my approval.'], ['State in files', 'Progress log, claims and decision log, so any agent can resume.'], ['Frozen results', 'Hashes pinned. Post-freeze work gets a new experiment id.'], ['Separate review', 'Blind AI reviewers. Five end-to-end reviews found real defects.'], ['Safe by default', 'Secrets in a gitignored file. Rights scan and secret scan in CI.']].forEach(([head, text], i) => {
-    const li = el('li', 'g24-lane'); li.style.setProperty('--i', String(i)); li.append(el('strong', '', head), el('span', '', text)); lanes.append(li);
+  const loopTip = 'Options came from the agent. I approved before any build. Tests, lint and the rights scan checked it, and the decision log recorded it.';
+  withTip(loop, loopTip, 'is-down');
+
+  const cols = el('div', 'g24-cols');
+  const col = (title, tag, items, ordered = false, tips = []) => {
+    const c = el('div', 'g24-col'); c.append(el('h3', '', title));
+    const list = el(ordered ? 'ol' : 'ul', 'g24-list');
+    items.forEach((item, i) => {
+      const li = el('li'); if (Array.isArray(item)) li.append(el('strong', '', item[0]), el('span', '', item[1])); else li.append(el('span', '', item));
+      list.append(tips[i] ? withTip(li, tips[i], i < 2 ? 'is-down' : 'is-up') : li);
+    });
+    c.append(list); return c;
+  };
+  cols.append(
+    col('Planned before any code', '', ['Read the assessment PDF.', 'Built a requirement-to-evidence matrix.', 'Compared labour, housing and cost of living.', 'Wrote two decision records: scope, then one bounded agent.', 'Planning only until I approved the first build.'], true,
+      ['', 'Each requirement maps to code, a test or a demo, or is shown incomplete.', 'Labour won on official quarterly data with real report revisions.', 'The first record fixed domain, sources and period. The second fixed a single bounded LangGraph agent.', '']),
+    col('Three harnesses', '', [['Coding agent', 'Written project contract, skills, parallel agents on named files.'], ['Evaluation', 'Frozen configs, run ids, scorers and paired bootstrap.'], ['Threats and MCP', 'Attack suite, hostile-server cases and a protocol demo.']], false,
+      ['Tests, lint and the rights scan gate every change. Parallel agents each worked on named files.', 'Run ids refuse overwrite. Scoring checks the gold file hash. Judges are AI and are labelled so.', 'Attacks are synthetic and the hostile servers are test fixtures. This is not a security certification.']),
+    col('Every experiment decision', '', ['Options compared, then my approval.', 'Hypotheses written before paid runs.', 'One factor at a time; tune on development only.', 'Frozen results never edited; negative results kept.', 'AI-drafted labels, signed off by one reviewer.'], false,
+      ['Each logged decision lists alternatives, approval and how to reverse it.', 'Pre-registration pins hashes. Later work gets a new run id.', '', 'The Decisions API trials were rejected and stayed in the record.', 'I signed off after the saved runs were scored. This is not independent review.'])
+  );
+
+  const steps = el('div', 'g24-try');
+  steps.append(el('h3', '', 'Steps to try'));
+  const list = el('ol', 'g24-try-list');
+  [['Open the report', 'LABOURLENS_DEMO_ENABLED=false make serve'], ['Ask in the workbench', '/workbench (live site needs a code)'], ['Read the decisions', 'The decision log in the docs folder'], ['Run the checks', 'make verify'], ['Run the rights scan', 'uv run labourlens rights-scan'], ['Replay the headline', 'uv run python scripts/final_mean.py'], ['Try the MCP client', 'uv run labourlens mcp-demo']].forEach(([head, cmd]) => {
+    const li = el('li'); li.append(el('strong', '', head), el('code', '', cmd)); list.append(li);
   });
-  const nums = el('div', 'g24-nums');
-  [[finite(decisionCount) ? String(decisionCount) : 'many', 'decisions logged'], ['5', 'end-to-end AI reviews']].forEach(([n, label]) => { const d = el('div', 'g24-num'); d.append(el('p', 'num', n), el('p', '', label)); nums.append(d); });
-  wrap.append(loop, el('div', 'g24-body', ''), nums);
-  wrap.querySelector('.g24-body').append(lanes);
+  steps.append(list);
+  const note = el('p', 'g24-note');
+  note.append(el('strong', '', finite(decisionCount) ? String(decisionCount) : 'Many'), document.createTextNode(' decisions logged. Five end-to-end AI reviews found real defects; they were AI, not human.'));
+  wrap.append(loop, cols, steps, note);
   return wrap;
 }
 
@@ -1559,8 +1583,9 @@ export function summaryBoard(m) {
   ['AI-drafted labels, signed off by one reviewer', 'Judge and answer models share a provider', 'Scanner can be bypassed', 'Three dataset licences and some source rights unverified'].forEach(t => list.append(el('li', '', t)));
   limits.append(heading('Limits', 'is-small'), list);
   const liveNote = el('p', 'sb-live-note', 'The live app differs from the measured build; ');
-  const appendixLink = el('a', '', 'see appendix M.'); appendixLink.href = '#/served-versus-evaluated';
-  liveNote.append(appendixLink); limits.append(liveNote);
+  const appendixLink = el('a', '', 'see appendix M'); appendixLink.href = '#/served-versus-evaluated';
+  const failuresLink = el('a', '', 'appendix P'); failuresLink.href = '#/where-it-fails';
+  liveNote.append(appendixLink, document.createTextNode('. Failure counts by question type: '), failuresLink, document.createTextNode('.')); limits.append(liveNote);
 
   wrap.append(acc, side, facts2, limits);
   return wrap;

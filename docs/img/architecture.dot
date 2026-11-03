@@ -32,7 +32,7 @@
     ADMIT [label="Authentication + budget / rate limits\nRequest bounds", fillcolor="#e6f3eb"];
     WEBONLY [label="SERVED ONLY\nSmall-talk fast path (no model)\nContextualise when needed: MODEL call\nScope triage: MODEL call\nRewrite / triage errors pass to agent", fillcolor="#eee8fa"];
     INPUT [label="Input guard\nLength checks + injection flags", fillcolor="#e6f3eb"];
-    PLAN [label="PLANNER model call\nQuestion + catalogue, never passage text\nChoose from three typed read-only tools", fillcolor="#eee8fa"];
+    PLAN [label="PLANNER model call\nQuestion + catalogue, never passage text\nChoose from typed read-only tools (three evaluated, four served)", fillcolor="#eee8fa"];
     SEARCH [label="search_reports\nIn process in live / full evaluation"];
     SERIES [label="get_series\nValidated statistical observations"];
     CALC [label="calculate_change\nDeterministic Decimal arithmetic\non returned observation rows"];

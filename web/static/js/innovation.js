@@ -11,7 +11,6 @@ toggle.addEventListener('click', () => {
 });
 themeLabel();
 const repo = 'https://github.com/mihirkhandekar/labourlens/blob/master/';
-const percent = new Intl.NumberFormat('en-SG', {style: 'percent', maximumFractionDigits: 0});
 function anchor(text, href) { const a = el('a', '', text); a.href = href; return a; }
 function table(caption, headers, rows) {
   const node = el('table', 'iv-table'); node.append(el('caption', '', caption));
@@ -22,12 +21,12 @@ function table(caption, headers, rows) {
   node.append(add(el('thead'), head), body); return node;
 }
 function render(page) {
-  const c = page.content; const m = page.measurements;
+  const c = page.content;
   const contents = el('nav', 'iv-contents'); contents.setAttribute('aria-label', 'Assessment contents');
   contents.append(el('p', 'iv-contents-title', 'Contents'));
   const documentBody = el('article', 'iv-document');
   const header = el('header', 'iv-header');
-  header.append(el('h1', '', c.title), el('p', 'iv-scope', c.scope), el('h2', 'iv-abstract-title', 'Abstract'), el('p', '', c.abstract));
+  header.append(el('h1', '', c.title), el('p', 'iv-scope', c.scope), el('p', '', c.abstract));
   documentBody.append(header);
   function addSection(id, title) {
     const section = el('section', 'iv-section'); section.id = id;
@@ -38,17 +37,12 @@ function render(page) {
   const approach = addSection('approach', 'Current approach');
   const approachList = el('ul'); c.approach.forEach(text => approachList.append(el('li', '', text))); approach.append(approachList);
   function results(kind) {
-    if (kind === 'retrieval') return table('Relevant report passages in the first eight results. Same development set.', ['Method', 'Passage hit rate'], [
-      ['BM25 keyword search', percent.format(m.retrieval.R0)],
-      ['Filter then rerank', percent.format(m.retrieval.R3)]
-    ]);
-    if (kind === 'components') return table('Current boundaries and proposed production replacements. Nothing proposed is deployed or verified.', ['Component', 'Current state', 'Proposed production replacement'], c.components.map(item => [item.component, item.current, item.replacement]));
+    if (kind === 'components') return table('Current limits and proposed replacements, not built.', ['Area', 'Today', 'Proposed replacement'], c.components.map(item => [item.component, item.current, item.replacement]));
   }
   function labelled(label, text) { const p = el('p', 'iv-field'); p.append(el('strong', '', `${label} `), document.createTextNode(text)); return p; }
   function proposalBlock(proposal) {
     const block = el('div', 'iv-proposal');
-    const registered = proposal.title.startsWith('Third Decisions attempt:');
-    block.append(el('h3', '', proposal.title), labelled('Proposed change.', proposal.measure), labelled('Why it matters.', proposal.gap), labelled('Check before adoption.', proposal.threshold), el('p', 'iv-status', registered ? 'Status: preregistered plan, untested, not adopted.' : 'Status: proposal, not built.'));
+    block.append(el('h3', '', proposal.title), labelled('Change.', proposal.measure), labelled('Why.', proposal.gap), labelled('Check.', proposal.threshold), el('p', 'iv-status', 'Proposal, not built.'));
     return block;
   }
   c.sections.forEach(spec => {
@@ -62,7 +56,7 @@ function render(page) {
     });
     spec.proposals.forEach(proposal => section.append(proposalBlock(proposal)));
   });
-  const limitations = addSection('limitations', 'Limitations and threats to validity');
+  const limitations = addSection('limitations', 'Limitations');
   const list = el('ul'); c.limitations.forEach(text => list.append(el('li', '', text))); limitations.append(list);
   documentBody.append(add(el('footer', 'iv-footer'), anchor('Project report', '/'), anchor('Short assessment source', `${repo}docs/innovation.md`)));
   root.replaceChildren(contents, documentBody);
@@ -81,7 +75,7 @@ try {
   const response = await fetch('/static/data/report.json', {credentials: 'same-origin'});
   if (!response.ok) throw new Error('The report data is unavailable.');
   const report = await response.json();
-  if (!report.innovation) throw new Error('The innovation projection is missing. Run labourlens build-report.');
+  if (!report.innovation) throw new Error('The assessment is not available yet.');
   render(report.innovation);
 } catch (error) {
   root.replaceChildren(el('h1', '', 'Assessment unavailable'), el('p', '', error.message), anchor('Project report', '/'));

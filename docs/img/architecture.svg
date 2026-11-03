@@ -236,10 +236,10 @@
 <!-- PLAN -->
 <g id="node14" class="node">
 <title>PLAN</title>
-<path fill="#eee8fa" stroke="#66788c" d="M834.74,-825.7C834.74,-825.7 641.26,-825.7 641.26,-825.7 635.26,-825.7 629.26,-819.7 629.26,-813.7 629.26,-813.7 629.26,-787.3 629.26,-787.3 629.26,-781.3 635.26,-775.3 641.26,-775.3 641.26,-775.3 834.74,-775.3 834.74,-775.3 840.74,-775.3 846.74,-781.3 846.74,-787.3 846.74,-787.3 846.74,-813.7 846.74,-813.7 846.74,-819.7 840.74,-825.7 834.74,-825.7"/>
+<path fill="#eee8fa" stroke="#66788c" d="M890.24,-825.7C890.24,-825.7 585.76,-825.7 585.76,-825.7 579.76,-825.7 573.76,-819.7 573.76,-813.7 573.76,-813.7 573.76,-787.3 573.76,-787.3 573.76,-781.3 579.76,-775.3 585.76,-775.3 585.76,-775.3 890.24,-775.3 890.24,-775.3 896.24,-775.3 902.24,-781.3 902.24,-787.3 902.24,-787.3 902.24,-813.7 902.24,-813.7 902.24,-819.7 896.24,-825.7 890.24,-825.7"/>
 <text text-anchor="middle" x="738" y="-808.05" font-family="Helvetica,sans-Serif" font-size="11.00" fill="#15283d">PLANNER model call</text>
 <text text-anchor="middle" x="738" y="-796.05" font-family="Helvetica,sans-Serif" font-size="11.00" fill="#15283d">Question + catalogue, never passage text</text>
-<text text-anchor="middle" x="738" y="-784.05" font-family="Helvetica,sans-Serif" font-size="11.00" fill="#15283d">Choose from three typed read&#45;only tools</text>
+<text text-anchor="middle" x="738" y="-784.05" font-family="Helvetica,sans-Serif" font-size="11.00" fill="#15283d">Choose from typed read&#45;only tools (three evaluated, four served)</text>
 </g>
 <!-- INPUT&#45;&gt;PLAN -->
 <g id="edge13" class="edge">
@@ -344,8 +344,8 @@
 <!-- ASSESS&#45;&gt;PLAN -->
 <g id="edge27" class="edge">
 <title>ASSESS&#45;&gt;PLAN</title>
-<path fill="none" stroke="#61758c" d="M837.96,-443.55C856.91,-453.07 876.86,-464.41 894,-476.95 920.42,-496.29 980.97,-553.75 997,-582.3 1006.98,-600.08 1046.99,-704.81 1023,-734.85 1001.66,-761.57 923.77,-778.08 854.8,-787.72"/>
-<polygon fill="#61758c" stroke="#61758c" points="854.5,-785.46 848.37,-788.6 855.12,-789.97 854.5,-785.46"/>
+<path fill="none" stroke="#61758c" d="M837.96,-443.55C856.91,-453.07 876.86,-464.41 894,-476.95 900.61,-481.78 992.99,-575.16 997,-582.3 1006.98,-600.08 1046.99,-704.81 1023,-734.85 1007.34,-754.46 961.23,-768.57 910.54,-778.5"/>
+<polygon fill="#61758c" stroke="#61758c" points="910.14,-776.26 904.18,-779.71 910.99,-780.73 910.14,-776.26"/>
 <text text-anchor="middle" x="1061.24" y="-609.83" font-family="Helvetica,sans-Serif" font-size="9.00" fill="#40546b">bounded next round</text>
 </g>
 <!-- ANSWER -->

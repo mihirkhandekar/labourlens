@@ -2,7 +2,7 @@
 
 Show `/deck` and `/workbench` (access code required). Use slide titles, not numbers. Label recordings and synthetic fixtures; questions follow the 20 minutes. Evaluation and attacks together take 6 of the 20 minutes (25% of the weight sits on evaluation). Final rehearsal and owner acceptance remain pending.
 
-The deck has 29 main slides and 45 including its hidden appendix. The data section comes before processing and retrieval; statistics MCP comes before the agent loop. Saved examples precede evaluation and measured failures. Next steps, Improve the system and Deploy in production lead to Summary. Appendix index is slide 30; references A to O are 31 to 45 when revealed. Press **A twice within 400 ms** to toggle references; they do not count in navigation, progress or overview until shown. Hiding from a reference returns to Summary. Appendix links reveal their target. Press **X twice** for notes, **T** for theme and **?** for help.
+The deck has 28 main slides and 45 including its hidden appendix. The data section comes before processing and retrieval; statistics MCP comes before the agent loop. Saved examples precede evaluation. Next steps, Improve the system and Deploy in production lead to Summary. Appendix index is slide 29; references A to P are 30 to 45 when revealed (P is the failure counts by question type). Press **A twice within 400 ms** to toggle references; they do not count in navigation, progress or overview until shown. Hiding from a reference returns to Summary. Appendix links reveal their target. Press **X twice** for notes, **T** for theme and **?** for help.
 
 **Current served setup (3 Nov 2026).** The workbench now answers for 2020-Q1 to 2026-Q2 (D-077), searches corpus v4 with 106 documents (D-080) and shows live steps while a question runs, through the streaming endpoint (D-079); it falls back to the plain endpoint if streaming fails. The prepared questions below use 2024 to 2026 periods, inside both the old and new window, and the measured results narrated here come from the earlier 2024-Q1 to 2026-Q2 window, corpus v3.1, structured-output planner and older prompts. Say plainly that answers about 2020 to 2023, answers drawing on the 57 added documents and the new function-calling planner are unevaluated.
 
@@ -16,7 +16,7 @@ The deck has 29 main slides and 45 including its hidden appendix. The data secti
 | 7:15-9:15 | **Agent Workbench** to show the cited answer, evidence and activity trace. |
 | 9:15-10:00 | Recorded deterministic calculation: [MCP agent answer](../artifacts/mcp-agent-demo.md), operands, units and calculation citation. |
 | 10:00-11:45 | Workbench: clarification and injection-resistance demonstrations. |
-| 11:45-16:15 | **How I evaluated**, **Choosing models**, **Does better retrieval improve answers?**, **Where the system still fails**: test design, review limitations, model trade-offs and exact response-status failure counts. |
+| 11:45-16:15 | **How I evaluated**, **Choosing models**, **Does better retrieval improve answers?**: test design, review limitations, model trade-offs and end-to-end results. Open appendix P only if asked about failure counts by question type. |
 | 16:15-17:45 | **Attacks and defences**: paired attack results, examples and limits of attribution. |
 | 17:45-20:00 | **How I built it**, **Next steps**, **Improve the system**, **Deploy in production**, **Summary** and the [innovation assessment](innovation.md). Treat the architecture and improvement levers as proposals, not implemented production controls. |
 
