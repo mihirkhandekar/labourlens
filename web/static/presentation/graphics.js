@@ -1441,13 +1441,27 @@ export function decisionsExperiment() {
   return wrap;
 }
 
+// A presenter may open the deck as /deck?code=... so the on-screen link carries the access code (as a fragment, which no server logs). The deck URL is
+// cleaned straight away; with no code present the link is the plain workbench URL. The printed QR image is static and never carries a code.
+const WORKBENCH_URL = 'https://labourlens.navig.me/workbench';
+const DECK_CODE = (() => {
+  if (typeof location === 'undefined') return '';
+  const query = new URLSearchParams(location.search), value = query.get('code');
+  if (value === null) return '';
+  query.delete('code');
+  history.replaceState(history.state, '', location.pathname + (query.toString() ? `?${query}` : '') + location.hash);
+  return value.slice(0, 200);
+})();
+export function workbenchHref(code = DECK_CODE) { return code ? `${WORKBENCH_URL}#code=${encodeURIComponent(code)}` : WORKBENCH_URL; }
+
 /** A screenshot and scannable link to the workbench, served locally. */
+
 export function workbenchShot() {
   const wrap = el('div', 'g22');
   wrap.style.setProperty('grid-template-columns', 'minmax(0, 1fr) auto');
   wrap.style.setProperty('gap', '24px');
   const img = el('img', 'g22-img'); img.src = '/static/presentation/workbench.png'; img.alt = 'The LabourLens workbench: a question box, example questions, session history and an activity timeline.'; img.width = 1500; img.height = 900;
-  const link = el('a', 'g22-link'); link.href = 'https://labourlens.navig.me/workbench'; link.setAttribute('aria-label', 'Try the workbench at labourlens.navig.me');
+  const link = el('a', 'g22-link'); link.href = workbenchHref(); link.setAttribute('aria-label', 'Try the workbench at labourlens.navig.me');
   link.style.setProperty('display', 'grid'); link.style.setProperty('justify-items', 'center'); link.style.setProperty('gap', '12px');
   link.style.setProperty('color', 'var(--accent)'); link.style.setProperty('text-decoration', 'none');
   const qr = el('img', 'g22-qr'); qr.src = '/static/presentation/workbench-qr.svg'; qr.alt = 'QR code linking to the LabourLens workbench'; qr.width = 240; qr.height = 240;

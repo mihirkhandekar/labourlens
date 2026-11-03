@@ -1,7 +1,7 @@
 {
   "checks": [
     {
-      "detail": "85 catalogued, missing=[]",
+      "detail": "142 catalogued, missing=[]",
       "name": "manifest.all_sources_present",
       "status": "pass"
     },
@@ -26,7 +26,7 @@
       "status": "pass"
     },
     {
-      "detail": "23 sources still have unresolved rights (kept local-only): ['mom-2026-q2-advance', 'mom-2026-q2-final-release', 'mom-2025-q3-advance', 'mom-2025-q3-final-release', 'mom-2025-q4-advance', 'mom-2025-q4-final-release', 'mom-2026-q1-advance', 'mom-2026-q1-final-release', 'mom-2024-q1-advance', 'mom-2024-q1-final-release', 'mom-2024-q2-advance', 'mom-2024-q2-final-release', 'mom-2024-q3-advance', 'mom-2024-q3-final-release', 'mom-2024-q4-advance', 'mom-2024-q4-final-release', 'mom-2025-q1-advance', 'mom-2025-q1-final-release', 'mom-2025-q2-advance', 'mom-2025-q2-final-release', 'mom-jv2025-release', 'mom-wage-practices2024-release', 'mti-2026-q2-feature-ai-employment']",
+      "detail": "45 sources still have unresolved rights (kept local-only): ['mom-2026-q2-advance', 'mom-2026-q2-final-release', 'mom-2025-q3-advance', 'mom-2025-q3-final-release', 'mom-2025-q4-advance', 'mom-2025-q4-final-release', 'mom-2026-q1-advance', 'mom-2026-q1-final-release', 'mom-2020-q1-advance', 'mom-2020-q1-final-release', 'mom-2020-q2-advance', 'mom-2020-q3-advance', 'mom-2020-q3-final-release', 'mom-2020-q4-advance', 'mom-2021-q1-advance', 'mom-2021-q1-final-release', 'mom-2021-q2-advance', 'mom-2021-q3-advance', 'mom-2021-q3-final-release', 'mom-2021-q4-advance', 'mom-2021-q4-final-release', 'mom-2022-q1-advance', 'mom-2022-q1-final-release', 'mom-2022-q2-advance', 'mom-2022-q2-final-release', 'mom-2022-q3-advance', 'mom-2022-q3-final-release', 'mom-2022-q4-advance', 'mom-2022-q4-final-release', 'mom-wage-practices2020', 'mom-2024-q1-advance', 'mom-2024-q1-final-release', 'mom-2024-q2-advance', 'mom-2024-q2-final-release', 'mom-2024-q3-advance', 'mom-2024-q3-final-release', 'mom-2024-q4-advance', 'mom-2024-q4-final-release', 'mom-2025-q1-advance', 'mom-2025-q1-final-release', 'mom-2025-q2-advance', 'mom-2025-q2-final-release', 'mom-jv2025-release', 'mom-wage-practices2024-release', 'mti-2026-q2-feature-ai-employment']",
       "name": "rights.unresolved_sources_listed",
       "status": "warn"
     },
@@ -1316,7 +1316,7 @@
       "status": "warn"
     },
     {
-      "detail": "16419 passages",
+      "detail": "29760 passages",
       "name": "passages.ids_unique",
       "status": "pass"
     },
@@ -1346,17 +1346,17 @@
       "status": "pass"
     },
     {
-      "detail": "{'ok': 9052, 'table_unreliable': 7121, 'garbled': 246}",
+      "detail": "{'ok': 16342, 'table_unreliable': 13164, 'garbled': 254}",
       "name": "passages.quality_flag_distribution",
       "status": "pass"
     },
     {
-      "detail": "documents with fewer than 0.5 passages per page (text may be in images/tables): []",
+      "detail": "documents with fewer than 0.5 passages per page (text may be in images/tables): [('mom-lf2020-coverage-methodology', 12, 0), ('mom-lf2021-survey-findings', 58, 0), ('mom-lf2021-survey-highlights', 1, 0), ('mom-lf2021-coverage-methodology', 12, 0)]",
       "name": "passages.low_yield_documents",
-      "status": "pass"
+      "status": "warn"
     },
     {
-      "detail": "scanned 16419 passages and 180 distinct text values; hits=0 []",
+      "detail": "scanned 29760 passages and 180 distinct text values; hits=0 []",
       "name": "security.no_instruction_like_text_in_sources",
       "status": "pass"
     },
@@ -1382,7 +1382,7 @@
     }
   ],
   "summary": {
-    "pass": 268,
-    "warn": 8
+    "pass": 267,
+    "warn": 9
   }
 }

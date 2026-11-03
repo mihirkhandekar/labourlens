@@ -31,6 +31,18 @@ const NODE_LABEL = {
 const BAD = new Set(['error', 'operational_failure', 'rejected', 'output_blocked', 'invalid_arguments']);
 const WARN = new Set(['invalid', 'no_evidence', 'budget_exhausted']);
 
+// A shared link may carry the access code as #code=... (preferred: a fragment is never sent to the server or written to its logs) or ?code=...
+// The code is copied into the access field only, never auto-submitted, never stored, and removed from the address bar at once.
+export function takeAccessCodeFromUrl(loc = location, hist = history) {
+  const fromHash = new URLSearchParams(loc.hash.replace(/^#/, '')), fromQuery = new URLSearchParams(loc.search);
+  const value = fromHash.get('code') ?? fromQuery.get('code');
+  if (value === null) return '';
+  fromHash.delete('code'); fromQuery.delete('code');
+  const search = fromQuery.toString(), hash = fromHash.toString();
+  hist.replaceState(hist.state, '', loc.pathname + (search ? `?${search}` : '') + (hash ? `#${hash}` : ''));
+  return value.slice(0, 200);
+}
+
 export function mountWorkbench(root, {onMode} = {}) {
   let enabled = false, authenticated = false, busy = false, statusKnown = false;
   let evidenceList = [], timer = null, lastQuestion = '', thread = [];  // thread: the last finished turns, kept in memory only and sent with the next question (D-054)
@@ -50,6 +62,7 @@ export function mountWorkbench(root, {onMode} = {}) {
   const code = el('input', 'input'); code.type = 'password'; code.name = 'code'; code.autocomplete = 'current-password'; code.required = true; code.setAttribute('aria-label', 'Access code'); code.placeholder = 'Access code';
   const unlock = el('button', 'btn btn-primary'); unlock.type = 'submit';
   add(unlock, el('span', '', 'Continue'), (() => { const w = el('span', 'btn-ico'); w.append(icon('arrow-r')); return w; })());
+  code.value = takeAccessCodeFromUrl();
   add(login, code, unlock); accessCard.append(login); access.append(accessCard);
   const chatHead = el('header', 'wb-chat-head');
   const headCopy = el('div'); add(headCopy, el('h1', '', 'Research workbench'), el('p', 'small muted', 'Ask about Singapore labour-market data and reports.'));

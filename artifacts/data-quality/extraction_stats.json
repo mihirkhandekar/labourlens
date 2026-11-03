@@ -192,6 +192,735 @@
     "status": "ok"
   },
   {
+    "body_font_size_median": 11.0,
+    "dropped_short_blocks": 824,
+    "flags": {
+      "empty": 0,
+      "garbled": 0,
+      "multicolumn_uncertain": 0,
+      "ok": 340,
+      "table_unreliable": 466
+    },
+    "pages": 61,
+    "passages": 806,
+    "source_id": "mom-2020-q1-final",
+    "status": "ok"
+  },
+  {
+    "catalog_publication_date": "2020-04-29",
+    "date_matches_catalog": true,
+    "page_first_date": "2020-04-29",
+    "passages": 19,
+    "rights_notices": [],
+    "source_id": "mom-2020-q1-advance",
+    "status": "ok"
+  },
+  {
+    "catalog_publication_date": "2020-06-15",
+    "date_matches_catalog": true,
+    "page_first_date": "2020-06-15",
+    "passages": 21,
+    "rights_notices": [],
+    "source_id": "mom-2020-q1-final-release",
+    "status": "ok"
+  },
+  {
+    "body_font_size_median": 11.0,
+    "dropped_short_blocks": 716,
+    "flags": {
+      "empty": 0,
+      "garbled": 0,
+      "multicolumn_uncertain": 0,
+      "ok": 377,
+      "table_unreliable": 484
+    },
+    "pages": 60,
+    "passages": 861,
+    "source_id": "mom-2020-q2-final",
+    "status": "ok"
+  },
+  {
+    "catalog_publication_date": "2020-07-29",
+    "date_matches_catalog": true,
+    "page_first_date": "2020-07-29",
+    "passages": 15,
+    "rights_notices": [],
+    "source_id": "mom-2020-q2-advance",
+    "status": "ok"
+  },
+  {
+    "body_font_size_median": 11.0,
+    "dropped_short_blocks": 734,
+    "flags": {
+      "empty": 0,
+      "garbled": 0,
+      "multicolumn_uncertain": 0,
+      "ok": 335,
+      "table_unreliable": 484
+    },
+    "pages": 59,
+    "passages": 819,
+    "source_id": "mom-2020-q3-final",
+    "status": "ok"
+  },
+  {
+    "catalog_publication_date": "2020-10-30",
+    "date_matches_catalog": true,
+    "page_first_date": "2020-10-30",
+    "passages": 16,
+    "rights_notices": [],
+    "source_id": "mom-2020-q3-advance",
+    "status": "ok"
+  },
+  {
+    "catalog_publication_date": "2020-12-17",
+    "date_matches_catalog": true,
+    "page_first_date": "2020-12-17",
+    "passages": 16,
+    "rights_notices": [],
+    "source_id": "mom-2020-q3-final-release",
+    "status": "ok"
+  },
+  {
+    "body_font_size_median": 11.0,
+    "dropped_short_blocks": 1344,
+    "flags": {
+      "empty": 0,
+      "garbled": 0,
+      "multicolumn_uncertain": 0,
+      "ok": 480,
+      "table_unreliable": 595
+    },
+    "pages": 88,
+    "passages": 1075,
+    "source_id": "mom-2020-q4-final",
+    "status": "ok"
+  },
+  {
+    "catalog_publication_date": "2021-01-28",
+    "date_matches_catalog": true,
+    "page_first_date": "2021-01-28",
+    "passages": 20,
+    "rights_notices": [],
+    "source_id": "mom-2020-q4-advance",
+    "status": "ok"
+  },
+  {
+    "body_font_size_median": 10.08,
+    "dropped_short_blocks": 985,
+    "flags": {
+      "empty": 0,
+      "garbled": 0,
+      "multicolumn_uncertain": 0,
+      "ok": 389,
+      "table_unreliable": 473
+    },
+    "pages": 64,
+    "passages": 862,
+    "source_id": "mom-2021-q1-final",
+    "status": "ok"
+  },
+  {
+    "catalog_publication_date": "2021-04-28",
+    "date_matches_catalog": true,
+    "page_first_date": "2021-04-28",
+    "passages": 18,
+    "rights_notices": [],
+    "source_id": "mom-2021-q1-advance",
+    "status": "ok"
+  },
+  {
+    "catalog_publication_date": "2021-06-17",
+    "date_matches_catalog": true,
+    "page_first_date": "2021-06-17",
+    "passages": 26,
+    "rights_notices": [],
+    "source_id": "mom-2021-q1-final-release",
+    "status": "ok"
+  },
+  {
+    "body_font_size_median": 10.08,
+    "dropped_short_blocks": 695,
+    "flags": {
+      "empty": 0,
+      "garbled": 0,
+      "multicolumn_uncertain": 0,
+      "ok": 393,
+      "table_unreliable": 459
+    },
+    "pages": 63,
+    "passages": 852,
+    "source_id": "mom-2021-q2-final",
+    "status": "ok"
+  },
+  {
+    "catalog_publication_date": "2021-07-30",
+    "date_matches_catalog": true,
+    "page_first_date": "2021-07-30",
+    "passages": 19,
+    "rights_notices": [],
+    "source_id": "mom-2021-q2-advance",
+    "status": "ok"
+  },
+  {
+    "body_font_size_median": 10.08,
+    "dropped_short_blocks": 678,
+    "flags": {
+      "empty": 0,
+      "garbled": 0,
+      "multicolumn_uncertain": 0,
+      "ok": 330,
+      "table_unreliable": 456
+    },
+    "pages": 57,
+    "passages": 786,
+    "source_id": "mom-2021-q3-final",
+    "status": "ok"
+  },
+  {
+    "catalog_publication_date": "2021-10-29",
+    "date_matches_catalog": true,
+    "page_first_date": "2021-10-29",
+    "passages": 17,
+    "rights_notices": [],
+    "source_id": "mom-2021-q3-advance",
+    "status": "ok"
+  },
+  {
+    "catalog_publication_date": "2021-12-15",
+    "date_matches_catalog": true,
+    "page_first_date": "2021-12-15",
+    "passages": 26,
+    "rights_notices": [],
+    "source_id": "mom-2021-q3-final-release",
+    "status": "ok"
+  },
+  {
+    "body_font_size_median": 11.0,
+    "dropped_short_blocks": 867,
+    "flags": {
+      "empty": 0,
+      "garbled": 0,
+      "multicolumn_uncertain": 0,
+      "ok": 490,
+      "table_unreliable": 573
+    },
+    "pages": 85,
+    "passages": 1063,
+    "source_id": "mom-2021-q4-final",
+    "status": "ok"
+  },
+  {
+    "catalog_publication_date": "2022-01-28",
+    "date_matches_catalog": true,
+    "page_first_date": "2022-01-28",
+    "passages": 26,
+    "rights_notices": [],
+    "source_id": "mom-2021-q4-advance",
+    "status": "ok"
+  },
+  {
+    "catalog_publication_date": "2022-03-14",
+    "date_matches_catalog": true,
+    "page_first_date": "2022-03-14",
+    "passages": 27,
+    "rights_notices": [],
+    "source_id": "mom-2021-q4-final-release",
+    "status": "ok"
+  },
+  {
+    "body_font_size_median": 10.08,
+    "dropped_short_blocks": 776,
+    "flags": {
+      "empty": 0,
+      "garbled": 0,
+      "multicolumn_uncertain": 0,
+      "ok": 354,
+      "table_unreliable": 465
+    },
+    "pages": 58,
+    "passages": 819,
+    "source_id": "mom-2022-q1-final",
+    "status": "ok"
+  },
+  {
+    "catalog_publication_date": "2022-04-28",
+    "date_matches_catalog": true,
+    "page_first_date": "2022-04-28",
+    "passages": 21,
+    "rights_notices": [],
+    "source_id": "mom-2022-q1-advance",
+    "status": "ok"
+  },
+  {
+    "catalog_publication_date": "2022-06-17",
+    "date_matches_catalog": true,
+    "page_first_date": "2022-06-17",
+    "passages": 22,
+    "rights_notices": [],
+    "source_id": "mom-2022-q1-final-release",
+    "status": "ok"
+  },
+  {
+    "body_font_size_median": 10.08,
+    "dropped_short_blocks": 668,
+    "flags": {
+      "empty": 0,
+      "garbled": 0,
+      "multicolumn_uncertain": 0,
+      "ok": 394,
+      "table_unreliable": 471
+    },
+    "pages": 57,
+    "passages": 865,
+    "source_id": "mom-2022-q2-final",
+    "status": "ok"
+  },
+  {
+    "catalog_publication_date": "2022-07-29",
+    "date_matches_catalog": true,
+    "page_first_date": "2022-07-29",
+    "passages": 33,
+    "rights_notices": [],
+    "source_id": "mom-2022-q2-advance",
+    "status": "ok"
+  },
+  {
+    "catalog_publication_date": "2022-09-14",
+    "date_matches_catalog": true,
+    "page_first_date": "2022-09-14",
+    "passages": 18,
+    "rights_notices": [],
+    "source_id": "mom-2022-q2-final-release",
+    "status": "ok"
+  },
+  {
+    "body_font_size_median": 10.08,
+    "dropped_short_blocks": 668,
+    "flags": {
+      "empty": 0,
+      "garbled": 0,
+      "multicolumn_uncertain": 0,
+      "ok": 357,
+      "table_unreliable": 432
+    },
+    "pages": 53,
+    "passages": 789,
+    "source_id": "mom-2022-q3-final",
+    "status": "ok"
+  },
+  {
+    "catalog_publication_date": "2022-10-28",
+    "date_matches_catalog": true,
+    "page_first_date": "2022-10-28",
+    "passages": 24,
+    "rights_notices": [],
+    "source_id": "mom-2022-q3-advance",
+    "status": "ok"
+  },
+  {
+    "catalog_publication_date": "2022-12-15",
+    "date_matches_catalog": true,
+    "page_first_date": "2022-12-15",
+    "passages": 16,
+    "rights_notices": [],
+    "source_id": "mom-2022-q3-final-release",
+    "status": "ok"
+  },
+  {
+    "body_font_size_median": 11.0,
+    "dropped_short_blocks": 769,
+    "flags": {
+      "empty": 0,
+      "garbled": 0,
+      "multicolumn_uncertain": 0,
+      "ok": 520,
+      "table_unreliable": 542
+    },
+    "pages": 75,
+    "passages": 1062,
+    "source_id": "mom-2022-q4-final",
+    "status": "ok"
+  },
+  {
+    "catalog_publication_date": "2023-01-31",
+    "date_matches_catalog": true,
+    "page_first_date": "2023-01-31",
+    "passages": 24,
+    "rights_notices": [],
+    "source_id": "mom-2022-q4-advance",
+    "status": "ok"
+  },
+  {
+    "catalog_publication_date": "2023-03-15",
+    "date_matches_catalog": true,
+    "page_first_date": "2023-03-15",
+    "passages": 23,
+    "rights_notices": [],
+    "source_id": "mom-2022-q4-final-release",
+    "status": "ok"
+  },
+  {
+    "body_font_size_median": 11.0,
+    "dropped_short_blocks": 202,
+    "flags": {
+      "empty": 0,
+      "garbled": 1,
+      "multicolumn_uncertain": 0,
+      "ok": 134,
+      "table_unreliable": 5
+    },
+    "pages": 22,
+    "passages": 140,
+    "source_id": "mom-jv2020",
+    "status": "ok"
+  },
+  {
+    "body_font_size_median": 11.0,
+    "dropped_short_blocks": 242,
+    "flags": {
+      "empty": 0,
+      "garbled": 1,
+      "multicolumn_uncertain": 0,
+      "ok": 159,
+      "table_unreliable": 9
+    },
+    "pages": 24,
+    "passages": 169,
+    "source_id": "mom-jv2021",
+    "status": "ok"
+  },
+  {
+    "body_font_size_median": 11.0,
+    "dropped_short_blocks": 171,
+    "flags": {
+      "empty": 0,
+      "garbled": 1,
+      "multicolumn_uncertain": 0,
+      "ok": 291,
+      "table_unreliable": 3
+    },
+    "pages": 24,
+    "passages": 295,
+    "source_id": "mom-jv2022",
+    "status": "ok"
+  },
+  {
+    "body_font_size_median": 11.04,
+    "dropped_short_blocks": 155,
+    "flags": {
+      "empty": 0,
+      "garbled": 0,
+      "multicolumn_uncertain": 0,
+      "ok": 287,
+      "table_unreliable": 9
+    },
+    "pages": 24,
+    "passages": 296,
+    "source_id": "mom-jv2023",
+    "status": "ok"
+  },
+  {
+    "body_font_size_median": 13.58,
+    "dropped_short_blocks": 81,
+    "flags": {
+      "empty": 0,
+      "garbled": 5,
+      "multicolumn_uncertain": 0,
+      "ok": 82,
+      "table_unreliable": 7
+    },
+    "pages": 32,
+    "passages": 94,
+    "source_id": "mom-wage-practices2020",
+    "status": "ok"
+  },
+  {
+    "body_font_size_median": 10.08,
+    "dropped_short_blocks": 149,
+    "flags": {
+      "empty": 0,
+      "garbled": 0,
+      "multicolumn_uncertain": 0,
+      "ok": 128,
+      "table_unreliable": 14
+    },
+    "pages": 32,
+    "passages": 142,
+    "source_id": "mom-wage-practices2021",
+    "status": "ok"
+  },
+  {
+    "body_font_size_median": 11.0,
+    "dropped_short_blocks": 111,
+    "flags": {
+      "empty": 0,
+      "garbled": 0,
+      "multicolumn_uncertain": 0,
+      "ok": 145,
+      "table_unreliable": 38
+    },
+    "pages": 36,
+    "passages": 183,
+    "source_id": "mom-wage-practices2022",
+    "status": "ok"
+  },
+  {
+    "body_font_size_median": 11.0,
+    "dropped_short_blocks": 110,
+    "flags": {
+      "empty": 0,
+      "garbled": 0,
+      "multicolumn_uncertain": 0,
+      "ok": 159,
+      "table_unreliable": 38
+    },
+    "pages": 36,
+    "passages": 197,
+    "source_id": "mom-wage-practices2023",
+    "status": "ok"
+  },
+  {
+    "body_font_size_median": 10.56,
+    "dropped_short_blocks": 121,
+    "flags": {
+      "empty": 0,
+      "garbled": 0,
+      "multicolumn_uncertain": 0,
+      "ok": 124,
+      "table_unreliable": 0
+    },
+    "pages": 53,
+    "passages": 124,
+    "source_id": "mom-lf2020-survey-findings",
+    "status": "ok"
+  },
+  {
+    "body_font_size_median": 10.56,
+    "dropped_short_blocks": 1,
+    "flags": {
+      "empty": 0,
+      "garbled": 0,
+      "multicolumn_uncertain": 0,
+      "ok": 2,
+      "table_unreliable": 0
+    },
+    "pages": 1,
+    "passages": 2,
+    "source_id": "mom-lf2020-survey-highlights",
+    "status": "ok"
+  },
+  {
+    "body_font_size_median": 10.0,
+    "dropped_short_blocks": 28,
+    "flags": {
+      "empty": 0,
+      "garbled": 0,
+      "multicolumn_uncertain": 0,
+      "ok": 0,
+      "table_unreliable": 0
+    },
+    "pages": 12,
+    "passages": 0,
+    "source_id": "mom-lf2020-coverage-methodology",
+    "status": "ok"
+  },
+  {
+    "body_font_size_median": 10.5,
+    "dropped_short_blocks": 3,
+    "flags": {
+      "empty": 0,
+      "garbled": 0,
+      "multicolumn_uncertain": 0,
+      "ok": 10,
+      "table_unreliable": 0
+    },
+    "pages": 2,
+    "passages": 10,
+    "source_id": "mom-lf2020-copyright",
+    "status": "ok"
+  },
+  {
+    "body_font_size_median": 10.0,
+    "dropped_short_blocks": 0,
+    "flags": {
+      "empty": 0,
+      "garbled": 0,
+      "multicolumn_uncertain": 0,
+      "ok": 0,
+      "table_unreliable": 0
+    },
+    "pages": 58,
+    "passages": 0,
+    "source_id": "mom-lf2021-survey-findings",
+    "status": "ok"
+  },
+  {
+    "body_font_size_median": 10.0,
+    "dropped_short_blocks": 0,
+    "flags": {
+      "empty": 0,
+      "garbled": 0,
+      "multicolumn_uncertain": 0,
+      "ok": 0,
+      "table_unreliable": 0
+    },
+    "pages": 1,
+    "passages": 0,
+    "source_id": "mom-lf2021-survey-highlights",
+    "status": "ok"
+  },
+  {
+    "body_font_size_median": 10.0,
+    "dropped_short_blocks": 28,
+    "flags": {
+      "empty": 0,
+      "garbled": 0,
+      "multicolumn_uncertain": 0,
+      "ok": 0,
+      "table_unreliable": 0
+    },
+    "pages": 12,
+    "passages": 0,
+    "source_id": "mom-lf2021-coverage-methodology",
+    "status": "ok"
+  },
+  {
+    "body_font_size_median": 10.5,
+    "dropped_short_blocks": 3,
+    "flags": {
+      "empty": 0,
+      "garbled": 0,
+      "multicolumn_uncertain": 0,
+      "ok": 10,
+      "table_unreliable": 0
+    },
+    "pages": 2,
+    "passages": 10,
+    "source_id": "mom-lf2021-copyright",
+    "status": "ok"
+  },
+  {
+    "body_font_size_median": 10.56,
+    "dropped_short_blocks": 130,
+    "flags": {
+      "empty": 0,
+      "garbled": 0,
+      "multicolumn_uncertain": 0,
+      "ok": 147,
+      "table_unreliable": 0
+    },
+    "pages": 64,
+    "passages": 147,
+    "source_id": "mom-lf2022-survey-findings",
+    "status": "ok"
+  },
+  {
+    "body_font_size_median": 10.56,
+    "dropped_short_blocks": 1,
+    "flags": {
+      "empty": 0,
+      "garbled": 0,
+      "multicolumn_uncertain": 0,
+      "ok": 1,
+      "table_unreliable": 0
+    },
+    "pages": 1,
+    "passages": 1,
+    "source_id": "mom-lf2022-survey-highlights",
+    "status": "ok"
+  },
+  {
+    "body_font_size_median": 10.56,
+    "dropped_short_blocks": 57,
+    "flags": {
+      "empty": 0,
+      "garbled": 0,
+      "multicolumn_uncertain": 0,
+      "ok": 102,
+      "table_unreliable": 10
+    },
+    "pages": 12,
+    "passages": 112,
+    "source_id": "mom-lf2022-coverage-methodology",
+    "status": "ok"
+  },
+  {
+    "body_font_size_median": 10.5,
+    "dropped_short_blocks": 3,
+    "flags": {
+      "empty": 0,
+      "garbled": 0,
+      "multicolumn_uncertain": 0,
+      "ok": 10,
+      "table_unreliable": 0
+    },
+    "pages": 2,
+    "passages": 10,
+    "source_id": "mom-lf2022-copyright",
+    "status": "ok"
+  },
+  {
+    "body_font_size_median": 10.98,
+    "dropped_short_blocks": 158,
+    "flags": {
+      "empty": 0,
+      "garbled": 0,
+      "multicolumn_uncertain": 0,
+      "ok": 177,
+      "table_unreliable": 0
+    },
+    "pages": 69,
+    "passages": 177,
+    "source_id": "mom-lf2023-survey-findings",
+    "status": "ok"
+  },
+  {
+    "body_font_size_median": 10.5,
+    "dropped_short_blocks": 1,
+    "flags": {
+      "empty": 0,
+      "garbled": 0,
+      "multicolumn_uncertain": 0,
+      "ok": 4,
+      "table_unreliable": 0
+    },
+    "pages": 1,
+    "passages": 4,
+    "source_id": "mom-lf2023-survey-highlights",
+    "status": "ok"
+  },
+  {
+    "body_font_size_median": 10.5,
+    "dropped_short_blocks": 59,
+    "flags": {
+      "empty": 0,
+      "garbled": 0,
+      "multicolumn_uncertain": 0,
+      "ok": 102,
+      "table_unreliable": 10
+    },
+    "pages": 12,
+    "passages": 112,
+    "source_id": "mom-lf2023-coverage-methodology",
+    "status": "ok"
+  },
+  {
+    "body_font_size_median": 10.5,
+    "dropped_short_blocks": 3,
+    "flags": {
+      "empty": 0,
+      "garbled": 0,
+      "multicolumn_uncertain": 0,
+      "ok": 10,
+      "table_unreliable": 0
+    },
+    "pages": 2,
+    "passages": 10,
+    "source_id": "mom-lf2023-copyright",
+    "status": "ok"
+  },
+  {
     "body_font_size_median": 9.48,
     "dropped_short_blocks": 531,
     "flags": {

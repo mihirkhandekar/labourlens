@@ -117,6 +117,17 @@ def fetch_datasets(fetcher: acquire.Fetcher, only: set[str] | None = None) -> li
     return out
 
 
+def spec_notes(entry: dict) -> str:
+    """Extra manifest notes from a document spec: where the publication date is inferred rather than stated by the publisher (the
+    manifest field `publication_date` is otherwise 'as stated'), and any source-specific remark."""
+    out = ""
+    if entry.get("publication_date_basis"):
+        out += f"; publication_date_basis={entry['publication_date_basis']}"
+    if entry.get("source_notes"):
+        out += f"; {entry['source_notes']}"
+    return out
+
+
 def fetch_documents(fetcher: acquire.Fetcher, only: set[str] | None = None) -> list[SourceManifestEntry]:
     out: list[SourceManifestEntry] = []
     manifest = raw_store.load_manifest()
@@ -162,7 +173,7 @@ def fetch_documents(fetcher: acquire.Fetcher, only: set[str] | None = None) -> l
                 mime_type=(r.content_type or "").split(";")[0] or None,
                 raw_path=paths.rel(path),
                 retrieval_status="ok",
-                notes=f"newly_written={new}",
+                notes=f"newly_written={new}" + spec_notes(d),
             )
             if new:
                 raw_store.append_history(entry)

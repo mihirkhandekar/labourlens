@@ -570,7 +570,7 @@ def test_retrieval_tuning_states_fixed_numbers_and_advance_constant():
 def test_report_numeric_contract_pins_total_and_in_scope_observations():
     report = json.loads((STATIC / "data" / "report.json").read_text(encoding="utf-8"))
     metrics = report["sources"]["metrics"]
-    assert metrics["observations"] == 52020 and metrics["in_scope_observations"] == 4300, metrics
+    assert metrics["observations"] == 52020 and metrics["in_scope_observations"] == 11228, metrics
     assert metrics["by_type"]["dataset_csv"] == 36
 
 
