@@ -146,4 +146,4 @@ def test_cli_forwards_scorer_and_separate_source(monkeypatch):
     assert calls == [("new", "old", "v2")]
     monkeypatch.setattr(ts, "run", lambda *args: calls.append(args))
     assert main(["threat-test", "--experiment", "fresh"]) == 0
-    assert calls[-1] == (None, None, None, "fresh", "v1")
+    assert calls[-1] == (None, None, None, "fresh", "v1", None, 1)
