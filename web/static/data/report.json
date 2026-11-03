@@ -1,6 +1,6 @@
 {
   "schema_version": "report-1.0",
-  "generated_at": "2026-11-03T05:08:51.221873+00:00",
+  "generated_at": "2026-11-03T05:52:20.804412+00:00",
   "summary": {
     "title": "LabourLens research workbench",
     "scope": [
@@ -79074,6 +79074,14 @@
         "date": "3 Nov 2026",
         "alternatives": "",
         "summary": "All three were registered and committed before the paid runs (D-071 4cff027, D-072 and D-073 58c63d7)"
+      },
+      {
+        "id": "D-075",
+        "title": "Decisions API trial: faster components, failed quality screens",
+        "status": "OWNER DECISION / MEASURED RESULT",
+        "date": "3 Nov 2026",
+        "alternatives": "were retaining the current paths (chosen), adopting the unthresholded router despite the failed primary screen (rejected), or changing thresholds/prompts (requires a new registration, not authorised here)",
+        "summary": "The preregistration was committed as f950867 before paid runs; both manifests record implementation commit 3fd16ba"
       }
     ],
     "milestones": [],
@@ -79091,7 +79099,7 @@
     "The population basis of the dataset employment series is unverified."
   ],
   "provenance": {
-    "commit": "78bc6089bccb5652aa8639b3cd518a8a87777d1b",
+    "commit": "036802c35f07f7fae40b1bcdaf9cfc79734ee5bf",
     "artifacts": [
       {
         "path": "data/export/sources.json",
@@ -80324,12 +80332,12 @@
       {
         "path": "docs/decisions.md",
         "status": "available",
-        "sha256": "de53e262ce19eb4374d8f33ced14ced5a719e7faa161c153b67fc92ff105d2ae"
+        "sha256": "121fb0ddcf49fab6a544a788aeeef3842f2db298298253de0b44fe69155e8fdf"
       },
       {
         "path": "docs/progress.md",
         "status": "available",
-        "sha256": "b1acb694a5d45bc4b51d2e220544142f36966ed100388a157927b6b2d136cfc7"
+        "sha256": "b4bc1fc27f7889ead6fcc363f49568b3cdd9cd8828c4c1b1c0a4de6f54c8cfa9"
       }
     ],
     "policy": "Committed artifacts only; numeric fields only."
@@ -80773,7 +80781,7 @@
     "source": {
       "path": "docs/innovation-page.json",
       "sha256": "549ad5f8881853d66377b621092d5c7453f5298493e57e98c65c070997e271f2",
-      "evidence_commit": "78bc6089bccb5652aa8639b3cd518a8a87777d1b"
+      "evidence_commit": "036802c35f07f7fae40b1bcdaf9cfc79734ee5bf"
     }
   }
 }
