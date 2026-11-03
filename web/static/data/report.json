@@ -1,6 +1,6 @@
 {
   "schema_version": "report-1.0",
-  "generated_at": "2026-11-03T14:58:42.021104+00:00",
+  "generated_at": "2026-11-03T15:03:26.066978+00:00",
   "summary": {
     "title": "LabourLens research workbench",
     "scope": [
@@ -80989,6 +80989,22 @@
         "date": "3 Nov 2026",
         "alternatives": "",
         "summary": "Live trace: 51.6 s total; triage 2.2 s; getseries 0.07 s; four report searches of 6.4 to 9.8 s (round-2 calls ran one after another); 53k prompt tokens"
+      },
+      {
+        "id": "D-090",
+        "title": "Paraphrase-first answers and clause removal instead of a placeholder",
+        "status": "",
+        "date": "3 Nov 2026",
+        "alternatives": "",
+        "summary": "Live defect: \"MOM attributed the rise in retrenchments to Text withheld: excessive verbatim overlap with source evidence.\" The D-087 projection replaced a copied span inside a sentence with the placeholder"
+      },
+      {
+        "id": "D-091",
+        "title": "Served report search timeout, one retry and mandatory disclosure",
+        "status": "OWNER APPROVED",
+        "date": "3 Nov 2026",
+        "alternatives": "",
+        "summary": "Live finding: searchreports ended as an \"operational failure\" at 10.04 s, exactly the shared per-tool limit (TOOLTIMEOUTS), and the answer was then written from statistics alone with no mention that report search had fa…"
       }
     ],
     "milestones": [],
@@ -81006,7 +81022,7 @@
     "The population basis of the dataset employment series is unverified."
   ],
   "provenance": {
-    "commit": "243706638ebe9279dd143bf09fd160da24b997ce",
+    "commit": "3c7d81e170eabe148069c76d83edb6e2a83d9028",
     "artifacts": [
       {
         "path": "data/export/sources.json",
@@ -82016,7 +82032,7 @@
       {
         "path": "docs/mcp-demo-transcript.md",
         "status": "available",
-        "sha256": "ec69901ce1709e26b64d3b5f6eb047d397494f9b80591aaff7fc55b5669132fd"
+        "sha256": "a4dcd38f37468c0241d0aa5e94e16ff17c138aec4f42dc6462f89374515ac22f"
       },
       {
         "path": "experiments/corpus-snapshots/v1.json",
@@ -82244,12 +82260,12 @@
       {
         "path": "docs/decisions.md",
         "status": "available",
-        "sha256": "0e711fb08ae0bdb9d4630621c4754eb7daac904893b1ca452c86c482f4fb49d6"
+        "sha256": "c181e7a5d34107e86778c84656a3b9cdb5d76a7cc1b49e3192f6d4bccca0607a"
       },
       {
         "path": "docs/progress.md",
         "status": "available",
-        "sha256": "0478f18fd00e89f25efc9d40e21f6984de50acc0b06ade56acbd35bba6afeff1"
+        "sha256": "94bacd43a1d6287a91851539646d65ae32ac0b935438e390043beb5c7aa1f1ca"
       }
     ],
     "policy": "Committed artifacts only; numeric fields only."
@@ -82676,7 +82692,7 @@
     "source": {
       "path": "docs/innovation-page.json",
       "sha256": "0f779a8f321d020f1fd04cb090bd8a483f2f848d65b6237f53581469a3d37232",
-      "evidence_commit": "243706638ebe9279dd143bf09fd160da24b997ce"
+      "evidence_commit": "3c7d81e170eabe148069c76d83edb6e2a83d9028"
     }
   }
 }
