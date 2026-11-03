@@ -36,11 +36,13 @@ def test_derived_summary_uses_the_window():
 
 
 def test_frozen_prompt_files_are_unchanged_and_the_served_ones_are_new_files():
-    frozen = {"planner_v1": "32c800c83425", "answer_v3": "9a9372faf52e", "triage_v1": "de176c25e4b6", "contextualise_v1": "1fdf71c2fcfc"}
-    assert {name: load_prompt(name)[2] for name in frozen} == frozen  # hash-pinned by the frozen experiments: never edit, add a new version
-    for old, new in (("triage_v1", "triage_v2"), ("contextualise_v1", "contextualise_v2")):
+    # Hash-pinned by the frozen experiments (the first four) or already deployed (the next three, superseded by D-080): never edit, add a new version.
+    pinned = {"planner_v1": "32c800c83425", "answer_v3": "9a9372faf52e", "triage_v1": "de176c25e4b6", "contextualise_v1": "1fdf71c2fcfc",
+              "planner_v4": "550e97495ed0", "answer_v6": "5e0fbdc5a5bd", "triage_v2": "61695483ac77"}
+    assert {name: load_prompt(name)[2] for name in pinned} == pinned
+    for new in ("triage_v3", "contextualise_v2"):
         text = load_prompt(new)[0]
-        assert "Q1 2020 to Q2 2026" in text and "2024" not in text and load_prompt(new)[2] != frozen[old]
-    for name in ("planner_v4", "answer_v6"):
+        assert "Q1 2020 to Q2 2026" in text and "2024" not in text and load_prompt(new)[2] not in pinned.values()
+    for name in ("planner_v5", "answer_v7"):
         text = load_prompt(name)[0]
-        assert "1Q 2020 to 2Q 2026" in text and "2024" not in text and "2023 onward" in text
+        assert "1Q 2020 to 2Q 2026" in text and "2024" not in text and "2023 onward" not in text and load_prompt(name)[2] not in pinned.values()

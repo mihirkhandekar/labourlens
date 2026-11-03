@@ -17,7 +17,7 @@ MCP_ALL_ROUTED = frozenset({"search_reports", "calculate_change", "calculate_fro
 
 # What the web app ships (D-077, D-078): the 2020-Q1 to 2026-Q2 prompts, and the native function-calling planner. Every frozen experiment kept its own
 # prompt files and the structured-output planner; nothing here changes AgentConfig() or make_runner() defaults, so those runs reproduce as before.
-SHIPPED_PROMPTS = {"planner": "planner_v4", "answer": "answer_v6", "triage": "triage_v2", "contextualise": "contextualise_v2"}
+SHIPPED_PROMPTS = {"planner": "planner_v5", "answer": "answer_v7", "triage": "triage_v3", "contextualise": "contextualise_v2"}
 
 
 def shipped_config(run_deadline_s: float | None = 80.0):

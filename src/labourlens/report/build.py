@@ -527,7 +527,7 @@ def _mcp(artifacts: _Artifacts) -> dict:
                     limitations=["The input filter is heuristic and has known gaps.", "Warm-session timings exclude the initial connection."])
 
 _TRIAGE = "experiments/triage/triage-v1-luna/metrics.json"
-_CORPUS_V31 = "experiments/corpus-snapshots/v3.1.json"
+_CORPUS_V31 = "experiments/corpus-snapshots/v4.json"  # the current build (D-080); the name predates it. v3.1 is the evaluated build, kept in _BUILDS
 _CORPUS_V31_DIFF = "experiments/corpus-snapshots/v3.1-diff.json"
 _CONTEXT_V1 = "experiments/context/ctx-v1-luna/metrics.json"
 _CONTEXT_V2 = "experiments/context/ctx-v2-luna/metrics.json"
@@ -587,6 +587,10 @@ def _serving(artifacts: _Artifacts, sources: dict) -> dict:
             "chunks_changed": _numeric(diff.get("chunks")),
             "embeddings": _numeric(diff.get("embeddings")),
         }
+        evaluated = artifacts.mapping("experiments/corpus-snapshots/v3.1.json")
+        if evaluated:
+            block["evaluated_corpus"] = {"label": _label(evaluated.get("label")), "document_files": evaluated.get("document_files"),
+                                         "passages": evaluated.get("passages"), "chunks": evaluated.get("chunks")}
     counts = Counter(f"{row.get('type', 'unknown')}:{row.get('rights_status', 'unknown')}" for row in sources.get("rows", []))
     if counts:
         unverified_datasets = counts.get("dataset_csv:assumed_open_unverified", 0)
@@ -595,7 +599,7 @@ def _serving(artifacts: _Artifacts, sources: dict) -> dict:
                            "sources_all_rights_reserved": counts.get("report_pdf:verified_all_rights_reserved", 0)}
     status = "available" if block else "missing"
     return {"status": status, "summary": "Scope check measured alone, the current document build and rights counts. The served app differs from the evaluated system.",
-            "metrics": {}, "rows": rows, "provenance": [_TRIAGE, _CORPUS_V31, _CORPUS_V31_DIFF, "data/export/sources.json"], **block}
+            "metrics": {}, "rows": rows, "provenance": [_TRIAGE, _CORPUS_V31, "experiments/corpus-snapshots/v3.1.json", _CORPUS_V31_DIFF, "data/export/sources.json"], **block}
 
 
 def _saved_replay(artifacts: _Artifacts) -> list[dict]:
@@ -1053,7 +1057,8 @@ _BUILDS = (
     ("v1", "Build v1", "First experiments and the original test. Results frozen."),
     ("v2", "Build v2", "Extraction fixes tested alone. No measurable change."),
     ("v3", "Build v3", "Six new sources added. The first fresh-question run was on this build."),
-    ("v3.1", "Current build (v3.1)", "Same sources. Forty passages of one article relabelled."),
+    ("v3.1", "Build v3.1", "Same sources as v3. Forty passages of one article relabelled. The final evaluation ran on this build."),
+    ("v4", "Current build (v4)", "Adds the 2020 to 2022 quarterly reports and the 2020 to 2023 annual reports (57 documents). Not evaluated."),
 )
 
 
@@ -1237,8 +1242,8 @@ def _corpus_builds(artifacts: _Artifacts, final: dict | None = None) -> dict:
             continue
         row = {"id": key, "name": name, "passages": passages, "documents": snapshot.get("document_files") if isinstance(snapshot.get("document_files"), int) else None,
                "purpose": purpose, "current": key == _BUILDS[-1][0], "provenance": [path]}
-        if row["current"]:
-            row["rerun"] = _rerun_sentence(final) if key == "v3.1" else None
+        if key == "v3.1":
+            row["rerun"] = _rerun_sentence(final)
         rows.append(row)
     return _section("Document builds: passage counts from the committed corpus snapshots.", rows, [row["provenance"][0] for row in rows])
 
@@ -1323,7 +1328,7 @@ def build_report(root: Path) -> dict:
         "corpus_builds": _corpus_builds(artifacts, final_eval),
         "heldout_v31": v31_held,
         "final_evaluation": final_eval,
-        "retrieval": _section("Current corpus v3.1 retrieval rerun; earlier builds retained as history.", retrieval_rows, retrieval_paths + methods_v31.get("provenance", []) + ladder.get("provenance", []) + ladder_v2.get("provenance", []) + ladder_v1.get("provenance", []), ladder=ladder, ladder_corpus_v1=ladder_v1, ladder_corpus_v2=ladder_v2, methods=methods_v31),
+        "retrieval": _section("Corpus v3.1 retrieval rerun; earlier builds retained as history.", retrieval_rows, retrieval_paths + methods_v31.get("provenance", []) + ladder.get("provenance", []) + ladder_v2.get("provenance", []) + ladder_v1.get("provenance", []), ladder=ladder, ladder_corpus_v1=ladder_v1, ladder_corpus_v2=ladder_v2, methods=methods_v31),
         "answers": _section("Saved answer metrics. Model outputs are not published.", answer_rows, answer_paths,
                             limitations=["Costs that were not recorded are not estimated."]),
         "agent": _section("Bounded workflow measurements on statistics-only traces.", agent_rows, agent_paths + trace_paths, trace=trace, events=_saved_replay(artifacts)),

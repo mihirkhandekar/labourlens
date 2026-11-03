@@ -229,9 +229,9 @@ export function buildTimeline(m) {
   const body = el('tbody');
   builds.forEach(b => {
     const lead = (b.rerun || '').split('. ')[0];
-    const why = b.current ? `${b.purpose} ${b.rerun ? `${lead}. Hover or focus for the numbers.` : ''}`.trim() : b.purpose;
+    const why = b.rerun ? `${b.purpose} ${lead}. Hover or focus for the numbers.`.trim() : b.purpose;
     const tr = el('tr', b.current ? 'is-current' : ''); const cell = el('td', '', why);
-    if (b.current && b.rerun) withTip(cell, b.rerun, 'is-up');
+    if (b.rerun) withTip(cell, b.rerun, 'is-up');
     tr.append(el('th', '', b.name), el('td', 'num', fmt.int(b.passages)), cell); body.append(tr);
   });
   table.append(body); wrap.append(table);
@@ -251,7 +251,7 @@ export function flattening(m) {
   };
   node('Source report', 'PDF or web page', 'Raw MOM and MTI PDF and HTML files stay local in data/raw, never in public Git. The committed data/manifests/manifest.json records source snapshots, hashes and acquisition metadata.');
   node('Parse layout', 'Read blocks and sections', 'Parser extract-0.3: PyMuPDF reads PDF blocks with bounding boxes and column-aware ordering; BeautifulSoup reads HTML sections. Page, heading, source and release metadata are kept. This is not a reliable table-to-rows parser: table-like blocks can flatten and are flagged table_unreliable rather than silently repaired.');
-  node('Passages', `${fmt.int(corpus.passages)} · ${fmt.int(sources)} sources`, `Corpus v3.1 has ${fmt.int(sources)} sources: ${fmt.int(sources - documents)} statistical datasets and ${fmt.int(documents)} report documents, with ${fmt.int(corpus.passages)} passages. v3.1 relabelled 40 passages in one MTI article; source and passage totals did not change. Extracted report passages are local JSONL files in data/passages. Only quality_flag=ok enters default retrieval; table_unreliable and garbled blocks remain available for inspection, not default retrieval.`);
+  node('Passages', `${fmt.int(corpus.passages)} · ${fmt.int(sources)} sources`, `The live corpus (v4) has ${fmt.int(sources)} sources: ${fmt.int(sources - documents)} statistical datasets and ${fmt.int(documents)} report documents, with ${fmt.int(corpus.passages)} passages. The evaluated build, v3.1, had 85 sources and 16,419 passages. Extracted report passages are local JSONL files in data/passages. Only quality_flag=ok enters default retrieval; table_unreliable and garbled blocks remain available for inspection, not default retrieval.`);
   node('Merge chunks', `${fmt.int(corpus.chunks)} · about 200 words`, 'The live runtime uses merge200, not the earlier merge120 experiment: adjacent eligible passages within one source and section, target 200 words and up to 40 words of whole-passage overlap. Chunks are rebuilt in memory at startup. JSONL export is supported under data/index/chunks. That directory and all report-derived indexes are gitignored.');
   const forms = el('div', 'rpipeline-indexes');
   const form = (head, sub, tip) => { const n = el('div', 'rpipeline-index'); n.append(el('h3', '', head), el('p', '', sub)); withTip(n, tip, 'is-down'); forms.append(n); };
@@ -266,7 +266,8 @@ export function flattening(m) {
     const tr = el('tr'); r.forEach((v, j) => tr.append(el(i === 0 || j === 0 ? 'th' : 'td', '', v))); table.append(tr);
   });
   const after = el('div', 'rpipeline-flat'); after.append(el('strong', '', 'Flattened table'), el('p', '', 'Q1 Q2 Row A value value Row B value value'), el('p', 'rpipeline-flag', 'Flag and exclude, do not invent rows'));
-  tableExample.append(table, ico('arrow-right'), after);
+  const beforeBox = el('div', 'rpipeline-side'); beforeBox.append(el('strong', '', 'In the report'), table);
+  tableExample.append(beforeBox, after);
   withTip(tableExample, 'Schematic, not a real report quotation. A real table-like block in the MOM Q1 2026 final report, PDF page 28, is flagged table_unreliable by extract-0.3 and excluded from default chunks. Numerical answers use validated structured datasets instead. The code does not turn this report table into a trusted row chunk.', 'is-up');
   const example = el('div', 'rpipeline-example');
   example.append(el('h3', '', 'A real eligible chunk, without report text'), el('p', '', 'MOM Q1 2026 final · pages 2 to 3'), el('p', '', '216 words · 9 source passages · 3,072-number vector'));
@@ -629,10 +630,7 @@ export function agentLoop() {
   edge('M1485 370 H1535 V215 H1485', true);
   node(25, 240, 230, 110, ['Planner', 'Choose actions'], 'Input validation runs first. The planner sees the question, dataset catalogue, prior evidence summaries and tool errors. The base tool names and argument schemas are fixed in code: search_reports, get_series and calculate_change. It may request up to three calls in a round or stop gathering. It does not discover or choose freely among all MCP server tools.', 'is-planner');
   node(345, 35, 480, 130, ['Search reports', 'BM25 + embeddings', 'Filter, rerank, return passages'], LOOP_TIPS[1]);
-  node(345, 205, 480, 120, ['Structured statistics', ''], LOOP_TIPS[2], 'is-mcp');
-  svg.append(svgEl('path', {d: 'M585 250 V315', transform: `scale(1 ${yScale})`, class: 'owner-agent-boundary'}));
-  label(465, 302, 'Client →', 'is-mcp-detail');
-  label(705, 302, 'MCP server → rows', 'is-mcp-detail');
+  node(345, 205, 480, 120, ['Structured statistics', 'MCP server → rows'], LOOP_TIPS[2], 'is-mcp');
   node(345, 380, 480, 90, ['Calculate in code', 'Returned observations → change'], 'calculate_change uses deterministic Decimal arithmetic on previously collected, compatible observation rows. The model does not calculate the change. It runs in the app in the live system. The separately configured v2 experiment adds passage-value calculation; it is not part of the base three-tool choice.');
   node(345, 515, 480, 70, ['Stop gathering'], 'The planner can stop without calling a tool. A stop decision, exhausted round budget or exhausted call budget proceeds to final evidence assessment. It does not bypass evidence or answer validation.');
   node(925, 235, 210, 120, ['Review', 'evidence'], 'Logical evidence checkpoint: after tool execution, the planner receives evidence summaries and errors for another bounded round. In the actual graph, execute_tool routes back to plan_research while budget remains. When gathering stops, assess_evidence annotates source conflicts and coverage notes before generation. assess_evidence itself does not loop back.', 'is-guard');
@@ -640,14 +638,13 @@ export function agentLoop() {
   node(1205, 325, 280, 90, ['Check answer'], 'Validate the structured answer, citations, quotes and numbers against collected evidence; enforce cross-source conflict rules. One failed answer can be regenerated with validation errors. A second invalid answer ends as invalid rather than being passed off as supported.', 'is-guard');
   node(1205, 475, 280, 110, ['Answer or abstain'], 'Final statuses also include clarification and refusal. Rejected input, operational failure, invalid output and blocked output remain distinct from lack of evidence. The output guard runs before a successful answer reaches the user.', 'is-finish');
   label(595, 619, 'Review returned evidence; plan again', 'is-return');
-  label(1500, 140, '1 repair');
+  label(1500, 140, 'Repair');
   wrap.append(svg); svgTips(wrap, parts);
   const bounds = el('div', 'owner-agent-bounds');
   bounds.setAttribute('role', 'group'); bounds.setAttribute('aria-label', 'Agent execution limits');
   [
     ['2 rounds', 'Base configuration: at most two evidence-gathering rounds, at most three planned calls per round and six calls overall. The optional v2 configuration grants one bonus round after an unknown-dimension error, without increasing the six-call cap.'],
     ['6 calls', 'Six planned tool calls across the run. Calls execute sequentially within each round. A tool invocation uses isolated evidence state; only an on-time completion is committed.'],
-    ['10 s per call', 'Default agent tool deadline is ten seconds. A timed-out worker is not retried and its late result is not committed. The MCP client has its own eight-second default call deadline and twenty-second connect deadline.'],
     ['Bounded retries', 'One retry for a JSON parsing failure in planner output (the evaluated structured-output planner; the shipped native planner has no such retry, a malformed tool call becomes an invalid-arguments tool error). A finished TransientToolError may be retried once; a timed-out tool is not retried. The persistent MCP backend reconnects once after a lost connection. One answer repair is allowed. These are separate controls, not a blanket retry policy.'],
   ].forEach(([text, detail]) => bounds.append(withTip(el('span', '', text), detail, 'is-up is-wide')));
   wrap.append(bounds, toolLegend());
@@ -746,62 +743,6 @@ export function toolFixBars(m) {
   return wrap;
 }
 
-/** Why the change failed: figures from the pre-declared criteria in the report data, plus what the development run report states about tool use. */
-function toolFixWhy(m) {
-  const crit = m?.section('evaluation')?.tool_set_v2?.dev_x3?.criteria || {};
-  const a = crit['gpt-6-luna'];
-  if (!a) return null;
-  const failed = c => Object.values(c.criteria).filter(x => x.pass === false).length;
-  return exampleBlock('Why it did not work', [
-    ['Rules:', `They were declared before the run. ${failed(a)} failed for gpt-6-luna.`],
-    ['Right behaviour:', `${a.x2.correct} to ${a.x3.correct} of ${a.x3.n} for gpt-6-luna.`],
-    ['False-answer cases:', `${a.x2.false_answers} to ${a.x3.false_answers}. The limit was ${a.criteria['2_false_answers'].threshold}.`],
-    ['Cases with an ungrounded number:', `${a.x2.cases_with_ungrounded} to ${a.x3.cases_with_ungrounded}. In cases that used the new tool: ${a.x3.new_tool_cases_with_ungrounded} of ${a.x3.new_tool_cases}.`],
-    ['Numerical comparisons right:', `${a.x2.numerical_comparison_correct} of ${a.x3.numerical_comparison_n}, unchanged.`],
-    ['How the tool was used:', 'gpt-6-luna made 9 successful and 2 refused calls.'],
-    ['What this does not show:', 'The measurements show it did not help. They do not establish why. Whether the extra ungrounded numbers are the new tool\u2019s fault was not investigated per case.']
-  ], 'From the pre-declared criteria and the development run report.');
-}
-
-/** One real case where the old and the new tool set differed, from the committed case records. */
-function toolFixCase(m) {
-  const ex = m?.section('evaluation')?.tool_set_v2?.dev_x3?.example;
-  if (!ex?.models) return null;
-  const word = o => o.right ? 'right' : o.false_answer ? 'a false answer' : 'wrong';
-  return exampleBlock('A real case: a numerical comparison', [
-    ['Question:', ex.question],
-    ['Right behaviour:', ex.period_note],
-    ...Object.entries(ex.models).map(([name, o]) => [`${name}:`, `old tools ${word(o.old)}, new tool ${word(o.new)}.`]),
-    ['Why:', 'The committed case records show the outcome but not the tool calls, so the cause for this case is not shown.']
-  ], 'A real case from the development run.');
-}
-/** The dataset-row limit, tested report-text tool and failed adoption criteria. */
-export function toolFixFlow(m) {
-  const wrap = el('div', 'calculation-gap');
-  const tools = el('div', 'calculation-tools');
-  [
-    ['Dataset-row calculation tool', 'Used by the agent', 'Calculates changes from returned dataset rows. Report-only figures cannot enter it.'],
-    ['Report-text calculation tool', 'Tested extra tool', 'Calculates from two cited report figures. Checks their presence, units and basis.']
-  ].forEach(([name, status, description]) => {
-    const tool = el('div', 'calculation-tool');
-    tool.append(el('h3', '', name), el('p', 'calculation-status', status), el('p', '', description));
-    tools.append(tool);
-  });
-  const example = toolFixCase(m);
-  if (example) withTip(tools.lastChild, example, 'is-table is-down');
-  const first = m?.section('evaluation')?.tool_set_v2?.dev_x3?.criteria?.['gpt-6-luna'];
-  const result = el('div', 'calculation-result');
-  result.append(el('h3', '', 'What happened'),
-    el('p', '', 'Report-only arithmetic cases: 3 of 14 right.'),
-    el('p', 'calculation-change', first ? `${fmt.pct(first.x2.correct / first.x2.n)} → ${fmt.pct(first.x3.correct / first.x3.n)}` : 'Result unavailable'),
-    el('p', '', 'Development behaviour accuracy, 237 questions; one run.'),
-    el('p', '', 'Two rules failed: false answers rose from 6 to 7; one new-tool case contained an ungrounded number.'),
-    el('strong', 'calculation-verdict', 'Not adopted.'));
-  withTip(result, toolFixWhy(m) || 'The pre-declared development rules failed.', 'is-table is-up');
-  wrap.append(tools, result);
-  return wrap;
-}
-
 /** MCP capabilities and measured experiments. Figures come from the report data and the protocol demo transcript. */
 export function mcpMap(m, {showMeasurements = true} = {}) {
   const wrap = el('div', 'owner-mcp');
@@ -818,20 +759,11 @@ export function mcpMap(m, {showMeasurements = true} = {}) {
   const arrow = () => { const n = el('span', 'owner-mcp-arrow'); n.append(ico('arrow-right')); n.setAttribute('aria-hidden', 'true'); return n; };
   const server = el('div', 'owner-mcp-server');
   server.append(tipped('h3', '', 'MCP server', 'The server exposes nine read-only statistics tools, one catalogue resource, one source-entry resource template and a compare_quarters prompt. The prompt is available but not used by the research agent. Resources are application-selected context, not agent tool calls. Other compatible hosts could connect; this does not claim a third-party host has been demonstrated. The tested all-tools variant starts the server with an agent profile that adds search_reports, calculate_change, calculate_from_text_values and describe_corpus on top of these nine. The live app does not use that profile.'));
-  const tools = el('div', 'owner-mcp-tools');
-  tools.setAttribute('role', 'group'); tools.setAttribute('aria-label', 'Nine read-only tools. The highlighted get_statistic is used by the live agent.');
-  [
-    ['get_statistic', 'get_statistic', 'Used by the live agent through get_series. Returns matching observation rows with values, units, quarters, population, adjustment, release stage and provenance.'],
-    ['Datasets', 'list_datasets', 'List statistical datasets, optionally filtered by topic, with coverage and definitions.'],
-    ['Definitions', 'describe_dataset', 'Read series definitions, units, population, adjustment, coverage, source URL and licence.'],
-    ['Dimensions', 'get_dimension_values', 'List valid industry, sector or occupation values for a dataset.'],
-    ['Latest value', 'latest_value', 'Most recent non-null published value for each matching series, with release stage and later missing periods.'],
-    ['Compare periods', 'compare_periods', 'Compute exact Decimal difference and relative change for one compatible series. Refuse ambiguous or missing values.'],
-    ['Summary', 'series_summary', 'First, last, minimum, maximum and direction over a period range, computed in code.'],
-    ['Revisions', 'get_revisions', 'Compare the two latest snapshots. One snapshot means no revision history, not evidence of no revisions.'],
-    ['Provenance', 'get_provenance', 'Trace one observation to its publisher, source URL, snapshot checksum, licence and transformations. Not report passages.'],
-  ].forEach(([text, name, detail], i) => tools.append(tipped('div', `owner-mcp-tool${i === 0 ? ' is-active' : ''}`, text, `Server tool ${name}. ${detail}`)));
-  server.append(tipped('p', 'owner-mcp-label', '9 tools', 'The highlighted tool is the agent integration. The eight other server tools remain available through the MCP API and workbench, but are not in the base planner schema.'), tools);
+  const tools = el('div', 'owner-mcp-tools is-single');
+  tools.setAttribute('role', 'group'); tools.setAttribute('aria-label', 'The statistics tool used by the live agent.');
+  tools.append(tipped('div', 'owner-mcp-tool is-active', 'get_statistic', 'Server tool get_statistic. Used by the live agent through get_series. Returns matching observation rows with values, units, quarters, population, adjustment, release stage and provenance.'));
+  server.append(tipped('p', 'owner-mcp-label', '1 tool in use', 'The server offers eight other read-only tools (list_datasets, describe_dataset, get_dimension_values, latest_value, compare_periods, series_summary, get_revisions, get_provenance). They are not in the base planner schema; Appendix G lists them. Full-set accuracy evaluations used direct calls.'), tools);
+  server.append(el('p', 'owner-mcp-more', 'The server offers 8 other tools. Appendix G lists them.'));
   const resources = el('div', 'owner-mcp-resources');
   resources.append(tipped('div', 'owner-mcp-resource', 'Source catalogue', 'Resource labourlens://sources returns publisher, URL, rights and coverage metadata for datasets and documents. No report text.'));
   resources.append(tipped('div', 'owner-mcp-resource', 'Source entry', 'Resource template labourlens://source/{source_id} returns one catalogue entry. This second resource capability is a template, not a second fixed resource URI. Full report passages are not exposed. The research agent does not read these resources.'));
@@ -943,31 +875,31 @@ export function pairPanels(panels) {
   return wrap;
 }
 
-/** The system, its stages and the three cross-cutting bars: guardrails, evaluation and the MCP interface. */
+/** The pipeline as five columns on one rail. Guardrails span the run-time stages; evaluation spans everything. */
 export function architectureDiagram() {
-  const wrap = el('div', 'g17');
-  const stages = [['database', 'Sources', ['Quarterly statistics', 'MOM reports and an MTI article']], ['file-text', 'Processing', ['Validate observations', 'Parse report passages', 'Build report indexes']], ['wrench', 'Agent loop', ['Planner chooses a tool', 'Reviews returned evidence', 'Calls again or stops']], ['magnifying-glass', 'Three tools', ['search_reports: passages', 'get_series: rows over MCP', 'calculate_change: exact change']], ['check-circle', 'Answer', ['Cited, validated output', 'Or clarify, decline, refuse']]];
-  const row = el('div', 'g17-row');
-  stages.forEach(([icon, name, lines], i) => {
-    if (i) { const arrow = el('div', 'g17-arrow'); arrow.append(ico('arrow-right')); row.append(arrow); }
-    const box = el('div', 'g17-stage'); box.style.setProperty('--i', String(i));
+  const wrap = el('div', 'arch');
+  const stages = [
+    ['database', 'Sources', ['Quarterly statistics', 'MOM reports and an MTI article']],
+    ['file-text', 'Processing', ['Validate and normalise statistics', 'Split reports into passages', 'Build keyword and vector indexes']],
+    ['wrench', 'Agent loop', ['The planner picks a tool', 'It reviews what came back', 'It calls again or stops']],
+    ['magnifying-glass', 'Three tools', ['search_reports', 'get_series', 'calculate_change'], ['Finds report passages', 'Reads validated rows over MCP', 'Computes an exact change']],
+    ['check-circle', 'Answer', ['A cited, validated answer', 'Or a clarification, decline or refusal']]
+  ];
+  stages.forEach(([icon, name, lines, notes], i) => {
+    const col = el('div', 'arch-stage'); col.style.setProperty('--i', String(i));
     const head = el('div', 'g12-head'); head.append(ico(icon), el('h3', '', name));
-    const ul = el('ul'); lines.forEach(t => ul.append(el('li', '', t)));
-    box.append(head, ul);
-    if (name === 'Three tools') {
-      const mcp = el('div', 'g17-mcp');
-      mcp.append(ico('path'), el('strong', '', 'get_series → get_statistic'), el('span', 'g17-mcp-sub', 'MCP client → statistics server'));
-      withTip(mcp, 'The live agent uses get_series to request validated observation rows from server tool get_statistic. Report search and calculation stay in the app.', 'is-up is-wide');
-      box.append(mcp);
-    }
-    row.append(box);
+    const ul = el('ul', notes ? 'is-tools' : '');
+    lines.forEach((t, j) => { const li = el('li'); li.append(el(notes ? 'strong' : 'span', '', t)); if (notes) li.append(el('span', '', notes[j])); ul.append(li); });
+    col.append(head, ul);
+    wrap.append(col);
   });
-  const flowNote = el('p', 'g17-flow-note', 'The agent chooses tools, reviews the evidence and stops within fixed limits.');
-  const bars = el('div', 'g17-bars');
-  [['shield', 'Guardrails', 'Retrieved text is untrusted. Tools are read-only and calls are bounded.'], ['chart-line', 'Evaluation', 'Development and fresh cases, human review and attack tests.']].forEach(([icon, name, text]) => {
-    const bar = el('div', 'g17-bar'); bar.append(ico(icon), el('strong', '', name), el('span', '', text)); bars.append(bar);
+  const bars = [['shield', 'Guardrails', 'Retrieved text is untrusted. Tools are read-only and calls are bounded.', '3 / 6'], ['chart-line', 'Evaluation', 'Development and fresh questions, human review and attack tests.', '1 / 6']];
+  bars.forEach(([icon, name, text, cols]) => {
+    const bar = el('div', 'arch-span'); bar.style.setProperty('grid-column', cols);
+    const head = el('div', 'arch-span-head'); head.append(ico(icon), el('strong', '', name));
+    bar.append(head, el('p', '', text));
+    wrap.append(bar);
   });
-  wrap.append(row, flowNote, bars);
   return wrap;
 }
 
@@ -986,20 +918,15 @@ export function myProject() {
 export function assumptionsScope(m) {
   const count = m.section('sources').metrics?.sources;
   const groups = [
-    ['Assumptions', [
-      ['Validated rows anchor calculations', 'Reports add context, not calculator inputs.', 'Official observations are the numerical reference, with population, unit, seasonal adjustment and release stage kept separate. Reports can contain cited figures, but report-only arithmetic is not supported by the default tools. Sources: scope decision, data sheet and system card.'],
-      ['AI-drafted labels, one reviewer', 'Sign-off is not independent ground truth.', 'The gold questions and evidence labels were drafted with AI assistance. One reviewer recorded decisions after AI pre-review and saved-run scoring. Original-test evidence overlaps development; fresh-question results are now known. Sources: evaluation report and system card.'],
-      ['Licences follow their recorded status', 'Not all rights have been verified.', 'The data sheet records 33 dataset licences verified, three assumed and unverified, and 23 document rights unresolved. These statuses are not blanket permission to redistribute publisher material. Source: data sheet, At a glance.']
-    ]],
-    ['Constraints', [
+    ['Assumptions and constraints', [
+      ['Licences follow their recorded status', 'Not all rights have been verified.', 'The data sheet records 33 dataset licences verified, three assumed and unverified, and 23 document rights unresolved. These statuses are not blanket permission to redistribute publisher material. Source: data sheet, At a glance.'],
       ['Public sources; report text stays local', 'No redistribution of full MOM PDFs.', 'Official public sources only. Restricted documents, passages, indexes and raw answers stay local. Public material uses links, attribution and short excerpts under the recorded rights limits. Sources: data sheet and system card.'],
-      ['Read-only, bounded research', '6 tool calls, 2 rounds, 10 s per call.', 'Default graph limits: six total tool calls across two evidence rounds, at most three calls per round, one transient tool retry and one answer repair. No arbitrary SQL, shell execution or unrestricted browsing. Sources: agent graph, orchestration decision and README.'],
-      ['Default sampling; one provider family', 'Generation settings were not tuned.', 'Generation candidates share a provider family; temperature and top_p use provider defaults and no seed. A separate second-family judge sensitivity check exists, but is not human review. Two final runs do not estimate run-to-run variance. Source: system card.'],
-      ['Delivery deadline and run budgets', '4 November 2026, Singapore morning.', 'The assessment deadline is 4 November 2026 morning, Singapore time. Experiments and the app have local budget controls; an account-level provider spend cap is not verified. Do not interpret application estimates as a guaranteed provider invoice limit. Sources: project instructions and system card.']
+      ['Read-only, bounded research', 'Six tool calls over two rounds.', 'Default graph limits: six total tool calls across two evidence rounds, at most three calls per round, one transient tool retry and one answer repair. No arbitrary SQL, shell execution or unrestricted browsing. Sources: agent graph, orchestration decision and README.'],
+      ['Default sampling; one provider family', 'Generation settings were not tuned.', 'Generation candidates share a provider family; temperature and top_p use provider defaults and no seed. A separate second-family judge sensitivity check exists, but is not human review. Two final runs do not estimate run-to-run variance. Source: system card.']
     ]],
     ['Scope done', [
-      ['Q1 2020 to Q2 2026', 'Statistics from 2020, report text from 2023.', 'The answer window opened at Q1 2020 on 3 November 2026. Every experiment was run on the earlier Q1 2024 to Q2 2026 window, so the evaluation gold covers 2024 to 2026 and answers for 2020 to 2023 are unevaluated. Statistics cover the whole window; MOM report passages start with the 2023 reports. Actual period coverage varies by source. Requests that need a period before 2020 must abstain. Sources: scope decision and system card.'],
-      [finite(count) ? `${fmt.int(count)} official sources` : 'Source count not recorded', 'Statistics and report evidence stores.', 'The current data sheet records 36 statistical datasets and 49 documents. Validated observations and source passages are stored separately, with snapshots, hashes, provenance and revision labels. Source: data sheet, corpus v3.1.'],
+      ['Q1 2020 to Q2 2026', 'Statistics and report text from 2020.', 'The answer window opened at Q1 2020 on 3 November 2026. Every experiment was run on the earlier Q1 2024 to Q2 2026 window, so the evaluation gold covers 2024 to 2026 and answers for 2020 to 2023 are unevaluated. Statistics cover the whole window; MOM report passages start with the 2020 quarterly reports (answers that rely on 2020 to 2022 report text are unevaluated). Actual period coverage varies by source. Requests that need a period before 2020 must abstain. Sources: scope decision and system card.'],
+      [finite(count) ? `${fmt.int(count)} official sources` : 'Source count not recorded', 'Statistics and report evidence stores.', 'The current data sheet records 36 statistical datasets and 106 documents. Validated observations and source passages are stored separately, with snapshots, hashes, provenance and revision labels. Source: data sheet, corpus v4.'],
       ['Retrieval, agent and MCP', 'Built with traces and cited answers.', 'Keyword, dense and hybrid retrieval were compared; the bounded research loop uses report search, statistical lookup and deterministic calculation. Live statistical lookup uses MCP; report search and calculation stay in process. Sources: README and system card.'],
       ['Evaluation, threats and workbench', 'Measured and deployed, not production-ready.', 'Saved evaluation covers development, original test and fresh questions, with AI judges and documented human sign-off. Threat tests and a deployed workbench exist, with known failures and rights limitations. Sources: README and evaluation report.'],
       ['No forecasts or personal advice', 'No causal estimates or unrestricted browsing.', 'Unsupported causal attribution, forecasting, personal employment advice and unrestricted web research are outside scope. The system supports evidence inspection, not autonomous policy decisions. Sources: scope decision and system card.']
@@ -1012,7 +939,7 @@ export function assumptionsScope(m) {
     items.forEach(([heading, summary, detail], row) => {
       const item = el('div', 'scope-contract-item');
       item.append(el('strong', '', heading), el('p', '', summary));
-      withTip(item, detail, `${row < 2 ? 'is-down' : 'is-up'}${column === 2 ? ' is-contract-right' : ''}`);
+      withTip(item, detail, `${row < 2 ? 'is-down' : 'is-up'}${column === 1 ? ' is-contract-right' : ''}`);
       group.append(item);
     });
     wrap.append(group);
@@ -1138,7 +1065,7 @@ export function modelChoice(m) {
   const rows = names.map(name => ({name, x: m.answerRow('G1', name)?.metrics})).filter(r => r.x && finite(r.x.n));
   if (!rows.length) return null;
   const wrap = el('div', 'mc owner-models');
-  wrap.append(el('h3', 'owner-model-heading', 'Early screen on 30 questions'));
+  wrap.append(el('h3', 'owner-model-heading', 'Early screen on 30 questions'), el('p', 'owner-model-sub', 'Six of the 30 questions had no answer in the data. The other 24 did.'));
   const early = el('div', 'owner-model-early'); wrap.append(early);
   const wilson = (count, n) => {
     const z = 1.959963984540054, p = count / n, d = 1 + z * z / n;
@@ -1147,35 +1074,46 @@ export function modelChoice(m) {
   };
   const head = el('div', 'mc-row mc-head');
   const legend = el('span', 'mc-legend');
-  [['is-right', 'Right'], ['is-over', 'Over-abstained'], ['is-false', 'False answer'], ['is-other', 'Other']].forEach(([cls, text]) => { const k = el('span', 'mc-key'); k.append(el('i', cls), document.createTextNode(text)); legend.append(k); });
-  head.append(el('span', '', 'Model'), legend, el('span', '', 'False answers / 6'), el('span', '', 'Cost / question'));
+  [['is-right', 'Right'], ['is-over', 'Wrongly declined'], ['is-false', 'False answer'], ['is-other', 'Wrong response type']].forEach(([cls, text]) => { const k = el('span', 'mc-key'); k.append(el('i', cls), document.createTextNode(text)); legend.append(k); });
+  head.append(el('span', '', 'Model'), legend, el('span', '', 'Cost per question'));
   early.append(head);
   rows.forEach(({name, x}, i) => {
     const n = x.n, right = Math.round(x.behavior_accuracy * n), over = Math.round(x.over_abstention_rate * x.n_answer_cases), bad = Math.round(x.false_answer_rate * x.n_nonanswer_cases);
     const other = Math.max(0, n - right - over - bad);
     const row = el('div', `mc-row${name === 'gpt-6-luna' ? ' is-chosen' : ''}`); row.style.setProperty('--i', String(i));
-    const stack = el('div', 'mc-stack'); stack.setAttribute('role', 'img'); stack.setAttribute('aria-label', `${name}: ${right} right, ${over} declined when the evidence was there, ${bad} false answers, ${other} other, of ${n}.`);
+    const stack = el('div', 'mc-stack'); stack.setAttribute('role', 'img'); stack.setAttribute('aria-label', `${name}: ${right} right, ${over} wrongly declined, ${bad} false answers, ${other} wrong response type, of ${n}.`);
     [['is-right', right], ['is-over', over], ['is-false', bad], ['is-other', other]].forEach(([cls, count]) => { if (count) { const s = el('span', `mc-seg ${cls}`, String(count)); s.style.setProperty('--w', String(count)); stack.append(s); } });
-    const falseCell = el('div', 'mc-cell is-false'); const track = el('div', 'mc-track'); const bar = el('div', 'mc-bar'); bar.style.setProperty('--w', `${Math.round(Math.min(x.false_answer_rate / 0.5, 1) * 100)}%`); track.append(bar);
-    falseCell.dataset.label = `False answers / ${x.n_nonanswer_cases}`;
-    falseCell.append(track, el('span', 'mc-val num', fmt.pct(x.false_answer_rate)));
     const costCell = el('div', 'mc-cell is-cost'); const ctrack = el('div', 'mc-track'); const cbar = el('div', 'mc-bar'); cbar.style.setProperty('--w', `${Math.round(Math.min(x.cost_per_case_usd / 0.01, 1) * 100)}%`); ctrack.append(cbar);
     costCell.dataset.label = 'Cost / question';
     costCell.append(ctrack, el('span', 'mc-val num', `$${x.cost_per_case_usd.toFixed(5)}`));
-    row.append(el('span', 'mc-name', name), stack, falseCell, costCell);
-    withTip(row, `${name}: ${right} of ${n} right (${fmt.pct(x.behavior_accuracy)}), 95% Wilson interval ${wilson(right, n)}; over-abstention ${over} of ${x.n_answer_cases} answerable (${fmt.pct(x.over_abstention_rate)}); false answers ${bad} of ${x.n_nonanswer_cases} non-answerable (${fmt.pct(x.false_answer_rate)}); ${other} other status errors; $${x.cost_per_case_usd.toFixed(5)} per question. First prototype, one run on 30 questions, so the interval is wide.`, 'is-down is-wide');
+    row.append(el('span', 'mc-name', name), stack, costCell);
+    withTip(row, `${name}: ${right} of ${n} right (${fmt.pct(x.behavior_accuracy)}), 95% Wilson interval ${wilson(right, n)}. Wrongly declined ${over} of ${x.n_answer_cases} answerable questions. False answers ${bad} of ${x.n_nonanswer_cases} questions with no answer in the data (${fmt.pct(x.false_answer_rate)}). Wrong response type ${other}: a decline of the wrong kind, such as abstaining where a clarifying question was needed. $${x.cost_per_case_usd.toFixed(5)} per question. First prototype, one run on 30 questions, so the interval is wide.`, 'is-down is-wide');
     early.append(row);
   });
   const final = el('div', 'owner-model-final');
-  final.append(el('h3', 'owner-model-heading', 'Final system on 237 questions'), el('p', 'owner-model-sub', 'Mean of two runs; rates use all 237 questions'));
-  const header = el('div', 'owner-model-final-row is-head');
-  const labels = ['Model', 'Accuracy', 'False answers', 'Over-abstention', 'Cost / question'];
-  labels.forEach(t => header.append(el('span', '', t))); final.append(header);
+  final.append(el('h3', 'owner-model-heading', 'Final system on 237 questions'), el('p', 'owner-model-sub', 'gpt-6-luna, mean of two runs. Each question lands in exactly one group.'));
   const arms = m.finalEvaluation?.splits?.find(s => s.id === 'dev')?.arms || [];
   arms.filter(a => a.arm === 'r3' && a.model === 'gpt-6-luna').forEach(a => {
-    const row = el('div', 'owner-model-final-row'), x = a.metrics, runs = a.runs;
-    [a.model, fmt.pct(x.behaviour_accuracy.rate), `${(Math.round(x.false_answer_rate.rate * 10000) / 100).toFixed(2)}%`, `${(Math.round(x.over_abstention_rate.rate * 10000) / 100).toFixed(2)}%`, `$${x.cost_per_case_usd.toFixed(6)}`].forEach((t, i) => { const cell = el('strong', '', t); cell.dataset.label = labels[i]; row.append(cell); });
-    withTip(row, `Accuracy in the two runs: ${fmt.pct(runs.run1)} and ${fmt.pct(runs.run2)}. Mean ${fmt.pct(runs.mean)}. False-answer, over-abstention and cost are means of the saved run measures. All-case rate denominator: 237. Two runs do not estimate run-to-run variance. Costs use recorded tokens and declared list prices, not a provider invoice.`, 'is-up'); final.append(row);
+    const x = a.metrics, runs = a.runs;
+    const raw = [x.behaviour_accuracy.rate, x.over_abstention_rate.rate, x.false_answer_rate.rate];
+    raw.push(Math.max(0, 1 - raw.reduce((s, v) => s + v, 0)));
+    // Round to tenths so the four shares add to exactly 100.0.
+    const tenths = raw.map(v => v * 1000), base = tenths.map(Math.floor);
+    let spare = 1000 - base.reduce((s, v) => s + v, 0);
+    tenths.map((v, i) => [v - base[i], i]).sort((p, q) => q[0] - p[0]).forEach(([, i]) => { if (spare > 0) { base[i] += 1; spare -= 1; } });
+    const shares = base.map(v => v / 10);
+    const names = [['is-right', 'Right'], ['is-over', 'Wrongly declined'], ['is-false', 'False answer'], ['is-other', 'Wrong response type']];
+    const row = el('div', 'mc-row is-final');
+    const stack = el('div', 'mc-stack'); stack.setAttribute('role', 'img');
+    stack.setAttribute('aria-label', `${a.model}: ${names.map(([, t], i) => `${shares[i].toFixed(1)}% ${t.toLowerCase()}`).join(', ')}.`);
+    names.forEach(([cls], i) => { const s = el('span', `mc-seg ${cls}`, shares[i] >= 8 ? `${shares[i].toFixed(1)}%` : ''); s.style.setProperty('--w', String(shares[i])); stack.append(s); });
+    const costCell = el('div', 'mc-cell is-cost'); const ctrack = el('div', 'mc-track'); const cbar = el('div', 'mc-bar'); cbar.style.setProperty('--w', `${Math.round(Math.min(x.cost_per_case_usd / 0.01, 1) * 100)}%`); ctrack.append(cbar);
+    costCell.append(ctrack, el('span', 'mc-val num', `$${x.cost_per_case_usd.toFixed(5)}`));
+    row.append(el('span', 'mc-name', a.model), stack, costCell);
+    withTip(row, `Accuracy in the two runs: ${fmt.pct(runs.run1)} and ${fmt.pct(runs.run2)}; mean ${fmt.pct(runs.mean)}. Each run had 7 false answers, 10 or 5 wrongly declined questions and 10 of the wrong response type, out of 237. Most of those 10 were questions that needed a clarifying question. Shares are rounded to tenths so they add to 100. Two runs do not estimate run-to-run variance. Costs use recorded tokens and declared list prices, not a provider invoice.`, 'is-up is-wide');
+    const values = el('div', 'mc-values');
+    names.forEach(([cls, t], i) => { const v = el('span', 'mc-value'); v.append(el('i', cls), document.createTextNode(`${t} ${shares[i].toFixed(1)}%`)); values.append(v); });
+    final.append(row, values);
   });
   wrap.append(final, fixedPipeline());
   return wrap;
@@ -1224,7 +1162,7 @@ export function threatRuns(m) {
 }
 
 /** Attack categories with separate checks and descriptive paired v2 results. */
-export function threatMatrix(m) {
+export function threatLayerTable(m) {
   const wrap = el('div', 'tm is-attacks');
   const table = el('table', 'tm-table');
   const header = el('tr', '');
@@ -1457,16 +1395,12 @@ export function workbenchHref(code = DECK_CODE) { return code ? `${WORKBENCH_URL
 /** A screenshot and scannable link to the workbench, served locally. */
 
 export function workbenchShot() {
-  const wrap = el('div', 'g22');
-  wrap.style.setProperty('grid-template-columns', 'minmax(0, 1fr) auto');
-  wrap.style.setProperty('gap', '24px');
-  const img = el('img', 'g22-img'); img.src = '/static/presentation/workbench.png'; img.alt = 'The LabourLens workbench: a question box, example questions, session history and an activity timeline.'; img.width = 1500; img.height = 900;
+  const wrap = el('div', 'g22 is-workbench');
+  const img = el('img', 'g22-img'); img.src = '/static/presentation/workbench.png'; img.alt = 'The LabourLens workbench: a question box, example questions and an activity timeline.'; img.width = 1500; img.height = 900;
   const link = el('a', 'g22-link'); link.href = workbenchHref(); link.setAttribute('aria-label', 'Try the workbench at labourlens.navig.me');
-  link.style.setProperty('display', 'grid'); link.style.setProperty('justify-items', 'center'); link.style.setProperty('gap', '12px');
-  link.style.setProperty('color', 'var(--accent)'); link.style.setProperty('text-decoration', 'none');
-  const qr = el('img', 'g22-qr'); qr.src = '/static/presentation/workbench-qr.svg'; qr.alt = 'QR code linking to the LabourLens workbench'; qr.width = 240; qr.height = 240;
+  const qr = el('img', 'g22-qr'); qr.src = '/static/presentation/workbench-qr.svg'; qr.alt = 'QR code linking to the LabourLens workbench'; qr.width = 400; qr.height = 400;
   link.append(qr, el('span', '', 'Try the workbench'));
-  wrap.append(img, link);
+  wrap.append(img, link, el('p', 'g22-budget', 'Each live question reserves $0.05 of budget before any paid call.'));
   return wrap;
 }
 
@@ -1533,5 +1467,102 @@ export function buildProcess(decisionCount) {
   [[finite(decisionCount) ? String(decisionCount) : 'many', 'decisions logged'], ['5', 'end-to-end AI reviews'], ['0', 'rights-scan hits on my machine']].forEach(([n, label]) => { const d = el('div', 'g24-num'); d.append(el('p', 'num', n), el('p', '', label)); nums.append(d); });
   wrap.append(loop, el('div', 'g24-body', ''), nums);
   wrap.querySelector('.g24-body').append(lanes);
+  return wrap;
+}
+
+/** Threat suite v2 totals. These are not in report.json yet; same source and numbers as threatComparison: experiments/threats/threat-v2-analysis.json. */
+const THREAT_V2 = {guarded: 50, naive: 42, n: 54, benignFailed: 3, benignN: 8};
+/** The statistics server's tool count, as stated on the MCP slides (not in report.json). */
+const MCP_TOOLS = 9;
+
+/** The closing results board. Every figure is read from report.json through the model, except the threat totals and tool count above and the served-build document count. */
+export function summaryBoard(m) {
+  const facts = finalFacts(m), cost = finalCostFacts(m);
+  const sets = ['dev', 'registered', 'fresh'].map(id => {
+    const s = facts?.sets.find(x => x.id === id), a = s?.models.find(x => x.model === 'gpt-6-luna');
+    return s && a && finite(a.r3rate) && finite(a.hyrate) ? {id, label: s.label, n: s.n, r3: a.r3rate, hy: a.hyrate} : null;
+  });
+  const bm25 = m.methodsV31?.methods?.bm25?.['hit@8'], rerank = m.ladder?.configs?.R3?.['hit@8'], hitN = m.ladder?.n_cases;
+  const mcp = m.section('mcp').metrics || {};
+  if (sets.some(s => !s) || !finite(bm25) || !finite(rerank) || !finite(mcp.identical_datasets) || !cost) return null;
+  const points = d => `${d >= 0 ? '+' : '-'}${Math.abs(d * 100).toFixed(1)} points`;
+  const wrap = el('div', 'sb');
+  const heading = (text, cls = '') => el('h3', `sb-h ${cls}`.trim(), text);
+
+  // Behaviour accuracy: a shared 60 to 100% axis, hybrid ring to filter-then-rerank dot.
+  const LO = 0.6, HI = 1, pos = v => Math.min(100, Math.max(0, ((v - LO) / (HI - LO)) * 100));
+  const acc = el('div', 'sb-acc');
+  acc.append(heading('Behaviour accuracy, gpt-6-luna'), el('p', 'sb-sub', 'Hybrid (ring) against filter then rerank (dot). Mean of two runs.'));
+  const NOTE = {dev: 'Choices were tuned here, so this is optimistic.', registered: 'Reuses development evidence.', fresh: 'No gain on questions written after the choices.'};
+  const TIP = {dev: 'Development questions shaped the retrieval choices, so this gain is optimistic.', registered: 'The original test reuses some development evidence, so it is not a clean check.', fresh: 'Fresh questions were written after the choices. Filtering then reranking showed no gain.'};
+  sets.forEach(s => {
+    const d = s.r3 - s.hy;
+    const row = el('div', 'sb-drow');
+    const name = el('p', 'sb-dname'); name.append(el('strong', '', s.label), el('span', '', `${fmt.int(s.n)} questions`));
+    const track = el('div', 'sb-track'); track.setAttribute('aria-hidden', 'true');
+    const seg = el('span', `sb-seg${d < 0 ? ' is-down' : ''}`);
+    seg.style.setProperty('--lo', `${pos(Math.min(s.r3, s.hy))}%`); seg.style.setProperty('--span', `${Math.abs(pos(s.r3) - pos(s.hy))}%`);
+    const ring = el('span', 'sb-dot is-base'), dot = el('span', 'sb-dot');
+    ring.style.setProperty('--p', `${pos(s.hy)}%`); dot.style.setProperty('--p', `${pos(s.r3)}%`);
+    track.append(seg, ring, dot);
+    const nums = el('p', 'sb-dnums');
+    nums.append(el('span', 'sb-dbase', fmt.pct(s.hy)), el('span', 'sb-darrow', 'to'), el('strong', 'sb-dnow', fmt.pct(s.r3)));
+    row.append(name, track, nums, el('p', `sb-dnote${d <= 0 ? ' is-flat' : ''}`, `${points(d)}. ${NOTE[s.id]}`));
+    row.setAttribute('aria-label', `${s.label}: hybrid ${fmt.pct(s.hy)}, filter then rerank ${fmt.pct(s.r3)}. ${NOTE[s.id]}`);
+    acc.append(withTip(row, TIP[s.id], 'is-up'));
+  });
+  const axis = el('div', 'sb-axis'); axis.setAttribute('aria-hidden', 'true');
+  [LO, 0.8, HI].forEach(v => axis.append(el('span', '', fmt.pct(v, 0))));
+  acc.append(axis);
+
+  // Retrieval and threat bars, one scale each.
+  const side = el('div', 'sb-side');
+  const bars = (title, sub, rows) => {
+    const g = el('div', 'sb-bars');
+    g.append(heading(title), el('p', 'sb-sub', sub));
+    rows.forEach(([label, w, value, accent, tip]) => {
+      const row = el('div', 'sb-brow');
+      const track = el('div', 'sb-btrack'); track.setAttribute('aria-hidden', 'true');
+      const bar = el('span', `sb-bar${accent ? ' is-accent' : ''}`); bar.style.setProperty('--w', `${w * 100}%`); track.append(bar);
+      row.append(el('span', 'sb-blabel', label), track, el('strong', 'sb-bvalue', value));
+      g.append(withTip(row, tip, 'is-up'));
+    });
+    return g;
+  };
+  side.append(
+    bars('Retrieval hit@8', `${finite(hitN) ? fmt.int(hitN) : 'The'} development questions`, [
+      ['BM25', bm25, fmt.pct(bm25), false, 'BM25 is the keyword baseline. Hit@8 counts questions whose needed passage is in the first eight results.'],
+      ['Filter then rerank', rerank, fmt.pct(rerank), true, 'Filter by named period and release, then rerank the top 30. Measured on the development questions only.']
+    ]),
+    bars('Threat suite', `${THREAT_V2.n} attacks, majority of three repeats`, [
+      ['Naive', THREAT_V2.naive / THREAT_V2.n, `${THREAT_V2.naive}/${THREAT_V2.n}`, false, 'The naive arm has no guards or hardened answer prompt. Same typed tools and MCP boundary.'],
+      ['Guarded', THREAT_V2.guarded / THREAT_V2.n, `${THREAT_V2.guarded}/${THREAT_V2.n}`, true, 'Guards and the answer prompt changed together, so no single layer is credited. Exact McNemar p = .039.']
+    ]),
+    el('p', 'sb-aside', `Both arms failed ${THREAT_V2.benignFailed} of ${THREAT_V2.benignN} benign look-alike questions.`)
+  );
+
+  // MCP parity and cost, as two plain figures.
+  const accepted = mcp.identical_datasets + (finite(mcp.different_outputs) ? mcp.different_outputs : 0);
+  const facts2 = el('div', 'sb-facts');
+  const fact = (big, text, tip) => {
+    const f = el('div', 'sb-fact'); f.append(el('strong', '', big), el('span', '', text));
+    return withTip(f, tip, 'is-up');
+  };
+  facts2.append(
+    fact(`${MCP_TOOLS} tools`, mcp.different_outputs === 0 ? `Direct and MCP calls returned identical rows on all ${accepted} queries both accepted.` : `Direct and MCP calls matched on ${mcp.identical_datasets} of ${accepted} accepted queries.`, 'The statistics server exposes nine read-only tools. The agent uses one. Oversized queries were refused by both paths.'),
+    fact(`${Math.round(cost.p50)} s`, `Median answer time, about $${cost.cost.toFixed(4)} per question.`, 'Final evaluation, filter then rerank, development questions. The 95th percentile is slower.')
+  );
+
+  // What changed: the one emphasised row.
+  const [from, to] = m.scope, qtr = p => (/^(\d{4})-Q(\d)$/.exec(p) ? `Q${/^(\d{4})-Q(\d)$/.exec(p)[2]} ${/^(\d{4})-Q(\d)$/.exec(p)[1]}` : p);
+  const changed = el('div', 'sb-changed');
+  changed.append(heading('What changed after the evaluation'), el('p', '', `The served system is not the one I measured. It answers from ${qtr(from)} to ${qtr(to)}, with statistics from 2020 and 106 report documents; 2020 to 2022 answers are unevaluated. It also uses a native function-calling planner and streaming. Decisions API trials were rejected.`));
+
+  const limits = el('div', 'sb-limits');
+  const list = el('ul', 'sb-limit-list');
+  ['AI-drafted labels, signed off by one reviewer', 'Judge and answer models share a provider', 'Scanner can be bypassed', 'Three dataset licences and some source rights unverified'].forEach(t => list.append(el('li', '', t)));
+  limits.append(heading('Limits', 'is-small'), list);
+
+  wrap.append(acc, side, facts2, changed, limits);
   return wrap;
 }

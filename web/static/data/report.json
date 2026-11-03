@@ -1,6 +1,6 @@
 {
   "schema_version": "report-1.0",
-  "generated_at": "2026-11-03T08:42:09.128379+00:00",
+  "generated_at": "2026-11-03T10:09:37.595986+00:00",
   "summary": {
     "title": "LabourLens research workbench",
     "scope": [
@@ -3752,11 +3752,11 @@
       },
       {
         "id": "v3.1",
-        "name": "Current build (v3.1)",
+        "name": "Build v3.1",
         "passages": 16419,
         "documents": 49,
-        "purpose": "Same sources. Forty passages of one article relabelled.",
-        "current": true,
+        "purpose": "Same sources as v3. Forty passages of one article relabelled. The final evaluation ran on this build.",
+        "current": false,
         "provenance": [
           "experiments/corpus-snapshots/v3.1.json"
         ],
@@ -9911,7 +9911,7 @@
   },
   "retrieval": {
     "status": "available",
-    "summary": "Current corpus v3.1 retrieval rerun; earlier builds retained as history.",
+    "summary": "Corpus v3.1 retrieval rerun; earlier builds retained as history.",
     "metrics": {},
     "rows": [
       {
@@ -64216,6 +64216,7 @@
     ],
     "provenance": [
       "experiments/triage/triage-v1-luna/metrics.json",
+      "experiments/corpus-snapshots/v4.json",
       "experiments/corpus-snapshots/v3.1.json",
       "experiments/corpus-snapshots/v3.1-diff.json",
       "data/export/sources.json"
@@ -64323,61 +64324,6 @@
         "provenance": [
           "experiments/context/ctx-v2-luna/metrics.json"
         ]
-      }
-    },
-    "corpus": {
-      "label": "v3.1",
-      "sources": 85,
-      "document_files": 49,
-      "passages": 16419,
-      "chunks": 1847,
-      "parser_before": "extract-0.2",
-      "parser_after": "extract-0.3",
-      "quality_flags": {
-        "all_before": {
-          "garbled": 286,
-          "ok": 9040,
-          "table_unreliable": 7093
-        },
-        "all_after": {
-          "garbled": 246,
-          "ok": 9052,
-          "table_unreliable": 7121
-        },
-        "mti_before": {
-          "ok": 163,
-          "garbled": 40,
-          "table_unreliable": 15
-        },
-        "mti_after": {
-          "ok": 175,
-          "table_unreliable": 43
-        },
-        "control_character_garbled_before": 246,
-        "control_character_garbled_after": 246,
-        "new_garbled": 0
-      },
-      "flag_transitions": {
-        "garbled_to_ok": 16,
-        "garbled_to_table_unreliable": 24,
-        "ok_to_table_unreliable": 4
-      },
-      "chunks_changed": {
-        "before": 1847,
-        "after": 1847,
-        "ids_removed": 4,
-        "ids_added": 4,
-        "non_mti_ids_identical": true,
-        "non_mti_chunks": 1800,
-        "mti_before": 47,
-        "mti_after": 47
-      },
-      "embeddings": {
-        "cache_keys_before": 5113,
-        "unique_inputs_before": 1383,
-        "unique_inputs_after": 1383,
-        "unique_inputs_missing_from_cache_after": 10,
-        "cache_keys_no_longer_used": 3740
       }
     },
     "rights": {
@@ -80255,7 +80201,7 @@
     "The population basis of the dataset employment series is unverified."
   ],
   "provenance": {
-    "commit": "ea9071b375d07d77b65f66130a12f551d4bc86b9",
+    "commit": "28b4aa5ae250372fb78fe080a82787dcab43817b",
     "artifacts": [
       {
         "path": "data/export/sources.json",
@@ -81288,6 +81234,10 @@
         "sha256": "8f40df774b14d7af86f425893a9f7f0fb07f9d40d14d4112468f9b3925ddeaab"
       },
       {
+        "path": "experiments/corpus-snapshots/v4.json",
+        "status": "unavailable"
+      },
+      {
         "path": "experiments/runs/web-live-smoke.trace.json",
         "status": "available",
         "sha256": "b6207bf4aab049fac5e62f23feffe60e35b3a4138dbaa4dab8e4017d8faddf58"
@@ -81501,55 +81451,57 @@
   "innovation": {
     "content": {
       "title": "Innovation assessment",
-      "scope": "LabourLens researches public Singapore labour statistics (Q1 2020 to Q2 2026) and MOM and MTI reports (from 2023). Analysts inspect citations, records and tool calls before using an answer.",
-      "abstract": "Period filters and reranking select passages; typed read-only tools retrieve series and calculate changes. I measured retrieval, answer behaviour, runtime and attack responses. The next priorities are report-table arithmetic and independent evaluation.",
+      "scope": "LabourLens is a research prototype for Singapore labour-market analysts. It uses public statistics and MOM reports from Q1 2020 to Q2 2026, plus an MTI employment article.",
+      "abstract": "I built LabourLens for analysts researching Singapore's labour market. It searches reports, looks up statistics, calculates changes in code and returns cited answers, asks for clarification or abstains when evidence is missing. I tested retrieval, answer checks, the bounded agent, MCP, security controls and operating costs. Retrieval improved on development questions, but full answer tests did not show a reliable gain on either test set. The prototype is not approved for government production use.",
       "approach": [
-        "Numbers come from validated tables or deterministic code; claims cite passages or records.",
-        "Period and release filters precede reranking; preliminary and final releases stay labelled.",
-        "A bounded agent uses typed read-only tools, including an MCP statistics server.",
-        "Evaluation uses fixed reference sets, retained negative results and an attack suite."
+        "Collected official statistics and reports. Each statistical row records its measure, unit, period, population, release and source. Reports become searchable passages; uncertain tables are flagged rather than guessed.",
+        "Compared exact-word keyword search with meaning search based on text embeddings, then combined their results. Period and release filters remove mismatched evidence; a second ranking pass orders what remains.",
+        "Built one bounded agent with three read-only tools: search reports, look up statistics through the Model Context Protocol (MCP), and calculate changes from returned rows in code.",
+        "Answers have a fixed structure, citations and short quotations. Code checks citation labels, quotations, reported numbers and answer status. These checks cannot prove that a quotation supports a claim.",
+        "Tested retrieval, a fixed workflow against the agent, model candidates, report-table calculation, direct and MCP routes, and synthetic attacks. Separate development, original and fresh question sets show what improved and what did not."
       ],
       "sections": [
         {
           "id": "retrieval",
           "title": "Retrieval and answer quality",
-          "summary": "Validate report tables before adding retrieval complexity.",
+          "summary": "Higher passage retrieval did not establish better answers on the test sets.",
           "paragraphs": [
             {
-              "text": "Development retrieval used 128 text questions. The later literal-question diagnostics used 18 of 31 original-test and 34 of 65 fresh-test questions. Strict first-eight-passages hit@8 was hybrid .167/.500 versus R3 .778/.941 on original/fresh questions. This does not demonstrate end-to-end accuracy gains; no per-case cause investigation was performed. Shared evidence and diagnostic reuse limit independence.",
+              "text": "I compared BM25 keyword search, embedding-based meaning search and a hybrid on the same development questions. Filtering by period and release, then reranking the candidates, raised the share of relevant passages in the first eight results from 54% to 97%. This measures passage retrieval, not answer accuracy.",
               "refs": [
-                "retrieval",
-                "heldout_retrieval",
-                "final"
+                "retrieval"
               ]
             },
             {
-              "text": "On 237 development questions, one fixed pipeline run scored .8143 behaviour accuracy versus the agent's two-run mean .8966, a development advantage under the registered criteria. The fixed policy lacks arithmetic records and permits only one statistics lookup; tool-policy and extraction-schema differences confound interpretation. This does not transfer to original-test or fresh questions. Behaviour measures answer/abstain/clarify/refuse status, not factual correctness. Historical fresh numerical accuracy was 3/14; the rejected tool extension failed its criteria.",
+              "text": "Filtering and reranking also found the known passage more often on small original and fresh test subsets. Full-system comparisons did not show a reliable answer gain on either set. Development shaped the design, the original test shares evidence with it, and fresh questions have since been reused. Treat these as diagnostics, not proof of general improvement.",
               "refs": [
-                "fixed",
                 "final",
-                "fresh",
+                "heldout_retrieval"
+              ]
+            },
+            {
+              "text": "I also tested arithmetic on figures extracted from report text. The extension failed pre-set development checks and was not adopted. The current calculator uses validated statistical rows; report tables still need reliable cell, unit and row-to-column extraction before they can be calculation inputs.",
+              "refs": [
                 "tools"
               ]
             }
           ],
           "tables": [
-            "retrieval",
-            "answers"
+            "retrieval"
           ],
           "proposals": [
             {
-              "title": "Report-table extraction",
-              "gap": "Tools cannot calculate reliably over report figures.",
-              "measure": "Verify cells, units, population and row/column lineage; test paired numerical and false-answer rates.",
-              "threshold": "Numerical regression accuracy at least 0.50; no rise in all-question false-answer rate; unchanged definition/citation checks.",
+              "title": "Verify report tables before calculation",
+              "gap": "Flattened report tables can lose which value belongs to which row or column.",
+              "measure": "Check cell, row and column lineage, units and population against the page. Exclude uncertain cells and test calculations on known cases followed by new blind questions.",
+              "threshold": "Meet the pre-registered numerical threshold without increasing false answers or weakening definition and citation checks.",
               "status": "proposal"
             },
             {
-              "title": "Period restatements and coverage",
-              "gap": "Period filters miss later restatements; quarters, series and languages are incomplete.",
-              "measure": "Test restatements; add reviewed MOM/MTI/SingStat series and language cases. Exclude table_unreliable cells from calculation.",
-              "threshold": "No regression on definition, revision-conflict or citation cases before extending coverage.",
+              "title": "Add coverage carefully",
+              "gap": "Some series, periods, source versions and languages are not represented.",
+              "measure": "Add reviewed MOM, SingStat and other government sources through the same source manifest, rights review and evaluation process.",
+              "threshold": "Keep revision-conflict, definition and citation performance within the approved baseline before serving a new source.",
               "status": "proposal"
             }
           ]
@@ -81557,10 +81509,10 @@
         {
           "id": "drift",
           "title": "Drift detection",
-          "summary": "Gate releases and monitor fixed probes.",
+          "summary": "Keep source changes visible and test each new build before use.",
           "paragraphs": [
             {
-              "text": "Snapshots, corpus fingerprints and gold hashes record inputs.",
+              "text": "The data pipeline stores versioned snapshots and provenance. An operator still has to acquire and rebuild the data; scheduled refresh, automatic drift alerts and rollback have not been implemented. The expanded source corpus and newer served planner were not re-evaluated, so the older scores do not describe those changes.",
               "refs": [
                 "system"
               ]
@@ -81569,17 +81521,17 @@
           "tables": [],
           "proposals": [
             {
-              "title": "Release gates and probes",
-              "gap": "Corpus, prompt, embedding and provider changes can alter answers.",
-              "measure": "Check schemas, periods and revisions; rerun evaluation after every corpus/prompt/model change. Pin versions, alert on provider changes and probe embedding drift. Track hit rate, abstention, citation validity, grounded numbers, latency and cost.",
-              "threshold": "Hold unexplained regressions; retain rollback versions. Detect seeded regressions within one daily probe cycle.",
+              "title": "Release gates and monitoring",
+              "gap": "A change to data, prompts, retrieval or a model can change answers without warning.",
+              "measure": "Check schema, coverage, release revisions and rights on every source update. Run fixed question probes after each corpus, prompt or model change. Track retrieval, abstention, citation validity, grounded numbers, latency and cost; retain the last approved build for rollback.",
+              "threshold": "Do not publish a build with unexplained regressions. Report what changed and which checks passed.",
               "status": "proposal"
             },
             {
-              "title": "Question-family review",
-              "gap": "Researchers' requests can diverge from evaluation coverage.",
-              "measure": "Sample minimised, pseudonymised logs and feedback by family, including clarification rates.",
-              "threshold": "Review material shifts before changing coverage; derive alerts from an approved operating baseline.",
+              "title": "Scheduled refresh and source onboarding",
+              "gap": "Published datasets change, and other government sources may answer new research questions.",
+              "measure": "Fetch approved sources on a schedule into immutable snapshots. Validate schema, coverage, revisions and licence before promotion. Set a freshness expectation per publisher, record the last successful fetch, and alert on missed updates. Keep the prior snapshot marked stale rather than presenting it as current. Add new sources only after definitions, provenance, rights and evaluation cases are recorded; expand to new topics only after an explicit scope decision.",
+              "threshold": "Reject snapshots that fail validation or rights review. Evaluate each new source before serving it, and surface missed freshness targets.",
               "status": "proposal"
             }
           ]
@@ -81587,10 +81539,10 @@
         {
           "id": "review",
           "title": "Provenance, explainability and review",
-          "summary": "Base confidence on evidence coverage and reviewer agreement.",
+          "summary": "Show the evidence and turn reviewed failures into tests.",
           "paragraphs": [
             {
-              "text": "Citations, observation lineage, abstention reasons, conflict flags, an evidence drawer and tool traces support inspection. Thumbs/comments link to the run's question, calls, answer and citations; no improvement loop consumes them.",
+              "text": "The workbench shows source links, cited passages, answer status and tool activity. Feedback is stored with the run, but it does not yet change the system. A citation validator confirms that labels and quotations came from supplied evidence; it cannot determine whether the evidence entails the claim.",
               "refs": [
                 "system",
                 "audit"
@@ -81600,17 +81552,17 @@
           "tables": [],
           "proposals": [
             {
-              "title": "Evidence inspection and review",
-              "gap": "Labels lack independent multi-reviewer validation.",
-              "measure": "Add table-row locators, side-by-side sources and coverage/review indicators. Analysts label before AI suggestions, then adjudicate. Extend second-family judging and repeated runs. Preserve provenance in saved analyses, cited exports and revision alerts.",
-              "threshold": "At least three reviewers; kappa at least 0.70; 95% accuracy interval width at most 0.10.",
+              "title": "Independent review",
+              "gap": "One reviewer and AI-drafted labels do not establish independent ground truth.",
+              "measure": "Have at least three analysts label a stratified blind set before seeing AI suggestions, then adjudicate disagreements. Keep behaviour, factual support and calculation correctness as separate measures.",
+              "threshold": "Report reviewer agreement and uncertainty. The proposed targets are kappa of at least 0.70 and an accuracy interval no wider than 0.10.",
               "status": "proposal"
             },
             {
               "title": "Feedback review loop",
-              "gap": "Stored votes do not currently produce reviewed tests.",
-              "measure": "Review every thumbs-down and sample thumbs-up. Label evidence, number, period/population, abstention or style failures. Before fixing each confirmed failure, write a question with expected evidence for the next fresh set. Select one lever: filter/rerank, table extraction, planner prompt, validator or corpus gap. Change one thing; tune on development, report on fresh questions. Track weekly votes and abstention by family after corpus/prompt/model changes. Pseudonymise comments; limit retention.",
-              "threshold": "Each confirmed failure has a pre-fix case and lever. No fine-tuning on votes, unreviewed votes as truth or thumbs-up prompt examples: these leak tests and reward fluent errors.",
+              "gap": "Votes and comments do not currently produce regression tests.",
+              "measure": "Review every thumbs-down and a sample of thumbs-up. Label failure types and write one test with expected evidence before changing the system. Change one thing at a time; tune on development, then check fresh questions. Pseudonymise comments and limit retention.",
+              "threshold": "Every confirmed failure has a reviewed case and a recorded change. Do not train on unreviewed votes or reuse positive answers as prompts.",
               "status": "proposal"
             }
           ]
@@ -81618,13 +81570,11 @@
         {
           "id": "security",
           "title": "Security, privacy and third-party risk",
-          "summary": "Require approved access, hosting, retention and model terms.",
+          "summary": "Treat retrieved content as untrusted and keep tools narrowly scoped.",
           "paragraphs": [
             {
-              "text": "Tools are bounded and read-only; retrieved text is isolated and MCP responses validated. Scanner detections rose 10/30 to 23/30; benign flags stayed 9/30. The v1 fresh threat run remains 35/36. In the separate v2 suite, gpt-6-luna majority attack passes were 50/54 guarded versus 42/54 naive over three repeats, +14.8 points, exact McNemar p=.03857. Guards and answer prompt change together; typed tools, MCP controls and length cap stay on in both arms. Each arm fails three of eight benign cases, failing the utility criterion; their causes were not reviewed per question. These hand-written cases do not establish adaptive-attack safety or an individual layer's effect.",
+              "text": "The agent has typed, read-only tools, bounded calls and validated MCP replies. Retrieved passages are evidence, not instructions. In one three-repeat synthetic attack comparison, the guarded configuration passed 50 of 54 attack cases, compared with 42 of 54 for the naive configuration. The answer prompt and guards changed together, so this does not identify which defence helped. Both configurations also failed three of eight harmless look-alike cases. These tests do not establish resistance to adaptive attacks or a specific defence layer's effect.",
               "refs": [
-                "scanner",
-                "threat",
                 "threat_v2"
               ]
             }
@@ -81632,17 +81582,17 @@
           "tables": [],
           "proposals": [
             {
-              "title": "Access and processing controls",
-              "gap": "Demo access and external model processing lack government approval.",
-              "measure": "Clear licences, rights and publisher agreements. Add SSO/source roles, with an access label on every document and chunk applied as a pre-filter in BM25, vector search and the statistics tools so restricted text never reaches the model (the corpus is public today, so none exists now); approve residency, private endpoints, retention and audit access. Review provider terms; retain exportable evidence and a tested vendor exit plan.",
-              "threshold": "No sensitive deployment before approval. Provider failure returns unavailable or approved cached analysis, never an unvalidated fallback.",
+              "title": "Approve access and model processing",
+              "gap": "Shared demo codes and external model processing are not approved for government data.",
+              "measure": "Clear source licences and publisher terms. Replace shared codes with government identity and source roles. Use approved private model endpoints, data residency, retention and audit controls. Apply source permissions before retrieval so restricted text never reaches the model.",
+              "threshold": "Do not use sensitive or restricted sources until identity, rights, hosting and retention are approved.",
               "status": "proposal"
             },
             {
-              "title": "Injection and MCP testing",
-              "gap": "Pattern scanning lacks independent generalisation evidence.",
-              "measure": "Retain least privilege and content isolation. Test a stronger classifier on independent paraphrases; maintain server allow-lists, incident owners and recurring red-team reviews.",
-              "threshold": "Pass threat regressions without relaxing permissions; report misses and false positives.",
+              "title": "Test defences separately",
+              "gap": "The attack comparison changed the prompt and guards together, and its examples were written for the test.",
+              "measure": "Keep least-privilege tools and content isolation. Test each proposed layer against independent paraphrases, hostile passages, unsafe tool requests and harmless look-alikes. Record misses as well as false alarms.",
+              "threshold": "Pass the agreed regression set without weakening tool permissions or increasing harmless-question failures.",
               "status": "proposal"
             }
           ]
@@ -81650,26 +81600,29 @@
         {
           "id": "cost",
           "title": "Latency and cost",
-          "summary": "Accept cheaper routing only after quality checks.",
+          "summary": "Keep the smallest system that meets the evidence and safety requirements.",
           "paragraphs": [
             {
-              "text": "All-tools MCP scored 0.877 (57/65) versus statistics-only 0.908 (59/65); median latency 14.3/12.4 s, p95 51.4/34.7 s. It was rejected. Removing the statistics tool dropped accuracy from 0.908 to 0.692 on that sample, partly because calculation then loses its input; MCP against direct tied, which does not show it has no effect.",
+              "text": "The live agent sends only statistical lookup through MCP. Direct and MCP routes use the same local observations and query code, so the comparison tests transport rather than access to a different source. Moving report search and calculation into an all-tools MCP variant was slower and showed no answer-quality gain in a one-run, 65-question sample; it was not adopted. Removing statistics access also removed the calculator's input, so that was not a fair substitute for the full tool set.",
               "refs": [
-                "final",
                 "mcp",
                 "nostats"
               ]
+            },
+            {
+              "text": "The public prototype currently runs on one DigitalOcean Droplet behind Caddy, with Docker Compose and a GitHub Actions deployment. It uses one application worker. Budget and audit state are local files, and request limits are in memory. Government identity, provider-side spend caps, load behaviour and rollback are not verified.",
+              "refs": [
+                "system"
+              ]
             }
           ],
-          "tables": [
-            "cost"
-          ],
+          "tables": [],
           "proposals": [
             {
-              "title": "Caches, routing and budgets",
-              "gap": "Repeated context and optional calls consume latency and spend.",
-              "measure": "Retain embedding caches; test revision-keyed retrieval/answer caches, filter-only routing and smaller triage/rerank models. Invalidate on revisions. Add token/call/cost budgets, p95 alerts and provider caps.",
-              "threshold": "p95 below 40 s; mean cost below $0.005/question on an approved mix; no regression in citation support, numerical correctness or abstention.",
+              "title": "Deploy and scale in controlled steps",
+              "gap": "The single-worker prototype has local state and has not been load-tested.",
+              "measure": "Keep the current deployment shape until a representative load test shows a bottleneck. Separate scheduled ingestion and index builds from question serving. Publish versioned data and indexes atomically, with a tested rollback. Before adding app replicas, move budgets, rate limits and audit state to shared services and make the approved corpus read-only to query workers. Measure latency, failures and cost by question type; test caches and smaller routing or reranking models against the same quality checks.",
+              "threshold": "Set service and cost limits from an approved workload baseline. Any faster or cheaper configuration must preserve citations, numerical results, abstention and safety checks.",
               "status": "proposal"
             }
           ]
@@ -81677,53 +81630,61 @@
         {
           "id": "priorities",
           "title": "Priorities and measurement",
-          "summary": "Prioritise numerical evidence and independent evaluation.",
-          "paragraphs": [],
+          "summary": "Fix the largest evidence gap, then improve the strength of the evaluation.",
+          "paragraphs": [
+            {
+              "text": "The next work should address report-table arithmetic first, then independent review. Each change needs a pre-written test, an explicit acceptance rule and a fresh evaluation that was not used to tune it. Do not treat a better retrieval score as proof of better policy answers.",
+              "refs": [
+                "tools",
+                "final"
+              ]
+            }
+          ],
           "tables": [],
           "proposals": [
             {
               "title": "First: report-table arithmetic",
-              "gap": "Historical numerical accuracy was 0.214; the previous tool change failed.",
-              "measure": "Pre-register one extraction/tool change. Use 14 known cases for regression, then confirm on new blind numerical questions; compare paired false-answer rates and definition/citation checks.",
-              "threshold": "Regression accuracy at least 0.50; no rise in all-question false-answer rate; unchanged definition/citation checks. Reject a failed gate.",
+              "gap": "The current calculator cannot safely use figures that appear only in report tables.",
+              "measure": "Pre-register one extraction change. Regress against known cases, then test on new blind numerical questions. Compare wrong-answer rates and definition and citation checks.",
+              "threshold": "At least 0.50 accuracy on the predefined numerical cases, without increasing false-answer rate or weakening definition and citation checks.",
               "status": "proposal"
             },
             {
               "title": "Second: independent review",
-              "gap": "The label process cannot establish independent accuracy.",
-              "measure": "Three analysts independently label a stratified blind set before AI suggestions, then adjudicate. Pre-register sampling; expand if needed; never tune on it. Report semantic support, numerical correctness and run variance separately.",
-              "threshold": "Fleiss' kappa at least 0.70 on behaviour labels; headline 95% case-bootstrap accuracy interval width at most 0.10.",
+              "gap": "The current label process cannot establish independent accuracy.",
+              "measure": "Have three analysts label a stratified blind set before AI suggestions, then adjudicate. Never tune on it. Report semantic support, numerical correctness and run-to-run variation separately.",
+              "threshold": "Target Fleiss kappa of at least 0.70 and an accuracy interval no wider than 0.10.",
               "status": "proposal"
             }
           ]
         }
       ],
       "limitations": [
-        "Development shaped the design. Original-test evidence overlaps; fresh-test outcomes are known. Neither final test demonstrates a gain.",
-        "Gold was AI-drafted and reviewed by one person; the main judge is same-family. One fixed run and two agent runs do not establish stability; the primary agent references flip 13/237 behaviour verdicts.",
-        "Citations check mechanics; arithmetic can use wrong inputs. Scanner and attack results establish no general defence.",
-        "Full comparisons exclude web-only steps and MCP. Every measurement used questions about Q1 2024 to Q2 2026, the structured-output planner and older prompts; the served window (from Q1 2020), function-calling planner and newer prompts were not re-evaluated, so answers about 2020 to 2023 are unevaluated. Costs are list-price estimates. Monitoring, rollback and government readiness are untested."
+        "Development questions shaped the design. The original test shares evidence with development; fresh questions have since been reused. Neither test demonstrated an answer-quality gain.",
+        "Questions and reference labels were AI-drafted and signed off by one human reviewer. The primary answer judge belongs to the same provider family as the generator. This is not independent ground truth.",
+        "Citation checks confirm the mechanics of a quote, not that it supports a claim. Arithmetic can still use the wrong inputs. Synthetic attacks do not establish general security.",
+        "Final comparisons used an earlier corpus and planner than the expanded live system. The newer corpus and served planner have not been re-evaluated. Monitoring, rollback, government identity, provider limits and production scale remain unverified."
       ],
       "components": [
         {
-          "component": "Identity",
-          "current": "Shared access code.",
-          "replacement": "Approved SSO/source roles."
+          "component": "Identity and permissions",
+          "current": "The demo uses shared access codes and public sources.",
+          "replacement": "Government identity, source roles and permission checks before retrieval."
         },
         {
           "component": "Model processing",
-          "current": "External route; residency/terms unverified.",
-          "replacement": "Approved private endpoints and processing terms."
+          "current": "External model route; residency and provider terms are unverified.",
+          "replacement": "Approved private endpoints, processing terms, retention and audit controls."
         },
         {
-          "component": "Data rights",
-          "current": "Report rights, some licences and employment population basis unverified.",
-          "replacement": "Publisher agreements, rights review and validated definitions."
+          "component": "Data updates",
+          "current": "Versioned snapshots exist; scheduled refresh and automatic rollback do not.",
+          "replacement": "Scheduled acquisition, validation gates and versioned promotion with a tested rollback."
         },
         {
-          "component": "Mocks",
-          "current": "No live capability mocked; hostile-server fixtures are synthetic tests.",
-          "replacement": "Real approved identity/hosting services."
+          "component": "Scale and operations",
+          "current": "One application worker; local budget and audit files; in-memory request limits.",
+          "replacement": "Measure first. Before multiple app replicas, move shared state to managed services and separate ingestion from serving."
         }
       ],
       "references": [
@@ -81738,18 +81699,13 @@
           "path": "docs/evaluation-report.md"
         },
         {
-          "id": "fresh",
-          "label": "Fresh-question errors",
-          "path": "docs/experiments/m7-heldout-v2-result.md"
-        },
-        {
           "id": "tools",
-          "label": "Rejected tool extension",
+          "label": "Rejected report-calculation extension",
           "path": "docs/experiments/m7-tool-fix.md"
         },
         {
           "id": "system",
-          "label": "System card",
+          "label": "System card and deployed limits",
           "path": "docs/system-card.md"
         },
         {
@@ -81758,28 +81714,13 @@
           "path": "docs/audit-and-logging.md"
         },
         {
-          "id": "scanner",
-          "label": "Scanner experiment",
-          "path": "docs/experiments/injection-scanner-v2.md"
-        },
-        {
-          "id": "threat",
-          "label": "V1 threat scorer and history",
-          "path": "docs/experiments/t-i06-scorer-v2-rule.md"
-        },
-        {
           "id": "threat_v2",
-          "label": "Threat suite v2 results",
+          "label": "Synthetic threat-suite results",
           "path": "docs/experiments/threat-v2-results.md"
         },
         {
-          "id": "fixed",
-          "label": "Agent versus fixed pipeline measurements",
-          "path": "docs/experiments/agent-vs-fixed-pipeline-results.md"
-        },
-        {
           "id": "heldout_retrieval",
-          "label": "Original and fresh retrieval measurements",
+          "label": "Original and fresh retrieval diagnostics",
           "path": "docs/experiments/heldout-retrieval-metrics-results.md"
         },
         {
@@ -81936,8 +81877,8 @@
     },
     "source": {
       "path": "docs/innovation-page.json",
-      "sha256": "4fe089b33a72fc9373c087d69899b261bd6315abc02fe22f789e2efc604b09bd",
-      "evidence_commit": "ea9071b375d07d77b65f66130a12f551d4bc86b9"
+      "sha256": "4245cf254b922ed9ad22102159873b404040a9bc19a9008c584573ac6a8ae8c4",
+      "evidence_commit": "28b4aa5ae250372fb78fe080a82787dcab43817b"
     }
   }
 }

@@ -20,3 +20,6 @@ experiments/context/*/raw.jsonl | context-check run copies our own hand-written 
 experiments/context/cases.jsonl | hand-written conversation cases; the 7-word run is the official indicator name (job vacancy to unemployed person ratio), not report prose
 experiments/served/*.jsonl | served-chain sample copies our own gold question text (official indicator and category names, as in the pinned gold files) and hand-written probes; no MOM or MTI passage text
 docs/mcp-demo-transcript.md | the demo lists official category labels returned by a statistics tool (structured data values, not report prose)
+experiments/runs/dev-E1-chunking/blocks.cases.jsonl | frozen run output (D-080: first matched once the 2020 to 2022 Wage Practices reports were added to the local corpus): copies our own gold question text; the 7-word run is a question phrase about the share of establishments giving wage increases, not report prose; file is frozen
+experiments/runs/dev-dense-E*/*.cases.jsonl | frozen dense-retrieval run outputs (D-080): the same question phrase as the E1 entry, copied from our own gold question text; files are frozen
+docs/experiments/m7-heldout-v2-sources.md | statistic name (an employment rate of residents aged 25 to 64) and a hash in an audit table, not report prose (matched once the 2020 to 2023 Labour Force reports were added, D-080)

@@ -18,6 +18,7 @@ from labourlens.data import fetch, raw_store
 from labourlens.retrieval import chunk as ck
 
 BATCH_DOCS = {"mom-wage-practices2025", "mom-nwc-lower-wage2025", "mti-2026-q2-feature-ai-employment"}
+V4_DOCS = {d["source_id"] for d in __import__("yaml").safe_load((paths.SPECS / "sources.d" / "documents-2020-2022.yaml").read_text())["documents"]}  # D-080
 BATCH_DATASETS = {"unit_labour_cost_index_quarterly", "value_added_per_worker_quarterly", "avg_weekly_paid_hours_quarterly"}
 FIRST = {"unit_labour_cost_index_quarterly": "1980-Q1", "value_added_per_worker_quarterly": "1991-Q1", "avg_weekly_paid_hours_quarterly": "1998-Q1"}
 
@@ -265,7 +266,7 @@ def test_corpus_v2_passages_and_observations_unchanged_after_v3_build():
     now = _hashes_as_extract_02()
     changed = [f for f, h in v2["passage_file_sha256"].items() if now.get(f) != h]
     assert not changed, f"corpus-v2 passage files changed: {changed}"
-    assert len(now) == v2["document_files"] + len(BATCH_DOCS)
+    assert len(now) == v2["document_files"] + len(BATCH_DOCS) + len(V4_DOCS)  # D-080 added the 2020 to 2022 documents; every earlier file is unchanged
     base = json.loads((snaps / "v2-observations.json").read_text())["observations"]
     cur = fingerprint.observation_hashes()
     assert {s: cur.get(s) for s in base} == base
@@ -282,7 +283,7 @@ def test_corpus_v3_1_changes_only_the_mti_feature_article():
     now = _hashes_as_extract_02()
     changed = sorted(f for f, h in v3["passage_file_sha256"].items() if now.get(f) != h)
     assert changed == ["mti-2026-q2-feature-ai-employment.jsonl"], changed
-    passages = ck.load_passages()
+    passages = [p for p in ck.load_passages() if p["source_id"] not in V4_DOCS]  # D-080 (corpus v4) only adds documents
     assert len(passages) == v3["passages"]
     assert {p["parser_version"] for p in passages} == {"extract-0.3"}
     garbled = [p for p in passages if p["quality_flag"] == "garbled"]
@@ -291,6 +292,20 @@ def test_corpus_v3_1_changes_only_the_mti_feature_article():
     v31 = snaps / "v3.1.json"
     if v31.exists():
         assert json.loads(v31.read_text())["chunk_corpus_sha256"] == ck.corpus_hash(ck.build_chunks(ck.CONFIGS["merge200"], passages))
+
+
+def test_corpus_v4_only_adds_documents_and_changes_no_existing_passage_id():
+    """D-080: the 2020 to 2022 documents are additive. Every v3.1 passage id survives, and the cached chunks of the earlier documents are unchanged."""
+    snaps = paths.EXPERIMENTS / "corpus-snapshots"
+    v31 = json.loads((snaps / "v3.1.json").read_text())
+    passages = ck.load_passages()
+    old = [p for p in passages if p["source_id"] not in V4_DOCS]
+    assert len(old) == v31["passages"] 
+    # Four fetched PDFs give no passage: their text layer is not read by the extractor (hidden or glyph-image text). Recorded in the data sheet, not repaired.
+    assert V4_DOCS - {p["source_id"] for p in passages} == {"mom-lf2020-coverage-methodology", "mom-lf2021-survey-findings", "mom-lf2021-survey-highlights", "mom-lf2021-coverage-methodology"}
+    assert ck.corpus_hash(ck.build_chunks(ck.CONFIGS["merge200"], old)) == v31["chunk_corpus_sha256"]
+    v4 = json.loads((snaps / "v4.json").read_text())
+    assert (v4["passages"], v4["document_files"]) == (len(passages), v31["document_files"] + len(V4_DOCS))
 
 
 def test_corpus_fingerprint_content_hash_sees_a_reflag_that_passage_ids_do_not():

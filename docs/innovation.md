@@ -1,57 +1,54 @@
 # Innovation assessment
 
-LabourLens researches public Singapore labour statistics (Q1 2020 to Q2 2026) and MOM and MTI reports (from 2023). Analysts inspect citations, records and tool calls before using an answer.
-
-**Abstract.** Period filters and reranking select passages; typed read-only tools retrieve series and calculate changes. I measured retrieval, answer behaviour, runtime and attack responses. The next priorities are report-table arithmetic and independent evaluation.
+LabourLens is a research prototype for Singapore labour-market analysts. It answers questions with public statistics and MOM reports from Q1 2020 to Q2 2026. Answers include source citations; statistical changes are calculated in code.
 
 ## Current approach
 
-- Numbers come from validated tables or deterministic code; claims cite passages or records.
-- Period and release filters precede reranking; preliminary and final releases stay labelled.
-- A bounded agent uses typed read-only tools, including an MCP statistics server.
-- Evaluation uses fixed reference sets, retained negative results and an attack suite.
+Statistics are stored with their measure, unit, period, population, release and source. Reports become searchable passages; uncertain tables are flagged rather than guessed. I compared keyword search, meaning search and hybrid retrieval, then added period/release filters and reranking. A bounded agent can search reports, retrieve statistics through an MCP server and calculate changes from returned rows. Answers use a fixed schema. Code checks citation labels, quotations, numbers and answer status, but cannot establish that a quote supports a claim.
+
+I also compared the agent with a fixed workflow, screened model candidates, tested report-table arithmetic, compared direct and MCP routes, and ran synthetic security tests. The report-table extension failed its pre-set criteria and was not adopted.
 
 ## Retrieval and answer quality
 
-Development chunk hit@8 was .969 for filter then rerank versus .539 for hybrid (n=128; [retrieval](experiments/retrieval-v31-rerun.md)). [Original/fresh diagnostics](../experiments/eval/heldout-retrieval-20261103-paid/metrics.json) give strict passage hit@8 .778/.941 versus .167/.500 (n=18/34), without demonstrated end-to-end accuracy gain or per-case cause investigation. `gpt-6-luna` development behaviour was .897 versus hybrid .827, two-run means. Against one fixed pipeline run (.814), the agent mean .897 demonstrates a development advantage, confounded by arithmetic access and tool policy; it does not transfer to either test set ([comparison](../experiments/eval/agent-vs-fixed-pipeline.json)). Historical fresh numerical accuracy was 3/14; the tool extension failed ([tools](experiments/m7-tool-fix.md)).
+On the same 128 development report questions, filter-then-rerank raised relevant-passage hit@8 from 54% to 97% ([retrieval experiment](experiments/retrieval-v31-rerun.md)). This is a passage-retrieval result, not answer accuracy. Full-system comparisons showed a development gain but no demonstrated gain on the original or fresh test set ([evaluation report](evaluation-report.md)). The original shares evidence with development; fresh questions have since been reused.
 
-**Proposal:** verify report-table cells, units, population and row/column lineage before calculation; exclude `table_unreliable` cells. Add series, quarters and languages behind provenance and quality gates.
+The agent beat one fixed policy on development questions only. There is no test-set comparison ([experiment](experiments/agent-vs-fixed-pipeline-results.md)). The current calculator accepts validated statistic rows. Report-table arithmetic needs reliable cell and row/column checks before another attempt ([rejected extension](experiments/m7-tool-fix.md)).
 
 ## Drift detection
 
-**Proposal:** gate releases on schema, period and revision checks; rerun evaluation after every corpus, prompt or model change. Keep rollback versions, pin model versions, alert on provider changes and probe embedding drift.
+Versioned snapshots and provenance make rebuilds traceable. Source acquisition and rebuilds still require an operator; scheduled refresh, drift alerts and rollback are not implemented. The expanded corpus and newer served planner have not been re-evaluated.
 
-Track hit rate, abstention, citation validity, grounded numbers, latency and cost daily, plus minimised, pseudonymised logs by question family. Set alert thresholds from an approved baseline. None of this runs today ([system card](system-card.md)).
+**Proposal:** fetch approved sources on a schedule into immutable snapshots. Check schema, coverage, revisions and rights before promotion. Record the last successful fetch, alert on missed freshness targets, and label the previous approved snapshot stale until an update passes validation. Retain the prior version for rollback. Add government sources through the same definitions, rights review and evaluation process. Extend to new topics only after a separate scope decision.
 
 ## Provenance, explainability and review
 
-Citations, observation lineage, abstention reasons, conflict flags, an evidence drawer and tool traces support inspection. Thumbs and comments link to the run; nothing consumes them ([audit](audit-and-logging.md)).
+The workbench shows source links, cited passages, answer status and tool activity. Feedback is stored with its run but does not change the system. Citation checks verify that labels and quotations came from supplied evidence, not that the claim follows from them.
 
-**Proposal:** add table-row locators, side-by-side sources and review indicators. Several analysts label before AI suggestions, adjudicate and measure agreement; extend second-family judging.
-
-**Feedback loop proposal:** thumbs are triage, not labels. Review every thumbs-down and a sample of thumbs-up, label the failure type (evidence, number, period, abstention, style) and write a test with expected evidence before fixing. Tune on development; report on fresh questions. Do not fine-tune on votes or reuse thumbs-up answers as prompts: that leaks tests and rewards fluent errors. Pseudonymise comments; limit retention.
+**Proposal:** have at least three analysts label a blind set before AI suggestions, then adjudicate. Review every thumbs-down and sample thumbs-up. Classify confirmed failures, write a test with expected evidence, change one thing at a time, tune on development and check on fresh questions. Pseudonymise comments, limit retention, and do not treat votes as ground truth ([audit design](audit-and-logging.md)).
 
 ## Security, privacy and third-party risk
 
-Tools are bounded and read-only; MCP responses are validated. Scanner detections rose 10/30 to 23/30, benign flags unchanged at 9/30 ([scanner](experiments/injection-scanner-v2.md)). V1 fresh attacks remain 35/36. [V2](experiments/threat-v2-results.md), `gpt-6-luna`, three repeats: guarded/naive majority passes 50/54 versus 42/54 (p=.03857). Guards and answer prompt change together; both fail three of eight benign cases. No individual-layer or general safety claim follows.
+Tools are typed, read-only and bounded. Retrieved passages are untrusted data; MCP replies are validated. In a synthetic attack comparison repeated three times, the guarded setup passed 50 of 54 attacks versus 42 for the naive setup. The answer prompt and guards changed together, so the comparison cannot identify which defence helped. Both setups failed three of eight harmless look-alikes. This does not establish safety against adaptive attacks or an individual layer's effect ([threat results](experiments/threat-v2-results.md)).
 
-**Proposal:** clear licences and publisher agreements; replace shared codes with government SSO and source roles. **Permission-aware retrieval:** the corpus is public and has no per-user permissions today; for restricted sources, label each document and chunk and pre-filter by label in BM25, vector search and the statistics tools, so restricted text never reaches the model. Also approve residency, private endpoints, retention and audit access. Review provider terms; keep a tested vendor exit plan. On provider failure return unavailable, never an unvalidated fallback. Test a stronger injection classifier; keep server allow-lists and red-team reviews.
+**Proposal:** replace shared demo codes with government identity and source roles. Apply permissions before retrieval. Approve model endpoints, residency, retention, audit access and publisher terms before using restricted data. Test each security layer against independent paraphrases, hostile passages, unsafe tool requests and harmless look-alikes.
 
 ## Latency and cost
 
-Development median latency was 14.35 s, p95 35.4/34.1 s, cost $0.002845/question. All-tools MCP scored 57/65 versus statistics-only 59/65, p95 51.4 versus 34.7 s; it was rejected ([comparison](experiments/served-chain-mcp-all.md)). Removing statistics scored .692 versus .908, partly because calculation loses its input; MCP versus direct tied without establishing equivalence ([ablation](experiments/served-chain-no-stats.md)).
+The live agent sends statistical lookup through MCP. Direct and MCP routes query the same local observations. Moving report search and calculation into MCP was slower and showed no answer-quality gain in a one-run, 65-question sample, so it was not adopted ([comparison](experiments/served-chain-mcp-all.md)). Removing statistics access also removes the calculator's input ([ablation](experiments/served-chain-no-stats.md)).
 
-**Proposal:** test revision-keyed caches, filter-only routing and smaller triage/rerank models; add token and cost budgets, p95 alerts and provider caps. Target p95 below 40 s and mean cost below $0.005, with no regression in citations, numbers or abstention.
+The live site runs on one DigitalOcean Droplet behind Caddy, using Docker Compose and GitHub Actions. The app has one worker; budget and audit state are local files, and request limits are in memory. Provider-side spend limits, rollback and load behaviour are unverified ([deployment runbook](deploy.md)).
+
+**Proposal:** keep this deployment until load tests show a bottleneck. Separate ingestion and index builds from question serving. Publish versioned data and indexes atomically, with rollback. Before adding app replicas, move budget, rate-limit and audit state to shared services and give query workers read-only corpus access. Measure latency, failures and cost before testing caches or smaller models.
 
 ## Priorities and measurement
 
-1. **Report-table arithmetic.** Pre-register one change; regress on the 14 known cases, then confirm on new blind questions. Threshold: accuracy at least 0.50, no rise in false-answer rate, unchanged citation checks.
-2. **Independent review.** Three analysts label a stratified blind set before AI suggestions, then adjudicate; never tune on it. Threshold: Fleiss' kappa at least 0.70; 95% accuracy interval width at most 0.10.
+1. **Report-table arithmetic.** Pre-register one extraction change, test known cases, then confirm on new blind questions. Proposed threshold: 0.50 accuracy on predefined numerical cases, with no rise in false answers or weaker definition and citation checks.
+2. **Independent review.** Have three analysts label a stratified blind set before AI suggestions. Proposed targets: agreement of at least 0.70 and an accuracy interval no wider than 0.10. Do not tune on this set.
 
 ## Limitations and threats to validity
 
-Development shaped design; original-test evidence overlaps and fresh outcomes are known. Neither final test demonstrates an answer gain. Gold was AI-drafted, reviewed by one person; the main judge is same-family. One fixed run and two agent runs do not establish stability. Citations check mechanics; arithmetic can use wrong inputs. Attacks establish no general defence. Full comparisons exclude web/MCP. Every measurement used questions about Q1 2024 to Q2 2026, the structured-output planner and older prompts; the served window (from Q1 2020), function-calling planner and newer prompts were not re-evaluated, so answers about 2020 to 2023 are unevaluated. Government readiness is untested.
+Development questions shaped the design. The original test shares evidence with development; fresh questions have since been reused. Neither test demonstrated an answer-quality gain. Questions and labels were AI-drafted and signed off by one human reviewer. The primary judge is from the generator's provider family. A small number of runs does not establish stability. Citation checks are mechanical; arithmetic can use wrong inputs. Synthetic attacks do not establish general security. The expanded corpus, newer planner, monitoring, rollback, government identity and production scale remain untested.
 
 ## Mocked or unverified components and their production replacements
 
-No live capability is mocked; hostile-server fixtures are synthetic tests. Shared codes need approved SSO; the external model route needs approved private endpoints; report rights, some licences and the employment population basis need publisher agreements and validated definitions.
+No live capability is mocked; hostile-server cases are synthetic tests. Government use still requires approved identity, source permissions, model processing and data rights. Automated refresh is not implemented. Do not scale beyond one worker until budget, audit and rate-limit state have a reliable shared home.

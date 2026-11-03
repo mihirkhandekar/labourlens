@@ -109,7 +109,9 @@ Plain-English definitions. Add a term the first time it matters. Entries marked 
 - **Observation:** one validated statistical value with its unit, period, population, adjustment and source (`StatisticalObservation`).
 - **Passage:** a citable chunk of report text with page or section locator (`DocumentPassage`).
 - **Source manifest:** machine-readable record of each source: URL, hashes, dates, rights.
-- **Answer scope:** 2020-Q1 to 2026-Q2 (D-077; it was 2024-Q1 to 2026-Q2 until 3 Nov 2026, and every measured result used that earlier window). Data outside the window may exist in files but is not answerable. Report passages start in 2023.
+- **Answer scope:** 2020-Q1 to 2026-Q2 (D-077; it was 2024-Q1 to 2026-Q2 until 3 Nov 2026, and every measured result used that earlier window). Data outside the window may exist in files but is not answerable. Quarterly report passages cover the window since corpus v4 (D-080).
+- **Corpus v4:** the served document build: corpus v3.1 plus 57 documents (2020 to 2022 quarterly reports and releases, and 2020 to 2023 annual publications); 142 sources, 29,760 passages, 3,632 chunks. Not evaluated; the evaluated build is v3.1.
+- **Access link:** `/workbench#code=<code>` fills the access field without submitting it (D-081); the fragment form keeps the code out of server logs.
 - **Native function calling:** the model returns structured tool calls (name plus JSON arguments) from tool definitions given to it, instead of writing a JSON plan as ordinary output. The served planner uses it (D-078); the code still validates every argument.
 - **Server-sent events (streaming):** a one-way HTTP stream of small text events. The stream ask endpoint (D-079) sends live steps, then the finished answer; no model tokens are streamed.
 - **Rights review:** a recorded decision on whether a source may be redistributed.

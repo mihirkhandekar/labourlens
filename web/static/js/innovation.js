@@ -11,9 +11,7 @@ toggle.addEventListener('click', () => {
 });
 themeLabel();
 const repo = 'https://github.com/mihirkhandekar/labourlens/blob/master/';
-const rateFormat = new Intl.NumberFormat('en-SG', {minimumFractionDigits: 3, maximumFractionDigits: 3});
-const rate = n => typeof n === 'number' ? rateFormat.format(n) : 'Not recorded';
-const interval = values => Array.isArray(values) ? `[${values.map(rate).join(', ')}]` : 'Not recorded';
+const percent = new Intl.NumberFormat('en-SG', {style: 'percent', maximumFractionDigits: 0});
 function anchor(text, href) { const a = el('a', '', text); a.href = href; return a; }
 function table(caption, headers, rows) {
   const node = el('table', 'iv-table'); node.append(el('caption', '', caption));
@@ -49,19 +47,9 @@ function render(page) {
   const approach = addSection('approach', 'Current approach');
   const approachList = el('ul'); c.approach.forEach(text => approachList.append(el('li', '', text))); approach.append(approachList);
   function results(kind) {
-    if (kind === 'retrieval') return table('Table 1. Retrieval, 128 development text questions; 95% case-bootstrap intervals.', ['Method', 'n', 'Hit@8', '95% interval'], [
-      ['Hybrid', String(m.retrieval.n), rate(m.retrieval.R0), interval(m.retrieval_intervals.R0)],
-      ['Filter then rerank', String(m.retrieval.n), rate(m.retrieval.R3), interval(m.retrieval_intervals.R3)]
-    ]);
-    if (kind === 'answers') return table('Table 2. Behaviour accuracy, gpt-6-luna, two-run means. Difference: rerank minus hybrid.', ['Set', 'n', 'Rerank', 'Hybrid', 'Difference [95% interval]'], m.splits.map(split => {
-      const arms = Object.fromEntries(split.arms.map(a => [a.arm, a]));
-      return [{dev: 'Development', registered: 'Original test', fresh: 'Fresh test'}[split.id], String(split.n), rate(arms.r3?.accuracy), rate(arms.hybrid?.accuracy), `${rate(split.paired.paired_difference)} ${interval(split.paired.interval)}`];
-    }));
-    const arm = m.splits.find(s => s.id === 'dev')?.arms.find(a => a.arm === 'r3');
-    return table('Table 3. Development runtime and estimated cost, filter then rerank.', ['Measure', 'Value', 'Unit'], [
-      ['Mean of run medians', arm ? arm.latency.toFixed(2) : 'Not recorded', 'seconds'],
-      ['Run p95 values', arm ? arm.p95_runs.join(' / ') : 'Not recorded', 'seconds'],
-      ['Mean estimated cost', arm ? arm.cost.toFixed(6) : 'Not recorded', 'USD / question']
+    if (kind === 'retrieval') return table('Relevant report passages in the first eight results. Same development set.', ['Method', 'Passage hit rate'], [
+      ['BM25 keyword search', percent.format(m.retrieval.R0)],
+      ['Filter then rerank', percent.format(m.retrieval.R3)]
     ]);
   }
   c.sections.forEach(spec => {

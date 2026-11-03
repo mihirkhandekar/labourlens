@@ -26,9 +26,9 @@ def test_serving_projects_triage_corpus_and_rights_numbers_only():
         "cost_and_latency": {"calls": 409, "total_cost_usd": 0.050601, "latency_p50_s": 1.56, "latency_p95_s": 2.44},
         "config": {"model": "gpt-6-luna", "prompt": "triage_v1", "git_commit": "e361fcdaca4060014e0dc42aabfb860983e5bb30"},
     }
-    snapshot = {"label": "v3.1", "document_files": 49, "passages": 16419, "chunks": 1847, "gold_sha256": "x" * 64}
+    snapshot = {"label": "v4", "document_files": 106, "passages": 29760, "chunks": 3632, "gold_sha256": "x" * 64}
     diff = {"parser_version": {"before": "extract-0.2", "after": "extract-0.3"}, "quality_flags": {"transitions": {"garbled->ok": 16}, "new_garbled": 0}}
-    sources = {"metrics": {"sources": 85}, "rows": [
+    sources = {"metrics": {"sources": 142}, "rows": [
         {"type": "dataset_csv", "rights_status": "assumed_open_unverified"},
         {"type": "release_html", "rights_status": "unresolved"},
         {"type": "report_pdf", "rights_status": "unresolved"},
@@ -36,7 +36,7 @@ def test_serving_projects_triage_corpus_and_rights_numbers_only():
     ]}
     section = _serving(Artifacts({
         "experiments/triage/triage-v1-luna/metrics.json": triage,
-        "experiments/corpus-snapshots/v3.1.json": snapshot,
+        "experiments/corpus-snapshots/v4.json": snapshot,
         "experiments/corpus-snapshots/v3.1-diff.json": diff,
     }), sources)
     assert section["status"] == "available"
@@ -44,7 +44,7 @@ def test_serving_projects_triage_corpus_and_rights_numbers_only():
     assert section["triage"]["threats"]["false_out_of_scope"] == 1 and section["triage"]["diverted_threat_cases"] == ["T-D05"]
     assert section["triage"]["cost_and_latency"]["total_cost_usd"] == 0.050601
     assert section["rows"] == [{"kind": "clear_offtopic", "n": 14, "correct": 14, "provenance": ["experiments/triage/triage-v1-luna/metrics.json"]}]
-    assert section["corpus"]["passages"] == 16419 and section["corpus"]["chunks"] == 1847 and section["corpus"]["sources"] == 85
+    assert section["corpus"]["passages"] == 29760 and section["corpus"]["chunks"] == 3632 and section["corpus"]["sources"] == 142
     assert section["corpus"]["parser_after"] == "extract-0.3" and section["corpus"]["flag_transitions"] == {"garbled_to_ok": 16}
     assert section["rights"] == {"datasets_unverified": 1, "sources_unresolved": 2, "sources_all_rights_reserved": 1}
     assert "git_commit" not in str(section) and "gold_sha256" not in str(section)

@@ -30,7 +30,7 @@ Open `http://127.0.0.1:8000/`, `/deck` and `/workbench`. Without make, install w
 | Report and deck, static chapters | `make serve`, open `http://127.0.0.1:8000/` | checkout only | the ten report chapters and the deck; the live workbench needs the corpus and an API key | none |
 | Docs link check | `make docs-check` | checkout only | `0 problem(s)` | none |
 | Statistical store, EDA, export | `uv run labourlens fetch && uv run labourlens build && uv run labourlens eda && uv run labourlens export` | network; rewrites generated files | manifest, snapshots, `data/processed/`, figures. Do not run on a checkout whose `data/` you want to keep. | none |
-| Documents and passages | `uv run labourlens fetch --kind documents`, then `build` | network, time; the MOM and MTI files are not redistributed | local `data/raw/`, `data/passages/` (gitignored) | none |
+| Documents and passages | `uv run labourlens fetch --kind documents`, then `uv run labourlens build` | network, time; the MOM and MTI files are not redistributed | local `data/raw/`, `data/passages/` (gitignored); corpus v4 has 106 document files including the 57 added by D-080 (`specs/sources.d/documents-2020-2022.yaml`) | none |
 | MCP protocol demo | `uv run labourlens mcp-demo` | committed statistical store, manifest and snapshots; no private MOM/MTI corpus | writes gitignored `data/runs/mcp-demo-transcript.md`; leave committed transcript unchanged | none |
 | MCP-backed agent run | `uv run labourlens mcp-agent-demo` | corpus, `OPENAI_API_KEY` | rewrites `artifacts/mcp-agent-demo.md`; recorded run cost about $0.001 | paid, small |
 | Re-score saved raw answers, no judge (`agent-dev-A3` is the filter-then-rerank run, one of the five first-build development runs) | `uv run labourlens eval --exp agent-dev-A3 --no-judge --gold experiments/gold/archive/gold-v3.5.jsonl --force` | scratch checkout only, original private `data/runs/` records; deliberately replaces scratch evaluation output | deterministic rescoring, not restoration of judge metrics | none |
@@ -40,6 +40,7 @@ Open `http://127.0.0.1:8000/`, `/deck` and `/workbench`. Without make, install w
 | Saved second-family summary (the second-judge check: `FIN` is the first run of the final evaluation, whose answers were judged; `s60` is 60 cases per generator) | `uv run labourlens judge-xfamily --experiment sonnet55-FIN-s60-b-20261102 --summary` | checkout only | saved summary, no calls or writes | none |
 | New second-family dry-run | `uv run labourlens judge-xfamily --experiment MY-JUDGE-20261102 --dry-run` | private raw outputs of the first run of the final evaluation, to construct the paired sample | token/list-price heuristic, not a bill; unavailable in public clone | none |
 | Embedding-cache preparation | `uv run labourlens dense-exp --force` | scratch checkout only, complete corpus, `OPENAI_API_KEY`; replaces fixed-name scratch experiment outputs | cached vectors needed before live serving | paid embeddings |
+| Embedding the missing v4 chunks (D-080) | `uv run labourlens embed-corpus` (dry run, lists the missing chunks, free), then `OPENAI_API_KEY=... uv run labourlens embed-corpus --yes` | complete v4 corpus, `OPENAI_API_KEY` for `--yes` only | fills `data/index/embeddings/text-embedding-3-large/cache.npz` for the 1,285 chunks that had no vector; about 288,000 tokens, about $0.04 at list price (an estimate); the live container never embeds at startup | paid embeddings, small |
 | Human review ingestion (`v2-approve` is the approval step for the 65 fresh questions) | review-ingest and v2-approve commands | original owner exports and associated private review inputs | original signed records remain the evidence; never fabricate missing inputs | none |
 
 Published numbers come from saved outputs. Re-running a model gives different outputs; that is expected and does not change the published results. Do not use `--force` on a registered experiment: it overwrites frozen evidence.
@@ -95,7 +96,7 @@ uv run labourlens paired --gold experiments/gold/heldout_v2_v1.jsonl --candidate
 ### Tagged current-corpus retrieval (paid reranking/possible embeddings)
 
 ```sh
-# tag V31 = the current-corpus retrieval re-run (128 development report questions, build v3.1)
+# tag V31 = the corpus v3.1 retrieval re-run (128 development report questions, build v3.1)
 uv run labourlens retrieval-exp2 --tag V31
 ```
 

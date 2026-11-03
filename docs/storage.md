@@ -1,6 +1,6 @@
 # How documents and data are stored
 
-Layers as built (corpus v3). Background: D-009.
+Layers as built (corpus v4, D-080; earlier results belong to v3.1 or older). Background: D-009.
 
 ## Layers
 | Layer | What | Where | In git? | Status |
@@ -14,7 +14,7 @@ Layers as built (corpus v3). Background: D-009.
 | 7. Answer and trace logs | Runs, tool calls, citations, feedback | `data/runs/` (raw run outputs, gitignored), `data/audit/` (audit log and `feedback.jsonl`, gitignored); committed scores and metrics in `experiments/` | Scores and metrics yes; raw outputs and MOM text no | Built |
 
 ## Why files and not a database server
-The corpus is small (corpus v3: 16,419 passages across 49 documents; 36 datasets, 52,020 rows; earlier corpora had 13,484 and 15,915 passages). Files in Parquet and JSONL are reproducible, diffable, easy to hash, and need no service to run. DuckDB can query the Parquet directly when needed. A database server would add setup and failure modes without helping the assessment. Revisit if the corpus grows by orders of magnitude.
+The corpus is small (corpus v4: 29,760 passages across 106 documents; 36 datasets, 52,020 rows; the evaluated v3.1 had 16,419 passages across 49 documents, and earlier corpora had 13,484 and 15,915 passages). Files in Parquet and JSONL are reproducible, diffable, easy to hash, and need no service to run. DuckDB can query the Parquet directly when needed. A database server would add setup and failure modes without helping the assessment. Revisit if the corpus grows by orders of magnitude.
 
 ## Rebuild rule
 Everything from layer 3 up is derived and can be rebuilt from layers 1 and 2 with `labourlens build`. A reviewer without the MOM documents can rebuild all statistical layers from the committed CSV snapshots; passages need `labourlens fetch --kind documents` run locally.

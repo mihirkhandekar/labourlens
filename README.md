@@ -1,6 +1,6 @@
 # LabourLens
 
-I built LabourLens for the GenAI Engineer take-home. Singapore labour-market research often means checking a statistics table against several report releases, then working out which definitions and figures belong together. LabourLens takes a question and returns an answer with citations to official statistics or MOM and MTI reports. It answers for Q1 2020 to Q2 2026 (statistics cover the whole window; MOM report passages start in 2023); the workbench shows the source evidence and tool calls behind each answer.
+I built LabourLens for the GenAI Engineer take-home. Singapore labour-market research often means checking a statistics table against several report releases, then working out which definitions and figures belong together. LabourLens takes a question and returns an answer with citations to official statistics or MOM and MTI reports. It answers for Q1 2020 to Q2 2026 (statistics and MOM report passages both cover the whole window); the workbench shows the source evidence and tool calls behind each answer.
 
 ## Result
 
@@ -10,7 +10,7 @@ Retrieval-only checks now cover both test sets: strict first-eight-passage hit@8
 
 Neither Decisions API trial was adopted: [v1](docs/experiments/decisions-api-results.md) failed routing/verifier screens; [dev-tuned v2](docs/experiments/decisions-api-v2-results.md) was faster than contemporaneous chat but failed safety, quality and operational guards, including provider refusals on every tested serious-harm presentation. The live agent is unchanged.
 
-**Served system versus evaluated system.** Every figure above was measured on questions about 2024-Q1 to 2026-Q2, with the structured-output planner and the older prompts (`planner_v1`, `answer_v3`). The served app now answers for 2020-Q1 to 2026-Q2 (D-077), plans with native OpenAI function calling and newer prompts (D-078), and can stream its live steps (D-079). The evaluation gold covers 2024 to 2026 only, so answers about 2020 to 2023 are unevaluated, and the shipped planner and prompts were not re-evaluated; I decided not to rerun the experiments. See the [system card](docs/system-card.md#served-versus-evaluated).
+**Served system versus evaluated system.** Every figure above was measured on questions about 2024-Q1 to 2026-Q2, on corpus v3.1 (49 documents), with the structured-output planner and the older prompts (`planner_v1`, `answer_v3`). The served app now answers for 2020-Q1 to 2026-Q2 (D-077), searches a larger corpus v4 of 106 documents (D-080), plans with native OpenAI function calling and newer prompts (D-078), and can stream its live steps (D-079). The evaluation gold covers 2024 to 2026 only, so answers about 2020 to 2023 and from the 57 added documents are unevaluated, more documents now compete in retrieval, and the shipped planner and prompts were not re-evaluated; I decided not to rerun the experiments. See the [system card](docs/system-card.md#served-versus-evaluated).
 
 ## Quick start
 
@@ -24,9 +24,9 @@ LABOURLENS_DEMO_ENABLED=false make serve
 
 Open <http://127.0.0.1:8000> for the report, `/deck` for the presentation or `/workbench` for the research page. These commands need no API key and make no paid calls. `mcp-demo` exercises the statistics server with a real MCP client. [Reproduce](docs/reproduce.md) explains corpus setup and how to recompute the saved results.
 
-The presentation has 29 main slides and 44 including the appendix. Assumptions, constraints and implemented scope follow My project; evaluation design precedes the answer comparison, and the final appendix records the rejected Decisions API trials.
+The presentation has 28 main slides and 44 including the appendix. The flow now moves from the data and its limits, to report and statistics retrieval, the agent and answer checks, then evaluation and results. It ends with next steps before the summary.
 
-Live demo: <https://labourlens.navig.me>. Workbench access codes are sent separately. The [innovation page](https://labourlens.navig.me/innovation) presents the proposed next steps.
+Live demo: <https://labourlens.navig.me>. Workbench access codes are sent separately. A link of the form `/workbench#code=<code>` fills the access field but never submits or stores it (D-081). The [innovation page](https://labourlens.navig.me/innovation) presents the proposed next steps.
 
 ## Sample queries
 
@@ -119,7 +119,7 @@ The statistics capability is the `get_series` tool; direct and MCP are routes to
 
 ## Corpus versions
 
-The app uses v3.1: 85 sources, 52,020 observations, 16,419 passages and 1,847 chunks. Earlier builds remain attached to their original results. The [data sheet](docs/data-sheet.md) and [evaluation report](docs/evaluation-report.md) record the build history; `/healthz` identifies the served commit and corpus fingerprint.
+The app uses v4 (D-080): 142 sources (36 datasets and 106 documents), 52,020 observations, 29,760 passages and 3,632 chunks. The 57 added documents (2020 to 2022 reports and releases, and the 2020 to 2023 annual publications) are local-only like the others and not evaluated. Every measured result used v3.1 (85 sources, 16,419 passages, 1,847 chunks) or earlier builds, which remain attached to their original results. The [data sheet](docs/data-sheet.md) and [evaluation report](docs/evaluation-report.md) record the build history; `/healthz` identifies the served commit and corpus fingerprint.
 
 ## Limits
 

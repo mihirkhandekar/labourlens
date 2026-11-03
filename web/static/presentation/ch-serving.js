@@ -19,7 +19,7 @@ function differenceCards(m) {
     ['Scope check before the agent', `One short model call decides whether a message is about the workbench's subject. Off-topic, personal-advice and unsafe messages get a brief refusal; when unsure it defaults to in scope; if the call fails the agent runs anyway. It adds one call to each question that is not small talk${cl.mean_cost_usd != null ? `, about ${usd(cl.mean_cost_usd)} and ${secs(cl.latency_p50_s)} at the median` : ''}. Measured end to end on a separate 65-case sample, not the full final sets.`, 'docs/decisions.md › D-051 · tests/web/test_triage.py'],
     ['Follow-up rewrite before the agent', `When a message follows earlier turns or uses a relative date such as last quarter, one short model call turns it into a standalone question first. A first question with no such wording passes through with no call, and if the call fails the original question goes to the agent. ${contextSentence(sv)}`, 'docs/decisions.md › D-054 · experiments/context/ctx-v1-luna, ctx-v2-luna'],
     ['Statistics lookups through MCP', `The agent's get_series tool calls the local MCP server over stdio, and the workbench activity shows "via MCP". Report search and the change calculation stay in the same process, and the other eight MCP tools are not given to the agent. ${lat.mcp != null ? `Median ${lat.mcp} ms per call against ${lat.direct} ms direct` : 'Latency per call is not recorded'}${mx.connection_seconds != null ? `, and about ${mx.connection_seconds.toFixed(1)} s once to connect` : ''}. The 65-case served-chain sample (51 development cases and 14 probes, statistics-only MCP; not the fresh 65) scored 90.8% for both models, with no observed loss versus direct calls.`, 'docs/decisions.md › D-053 · docs/mcp-demo-transcript.md §17'],
-    ['Document build v3.1', `${corpus.sources != null ? `${fmt.int(corpus.sources)} sources, ${fmt.int(corpus.passages)} passages and ${fmt.int(corpus.chunks)} chunks, parser ${corpus.parser_after || 'not recorded'}.` : 'Corpus counts are not recorded.'} The same sources and passage ids as build v3; a refined rule relabels 40 passages of one article. The final evaluation of all three question sets ran on v3.1 and gives the headline numbers. Earlier results ran on earlier builds and stay as labelled history.`, 'docs/decisions.md › D-052, D-055 · experiments/corpus-snapshots/v3.1-diff.json']
+    ['Document build v4', `${corpus.sources != null ? `${fmt.int(corpus.sources)} sources, ${fmt.int(corpus.passages)} passages and ${fmt.int(corpus.chunks)} chunks, parser ${corpus.parser_after || 'not recorded'}.` : 'Corpus counts are not recorded.'} Build v4 adds the 2020 to 2022 quarterly reports and the 2020 to 2023 annual reports to v3.1; passage ids of the earlier documents are unchanged, and no evaluation ran on v4. The final evaluation of all three question sets ran on v3.1 and gives the headline numbers. Earlier results ran on earlier builds and stay as labelled history.`, 'docs/decisions.md › D-052, D-055 · experiments/corpus-snapshots/v4.json']
   ];
   const grid = el('div', 'pr-limit-grid');
   cards.forEach(([title, text, src], i) => {
@@ -57,9 +57,10 @@ function corpusBlock(m) {
   const c = m.section('serving').corpus;
   if (!c) return null;
   const f = c.quality_flags || {}, tr = c.flag_transitions || {};
-  const block = section(`Document build v3.1: ${fmt.int(c.sources)} sources, ${fmt.int(c.passages)} passages, ${fmt.int(c.chunks)} chunks, parser ${c.parser_after}`, ['No passage was added or removed; the changes are labels on one article.', 'The parser version field changes on every passage record.']);
+  const ev = m.section('serving').evaluated_corpus || {};
+  const block = section(`Evaluated document build v3.1: ${fmt.int(ev.passages)} passages, ${fmt.int(ev.chunks)} chunks, parser ${c.parser_after}`, ['No passage was added or removed; the changes are labels on one article.', 'The parser version field changes on every passage record.']);
   block.append(dataTable('Passage quality flags, build v3 against build v3.1', ['Measure', 'v3', 'v3.1'], [
-    ['Passages in the corpus', fmt.int(c.chunks_changed?.before != null ? c.passages : null), fmt.int(c.passages)],
+    ['Passages in the corpus', fmt.int(ev.passages), fmt.int(ev.passages)],
     ['Garbled, whole corpus', fmt.int(f.all_before?.garbled), fmt.int(f.all_after?.garbled)],
     ['Usable text, whole corpus', fmt.int(f.all_before?.ok), fmt.int(f.all_after?.ok)],
     ['Table fragments kept but not retrieved, whole corpus', fmt.int(f.all_before?.table_unreliable), fmt.int(f.all_after?.table_unreliable)],
@@ -81,7 +82,7 @@ export function knownLimits(m) {
     'The scanner flags 23/30 test attacks after improvement, with 9/30 benign false alarms and 0/15 on real report passages. Semantic and non-English bypasses remain; zero flags never establishes source safety.',
     'A provider-side spend cap is not verified; the app\u2019s own daily budget is an estimate.',
     r.datasets_unverified != null ? `Licences are unverified for ${fmt.int(r.datasets_unverified)} datasets (assumed open) and ${fmt.int(r.sources_unresolved)} documents (rights unresolved). All of them stay local and none is committed.` : 'Licence status is not recorded.',
-    'The live app differs from the evaluated system (small-talk reply, scope check, MCP route, build v3.1), and a separate 65-case sample measures the served configuration, not the full final sets.'
+    'The live app differs from the evaluated system (small-talk reply, scope check, MCP route, build v4 against v3.1), and a separate 65-case sample measures the served configuration, not the full final sets.'
   ];
 }
 
@@ -92,7 +93,7 @@ export function renderServing(m, ctx) {
     id: 'serving',
     title: 'The live app differs from the system I evaluated in four ways',
     bullets: [
-      'A small-talk reply, a scope check, statistics lookups through MCP and document build v3.1.',
+      'A small-talk reply, a scope check, statistics lookups through MCP and document build v4, which was not evaluated.',
       g.n != null ? `The scope check alone measured: ${of(g.false_out_of_scope, g.n)} reference and fresh questions wrongly turned away. The served chain also has a 65-case sample (51 development cases and 14 probes, statistics-only MCP; not the fresh 65), 90.8% for both models.` : 'The served chain also has a 65-case sample (51 development cases and 14 probes, statistics-only MCP; not the fresh 65), 90.8% for both models.',
       'The served sample contains 51 development cases and 14 hand-written probes, one run, same judge family, not independent evidence.'
     ]

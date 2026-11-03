@@ -31,7 +31,7 @@ def shared():
 
 
 def cfg(**kw):
-    return g.AgentConfig(planner_mode="tools", planner_prompt="planner_v4", answer_prompt="answer_v6", **kw)
+    return g.AgentConfig(planner_mode="tools", planner_prompt="planner_v5", answer_prompt="answer_v7", **kw)
 
 
 def tc(name, args, id=None):
@@ -93,7 +93,7 @@ def test_native_planner_request_shape_trace_and_config(shared, monkeypatch):
     assert r["rounds"] == 2 and r["tool_calls"] == 2 and len(seen) == 2  # two rounds, then the round bound ends planning
     assert [e["event"] for e in plans(r)] == ["gather", "gather"]
     assert all(e["detail"]["planner_mode"] == "tools" for e in plans(r))
-    assert r["planner_mode"] == "tools" and r["config"].endswith("|planner_v4|answer_v6|retrieval=r3|planner_mode=tools")
+    assert r["planner_mode"] == "tools" and r["config"].endswith("|planner_v5|answer_v7|retrieval=r3|planner_mode=tools")
     assert [e["event"] for e in tool_events(r)] == ["ok", "ok"] and r["evidence"][-1]["label"] == "C1"
     # Round 2 sees the assistant tool call and a tool message for the same id, framed as untrusted, with the labelled evidence lines.
     second = seen[1]["messages"]
@@ -242,11 +242,11 @@ def test_shipped_prompts_and_config_are_new_versioned_files_not_edits_of_frozen_
     from labourlens.agent import served
 
     conf = served.shipped_config(80.0)
-    assert (conf.planner_mode, conf.planner_prompt, conf.answer_prompt, conf.run_deadline_s) == ("tools", "planner_v4", "answer_v6", 80.0)
+    assert (conf.planner_mode, conf.planner_prompt, conf.answer_prompt, conf.run_deadline_s) == ("tools", "planner_v5", "answer_v7", 80.0)
     assert conf.planner_model == "gpt-6-luna" and conf.retrieval == "r3" and conf.tool_set == "base"
-    for old, new in (("planner_v1", "planner_v4"), ("answer_v3", "answer_v6"), ("triage_v1", "triage_v2"), ("contextualise_v1", "contextualise_v2")):
+    for old, new in (("planner_v1", "planner_v5"), ("answer_v3", "answer_v7"), ("triage_v1", "triage_v3"), ("contextualise_v1", "contextualise_v2")):
         assert g.load_prompt(old)[2] != g.load_prompt(new)[2]
-    assert "Q1 2024 to Q2 2026" in g.load_prompt("triage_v1")[0] and "Q1 2020 to Q2 2026" in g.load_prompt("triage_v2")[0]
-    assert "1Q 2024 to 2Q 2026" in g.load_prompt("answer_v3")[0] and "1Q 2020 to 2Q 2026" in g.load_prompt("answer_v6")[0]
-    first, later = g.load_prompt("planner_v4")[1].split(g.FOLLOW_UP_MARK, 1)
+    assert "Q1 2024 to Q2 2026" in g.load_prompt("triage_v1")[0] and "Q1 2020 to Q2 2026" in g.load_prompt("triage_v3")[0]
+    assert "1Q 2024 to 2Q 2026" in g.load_prompt("answer_v3")[0] and "1Q 2020 to 2Q 2026" in g.load_prompt("answer_v7")[0]
+    first, later = g.load_prompt("planner_v5")[1].split(g.FOLLOW_UP_MARK, 1)
     assert "{question}" in first and "{round}" in later and "{question}" not in later

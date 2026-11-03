@@ -95,7 +95,7 @@ def test_technical_panels_explain_methods_prompts_and_charts():
                     "prompts/answer_v5.md", "Direct prompt injection", "Poisoned report passage", "Sensitive-data requests",
                     "Unsafe tool use", "Unsupported claims", "MCP server failure", "Wilson interval"):
         assert excerpt in STORY, excerpt
-    assert "current methods chart uses hit@8, 128 cases and 85 sources" in STORY
+    assert "methods chart uses hit@8, 128 cases and the 85 sources of build v3.1" in STORY
     assert "Methods chart: BM25 .477, dense .367 and hybrid .539 hit@8" in STORY
     assert "The ladder starts at that same hybrid .539 baseline" in STORY
     assert "The original 24-question screen used hit@10" in STORY and "not comparable to the current chart" in STORY

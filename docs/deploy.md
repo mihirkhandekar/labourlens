@@ -115,7 +115,7 @@ A concurrency group serialises runs; a queued run waits rather than cancelling o
 
 ## 6. Runtime data
 
-The runtime list in `deploy/runtime-data.txt` contains 52 files: `observations.parquet`, `manifest.json`, 49 passage JSONL files and `data/index/embeddings/text-embedding-3-large/cache.npz`. Use `scripts/upload-corpus.sh` rather than reconstructing this list by hand. File sizes depend on the built corpus.
+The runtime list in `deploy/runtime-data.txt` contains `observations.parquet`, `manifest.json`, the passage JSONL files (49 for corpus v3.1, 106 for corpus v4, D-080) and `data/index/embeddings/text-embedding-3-large/cache.npz`; the file itself is the exact list. Use `scripts/upload-corpus.sh` rather than reconstructing this list by hand. File sizes depend on the built corpus.
 
 - `data/processed/observations.parquet`: structured observations (`StatsData`).
 - `data/manifests/manifest.json`: source provenance and audit manifest hash.
@@ -126,7 +126,7 @@ Everything else under `data/` (raw PDFs and HTML, other embedding models, `runs/
 
 **VERIFIED (local, 30 Oct 2026; corpus v1, historical: the live site serves corpus v3):** starting `Shared()` and then the web app against a `data/` directory containing exactly this set loaded 2,106 chunks, 13,484 passages and 3,790 in-scope observations without a network call or API key use, in about 2.5 seconds on the author's machine with a warm file cache. The container reported healthy about 9 seconds after start. The earlier estimate of 30 seconds for startup was not reproduced; no on-disk BM25 cache exists and none is needed at this size. Allow for slower cold-disk reads on the Droplet; the compose health check allows 120 seconds.
 
-**Corpus on the Droplet.** The live site now serves corpus v3.1; the commit it runs is shown by `/healthz`, which also reports the passage and chunk counts (16,419 and 1,847) and the corpus fingerprints (`passage_set_sha256` `d402120f6f8f`, unchanged between v3 and v3.1, and `content_sha256` `242e2b284fbc` for v3.1). The local figures in the VERIFIED paragraph above (2,106 chunks, 13,484 passages, 3,790 in-scope observations) are corpus v1, measured on 30 Oct 2026 and kept as history of the startup check. Corpus v3 has 4,300 in-scope observations; see the corpus-versions statement in the [README](../README.md#corpus-versions). Four measured evaluations exist on v3 (the X2 development regression check, the `m7-e2efix-20261031` threat run, held-out v2 and the tool-set diagnostic), and the 65 fresh questions were re-run once on v3.1 (D-055).
+**Corpus on the Droplet.** Until the v4 upload below is done, the live site serves corpus v3.1; the commit it runs is shown by `/healthz`, which also reports the passage and chunk counts (16,419 and 1,847 for v3.1; 29,760 and 3,632 for v4) and the corpus fingerprints (`passage_set_sha256` `d402120f6f8f`, unchanged between v3 and v3.1, and `content_sha256` `242e2b284fbc` for v3.1). The local figures in the VERIFIED paragraph above (2,106 chunks, 13,484 passages, 3,790 in-scope observations) are corpus v1, measured on 30 Oct 2026 and kept as history of the startup check. Corpus v3 has 4,300 observations in the earlier 2024-Q1 to 2026-Q2 scope (11,228 in the 2020-Q1 to 2026-Q2 scope now served); see the corpus-versions statement in the [README](../README.md#corpus-versions). Four measured evaluations exist on v3 (the X2 development regression check, the `m7-e2efix-20261031` threat run, held-out v2 and the tool-set diagnostic), and the 65 fresh questions were re-run once on v3.1 (D-055). None is evaluated on v4.
 
 Upload from your machine (dry run first, then transfer):
 
@@ -163,6 +163,8 @@ The server logs its explicit trusted-proxy setting without secrets. Regression c
 
 **Streaming route and proxy buffering (D-079).** `POST /api/ask/stream` sends server-sent events, so a proxy must pass each event on as it arrives. `deploy/Caddyfile` sets `flush_interval -1` and does not compress that route, and the app sends `X-Accel-Buffering: no`. Any other proxy, for example nginx, must not buffer it (`proxy_buffering off`); otherwise the live steps arrive all at once at the end, and the answer is unaffected. The app also writes a keepalive comment every 10 s. The workbench falls back to the plain `/api/ask` route if streaming fails before the first event.
 
+**Access link and QR code (D-081).** The workbench reads `#code=` (preferred) or `?code=` on load, puts it into the access field only, never submits or stores it, and removes it from the address bar at once. The deck, opened as `/deck?code=XXXX`, builds its on-screen "Try the workbench" link as `https://labourlens.navig.me/workbench#code=XXXX`; the printed QR image on the slide is static and never carries a code. To show a QR code with a code in it, generate your own locally from `https://labourlens.navig.me/workbench#code=<code>`. Use the fragment form: query strings (`?code=`) may appear in server and proxy logs, while fragments are never sent to the server. A code shown to an audience must be rotated afterwards (change `LABOURLENS_ACCESS_CODES` and restart). No real code belongs in any committed file.
+
 ## 9. Verify a deployment
 
 On the Droplet and from your machine:
@@ -196,6 +198,14 @@ On the Droplet and from your machine:
 2. `ssh deploy@<ip> '/srv/labourlens/deploy/deploy.sh restart'`. No image rebuild is needed for the data, but the `/healthz` field `content_sha256` exists only in code from this change, so deploy the commit (push to `master`) before or together with the restart; with older code the restart still works and `/healthz` shows the old fields only.
 3. Check `curl -fsS https://labourlens.navig.me/healthz`: expect `passage_set_sha256` **unchanged** `d402120f6f8f` (it hashes passage ids only and no id changed), `passages` 16419, `chunks` 1847, and, with the new code, `content_sha256` `242e2b284fbc` (v3 recomputed for comparison: `1c0f864650f2`; never served). If `content_sha256` is absent the old code is running. Local value: the command in section 11a (it now prints `content_sha256` too).
 4. If the app exits at start with "embedding cache incomplete", `cache.npz` was not uploaded or lacks the 10 vectors; `deploy.sh` rolls back to the previous tag.
+
+**Updating the corpus to v4 (D-080; not yet done on the Droplet).** Corpus v4 adds 57 documents, so there are 57 new passage files and 1,285 chunks without a cached vector. The container never embeds at startup (`LABOURLENS_ALLOW_EMBED=0`), so it will not start on the new passages until the cache is complete. On the machine that holds `data/`:
+1. `uv run labourlens embed-corpus` (a free dry run that lists the missing chunks), then `OPENAI_API_KEY=... uv run labourlens embed-corpus --yes` (paid: about 288,000 tokens, about $0.04 at list price, an estimate).
+2. `scripts/upload-corpus.sh deploy@<ip>` (dry run), then `--go`. The list in `deploy/runtime-data.txt` already names the 57 new passage files and `cache.npz`.
+3. Deploy the commit (push to `master`) together with the restart, then `ssh deploy@<ip> '/srv/labourlens/deploy/deploy.sh restart'`.
+4. Check `curl -fsS https://labourlens.navig.me/healthz`: expect `passages` 29760 and `chunks` 3632, and compare the fingerprints with the local value from section 11a. If the app exits with "embedding cache incomplete", `cache.npz` was not uploaded or is still missing vectors, and `deploy.sh` rolls back to the previous tag.
+
+All 57 added documents are local-only for rights reasons (`docs/data-sheet.md` section 7a): they go to the server disk and never into the image or the repository.
 
 **Updating the application.** Merge to `master`; the workflow does the rest. Docs-only pushes do not deploy.
 

@@ -4,7 +4,7 @@ Each entry: date, decision, alternatives, why, who approved, how reversible. Lab
 
 **How to read approvals.** An entry that cites an owner approval names it (date, and the quoted reply or the file that holds it). An entry that names no approver had none recorded in this log when this note was written (1 Nov 2026): it is an assistant decision inside the approved experiment protocol (D-016), open to owner reversal. The signed held-out v2 freeze (`experiments/heldout-v2/FREEZE.md`, 31 Oct 2026) is the owner's approval of the 65 held-out v2 cases and of the pre-registered rule of D-042; it does not approve the later entries. The owner confirmation or rollback of D-030 is not recorded.
 
-**Status index.** Settled by the owner: D-000 to D-003, D-005, D-006, D-010, D-012 to D-017, D-019 to D-022, D-024, D-026 to D-028, D-031, D-034 to D-036, D-037 to D-040, D-047, D-077 to D-079. Measured results and assistant decisions inside the protocol: D-018, D-023, D-025, D-029, D-030, D-032, D-033, D-041 to D-046, D-048. Logged first as proposals, outcome noted in the entry: D-004, D-007, D-008, D-009, D-011. D-046 is superseded by D-048.
+**Status index.** Settled by the owner: D-000 to D-003, D-005, D-006, D-010, D-012 to D-017, D-019 to D-022, D-024, D-026 to D-028, D-031, D-034 to D-036, D-037 to D-040, D-047, D-077 to D-081. Measured results and assistant decisions inside the protocol: D-018, D-023, D-025, D-029, D-030, D-032, D-033, D-041 to D-046, D-048. Logged first as proposals, outcome noted in the entry: D-004, D-007, D-008, D-009, D-011. D-046 is superseded by D-048.
 
 ## Settled
 
@@ -1121,3 +1121,48 @@ Client: `fetch` plus `ReadableStream` (EventSource cannot POST); live steps in t
 **Verified:** scripted tests for event order, final payload equality, mid-stream failure, timeout, the shared gates and the browser behaviour (live steps before the answer, error restore, Stop, fallback); a local uvicorn run with a fake runner showed events arriving at their send times. **Not verified without keys:** a live stream with the real planner and models.
 
 **Reversibility:** the client falls back to `/api/ask`; deleting the route and the client function removes the feature.
+
+### D-080 - Corpus v4: the 2020 to 2022 reports and 2020 to 2023 annual reports (OWNER DECISION / IMPLEMENTED, NOT EVALUATED, 3 Nov 2026)
+
+**DECISION (owner):** add the official MOM reports for the part of the widened window (D-077) that had statistics but no report text.
+
+**Options.** (A) leave 2020 to 2022 statistics-only (rejected: the quarterly reports exist and are live); (B) **ingest every report that exists, with the existing tooling (chosen)**; (C) only the four annual reports (rejected: the quarterly reports hold the commentary the answer step cites).
+
+**What was ingested (57 documents, 3 Nov 2026, `labourlens fetch`, spec `specs/sources.d/documents-2020-2022.yaml`).**
+
+| Family | Count | Type | Passages | Rights status |
+|---|---|---|---|---|
+| Labour Market Report, 1Q 2020 to 4Q 2022 (4Q 2020 and 4Q 2021 are the annual editions, indexed under their 4Q slot) | 12 | report_pdf | 10,659 (flags: ok 4,759; table_unreliable 5,900) | verified_all_rights_reserved |
+| Labour market advance release, 1Q 2020 to 4Q 2022 | 12 | release_html | 252 | unresolved |
+| Final-report press release (none exists for 2Q 2020, 4Q 2020, 2Q 2021) | 9 | release_html | 195 | unresolved |
+| Job Vacancies 2020 to 2023 | 4 | report_pdf | 900 | verified_all_rights_reserved |
+| Report on Wage Practices 2020 to 2023 | 4 | report_pdf | 616 | 2021 to 2023 verified; **2020 unresolved** (image-based PDF, notice unreadable) |
+| Labour Force in Singapore 2020 to 2023 (findings, highlights, coverage and methodology, copyright) | 16 | report_pdf | 719 | verified_all_rights_reserved (notice read in each year's copyright PDF) |
+
+Totals: 142 sources, 106 documents, **29,760 passages (was 16,419), 3,632 chunks (was 1,847)**; flags ok 16,342, table_unreliable 13,164, garbled 254. 35 new PDFs were verified from the notice text in the PDF itself on 2026-11-03; the HTML pages stay unresolved, as the existing 20 do. Everything is local-only and gitignored (data/raw, data/passages, data/index); the committed files hold the spec, the manifest (metadata, hashes, byte counts), counts and the new `v4` corpus snapshot. The rights scan still finds 0 hits.
+
+**Publication dates.** Where the publisher gave no date the date is **inferred** and the manifest notes say so (`publication_date_basis=inferred ...`): the report PDFs for 2Q 2020, 4Q 2020 and 2Q 2021 (first public capture, adjacent releases), and every Job Vacancies, Wage Practices and Labour Force file (month from the cover or first capture; day set to the 1st). The other dates come from the publisher's press releases.
+
+**Extraction quality, flagged and not repaired.** Four PDFs give **zero passages** (the extractor reads no text from them: hidden or glyph-image text layer): Labour Force 2021 survey findings, survey highlights, coverage and methodology, and Labour Force 2020 coverage and methodology. So the 2021 Labour Force report has only its copyright notice in the index. The 2020 Wage Practices PDF is image-based (94 passages, 5 garbled). About 45 percent of the new quarterly-report passages are `table_unreliable`, as in the 2023 to 2026 reports, and are excluded from default chunks.
+
+**Gold evidence audit.** `experiments/gold/corpus-2020-2022-evidence-audit.json` (new file; no frozen gold file was edited): all 299 evidence passage ids of gold v3.7 (268 cases) and all 51 of the held-out v2 draft (65 cases) still exist, none is outside a chunk, no case moved. The 49 earlier passage files are byte-identical, so unlike v3.6 no id migration is needed. The v3.1 chunk hash is reproduced from the earlier documents (a corpus test).
+
+**Prompts.** "2020 to 2022 are statistics only" (D-077) is no longer true, so new versioned files replace the served ones: `planner_v5`, `answer_v7`, `triage_v3` (`contextualise_v2` was already correct). `planner_v4`, `answer_v6` and `triage_v2` stay as deployed history; a test pins all hashes. The small-talk reply again says "statistics and MOM report passages for Q1 2020 to Q2 2026".
+
+**Dense embeddings (paid, not run here).** 1,285 of the 3,632 chunks have no cached vector. New command `labourlens embed-corpus` (dry run by default; `--yes` calls the embeddings API for exactly the missing chunks, about 288,000 tokens, about $0.04 at list price, an estimate). The deployed container runs with `LABOURLENS_ALLOW_EMBED=0` and will not start on the new passages until `cache.npz` and the 57 new passage files are uploaded (`deploy/runtime-data.txt`).
+
+**Disclosure (plain).** The gold set and every frozen result were measured on corpus v3.1 (49 documents). More documents now compete in retrieval, so retrieval and answer quality on the old questions may differ; none was rerun, by the owner's decision. **Answers that rely on 2020 to 2022 report text are unevaluated**, as are the 2020 to 2023 annual reports. The report is rebuilt so the "current build" is v4 and v3.1 is labelled as the evaluated build.
+
+**Reversibility:** delete the spec file and the new passage files, rebuild, restore the v3.1 prompt versions.
+
+### D-081 - Access code from the shared link (OWNER REQUEST / IMPLEMENTED, 3 Nov 2026)
+
+A link may carry the code as `#code=` (preferred) or `?code=`. The workbench copies it into the access field only (never submits it, never stores it), and removes it from the address bar at once with `history.replaceState`. A deck opened as `/deck?code=...` builds its on-screen "Try the workbench" link as `https://labourlens.navig.me/workbench#code=...` (a fragment, so it never reaches a server log; the owner's brief said `?code=`, the fragment form was chosen for that reason and the workbench accepts both). The printed QR is a static image and never carries a code; the presenter generates their own from the fragment URL. No real code is in any committed file, and a code shown to an audience must be rotated afterwards. Tests use a fake code. Reversibility: remove `takeAccessCodeFromUrl` and `workbenchHref`.
+
+### D-082 - Evidence-first presentation sequence and plain-language innovation page (OWNER APPROVED, IMPLEMENTED IN WORKING TREE, 3 Nov 2026)
+
+The owner approved a data-first story: project and scope, system map, data and its quality issues, report processing and retrieval, the statistics MCP path, then the agent and answer checks. Evaluation design and human review precede model choice and end-to-end results. The main deck adds a saved-run example slide and an answer-validation slide, moves the failure summary after results, places next steps before Summary and keeps the concepts reference and calculation experiment in the appendix. The worked-run slide uses the plain title “Three example runs”.
+
+The owner also requested a substantive rewrite of `/innovation`: explain the project and current implementation first, distinguish measured results from proposals, reduce uncontextualised metrics and cover data refresh, source expansion, feedback, security, performance, deployment and scale-out. Keep six assessment sections, the short assessment and evidence links. Proposed work remains labelled as proposals. The production guidance must match the approved single-Droplet runbook; multi-replica scale-out is conditional on externalising local state and load testing, not an approved current architecture.
+
+**Alternatives considered:** retain the old order; put MCP after the agent; keep each evaluation-method slide separate; present more experiment tables. The owner approved MCP alongside retrieval, a combined evaluation-design slide and fewer main-deck details with evidence retained in notes and appendices. **Approver:** project owner, in this conversation. **Reversibility:** reorder `FLOW`, restore removed main-deck entries, or revise the curated innovation content without changing the system or evaluation results.

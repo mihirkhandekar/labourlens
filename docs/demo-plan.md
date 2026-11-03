@@ -2,22 +2,23 @@
 
 Show `/deck` and `/workbench` (access code required). Use slide titles, not numbers. Label recordings and synthetic fixtures; questions follow the 20 minutes. Evaluation and attacks together take 6 of the 20 minutes (25% of the weight sits on evaluation). Final rehearsal and owner acceptance remain pending.
 
-The deck has 29 main slides and 44 including its appendix. Assumptions, constraints and implemented scope follow My project as slide 4. Evaluation design and review precede the complete-system answer comparison; the calculation limitation and rejected repair share one slide. The planted-figure example is covered by the attack table and notes. Titles below are stable navigation references; the failure-modes and model-choice slides are now 12 and 17, and the appendix index starts at 30.
+The deck has 28 main slides and 44 including its appendix. The opening moves from project scope to the full system map. The data section comes before report processing and retrieval; the statistics MCP path comes before the agent loop. Example runs show tool use, followed by answer validation. Evaluation design and human review precede model choice and end-to-end results. Next steps comes before Summary. The appendix index is slide 29; references A to O are slides 30 to 44.
 
-**Current served setup (3 Nov 2026).** The workbench now answers for 2020-Q1 to 2026-Q2 (D-077) and shows live steps while a question runs, through the streaming endpoint (D-079); it falls back to the plain endpoint if streaming fails. The prepared questions below use 2024 to 2026 periods, inside both the old and new window, and the measured results narrated here come from the earlier 2024-Q1 to 2026-Q2 window, structured-output planner and older prompts. Say plainly that answers about 2020 to 2023 and the new function-calling planner are unevaluated.
+**Current served setup (3 Nov 2026).** The workbench now answers for 2020-Q1 to 2026-Q2 (D-077), searches corpus v4 with 106 documents (D-080) and shows live steps while a question runs, through the streaming endpoint (D-079); it falls back to the plain endpoint if streaming fails. The prepared questions below use 2024 to 2026 periods, inside both the old and new window, and the measured results narrated here come from the earlier 2024-Q1 to 2026-Q2 window, corpus v3.1, structured-output planner and older prompts. Say plainly that answers about 2020 to 2023, answers drawing on the 57 added documents and the new function-calling planner are unevaluated.
+
+**Access link and QR (D-081).** Opening `/workbench#code=<code>` fills the access field without submitting it, so presenters can share a ready link. The printed QR on the deck slide is static and carries no code. To show a QR that includes a code, generate it locally from `https://labourlens.navig.me/workbench#code=<code>` and use the fragment form, because query strings may appear in server logs and fragments never reach the server. Rotate any code that was shown to an audience (`docs/deploy.md`). Opening the deck as `/deck?code=XXXX` makes its on-screen "Try the workbench" link carry the code in the same fragment form.
 
 | Minutes | Show |
 |---|---|
-| 0:00–3:00 | **Assignment**, **Agentic system**, **Data findings**: users, scope, pipeline, two EDA findings and source limitations. |
-| 3:00–4:00 | **Advance and final figures differ**, **Two kinds of evidence**: guaranteed conflict demonstration; inspect the [reconciliation record](../artifacts/data-quality/reconciliation.json) and [data sheet](data-sheet.md#5-things-a-reader-must-know). |
-| 4:00–5:15 | **Reading reports**, **Retrieval Strategies**, **Does filtering help?**: extraction, keyword/dense/hybrid search, filtering and reranking. |
-| 5:15–7:15 | **Agent loop**, **Choosing models**, **MCP server**: bounded tools, model trade-offs, discovery, validated rows and citations. |
-| 7:15–9:15 | **Agent Workbench** → workspace: guaranteed mixed structured/report answer; inspect rows, report citations and activity trace. |
-| 9:15–10:00 | Guaranteed deterministic calculation: [recorded actual MCP agent answer](../artifacts/mcp-agent-demo.md), operands, units and calculation citation. |
-| 10:00–11:45 | Workspace: clarification (30 seconds), injection resistance (75 seconds). |
-| 11:45–16:15 | **How the question sets work**, **How I measured**, **Human Review of Dataset**, **Does retrieval improve answers?**, **The calculation gap**: rules versus judges, review limits, inconclusive test-set gains and the rejected report-text calculation tool. |
-| 16:15–17:45 | **Attacks and defences**: attack types, naive/guarded counts, shared boundaries and synthetic transient-tool recovery. |
-| 17:45–20:00 | **How I built it**, **Summary**: approval controls, limitations, next steps and [innovation](innovation.md). |
+| 0:00-3:00 | **Assignment**, **My project**, **Assumptions, constraints and scope**, **System architecture**: users, boundaries and the system map. |
+| 3:00-5:15 | **Choosing the data**, **Two kinds of evidence**, the three EDA findings and **Challenges with the data**. Then **Processing reports** and **Retrieval Strategies**: how source text becomes searchable evidence. |
+| 5:15-7:15 | **Does filtering help?**, **Statistics lookup through MCP**, **Agent loop**, **Three example runs** and **Checking the answer**: retrieval, tool choice, arithmetic and validation. |
+| 7:15-9:15 | **Agent Workbench** to show the cited answer, evidence and activity trace. |
+| 9:15-10:00 | Recorded deterministic calculation: [MCP agent answer](../artifacts/mcp-agent-demo.md), operands, units and calculation citation. |
+| 10:00-11:45 | Workbench: clarification and injection-resistance demonstrations. |
+| 11:45-16:15 | **How I evaluated**, **Human Review of Dataset**, **Choosing models**, **Does better retrieval improve answers?**, **Where the system still fails**: test design, human sign-off, model trade-offs and end-to-end results. |
+| 16:15-17:45 | **Attacks and defences**: paired attack results, examples and limits of attribution. |
+| 17:45-20:00 | **How I built it**, **Next steps**, **Summary** and the [innovation assessment](innovation.md). |
 
 ## Questions and prepared evidence
 

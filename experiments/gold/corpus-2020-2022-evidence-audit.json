@@ -1,0 +1,24 @@
+{
+ "purpose": "D-080 audit: do the passage ids cited by the frozen gold files still exist after the 2020-2022 reports were added? Read-only; no gold file was edited.",
+ "corpus_passages": 29760,
+ "files": {
+  "experiments/gold/gold_v3.7.jsonl": {
+   "sha256": "af3ad02690ed1dabb69e2be7f7bb984f707f1352b95c8bd693d0fb51e9410d8f",
+   "cases": 268,
+   "evidence_passage_ids": 299,
+   "distinct": 184,
+   "missing_from_corpus": 0,
+   "cases_with_missing": [],
+   "not_in_any_chunk": 0
+  },
+  "experiments/gold/heldout_v2_draft.jsonl": {
+   "sha256": "698940357c090c4beed4ba6532f66967dc7175297a3d1ffcd5fd6325e128fb70",
+   "cases": 65,
+   "evidence_passage_ids": 51,
+   "distinct": 27,
+   "missing_from_corpus": 0,
+   "cases_with_missing": [],
+   "not_in_any_chunk": 0
+  }
+ }
+}

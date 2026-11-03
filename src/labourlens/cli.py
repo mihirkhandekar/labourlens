@@ -161,6 +161,8 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--days", type=int, required=True)
     sub.add_parser("scan-sources", help="scan stored passages and statistics text fields for instruction-like content (no build, no network)")
     sub.add_parser("gold-check", help="validate the gold set and regenerate the owner review sheet")
+    ec = sub.add_parser("embed-corpus", help="embed chunks that have no cached vector (OpenAI embeddings API, paid); dry run unless --yes")
+    ec.add_argument("--yes", action="store_true", help="actually call the embeddings API for the missing chunks")
     sub.add_parser("export", help="export presentation-ready JSON for the interactive report page")
     sub.add_parser("build-report", help="assemble the rights-safe interactive presentation")
     serve = sub.add_parser("serve", help="serve the presentation and authenticated live demo")
@@ -379,6 +381,13 @@ def main(argv: list[str] | None = None) -> int:
         from labourlens.audit import log as al
 
         print(al.report() if args.cmd == "audit-report" else al.show(args.run_id) if args.cmd == "audit-show" else al.prune(args.days))
+        return 0
+    if args.cmd == "embed-corpus":
+        import json as _j
+
+        from labourlens.retrieval import embed_corpus
+
+        print(_j.dumps(embed_corpus.run(args.yes), indent=1))
         return 0
     if args.cmd == "scan-sources":
         import json as _j
