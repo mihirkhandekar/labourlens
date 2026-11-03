@@ -1,6 +1,6 @@
 {
   "schema_version": "report-1.0",
-  "generated_at": "2026-11-03T05:52:20.804412+00:00",
+  "generated_at": "2026-11-03T06:28:34.969643+00:00",
   "summary": {
     "title": "LabourLens research workbench",
     "scope": [
@@ -79082,6 +79082,14 @@
         "date": "3 Nov 2026",
         "alternatives": "were retaining the current paths (chosen), adopting the unthresholded router despite the failed primary screen (rejected), or changing thresholds/prompts (requires a new registration, not authorised here)",
         "summary": "The preregistration was committed as f950867 before paid runs; both manifests record implementation commit 3fd16ba"
+      },
+      {
+        "id": "D-076",
+        "title": "Dev-tuned Decisions triage v2: fresh paired screen failed",
+        "status": "OWNER DECISION / MEASURED RESULT",
+        "date": "3 Nov 2026",
+        "alternatives": "",
+        "summary": "The v2 preregistration and 150 AI-labelled fresh cases were committed as 9e82d44; iteration 1's selected prompt and confidence threshold 0.70 were committed as 1ba2456 before fresh scoring"
       }
     ],
     "milestones": [],
@@ -79099,7 +79107,7 @@
     "The population basis of the dataset employment series is unverified."
   ],
   "provenance": {
-    "commit": "036802c35f07f7fae40b1bcdaf9cfc79734ee5bf",
+    "commit": "5c6696d6eb25b7650fdb9e04ea337b0c284859ec",
     "artifacts": [
       {
         "path": "data/export/sources.json",
@@ -80332,12 +80340,12 @@
       {
         "path": "docs/decisions.md",
         "status": "available",
-        "sha256": "121fb0ddcf49fab6a544a788aeeef3842f2db298298253de0b44fe69155e8fdf"
+        "sha256": "06fc40226f7d2e87dc5c2173eecf2e81d4cd1c302ecfa5912497ecd562432464"
       },
       {
         "path": "docs/progress.md",
         "status": "available",
-        "sha256": "b4bc1fc27f7889ead6fcc363f49568b3cdd9cd8828c4c1b1c0a4de6f54c8cfa9"
+        "sha256": "1100240c30e6c869d7148b07cdb092123b09c4dd6d5ef7e3b756b7175f05085f"
       }
     ],
     "policy": "Committed artifacts only; numeric fields only."
@@ -80781,7 +80789,7 @@
     "source": {
       "path": "docs/innovation-page.json",
       "sha256": "549ad5f8881853d66377b621092d5c7453f5298493e57e98c65c070997e271f2",
-      "evidence_commit": "036802c35f07f7fae40b1bcdaf9cfc79734ee5bf"
+      "evidence_commit": "5c6696d6eb25b7650fdb9e04ea337b0c284859ec"
     }
   }
 }
