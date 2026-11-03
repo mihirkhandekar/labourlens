@@ -1,6 +1,6 @@
 {
   "schema_version": "report-1.0",
-  "generated_at": "2026-11-03T15:54:47.844856+00:00",
+  "generated_at": "2026-11-03T23:59:48.387089+00:00",
   "summary": {
     "title": "LabourLens research workbench",
     "scope": [
@@ -81005,6 +81005,14 @@
         "date": "3 Nov 2026",
         "alternatives": "",
         "summary": "Live finding: searchreports ended as an \"operational failure\" at 10.04 s, exactly the shared per-tool limit (TOOLTIMEOUTS), and the answer was then written from statistics alone with no mention that report search had fa…"
+      },
+      {
+        "id": "D-092",
+        "title": "Explicit incomplete-year abstention from the tool result",
+        "status": "OWNER APPROVED",
+        "date": "3 Nov 2026",
+        "alternatives": "",
+        "summary": "Observed live: annualaverage refused 2026 with notfound and listed 2026-Q3 and 2026-Q4, but the model's abstention omitted that useful explanation"
       }
     ],
     "milestones": [],
@@ -81022,7 +81030,7 @@
     "The population basis of the dataset employment series is unverified."
   ],
   "provenance": {
-    "commit": "6f49e2bc10e854e2242e9567d8b0732fc90fb8e3",
+    "commit": "f7b7e45ef5999d649a5a89a14771758d98c8615e",
     "artifacts": [
       {
         "path": "data/export/sources.json",
@@ -82260,12 +82268,12 @@
       {
         "path": "docs/decisions.md",
         "status": "available",
-        "sha256": "c181e7a5d34107e86778c84656a3b9cdb5d76a7cc1b49e3192f6d4bccca0607a"
+        "sha256": "44911026f48f86fe03f717eb3dc473a11863f1020f40bab3f1f4fabc8954543c"
       },
       {
         "path": "docs/progress.md",
         "status": "available",
-        "sha256": "3a568f9396d299f6010f84bd01d193421cd5202a5f0e97f5e4f80e40982e6e13"
+        "sha256": "b374078083a53f8c37dac84240f32d7151d9d11b81aeb4dfc136cc68664aa82b"
       }
     ],
     "policy": "Committed artifacts only; numeric fields only."
@@ -82618,7 +82626,7 @@
     "source": {
       "path": "docs/innovation-page.json",
       "sha256": "c1c26c5e488c2ed268dc41a327c2f0fca1e696928f0acac9736a6681ec2623c5",
-      "evidence_commit": "6f49e2bc10e854e2242e9567d8b0732fc90fb8e3"
+      "evidence_commit": "f7b7e45ef5999d649a5a89a14771758d98c8615e"
     }
   }
 }
