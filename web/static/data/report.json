@@ -1,6 +1,6 @@
 {
   "schema_version": "report-1.0",
-  "generated_at": "2026-11-03T01:28:18.217318+00:00",
+  "generated_at": "2026-11-03T03:25:45.500337+00:00",
   "summary": {
     "title": "LabourLens research workbench",
     "scope": [
@@ -79042,6 +79042,38 @@
         "date": "2 Nov 2026",
         "alternatives": "",
         "summary": "- Stale \"run once\". The 65 fresh questions were not run once: five runs per arm exist (31 October first run, corpus v3.1 rerun, the post-freeze diagnostic, FIN and FIN2)"
+      },
+      {
+        "id": "D-071",
+        "title": "New threat challenge suite, frozen before paid runs",
+        "status": "OWNER REQUEST / IMPLEMENTED",
+        "date": "3 Nov 2026",
+        "alternatives": ". More repeats of the existing 36 cases would measure noise but would not broaden the attacks",
+        "summary": "DECISION. Add threat-v2 pre-registration and 62 independently authored synthetic challenge cases, ids T2-001 to T2-062: 54 attacks across ten families and eight benign look-alikes"
+      },
+      {
+        "id": "D-072",
+        "title": "Retrieval metrics on the registered 31 and fresh 65 sets, registered before the run",
+        "status": "OWNER REQUEST / PREPARED",
+        "date": "3 Nov 2026",
+        "alternatives": "",
+        "summary": "Retrieval metrics existed only for the 128 development text cases"
+      },
+      {
+        "id": "D-073",
+        "title": "Agent versus a fixed pipeline, registered before the run",
+        "status": "OWNER REQUEST / PREPARED",
+        "date": "3 Nov 2026",
+        "alternatives": "",
+        "summary": "The system card says the agent was never compared with a fixed pipeline"
+      },
+      {
+        "id": "D-074",
+        "title": "Results of the three registered experiments",
+        "status": "MEASURED RESULT",
+        "date": "3 Nov 2026",
+        "alternatives": "",
+        "summary": "All three were registered and committed before the paid runs (D-071 4cff027, D-072 and D-073 58c63d7)"
       }
     ],
     "milestones": [],
@@ -79059,7 +79091,7 @@
     "The population basis of the dataset employment series is unverified."
   ],
   "provenance": {
-    "commit": "0f0289672b6e88b70febafb501fd6bc8aaa00ea4",
+    "commit": "6ccdbc019c6e5374f3137ea015c7a3641b9d8725",
     "artifacts": [
       {
         "path": "data/export/sources.json",
@@ -80292,12 +80324,12 @@
       {
         "path": "docs/decisions.md",
         "status": "available",
-        "sha256": "06ce2dc98a5b05b3d658b6043c8a601840cb96d74e277ed6564c33d9f2c80a7a"
+        "sha256": "de53e262ce19eb4374d8f33ced14ced5a719e7faa161c153b67fc92ff105d2ae"
       },
       {
         "path": "docs/progress.md",
         "status": "available",
-        "sha256": "90c4746d0c4178c3c6292497101c339d6c1a7ce8faf6010366e49021140c9fbd"
+        "sha256": "b1acb694a5d45bc4b51d2e220544142f36966ed100388a157927b6b2d136cfc7"
       }
     ],
     "policy": "Committed artifacts only; numeric fields only."
@@ -80320,15 +80352,18 @@
           "summary": "Validate report tables before adding retrieval complexity.",
           "paragraphs": [
             {
-              "text": "Retrieval used 128 development text questions. Answer evaluation used 237 development, 31 original-test and 65 fresh-test questions, with two runs per arm. Behaviour accuracy measures answer, abstain, clarify or refuse status, not factual correctness.",
+              "text": "Development retrieval used 128 text questions. The later literal-question diagnostics used 18 of 31 original-test and 34 of 65 fresh-test questions. Strict first-eight-passages hit@8 was hybrid .167/.500 versus R3 .778/.941 on original/fresh questions. This does not demonstrate end-to-end accuracy gains; no per-case cause investigation was performed. Shared evidence and diagnostic reuse limit independence.",
               "refs": [
                 "retrieval",
+                "heldout_retrieval",
                 "final"
               ]
             },
             {
-              "text": "Historical fresh-set numerical accuracy was 0.214 (3/14). The attempted tool extension failed its criteria and was rejected.",
+              "text": "On 237 development questions, one fixed pipeline run scored .8143 behaviour accuracy versus the agent's two-run mean .8966, a development advantage under the registered criteria. The fixed policy lacks arithmetic records and permits only one statistics lookup; tool-policy and extraction-schema differences confound interpretation. This does not transfer to original-test or fresh questions. Behaviour measures answer/abstain/clarify/refuse status, not factual correctness. Historical fresh numerical accuracy was 3/14; the rejected tool extension failed its criteria.",
               "refs": [
+                "fixed",
+                "final",
                 "fresh",
                 "tools"
               ]
@@ -80422,10 +80457,11 @@
           "summary": "Require approved access, hosting, retention and model terms.",
           "paragraphs": [
             {
-              "text": "Tools are bounded and read-only; retrieved text is isolated and MCP responses validated. Scanner detections rose 10/30 to 23/30; benign flags stayed 9/30. Fresh attacks scored 35/36 across configurations.",
+              "text": "Tools are bounded and read-only; retrieved text is isolated and MCP responses validated. Scanner detections rose 10/30 to 23/30; benign flags stayed 9/30. The v1 fresh threat run remains 35/36. In the separate v2 suite, gpt-6-luna majority attack passes were 50/54 guarded versus 42/54 naive over three repeats, +14.8 points, exact McNemar p=.03857. Guards and answer prompt change together; typed tools, MCP controls and length cap stay on in both arms. Each arm fails three of eight benign cases, failing the utility criterion; their causes were not reviewed per question. These hand-written cases do not establish adaptive-attack safety or an individual layer's effect.",
               "refs": [
                 "scanner",
-                "threat"
+                "threat",
+                "threat_v2"
               ]
             }
           ],
@@ -80500,7 +80536,7 @@
       ],
       "limitations": [
         "Development shaped the design. Original-test evidence overlaps; fresh-test outcomes are known. Neither final test demonstrates a gain.",
-        "Gold was AI-drafted and reviewed by one person; the main judge is same-family. Two runs do not estimate variance.",
+        "Gold was AI-drafted and reviewed by one person; the main judge is same-family. One fixed run and two agent runs do not establish stability; the primary agent references flip 13/237 behaviour verdicts.",
         "Citations check mechanics; arithmetic can use wrong inputs. Scanner and attack results establish no general defence.",
         "Full comparisons exclude web-only steps and MCP. Costs are list-price estimates. Monitoring, rollback and government readiness are untested."
       ],
@@ -80564,8 +80600,23 @@
         },
         {
           "id": "threat",
-          "label": "Threat experiment",
+          "label": "V1 threat scorer and history",
           "path": "docs/experiments/t-i06-scorer-v2-rule.md"
+        },
+        {
+          "id": "threat_v2",
+          "label": "Threat suite v2 results",
+          "path": "docs/experiments/threat-v2-results.md"
+        },
+        {
+          "id": "fixed",
+          "label": "Agent versus fixed pipeline measurements",
+          "path": "docs/experiments/agent-vs-fixed-pipeline-results.md"
+        },
+        {
+          "id": "heldout_retrieval",
+          "label": "Original and fresh retrieval measurements",
+          "path": "docs/experiments/heldout-retrieval-metrics-results.md"
         },
         {
           "id": "mcp",
@@ -80721,8 +80772,8 @@
     },
     "source": {
       "path": "docs/innovation-page.json",
-      "sha256": "4b26c85c3de316b706fc3fd3344afec898727a39dd4276bd24ae1c0eee80ed3c",
-      "evidence_commit": "0f0289672b6e88b70febafb501fd6bc8aaa00ea4"
+      "sha256": "549ad5f8881853d66377b621092d5c7453f5298493e57e98c65c070997e271f2",
+      "evidence_commit": "6ccdbc019c6e5374f3137ea015c7a3641b9d8725"
     }
   }
 }
