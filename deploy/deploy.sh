@@ -57,6 +57,10 @@ case "${1:-}" in
       [ -n "$prev" ] && [ "$prev" != "$tag" ] && echo "$prev" > "$state/previous_tag"
       echo "$tag" > "$state/current_tag"
       docker image prune -f >/dev/null
+      # keep only the running and the previous tag (rollback target); older tags filled the disk once
+      for old in $(docker image ls --format '{{.Repository}}:{{.Tag}}' | grep '^ghcr.io/mihirkhandekar/labourlens:' || true); do
+        case "$old" in *":$tag"|*":${prev:-none}") ;; *) docker rmi "$old" >/dev/null 2>&1 || true ;; esac
+      done
       echo "deployed $tag (previous: ${prev:-none})"
     else
       echo "deploy of $tag FAILED" >&2
