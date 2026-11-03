@@ -70,11 +70,16 @@ export function whenVisible(node, callback) {
   observer.observe(node);
 }
 
+/* A page may install one formatter that rewrites a point's tooltip lines (the deck shortens them). It receives the lines and the hit node and returns the lines to show. */
+let tipFormatter = null;
+export function setTipFormatter(fn) { tipFormatter = typeof fn === 'function' ? fn : null; }
+
 /* ---------- tooltips and keyboard navigation ---------- */
 export function interactive(svg, ctx, items, {label = 'Chart values. Use the arrow keys to move between points.', cols = 0} = {}) {
   svg.setAttribute('role', 'group');
   svg.setAttribute('aria-label', label);
   const tip = ctx.tip;
+  const shown = items.map(item => (tipFormatter ? tipFormatter(item.lines, item.node) : item.lines));
   const clear = () => items.forEach(item => (item.mark || []).forEach(mark => mark.classList.remove('is-active')));
   const hide = () => { tip.classList.remove('is-on'); clear(); };
   const rove = index => items.forEach((item, i) => item.node.setAttribute('tabindex', i === index ? '0' : '-1'));
@@ -83,7 +88,7 @@ export function interactive(svg, ctx, items, {label = 'Chart values. Use the arr
     clear();
     (item.mark || []).forEach(mark => mark.classList.add('is-active'));
     tip.textContent = '';
-    item.lines.forEach((line, i) => tip.append(el('span', i ? 'pr-tip-row' : 'pr-tip-title', line)));
+    shown[index].forEach((line, i) => tip.append(el('span', i ? 'pr-tip-row' : 'pr-tip-title', line)));
     tip.classList.add('is-on');
     const w = tip.offsetWidth, h = tip.offsetHeight;
     let x = item.ax + 14, y = item.ay - h - 12;
@@ -102,7 +107,7 @@ export function interactive(svg, ctx, items, {label = 'Chart values. Use the arr
     const node = item.node;
     node.classList.add('pr-hit');
     node.setAttribute('role', 'img');
-    node.setAttribute('aria-label', item.lines.join('. '));
+    node.setAttribute('aria-label', shown[index].join('. '));
     node.setAttribute('tabindex', index === 0 ? '0' : '-1');
     node.addEventListener('pointerenter', () => show(index));
     node.addEventListener('pointerleave', () => { if (document.activeElement !== node) hide(); });

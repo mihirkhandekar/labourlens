@@ -71,8 +71,8 @@ export const metricOf = value => {
   return {rate: null, ci: null, n: null};
 };
 
-// Deck only: the slides present gpt-6-luna alone. The report page and the documents keep both models, so this
-// is applied to the report data and the built DOM in deck.js and nowhere else.
+// Deck only: omit the secondary final-system model while retaining the other early-screen candidates.
+// The report data and documents keep both final-system models; deck.js applies this view projection only.
 const SECOND = /gpt-5\.6-luna/;
 const TWO = /\b(both models|two models|either model|second model|each model)\b|\(four configurations\)/i;
 const REWRITE = [

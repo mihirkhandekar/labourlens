@@ -2,7 +2,7 @@
 
 Show `/deck` and `/workbench` (access code required). Use slide titles, not numbers. Label recordings and synthetic fixtures; questions follow the 20 minutes. Evaluation and attacks together take 6 of the 20 minutes (25% of the weight sits on evaluation). Final rehearsal and owner acceptance remain pending.
 
-The deck has 28 main slides and 42 including its appendix. Evaluation design and review precede the complete-system answer comparison; the calculation limitation and rejected repair share one slide. The planted-figure example is covered by the attack table and notes.
+The deck has 29 main slides and 44 including its appendix. Assumptions, constraints and implemented scope follow My project as slide 4. Evaluation design and review precede the complete-system answer comparison; the calculation limitation and rejected repair share one slide. The planted-figure example is covered by the attack table and notes. Titles below are stable navigation references; the failure-modes and model-choice slides are now 12 and 17, and the appendix index starts at 30.
 
 | Minutes | Show |
 |---|---|

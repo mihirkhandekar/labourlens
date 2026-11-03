@@ -5,7 +5,7 @@
 import {fmt, finite} from '../charts.js';
 import {model, metricOf, contextSentence} from '../presentation/model.js';
 import {assignmentBrief, excerptTable, myProject, architectureDiagram, twoSources, buildTimeline, flattening, hardParts, challengeGrid, costBars, retrievalStaircase, keywordVsMeaning, agentLoop, experimentStaircase, freshQuestions, errorBars, toolFixBars, evidenceTrace, mcpMap, conceptGrid, plantedFlow, reviewStreams, measureCards, workbenchShot, cardRow, modelChoice, threatMatrix, failureModes, HYPOTHESES, RESPONSIBLE_AI, contentMetricsText, finalComparison, finalSentence, finalCostFacts, provenanceTable, secondJudgeSentence, SUPPORT_LABEL} from '../presentation/graphics.js';
-import {evidenceStores, questionSets, threatComparison, unseenRetrieval, fixedPipeline} from '../presentation/graphics.js';
+import {evidenceStores, questionSets, threatComparison, unseenRetrieval, fixedPipeline, assumptionsScope} from '../presentation/graphics.js';
 import {dataTable} from '../presentation/ui.js';
 import {el, band, stage, chartBox, sub, more, group, rows, statRow, table, commands, link, note} from './report-kit.js';
 import {cta} from './dom.js';
@@ -17,7 +17,7 @@ const REPO = 'https://github.com/mihirkhandekar/labourlens/blob/master/';
 
 /** The nav labels, in order. Each id is a band below. */
 export const STEPS = [
-  ['assignment', 'Assignment'], ['problem', 'My project'], ['system', 'Agentic system'], ['data', 'Choosing the data'],
+  ['assignment', 'Assignment'], ['problem', 'My project'], ['scope-contract', 'Assumptions and constraints'], ['system', 'Agentic system'], ['data', 'Choosing the data'],
   ['eda', 'Data findings'], ['hard', 'Challenges with the data'], ['build', 'Report processing'], ['retrieval', 'Retrieval Strategies'], ['agent', 'Agent'],
   ['models', 'Models'], ['tools', 'Tools and MCP'], ['ops', 'Agent Workbench'], ['review', 'Human Review of Dataset'], ['safety', 'Safety'], ['process', 'How I built it'],
   ['limits', 'Limits'], ['run', 'Run it']
@@ -101,6 +101,13 @@ export function buildBands(report) {
   problem.visual.append(stage(safe('My project', myProject), {design: 1100}));
   problem.node.append(more('Other domains I considered', group('', 'Recorded alternatives were housing affordability, which has confounded transaction-level data, and cost of living, which has index methods and causal complexity. They are not on the slide face.')));
   bands.problem = problem;
+  const contract = band({
+    id: 'scope-contract', title: 'Assumptions, constraints and scope',
+    lede: ['Validated observations anchor calculations; reports provide context. The reference labels were drafted with AI assistance and signed off by one reviewer, not independently validated. Public-source rights, read-only tools, bounded calls and the fixed answer period constrain what the deployed prototype can do.']
+  });
+  contract.visual.append(stage(safe('Assumptions, constraints and scope', () => assumptionsScope(m))));
+  contract.node.append(note('Sources: ADR-001, ADR-002, data sheet, system card, README and evaluation report. Hover or focus each item for the recorded limitations; deployment does not establish production readiness.'));
+  bands['scope-contract'] = contract;
   const system = band({
     id: 'system', title: 'Agentic system',
     lede: ['The live system uses one bounded agent. The planner sees a question and a dataset catalogue, then chooses one of three tools inside its loop: report search returns retrieved chunks, series lookup returns validated statistical rows, and code calculates a change. Passage retrieval is not run before the agent, and the planner never sees passage text until a tool returns evidence. The live series lookup crosses the MCP client and server; report search and calculation stay in process. Retrieved text is untrusted, and calls have limits on time, retries and total steps.']

@@ -22,7 +22,7 @@ LABOURLENS_DEMO_ENABLED=false make serve
 
 Open <http://127.0.0.1:8000> for the report, `/deck` for the presentation or `/workbench` for the research page. These commands need no API key and make no paid calls. `mcp-demo` exercises the statistics server with a real MCP client. [Reproduce](docs/reproduce.md) explains corpus setup and how to recompute the saved results.
 
-The presentation has 28 main slides and 43 including the appendix. Evaluation design leads into the answer comparison, the merged calculation-gap experiment and the attack-type table; the final appendix records the rejected Decisions API trial.
+The presentation has 29 main slides and 44 including the appendix. Assumptions, constraints and implemented scope follow My project; evaluation design precedes the answer comparison, and the final appendix records the rejected Decisions API trials.
 
 Live demo: <https://labourlens.navig.me>. Workbench access codes are sent separately. The [innovation page](https://labourlens.navig.me/innovation) presents the proposed next steps.
 

@@ -2,9 +2,10 @@
 // speaker notes drawer, chart fitting, count-up and the number morph between slides.
 // No inline script or style: everything is a DOM call or a CSSOM property write.
 import Reveal from '/static/vendor/reveal/reveal.mjs';
-import {el, reduced} from '../charts.js';
+import {el, reduced, setTipFormatter} from '../charts.js';
 import {slideSpecs} from './slides.js';
 import {withoutSecondModel, scrubDom} from './model.js';
+import {chartLines, tightenLabels, tipNotes} from './tooltips.js';
 
 const DESIGN_W = 1920, DESIGN_H = 1080, CHART_W = 600;
 const printing = /[?&]print-pdf/.test(location.search);
@@ -134,12 +135,16 @@ function buildSlide(spec) {
   const notes = el('aside', 'notes');
   (spec.notes || []).filter(Boolean).forEach(line => notes.append(el('p', '', line)));
   if (spec.detail) notes.append(el('p', '', `${spec.detail.label || 'How to read this'}: ${spec.detail.content.replace(/\n+/g, ' ')}`));
+  // Popovers are short; what they used to say is kept here. Long spoken labels are shortened the same way.
+  tightenLabels(inner);
+  tipNotes(inner).forEach(line => notes.append(el('p', '', line)));
   if (!notes.children.length) notes.append(el('p', '', spec.title));
   section.append(notes);
   return section;
 }
 
 function main(report) {
+  setTipFormatter(chartLines);
   const specs = report && typeof report === 'object' ? slideSpecs(withoutSecondModel(report)) : [];
   if (!specs.length) {
     slidesHost.append(buildSlide({layout: 'text', title: 'The report data could not be loaded', bullets: ['Rebuild it with: uv run labourlens build-report.'], notes: ['report.json is missing or malformed.']}));

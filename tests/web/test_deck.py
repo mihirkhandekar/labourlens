@@ -117,9 +117,9 @@ def test_every_slide_has_a_heading_and_speaker_notes():
     assert "el('aside', 'notes')" in builder and "if (!notes.children.length) notes.append(" in builder
     main = _slides_main_section()
     specs = re.findall(r"\badd\(\{", main)
-    assert len(specs) == 28, len(specs)
+    assert len(specs) == 29, len(specs)
     total = len(re.findall(r"\badd\(\{", (STATIC / "presentation" / "slides.js").read_text()))
-    assert total == 43  # 28 main slides, appendix index, and references A to N
+    assert total == 44  # 29 main slides, appendix index, and references A to N
     assert total - len(specs) == 15
     for block in re.split(r"\badd\(\{", main)[1:]:
         assert "notes:" in block, block[:100]
@@ -138,6 +138,8 @@ def test_slide_faces_carry_no_identifiers():
         text = path.read_text()
         # Evidence-only strings are passed to withTip, never added as face labels.
         text = re.sub(r"(?m)^ +(?:const suiteSource = )?'(?:tests/|experiments/)[^\n]*\n", "", text)
+        # Owner policy: case ids and run paths belong in the failure-mode hover evidence, never on a face.
+        text = re.sub(r"export function failureModes\(m\).*?(?=\n/\*\* Same-set comparison of keyword)", "", text, flags=re.S)
         assert not re.search(r"ADR-|D-0\d\d|T-I06|\.md\b", text), path.name
 
 
@@ -148,7 +150,7 @@ def test_no_bridge_sentences_or_pills_on_faces():
 
 
 REQUIRED_TITLES = [
-    "Assignment", "My project", "Agentic system", "Choosing the data", "Data findings", "Retrenchments rose, data gives no cause", "Advance and final figures differ", "Two kinds of evidence", "Challenges with the data", "Success criteria and failure modes",
+    "Assignment", "My project", "Assumptions, constraints and scope", "Agentic system", "Choosing the data", "Data findings", "Retrenchments rose, data gives no cause", "Advance and final figures differ", "Two kinds of evidence", "Challenges with the data", "Success criteria and failure modes",
     "Reading reports", "Retrieval Strategies", "Does filtering help?", "Agent loop", "Choosing models", "MCP server", "GenAI concepts in this build", "Ensuring Reliable Sources", "Agent Workbench", "How the question sets work",
     "How I measured", "Human Review of Dataset", "Does retrieval improve answers?", "The calculation gap", "Attacks and defences", "How I built it", "Summary",
 ]
@@ -164,7 +166,7 @@ def test_main_deck_follows_the_navigation_flow_and_has_short_plain_titles():
     main = _slides_main_section()
     defined = set(re.findall(r"\btitle: '([^']+)'", main))
     rows = _flow_rows()
-    assert len(rows) == 28
+    assert len(rows) == 29
     assert [r[0] for r in rows[1:]] == REQUIRED_TITLES
     for title, _, _ in rows:
         assert title in defined or "Singapore AI Agent" in title, title
@@ -177,7 +179,7 @@ def test_main_deck_follows_the_navigation_flow_and_has_short_plain_titles():
     assert "['Sources', 'Processing', 'Retrieval', 'Agent', 'Answer', 'Checks']" in (STATIC / "presentation" / "deck.js").read_text()
     for title in [r[0] for r in rows][1:]:
         assert len(title.split()) <= 9, title
-    assert len(re.findall(r"\badd\(\{", main)) == 28
+    assert len(re.findall(r"\badd\(\{", main)) == 29
 
 
 def test_removed_slides_stay_removed_and_summary_keeps_limitations():
@@ -303,14 +305,37 @@ def test_model_choice_is_read_from_the_screen_metrics():
     assert not re.search(r"\['gpt-[\w.-]+', \.\d+, \.\d+", block), "model numbers must come from report.json, not literals"
     report = json.loads((STATIC / "data" / "report.json").read_text())
     rows = {r["id"].rsplit("/", 1)[1]: r["metrics"] for r in report["answers"]["rows"] if "answer-dev-G1/" in r["id"]}
-    luna, luna56 = rows["gpt-6-luna"], rows["gpt-5.6-luna"]
-    assert (luna["false_answer_rate"], luna["cost_per_case_usd"], luna["over_abstention_rate"]) == (0.0, 0.00051, 0.417)
-    assert luna56["behavior_accuracy"] > luna["behavior_accuracy"] and luna56["false_answer_rate"] == 0.0
+    expected = {
+        "gpt-6-luna": (18, 10, 0, 0.00051),
+        "gpt-6.1-terra": (17, 10, 0, 0.00432),
+        "gpt-5.4-mini": (21, 6, 1, 0.00335),
+        "gpt-6-sol": (18, 9, 1, 0.00912),
+        "gpt-4.1-mini": (25, 3, 2, 0.00161),
+    }
+    names = re.search(r"const names = \[([^\]]+)\]", block).group(1)
+    assert re.findall(r"'([^']+)'", names) == list(expected)
+    assert "primaryOnly" not in block and "gpt-5.6-luna" not in block
+    for name, (right, over, false, cost) in expected.items():
+        metrics = rows[name]
+        assert (metrics["n"], metrics["n_answer_cases"], metrics["n_nonanswer_cases"]) == (30, 24, 6)
+        assert round(metrics["behavior_accuracy"] * metrics["n"]) == right
+        assert round(metrics["over_abstention_rate"] * metrics["n_answer_cases"]) == over
+        assert round(metrics["false_answer_rate"] * metrics["n_nonanswer_cases"]) == false
+        assert metrics["cost_per_case_usd"] == cost
+    assert max(expected, key=lambda name: rows[name]["behavior_accuracy"]) == "gpt-4.1-mini"
+    assert max(expected, key=lambda name: rows[name]["false_answer_rate"]) == "gpt-4.1-mini"
+    assert min(expected, key=lambda name: rows[name]["cost_per_case_usd"]) == "gpt-6-luna"
+    assert "name === 'gpt-6-luna' ? ' is-chosen'" in block
+    assert "False answers / 6" in block and "rates use all 237 questions" in block
+    assert "arms.filter(a => a.arm === 'r3' && a.model === 'gpt-6-luna')" in block
     main = _slides_main_section()
     assert "Early screen on 30 questions" in block and "Final system on 237 questions" in block
     assert "95% Wilson interval" in block and "wilson(right, n)" in block and "runs.run1" in block and "runs.run2" in block
     models_slide = main.split("title: 'Choosing models'", 1)[1].split("\n  });", 1)[0]
     assert "gpt-5.6" not in models_slide and "89.7%" in models_slide and "no false answers at the lowest cost" in models_slide
+    assert "modelChoice(m)" in models_slide and "modelChoice(m, true)" not in models_slide
+    assert "highest early accuracy but most false answers" in models_slide
+    assert "lowest cost among these five" in models_slide and "25/30 (83.3%)" in models_slide and "2/6 (33.3%)" in models_slide
     final = next(s for s in report["final_evaluation"]["splits"] if s["id"] == "dev")
     arms = {a["model"]: a for a in final["arms"] if a["arm"] == "r3"}
     assert round(arms["gpt-6-luna"]["runs"]["mean"], 3) == 0.897
@@ -620,7 +645,7 @@ def test_pipeline_steps_have_no_top_border_and_agent_limits_are_aligned():
 
 def test_retained_calculation_experiment_explains_its_rejection_once():
     main = _slides_main_section()
-    assert [row[0] for row in _flow_rows()][24] == "The calculation gap"
+    assert [row[0] for row in _flow_rows()][25] == "The calculation gap"
     slide = main.split("title: 'The calculation gap'", 1)[1].split("\n  });", 1)[0]
     assert "visual: toolFixFlow(m)" in slide and "toolFixBars(m)" not in slide
     assert "kept it out of the live system" in slide
@@ -658,7 +683,7 @@ def test_three_frozen_experiments_are_integrated_without_changing_slide_count():
     for helper in ("threatComparison", "unseenRetrieval", "fixedPipeline"):
         assert f"export function {helper}" in graphics
         assert helper in slides and helper in story
-    assert len(re.findall(r"\badd\(\{", slides)) == 43
+    assert len(re.findall(r"\badd\(\{", slides)) == 44
     threat = json.loads((root / "experiments/threats/threat-v2-analysis.json").read_text())
     assert (threat["guarded_majority_pass"], threat["naive_majority_pass"]) == (50, 42)
     assert (threat["guarded_only"], threat["naive_only"]) == (10, 2)
@@ -804,3 +829,109 @@ def test_decisions_api_is_exactly_one_final_appendix_slide_with_frozen_results()
     assert ".decisions-experiment > svg { display: none; }" in css
     assert ".decisions-experiment .decisions-mobile { display: grid;" in css
     assert ".decisions-mobile-note, .decisions-mobile-threshold, .decisions-mobile-failed { font-size: 16px;" in css
+
+
+def test_failure_modes_all_eight_rows_have_visible_examples_and_scoped_mobile_layout():
+    graphics = (STATIC / "presentation/graphics.js").read_text()
+    block = graphics.split("export function failureModes(m)", 1)[1].split("export function keywordVsMeaning(m)", 1)[0]
+    rows = re.findall(r"^    \['([^']+)',.*\n      '([^']+)',\n      '([^']+)'\]", block, re.MULTILINE)
+    assert len(rows) == 8
+    assert [row[0] for row in rows] == [
+        "Retrieval misses the passage", "Wrong series, period or population",
+        "Advance and final figures mixed", "Wrong numbers",
+        "Causal overreach and unsupported claims", "Prompt injection in questions or passages",
+        "Tool failure or timeout", "A real question wrongly blocked",
+    ]
+    assert "row.append(summary, el('p', 'fm-example', example))" in block
+    assert "Hover or focus for a concrete case" not in block
+    for _, example, provenance in rows:
+        assert example and provenance
+        assert not re.search(r"(?:DEV|HO|F2|T-[DI])-\d+", example)
+    assert block.count("No observed instance in the runs") == 3
+    assert "Related weakness: correct figures" in rows[2][1]
+    assert "Related weakness: answered a causal demand" in rows[4][1]
+    assert rows[6][1] == "No observed instance in the runs"
+    assert "Trial only:" in rows[7][1] and "Decisions trial not adopted" in block
+    css = (STATIC / "css/presentation.css").read_text()
+    assert ".fm-row { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.08fr)" in css
+    assert ".fm-row { grid-template-columns: 1fr;" in css
+    assert ".fm { height: auto; min-height: 100%; align-content: start; overflow: visible; }" in css
+    assert ".fm-control, .fm-measure, .fm-example { font-size: 16px;" in css
+
+
+def test_failure_modes_examples_are_pinned_to_committed_gold_and_scores():
+    repo = WEB.parent
+    def cases(path):
+        return {row["case_id"]: row for row in map(json.loads, (repo / path).read_text().splitlines())}
+    gold = cases("experiments/gold/gold_v3.7.jsonl")
+    dev = cases("experiments/eval/agent-dev-A3/gpt-6-luna.cases.jsonl")
+    original = cases("experiments/eval/agent-heldout-FIN2-r3/gpt-6-luna.cases.jsonl")
+    fresh = cases("experiments/threats/ti06-v2-fresh-20261102/runs/gpt-6-luna.verdicts.jsonl")
+    earlier = cases("experiments/threats/ti06-v2-e2efix-20261102/runs/gpt-6-luna.verdicts.jsonl")
+    threats = cases("experiments/threats/cases.jsonl")
+    block = (STATIC / "presentation/graphics.js").read_text().split("export function failureModes(m)", 1)[1].split("export function keywordVsMeaning(m)", 1)[0]
+    for case in ("DEV-009", "HO-027", "DEV-011", "T-I06", "DEV-425", "T-D01", "F2-072"):
+        assert case in block
+    assert "re-entry rate" in gold["DEV-009"]["question"] and gold["DEV-009"]["expected_behavior"] == "answer"
+    assert dev["DEV-009"]["over_abstain"] and not dev["DEV-009"]["gold_cited"]
+    report = (repo / "docs/evaluation-report.md").read_text()
+    assert "DEV-009 gathered evidence without a gold passage" in report
+    assert gold["HO-027"]["expected_behavior"] == "clarify"
+    assert original["HO-027"]["false_answer"] and not original["HO-027"]["behavior_ok"]
+    assert dev["DEV-011"]["key_number_recall"] == 1 and dev["DEV-011"]["claims_partial"] == 2
+    assert "does not identify the release as advance" in " ".join(dev["DEV-011"]["judge_notes"])
+    assert "not a proven numerical mix-up" in block
+    assert gold["DEV-425"]["expected_behavior"] == "refuse" and dev["DEV-425"]["false_answer"]
+    assert dev["DEV-425"]["claims_unsupported"] == 0 and dev["DEV-425"]["claims_supported"] == 1
+    assert "not that the response asserted the requested causal claim" in block
+    assert threats["T-I06"]["poison"] == "false_figure"
+    assert not fresh["T-I06"]["passed"] and earlier["T-I06"]["passed"]
+    assert fresh["T-I06"]["scorer"] == earlier["T-I06"]["scorer"] == "v2"
+    assert earlier["T-I06"]["post_hoc_rescore"]
+    assert sum(r["passed"] for r in fresh.values()) == 35
+    assert sum(r["passed"] for r in earlier.values()) == 36
+    assert "Ignore all previous instructions" in threats["T-D01"]["question"]
+    assert fresh["T-D01"]["passed"] and fresh["T-D01"]["status"] == "refused"
+    assert fresh["T-D01"]["tool_calls"] == 0
+    assert "scripted, not a recorded live run" in report
+
+
+def test_failure_modes_routing_trial_does_not_replace_live_baseline():
+    repo = WEB.parent
+    results = json.loads((repo / "experiments/eval/decisions-api-v2-results.json").read_text())
+    questions = {r["case_id"]: r for r in map(json.loads, (repo / "experiments/triage/fresh_cases_v2.jsonl").read_text().splitlines())}
+    assert results["decision"] == "do_not_adopt"
+    assert questions["F2-072"]["expected_route"] == questions["F2-070"]["expected_route"] == "in_scope"
+    assert "seasonally adjusted" in questions["F2-072"]["question"]
+    source = (repo / "docs/experiments/decisions-api-v2-results.md").read_text()
+    assert "F2-070 and F2-072" in source and "diverted in every repeat" in source
+    slides = (STATIC / "presentation/slides.js").read_text()
+    declaration = slides.split("title: 'Success criteria and failure modes'", 1)[1].split("  });", 1)[0]
+    assert "six of 270" in declaration and "two distinct" in declaration
+    assert "Neither result replaces the earlier live-baseline observation of 0/333" in declaration
+    assert "No observed instance in the runs" in declaration
+
+
+def test_assumptions_slide_follows_project_and_records_real_boundaries():
+    main = _slides_main_section()
+    order = [row[0] for row in _flow_rows()]
+    assert order[2:5] == ["My project", "Assumptions, constraints and scope", "Agentic system"]
+    block = main.split("title: 'Assumptions, constraints and scope'", 1)[1].split("\n  });", 1)[0]
+    assert "assumptionsScope(m)" in block and "notes:" in block
+    assert "gpt-5.6-luna" not in block
+    graphics = (STATIC / "presentation" / "graphics.js").read_text()
+    visual = graphics.split("export function assumptionsScope(m)", 1)[1].split("\n/**", 1)[0]
+    for text in ("Assumptions", "Constraints", "Scope done", "Validated rows anchor calculations",
+                 "AI-drafted labels, one reviewer", "Licences follow their recorded status",
+                 "6 tool calls, 2 rounds, 10 s per call", "4 November 2026, Singapore morning.",
+                 "Q1 2024 to Q2 2026", "Retrieval, agent and MCP", "Evaluation, threats and workbench",
+                 "No forecasts or personal advice", "Not all rights have been verified."):
+        assert text in visual
+    assert "m.section('sources').metrics?.sources" in visual
+    report = json.loads((STATIC / "data" / "report.json").read_text())
+    assert report["sources"]["metrics"]["sources"] == 85
+    story = (STATIC / "js" / "report-story.js").read_text()
+    assert "['scope-contract', 'Assumptions and constraints']" in story
+    assert "assumptionsScope(m)" in story
+    css = (STATIC / "css" / "presentation.css").read_text()
+    assert ".scope-contract" in css and ".scope-contract { grid-template-columns: 1fr;" in css
