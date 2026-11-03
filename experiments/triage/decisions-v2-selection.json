@@ -1,0 +1,18 @@
+{
+  "selected_tuning_id": "decisions-triage-tune-1",
+  "prompt_path": "experiments/triage/decisions-triage-tune-1/prompt.md",
+  "prompt_sha256": "9d2c5a08d16bed5ac43f4b7f3aad9afe40bf70bcea805586176fa5c864d57a74",
+  "threshold": 0.7,
+  "dev_metrics": {
+    "threshold": 0.7,
+    "n": 409,
+    "diversions": 0,
+    "exact_matches": 406,
+    "non_in_scope_recall": 27,
+    "operational_errors": 4
+  },
+  "tuning_raw_sha256": "62e2cb908fba8ca95611e4348da074912919687834b50a381ccfa7237888d332",
+  "cases_sha256": "fc431214c64643b5d8e63f76e4ad39a9fd31c6d61566613d9ab372d7016f8a7d",
+  "prereg_sha256": "19331f73a66a81835bcf503a9d69653774f499ec608193ce3ff99cf306a257ad",
+  "selection_rule": "min diversions, max exact matches, max off-topic recall, lower threshold, earlier iteration"
+}

@@ -1,0 +1,53 @@
+{
+  "thresholds": [
+    {
+      "threshold": 0.0,
+      "n": 409,
+      "diversions": 2,
+      "exact_matches": 405,
+      "non_in_scope_recall": 28,
+      "operational_errors": 4
+    },
+    {
+      "threshold": 0.3,
+      "n": 409,
+      "diversions": 2,
+      "exact_matches": 405,
+      "non_in_scope_recall": 28,
+      "operational_errors": 4
+    },
+    {
+      "threshold": 0.5,
+      "n": 409,
+      "diversions": 1,
+      "exact_matches": 406,
+      "non_in_scope_recall": 28,
+      "operational_errors": 4
+    },
+    {
+      "threshold": 0.7,
+      "n": 409,
+      "diversions": 0,
+      "exact_matches": 406,
+      "non_in_scope_recall": 27,
+      "operational_errors": 4
+    },
+    {
+      "threshold": 0.9,
+      "n": 409,
+      "diversions": 0,
+      "exact_matches": 403,
+      "non_in_scope_recall": 24,
+      "operational_errors": 4
+    }
+  ],
+  "best": {
+    "threshold": 0.7,
+    "n": 409,
+    "diversions": 0,
+    "exact_matches": 406,
+    "non_in_scope_recall": 27,
+    "operational_errors": 4
+  },
+  "usable_for_selection": true
+}

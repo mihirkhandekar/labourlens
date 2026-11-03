@@ -1,0 +1,39 @@
+{
+  "phase": "dev_tuning",
+  "iteration": 1,
+  "contaminated_for_scoring": true,
+  "expected_n": 409,
+  "prompt_sha256": "9d2c5a08d16bed5ac43f4b7f3aad9afe40bf70bcea805586176fa5c864d57a74",
+  "inputs_sha256": {
+    "experiments/gold/gold_v3.7.jsonl": "af3ad02690ed1dabb69e2be7f7bb984f707f1352b95c8bd693d0fb51e9410d8f",
+    "experiments/gold/heldout_v2_v1.jsonl": "e3d16597d542d33d106b4e9291aa3b92ca5fcdf19aa4d3c2b3319c0543efa542",
+    "experiments/threats/cases.jsonl": "17fd3bf5a195f19b40110493f838a929104f41d7009c853332a2b83c8a82b77b",
+    "experiments/triage/offtopic_cases.jsonl": "e6170b69260e6c73a1b5a2a0c2f2ee2d1c4d76abdea3b0d1a6003e06d9fee69f",
+    "experiments/triage/triage-v1-luna/raw.jsonl": "1029171d0b494ef659b378827bf597c41e58c594ec31ab9bd7721419360c6e7a",
+    "experiments/triage/triage-v1-luna/metrics.json": "a544504444a2a00327e7ad7c5a85299787e2bc248477f56e9a4cb4e1827d90eb"
+  },
+  "threshold_grid": [
+    0.0,
+    0.3,
+    0.5,
+    0.7,
+    0.9
+  ],
+  "fresh_cases_sha256": "fc431214c64643b5d8e63f76e4ad39a9fd31c6d61566613d9ab372d7016f8a7d",
+  "estimated_uncached_usd": 0.08680796666666667,
+  "estimate_method": "bytes/3 plus 1024 tokens, heuristic",
+  "global_cap_usd": 3,
+  "incremental_tuning_cap_usd": 1,
+  "workers": 6,
+  "prereg_commit": "9e82d44ea82f13b5d3d4b5096bd15e6365cde17b",
+  "fresh_cases_commit": "9e82d44ea82f13b5d3d4b5096bd15e6365cde17b",
+  "prereg_sha256": "19331f73a66a81835bcf503a9d69653774f499ec608193ce3ff99cf306a257ad",
+  "git_commit": "9e82d44ea82f13b5d3d4b5096bd15e6365cde17b",
+  "implementation_sha256": {
+    "src/labourlens/evaluation/decisions_v2.py": "490e96329eb78ab16ac7ae88e4fe8cb388d4c00172f7c5c58ea698a8aa355e11",
+    "src/labourlens/agent/decisions.py": "c59dedf7e36ba20da590844fe4f2b312acd5cb90c9b38841316816c76bb2e973",
+    "src/labourlens/answer/llm.py": "a438439cfca9499616990e409028750d5dbd653ef2a633a7b8cfed70d3561b11",
+    "specs/prices.yaml": "6c61e81b4fca213be3b9db467443ce294148be7f6e16697e13f105ac2d75d224"
+  },
+  "started_at": "2026-11-03T06:10:33.814053+00:00"
+}
