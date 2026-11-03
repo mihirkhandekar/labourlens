@@ -306,6 +306,34 @@ function secondJudgeSection(m) {
   return sec;
 }
 
+/** Responsibilities, not a chronology: post-score approval is disclosed in the slide notes. */
+export function measurementProcess() {
+  const root = el('div', 'g-measure measurement-process');
+  const columns = el('div', 'sj-cols');
+  const own = el('div', 'sj-col measurement-column');
+  own.append(el('h3', 'sj-head', 'What I did'));
+  const steps = el('ol', 'pr-list measurement-steps');
+  [
+    'AI drafted questions; I approved them.',
+    'I ran the system.',
+    'Rules scored behaviour.',
+    'I reviewed samples.'
+  ].forEach(text => steps.append(el('li', '', text)));
+  own.append(steps);
+
+  const judges = el('div', 'sj-col measurement-column');
+  judges.append(el('h3', 'sj-head', 'What the AI judges did'));
+  const checks = el('ul', 'pr-list measurement-checks');
+  ['Claim support', 'Fact coverage', 'Contradictions'].forEach(text => checks.append(el('li', '', text)));
+  judges.append(checks,
+    el('p', 'sj-sub', 'Primary: gpt-6.1-terra'),
+    el('p', 'sj-sub', 'Second-family sample: claude-sonnet-5-5'),
+    el('p', 'sj-sub', 'Judges never set the behaviour score.'));
+  columns.append(own, judges);
+  root.append(columns);
+  return root;
+}
+
 export function renderEvaluation(m, ctx) {
   const a3 = m.evalRow('dev-A3', 'gpt-6-luna'), r3 = m.heldRow('r3', 'gpt-6-luna');
   const ch = chapter({

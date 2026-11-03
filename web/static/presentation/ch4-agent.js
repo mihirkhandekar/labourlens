@@ -192,7 +192,7 @@ function toolCards(m) {
   tools.forEach(([name, label, text]) => {
     const card = el('article', 'pr-tool');
     const head = el('header', 'pr-tool-head');
-    head.append(el('code', 'pr-tool-name', name), el('span', 'pr-pill-label', 'read-only'));
+    head.append(el('code', 'pr-tool-name', name), el('span', 'pr-tool-label', 'Read only'));
     card.append(head, el('p', 'pr-tool-text', text));
     const foot = el('p', 'pr-tool-foot');
     foot.append(el('span', 'pr-tool-label', `Label ${label}`), el('span', 'num', `${fmt.int(counts[name])} recorded calls`));

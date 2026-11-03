@@ -13,7 +13,7 @@ LabourLens researches public Singapore labour statistics and reports for Q1 2024
 
 ## Retrieval and answer quality
 
-Chunk-level hit@8 was 0.969 [0.938, 0.992] for filter then rerank versus 0.539 [0.453, 0.625] for hybrid (128 development text questions; 0.719 versus 0.258 counting the first eight distinct passages; [retrieval](experiments/retrieval-v31-rerun.md)). `gpt-6-luna` behaviour accuracy was 0.897 versus 0.827 (237 development questions, two-run means); difference +0.070 [0.036, 0.106] ([evaluation](evaluation-report.md)). Historical fresh-set numerical accuracy was 0.214 (3/14); the tool extension failed its criteria ([tools](experiments/m7-tool-fix.md)).
+Development chunk hit@8 was .969 for filter then rerank versus .539 for hybrid (n=128; [retrieval](experiments/retrieval-v31-rerun.md)). [Original/fresh diagnostics](../experiments/eval/heldout-retrieval-20261103-paid/metrics.json) give strict passage hit@8 .778/.941 versus .167/.500 (n=18/34), without demonstrated end-to-end accuracy gain or per-case cause investigation. `gpt-6-luna` development behaviour was .897 versus hybrid .827, two-run means. Against one fixed pipeline run (.814), the agent mean .897 demonstrates a development advantage, confounded by arithmetic access and tool policy; it does not transfer to either test set ([comparison](../experiments/eval/agent-vs-fixed-pipeline.json)). Historical fresh numerical accuracy was 3/14; the tool extension failed ([tools](experiments/m7-tool-fix.md)).
 
 **Proposal:** verify report-table cells, units, population and row/column lineage before calculation; exclude `table_unreliable` cells. Add series, quarters and languages behind provenance and quality gates.
 
@@ -33,13 +33,13 @@ Citations, observation lineage, abstention reasons, conflict flags, an evidence 
 
 ## Security, privacy and third-party risk
 
-Tools are bounded and read-only; retrieved text is isolated; MCP responses are validated. Scanner detections rose 10/30 to 23/30 with benign flags unchanged at 9/30 ([scanner](experiments/injection-scanner-v2.md)). Fresh attacks scored 35/36 ([threats](experiments/t-i06-scorer-v2-rule.md)).
+Tools are bounded and read-only; MCP responses are validated. Scanner detections rose 10/30 to 23/30, benign flags unchanged at 9/30 ([scanner](experiments/injection-scanner-v2.md)). V1 fresh attacks remain 35/36. [V2](experiments/threat-v2-results.md), `gpt-6-luna`, three repeats: guarded/naive majority passes 50/54 versus 42/54 (p=.03857). Guards and answer prompt change together; both fail three of eight benign cases. No individual-layer or general safety claim follows.
 
 **Proposal:** clear licences and publisher agreements; replace shared codes with government SSO and source roles. **Permission-aware retrieval:** the corpus is public and has no per-user permissions today; for restricted sources, label each document and chunk and pre-filter by label in BM25, vector search and the statistics tools, so restricted text never reaches the model. Also approve residency, private endpoints, retention and audit access. Review provider terms; keep a tested vendor exit plan. On provider failure return unavailable, never an unvalidated fallback. Test a stronger injection classifier; keep server allow-lists and red-team reviews.
 
 ## Latency and cost
 
-Filter then rerank on development: median 14.35 s, p95 35.4 and 34.1 s, $0.002845 per question. All-tools MCP scored 0.877 (57/65) versus 0.908 (59/65) for statistics-only, median 14.3 versus 12.4 s, p95 51.4 versus 34.7 s; it was rejected ([comparison](experiments/served-chain-mcp-all.md)). Removing the statistics tool dropped accuracy from 0.908 to 0.692 on that sample, partly because calculation then loses its input; MCP against direct tied, which does not show it has no effect ([ablation](experiments/served-chain-no-stats.md)).
+Development median latency was 14.35 s, p95 35.4/34.1 s, cost $0.002845/question. All-tools MCP scored 57/65 versus statistics-only 59/65, p95 51.4 versus 34.7 s; it was rejected ([comparison](experiments/served-chain-mcp-all.md)). Removing statistics scored .692 versus .908, partly because calculation loses its input; MCP versus direct tied without establishing equivalence ([ablation](experiments/served-chain-no-stats.md)).
 
 **Proposal:** test revision-keyed caches, filter-only routing and smaller triage/rerank models; add token and cost budgets, p95 alerts and provider caps. Target p95 below 40 s and mean cost below $0.005, with no regression in citations, numbers or abstention.
 
@@ -50,7 +50,7 @@ Filter then rerank on development: median 14.35 s, p95 35.4 and 34.1 s, $0.00284
 
 ## Limitations and threats to validity
 
-Development shaped the design; original-test evidence overlaps and fresh-test outcomes are known. Neither final test demonstrates a gain. Gold was AI-drafted and reviewed by one person; the main judge is same-family. Two runs do not estimate variance. Citations check mechanics; arithmetic can use wrong inputs. Scanner and attack results establish no general defence. Full comparisons exclude web-only steps and MCP. Government readiness is untested.
+Development shaped design; original-test evidence overlaps and fresh outcomes are known. Neither final test demonstrates an answer gain. Gold was AI-drafted, reviewed by one person; the main judge is same-family. One fixed run and two agent runs do not establish stability. Citations check mechanics; arithmetic can use wrong inputs. Attacks establish no general defence. Full comparisons exclude web/MCP. Government readiness is untested.
 
 ## Mocked or unverified components and their production replacements
 

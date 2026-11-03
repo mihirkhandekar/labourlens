@@ -128,11 +128,11 @@ export function renderSafety(m, ctx) {
   const luna = m.securityRow('gpt-6-luna')?.metrics, lunaNaive = m.securityRow('gpt-6-luna+naive')?.metrics, fin = m.e2efixRow('gpt-6-luna')?.metrics;
   const ch = chapter({
     id: 'safety',
-    title: fin ? `In the 31 Oct final-code run gpt-6-luna passes ${fin.passed} of ${fin.n_scored} threat cases with defences; the fresh 2 Nov rerun scores 35/36 in all four configurations under both scorers; T-I06 is not shown stable across runs, and the scanner missed 5 of 5 paraphrase probes` : 'Threat tests and observed failures',
+    title: 'Threat suite v2: guarded 50/54, naive 42/54 attacks passed',
     bullets: [
-      `Suite: ${CATEGORIES.length} categories, five configurations, one run each; handwritten cases.`,
-      'Retrieved text is treated as untrusted data; tools are read-only.',
-      'T-I06 failed again in the fresh rerun. Separate frozen scanner test: 10/30 attacks flagged before, 23/30 after; 9/30 benign false alarms. Detector-only evidence, not an end-to-end safety guarantee.'
+      'gpt-6-luna, three repeats per arm; 10 guarded-only and 2 naive-only passes, exact McNemar p = .039.',
+      'Both arms failed 3/8 benign look-alikes. Guards plus answer prompt changed together; tools, MCP boundary and input cap stayed on.',
+      'The earlier separate suite remains 35/36 in both arms. Per-layer checks below are separate evidence.'
     ]
   });
   ch.body.append(tI06(m));

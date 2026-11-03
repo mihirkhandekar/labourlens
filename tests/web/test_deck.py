@@ -117,9 +117,9 @@ def test_every_slide_has_a_heading_and_speaker_notes():
     assert "el('aside', 'notes')" in builder and "if (!notes.children.length) notes.append(" in builder
     main = _slides_main_section()
     specs = re.findall(r"\badd\(\{", main)
-    assert len(specs) == 30, len(specs)
+    assert len(specs) == 28, len(specs)
     total = len(re.findall(r"\badd\(\{", (STATIC / "presentation" / "slides.js").read_text()))
-    assert total == 44  # 30 main slides, appendix index, and references A to M
+    assert total == 42  # 28 main slides, appendix index, and references A to M
     for block in re.split(r"\badd\(\{", main)[1:]:
         assert "notes:" in block, block[:100]
         assert "title:" in block, block[:100]
@@ -149,7 +149,7 @@ def test_no_bridge_sentences_or_pills_on_faces():
 REQUIRED_TITLES = [
     "Assignment", "My project", "Agentic system", "Choosing the data", "Data findings", "Retrenchments rose, data gives no cause", "Advance and final figures differ", "Two kinds of evidence", "Challenges with the data", "Success criteria and failure modes",
     "Reading reports", "Retrieval Strategies", "Does filtering help?", "Agent loop", "Choosing models", "MCP server", "GenAI concepts in this build", "Ensuring Reliable Sources", "Agent Workbench", "How the question sets work",
-    "How I measured", "Human Review of Dataset", "Experiment ladder", "Why it missed", "Fixing the calculation gap", "Attacks and defences", "Planted wrong figure", "How I built it", "Summary",
+    "How I measured", "Human Review of Dataset", "Does retrieval improve answers?", "The calculation gap", "Attacks and defences", "How I built it", "Summary",
 ]
 
 
@@ -163,7 +163,7 @@ def test_main_deck_follows_the_navigation_flow_and_has_short_plain_titles():
     main = _slides_main_section()
     defined = set(re.findall(r"\btitle: '([^']+)'", main))
     rows = _flow_rows()
-    assert len(rows) == 30
+    assert len(rows) == 28
     assert [r[0] for r in rows[1:]] == REQUIRED_TITLES
     for title, _, _ in rows:
         assert title in defined or "Singapore AI Agent" in title, title
@@ -176,7 +176,7 @@ def test_main_deck_follows_the_navigation_flow_and_has_short_plain_titles():
     assert "['Sources', 'Processing', 'Retrieval', 'Agent', 'Answer', 'Checks']" in (STATIC / "presentation" / "deck.js").read_text()
     for title in [r[0] for r in rows][1:]:
         assert len(title.split()) <= 9, title
-    assert len(re.findall(r"\badd\(\{", main)) == 30
+    assert len(re.findall(r"\badd\(\{", main)) == 28
 
 
 def test_removed_slides_stay_removed_and_summary_keeps_limitations():
@@ -204,8 +204,8 @@ def test_reading_reports_keeps_current_build_facts():
 
 def test_calculation_fix_slide_states_the_failure_and_the_graphics_exist():
     main = _slides_main_section()
-    assert main.count("Fixing the calculation gap") == 1
-    calculation = main.split("title: 'Fixing the calculation gap'", 1)[1].split("\n  });", 1)[0]
+    assert main.count("title: 'The calculation gap'") == 1
+    calculation = main.split("title: 'The calculation gap'", 1)[1].split("\n  });", 1)[0]
     assert "Two criteria failed" in calculation and "optimistic diagnostic" in calculation and "not adopted" in calculation
     assert "calculate_from_text_values" in main and ("do not establish why" in main or "does not establish why" in main)
     graphics = (STATIC / "presentation" / "graphics.js").read_text()
@@ -332,7 +332,7 @@ def test_deck_presents_gpt_6_luna_alone_and_the_report_keeps_both():
 
 def test_mcp_slide_states_where_mcp_sits():
     graphics = (STATIC / "presentation" / "graphics.js").read_text()
-    block = graphics.split("export function mcpMap", 1)[1].split("return wrap;", 1)[0]
+    block = _graphics_block(graphics, "export function mcpMap", "/** The nine remaining")
     for needle in ("LabourLens host", "MCP client", "MCP server", "get_statistic", "labourlens://sources", "compare_quarters", "outputSchema", "stdio", "Nine read-only tools", "2 resources"):
         assert needle in block, needle
     assert "not in the base planner schema" in block and "Full-set accuracy evaluations used direct calls" in block
@@ -346,10 +346,10 @@ def test_mcp_slide_states_where_mcp_sits():
 
 def test_mcp_slide_labels_the_all_tools_arm_as_tested_and_not_live():
     graphics = (STATIC / "presentation" / "graphics.js").read_text()
-    block = graphics.split("export function mcpMap", 1)[1].split("return wrap;", 1)[0]
-    assert "Tested: all three tools over MCP. Slower (slowest 5% about" in block and "no accuracy gain" in block and "Not used live." in block
+    block = _graphics_block(graphics, "export function mcpMap", "/** The nine remaining")
+    assert "All-tools MCP: slowest 5%" in block and "no accuracy gain" in block and "Not live." in block
     assert "which exceeds the limit set in advance (43.3 s" in block and "never receives the API key" in block
-    assert "improves accuracy" not in block
+    assert "if (!showMeasurements) return wrap" in block
     report = json.loads((STATIC / "data" / "report.json").read_text())
     chain = report["serving"]["chain"]
     rows = {(r["route"], r["model"]): r["metrics"]["all"] for r in chain["rows"]}
@@ -362,15 +362,15 @@ def test_mcp_slide_labels_the_all_tools_arm_as_tested_and_not_live():
             p = chain["paired"][key]["gpt-6-luna"]
             assert (p["better"], p["worse"], p["paired_difference"]) == (better, worse, -0.0308)
     live = (STATIC / "presentation" / "slides.js").read_text()
-    assert "the live app does not use it" in live and "not used live" in live
-    face = (STATIC / "presentation" / "graphics.js").read_text()
-    assert "Taking the statistics tool away drops accuracy from 90.8% to 69.2% on these 65 questions; MCP and direct calls tie on this set." in face
-    assert "-21.5 points" in live and "first attempt stopped at 44 of 65" in live and "gpt-5.6" not in face.split("Taking the statistics tool away")[1][:1500]
+    assert "It exceeded the pre-set latency limit and was not adopted" in live
+    assert "Without statistics: 69.2% accuracy, down from 90.8%" in block
+    assert "-21.5 points" in block and "first attempt stopped at 44 of 65" in block.lower()
+    assert "mcpMap(m, {showMeasurements: false})" in live
 
 
 def test_ladder_hides_fresh_results_and_difference_labels_on_deck_only():
     slides = (STATIC / "presentation" / "slides.js").read_text()
-    assert "finalComparison(m, {includeFresh: false, showDifference: false})" in slides
+    assert "finalComparison(m, {includeFresh: false, showDifference: false, showHistory: false})" in slides
     graphics = (STATIC / "presentation" / "graphics.js").read_text()
     assert "includeFresh = true, showDifference = true" in graphics
     assert "if (showDifference)" in graphics
@@ -379,21 +379,23 @@ def test_ladder_hides_fresh_results_and_difference_labels_on_deck_only():
 def test_threat_slide_maps_layers_to_checks_without_an_on_off_leaderboard():
     graphics = (STATIC / "presentation" / "graphics.js").read_text()
     block = graphics.split("export function threatMatrix", 1)[1].split("return wrap;", 1)[0]
-    assert "threatRuns(m)[0]" in block and "defended.by_category[key]" in block
-    assert "With defences" not in block and "Without defences" not in block
+    assert "per_category" in block and "per_layer" in block
+    assert "'Passed without defences (naive)'" in block and "'Passed with defences (guarded)'" in block
+    assert "Same boundary on in both arms" in block
     for evidence in ("tests/test_security.py", "tests/retrieval/test_crosscheck.py",
                      "tests/retrieval/test_answer_validate.py", "tests/retrieval/test_agent.py",
                      "tests/mcp/test_mcp.py", "v2-baseline-test/metrics.json", "v2-selected-test/metrics.json"):
         assert evidence in block
     assert "no separate test of sensitive-data refusal" in block
     assert "No separate test of model obedience" in block
-    assert "planted figure failed again" in block and "T-I06" in block
-    assert "10 of 30 to 23 of 30" in block and "9/30 false alarms" in block
+    assert "planted figure failed again" in block
+    assert "10 of 30 to 23 of 30" in block and "9/30 benign test passages" in block
     assert "gpt-5.6-luna" not in block
     main = _slides_main_section()
-    assert "Both arms scored 35/36 on gpt-6-luna" in main
-    assert "suite cannot rank the defences" in main
-    assert "Neither proof they work nor evidence they are useless" in main
+    for result in ("guarded 50/54", "naive 42/54", "3/8 benign", "10 attacks", "2 only naive", "p = .039"):
+        assert result.lower() in main.lower()
+    assert "Guards plus answer prompt changed together" in main
+    assert "35/36 in both arms" in main
 
 
 def test_workbench_slide_names_the_live_only_steps():
@@ -454,7 +456,7 @@ def test_build_row_reads_the_final_evaluation_and_the_headline_numbers_come_from
     assert f"{r3['metrics']['behaviour_accuracy']['rate'] * 100:.1f}%" in rerun
     graphics = (STATIC / "presentation" / "graphics.js").read_text(encoding="utf-8")
     slides = (STATIC / "presentation" / "slides.js").read_text(encoding="utf-8")
-    assert "finalComparison(m, {includeFresh: false, showDifference: false})" in slides and "provenanceTable(m)" in slides
+    assert "finalComparison(m, {includeFresh: false, showDifference: false, showHistory: false})" in slides and "provenanceTable(m)" in slides
     for name in ("finalComparison", "finalSentence", "finalFacts", "provenanceTable"):
         assert f"export function {name}" in graphics
 
@@ -478,7 +480,7 @@ def test_mcp_wording_is_exact():
     mcp = (STATIC / "presentation" / "ch7-mcp.js").read_text(encoding="utf-8")
     assert "another protocol version" not in mcp and "unexpected version string" in mcp and "client default is 8 s" in mcp
     slides = (STATIC / "presentation" / "slides.js").read_text(encoding="utf-8")
-    assert "advertised input schemas" in slides and "fixed in code" in slides and "2025-11-25" in slides
+    assert "advertised input schemas" in slides and "hard-coded in code" in slides and "2025-11-25" in slides
 
 
 def test_report_processing_path_matches_the_runtime_and_discloses_table_limits():
@@ -529,7 +531,7 @@ def test_tool_legend_lists_the_three_tools_with_inputs_outputs_where_and_why():
         assert exchange in block, exchange
     for where in ("'App'", "'MCP server (blue outline)'", "'App, plain code'"):
         assert where in block, where
-    assert "not proof of equivalence" in block and "the base tool does not calculate from report-only figures" in block
+    assert "Read validated statistics" in block and "the base tool does not calculate from report-only figures" in block
 
 
 def test_retrieval_tuning_states_fixed_numbers_and_advance_constant():
@@ -557,11 +559,11 @@ def test_metric_comparison_is_reused_and_keeps_retrieval_separate_from_answer_qu
     assert "abstention, clarification or refusal" in block and "not an answerable-only score" in block
     main = _slides_main_section()
     retrieval = main.split("title: 'Does filtering help?'", 1)[1].split("\n  });", 1)[0]
-    assert "metricComparison(m)" in retrieval and "not answer accuracy" in retrieval
+    assert "unseenRetrieval()" in retrieval and "End-to-end answer gains remain unproven" in retrieval
     final = _graphics_block(graphics, "export function finalComparison", "export function agentLoop")
-    assert "if (!includeFresh) wrap.append(metricComparison(m))" in final
-    ladder = main.split("title: 'Experiment ladder'", 1)[1].split("\n  });", 1)[0]
-    assert "includeFresh: false" in ladder and "not retrieval hit@8" in ladder
+    assert "if (!includeFresh && showHistory) wrap.append(metricComparison(m))" in final
+    ladder = main.split("title: 'Does retrieval improve answers?'", 1)[1].split("\n  });", 1)[0]
+    assert "showHistory: false" in ladder and "not retrieval hit rates" in ladder
     report = json.loads((STATIC / "data" / "report.json").read_text(encoding="utf-8"))
     retrieval_data = report["retrieval"]["ladder"]
     assert retrieval_data["n_cases"] == 128
@@ -593,7 +595,7 @@ def test_architecture_names_all_three_tools_without_a_redundant_mcp_bar():
     block = _graphics_block(graphics, "export function architectureDiagram()", "export function myProject")
     for tool in ("search_reports", "get_series", "calculate_change"):
         assert tool in block, tool
-    assert "Only series lookups cross this process boundary" in block
+    assert "Report search and calculation stay in the app" in block
     bars = block.split("const bars =", 1)[1]
     assert "'Guardrails'" in bars and "'Evaluation'" in bars
     assert not re.search(r"\['[^']+', 'MCP',", bars)
@@ -611,22 +613,22 @@ def test_pipeline_steps_have_no_top_border_and_agent_limits_are_aligned():
     for label in ("2 rounds", "6 calls", "10 s per call", "Bounded retries"):
         assert label in loop, label
     legend = _graphics_block(graphics, "export function toolLegend()", "export function buildTimeline(m)")
-    assert "MCP server (blue outline)" in legend and "Blue outlines mark the MCP boundary" in legend
+    assert "MCP server (blue outline)" in legend and "Calls server tool get_statistic" in legend
     assert re.search(r"\.owner-agent \.owner-agent-node\.is-mcp rect\s*\{[^}]*stroke:\s*var\(--c3\)", css)
 
 
 def test_retained_calculation_experiment_explains_its_rejection_once():
     main = _slides_main_section()
-    assert [row[0] for row in _flow_rows()][25] == "Fixing the calculation gap"
-    slide = main.split("title: 'Fixing the calculation gap'", 1)[1].split("\n  });", 1)[0]
+    assert [row[0] for row in _flow_rows()][24] == "The calculation gap"
+    slide = main.split("title: 'The calculation gap'", 1)[1].split("\n  });", 1)[0]
     assert "visual: toolFixFlow(m)" in slide and "toolFixBars(m)" not in slide
-    assert "kept the change out of the live system" in slide
+    assert "kept it out of the live system" in slide
     graphics = (STATIC / "presentation" / "graphics.js").read_text(encoding="utf-8")
     block = _graphics_block(graphics, "export function toolFixFlow(m)", "return wrap;")
-    for label in ("New capability", "Recovery added", "Decision rule", "False-answer cases, of 237 development questions", "The pre-set limit was", "Rejected: more false answers"):
+    for label in ("Dataset-row calculation tool", "Report-text calculation tool", "3 of 14", "Two rules failed", "Not adopted."):
         assert label in block, label
-    assert "first.x2.false_answers" in block and "first.x3.false_answers" in block
-    assert "first.criteria['2_false_answers'].threshold" in block
+    assert "first.x2.correct / first.x2.n" in block and "first.x3.correct / first.x3.n" in block
+    assert "false answers rose from 6 to 7" in block and "one new-tool case" in block
     assert "Same 65 questions" not in block and "For both models" not in block
     report = json.loads((STATIC / "data" / "report.json").read_text(encoding="utf-8"))
     result = report["evaluation"]["tool_set_v2"]["dev_x3"]["criteria"]["gpt-6-luna"]
@@ -645,3 +647,70 @@ def test_deck_names_the_fresh_questions_apart_from_the_original_test():
     sources = {f.name: f.read_text() for f in (STATIC / "presentation").glob("*.js")}
     assert "S shows these notes" not in sources["slides.js"] and "X twice" in sources["slides.js"]
     assert "Run held-out v2 once" not in sources["ch8-limits.js"] and "were run once" not in sources["graphics.js"]
+
+
+def test_three_frozen_experiments_are_integrated_without_changing_slide_count():
+    root = WEB.parent
+    graphics = (STATIC / "presentation" / "graphics.js").read_text()
+    slides = (STATIC / "presentation" / "slides.js").read_text()
+    story = (STATIC / "js" / "report-story.js").read_text()
+    for helper in ("threatComparison", "unseenRetrieval", "fixedPipeline"):
+        assert f"export function {helper}" in graphics
+        assert helper in slides and helper in story
+    assert len(re.findall(r"\badd\(\{", slides)) == 42
+    threat = json.loads((root / "experiments/threats/threat-v2-analysis.json").read_text())
+    assert (threat["guarded_majority_pass"], threat["naive_majority_pass"]) == (50, 42)
+    assert (threat["guarded_only"], threat["naive_only"]) == (10, 2)
+    assert (threat["benign_failures_guarded"], threat["benign_failures_naive"]) == (3, 3)
+    assert round(threat["mcnemar_exact_p"], 3) == .039
+    retrieval = json.loads((root / "experiments/eval/heldout-retrieval-20261103-paid/metrics.json").read_text())
+    for key, n, hybrid, filtered in (("registered31", 18, .167, .778), ("fresh65", 34, .500, .941)):
+        metrics = retrieval["results"][key]["metrics"]
+        assert metrics["hybrid"]["n"] == n
+        assert round(metrics["hybrid"]["strict_passage_hit@8"]["mean"], 3) == hybrid
+        assert round(metrics["R3"]["strict_passage_hit@8"]["mean"], 3) == filtered
+        index = 0 if key == "registered31" else 1
+        for label, method in (("Hybrid", "hybrid"), ("Filter then rerank", "R3")):
+            values = re.findall(r"\['" + label + r"', ([.\d]+),", graphics)
+            assert round(float(values[index]), 3) == round(metrics[method]["strict_passage_hit@8"]["mean"], 3)
+    fixed = json.loads((root / "experiments/eval/agent-vs-fixed-pipeline.json").read_text())
+    mean = fixed["agent_two_run_mean_comparison"]
+    assert round(mean["fixed_accuracy"], 3) == .814
+    assert round(mean["agent_accuracy"], 3) == .897
+    for caveat in ("One fixed run", "no original test or fresh-question comparison", "unchanged planner prompt", "historical runtime drift"):
+        assert caveat.lower() in graphics.lower()
+    assert "No retrieval-only measurement" not in (STATIC / "presentation/ch3-retrieval.js").read_text()
+    assert "no retrieval-only run" not in (STATIC / "presentation/ch-work.js").read_text()
+    assert "visual: threatMatrix(m)" in slides
+    assert "Attack type" in graphics and "Defence layer(s)" in graphics
+    block = graphics.split("export function threatMatrix", 1)[1].split("return wrap;", 1)[0]
+    rows = re.findall(r"\['([^']+)', '[^']+', '[^']+', (\d+), (\d+), (\d+),", block)
+    assert len(rows) == 10
+    for key, n, naive, guarded in rows:
+        category = threat["per_category"][key]
+        assert (int(n), int(naive), int(guarded)) == (category["cases"], category["naive"], category["guarded"])
+    assert "wrap.append(final, fixedPipeline())" in graphics
+    assert "exp-bar-track" in graphics and "exp-bar-value" in graphics
+    assert "Chunk MRR@10" in slides and "Chunk hit@8" in slides
+
+
+def test_deck_uses_geist_for_code_and_plain_labels():
+    css = (STATIC / "css/presentation.css").read_text()
+    assert "--font-mono: var(--font-sans)" in css
+    assert "Geist Mono" not in css
+    assert ".pr-tl-item::before { content: none; }" in css
+
+def test_evaluation_story_separates_rules_from_judges_and_merges_the_tool_gap():
+    slides = (STATIC / "presentation/slides.js").read_text()
+    evaluation = (STATIC / "presentation/ch5-evaluation.js").read_text()
+    main = _slides_main_section()
+    for removed in ("title: 'Why it missed'", "title: 'Fixing the calculation gap'", "title: 'Planted wrong figure'"):
+        assert removed not in main
+    assert "measurementProcess()" in main
+    component = evaluation.split("export function measurementProcess()", 1)[1].split("return root;", 1)[0]
+    for text in ("What I did", "What the AI judges did", "Claim support", "Fact coverage", "Contradictions",
+                 "gpt-6.1-terra", "claude-sonnet-5-5", "Judges never set the behaviour score"):
+        assert text in component
+    assert "after saved runs had been scored" in main
+    for forbidden in ("same query on the same local", "two routes", "adds no new knowledge", "adds no second knowledge"):
+        assert forbidden not in slides

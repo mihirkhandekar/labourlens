@@ -251,7 +251,7 @@ export function renderRetrieval(m, ctx) {
       'An LLM reranks and an LLM drafted the labels, so R2 and R3 may look better than they are.',
       'A hard period filter can exclude the right document when a later release restates an earlier quarter. Documented, not fixed.',
       'The development set was inspected many times, so it is not an unbiased estimate for new questions.',
-      'No retrieval-only measurement on the held-out set. Held-out compares r3 with hybrid end to end on 31 cases; the gain is inconclusive (see Evaluation).'
+      'Retrieval-only diagnostics now cover 18 original-test and 34 fresh text questions. Strict first-eight-context-passages hit@8: hybrid .167/.500, filter then rerank .778/.941. Literal questions, reused sets and case-only intervals limit interpretation. No demonstrated end-to-end gain.'
     ],
     src: 'docs/evaluation-report.md › Expanded retrieval study · docs/experiments/m6-retrieval-improvements.md'
   }));

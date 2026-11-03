@@ -13,10 +13,10 @@ const CHECKS = {
 
 function diagramFigure() {
   const boxes = [
-    {id: 'agent', title: 'Agent', sub: 'plans and answers', text: 'In the live app, get_series goes through the MCP client (get_statistic only). The full final evaluations called statistics directly; a separate 65-case sample measures this served route.'},
+    {id: 'agent', title: 'Agent', sub: 'plans and answers', text: 'get_series requests validated observation rows from MCP tool get_statistic. Report search and calculation stay in the app.'},
     {id: 'client', title: 'MCP client', sub: 'treats the server as untrusted', text: 'Allow-listed launch, minimal environment, name and version checks, tool allow-list, input and output schemas, deadlines, size caps, typed result validation, and quarantine of instruction-like content.'},
     {id: 'server', title: 'MCP server', sub: '9 tools, 2 resources, 1 prompt', text: 'labourlens-stats. Serves statistics and catalogue metadata only. MOM report text is excluded. Default transport is stdio; an optional loopback HTTP transport needs a bearer token.'},
-    {id: 'store', title: 'Validated statistics', sub: 'observations and catalogue', text: 'The same validated observation table the agent uses. Rows carry observation identifiers.'}
+    {id: 'store', title: 'Validated statistics', sub: 'observations and catalogue', text: 'Validated observations carry identifiers, units, release stage and source provenance.'}
   ];
   return figure({
     id: 'fig-mcp', title: `A client treats the ${TOOLS.length}-tool MCP server as untrusted and validates every result`, wide: true,
@@ -93,7 +93,7 @@ function latencyFigures(m) {
   const names = {latency_p50_ms: 'Median per call', latency_p95_ms: 'Slowest 5% of calls'};
   const lat = figure({
     id: 'fig-mcp-latency', title: rows.length ? `MCP took ${p50.mcp} ms at the median per call against ${p50.direct} ms direct` : 'Direct call against MCP, latency per call',
-    takeaway: rows.length ? `Connecting once costs ${fmt.num(x.connection_seconds, 2)} s. The live app pays this once at startup; the full final comparisons used direct calls; the separate served sample uses MCP.` : 'No latency rows recorded.',
+    takeaway: rows.length ? `Connecting once costs ${fmt.num(x.connection_seconds, 2)} s, paid at startup.` : 'No latency rows recorded.',
     summary: rows.map(r => `${names[r.metric] || r.metric}: direct ${r.direct} ms, MCP ${r.mcp} ms`).join('. '),
     source: {data: 'report.json › mcp.rows[*].{direct,mcp} · mcp.metrics.connection_seconds', files: ['docs/mcp-demo-transcript.md §17']},
     note: 'Warm-session timings exclude the one-off connection (spawn, initialise, discovery).',
@@ -135,7 +135,7 @@ export function renderMcp(m, ctx) {
     bullets: [
       `Server: ${TOOLS.length} read-only tools, 2 resources, 1 prompt. Statistics and catalogue only; no MOM report text.`,
       `Client: treats the server as untrusted; ${(mcp.checks || []).length} client refusal behaviours observed.`,
-      'Comparison: the same queries over the direct route and over MCP. The live app uses MCP for get_series; a separate 65-case served-chain sample (51 development cases and 14 probes, statistics-only MCP; not the fresh 65) scores 90.8% for both models, with no observed loss versus direct.',
+      'Served-chain sample: 90.8% behaviour accuracy for both models, with no observed loss against direct calls. One run on 51 development cases and 14 probes, not independent evidence.',
       'Limit: a protocol demo on the cases tried, not an audit.'
     ]
   });

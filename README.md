@@ -6,6 +6,8 @@ I built LabourLens for the GenAI Engineer take-home. Singapore labour-market res
 
 The default model is `gpt-6-luna`. Averaged over two runs, filter then rerank scored 0.897 against hybrid search's 0.827 on 237 development questions for matching the expected answer status. On the original 31 test questions it scored 0.839 against 0.806; on 65 fresh questions, 0.715 against 0.746. Neither test set demonstrates a gain. For scale, a rule that never reads the question and always answers would score 0.768, 0.774 and 0.738 on the three sets (computed from the gold labels), so on the 65 fresh questions both arms sit within three points of that floor. The [evaluation report](docs/evaluation-report.md) has both runs, intervals and content-quality scores.
 
+Retrieval-only checks now cover both test sets: strict first-eight-passage hit@8 rose from hybrid .167 to .778 on 18 original-test text cases, and .500 to .941 on 34 fresh text cases, without a demonstrated end-to-end answer gain. On development questions, a fixed pipeline scored .814 against the bounded agent's .897 mean; one fixed run, missing arithmetic and other policy differences limit that comparison. A harder attack suite passed 50/54 guarded versus 42/54 naive (three repeats, case majority, exact p=.039), with 3/8 benign failures in each arm. [Retrieval results](docs/experiments/heldout-retrieval-metrics-results.md), [fixed-pipeline comparison](docs/experiments/agent-vs-fixed-pipeline-results.md), [threat results](docs/experiments/threat-v2-results.md).
+
 ## Quick start
 
 You need Git, [uv](https://docs.astral.sh/uv/) and make. uv can install Python 3.12. From the repository root:
@@ -17,6 +19,8 @@ LABOURLENS_DEMO_ENABLED=false make serve
 ```
 
 Open <http://127.0.0.1:8000> for the report, `/deck` for the presentation or `/workbench` for the research page. These commands need no API key and make no paid calls. `mcp-demo` exercises the statistics server with a real MCP client. [Reproduce](docs/reproduce.md) explains corpus setup and how to recompute the saved results.
+
+The presentation has 28 main slides and 42 including the appendix. Evaluation design leads into the answer comparison, the merged calculation-gap experiment and the attack-type table.
 
 Live demo: <https://labourlens.navig.me>. Workbench access codes are sent separately. The [innovation page](https://labourlens.navig.me/innovation) presents the proposed next steps.
 
@@ -82,7 +86,7 @@ The statistics capability is the `get_series` tool; direct and MCP are routes to
 - A statistics MCP server with tools, resources and a client that checks server responses.
 - A cited-answer workbench with evidence cards and an activity timeline.
 - An evaluation harness; the served chain scored 90.8% on a 65-case sample (51 reused development cases and 14 of my own probes; 88 to 90% on the gold cases alone).
-- A 36-case attack suite, plus scanner tests that improved detection from 10 of 30 to 23 of 30 attacks.
+- Two attack suites: the earlier 36-case smoke test and a harder 62-case suite, plus scanner tests that improved detection from 10 of 30 to 23 of 30 attacks.
 
 ## Repository map
 
@@ -117,8 +121,9 @@ The app uses v3.1: 85 sources, 52,020 observations, 16,419 passages and 1,847 ch
 
 - AI drafted the reference answers; I reviewed them after scoring, as the sole reviewer. The main judge is from the same model family; a second-family check did not reproduce every gain.
 - The question sets are only partly independent: the original test shares development evidence, and the fresh set was reused for diagnostics. Two runs do not estimate run-to-run variance, but identical reruns flip 11 to 18 of 237 development cases and 1 to 3 of 65 fresh cases, so differences of a few cases are inside the noise; the served-chain sample reuses development cases.
+- The agent-versus-fixed comparison is development-only, with one fixed run and no original-test or fresh-question comparison. The fixed policy lacks a calculation tool and repeated lookups, so its lower score cannot be attributed to adaptive planning alone.
 - Report-only figures cannot enter deterministic calculations; PDF tables can extract poorly. The tested arithmetic extension was not adopted.
-- The scanner is a warning layer. It still misses attacks and flags benign text; the fresh attack suite scored 35/36 in all four settings, including with defences off. Citation checks do not prove claim support.
+- The scanner is a warning layer and still misses attacks. The earlier suite scored 35/36 with defences on or off; harder v2 attacks scored 50/54 guarded versus 42/54 naive, changing guards and answer prompt together. Both arms failed 3/8 benign cases, above the registered cap. Citation checks do not prove claim support.
 - Extracted report text and raw model answers are local-only. Three dataset licences are unverified and 23 document rights are unresolved. Without the private corpus, the rights scan says `NOT CHECKED`.
 - This is a single-process prototype with local state. Live answers need a corpus and API key, cost money and have no verified provider-side spend cap. Do not submit confidential or personal information.
 

@@ -1,0 +1,4650 @@
+{
+ "candidate": "agent-dev-FIXED1-r3",
+ "references": [
+  "agent-dev-FIN-r3",
+  "agent-dev-FIN2-r3"
+ ],
+ "gold": "experiments/gold/gold_v3.7.jsonl",
+ "corpus": {
+  "passage_set_sha256": "d402120f6f8f",
+  "content_sha256": "242e2b284fbc",
+  "passages": 16419,
+  "chunks": 1847
+ },
+ "scoring_provenance": {
+  "agent-dev-FIXED1-r3": {
+   "gold_sha256": "af3ad02690ed1dabb69e2be7f7bb984f707f1352b95c8bd693d0fb51e9410d8f",
+   "prompt_sha256": {
+    "planner": "df68ef8e5e287d1a0b1f71d938e85ec25b4f03eeec501bc439a3a77aec2482dc",
+    "answer": "e854b64c72116c4c175082e70f39c312ed94b1f37778e7daf3f9a51de1bac350",
+    "judge": "85f3529fca32faec681b3d4b1e6899b8620c383ed2aa54bc423241e2b7f4a10f",
+    "rerank": "e45ed816ccefd679d046cf9bcbd4dad92ba27b20cfc5f45b900063b84784793a",
+    "planner_user": "e59f408b00f5a99e0fb867c635a84d2d77947171620ab035f6067a3cdfb8136f",
+    "answer_user": "c4f4ef05d7d1b87fca94bee65cbf2a38999c181dc2e92bced9cdf8ef92b006e7"
+   },
+   "agent_config": "planner=gpt-6-luna|answer=gpt-6-luna|planner_v1|answer_v3|retrieval=r3|control=fixed",
+   "git_head": "58c63d7c6bf1257f57531c9324b960468e4bf83a",
+   "price_table_sha256": "6c61e81b4fca213be3b9db467443ce294148be7f6e16697e13f105ac2d75d224",
+   "eligible_n": 237,
+   "available_n": 237,
+   "fingerprint_scope": "files at scoring time; generation-time provenance only when saved in raw run"
+  },
+  "agent-dev-FIN-r3": {
+   "gold_sha256": "af3ad02690ed1dabb69e2be7f7bb984f707f1352b95c8bd693d0fb51e9410d8f",
+   "prompt_sha256": {
+    "planner": "df68ef8e5e287d1a0b1f71d938e85ec25b4f03eeec501bc439a3a77aec2482dc",
+    "answer": "e854b64c72116c4c175082e70f39c312ed94b1f37778e7daf3f9a51de1bac350",
+    "judge": "85f3529fca32faec681b3d4b1e6899b8620c383ed2aa54bc423241e2b7f4a10f",
+    "rerank": "e45ed816ccefd679d046cf9bcbd4dad92ba27b20cfc5f45b900063b84784793a",
+    "planner_user": "e59f408b00f5a99e0fb867c635a84d2d77947171620ab035f6067a3cdfb8136f",
+    "answer_user": "c4f4ef05d7d1b87fca94bee65cbf2a38999c181dc2e92bced9cdf8ef92b006e7"
+   },
+   "agent_config": "planner=gpt-6-luna|answer=gpt-6-luna|planner_v1|answer_v3|retrieval=r3",
+   "git_head": "9f979a5d94af54e8a4b57707bac6e8b20b78fd1d",
+   "price_table_sha256": "634b32441c3495b4c3ec13efa3af1e9cc99e5c7523eac3a15a5c238c3acaeb5c",
+   "eligible_n": 237,
+   "available_n": 237,
+   "fingerprint_scope": "files at scoring time; generation-time provenance only when saved in raw run"
+  },
+  "agent-dev-FIN2-r3": {
+   "gold_sha256": "af3ad02690ed1dabb69e2be7f7bb984f707f1352b95c8bd693d0fb51e9410d8f",
+   "prompt_sha256": {
+    "planner": "df68ef8e5e287d1a0b1f71d938e85ec25b4f03eeec501bc439a3a77aec2482dc",
+    "answer": "e854b64c72116c4c175082e70f39c312ed94b1f37778e7daf3f9a51de1bac350",
+    "judge": "85f3529fca32faec681b3d4b1e6899b8620c383ed2aa54bc423241e2b7f4a10f",
+    "rerank": "e45ed816ccefd679d046cf9bcbd4dad92ba27b20cfc5f45b900063b84784793a",
+    "planner_user": "e59f408b00f5a99e0fb867c635a84d2d77947171620ab035f6067a3cdfb8136f",
+    "answer_user": "c4f4ef05d7d1b87fca94bee65cbf2a38999c181dc2e92bced9cdf8ef92b006e7"
+   },
+   "agent_config": "planner=gpt-6-luna|answer=gpt-6-luna|planner_v1|answer_v3|retrieval=r3",
+   "git_head": "41ec2da10433dfa633ac0c535e16d66560612fd8",
+   "price_table_sha256": "634b32441c3495b4c3ec13efa3af1e9cc99e5c7523eac3a15a5c238c3acaeb5c",
+   "eligible_n": 237,
+   "available_n": 237,
+   "fingerprint_scope": "files at scoring time; generation-time provenance only when saved in raw run"
+  }
+ },
+ "scorer_limit": "Scoring functions unchanged between frozen scoring commits and preparation; wrapper changes add provenance and overwrite protection. Historical runtime drift remains possible.",
+ "n": 237,
+ "always_answer_floor": 0.7679324894514767,
+ "single_run_comparisons": {
+  "agent-dev-FIN-r3": {
+   "n_gold_cases": 237,
+   "complete": true,
+   "missing": {
+    "candidate": [],
+    "baseline": []
+   },
+   "unexpected": {
+    "candidate": [],
+    "baseline": []
+   },
+   "seed": 20261030,
+   "n_boot": 10000,
+   "level": 0.95,
+   "behaviour_accuracy": {
+    "candidate": 0.8143,
+    "baseline": 0.8861
+   },
+   "paired_difference": -0.0717,
+   "better": 11,
+   "worse": 28,
+   "mcnemar_exact_p": 0.0095,
+   "case_bootstrap_interval": [
+    -0.1224,
+    -0.0211
+   ],
+   "component_bootstrap_interval": [
+    -0.1244,
+    -0.0202
+   ],
+   "n_components": 149,
+   "n_evidence_components": 101,
+   "guardrails": {
+    "false_answers": {
+     "candidate": 11,
+     "baseline": 7
+    },
+    "answers_with_contradicted_fact": {
+     "candidate": 5,
+     "baseline": 2
+    }
+   },
+   "by_family_descriptive": {
+    "factual_lookup": {
+     "n": 70,
+     "better": 1,
+     "worse": 5
+    },
+    "numerical_comparison": {
+     "n": 34,
+     "better": 1,
+     "worse": 17
+    },
+    "cross_source_synthesis": {
+     "n": 35,
+     "better": 1,
+     "worse": 1
+    },
+    "revision_conflict": {
+     "n": 19,
+     "better": 0,
+     "worse": 2
+    },
+    "ambiguity_insufficient_causal": {
+     "n": 44,
+     "better": 6,
+     "worse": 3
+    },
+    "adversarial": {
+     "n": 35,
+     "better": 2,
+     "worse": 0
+    }
+   },
+   "sensitivity_descriptive": {},
+   "conditions": {
+    "complete_paired_data": true,
+    "case_bootstrap_lower_above_zero": false,
+    "component_bootstrap_lower_above_zero": false,
+    "enough_evidence_components": true,
+    "no_added_false_answers": false
+   },
+   "demonstrated_gain": false
+  },
+  "agent-dev-FIN2-r3": {
+   "n_gold_cases": 237,
+   "complete": true,
+   "missing": {
+    "candidate": [],
+    "baseline": []
+   },
+   "unexpected": {
+    "candidate": [],
+    "baseline": []
+   },
+   "seed": 20261030,
+   "n_boot": 10000,
+   "level": 0.95,
+   "behaviour_accuracy": {
+    "candidate": 0.8143,
+    "baseline": 0.9072
+   },
+   "paired_difference": -0.0928,
+   "better": 11,
+   "worse": 33,
+   "mcnemar_exact_p": 0.0013,
+   "case_bootstrap_interval": [
+    -0.1436,
+    -0.038
+   ],
+   "component_bootstrap_interval": [
+    -0.1447,
+    -0.0413
+   ],
+   "n_components": 149,
+   "n_evidence_components": 101,
+   "guardrails": {
+    "false_answers": {
+     "candidate": 11,
+     "baseline": 7
+    },
+    "answers_with_contradicted_fact": {
+     "candidate": 5,
+     "baseline": 1
+    }
+   },
+   "by_family_descriptive": {
+    "factual_lookup": {
+     "n": 70,
+     "better": 1,
+     "worse": 5
+    },
+    "numerical_comparison": {
+     "n": 34,
+     "better": 0,
+     "worse": 20
+    },
+    "cross_source_synthesis": {
+     "n": 35,
+     "better": 1,
+     "worse": 2
+    },
+    "revision_conflict": {
+     "n": 19,
+     "better": 0,
+     "worse": 2
+    },
+    "ambiguity_insufficient_causal": {
+     "n": 44,
+     "better": 7,
+     "worse": 2
+    },
+    "adversarial": {
+     "n": 35,
+     "better": 2,
+     "worse": 2
+    }
+   },
+   "sensitivity_descriptive": {},
+   "conditions": {
+    "complete_paired_data": true,
+    "case_bootstrap_lower_above_zero": false,
+    "component_bootstrap_lower_above_zero": false,
+    "enough_evidence_components": true,
+    "no_added_false_answers": false
+   },
+   "demonstrated_gain": false
+  }
+ },
+ "agent_two_run_mean_comparison": {
+  "agent_accuracy": 0.8966244725738397,
+  "fixed_accuracy": 0.8143459915611815,
+  "paired_difference": -0.08227848101265822,
+  "case_bootstrap_interval": [
+   -0.1308,
+   -0.0338
+  ],
+  "component_bootstrap_interval": [
+   -0.1324,
+   -0.0335
+  ],
+  "mcnemar_exact_p": null,
+  "mcnemar_note": "Not defined for fractional replicate means"
+ },
+ "decision": "agent development advantage",
+ "agent_run_flips": 13,
+ "arms": {
+  "fixed": {
+   "n": 237,
+   "behaviour_accuracy": 0.8143459915611815,
+   "false_answers": 11,
+   "over_abstentions": 31,
+   "operational_failures": 0,
+   "latency_median_s": 15.27,
+   "latency_p95_s": 28.33,
+   "usage_cost_per_question_usd": 0.0026968945147679323,
+   "judge_cost_per_question_usd": 0.0009973080168776372,
+   "per_question": [
+    {
+     "case_id": "DEV-001",
+     "seconds": 12.04,
+     "cost_usd": 0.002324,
+     "judge_cost_usd": 0.000752
+    },
+    {
+     "case_id": "DEV-002",
+     "seconds": 13.08,
+     "cost_usd": 0.002113,
+     "judge_cost_usd": 0.000647
+    },
+    {
+     "case_id": "DEV-003",
+     "seconds": 15.89,
+     "cost_usd": 0.003953,
+     "judge_cost_usd": 0.001553
+    },
+    {
+     "case_id": "DEV-004",
+     "seconds": 18.23,
+     "cost_usd": 0.003336,
+     "judge_cost_usd": 0
+    },
+    {
+     "case_id": "DEV-005",
+     "seconds": 11.35,
+     "cost_usd": 0.002496,
+     "judge_cost_usd": 0.000994
+    },
+    {
+     "case_id": "DEV-006",
+     "seconds": 14.73,
+     "cost_usd": 0.003095,
+     "judge_cost_usd": 0
+    },
+    {
+     "case_id": "DEV-007",
+     "seconds": 15.29,
+     "cost_usd": 0.003488,
+     "judge_cost_usd": 0
+    },
+    {
+     "case_id": "DEV-008",
+     "seconds": 19.45,
+     "cost_usd": 0.003412,
+     "judge_cost_usd": 0
+    },
+    {
+     "case_id": "DEV-009",
+     "seconds": 14.06,
+     "cost_usd": 0.002684,
+     "judge_cost_usd": 0.001404
+    },
+    {
+     "case_id": "DEV-010",
+     "seconds": 15.41,
+     "cost_usd": 0.002497,
+     "judge_cost_usd": 0.001379
+    },
+    {
+     "case_id": "DEV-011",
+     "seconds": 21.13,
+     "cost_usd": 0.003862,
+     "judge_cost_usd": 0.002385
+    },
+    {
+     "case_id": "DEV-012",
+     "seconds": 16.52,
+     "cost_usd": 0.002747,
+     "judge_cost_usd": 0.001385
+    },
+    {
+     "case_id": "DEV-013",
+     "seconds": 14.73,
+     "cost_usd": 0.002902,
+     "judge_cost_usd": 0
+    },
+    {
+     "case_id": "DEV-014",
+     "seconds": 25.81,
+     "cost_usd": 0.004035,
+     "judge_cost_usd": 0.002718
+    },
+    {
+     "case_id": "DEV-015",
+     "seconds": 12.43,
+     "cost_usd": 0.002439,
+     "judge_cost_usd": 0
+    },
+    {
+     "case_id": "DEV-016",
+     "seconds": 12.08,
+     "cost_usd": 0.002003,
+     "judge_cost_usd": 0
+    },
+    {
+     "case_id": "DEV-017",
+     "seconds": 11.14,
+     "cost_usd": 0.002571,
+     "judge_cost_usd": 0.000855
+    },
+    {
+     "case_id": "DEV-018",
+     "seconds": 20.74,
+     "cost_usd": 0.00198,
+     "judge_cost_usd": 0
+    },
+    {
+     "case_id": "DEV-019",
+     "seconds": 13.05,
+     "cost_usd": 0.002334,
+     "judge_cost_usd": 0
+    },
+    {
+     "case_id": "DEV-020",
+     "seconds": 8.93,
+     "cost_usd": 0.002406,
+     "judge_cost_usd": 0.001077
+    },
+    {
+     "case_id": "DEV-021",
+     "seconds": 10.53,
+     "cost_usd": 0.002196,
+     "judge_cost_usd": 0.0014
+    },
+    {
+     "case_id": "DEV-022",
+     "seconds": 18.99,
+     "cost_usd": 0.00293,
+     "judge_cost_usd": 0.000964
+    },
+    {
+     "case_id": "DEV-023",
+     "seconds": 21.25,
+     "cost_usd": 0.004252,
+     "judge_cost_usd": 0.000869
+    },
+    {
+     "case_id": "DEV-024",
+     "seconds": 8.43,
+     "cost_usd": 0.001959,
+     "judge_cost_usd": 0.00076
+    },
+    {
+     "case_id": "DEV-025",
+     "seconds": 31.63,
+     "cost_usd": 0.004151,
+     "judge_cost_usd": 0
+    },
+    {
+     "case_id": "DEV-026",
+     "seconds": 31.92,
+     "cost_usd": 0.004218,
+     "judge_cost_usd": 0.002858
+    },
+    {
+     "case_id": "DEV-027",
+     "seconds": 20.26,
+     "cost_usd": 0.003062,
+     "judge_cost_usd": 0.001609
+    },
+    {
+     "case_id": "DEV-028",
+     "seconds": 15.85,
+     "cost_usd": 0.002499,
+     "judge_cost_usd": 0.002752
+    },
+    {
+     "case_id": "DEV-029",
+     "seconds": 19.4,
+     "cost_usd": 0.002703,
+     "judge_cost_usd": 0.001739
+    },
+    {
+     "case_id": "DEV-030",
+     "seconds": 17.3,
+     "cost_usd": 0.002785,
+     "judge_cost_usd": 0.002402
+    },
+    {
+     "case_id": "DEV-031",
+     "seconds": 24.49,
+     "cost_usd": 0.00289,
+     "judge_cost_usd": 0.001806
+    },
+    {
+     "case_id": "DEV-032",
+     "seconds": 28.26,
+     "cost_usd": 0.003409,
+     "judge_cost_usd": 0.001628
+    },
+    {
+     "case_id": "DEV-033",
+     "seconds": 14.7,
+     "cost_usd": 0.002376,
+     "judge_cost_usd": 0.001561
+    },
+    {
+     "case_id": "DEV-034",
+     "seconds": 19.52,
+     "cost_usd": 0.002805,
+     "judge_cost_usd": 0.000776
+    },
+    {
+     "case_id": "DEV-101",
+     "seconds": 10.48,
+     "cost_usd": 0.002402,
+     "judge_cost_usd": 0.000732
+    },
+    {
+     "case_id": "DEV-102",
+     "seconds": 11.94,
+     "cost_usd": 0.002551,
+     "judge_cost_usd": 0.000722
+    },
+    {
+     "case_id": "DEV-103",
+     "seconds": 11.32,
+     "cost_usd": 0.00232,
+     "judge_cost_usd": 0.000725
+    },
+    {
+     "case_id": "DEV-104",
+     "seconds": 17.09,
+     "cost_usd": 0.00127,
+     "judge_cost_usd": 0.000732
+    },
+    {
+     "case_id": "DEV-105",
+     "seconds": 11.59,
+     "cost_usd": 0.002587,
+     "judge_cost_usd": 0.000721
+    },
+    {
+     "case_id": "DEV-106",
+     "seconds": 11.71,
+     "cost_usd": 0.002295,
+     "judge_cost_usd": 0.000726
+    },
+    {
+     "case_id": "DEV-107",
+     "seconds": 14.28,
+     "cost_usd": 0.002731,
+     "judge_cost_usd": 0.000726
+    },
+    {
+     "case_id": "DEV-108",
+     "seconds": 12.71,
+     "cost_usd": 0.002178,
+     "judge_cost_usd": 0.000723
+    },
+    {
+     "case_id": "DEV-109",
+     "seconds": 13.83,
+     "cost_usd": 0.002613,
+     "judge_cost_usd": 0.000755
+    },
+    {
+     "case_id": "DEV-110",
+     "seconds": 15.57,
+     "cost_usd": 0.003406,
+     "judge_cost_usd": 0
+    },
+    {
+     "case_id": "DEV-111",
+     "seconds": 14.02,
+     "cost_usd": 0.002765,
+     "judge_cost_usd": 0.000738
+    },
+    {
+     "case_id": "DEV-112",
+     "seconds": 19.26,
+     "cost_usd": 0.003671,
+     "judge_cost_usd": 0
+    },
+    {
+     "case_id": "DEV-113",
+     "seconds": 13.16,
+     "cost_usd": 0.002917,
+     "judge_cost_usd": 0.000723
+    },
+    {
+     "case_id": "DEV-114",
+     "seconds": 19.42,
+     "cost_usd": 0.002085,
+     "judge_cost_usd": 0
+    },
+    {
+     "case_id": "DEV-115",
+     "seconds": 11.8,
+     "cost_usd": 0.002403,
+     "judge_cost_usd": 0.000749
+    },
+    {
+     "case_id": "DEV-116",
+     "seconds": 14.46,
+     "cost_usd": 0.002805,
+     "judge_cost_usd": 0
+    },
+    {
+     "case_id": "DEV-117",
+     "seconds": 14.33,
+     "cost_usd": 0.002948,
+     "judge_cost_usd": 0
+    },
+    {
+     "case_id": "DEV-118",
+     "seconds": 15.31,
+     "cost_usd": 0.003649,
+     "judge_cost_usd": 0
+    },
+    {
+     "case_id": "DEV-119",
+     "seconds": 21.0,
+     "cost_usd": 0.004195,
+     "judge_cost_usd": 0
+    },
+    {
+     "case_id": "DEV-120",
+     "seconds": 19.07,
+     "cost_usd": 0.002189,
+     "judge_cost_usd": 0
+    },
+    {
+     "case_id": "DEV-121",
+     "seconds": 14.48,
+     "cost_usd": 0.003677,
+     "judge_cost_usd": 0
+    },
+    {
+     "case_id": "DEV-122",
+     "seconds": 15.9,
+     "cost_usd": 0.003161,
+     "judge_cost_usd": 0
+    },
+    {
+     "case_id": "DEV-123",
+     "seconds": 16.76,
+     "cost_usd": 0.003443,
+     "judge_cost_usd": 0
+    },
+    {
+     "case_id": "DEV-124",
+     "seconds": 15.68,
+     "cost_usd": 0.003391,
+     "judge_cost_usd": 0
+    },
+    {
+     "case_id": "DEV-125",
+     "seconds": 15.35,
+     "cost_usd": 0.003143,
+     "judge_cost_usd": 0
+    },
+    {
+     "case_id": "DEV-126",
+     "seconds": 16.55,
+     "cost_usd": 0.00343,
+     "judge_cost_usd": 0
+    },
+    {
+     "case_id": "DEV-127",
+     "seconds": 12.21,
+     "cost_usd": 0.002576,
+     "judge_cost_usd": 0
+    },
+    {
+     "case_id": "DEV-128",
+     "seconds": 17.67,
+     "cost_usd": 0.003388,
+     "judge_cost_usd": 0
+    },
+    {
+     "case_id": "DEV-129",
+     "seconds": 16.51,
+     "cost_usd": 0.003259,
+     "judge_cost_usd": 0
+    },
+    {
+     "case_id": "DEV-130",
+     "seconds": 11.7,
+     "cost_usd": 0.003211,
+     "judge_cost_usd": 0
+    },
+    {
+     "case_id": "DEV-131",
+     "seconds": 19.39,
+     "cost_usd": 0.002036,
+     "judge_cost_usd": 0
+    },
+    {
+     "case_id": "DEV-132",
+     "seconds": 13.43,
+     "cost_usd": 0.002575,
+     "judge_cost_usd": 0.001343
+    },
+    {
+     "case_id": "DEV-133",
+     "seconds": 17.25,
+     "cost_usd": 0.003569,
+     "judge_cost_usd": 0
+    },
+    {
+     "case_id": "DEV-134",
+     "seconds": 14.01,
+     "cost_usd": 0.002474,
+     "judge_cost_usd": 0.00133
+    },
+    {
+     "case_id": "DEV-135",
+     "seconds": 31.14,
+     "cost_usd": 0.002839,
+     "judge_cost_usd": 0
+    },
+    {
+     "case_id": "DEV-201",
+     "seconds": 10.52,
+     "cost_usd": 0.00253,
+     "judge_cost_usd": 0.000685
+    },
+    {
+     "case_id": "DEV-202",
+     "seconds": 11.52,
+     "cost_usd": 0.002406,
+     "judge_cost_usd": 0.000908
+    },
+    {
+     "case_id": "DEV-203",
+     "seconds": 10.77,
+     "cost_usd": 0.002027,
+     "judge_cost_usd": 0.000798
+    },
+    {
+     "case_id": "DEV-204",
+     "seconds": 14.38,
+     "cost_usd": 0.002319,
+     "judge_cost_usd": 0.0012
+    },
+    {
+     "case_id": "DEV-205",
+     "seconds": 19.76,
+     "cost_usd": 0.003687,
+     "judge_cost_usd": 0.001022
+    },
+    {
+     "case_id": "DEV-206",
+     "seconds": 14.29,
+     "cost_usd": 0.002562,
+     "judge_cost_usd": 0.000922
+    },
+    {
+     "case_id": "DEV-207",
+     "seconds": 11.38,
+     "cost_usd": 0.001271,
+     "judge_cost_usd": 0.001049
+    },
+    {
+     "case_id": "DEV-208",
+     "seconds": 8.22,
+     "cost_usd": 0.002306,
+     "judge_cost_usd": 0.001029
+    },
+    {
+     "case_id": "DEV-209",
+     "seconds": 21.59,
+     "cost_usd": 0.00359,
+     "judge_cost_usd": 0.000825
+    },
+    {
+     "case_id": "DEV-210",
+     "seconds": 14.06,
+     "cost_usd": 0.002086,
+     "judge_cost_usd": 0.001274
+    },
+    {
+     "case_id": "DEV-211",
+     "seconds": 11.44,
+     "cost_usd": 0.002319,
+     "judge_cost_usd": 0.000779
+    },
+    {
+     "case_id": "DEV-212",
+     "seconds": 19.69,
+     "cost_usd": 0.002593,
+     "judge_cost_usd": 0.001222
+    },
+    {
+     "case_id": "DEV-213",
+     "seconds": 12.73,
+     "cost_usd": 0.002806,
+     "judge_cost_usd": 0.000777
+    },
+    {
+     "case_id": "DEV-214",
+     "seconds": 16.45,
+     "cost_usd": 0.001706,
+     "judge_cost_usd": 0.001344
+    },
+    {
+     "case_id": "DEV-215",
+     "seconds": 11.83,
+     "cost_usd": 0.002644,
+     "judge_cost_usd": 0.000918
+    },
+    {
+     "case_id": "DEV-216",
+     "seconds": 11.87,
+     "cost_usd": 0.001601,
+     "judge_cost_usd": 0.000809
+    },
+    {
+     "case_id": "DEV-217",
+     "seconds": 12.15,
+     "cost_usd": 0.002553,
+     "judge_cost_usd": 0.000819
+    },
+    {
+     "case_id": "DEV-218",
+     "seconds": 8.34,
+     "cost_usd": 0.001193,
+     "judge_cost_usd": 0.00078
+    },
+    {
+     "case_id": "DEV-219",
+     "seconds": 14.03,
+     "cost_usd": 0.002507,
+     "judge_cost_usd": 0.000776
+    },
+    {
+     "case_id": "DEV-220",
+     "seconds": 10.75,
+     "cost_usd": 0.001289,
+     "judge_cost_usd": 0.00069
+    },
+    {
+     "case_id": "DEV-221",
+     "seconds": 18.25,
+     "cost_usd": 0.002779,
+     "judge_cost_usd": 0.001068
+    },
+    {
+     "case_id": "DEV-222",
+     "seconds": 17.03,
+     "cost_usd": 0.0019,
+     "judge_cost_usd": 0.000826
+    },
+    {
+     "case_id": "DEV-223",
+     "seconds": 14.7,
+     "cost_usd": 0.002412,
+     "judge_cost_usd": 0.001169
+    },
+    {
+     "case_id": "DEV-224",
+     "seconds": 8.69,
+     "cost_usd": 0.001148,
+     "judge_cost_usd": 0.00072
+    },
+    {
+     "case_id": "DEV-225",
+     "seconds": 12.52,
+     "cost_usd": 0.002671,
+     "judge_cost_usd": 0.000753
+    },
+    {
+     "case_id": "DEV-226",
+     "seconds": 18.94,
+     "cost_usd": 0.001263,
+     "judge_cost_usd": 0.00099
+    },
+    {
+     "case_id": "DEV-227",
+     "seconds": 13.6,
+     "cost_usd": 0.001412,
+     "judge_cost_usd": 0.000884
+    },
+    {
+     "case_id": "DEV-228",
+     "seconds": 12.84,
+     "cost_usd": 0.002641,
+     "judge_cost_usd": 0.001918
+    },
+    {
+     "case_id": "DEV-229",
+     "seconds": 11.16,
+     "cost_usd": 0.002247,
+     "judge_cost_usd": 0.000733
+    },
+    {
+     "case_id": "DEV-230",
+     "seconds": 10.72,
+     "cost_usd": 0.002145,
+     "judge_cost_usd": 0.000833
+    },
+    {
+     "case_id": "DEV-231",
+     "seconds": 10.65,
+     "cost_usd": 0.001995,
+     "judge_cost_usd": 0.001258
+    },
+    {
+     "case_id": "DEV-232",
+     "seconds": 15.5,
+     "cost_usd": 0.002535,
+     "judge_cost_usd": 0.000782
+    },
+    {
+     "case_id": "DEV-233",
+     "seconds": 14.47,
+     "cost_usd": 0.001365,
+     "judge_cost_usd": 0.00091
+    },
+    {
+     "case_id": "DEV-234",
+     "seconds": 17.79,
+     "cost_usd": 0.001934,
+     "judge_cost_usd": 0.000953
+    },
+    {
+     "case_id": "DEV-235",
+     "seconds": 10.69,
+     "cost_usd": 0.002194,
+     "judge_cost_usd": 0.000894
+    },
+    {
+     "case_id": "DEV-301",
+     "seconds": 15.0,
+     "cost_usd": 0.002432,
+     "judge_cost_usd": 0.001108
+    },
+    {
+     "case_id": "DEV-302",
+     "seconds": 19.48,
+     "cost_usd": 0.003856,
+     "judge_cost_usd": 0.001308
+    },
+    {
+     "case_id": "DEV-303",
+     "seconds": 26.5,
+     "cost_usd": 0.004397,
+     "judge_cost_usd": 0.001765
+    },
+    {
+     "case_id": "DEV-304",
+     "seconds": 25.11,
+     "cost_usd": 0.004112,
+     "judge_cost_usd": 0.002408
+    },
+    {
+     "case_id": "DEV-305",
+     "seconds": 25.46,
+     "cost_usd": 0.004113,
+     "judge_cost_usd": 0.001097
+    },
+    {
+     "case_id": "DEV-306",
+     "seconds": 17.6,
+     "cost_usd": 0.002901,
+     "judge_cost_usd": 0.001555
+    },
+    {
+     "case_id": "DEV-307",
+     "seconds": 23.71,
+     "cost_usd": 0.003319,
+     "judge_cost_usd": 0.001411
+    },
+    {
+     "case_id": "DEV-308",
+     "seconds": 23.55,
+     "cost_usd": 0.002622,
+     "judge_cost_usd": 0.003192
+    },
+    {
+     "case_id": "DEV-309",
+     "seconds": 15.43,
+     "cost_usd": 0.00245,
+     "judge_cost_usd": 0.001156
+    },
+    {
+     "case_id": "DEV-310",
+     "seconds": 20.15,
+     "cost_usd": 0.002879,
+     "judge_cost_usd": 0.005229
+    },
+    {
+     "case_id": "DEV-311",
+     "seconds": 39.0,
+     "cost_usd": 0.004449,
+     "judge_cost_usd": 0.001657
+    },
+    {
+     "case_id": "DEV-312",
+     "seconds": 38.87,
+     "cost_usd": 0.003395,
+     "judge_cost_usd": 0.002263
+    },
+    {
+     "case_id": "DEV-313",
+     "seconds": 32.74,
+     "cost_usd": 0.004194,
+     "judge_cost_usd": 0.001696
+    },
+    {
+     "case_id": "DEV-314",
+     "seconds": 28.52,
+     "cost_usd": 0.00421,
+     "judge_cost_usd": 0.001917
+    },
+    {
+     "case_id": "DEV-315",
+     "seconds": 17.71,
+     "cost_usd": 0.002784,
+     "judge_cost_usd": 0.001764
+    },
+    {
+     "case_id": "DEV-316",
+     "seconds": 26.94,
+     "cost_usd": 0.003897,
+     "judge_cost_usd": 0.001904
+    },
+    {
+     "case_id": "DEV-317",
+     "seconds": 13.88,
+     "cost_usd": 0.002512,
+     "judge_cost_usd": 0.001984
+    },
+    {
+     "case_id": "DEV-318",
+     "seconds": 19.72,
+     "cost_usd": 0.003747,
+     "judge_cost_usd": 0.001767
+    },
+    {
+     "case_id": "DEV-319",
+     "seconds": 21.11,
+     "cost_usd": 0.003046,
+     "judge_cost_usd": 0.001181
+    },
+    {
+     "case_id": "DEV-320",
+     "seconds": 23.41,
+     "cost_usd": 0.004173,
+     "judge_cost_usd": 0.002067
+    },
+    {
+     "case_id": "DEV-321",
+     "seconds": 21.12,
+     "cost_usd": 0.003008,
+     "judge_cost_usd": 0.002534
+    },
+    {
+     "case_id": "DEV-322",
+     "seconds": 17.58,
+     "cost_usd": 0.002787,
+     "judge_cost_usd": 0.002696
+    },
+    {
+     "case_id": "DEV-323",
+     "seconds": 16.84,
+     "cost_usd": 0.002407,
+     "judge_cost_usd": 0.001314
+    },
+    {
+     "case_id": "DEV-324",
+     "seconds": 16.7,
+     "cost_usd": 0.002489,
+     "judge_cost_usd": 0.001762
+    },
+    {
+     "case_id": "DEV-325",
+     "seconds": 18.59,
+     "cost_usd": 0.002485,
+     "judge_cost_usd": 0.002117
+    },
+    {
+     "case_id": "DEV-326",
+     "seconds": 26.69,
+     "cost_usd": 0.003228,
+     "judge_cost_usd": 0
+    },
+    {
+     "case_id": "DEV-327",
+     "seconds": 19.83,
+     "cost_usd": 0.002807,
+     "judge_cost_usd": 0.002464
+    },
+    {
+     "case_id": "DEV-328",
+     "seconds": 26.84,
+     "cost_usd": 0.003385,
+     "judge_cost_usd": 0.001797
+    },
+    {
+     "case_id": "DEV-329",
+     "seconds": 26.19,
+     "cost_usd": 0.003774,
+     "judge_cost_usd": 0.002176
+    },
+    {
+     "case_id": "DEV-330",
+     "seconds": 22.26,
+     "cost_usd": 0.003606,
+     "judge_cost_usd": 0
+    },
+    {
+     "case_id": "DEV-331",
+     "seconds": 27.57,
+     "cost_usd": 0.00311,
+     "judge_cost_usd": 0.001998
+    },
+    {
+     "case_id": "DEV-332",
+     "seconds": 18.13,
+     "cost_usd": 0.002673,
+     "judge_cost_usd": 0.004809
+    },
+    {
+     "case_id": "DEV-333",
+     "seconds": 23.09,
+     "cost_usd": 0.003289,
+     "judge_cost_usd": 0.002856
+    },
+    {
+     "case_id": "DEV-334",
+     "seconds": 28.33,
+     "cost_usd": 0.002112,
+     "judge_cost_usd": 0.002892
+    },
+    {
+     "case_id": "DEV-335",
+     "seconds": 28.89,
+     "cost_usd": 0.003561,
+     "judge_cost_usd": 0.003856
+    },
+    {
+     "case_id": "DEV-401",
+     "seconds": 12.53,
+     "cost_usd": 0.002276,
+     "judge_cost_usd": 0
+    },
+    {
+     "case_id": "DEV-402",
+     "seconds": 11.96,
+     "cost_usd": 0.002227,
+     "judge_cost_usd": 0
+    },
+    {
+     "case_id": "DEV-403",
+     "seconds": 11.86,
+     "cost_usd": 0.002308,
+     "judge_cost_usd": 0.001005
+    },
+    {
+     "case_id": "DEV-404",
+     "seconds": 21.77,
+     "cost_usd": 0.002768,
+     "judge_cost_usd": 0.00101
+    },
+    {
+     "case_id": "DEV-405",
+     "seconds": 12.17,
+     "cost_usd": 0.003127,
+     "judge_cost_usd": 0
+    },
+    {
+     "case_id": "DEV-406",
+     "seconds": 17.84,
+     "cost_usd": 0.001644,
+     "judge_cost_usd": 0
+    },
+    {
+     "case_id": "DEV-407",
+     "seconds": 18.04,
+     "cost_usd": 0.003647,
+     "judge_cost_usd": 0
+    },
+    {
+     "case_id": "DEV-408",
+     "seconds": 15.62,
+     "cost_usd": 0.003081,
+     "judge_cost_usd": 0
+    },
+    {
+     "case_id": "DEV-409",
+     "seconds": 13.31,
+     "cost_usd": 0.002686,
+     "judge_cost_usd": 0.001043
+    },
+    {
+     "case_id": "DEV-410",
+     "seconds": 16.44,
+     "cost_usd": 0.003299,
+     "judge_cost_usd": 0
+    },
+    {
+     "case_id": "DEV-411",
+     "seconds": 12.53,
+     "cost_usd": 0.002853,
+     "judge_cost_usd": 0
+    },
+    {
+     "case_id": "DEV-412",
+     "seconds": 10.55,
+     "cost_usd": 0.002995,
+     "judge_cost_usd": 0
+    },
+    {
+     "case_id": "DEV-413",
+     "seconds": 8.02,
+     "cost_usd": 0.002242,
+     "judge_cost_usd": 0
+    },
+    {
+     "case_id": "DEV-414",
+     "seconds": 15.12,
+     "cost_usd": 0.002608,
+     "judge_cost_usd": 0
+    },
+    {
+     "case_id": "DEV-415",
+     "seconds": 15.01,
+     "cost_usd": 0.002312,
+     "judge_cost_usd": 0
+    },
+    {
+     "case_id": "DEV-416",
+     "seconds": 15.03,
+     "cost_usd": 0.002472,
+     "judge_cost_usd": 0
+    },
+    {
+     "case_id": "DEV-417",
+     "seconds": 10.33,
+     "cost_usd": 0.001991,
+     "judge_cost_usd": 0
+    },
+    {
+     "case_id": "DEV-418",
+     "seconds": 11.98,
+     "cost_usd": 0.002887,
+     "judge_cost_usd": 0
+    },
+    {
+     "case_id": "DEV-419",
+     "seconds": 12.97,
+     "cost_usd": 0.003069,
+     "judge_cost_usd": 0
+    },
+    {
+     "case_id": "DEV-420",
+     "seconds": 13.2,
+     "cost_usd": 0.002996,
+     "judge_cost_usd": 0
+    },
+    {
+     "case_id": "DEV-421",
+     "seconds": 13.54,
+     "cost_usd": 0.002372,
+     "judge_cost_usd": 0
+    },
+    {
+     "case_id": "DEV-422",
+     "seconds": 13.61,
+     "cost_usd": 0.002465,
+     "judge_cost_usd": 0
+    },
+    {
+     "case_id": "DEV-423",
+     "seconds": 11.08,
+     "cost_usd": 0.00186,
+     "judge_cost_usd": 0
+    },
+    {
+     "case_id": "DEV-424",
+     "seconds": 17.15,
+     "cost_usd": 0.002561,
+     "judge_cost_usd": 0.000748
+    },
+    {
+     "case_id": "DEV-425",
+     "seconds": 16.65,
+     "cost_usd": 0.002625,
+     "judge_cost_usd": 0.000791
+    },
+    {
+     "case_id": "DEV-426",
+     "seconds": 23.47,
+     "cost_usd": 0.00273,
+     "judge_cost_usd": 0
+    },
+    {
+     "case_id": "DEV-427",
+     "seconds": 14.79,
+     "cost_usd": 0.002586,
+     "judge_cost_usd": 0
+    },
+    {
+     "case_id": "DEV-428",
+     "seconds": 12.52,
+     "cost_usd": 0.001697,
+     "judge_cost_usd": 0
+    },
+    {
+     "case_id": "DEV-429",
+     "seconds": 23.54,
+     "cost_usd": 0.001695,
+     "judge_cost_usd": 0
+    },
+    {
+     "case_id": "DEV-430",
+     "seconds": 20.63,
+     "cost_usd": 0.002931,
+     "judge_cost_usd": 0.0039
+    },
+    {
+     "case_id": "DEV-431",
+     "seconds": 36.29,
+     "cost_usd": 0.004654,
+     "judge_cost_usd": 0.002492
+    },
+    {
+     "case_id": "DEV-432",
+     "seconds": 24.28,
+     "cost_usd": 0.003027,
+     "judge_cost_usd": 0.002772
+    },
+    {
+     "case_id": "DEV-433",
+     "seconds": 27.31,
+     "cost_usd": 0.001965,
+     "judge_cost_usd": 0.001993
+    },
+    {
+     "case_id": "DEV-434",
+     "seconds": 32.96,
+     "cost_usd": 0.002486,
+     "judge_cost_usd": 0
+    },
+    {
+     "case_id": "DEV-435",
+     "seconds": 25.03,
+     "cost_usd": 0.003356,
+     "judge_cost_usd": 0.005221
+    },
+    {
+     "case_id": "DEV-501",
+     "seconds": 11.12,
+     "cost_usd": 0.002236,
+     "judge_cost_usd": 0.001202
+    },
+    {
+     "case_id": "DEV-502",
+     "seconds": 12.02,
+     "cost_usd": 0.002515,
+     "judge_cost_usd": 0.001103
+    },
+    {
+     "case_id": "DEV-503",
+     "seconds": 12.88,
+     "cost_usd": 0.002407,
+     "judge_cost_usd": 0.00143
+    },
+    {
+     "case_id": "DEV-504",
+     "seconds": 11.21,
+     "cost_usd": 0.002357,
+     "judge_cost_usd": 0.001624
+    },
+    {
+     "case_id": "DEV-505",
+     "seconds": 13.14,
+     "cost_usd": 0.002646,
+     "judge_cost_usd": 0.001246
+    },
+    {
+     "case_id": "DEV-506",
+     "seconds": 12.11,
+     "cost_usd": 0.002505,
+     "judge_cost_usd": 0.002045
+    },
+    {
+     "case_id": "DEV-507",
+     "seconds": 13.69,
+     "cost_usd": 0.002307,
+     "judge_cost_usd": 0.000913
+    },
+    {
+     "case_id": "DEV-508",
+     "seconds": 22.23,
+     "cost_usd": 0.003636,
+     "judge_cost_usd": 0.001311
+    },
+    {
+     "case_id": "DEV-509",
+     "seconds": 11.01,
+     "cost_usd": 0.002442,
+     "judge_cost_usd": 0.000882
+    },
+    {
+     "case_id": "DEV-510",
+     "seconds": 15.27,
+     "cost_usd": 0.002481,
+     "judge_cost_usd": 0.003143
+    },
+    {
+     "case_id": "DEV-511",
+     "seconds": 14.44,
+     "cost_usd": 0.00252,
+     "judge_cost_usd": 0.001555
+    },
+    {
+     "case_id": "DEV-512",
+     "seconds": 14.96,
+     "cost_usd": 0.002546,
+     "judge_cost_usd": 0.001075
+    },
+    {
+     "case_id": "DEV-513",
+     "seconds": 16.16,
+     "cost_usd": 0.002764,
+     "judge_cost_usd": 0.000743
+    },
+    {
+     "case_id": "DEV-514",
+     "seconds": 15.1,
+     "cost_usd": 0.00256,
+     "judge_cost_usd": 0.000846
+    },
+    {
+     "case_id": "DEV-515",
+     "seconds": 14.31,
+     "cost_usd": 0.002638,
+     "judge_cost_usd": 0.000921
+    },
+    {
+     "case_id": "DEV-516",
+     "seconds": 8.28,
+     "cost_usd": 0.001555,
+     "judge_cost_usd": 0
+    },
+    {
+     "case_id": "DEV-517",
+     "seconds": 8.41,
+     "cost_usd": 0.001713,
+     "judge_cost_usd": 0
+    },
+    {
+     "case_id": "DEV-518",
+     "seconds": 5.82,
+     "cost_usd": 0.001501,
+     "judge_cost_usd": 0
+    },
+    {
+     "case_id": "DEV-519",
+     "seconds": 6.83,
+     "cost_usd": 0.001425,
+     "judge_cost_usd": 0
+    },
+    {
+     "case_id": "DEV-520",
+     "seconds": 5.05,
+     "cost_usd": 0.00134,
+     "judge_cost_usd": 0
+    },
+    {
+     "case_id": "DEV-521",
+     "seconds": 7.25,
+     "cost_usd": 0.001474,
+     "judge_cost_usd": 0
+    },
+    {
+     "case_id": "DEV-522",
+     "seconds": 11.16,
+     "cost_usd": 0.002247,
+     "judge_cost_usd": 0
+    },
+    {
+     "case_id": "DEV-523",
+     "seconds": 8.0,
+     "cost_usd": 0.001663,
+     "judge_cost_usd": 0
+    },
+    {
+     "case_id": "DEV-524",
+     "seconds": 16.41,
+     "cost_usd": 0.002535,
+     "judge_cost_usd": 0.001512
+    },
+    {
+     "case_id": "DEV-525",
+     "seconds": 11.56,
+     "cost_usd": 0.002565,
+     "judge_cost_usd": 0.001226
+    },
+    {
+     "case_id": "DEV-526",
+     "seconds": 16.71,
+     "cost_usd": 0.00279,
+     "judge_cost_usd": 0.001524
+    },
+    {
+     "case_id": "DEV-527",
+     "seconds": 13.03,
+     "cost_usd": 0.002525,
+     "judge_cost_usd": 0.001596
+    },
+    {
+     "case_id": "DEV-528",
+     "seconds": 18.46,
+     "cost_usd": 0.002746,
+     "judge_cost_usd": 0.000724
+    },
+    {
+     "case_id": "DEV-529",
+     "seconds": 16.27,
+     "cost_usd": 0.001269,
+     "judge_cost_usd": 0.000815
+    },
+    {
+     "case_id": "DEV-530",
+     "seconds": 17.4,
+     "cost_usd": 0.003045,
+     "judge_cost_usd": 0
+    },
+    {
+     "case_id": "DEV-601",
+     "seconds": 15.14,
+     "cost_usd": 0.002399,
+     "judge_cost_usd": 0
+    },
+    {
+     "case_id": "DEV-602",
+     "seconds": 10.16,
+     "cost_usd": 0.002173,
+     "judge_cost_usd": 0
+    },
+    {
+     "case_id": "DEV-603",
+     "seconds": 16.19,
+     "cost_usd": 0.002493,
+     "judge_cost_usd": 0.001887
+    },
+    {
+     "case_id": "DEV-604",
+     "seconds": 17.54,
+     "cost_usd": 0.001415,
+     "judge_cost_usd": 0.000824
+    },
+    {
+     "case_id": "DEV-605",
+     "seconds": 17.29,
+     "cost_usd": 0.003438,
+     "judge_cost_usd": 0.001007
+    },
+    {
+     "case_id": "DEV-606",
+     "seconds": 10.97,
+     "cost_usd": 0.002387,
+     "judge_cost_usd": 0.00079
+    },
+    {
+     "case_id": "DEV-607",
+     "seconds": 19.11,
+     "cost_usd": 0.002823,
+     "judge_cost_usd": 0.001195
+    },
+    {
+     "case_id": "DEV-608",
+     "seconds": 13.59,
+     "cost_usd": 0.002224,
+     "judge_cost_usd": 0.001462
+    },
+    {
+     "case_id": "DEV-609",
+     "seconds": 12.51,
+     "cost_usd": 0.002343,
+     "judge_cost_usd": 0.000946
+    },
+    {
+     "case_id": "DEV-610",
+     "seconds": 22.05,
+     "cost_usd": 0.00306,
+     "judge_cost_usd": 0.003024
+    },
+    {
+     "case_id": "DEV-611",
+     "seconds": 12.78,
+     "cost_usd": 0.002348,
+     "judge_cost_usd": 0.001035
+    },
+    {
+     "case_id": "DEV-612",
+     "seconds": 13.5,
+     "cost_usd": 0.002216,
+     "judge_cost_usd": 0.001009
+    },
+    {
+     "case_id": "DEV-613",
+     "seconds": 12.62,
+     "cost_usd": 0.001641,
+     "judge_cost_usd": 0.001159
+    },
+    {
+     "case_id": "DEV-614",
+     "seconds": 18.0,
+     "cost_usd": 0.001873,
+     "judge_cost_usd": 0.001078
+    },
+    {
+     "case_id": "DEV-615",
+     "seconds": 19.21,
+     "cost_usd": 0.003398,
+     "judge_cost_usd": 0.000808
+    },
+    {
+     "case_id": "DEV-616",
+     "seconds": 12.87,
+     "cost_usd": 0.00272,
+     "judge_cost_usd": 0.000953
+    },
+    {
+     "case_id": "DEV-617",
+     "seconds": 23.35,
+     "cost_usd": 0.003112,
+     "judge_cost_usd": 0.003267
+    },
+    {
+     "case_id": "DEV-618",
+     "seconds": 22.09,
+     "cost_usd": 0.003349,
+     "judge_cost_usd": 0.002065
+    },
+    {
+     "case_id": "DEV-619",
+     "seconds": 28.46,
+     "cost_usd": 0.003234,
+     "judge_cost_usd": 0.002019
+    },
+    {
+     "case_id": "DEV-620",
+     "seconds": 21.48,
+     "cost_usd": 0.002566,
+     "judge_cost_usd": 0.002124
+    },
+    {
+     "case_id": "DEV-621",
+     "seconds": 24.74,
+     "cost_usd": 0.003362,
+     "judge_cost_usd": 0.002635
+    },
+    {
+     "case_id": "DEV-622",
+     "seconds": 14.76,
+     "cost_usd": 0.002472,
+     "judge_cost_usd": 0
+    },
+    {
+     "case_id": "DEV-623",
+     "seconds": 16.97,
+     "cost_usd": 0.002892,
+     "judge_cost_usd": 0.001341
+    },
+    {
+     "case_id": "DEV-624",
+     "seconds": 17.92,
+     "cost_usd": 0.002853,
+     "judge_cost_usd": 0.000853
+    },
+    {
+     "case_id": "DEV-625",
+     "seconds": 10.67,
+     "cost_usd": 0.00247,
+     "judge_cost_usd": 0.001413
+    },
+    {
+     "case_id": "DEV-626",
+     "seconds": 15.8,
+     "cost_usd": 0.00308,
+     "judge_cost_usd": 0.000749
+    },
+    {
+     "case_id": "DEV-627",
+     "seconds": 11.24,
+     "cost_usd": 0.002178,
+     "judge_cost_usd": 0.000709
+    },
+    {
+     "case_id": "DEV-628",
+     "seconds": 15.04,
+     "cost_usd": 0.002635,
+     "judge_cost_usd": 0.000864
+    },
+    {
+     "case_id": "DEV-631",
+     "seconds": 17.32,
+     "cost_usd": 0.003052,
+     "judge_cost_usd": 0
+    },
+    {
+     "case_id": "DEV-632",
+     "seconds": 15.08,
+     "cost_usd": 0.003199,
+     "judge_cost_usd": 0
+    },
+    {
+     "case_id": "DEV-633",
+     "seconds": 18.23,
+     "cost_usd": 0.003596,
+     "judge_cost_usd": 0
+    },
+    {
+     "case_id": "DEV-634",
+     "seconds": 12.49,
+     "cost_usd": 0.002336,
+     "judge_cost_usd": 0
+    },
+    {
+     "case_id": "DEV-635",
+     "seconds": 9.79,
+     "cost_usd": 0.002467,
+     "judge_cost_usd": 0
+    }
+   ],
+   "by_family": {
+    "adversarial": {
+     "n": 35,
+     "behaviour_accuracy": 0.9428571428571428
+    },
+    "ambiguity_insufficient_causal": {
+     "n": 44,
+     "behaviour_accuracy": 0.7954545454545454
+    },
+    "cross_source_synthesis": {
+     "n": 35,
+     "behaviour_accuracy": 0.9428571428571428
+    },
+    "factual_lookup": {
+     "n": 70,
+     "behaviour_accuracy": 0.9142857142857143
+    },
+    "numerical_comparison": {
+     "n": 34,
+     "behaviour_accuracy": 0.3235294117647059
+    },
+    "revision_conflict": {
+     "n": 19,
+     "behaviour_accuracy": 0.8947368421052632
+    }
+   }
+  },
+  "agent-dev-FIN-r3": {
+   "n": 237,
+   "behaviour_accuracy": 0.8860759493670886,
+   "false_answers": 7,
+   "over_abstentions": 10,
+   "operational_failures": 0,
+   "latency_median_s": 15.06,
+   "latency_p95_s": 35.43,
+   "usage_cost_per_question_usd": 0.002840721518987342,
+   "judge_cost_per_question_usd": 0.00103915611814346,
+   "per_question": [
+    {
+     "case_id": "DEV-001",
+     "seconds": 20.82,
+     "cost_usd": 0.003882,
+     "judge_cost_usd": 0.000864
+    },
+    {
+     "case_id": "DEV-002",
+     "seconds": 22.7,
+     "cost_usd": 0.003082,
+     "judge_cost_usd": 0.000643
+    },
+    {
+     "case_id": "DEV-003",
+     "seconds": 26.76,
+     "cost_usd": 0.005229,
+     "judge_cost_usd": 0.000743
+    },
+    {
+     "case_id": "DEV-004",
+     "seconds": 8.32,
+     "cost_usd": 0.001053,
+     "judge_cost_usd": 0.000858
+    },
+    {
+     "case_id": "DEV-005",
+     "seconds": 8.11,
+     "cost_usd": 0.001026,
+     "judge_cost_usd": 0.00087
+    },
+    {
+     "case_id": "DEV-006",
+     "seconds": 7.74,
+     "cost_usd": 0.001032,
+     "judge_cost_usd": 0.000891
+    },
+    {
+     "case_id": "DEV-007",
+     "seconds": 8.03,
+     "cost_usd": 0.001027,
+     "judge_cost_usd": 0.000839
+    },
+    {
+     "case_id": "DEV-008",
+     "seconds": 16.39,
+     "cost_usd": 0.0015,
+     "judge_cost_usd": 0
+    },
+    {
+     "case_id": "DEV-009",
+     "seconds": 28.59,
+     "cost_usd": 0.004871,
+     "judge_cost_usd": 0.00144
+    },
+    {
+     "case_id": "DEV-010",
+     "seconds": 14.3,
+     "cost_usd": 0.001376,
+     "judge_cost_usd": 0.001675
+    },
+    {
+     "case_id": "DEV-011",
+     "seconds": 20.09,
+     "cost_usd": 0.003839,
+     "judge_cost_usd": 0.001729
+    },
+    {
+     "case_id": "DEV-012",
+     "seconds": 19.04,
+     "cost_usd": 0.003959,
+     "judge_cost_usd": 0.001597
+    },
+    {
+     "case_id": "DEV-013",
+     "seconds": 4.0,
+     "cost_usd": 0.000499,
+     "judge_cost_usd": 0
+    },
+    {
+     "case_id": "DEV-014",
+     "seconds": 34.03,
+     "cost_usd": 0.003936,
+     "judge_cost_usd": 0.002929
+    },
+    {
+     "case_id": "DEV-015",
+     "seconds": 6.19,
+     "cost_usd": 0.000677,
+     "judge_cost_usd": 0
+    },
+    {
+     "case_id": "DEV-016",
+     "seconds": 3.45,
+     "cost_usd": 0.000461,
+     "judge_cost_usd": 0
+    },
+    {
+     "case_id": "DEV-017",
+     "seconds": 16.02,
+     "cost_usd": 0.003187,
+     "judge_cost_usd": 0.000753
+    },
+    {
+     "case_id": "DEV-018",
+     "seconds": 7.36,
+     "cost_usd": 0.000701,
+     "judge_cost_usd": 0
+    },
+    {
+     "case_id": "DEV-019",
+     "seconds": 3.56,
+     "cost_usd": 0.000467,
+     "judge_cost_usd": 0
+    },
+    {
+     "case_id": "DEV-020",
+     "seconds": 18.28,
+     "cost_usd": 0.00413,
+     "judge_cost_usd": 0.001132
+    },
+    {
+     "case_id": "DEV-021",
+     "seconds": 8.23,
+     "cost_usd": 0.001048,
+     "judge_cost_usd": 0.001244
+    },
+    {
+     "case_id": "DEV-022",
+     "seconds": 22.51,
+     "cost_usd": 0.004486,
+     "judge_cost_usd": 0.000953
+    },
+    {
+     "case_id": "DEV-023",
+     "seconds": 27.88,
+     "cost_usd": 0.005498,
+     "judge_cost_usd": 0.000788
+    },
+    {
+     "case_id": "DEV-024",
+     "seconds": 19.5,
+     "cost_usd": 0.004243,
+     "judge_cost_usd": 0.001178
+    },
+    {
+     "case_id": "DEV-025",
+     "seconds": 43.9,
+     "cost_usd": 0.006527,
+     "judge_cost_usd": 0.001943
+    },
+    {
+     "case_id": "DEV-026",
+     "seconds": 36.22,
+     "cost_usd": 0.008717,
+     "judge_cost_usd": 0.002139
+    },
+    {
+     "case_id": "DEV-027",
+     "seconds": 27.33,
+     "cost_usd": 0.004846,
+     "judge_cost_usd": 0.001595
+    },
+    {
+     "case_id": "DEV-028",
+     "seconds": 16.88,
+     "cost_usd": 0.002877,
+     "judge_cost_usd": 0.002278
+    },
+    {
+     "case_id": "DEV-029",
+     "seconds": 20.54,
+     "cost_usd": 0.003987,
+     "judge_cost_usd": 0.001293
+    },
+    {
+     "case_id": "DEV-030",
+     "seconds": 26.75,
+     "cost_usd": 0.005721,
+     "judge_cost_usd": 0.002481
+    },
+    {
+     "case_id": "DEV-031",
+     "seconds": 22.42,
+     "cost_usd": 0.00421,
+     "judge_cost_usd": 0.001788
+    },
+    {
+     "case_id": "DEV-032",
+     "seconds": 32.31,
+     "cost_usd": 0.006518,
+     "judge_cost_usd": 0.001001
+    },
+    {
+     "case_id": "DEV-033",
+     "seconds": 15.51,
+     "cost_usd": 0.003984,
+     "judge_cost_usd": 0.002036
+    },
+    {
+     "case_id": "DEV-034",
+     "seconds": 23.91,
+     "cost_usd": 0.004296,
+     "judge_cost_usd": 0.001052
+    },
+    {
+     "case_id": "DEV-101",
+     "seconds": 7.15,
+     "cost_usd": 0.000875,
+     "judge_cost_usd": 0.000727
+    },
+    {
+     "case_id": "DEV-102",
+     "seconds": 8.72,
+     "cost_usd": 0.000933,
+     "judge_cost_usd": 0.000721
+    },
+    {
+     "case_id": "DEV-103",
+     "seconds": 8.31,
+     "cost_usd": 0.000873,
+     "judge_cost_usd": 0.000719
+    },
+    {
+     "case_id": "DEV-104",
+     "seconds": 6.47,
+     "cost_usd": 0.000882,
+     "judge_cost_usd": 0.000712
+    },
+    {
+     "case_id": "DEV-105",
+     "seconds": 5.8,
+     "cost_usd": 0.000905,
+     "judge_cost_usd": 0.000722
+    },
+    {
+     "case_id": "DEV-106",
+     "seconds": 10.71,
+     "cost_usd": 0.000914,
+     "judge_cost_usd": 0.000723
+    },
+    {
+     "case_id": "DEV-107",
+     "seconds": 6.23,
+     "cost_usd": 0.000921,
+     "judge_cost_usd": 0.000722
+    },
+    {
+     "case_id": "DEV-108",
+     "seconds": 5.67,
+     "cost_usd": 0.000877,
+     "judge_cost_usd": 0.00072
+    },
+    {
+     "case_id": "DEV-109",
+     "seconds": 5.61,
+     "cost_usd": 0.000912,
+     "judge_cost_usd": 0.000743
+    },
+    {
+     "case_id": "DEV-110",
+     "seconds": 6.74,
+     "cost_usd": 0.000927,
+     "judge_cost_usd": 0.000716
+    },
+    {
+     "case_id": "DEV-111",
+     "seconds": 7.56,
+     "cost_usd": 0.000916,
+     "judge_cost_usd": 0.000738
+    },
+    {
+     "case_id": "DEV-112",
+     "seconds": 6.91,
+     "cost_usd": 0.000978,
+     "judge_cost_usd": 0.000746
+    },
+    {
+     "case_id": "DEV-113",
+     "seconds": 6.36,
+     "cost_usd": 0.000915,
+     "judge_cost_usd": 0
+    },
+    {
+     "case_id": "DEV-114",
+     "seconds": 6.94,
+     "cost_usd": 0.000956,
+     "judge_cost_usd": 0.000746
+    },
+    {
+     "case_id": "DEV-115",
+     "seconds": 8.09,
+     "cost_usd": 0.00098,
+     "judge_cost_usd": 0.000871
+    },
+    {
+     "case_id": "DEV-116",
+     "seconds": 7.96,
+     "cost_usd": 0.0011,
+     "judge_cost_usd": 0.001333
+    },
+    {
+     "case_id": "DEV-117",
+     "seconds": 7.34,
+     "cost_usd": 0.000994,
+     "judge_cost_usd": 0.001276
+    },
+    {
+     "case_id": "DEV-118",
+     "seconds": 7.37,
+     "cost_usd": 0.001069,
+     "judge_cost_usd": 0.001135
+    },
+    {
+     "case_id": "DEV-119",
+     "seconds": 17.18,
+     "cost_usd": 0.001556,
+     "judge_cost_usd": 0
+    },
+    {
+     "case_id": "DEV-120",
+     "seconds": 10.13,
+     "cost_usd": 0.00118,
+     "judge_cost_usd": 0.001199
+    },
+    {
+     "case_id": "DEV-121",
+     "seconds": 8.0,
+     "cost_usd": 0.00105,
+     "judge_cost_usd": 0.001168
+    },
+    {
+     "case_id": "DEV-122",
+     "seconds": 8.26,
+     "cost_usd": 0.001127,
+     "judge_cost_usd": 0.001041
+    },
+    {
+     "case_id": "DEV-123",
+     "seconds": 7.97,
+     "cost_usd": 0.001082,
+     "judge_cost_usd": 0.001036
+    },
+    {
+     "case_id": "DEV-124",
+     "seconds": 6.52,
+     "cost_usd": 0.000969,
+     "judge_cost_usd": 0.001092
+    },
+    {
+     "case_id": "DEV-125",
+     "seconds": 15.06,
+     "cost_usd": 0.001543,
+     "judge_cost_usd": 0
+    },
+    {
+     "case_id": "DEV-126",
+     "seconds": 8.6,
+     "cost_usd": 0.00108,
+     "judge_cost_usd": 0
+    },
+    {
+     "case_id": "DEV-127",
+     "seconds": 13.1,
+     "cost_usd": 0.001358,
+     "judge_cost_usd": 0
+    },
+    {
+     "case_id": "DEV-128",
+     "seconds": 6.88,
+     "cost_usd": 0.001103,
+     "judge_cost_usd": 0.001213
+    },
+    {
+     "case_id": "DEV-129",
+     "seconds": 7.89,
+     "cost_usd": 0.001102,
+     "judge_cost_usd": 0.001089
+    },
+    {
+     "case_id": "DEV-130",
+     "seconds": 7.07,
+     "cost_usd": 0.001004,
+     "judge_cost_usd": 0.001112
+    },
+    {
+     "case_id": "DEV-131",
+     "seconds": 7.01,
+     "cost_usd": 0.001041,
+     "judge_cost_usd": 0.001124
+    },
+    {
+     "case_id": "DEV-132",
+     "seconds": 9.58,
+     "cost_usd": 0.001135,
+     "judge_cost_usd": 0.00129
+    },
+    {
+     "case_id": "DEV-133",
+     "seconds": 21.7,
+     "cost_usd": 0.002441,
+     "judge_cost_usd": 0.001426
+    },
+    {
+     "case_id": "DEV-134",
+     "seconds": 28.55,
+     "cost_usd": 0.005249,
+     "judge_cost_usd": 0
+    },
+    {
+     "case_id": "DEV-135",
+     "seconds": 7.61,
+     "cost_usd": 0.001071,
+     "judge_cost_usd": 0.001217
+    },
+    {
+     "case_id": "DEV-201",
+     "seconds": 14.85,
+     "cost_usd": 0.003761,
+     "judge_cost_usd": 0.00069
+    },
+    {
+     "case_id": "DEV-202",
+     "seconds": 15.58,
+     "cost_usd": 0.003943,
+     "judge_cost_usd": 0.000911
+    },
+    {
+     "case_id": "DEV-203",
+     "seconds": 10.21,
+     "cost_usd": 0.001837,
+     "judge_cost_usd": 0.000798
+    },
+    {
+     "case_id": "DEV-204",
+     "seconds": 15.67,
+     "cost_usd": 0.003669,
+     "judge_cost_usd": 0.001264
+    },
+    {
+     "case_id": "DEV-205",
+     "seconds": 20.62,
+     "cost_usd": 0.004994,
+     "judge_cost_usd": 0.001036
+    },
+    {
+     "case_id": "DEV-206",
+     "seconds": 15.46,
+     "cost_usd": 0.004088,
+     "judge_cost_usd": 0.000967
+    },
+    {
+     "case_id": "DEV-207",
+     "seconds": 12.3,
+     "cost_usd": 0.001874,
+     "judge_cost_usd": 0.001036
+    },
+    {
+     "case_id": "DEV-208",
+     "seconds": 11.79,
+     "cost_usd": 0.003971,
+     "judge_cost_usd": 0.001164
+    },
+    {
+     "case_id": "DEV-209",
+     "seconds": 28.89,
+     "cost_usd": 0.004192,
+     "judge_cost_usd": 0.001012
+    },
+    {
+     "case_id": "DEV-210",
+     "seconds": 11.02,
+     "cost_usd": 0.001797,
+     "judge_cost_usd": 0.000775
+    },
+    {
+     "case_id": "DEV-211",
+     "seconds": 17.76,
+     "cost_usd": 0.004212,
+     "judge_cost_usd": 0.000784
+    },
+    {
+     "case_id": "DEV-212",
+     "seconds": 18.88,
+     "cost_usd": 0.002032,
+     "judge_cost_usd": 0.000816
+    },
+    {
+     "case_id": "DEV-213",
+     "seconds": 18.66,
+     "cost_usd": 0.004213,
+     "judge_cost_usd": 0.000775
+    },
+    {
+     "case_id": "DEV-214",
+     "seconds": 19.7,
+     "cost_usd": 0.002366,
+     "judge_cost_usd": 0.000833
+    },
+    {
+     "case_id": "DEV-215",
+     "seconds": 18.58,
+     "cost_usd": 0.00454,
+     "judge_cost_usd": 0.000796
+    },
+    {
+     "case_id": "DEV-216",
+     "seconds": 12.94,
+     "cost_usd": 0.002452,
+     "judge_cost_usd": 0.000801
+    },
+    {
+     "case_id": "DEV-217",
+     "seconds": 24.77,
+     "cost_usd": 0.005385,
+     "judge_cost_usd": 0.000812
+    },
+    {
+     "case_id": "DEV-218",
+     "seconds": 10.18,
+     "cost_usd": 0.001858,
+     "judge_cost_usd": 0.000772
+    },
+    {
+     "case_id": "DEV-219",
+     "seconds": 17.6,
+     "cost_usd": 0.004042,
+     "judge_cost_usd": 0.000837
+    },
+    {
+     "case_id": "DEV-220",
+     "seconds": 16.56,
+     "cost_usd": 0.001999,
+     "judge_cost_usd": 0.000703
+    },
+    {
+     "case_id": "DEV-221",
+     "seconds": 20.65,
+     "cost_usd": 0.004064,
+     "judge_cost_usd": 0.00086
+    },
+    {
+     "case_id": "DEV-222",
+     "seconds": 16.27,
+     "cost_usd": 0.002286,
+     "judge_cost_usd": 0.000817
+    },
+    {
+     "case_id": "DEV-223",
+     "seconds": 18.98,
+     "cost_usd": 0.003764,
+     "judge_cost_usd": 0.001161
+    },
+    {
+     "case_id": "DEV-224",
+     "seconds": 14.52,
+     "cost_usd": 0.001863,
+     "judge_cost_usd": 0.000725
+    },
+    {
+     "case_id": "DEV-225",
+     "seconds": 19.69,
+     "cost_usd": 0.004367,
+     "judge_cost_usd": 0.000755
+    },
+    {
+     "case_id": "DEV-226",
+     "seconds": 14.29,
+     "cost_usd": 0.003972,
+     "judge_cost_usd": 0.00096
+    },
+    {
+     "case_id": "DEV-227",
+     "seconds": 14.87,
+     "cost_usd": 0.001953,
+     "judge_cost_usd": 0.001116
+    },
+    {
+     "case_id": "DEV-228",
+     "seconds": 15.64,
+     "cost_usd": 0.004314,
+     "judge_cost_usd": 0.001103
+    },
+    {
+     "case_id": "DEV-229",
+     "seconds": 23.56,
+     "cost_usd": 0.004056,
+     "judge_cost_usd": 0.000702
+    },
+    {
+     "case_id": "DEV-230",
+     "seconds": 18.08,
+     "cost_usd": 0.003812,
+     "judge_cost_usd": 0.000838
+    },
+    {
+     "case_id": "DEV-231",
+     "seconds": 10.59,
+     "cost_usd": 0.001802,
+     "judge_cost_usd": 0.000855
+    },
+    {
+     "case_id": "DEV-232",
+     "seconds": 19.96,
+     "cost_usd": 0.003959,
+     "judge_cost_usd": 0.000783
+    },
+    {
+     "case_id": "DEV-233",
+     "seconds": 11.68,
+     "cost_usd": 0.001752,
+     "judge_cost_usd": 0.000922
+    },
+    {
+     "case_id": "DEV-234",
+     "seconds": 13.89,
+     "cost_usd": 0.001853,
+     "judge_cost_usd": 0.000913
+    },
+    {
+     "case_id": "DEV-235",
+     "seconds": 16.08,
+     "cost_usd": 0.003616,
+     "judge_cost_usd": 0.000797
+    },
+    {
+     "case_id": "DEV-301",
+     "seconds": 24.6,
+     "cost_usd": 0.004426,
+     "judge_cost_usd": 0.001459
+    },
+    {
+     "case_id": "DEV-302",
+     "seconds": 22.1,
+     "cost_usd": 0.004428,
+     "judge_cost_usd": 0.001312
+    },
+    {
+     "case_id": "DEV-303",
+     "seconds": 34.02,
+     "cost_usd": 0.00616,
+     "judge_cost_usd": 0.002188
+    },
+    {
+     "case_id": "DEV-304",
+     "seconds": 24.95,
+     "cost_usd": 0.005697,
+     "judge_cost_usd": 0.00138
+    },
+    {
+     "case_id": "DEV-305",
+     "seconds": 23.23,
+     "cost_usd": 0.004862,
+     "judge_cost_usd": 0.001409
+    },
+    {
+     "case_id": "DEV-306",
+     "seconds": 27.78,
+     "cost_usd": 0.005853,
+     "judge_cost_usd": 0.00167
+    },
+    {
+     "case_id": "DEV-307",
+     "seconds": 28.08,
+     "cost_usd": 0.005248,
+     "judge_cost_usd": 0.001682
+    },
+    {
+     "case_id": "DEV-308",
+     "seconds": 23.21,
+     "cost_usd": 0.004138,
+     "judge_cost_usd": 0.005204
+    },
+    {
+     "case_id": "DEV-309",
+     "seconds": 19.59,
+     "cost_usd": 0.004029,
+     "judge_cost_usd": 0.001362
+    },
+    {
+     "case_id": "DEV-310",
+     "seconds": 23.84,
+     "cost_usd": 0.004209,
+     "judge_cost_usd": 0.002671
+    },
+    {
+     "case_id": "DEV-311",
+     "seconds": 56.0,
+     "cost_usd": 0.006435,
+     "judge_cost_usd": 0
+    },
+    {
+     "case_id": "DEV-312",
+     "seconds": 34.08,
+     "cost_usd": 0.005048,
+     "judge_cost_usd": 0.001878
+    },
+    {
+     "case_id": "DEV-313",
+     "seconds": 34.98,
+     "cost_usd": 0.005133,
+     "judge_cost_usd": 0.002214
+    },
+    {
+     "case_id": "DEV-314",
+     "seconds": 32.47,
+     "cost_usd": 0.005798,
+     "judge_cost_usd": 0.001344
+    },
+    {
+     "case_id": "DEV-315",
+     "seconds": 25.21,
+     "cost_usd": 0.004579,
+     "judge_cost_usd": 0.002157
+    },
+    {
+     "case_id": "DEV-316",
+     "seconds": 24.66,
+     "cost_usd": 0.004686,
+     "judge_cost_usd": 0.002734
+    },
+    {
+     "case_id": "DEV-317",
+     "seconds": 19.96,
+     "cost_usd": 0.00417,
+     "judge_cost_usd": 0.001717
+    },
+    {
+     "case_id": "DEV-318",
+     "seconds": 23.54,
+     "cost_usd": 0.004516,
+     "judge_cost_usd": 0.001093
+    },
+    {
+     "case_id": "DEV-319",
+     "seconds": 24.8,
+     "cost_usd": 0.004764,
+     "judge_cost_usd": 0.001832
+    },
+    {
+     "case_id": "DEV-320",
+     "seconds": 35.43,
+     "cost_usd": 0.006135,
+     "judge_cost_usd": 0.001777
+    },
+    {
+     "case_id": "DEV-321",
+     "seconds": 31.31,
+     "cost_usd": 0.005112,
+     "judge_cost_usd": 0.002733
+    },
+    {
+     "case_id": "DEV-322",
+     "seconds": 26.52,
+     "cost_usd": 0.004665,
+     "judge_cost_usd": 0.001798
+    },
+    {
+     "case_id": "DEV-323",
+     "seconds": 27.66,
+     "cost_usd": 0.005108,
+     "judge_cost_usd": 0.001638
+    },
+    {
+     "case_id": "DEV-324",
+     "seconds": 28.3,
+     "cost_usd": 0.004706,
+     "judge_cost_usd": 0.002347
+    },
+    {
+     "case_id": "DEV-325",
+     "seconds": 24.39,
+     "cost_usd": 0.004077,
+     "judge_cost_usd": 0.001318
+    },
+    {
+     "case_id": "DEV-326",
+     "seconds": 26.43,
+     "cost_usd": 0.00439,
+     "judge_cost_usd": 0.002074
+    },
+    {
+     "case_id": "DEV-327",
+     "seconds": 28.82,
+     "cost_usd": 0.004976,
+     "judge_cost_usd": 0.003976
+    },
+    {
+     "case_id": "DEV-328",
+     "seconds": 37.71,
+     "cost_usd": 0.006428,
+     "judge_cost_usd": 0.003481
+    },
+    {
+     "case_id": "DEV-329",
+     "seconds": 36.7,
+     "cost_usd": 0.007245,
+     "judge_cost_usd": 0.001344
+    },
+    {
+     "case_id": "DEV-330",
+     "seconds": 50.49,
+     "cost_usd": 0.008227,
+     "judge_cost_usd": 0.001739
+    },
+    {
+     "case_id": "DEV-331",
+     "seconds": 30.94,
+     "cost_usd": 0.006322,
+     "judge_cost_usd": 0.003397
+    },
+    {
+     "case_id": "DEV-332",
+     "seconds": 26.26,
+     "cost_usd": 0.004286,
+     "judge_cost_usd": 0.002124
+    },
+    {
+     "case_id": "DEV-333",
+     "seconds": 33.12,
+     "cost_usd": 0.003741,
+     "judge_cost_usd": 0.002031
+    },
+    {
+     "case_id": "DEV-334",
+     "seconds": 47.02,
+     "cost_usd": 0.005797,
+     "judge_cost_usd": 0.002683
+    },
+    {
+     "case_id": "DEV-335",
+     "seconds": 38.53,
+     "cost_usd": 0.005331,
+     "judge_cost_usd": 0.001847
+    },
+    {
+     "case_id": "DEV-401",
+     "seconds": 5.51,
+     "cost_usd": 0.00062,
+     "judge_cost_usd": 0
+    },
+    {
+     "case_id": "DEV-402",
+     "seconds": 6.1,
+     "cost_usd": 0.000657,
+     "judge_cost_usd": 0
+    },
+    {
+     "case_id": "DEV-403",
+     "seconds": 6.26,
+     "cost_usd": 0.000619,
+     "judge_cost_usd": 0
+    },
+    {
+     "case_id": "DEV-404",
+     "seconds": 15.23,
+     "cost_usd": 0.001461,
+     "judge_cost_usd": 0
+    },
+    {
+     "case_id": "DEV-405",
+     "seconds": 7.64,
+     "cost_usd": 0.000713,
+     "judge_cost_usd": 0
+    },
+    {
+     "case_id": "DEV-406",
+     "seconds": 6.37,
+     "cost_usd": 0.000684,
+     "judge_cost_usd": 0
+    },
+    {
+     "case_id": "DEV-407",
+     "seconds": 4.49,
+     "cost_usd": 0.00051,
+     "judge_cost_usd": 0
+    },
+    {
+     "case_id": "DEV-408",
+     "seconds": 6.14,
+     "cost_usd": 0.000638,
+     "judge_cost_usd": 0
+    },
+    {
+     "case_id": "DEV-409",
+     "seconds": 14.48,
+     "cost_usd": 0.002956,
+     "judge_cost_usd": 0.001383
+    },
+    {
+     "case_id": "DEV-410",
+     "seconds": 12.34,
+     "cost_usd": 0.001262,
+     "judge_cost_usd": 0
+    },
+    {
+     "case_id": "DEV-411",
+     "seconds": 6.53,
+     "cost_usd": 0.000648,
+     "judge_cost_usd": 0
+    },
+    {
+     "case_id": "DEV-412",
+     "seconds": 4.55,
+     "cost_usd": 0.000521,
+     "judge_cost_usd": 0
+    },
+    {
+     "case_id": "DEV-413",
+     "seconds": 6.11,
+     "cost_usd": 0.000675,
+     "judge_cost_usd": 0
+    },
+    {
+     "case_id": "DEV-414",
+     "seconds": 6.15,
+     "cost_usd": 0.000659,
+     "judge_cost_usd": 0
+    },
+    {
+     "case_id": "DEV-415",
+     "seconds": 15.56,
+     "cost_usd": 0.004294,
+     "judge_cost_usd": 0
+    },
+    {
+     "case_id": "DEV-416",
+     "seconds": 22.98,
+     "cost_usd": 0.003915,
+     "judge_cost_usd": 0
+    },
+    {
+     "case_id": "DEV-417",
+     "seconds": 6.08,
+     "cost_usd": 0.000646,
+     "judge_cost_usd": 0
+    },
+    {
+     "case_id": "DEV-418",
+     "seconds": 4.29,
+     "cost_usd": 0.000495,
+     "judge_cost_usd": 0
+    },
+    {
+     "case_id": "DEV-419",
+     "seconds": 25.07,
+     "cost_usd": 0.004868,
+     "judge_cost_usd": 0
+    },
+    {
+     "case_id": "DEV-420",
+     "seconds": 5.38,
+     "cost_usd": 0.000631,
+     "judge_cost_usd": 0
+    },
+    {
+     "case_id": "DEV-421",
+     "seconds": 4.05,
+     "cost_usd": 0.000476,
+     "judge_cost_usd": 0
+    },
+    {
+     "case_id": "DEV-422",
+     "seconds": 3.52,
+     "cost_usd": 0.000461,
+     "judge_cost_usd": 0
+    },
+    {
+     "case_id": "DEV-423",
+     "seconds": 4.08,
+     "cost_usd": 0.000477,
+     "judge_cost_usd": 0
+    },
+    {
+     "case_id": "DEV-424",
+     "seconds": 4.28,
+     "cost_usd": 0.000499,
+     "judge_cost_usd": 0
+    },
+    {
+     "case_id": "DEV-425",
+     "seconds": 33.15,
+     "cost_usd": 0.006252,
+     "judge_cost_usd": 0.001498
+    },
+    {
+     "case_id": "DEV-426",
+     "seconds": 26.98,
+     "cost_usd": 0.003399,
+     "judge_cost_usd": 0.002294
+    },
+    {
+     "case_id": "DEV-427",
+     "seconds": 3.89,
+     "cost_usd": 0.000482,
+     "judge_cost_usd": 0
+    },
+    {
+     "case_id": "DEV-428",
+     "seconds": 3.49,
+     "cost_usd": 0.000474,
+     "judge_cost_usd": 0
+    },
+    {
+     "case_id": "DEV-429",
+     "seconds": 30.74,
+     "cost_usd": 0.003906,
+     "judge_cost_usd": 0.001573
+    },
+    {
+     "case_id": "DEV-430",
+     "seconds": 32.66,
+     "cost_usd": 0.005091,
+     "judge_cost_usd": 0.002738
+    },
+    {
+     "case_id": "DEV-431",
+     "seconds": 31.68,
+     "cost_usd": 0.005017,
+     "judge_cost_usd": 0.003206
+    },
+    {
+     "case_id": "DEV-432",
+     "seconds": 24.26,
+     "cost_usd": 0.004633,
+     "judge_cost_usd": 0.005581
+    },
+    {
+     "case_id": "DEV-433",
+     "seconds": 13.56,
+     "cost_usd": 0.001605,
+     "judge_cost_usd": 0.00166
+    },
+    {
+     "case_id": "DEV-434",
+     "seconds": 11.75,
+     "cost_usd": 0.001294,
+     "judge_cost_usd": 0.001384
+    },
+    {
+     "case_id": "DEV-435",
+     "seconds": 39.41,
+     "cost_usd": 0.004991,
+     "judge_cost_usd": 0.004143
+    },
+    {
+     "case_id": "DEV-501",
+     "seconds": 3.88,
+     "cost_usd": 0.000521,
+     "judge_cost_usd": 0
+    },
+    {
+     "case_id": "DEV-502",
+     "seconds": 6.48,
+     "cost_usd": 0.000929,
+     "judge_cost_usd": 0.001038
+    },
+    {
+     "case_id": "DEV-503",
+     "seconds": 6.45,
+     "cost_usd": 0.00091,
+     "judge_cost_usd": 0.000828
+    },
+    {
+     "case_id": "DEV-504",
+     "seconds": 8.95,
+     "cost_usd": 0.001089,
+     "judge_cost_usd": 0.001125
+    },
+    {
+     "case_id": "DEV-505",
+     "seconds": 7.25,
+     "cost_usd": 0.000975,
+     "judge_cost_usd": 0.00072
+    },
+    {
+     "case_id": "DEV-506",
+     "seconds": 9.53,
+     "cost_usd": 0.001057,
+     "judge_cost_usd": 0.001113
+    },
+    {
+     "case_id": "DEV-507",
+     "seconds": 6.39,
+     "cost_usd": 0.000957,
+     "judge_cost_usd": 0.000913
+    },
+    {
+     "case_id": "DEV-508",
+     "seconds": 8.61,
+     "cost_usd": 0.00093,
+     "judge_cost_usd": 0.001417
+    },
+    {
+     "case_id": "DEV-509",
+     "seconds": 9.32,
+     "cost_usd": 0.001078,
+     "judge_cost_usd": 0.000897
+    },
+    {
+     "case_id": "DEV-510",
+     "seconds": 7.85,
+     "cost_usd": 0.000972,
+     "judge_cost_usd": 0.001733
+    },
+    {
+     "case_id": "DEV-511",
+     "seconds": 8.48,
+     "cost_usd": 0.000999,
+     "judge_cost_usd": 0.000762
+    },
+    {
+     "case_id": "DEV-512",
+     "seconds": 6.24,
+     "cost_usd": 0.000926,
+     "judge_cost_usd": 0.002287
+    },
+    {
+     "case_id": "DEV-513",
+     "seconds": 7.95,
+     "cost_usd": 0.000986,
+     "judge_cost_usd": 0.000738
+    },
+    {
+     "case_id": "DEV-514",
+     "seconds": 5.52,
+     "cost_usd": 0.000892,
+     "judge_cost_usd": 0.000906
+    },
+    {
+     "case_id": "DEV-515",
+     "seconds": 6.38,
+     "cost_usd": 0.00091,
+     "judge_cost_usd": 0.001051
+    },
+    {
+     "case_id": "DEV-516",
+     "seconds": 3.75,
+     "cost_usd": 0.000473,
+     "judge_cost_usd": 0
+    },
+    {
+     "case_id": "DEV-517",
+     "seconds": 3.73,
+     "cost_usd": 0.000467,
+     "judge_cost_usd": 0
+    },
+    {
+     "case_id": "DEV-518",
+     "seconds": 3.92,
+     "cost_usd": 0.000469,
+     "judge_cost_usd": 0
+    },
+    {
+     "case_id": "DEV-519",
+     "seconds": 3.57,
+     "cost_usd": 0.000481,
+     "judge_cost_usd": 0
+    },
+    {
+     "case_id": "DEV-520",
+     "seconds": 3.92,
+     "cost_usd": 0.000473,
+     "judge_cost_usd": 0
+    },
+    {
+     "case_id": "DEV-521",
+     "seconds": 3.57,
+     "cost_usd": 0.000465,
+     "judge_cost_usd": 0
+    },
+    {
+     "case_id": "DEV-522",
+     "seconds": 4.54,
+     "cost_usd": 0.000536,
+     "judge_cost_usd": 0
+    },
+    {
+     "case_id": "DEV-523",
+     "seconds": 3.81,
+     "cost_usd": 0.000474,
+     "judge_cost_usd": 0
+    },
+    {
+     "case_id": "DEV-524",
+     "seconds": 7.79,
+     "cost_usd": 0.001017,
+     "judge_cost_usd": 0.000814
+    },
+    {
+     "case_id": "DEV-525",
+     "seconds": 21.78,
+     "cost_usd": 0.004437,
+     "judge_cost_usd": 0.00082
+    },
+    {
+     "case_id": "DEV-526",
+     "seconds": 18.51,
+     "cost_usd": 0.003746,
+     "judge_cost_usd": 0.001665
+    },
+    {
+     "case_id": "DEV-527",
+     "seconds": 8.59,
+     "cost_usd": 0.001036,
+     "judge_cost_usd": 0.000962
+    },
+    {
+     "case_id": "DEV-528",
+     "seconds": 7.21,
+     "cost_usd": 0.000977,
+     "judge_cost_usd": 0.000733
+    },
+    {
+     "case_id": "DEV-529",
+     "seconds": 7.41,
+     "cost_usd": 0.000995,
+     "judge_cost_usd": 0.000805
+    },
+    {
+     "case_id": "DEV-530",
+     "seconds": 9.7,
+     "cost_usd": 0.001015,
+     "judge_cost_usd": 0
+    },
+    {
+     "case_id": "DEV-601",
+     "seconds": 4.44,
+     "cost_usd": 0.000528,
+     "judge_cost_usd": 0
+    },
+    {
+     "case_id": "DEV-602",
+     "seconds": 3.98,
+     "cost_usd": 0.000503,
+     "judge_cost_usd": 0
+    },
+    {
+     "case_id": "DEV-603",
+     "seconds": 4.28,
+     "cost_usd": 0.000543,
+     "judge_cost_usd": 0
+    },
+    {
+     "case_id": "DEV-604",
+     "seconds": 6.02,
+     "cost_usd": 0.000654,
+     "judge_cost_usd": 0
+    },
+    {
+     "case_id": "DEV-605",
+     "seconds": 17.41,
+     "cost_usd": 0.004096,
+     "judge_cost_usd": 0.000993
+    },
+    {
+     "case_id": "DEV-606",
+     "seconds": 16.74,
+     "cost_usd": 0.004204,
+     "judge_cost_usd": 0.000787
+    },
+    {
+     "case_id": "DEV-607",
+     "seconds": 12.71,
+     "cost_usd": 0.002946,
+     "judge_cost_usd": 0.001711
+    },
+    {
+     "case_id": "DEV-608",
+     "seconds": 24.39,
+     "cost_usd": 0.003989,
+     "judge_cost_usd": 0.001441
+    },
+    {
+     "case_id": "DEV-609",
+     "seconds": 16.42,
+     "cost_usd": 0.003856,
+     "judge_cost_usd": 0.000953
+    },
+    {
+     "case_id": "DEV-610",
+     "seconds": 18.63,
+     "cost_usd": 0.004512,
+     "judge_cost_usd": 0.001325
+    },
+    {
+     "case_id": "DEV-611",
+     "seconds": 12.6,
+     "cost_usd": 0.003801,
+     "judge_cost_usd": 0.00103
+    },
+    {
+     "case_id": "DEV-612",
+     "seconds": 14.09,
+     "cost_usd": 0.00357,
+     "judge_cost_usd": 0.000735
+    },
+    {
+     "case_id": "DEV-613",
+     "seconds": 16.74,
+     "cost_usd": 0.002752,
+     "judge_cost_usd": 0.00107
+    },
+    {
+     "case_id": "DEV-614",
+     "seconds": 17.56,
+     "cost_usd": 0.002965,
+     "judge_cost_usd": 0.001161
+    },
+    {
+     "case_id": "DEV-615",
+     "seconds": 22.75,
+     "cost_usd": 0.004825,
+     "judge_cost_usd": 0.000813
+    },
+    {
+     "case_id": "DEV-616",
+     "seconds": 19.66,
+     "cost_usd": 0.004695,
+     "judge_cost_usd": 0.000946
+    },
+    {
+     "case_id": "DEV-617",
+     "seconds": 38.51,
+     "cost_usd": 0.006492,
+     "judge_cost_usd": 0.00261
+    },
+    {
+     "case_id": "DEV-618",
+     "seconds": 26.55,
+     "cost_usd": 0.006575,
+     "judge_cost_usd": 0.001011
+    },
+    {
+     "case_id": "DEV-619",
+     "seconds": 33.58,
+     "cost_usd": 0.006185,
+     "judge_cost_usd": 0.002306
+    },
+    {
+     "case_id": "DEV-620",
+     "seconds": 23.26,
+     "cost_usd": 0.004246,
+     "judge_cost_usd": 0.002313
+    },
+    {
+     "case_id": "DEV-621",
+     "seconds": 41.21,
+     "cost_usd": 0.008139,
+     "judge_cost_usd": 0.002776
+    },
+    {
+     "case_id": "DEV-622",
+     "seconds": 4.6,
+     "cost_usd": 0.000558,
+     "judge_cost_usd": 0
+    },
+    {
+     "case_id": "DEV-623",
+     "seconds": 35.0,
+     "cost_usd": 0.00747,
+     "judge_cost_usd": 0.00134
+    },
+    {
+     "case_id": "DEV-624",
+     "seconds": 23.56,
+     "cost_usd": 0.005242,
+     "judge_cost_usd": 0.000726
+    },
+    {
+     "case_id": "DEV-625",
+     "seconds": 21.48,
+     "cost_usd": 0.0061,
+     "judge_cost_usd": 0.001391
+    },
+    {
+     "case_id": "DEV-626",
+     "seconds": 11.12,
+     "cost_usd": 0.002721,
+     "judge_cost_usd": 0.000952
+    },
+    {
+     "case_id": "DEV-627",
+     "seconds": 17.51,
+     "cost_usd": 0.004027,
+     "judge_cost_usd": 0.000733
+    },
+    {
+     "case_id": "DEV-628",
+     "seconds": 17.35,
+     "cost_usd": 0.004111,
+     "judge_cost_usd": 0.001059
+    },
+    {
+     "case_id": "DEV-631",
+     "seconds": 27.93,
+     "cost_usd": 0.005629,
+     "judge_cost_usd": 0
+    },
+    {
+     "case_id": "DEV-632",
+     "seconds": 16.4,
+     "cost_usd": 0.003947,
+     "judge_cost_usd": 0
+    },
+    {
+     "case_id": "DEV-633",
+     "seconds": 7.3,
+     "cost_usd": 0.000675,
+     "judge_cost_usd": 0
+    },
+    {
+     "case_id": "DEV-634",
+     "seconds": 24.82,
+     "cost_usd": 0.004204,
+     "judge_cost_usd": 0
+    },
+    {
+     "case_id": "DEV-635",
+     "seconds": 3.61,
+     "cost_usd": 0.000477,
+     "judge_cost_usd": 0
+    }
+   ],
+   "by_family": {
+    "adversarial": {
+     "n": 35,
+     "behaviour_accuracy": 0.8857142857142857
+    },
+    "ambiguity_insufficient_causal": {
+     "n": 44,
+     "behaviour_accuracy": 0.7272727272727273
+    },
+    "cross_source_synthesis": {
+     "n": 35,
+     "behaviour_accuracy": 0.9428571428571428
+    },
+    "factual_lookup": {
+     "n": 70,
+     "behaviour_accuracy": 0.9714285714285714
+    },
+    "numerical_comparison": {
+     "n": 34,
+     "behaviour_accuracy": 0.7941176470588235
+    },
+    "revision_conflict": {
+     "n": 19,
+     "behaviour_accuracy": 1
+    }
+   }
+  },
+  "agent-dev-FIN2-r3": {
+   "n": 237,
+   "behaviour_accuracy": 0.9071729957805907,
+   "false_answers": 7,
+   "over_abstentions": 5,
+   "operational_failures": 0,
+   "latency_median_s": 13.64,
+   "latency_p95_s": 34.11,
+   "usage_cost_per_question_usd": 0.002851932489451477,
+   "judge_cost_per_question_usd": 0.001082324894514768,
+   "per_question": [
+    {
+     "case_id": "DEV-001",
+     "seconds": 15.12,
+     "cost_usd": 0.002868,
+     "judge_cost_usd": 0.000714
+    },
+    {
+     "case_id": "DEV-002",
+     "seconds": 13.16,
+     "cost_usd": 0.002616,
+     "judge_cost_usd": 0.000639
+    },
+    {
+     "case_id": "DEV-003",
+     "seconds": 20.6,
+     "cost_usd": 0.004737,
+     "judge_cost_usd": 0.000752
+    },
+    {
+     "case_id": "DEV-004",
+     "seconds": 8.31,
+     "cost_usd": 0.001022,
+     "judge_cost_usd": 0.001099
+    },
+    {
+     "case_id": "DEV-005",
+     "seconds": 7.87,
+     "cost_usd": 0.001055,
+     "judge_cost_usd": 0.000955
+    },
+    {
+     "case_id": "DEV-006",
+     "seconds": 9.22,
+     "cost_usd": 0.001102,
+     "judge_cost_usd": 0.000898
+    },
+    {
+     "case_id": "DEV-007",
+     "seconds": 8.06,
+     "cost_usd": 0.001002,
+     "judge_cost_usd": 0.000843
+    },
+    {
+     "case_id": "DEV-008",
+     "seconds": 16.3,
+     "cost_usd": 0.003354,
+     "judge_cost_usd": 0.000911
+    },
+    {
+     "case_id": "DEV-009",
+     "seconds": 21.24,
+     "cost_usd": 0.004657,
+     "judge_cost_usd": 0.00151
+    },
+    {
+     "case_id": "DEV-010",
+     "seconds": 11.83,
+     "cost_usd": 0.001271,
+     "judge_cost_usd": 0.001657
+    },
+    {
+     "case_id": "DEV-011",
+     "seconds": 18.85,
+     "cost_usd": 0.003954,
+     "judge_cost_usd": 0.001607
+    },
+    {
+     "case_id": "DEV-012",
+     "seconds": 18.23,
+     "cost_usd": 0.005036,
+     "judge_cost_usd": 0.001333
+    },
+    {
+     "case_id": "DEV-013",
+     "seconds": 5.79,
+     "cost_usd": 0.000635,
+     "judge_cost_usd": 0
+    },
+    {
+     "case_id": "DEV-014",
+     "seconds": 43.32,
+     "cost_usd": 0.007626,
+     "judge_cost_usd": 0.002497
+    },
+    {
+     "case_id": "DEV-015",
+     "seconds": 6.14,
+     "cost_usd": 0.000665,
+     "judge_cost_usd": 0
+    },
+    {
+     "case_id": "DEV-016",
+     "seconds": 3.96,
+     "cost_usd": 0.000469,
+     "judge_cost_usd": 0
+    },
+    {
+     "case_id": "DEV-017",
+     "seconds": 12.63,
+     "cost_usd": 0.003112,
+     "judge_cost_usd": 0.00072
+    },
+    {
+     "case_id": "DEV-018",
+     "seconds": 5.96,
+     "cost_usd": 0.000571,
+     "judge_cost_usd": 0
+    },
+    {
+     "case_id": "DEV-019",
+     "seconds": 3.5,
+     "cost_usd": 0.000463,
+     "judge_cost_usd": 0
+    },
+    {
+     "case_id": "DEV-020",
+     "seconds": 16.65,
+     "cost_usd": 0.004231,
+     "judge_cost_usd": 0.001027
+    },
+    {
+     "case_id": "DEV-021",
+     "seconds": 8.78,
+     "cost_usd": 0.001087,
+     "judge_cost_usd": 0.000995
+    },
+    {
+     "case_id": "DEV-022",
+     "seconds": 25.56,
+     "cost_usd": 0.005275,
+     "judge_cost_usd": 0.001144
+    },
+    {
+     "case_id": "DEV-023",
+     "seconds": 25.46,
+     "cost_usd": 0.005525,
+     "judge_cost_usd": 0.000789
+    },
+    {
+     "case_id": "DEV-024",
+     "seconds": 15.56,
+     "cost_usd": 0.003524,
+     "judge_cost_usd": 0.000748
+    },
+    {
+     "case_id": "DEV-025",
+     "seconds": 36.55,
+     "cost_usd": 0.0062,
+     "judge_cost_usd": 0.002028
+    },
+    {
+     "case_id": "DEV-026",
+     "seconds": 32.94,
+     "cost_usd": 0.006914,
+     "judge_cost_usd": 0.00269
+    },
+    {
+     "case_id": "DEV-027",
+     "seconds": 24.8,
+     "cost_usd": 0.004815,
+     "judge_cost_usd": 0.00199
+    },
+    {
+     "case_id": "DEV-028",
+     "seconds": 20.48,
+     "cost_usd": 0.004047,
+     "judge_cost_usd": 0.003228
+    },
+    {
+     "case_id": "DEV-029",
+     "seconds": 19.21,
+     "cost_usd": 0.004905,
+     "judge_cost_usd": 0.001417
+    },
+    {
+     "case_id": "DEV-030",
+     "seconds": 28.2,
+     "cost_usd": 0.006139,
+     "judge_cost_usd": 0.001921
+    },
+    {
+     "case_id": "DEV-031",
+     "seconds": 25.24,
+     "cost_usd": 0.004464,
+     "judge_cost_usd": 0.001917
+    },
+    {
+     "case_id": "DEV-032",
+     "seconds": 27.47,
+     "cost_usd": 0.006124,
+     "judge_cost_usd": 0.001002
+    },
+    {
+     "case_id": "DEV-033",
+     "seconds": 17.86,
+     "cost_usd": 0.00394,
+     "judge_cost_usd": 0.001762
+    },
+    {
+     "case_id": "DEV-034",
+     "seconds": 6.98,
+     "cost_usd": 0.000711,
+     "judge_cost_usd": 0
+    },
+    {
+     "case_id": "DEV-101",
+     "seconds": 6.92,
+     "cost_usd": 0.000919,
+     "judge_cost_usd": 0.000732
+    },
+    {
+     "case_id": "DEV-102",
+     "seconds": 7.16,
+     "cost_usd": 0.000927,
+     "judge_cost_usd": 0.000714
+    },
+    {
+     "case_id": "DEV-103",
+     "seconds": 6.28,
+     "cost_usd": 0.000896,
+     "judge_cost_usd": 0.000721
+    },
+    {
+     "case_id": "DEV-104",
+     "seconds": 7.05,
+     "cost_usd": 0.000925,
+     "judge_cost_usd": 0.000698
+    },
+    {
+     "case_id": "DEV-105",
+     "seconds": 6.08,
+     "cost_usd": 0.000883,
+     "judge_cost_usd": 0.000725
+    },
+    {
+     "case_id": "DEV-106",
+     "seconds": 6.08,
+     "cost_usd": 0.00091,
+     "judge_cost_usd": 0.00072
+    },
+    {
+     "case_id": "DEV-107",
+     "seconds": 6.95,
+     "cost_usd": 0.000944,
+     "judge_cost_usd": 0.000719
+    },
+    {
+     "case_id": "DEV-108",
+     "seconds": 5.92,
+     "cost_usd": 0.00088,
+     "judge_cost_usd": 0.000721
+    },
+    {
+     "case_id": "DEV-109",
+     "seconds": 8.08,
+     "cost_usd": 0.000957,
+     "judge_cost_usd": 0.00076
+    },
+    {
+     "case_id": "DEV-110",
+     "seconds": 6.9,
+     "cost_usd": 0.000921,
+     "judge_cost_usd": 0.000716
+    },
+    {
+     "case_id": "DEV-111",
+     "seconds": 6.39,
+     "cost_usd": 0.000892,
+     "judge_cost_usd": 0.000738
+    },
+    {
+     "case_id": "DEV-112",
+     "seconds": 7.75,
+     "cost_usd": 0.000991,
+     "judge_cost_usd": 0.000749
+    },
+    {
+     "case_id": "DEV-113",
+     "seconds": 8.54,
+     "cost_usd": 0.001076,
+     "judge_cost_usd": 0
+    },
+    {
+     "case_id": "DEV-114",
+     "seconds": 7.08,
+     "cost_usd": 0.000985,
+     "judge_cost_usd": 0.00074
+    },
+    {
+     "case_id": "DEV-115",
+     "seconds": 7.47,
+     "cost_usd": 0.000969,
+     "judge_cost_usd": 0.000737
+    },
+    {
+     "case_id": "DEV-116",
+     "seconds": 7.7,
+     "cost_usd": 0.001074,
+     "judge_cost_usd": 0.001168
+    },
+    {
+     "case_id": "DEV-117",
+     "seconds": 7.05,
+     "cost_usd": 0.000988,
+     "judge_cost_usd": 0.000997
+    },
+    {
+     "case_id": "DEV-118",
+     "seconds": 8.06,
+     "cost_usd": 0.001092,
+     "judge_cost_usd": 0.001389
+    },
+    {
+     "case_id": "DEV-119",
+     "seconds": 20.49,
+     "cost_usd": 0.003692,
+     "judge_cost_usd": 0.001204
+    },
+    {
+     "case_id": "DEV-120",
+     "seconds": 7.01,
+     "cost_usd": 0.001048,
+     "judge_cost_usd": 0.001272
+    },
+    {
+     "case_id": "DEV-121",
+     "seconds": 7.12,
+     "cost_usd": 0.001025,
+     "judge_cost_usd": 0.00105
+    },
+    {
+     "case_id": "DEV-122",
+     "seconds": 7.24,
+     "cost_usd": 0.001038,
+     "judge_cost_usd": 0.001081
+    },
+    {
+     "case_id": "DEV-123",
+     "seconds": 7.61,
+     "cost_usd": 0.001071,
+     "judge_cost_usd": 0.001041
+    },
+    {
+     "case_id": "DEV-124",
+     "seconds": 7.84,
+     "cost_usd": 0.001047,
+     "judge_cost_usd": 0.001164
+    },
+    {
+     "case_id": "DEV-125",
+     "seconds": 7.3,
+     "cost_usd": 0.001061,
+     "judge_cost_usd": 0.001295
+    },
+    {
+     "case_id": "DEV-126",
+     "seconds": 8.64,
+     "cost_usd": 0.001097,
+     "judge_cost_usd": 0
+    },
+    {
+     "case_id": "DEV-127",
+     "seconds": 12.16,
+     "cost_usd": 0.001281,
+     "judge_cost_usd": 0
+    },
+    {
+     "case_id": "DEV-128",
+     "seconds": 7.39,
+     "cost_usd": 0.001074,
+     "judge_cost_usd": 0.001139
+    },
+    {
+     "case_id": "DEV-129",
+     "seconds": 8.64,
+     "cost_usd": 0.001159,
+     "judge_cost_usd": 0.001241
+    },
+    {
+     "case_id": "DEV-130",
+     "seconds": 9.26,
+     "cost_usd": 0.0011,
+     "judge_cost_usd": 0.001036
+    },
+    {
+     "case_id": "DEV-131",
+     "seconds": 7.5,
+     "cost_usd": 0.001037,
+     "judge_cost_usd": 0.001171
+    },
+    {
+     "case_id": "DEV-132",
+     "seconds": 8.08,
+     "cost_usd": 0.001033,
+     "judge_cost_usd": 0.001269
+    },
+    {
+     "case_id": "DEV-133",
+     "seconds": 15.87,
+     "cost_usd": 0.001698,
+     "judge_cost_usd": 0.001417
+    },
+    {
+     "case_id": "DEV-134",
+     "seconds": 7.62,
+     "cost_usd": 0.00105,
+     "judge_cost_usd": 0.00132
+    },
+    {
+     "case_id": "DEV-135",
+     "seconds": 7.91,
+     "cost_usd": 0.00112,
+     "judge_cost_usd": 0.00123
+    },
+    {
+     "case_id": "DEV-201",
+     "seconds": 14.43,
+     "cost_usd": 0.003793,
+     "judge_cost_usd": 0.000685
+    },
+    {
+     "case_id": "DEV-202",
+     "seconds": 14.39,
+     "cost_usd": 0.00394,
+     "judge_cost_usd": 0.000914
+    },
+    {
+     "case_id": "DEV-203",
+     "seconds": 9.98,
+     "cost_usd": 0.001774,
+     "judge_cost_usd": 0.000798
+    },
+    {
+     "case_id": "DEV-204",
+     "seconds": 16.28,
+     "cost_usd": 0.003764,
+     "judge_cost_usd": 0.0015
+    },
+    {
+     "case_id": "DEV-205",
+     "seconds": 18.06,
+     "cost_usd": 0.004799,
+     "judge_cost_usd": 0.001027
+    },
+    {
+     "case_id": "DEV-206",
+     "seconds": 14.31,
+     "cost_usd": 0.004,
+     "judge_cost_usd": 0.000952
+    },
+    {
+     "case_id": "DEV-207",
+     "seconds": 12.91,
+     "cost_usd": 0.001936,
+     "judge_cost_usd": 0.001243
+    },
+    {
+     "case_id": "DEV-208",
+     "seconds": 12.36,
+     "cost_usd": 0.004036,
+     "judge_cost_usd": 0.001147
+    },
+    {
+     "case_id": "DEV-209",
+     "seconds": 21.5,
+     "cost_usd": 0.005407,
+     "judge_cost_usd": 0.001025
+    },
+    {
+     "case_id": "DEV-210",
+     "seconds": 12.04,
+     "cost_usd": 0.001801,
+     "judge_cost_usd": 0.000765
+    },
+    {
+     "case_id": "DEV-211",
+     "seconds": 13.73,
+     "cost_usd": 0.003624,
+     "judge_cost_usd": 0.000784
+    },
+    {
+     "case_id": "DEV-212",
+     "seconds": 16.43,
+     "cost_usd": 0.00209,
+     "judge_cost_usd": 0.001335
+    },
+    {
+     "case_id": "DEV-213",
+     "seconds": 11.15,
+     "cost_usd": 0.002811,
+     "judge_cost_usd": 0.000783
+    },
+    {
+     "case_id": "DEV-214",
+     "seconds": 20.93,
+     "cost_usd": 0.002445,
+     "judge_cost_usd": 0.002102
+    },
+    {
+     "case_id": "DEV-215",
+     "seconds": 18.33,
+     "cost_usd": 0.004518,
+     "judge_cost_usd": 0.00094
+    },
+    {
+     "case_id": "DEV-216",
+     "seconds": 15.87,
+     "cost_usd": 0.002585,
+     "judge_cost_usd": 0.000805
+    },
+    {
+     "case_id": "DEV-217",
+     "seconds": 24.04,
+     "cost_usd": 0.005602,
+     "judge_cost_usd": 0.000827
+    },
+    {
+     "case_id": "DEV-218",
+     "seconds": 10.03,
+     "cost_usd": 0.001866,
+     "judge_cost_usd": 0.00078
+    },
+    {
+     "case_id": "DEV-219",
+     "seconds": 15.12,
+     "cost_usd": 0.003967,
+     "judge_cost_usd": 0.001116
+    },
+    {
+     "case_id": "DEV-220",
+     "seconds": 14.57,
+     "cost_usd": 0.002008,
+     "judge_cost_usd": 0.0007
+    },
+    {
+     "case_id": "DEV-221",
+     "seconds": 18.52,
+     "cost_usd": 0.004272,
+     "judge_cost_usd": 0.001243
+    },
+    {
+     "case_id": "DEV-222",
+     "seconds": 15.2,
+     "cost_usd": 0.002311,
+     "judge_cost_usd": 0.000822
+    },
+    {
+     "case_id": "DEV-223",
+     "seconds": 13.35,
+     "cost_usd": 0.002798,
+     "judge_cost_usd": 0.001157
+    },
+    {
+     "case_id": "DEV-224",
+     "seconds": 12.57,
+     "cost_usd": 0.001815,
+     "judge_cost_usd": 0.000721
+    },
+    {
+     "case_id": "DEV-225",
+     "seconds": 21.15,
+     "cost_usd": 0.004592,
+     "judge_cost_usd": 0.000756
+    },
+    {
+     "case_id": "DEV-226",
+     "seconds": 14.83,
+     "cost_usd": 0.003855,
+     "judge_cost_usd": 0.00098
+    },
+    {
+     "case_id": "DEV-227",
+     "seconds": 13.01,
+     "cost_usd": 0.001856,
+     "judge_cost_usd": 0.001783
+    },
+    {
+     "case_id": "DEV-228",
+     "seconds": 12.43,
+     "cost_usd": 0.004034,
+     "judge_cost_usd": 0.00108
+    },
+    {
+     "case_id": "DEV-229",
+     "seconds": 19.12,
+     "cost_usd": 0.004107,
+     "judge_cost_usd": 0.000713
+    },
+    {
+     "case_id": "DEV-230",
+     "seconds": 12.73,
+     "cost_usd": 0.003651,
+     "judge_cost_usd": 0.000829
+    },
+    {
+     "case_id": "DEV-231",
+     "seconds": 11.91,
+     "cost_usd": 0.001801,
+     "judge_cost_usd": 0.001089
+    },
+    {
+     "case_id": "DEV-232",
+     "seconds": 19.14,
+     "cost_usd": 0.004022,
+     "judge_cost_usd": 0.000783
+    },
+    {
+     "case_id": "DEV-233",
+     "seconds": 10.85,
+     "cost_usd": 0.001742,
+     "judge_cost_usd": 0.001007
+    },
+    {
+     "case_id": "DEV-234",
+     "seconds": 20.18,
+     "cost_usd": 0.003583,
+     "judge_cost_usd": 0.000919
+    },
+    {
+     "case_id": "DEV-235",
+     "seconds": 11.59,
+     "cost_usd": 0.002776,
+     "judge_cost_usd": 0.000958
+    },
+    {
+     "case_id": "DEV-301",
+     "seconds": 25.26,
+     "cost_usd": 0.004384,
+     "judge_cost_usd": 0.001434
+    },
+    {
+     "case_id": "DEV-302",
+     "seconds": 28.03,
+     "cost_usd": 0.0058,
+     "judge_cost_usd": 0.001257
+    },
+    {
+     "case_id": "DEV-303",
+     "seconds": 27.03,
+     "cost_usd": 0.005455,
+     "judge_cost_usd": 0.001601
+    },
+    {
+     "case_id": "DEV-304",
+     "seconds": 29.36,
+     "cost_usd": 0.005832,
+     "judge_cost_usd": 0.001731
+    },
+    {
+     "case_id": "DEV-305",
+     "seconds": 24.28,
+     "cost_usd": 0.004955,
+     "judge_cost_usd": 0.001616
+    },
+    {
+     "case_id": "DEV-306",
+     "seconds": 33.49,
+     "cost_usd": 0.00646,
+     "judge_cost_usd": 0.001472
+    },
+    {
+     "case_id": "DEV-307",
+     "seconds": 25.66,
+     "cost_usd": 0.004409,
+     "judge_cost_usd": 0.001521
+    },
+    {
+     "case_id": "DEV-308",
+     "seconds": 23.96,
+     "cost_usd": 0.004442,
+     "judge_cost_usd": 0.003187
+    },
+    {
+     "case_id": "DEV-309",
+     "seconds": 22.0,
+     "cost_usd": 0.004287,
+     "judge_cost_usd": 0.001205
+    },
+    {
+     "case_id": "DEV-310",
+     "seconds": 26.84,
+     "cost_usd": 0.004405,
+     "judge_cost_usd": 0.002712
+    },
+    {
+     "case_id": "DEV-311",
+     "seconds": 34.77,
+     "cost_usd": 0.005655,
+     "judge_cost_usd": 0.001671
+    },
+    {
+     "case_id": "DEV-312",
+     "seconds": 30.72,
+     "cost_usd": 0.005683,
+     "judge_cost_usd": 0
+    },
+    {
+     "case_id": "DEV-313",
+     "seconds": 36.47,
+     "cost_usd": 0.006028,
+     "judge_cost_usd": 0.002866
+    },
+    {
+     "case_id": "DEV-314",
+     "seconds": 24.3,
+     "cost_usd": 0.004462,
+     "judge_cost_usd": 0.002083
+    },
+    {
+     "case_id": "DEV-315",
+     "seconds": 25.5,
+     "cost_usd": 0.004693,
+     "judge_cost_usd": 0.0024
+    },
+    {
+     "case_id": "DEV-316",
+     "seconds": 33.12,
+     "cost_usd": 0.006408,
+     "judge_cost_usd": 0.002751
+    },
+    {
+     "case_id": "DEV-317",
+     "seconds": 19.06,
+     "cost_usd": 0.004355,
+     "judge_cost_usd": 0.001085
+    },
+    {
+     "case_id": "DEV-318",
+     "seconds": 23.96,
+     "cost_usd": 0.004897,
+     "judge_cost_usd": 0.00108
+    },
+    {
+     "case_id": "DEV-319",
+     "seconds": 22.43,
+     "cost_usd": 0.004606,
+     "judge_cost_usd": 0.002497
+    },
+    {
+     "case_id": "DEV-320",
+     "seconds": 26.53,
+     "cost_usd": 0.005973,
+     "judge_cost_usd": 0.003
+    },
+    {
+     "case_id": "DEV-321",
+     "seconds": 26.99,
+     "cost_usd": 0.006285,
+     "judge_cost_usd": 0.002545
+    },
+    {
+     "case_id": "DEV-322",
+     "seconds": 24.94,
+     "cost_usd": 0.004634,
+     "judge_cost_usd": 0.002388
+    },
+    {
+     "case_id": "DEV-323",
+     "seconds": 23.29,
+     "cost_usd": 0.003993,
+     "judge_cost_usd": 0.002756
+    },
+    {
+     "case_id": "DEV-324",
+     "seconds": 20.4,
+     "cost_usd": 0.004266,
+     "judge_cost_usd": 0.002926
+    },
+    {
+     "case_id": "DEV-325",
+     "seconds": 27.43,
+     "cost_usd": 0.003182,
+     "judge_cost_usd": 0.001375
+    },
+    {
+     "case_id": "DEV-326",
+     "seconds": 33.44,
+     "cost_usd": 0.004573,
+     "judge_cost_usd": 0.001952
+    },
+    {
+     "case_id": "DEV-327",
+     "seconds": 27.84,
+     "cost_usd": 0.004513,
+     "judge_cost_usd": 0.001998
+    },
+    {
+     "case_id": "DEV-328",
+     "seconds": 39.48,
+     "cost_usd": 0.00692,
+     "judge_cost_usd": 0.001654
+    },
+    {
+     "case_id": "DEV-329",
+     "seconds": 34.28,
+     "cost_usd": 0.00731,
+     "judge_cost_usd": 0.001978
+    },
+    {
+     "case_id": "DEV-330",
+     "seconds": 36.11,
+     "cost_usd": 0.006234,
+     "judge_cost_usd": 0.001563
+    },
+    {
+     "case_id": "DEV-331",
+     "seconds": 27.77,
+     "cost_usd": 0.00607,
+     "judge_cost_usd": 0.002259
+    },
+    {
+     "case_id": "DEV-332",
+     "seconds": 24.01,
+     "cost_usd": 0.004209,
+     "judge_cost_usd": 0.002076
+    },
+    {
+     "case_id": "DEV-333",
+     "seconds": 34.11,
+     "cost_usd": 0.005315,
+     "judge_cost_usd": 0.002931
+    },
+    {
+     "case_id": "DEV-334",
+     "seconds": 27.7,
+     "cost_usd": 0.004915,
+     "judge_cost_usd": 0.002138
+    },
+    {
+     "case_id": "DEV-335",
+     "seconds": 32.91,
+     "cost_usd": 0.006385,
+     "judge_cost_usd": 0.00275
+    },
+    {
+     "case_id": "DEV-401",
+     "seconds": 6.09,
+     "cost_usd": 0.000635,
+     "judge_cost_usd": 0
+    },
+    {
+     "case_id": "DEV-402",
+     "seconds": 7.53,
+     "cost_usd": 0.000698,
+     "judge_cost_usd": 0
+    },
+    {
+     "case_id": "DEV-403",
+     "seconds": 6.13,
+     "cost_usd": 0.000621,
+     "judge_cost_usd": 0
+    },
+    {
+     "case_id": "DEV-404",
+     "seconds": 13.76,
+     "cost_usd": 0.00128,
+     "judge_cost_usd": 0.000774
+    },
+    {
+     "case_id": "DEV-405",
+     "seconds": 4.87,
+     "cost_usd": 0.000528,
+     "judge_cost_usd": 0
+    },
+    {
+     "case_id": "DEV-406",
+     "seconds": 6.14,
+     "cost_usd": 0.000629,
+     "judge_cost_usd": 0
+    },
+    {
+     "case_id": "DEV-407",
+     "seconds": 6.29,
+     "cost_usd": 0.000643,
+     "judge_cost_usd": 0
+    },
+    {
+     "case_id": "DEV-408",
+     "seconds": 6.03,
+     "cost_usd": 0.00064,
+     "judge_cost_usd": 0
+    },
+    {
+     "case_id": "DEV-409",
+     "seconds": 8.94,
+     "cost_usd": 0.000993,
+     "judge_cost_usd": 0.000634
+    },
+    {
+     "case_id": "DEV-410",
+     "seconds": 14.64,
+     "cost_usd": 0.001325,
+     "judge_cost_usd": 0
+    },
+    {
+     "case_id": "DEV-411",
+     "seconds": 4.22,
+     "cost_usd": 0.000503,
+     "judge_cost_usd": 0
+    },
+    {
+     "case_id": "DEV-412",
+     "seconds": 6.5,
+     "cost_usd": 0.000682,
+     "judge_cost_usd": 0
+    },
+    {
+     "case_id": "DEV-413",
+     "seconds": 6.44,
+     "cost_usd": 0.000658,
+     "judge_cost_usd": 0
+    },
+    {
+     "case_id": "DEV-414",
+     "seconds": 6.29,
+     "cost_usd": 0.000663,
+     "judge_cost_usd": 0
+    },
+    {
+     "case_id": "DEV-415",
+     "seconds": 16.57,
+     "cost_usd": 0.004376,
+     "judge_cost_usd": 0
+    },
+    {
+     "case_id": "DEV-416",
+     "seconds": 6.97,
+     "cost_usd": 0.00068,
+     "judge_cost_usd": 0
+    },
+    {
+     "case_id": "DEV-417",
+     "seconds": 7.13,
+     "cost_usd": 0.000685,
+     "judge_cost_usd": 0
+    },
+    {
+     "case_id": "DEV-418",
+     "seconds": 3.98,
+     "cost_usd": 0.000491,
+     "judge_cost_usd": 0
+    },
+    {
+     "case_id": "DEV-419",
+     "seconds": 16.81,
+     "cost_usd": 0.004535,
+     "judge_cost_usd": 0
+    },
+    {
+     "case_id": "DEV-420",
+     "seconds": 5.75,
+     "cost_usd": 0.00062,
+     "judge_cost_usd": 0
+    },
+    {
+     "case_id": "DEV-421",
+     "seconds": 3.56,
+     "cost_usd": 0.000468,
+     "judge_cost_usd": 0
+    },
+    {
+     "case_id": "DEV-422",
+     "seconds": 4.01,
+     "cost_usd": 0.000489,
+     "judge_cost_usd": 0
+    },
+    {
+     "case_id": "DEV-423",
+     "seconds": 4.41,
+     "cost_usd": 0.000468,
+     "judge_cost_usd": 0
+    },
+    {
+     "case_id": "DEV-424",
+     "seconds": 30.32,
+     "cost_usd": 0.003889,
+     "judge_cost_usd": 0.002532
+    },
+    {
+     "case_id": "DEV-425",
+     "seconds": 23.02,
+     "cost_usd": 0.003431,
+     "judge_cost_usd": 0.001135
+    },
+    {
+     "case_id": "DEV-426",
+     "seconds": 19.91,
+     "cost_usd": 0.003055,
+     "judge_cost_usd": 0.00099
+    },
+    {
+     "case_id": "DEV-427",
+     "seconds": 3.66,
+     "cost_usd": 0.000463,
+     "judge_cost_usd": 0
+    },
+    {
+     "case_id": "DEV-428",
+     "seconds": 3.92,
+     "cost_usd": 0.000475,
+     "judge_cost_usd": 0
+    },
+    {
+     "case_id": "DEV-429",
+     "seconds": 26.23,
+     "cost_usd": 0.003896,
+     "judge_cost_usd": 0.001172
+    },
+    {
+     "case_id": "DEV-430",
+     "seconds": 37.57,
+     "cost_usd": 0.006141,
+     "judge_cost_usd": 0.005391
+    },
+    {
+     "case_id": "DEV-431",
+     "seconds": 35.87,
+     "cost_usd": 0.004936,
+     "judge_cost_usd": 0.002553
+    },
+    {
+     "case_id": "DEV-432",
+     "seconds": 25.6,
+     "cost_usd": 0.003729,
+     "judge_cost_usd": 0.003271
+    },
+    {
+     "case_id": "DEV-433",
+     "seconds": 14.43,
+     "cost_usd": 0.001608,
+     "judge_cost_usd": 0.00166
+    },
+    {
+     "case_id": "DEV-434",
+     "seconds": 10.73,
+     "cost_usd": 0.001303,
+     "judge_cost_usd": 0.001384
+    },
+    {
+     "case_id": "DEV-435",
+     "seconds": 31.81,
+     "cost_usd": 0.005033,
+     "judge_cost_usd": 0.002479
+    },
+    {
+     "case_id": "DEV-501",
+     "seconds": 7.44,
+     "cost_usd": 0.000727,
+     "judge_cost_usd": 0
+    },
+    {
+     "case_id": "DEV-502",
+     "seconds": 8.21,
+     "cost_usd": 0.000984,
+     "judge_cost_usd": 0.001008
+    },
+    {
+     "case_id": "DEV-503",
+     "seconds": 7.28,
+     "cost_usd": 0.000931,
+     "judge_cost_usd": 0.00086
+    },
+    {
+     "case_id": "DEV-504",
+     "seconds": 6.68,
+     "cost_usd": 0.000925,
+     "judge_cost_usd": 0.001067
+    },
+    {
+     "case_id": "DEV-505",
+     "seconds": 6.45,
+     "cost_usd": 0.000908,
+     "judge_cost_usd": 0.000722
+    },
+    {
+     "case_id": "DEV-506",
+     "seconds": 9.54,
+     "cost_usd": 0.001076,
+     "judge_cost_usd": 0.001014
+    },
+    {
+     "case_id": "DEV-507",
+     "seconds": 7.53,
+     "cost_usd": 0.000994,
+     "judge_cost_usd": 0.000768
+    },
+    {
+     "case_id": "DEV-508",
+     "seconds": 7.81,
+     "cost_usd": 0.000964,
+     "judge_cost_usd": 0.001365
+    },
+    {
+     "case_id": "DEV-509",
+     "seconds": 7.38,
+     "cost_usd": 0.000965,
+     "judge_cost_usd": 0.000936
+    },
+    {
+     "case_id": "DEV-510",
+     "seconds": 7.11,
+     "cost_usd": 0.000963,
+     "judge_cost_usd": 0.001884
+    },
+    {
+     "case_id": "DEV-511",
+     "seconds": 7.7,
+     "cost_usd": 0.000979,
+     "judge_cost_usd": 0.000765
+    },
+    {
+     "case_id": "DEV-512",
+     "seconds": 7.6,
+     "cost_usd": 0.00096,
+     "judge_cost_usd": 0.002094
+    },
+    {
+     "case_id": "DEV-513",
+     "seconds": 7.75,
+     "cost_usd": 0.000971,
+     "judge_cost_usd": 0.000848
+    },
+    {
+     "case_id": "DEV-514",
+     "seconds": 7.3,
+     "cost_usd": 0.000943,
+     "judge_cost_usd": 0.000976
+    },
+    {
+     "case_id": "DEV-515",
+     "seconds": 9.1,
+     "cost_usd": 0.000968,
+     "judge_cost_usd": 0.000918
+    },
+    {
+     "case_id": "DEV-516",
+     "seconds": 3.88,
+     "cost_usd": 0.000497,
+     "judge_cost_usd": 0
+    },
+    {
+     "case_id": "DEV-517",
+     "seconds": 4.0,
+     "cost_usd": 0.000489,
+     "judge_cost_usd": 0
+    },
+    {
+     "case_id": "DEV-518",
+     "seconds": 3.5,
+     "cost_usd": 0.000459,
+     "judge_cost_usd": 0
+    },
+    {
+     "case_id": "DEV-519",
+     "seconds": 3.58,
+     "cost_usd": 0.000485,
+     "judge_cost_usd": 0
+    },
+    {
+     "case_id": "DEV-520",
+     "seconds": 3.53,
+     "cost_usd": 0.000481,
+     "judge_cost_usd": 0
+    },
+    {
+     "case_id": "DEV-521",
+     "seconds": 3.34,
+     "cost_usd": 0.000479,
+     "judge_cost_usd": 0
+    },
+    {
+     "case_id": "DEV-522",
+     "seconds": 5.16,
+     "cost_usd": 0.000561,
+     "judge_cost_usd": 0
+    },
+    {
+     "case_id": "DEV-523",
+     "seconds": 3.65,
+     "cost_usd": 0.000487,
+     "judge_cost_usd": 0
+    },
+    {
+     "case_id": "DEV-524",
+     "seconds": 22.38,
+     "cost_usd": 0.003394,
+     "judge_cost_usd": 0.000851
+    },
+    {
+     "case_id": "DEV-525",
+     "seconds": 14.39,
+     "cost_usd": 0.003202,
+     "judge_cost_usd": 0.000824
+    },
+    {
+     "case_id": "DEV-526",
+     "seconds": 18.85,
+     "cost_usd": 0.003069,
+     "judge_cost_usd": 0.002655
+    },
+    {
+     "case_id": "DEV-527",
+     "seconds": 15.78,
+     "cost_usd": 0.002961,
+     "judge_cost_usd": 0.00128
+    },
+    {
+     "case_id": "DEV-528",
+     "seconds": 7.59,
+     "cost_usd": 0.000963,
+     "judge_cost_usd": 0.00071
+    },
+    {
+     "case_id": "DEV-529",
+     "seconds": 6.7,
+     "cost_usd": 0.000942,
+     "judge_cost_usd": 0.000804
+    },
+    {
+     "case_id": "DEV-530",
+     "seconds": 17.47,
+     "cost_usd": 0.002968,
+     "judge_cost_usd": 0.001472
+    },
+    {
+     "case_id": "DEV-601",
+     "seconds": 5.52,
+     "cost_usd": 0.000642,
+     "judge_cost_usd": 0
+    },
+    {
+     "case_id": "DEV-602",
+     "seconds": 7.18,
+     "cost_usd": 0.000731,
+     "judge_cost_usd": 0
+    },
+    {
+     "case_id": "DEV-603",
+     "seconds": 6.67,
+     "cost_usd": 0.00069,
+     "judge_cost_usd": 0
+    },
+    {
+     "case_id": "DEV-604",
+     "seconds": 5.7,
+     "cost_usd": 0.000646,
+     "judge_cost_usd": 0
+    },
+    {
+     "case_id": "DEV-605",
+     "seconds": 24.42,
+     "cost_usd": 0.005263,
+     "judge_cost_usd": 0.001303
+    },
+    {
+     "case_id": "DEV-606",
+     "seconds": 18.56,
+     "cost_usd": 0.004184,
+     "judge_cost_usd": 0.000794
+    },
+    {
+     "case_id": "DEV-607",
+     "seconds": 20.6,
+     "cost_usd": 0.00468,
+     "judge_cost_usd": 0.001133
+    },
+    {
+     "case_id": "DEV-608",
+     "seconds": 16.6,
+     "cost_usd": 0.002769,
+     "judge_cost_usd": 0.001459
+    },
+    {
+     "case_id": "DEV-609",
+     "seconds": 19.82,
+     "cost_usd": 0.004653,
+     "judge_cost_usd": 0.000834
+    },
+    {
+     "case_id": "DEV-610",
+     "seconds": 15.92,
+     "cost_usd": 0.004443,
+     "judge_cost_usd": 0.001861
+    },
+    {
+     "case_id": "DEV-611",
+     "seconds": 13.64,
+     "cost_usd": 0.004067,
+     "judge_cost_usd": 0.001217
+    },
+    {
+     "case_id": "DEV-612",
+     "seconds": 13.01,
+     "cost_usd": 0.003548,
+     "judge_cost_usd": 0.00074
+    },
+    {
+     "case_id": "DEV-613",
+     "seconds": 14.77,
+     "cost_usd": 0.002502,
+     "judge_cost_usd": 0.001101
+    },
+    {
+     "case_id": "DEV-614",
+     "seconds": 12.48,
+     "cost_usd": 0.002091,
+     "judge_cost_usd": 0.001035
+    },
+    {
+     "case_id": "DEV-615",
+     "seconds": 18.21,
+     "cost_usd": 0.004088,
+     "judge_cost_usd": 0.001119
+    },
+    {
+     "case_id": "DEV-616",
+     "seconds": 24.64,
+     "cost_usd": 0.006926,
+     "judge_cost_usd": 0.000948
+    },
+    {
+     "case_id": "DEV-617",
+     "seconds": 41.57,
+     "cost_usd": 0.006941,
+     "judge_cost_usd": 0.00318
+    },
+    {
+     "case_id": "DEV-618",
+     "seconds": 28.24,
+     "cost_usd": 0.00675,
+     "judge_cost_usd": 0.001024
+    },
+    {
+     "case_id": "DEV-619",
+     "seconds": 32.66,
+     "cost_usd": 0.00615,
+     "judge_cost_usd": 0.002278
+    },
+    {
+     "case_id": "DEV-620",
+     "seconds": 29.63,
+     "cost_usd": 0.004654,
+     "judge_cost_usd": 0.003771
+    },
+    {
+     "case_id": "DEV-621",
+     "seconds": 33.6,
+     "cost_usd": 0.006778,
+     "judge_cost_usd": 0.003639
+    },
+    {
+     "case_id": "DEV-622",
+     "seconds": 6.39,
+     "cost_usd": 0.000677,
+     "judge_cost_usd": 0
+    },
+    {
+     "case_id": "DEV-623",
+     "seconds": 37.38,
+     "cost_usd": 0.007281,
+     "judge_cost_usd": 0.00152
+    },
+    {
+     "case_id": "DEV-624",
+     "seconds": 26.44,
+     "cost_usd": 0.006006,
+     "judge_cost_usd": 0.001139
+    },
+    {
+     "case_id": "DEV-625",
+     "seconds": 27.6,
+     "cost_usd": 0.007196,
+     "judge_cost_usd": 0.000826
+    },
+    {
+     "case_id": "DEV-626",
+     "seconds": 10.7,
+     "cost_usd": 0.002684,
+     "judge_cost_usd": 0.00093
+    },
+    {
+     "case_id": "DEV-627",
+     "seconds": 7.24,
+     "cost_usd": 0.000733,
+     "judge_cost_usd": 0
+    },
+    {
+     "case_id": "DEV-628",
+     "seconds": 16.84,
+     "cost_usd": 0.004078,
+     "judge_cost_usd": 0.000871
+    },
+    {
+     "case_id": "DEV-631",
+     "seconds": 20.26,
+     "cost_usd": 0.005077,
+     "judge_cost_usd": 0
+    },
+    {
+     "case_id": "DEV-632",
+     "seconds": 19.22,
+     "cost_usd": 0.004428,
+     "judge_cost_usd": 0
+    },
+    {
+     "case_id": "DEV-633",
+     "seconds": 19.7,
+     "cost_usd": 0.00423,
+     "judge_cost_usd": 0
+    },
+    {
+     "case_id": "DEV-634",
+     "seconds": 17.63,
+     "cost_usd": 0.003915,
+     "judge_cost_usd": 0
+    },
+    {
+     "case_id": "DEV-635",
+     "seconds": 4.34,
+     "cost_usd": 0.000493,
+     "judge_cost_usd": 0
+    }
+   ],
+   "by_family": {
+    "adversarial": {
+     "n": 35,
+     "behaviour_accuracy": 0.9428571428571428
+    },
+    "ambiguity_insufficient_causal": {
+     "n": 44,
+     "behaviour_accuracy": 0.6818181818181818
+    },
+    "cross_source_synthesis": {
+     "n": 35,
+     "behaviour_accuracy": 0.9714285714285714
+    },
+    "factual_lookup": {
+     "n": 70,
+     "behaviour_accuracy": 0.9714285714285714
+    },
+    "numerical_comparison": {
+     "n": 34,
+     "behaviour_accuracy": 0.9117647058823529
+    },
+    "revision_conflict": {
+     "n": 19,
+     "behaviour_accuracy": 1
+    }
+   }
+  }
+ },
+ "agent_mean_by_family": {
+  "adversarial": 0.9142857142857143,
+  "ambiguity_insufficient_causal": 0.7045454545454546,
+  "cross_source_synthesis": 0.9571428571428572,
+  "factual_lookup": 0.9714285714285714,
+  "numerical_comparison": 0.8529411764705882,
+  "revision_conflict": 1.0
+ }
+}

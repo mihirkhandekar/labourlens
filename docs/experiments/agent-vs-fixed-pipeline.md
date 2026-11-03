@@ -55,3 +55,7 @@ uv run pytest tests/retrieval/test_agent.py tests/evaluation/test_fixed_comparis
 uv run labourlens rights-scan
 make docs-check
 ```
+
+## Subsequent measured result
+
+The registered run is complete. See [results](agent-vs-fixed-pipeline-results.md) and [immutable comparison](../../experiments/eval/agent-vs-fixed-pipeline.json). The proposal and preparation statements above record the pre-run state; they do not describe the current measurement status.

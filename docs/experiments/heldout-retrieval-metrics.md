@@ -57,3 +57,7 @@ Eligible text n is **18 of 31** registered cases and **34 of 65** fresh cases. N
 The next real metric run therefore needs owner-authorised embedding/rerank calls or pre-populated exact caches. Use the paid command above only after authorisation. No held-out retrieval-quality result is claimed in this preparation.
 
 **Observed offline checks, 3 November 2026:** `uv run pytest -q tests/retrieval/test_heldout_metrics.py tests/retrieval/test_experiments_rerank_tag.py tests/retrieval/test_evaluate.py` passed 19 tests, including the expected network-free cache-miss failure and complete synthetic cache-only output. After intent-to-add for new public files, `uv run labourlens rights-scan` reported zero hits (21 allowlisted globs), and `make docs-check` reported zero problems in 213 Markdown files. The initial rights failure above was fixed by excluding copied question text, not by changing the scanner or adding an exception.
+
+## Subsequent measured result
+
+The authorised metric run is complete. See [results](heldout-retrieval-metrics-results.md) and [immutable metrics](../../experiments/eval/heldout-retrieval-20261103-paid/metrics.json). The preparation and cache-audit statements above record their pre-run state; the retrieval-quality measurement gap is now closed.

@@ -1,0 +1,401 @@
+{
+  "id": "heldout-retrieval-20261103-paid",
+  "sets": {
+    "registered31": {
+      "gold_path": "experiments/gold/gold_v3.7.jsonl",
+      "gold_sha256": "af3ad02690ed1dabb69e2be7f7bb984f707f1352b95c8bd693d0fb51e9410d8f",
+      "total_n": 31,
+      "text_n": 18,
+      "excluded_ids": [
+        "HO-006",
+        "HO-007",
+        "HO-008",
+        "HO-009",
+        "HO-010",
+        "HO-011",
+        "HO-021",
+        "HO-024",
+        "HO-025",
+        "HO-026",
+        "HO-027",
+        "HO-030",
+        "HO-031"
+      ],
+      "unresolved_gold_ids": []
+    },
+    "fresh65": {
+      "gold_path": "experiments/gold/heldout_v2_v1.jsonl",
+      "gold_sha256": "e3d16597d542d33d106b4e9291aa3b92ca5fcdf19aa4d3c2b3319c0543efa542",
+      "total_n": 65,
+      "text_n": 34,
+      "excluded_ids": [
+        "HO-V2-001",
+        "HO-V2-002",
+        "HO-V2-003",
+        "HO-V2-004",
+        "HO-V2-005",
+        "HO-V2-006",
+        "HO-V2-023",
+        "HO-V2-024",
+        "HO-V2-025",
+        "HO-V2-026",
+        "HO-V2-027",
+        "HO-V2-028",
+        "HO-V2-045",
+        "HO-V2-046",
+        "HO-V2-047",
+        "HO-V2-048",
+        "HO-V2-049",
+        "HO-V2-050",
+        "HO-V2-051",
+        "HO-V2-052",
+        "HO-V2-053",
+        "HO-V2-054",
+        "HO-V2-055",
+        "HO-V2-056",
+        "HO-V2-057",
+        "HO-V2-059",
+        "HO-V2-060",
+        "HO-V2-062",
+        "HO-V2-063",
+        "HO-V2-064",
+        "HO-V2-065"
+      ],
+      "unresolved_gold_ids": []
+    }
+  },
+  "provenance": {
+    "corpus_version": "v3.1",
+    "chunk_count": 1847,
+    "corpus_hash": "f3a5734cf43dc93e1712a11b72d00d8eff6baa3b35556c366b8b18e1cf19c7b1",
+    "gold_file_sha256": "per-set",
+    "code_commit": "58c63d7c6bf1257f57531c9324b960468e4bf83a"
+  },
+  "script_sha256": "939e16c8d8dc9e69d16fea38f1717c9a9051b18cab163b5e19ee48f8a2b86f65",
+  "price_sha256": "6c61e81b4fca213be3b9db467443ce294148be7f6e16697e13f105ac2d75d224",
+  "prompt_sha256": "e45ed816ccefd679d046cf9bcbd4dad92ba27b20cfc5f45b900063b84784793a",
+  "missing_query_embeddings": [
+    {
+      "set": "registered31",
+      "case_id": "HO-001",
+      "question_sha256": "429439f975228f88377dbecff8f6664b6321167be4cd158030480c9e55cf49ea",
+      "estimated_tokens": 25
+    },
+    {
+      "set": "registered31",
+      "case_id": "HO-002",
+      "question_sha256": "296414a7de330497fa506b570d1b667c0b2eb35bac2c2529c30eba2938843410",
+      "estimated_tokens": 20
+    },
+    {
+      "set": "registered31",
+      "case_id": "HO-003",
+      "question_sha256": "4aac2ca7951024198b3ae0646cf909de2091107f430a315796321c4dbe10ae90",
+      "estimated_tokens": 22
+    },
+    {
+      "set": "registered31",
+      "case_id": "HO-004",
+      "question_sha256": "7292faa7a5d32eb851d2f92cf2e5bc273478204e160657022cb4441bd26861e5",
+      "estimated_tokens": 21
+    },
+    {
+      "set": "registered31",
+      "case_id": "HO-005",
+      "question_sha256": "476db305f4629ee2c3f7e95767249bc279d764aec38c6c06fa028bf1dd9a4364",
+      "estimated_tokens": 22
+    },
+    {
+      "set": "registered31",
+      "case_id": "HO-012",
+      "question_sha256": "7182b5fee6da911aa322e40549ea6fab8147f6cfbe1ea100da26bd3e98315ee4",
+      "estimated_tokens": 23
+    },
+    {
+      "set": "registered31",
+      "case_id": "HO-013",
+      "question_sha256": "824d98442d7503fcb511097671700efddd2d56b2993d622ff5ae68fe0175d59a",
+      "estimated_tokens": 18
+    },
+    {
+      "set": "registered31",
+      "case_id": "HO-014",
+      "question_sha256": "56eb36b4cfe3d6021cbac3ec9632a13b32d28d144a0acc8b8c9695577c517bcd",
+      "estimated_tokens": 26
+    },
+    {
+      "set": "registered31",
+      "case_id": "HO-015",
+      "question_sha256": "1c180c35422117b40a1f5d93af378a185d8d02df53e8f23e8381c42a6ced2883",
+      "estimated_tokens": 30
+    },
+    {
+      "set": "registered31",
+      "case_id": "HO-016",
+      "question_sha256": "15d54d49b3a1e49bb968f3656f118828fd344b5335de25711aff0614970547f2",
+      "estimated_tokens": 29
+    },
+    {
+      "set": "registered31",
+      "case_id": "HO-017",
+      "question_sha256": "6708527836f97af9e06f6f1e5652739887060ed48e30be335c5d62a224c83c12",
+      "estimated_tokens": 21
+    },
+    {
+      "set": "registered31",
+      "case_id": "HO-018",
+      "question_sha256": "21078e54b9086134e56ee9b7feb9d3c8b2495b443b8e7759954047df651b8413",
+      "estimated_tokens": 24
+    },
+    {
+      "set": "registered31",
+      "case_id": "HO-019",
+      "question_sha256": "b16542475e600b335b28deade15c0f7e817aa3951a5498e6e817f3835c09a48b",
+      "estimated_tokens": 20
+    },
+    {
+      "set": "registered31",
+      "case_id": "HO-020",
+      "question_sha256": "e4b3198f4f7767f981f4e9352612370a5011aae58c3e606a30b3716be20b90d1",
+      "estimated_tokens": 30
+    },
+    {
+      "set": "registered31",
+      "case_id": "HO-022",
+      "question_sha256": "5eec281ec23503eeba90e5d54277d0d113fa31cac72d9b837aa8caf21a59d09c",
+      "estimated_tokens": 18
+    },
+    {
+      "set": "registered31",
+      "case_id": "HO-023",
+      "question_sha256": "4912e7847666561933b04e67a1e527d511ddb122ef10fd662a8f89cf353fa91e",
+      "estimated_tokens": 23
+    },
+    {
+      "set": "registered31",
+      "case_id": "HO-028",
+      "question_sha256": "c9a58a17b0e919687b984b146f13c7d252dbf04c133d539de920ae00a6641d5a",
+      "estimated_tokens": 22
+    },
+    {
+      "set": "registered31",
+      "case_id": "HO-029",
+      "question_sha256": "e69055456f16a930d73367902eab443e5f6fa8ad12e222b27d5758e561285cf8",
+      "estimated_tokens": 28
+    },
+    {
+      "set": "fresh65",
+      "case_id": "HO-V2-007",
+      "question_sha256": "7eaaf56f544b9d51599ba9946bb7b5e9f7a2cd2c0e34efcf7867b14fb213c484",
+      "estimated_tokens": 31
+    },
+    {
+      "set": "fresh65",
+      "case_id": "HO-V2-008",
+      "question_sha256": "2bb5a92fb0095253fd4594bb16de81066c291baa2d1ce24a41fa80b81fab12d6",
+      "estimated_tokens": 26
+    },
+    {
+      "set": "fresh65",
+      "case_id": "HO-V2-009",
+      "question_sha256": "3229a84b6bd2de3439fe55d4ffc11141270ac51512e1af1e69dc2a87b2ac61a5",
+      "estimated_tokens": 27
+    },
+    {
+      "set": "fresh65",
+      "case_id": "HO-V2-010",
+      "question_sha256": "408d314a007a6c88f0430a4918929a0a11392f74f7052c43c61ad15e04c85f1d",
+      "estimated_tokens": 23
+    },
+    {
+      "set": "fresh65",
+      "case_id": "HO-V2-011",
+      "question_sha256": "2fec4e1745550b9f5a6f2e906580878ee1a267b1c3dc614e0963918cc6b403ed",
+      "estimated_tokens": 34
+    },
+    {
+      "set": "fresh65",
+      "case_id": "HO-V2-012",
+      "question_sha256": "21220c8ee86d1fe1f7f19eeb2cd0799a4d877dd1f321539b2e2f904a0a1c714f",
+      "estimated_tokens": 29
+    },
+    {
+      "set": "fresh65",
+      "case_id": "HO-V2-013",
+      "question_sha256": "d638cb7f41e56e1f2914e598fc4d18b772467e8e76ede71e174aba57fc1edbfb",
+      "estimated_tokens": 27
+    },
+    {
+      "set": "fresh65",
+      "case_id": "HO-V2-014",
+      "question_sha256": "4c81fda7da4cbdafc32d98745ac051043139436d4a95d059032f4bc66e138d9b",
+      "estimated_tokens": 31
+    },
+    {
+      "set": "fresh65",
+      "case_id": "HO-V2-015",
+      "question_sha256": "3daa81e0673220b15081b136138b55e7a8c0348bf4c23bdaf7e8b1117005b6f6",
+      "estimated_tokens": 29
+    },
+    {
+      "set": "fresh65",
+      "case_id": "HO-V2-016",
+      "question_sha256": "eabe21205bec96d69600b885fe33d654c6bcd7a90588754ed8033582a93d8fcd",
+      "estimated_tokens": 14
+    },
+    {
+      "set": "fresh65",
+      "case_id": "HO-V2-017",
+      "question_sha256": "800a9826b48d4cfff56c2329c928a6c9db82dfae6751c6906d1e27e824fa2d85",
+      "estimated_tokens": 30
+    },
+    {
+      "set": "fresh65",
+      "case_id": "HO-V2-018",
+      "question_sha256": "ad0e6a20f37800dc01b0f5898ab4c98df098e49d792117136e19ab484da2ef7d",
+      "estimated_tokens": 21
+    },
+    {
+      "set": "fresh65",
+      "case_id": "HO-V2-019",
+      "question_sha256": "f15331dbe4a7efba1e7d3371436507f5268851120992d38953067ee1c38c5357",
+      "estimated_tokens": 29
+    },
+    {
+      "set": "fresh65",
+      "case_id": "HO-V2-020",
+      "question_sha256": "b15b47c9a8e606671934e45ab2c79b696e0ff74dfae165ddf2c7c24bb8021850",
+      "estimated_tokens": 35
+    },
+    {
+      "set": "fresh65",
+      "case_id": "HO-V2-021",
+      "question_sha256": "6a306d996733d86060e817873c2b991de72f8a61ad090e018a1b3df9c2947d70",
+      "estimated_tokens": 35
+    },
+    {
+      "set": "fresh65",
+      "case_id": "HO-V2-022",
+      "question_sha256": "9d9704a0306169ff557ba26f9693155084963dff715773ac73aab96885e67680",
+      "estimated_tokens": 24
+    },
+    {
+      "set": "fresh65",
+      "case_id": "HO-V2-029",
+      "question_sha256": "d841148f9d90f7d3e58815b0ae068d78a35556e1eb7c524702a8849c97319f24",
+      "estimated_tokens": 35
+    },
+    {
+      "set": "fresh65",
+      "case_id": "HO-V2-030",
+      "question_sha256": "27f9f3f38704ef6c4e695672f41f9171cd2fc80bc4e2edd6198d5d0cd228a930",
+      "estimated_tokens": 32
+    },
+    {
+      "set": "fresh65",
+      "case_id": "HO-V2-031",
+      "question_sha256": "f9019e1c49eb11c2cd5c56a67b7c7b2ff2c3c20d4945ee70c71eb00b192581b1",
+      "estimated_tokens": 30
+    },
+    {
+      "set": "fresh65",
+      "case_id": "HO-V2-032",
+      "question_sha256": "2abd1bf7383de46f03eb94b3f01b20551647c7de4f8a7a144784fcbcd19f17f2",
+      "estimated_tokens": 30
+    },
+    {
+      "set": "fresh65",
+      "case_id": "HO-V2-033",
+      "question_sha256": "501b91f6b6574f9082b9828e4399d6fbdf97ab11bb85e7b801e520fb6ab38e6c",
+      "estimated_tokens": 31
+    },
+    {
+      "set": "fresh65",
+      "case_id": "HO-V2-034",
+      "question_sha256": "815e5f9e9b827f1b6a7ee5c177732985fe926b3599d0c5ae2a14983726db224c",
+      "estimated_tokens": 25
+    },
+    {
+      "set": "fresh65",
+      "case_id": "HO-V2-035",
+      "question_sha256": "2c7d4bfe6ff7313cbddafe2c0d5d36ebab0e598ee555ed75d95222832e238b17",
+      "estimated_tokens": 24
+    },
+    {
+      "set": "fresh65",
+      "case_id": "HO-V2-036",
+      "question_sha256": "95abd7d23fb036a9f9e7b539f9586c10af44dcc7ae226106799115f8ff46f933",
+      "estimated_tokens": 27
+    },
+    {
+      "set": "fresh65",
+      "case_id": "HO-V2-037",
+      "question_sha256": "2b13963670f38aad8d837c4f784269880e31397afaab39542a01c5340d6f0a41",
+      "estimated_tokens": 54
+    },
+    {
+      "set": "fresh65",
+      "case_id": "HO-V2-038",
+      "question_sha256": "8fde45688ee00d450407f4172f016449dd3a9104ce4d99eea34a4b43ee0ef9e0",
+      "estimated_tokens": 28
+    },
+    {
+      "set": "fresh65",
+      "case_id": "HO-V2-039",
+      "question_sha256": "f439e116e7bad6a539f739f38e94e3bd5c2fd69e5b4ff95f5f993694bb864a07",
+      "estimated_tokens": 30
+    },
+    {
+      "set": "fresh65",
+      "case_id": "HO-V2-040",
+      "question_sha256": "6466ba8d4f850d5a9fff83ff0e6c01ac86a0cae831ea90f2ad457851c26af5c1",
+      "estimated_tokens": 54
+    },
+    {
+      "set": "fresh65",
+      "case_id": "HO-V2-041",
+      "question_sha256": "c7fa5334a0c16c4e226a6bd4ed2f277b3bbffbbe1f828259fe89b7982fa79736",
+      "estimated_tokens": 38
+    },
+    {
+      "set": "fresh65",
+      "case_id": "HO-V2-042",
+      "question_sha256": "db179437f5d2a8e3e6d6569c7620fede462268c58a4a15f1b1fecb3357355078",
+      "estimated_tokens": 37
+    },
+    {
+      "set": "fresh65",
+      "case_id": "HO-V2-043",
+      "question_sha256": "c7c1f8e610fbb2e4d49b53bccc47fbe24d93b9df42472fbb1138fe8002a75c31",
+      "estimated_tokens": 56
+    },
+    {
+      "set": "fresh65",
+      "case_id": "HO-V2-044",
+      "question_sha256": "1d77275ba59717a4a08609167bb1f4d07beb7b468d0858cbc67b6ee294829f06",
+      "estimated_tokens": 42
+    },
+    {
+      "set": "fresh65",
+      "case_id": "HO-V2-058",
+      "question_sha256": "61d4d65fb8f853d8b3b5f9ed5a904230405b28390969e2366d9050d769d5f99a",
+      "estimated_tokens": 33
+    },
+    {
+      "set": "fresh65",
+      "case_id": "HO-V2-061",
+      "question_sha256": "d12434d818e32c72a8fca9649decb2b4be182e5ced4cd11d9da27e5c6bde93f3",
+      "estimated_tokens": 32
+    }
+  ],
+  "missing_unique_query_count": 52,
+  "embedding_estimated_cost_usd": 0.00019565,
+  "token_estimator": "ceil(UTF-8 bytes / 4), heuristic, not measured usage",
+  "rerank_cache_misses": [],
+  "rerank_audit_complete": false,
+  "rerank_estimated_cost_usd": 0,
+  "unknown_pool_rerank_estimated_cost_usd": 0.385627,
+  "unknown_pool_rerank_estimate_method": "two calls per missing case, largest 30 rendered chunks, 4000 output tokens",
+  "rerank_estimate_output_tokens_per_call": 4000,
+  "answer_generation_calls": 0
+}

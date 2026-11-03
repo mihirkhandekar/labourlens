@@ -20,7 +20,7 @@ make verify && uv run labourlens mcp-demo
 LABOURLENS_DEMO_ENABLED=false make serve
 ```
 
-Open <http://127.0.0.1:8000>, `/deck` or `/workbench`. These commands make no paid calls. The deck has 30 main slides and 44 including the appendix; press X twice quickly for speaker notes. Full commands are in [Reproduce](docs/reproduce.md).
+Open <http://127.0.0.1:8000>, `/deck` or `/workbench`. These commands make no paid calls. The deck has 28 main slides and 42 including the appendix; press X twice quickly for speaker notes. Full commands are in [Reproduce](docs/reproduce.md).
 
 ## Inputs
 
@@ -43,7 +43,8 @@ Open <http://127.0.0.1:8000>, `/deck` or `/workbench`. These commands make no pa
 - Test sets are partly independent. Original questions share development evidence; fresh questions were later reused for diagnostics.
 - The served chain scored 90.8% on 65 cases, mostly reused development questions. The full evaluation bypasses web stages and MCP.
 - Report-only arithmetic remains weak. PDF tables can extract poorly, and the tested tool extension was not adopted.
-- The scanner is a warning layer. Detection rose from 10/30 to 23/30; it still misses attacks. The fresh 36-case attack suite scored 35/36 with and without defences.
+- The scanner is a warning layer. Detection rose from 10/30 to 23/30; it still misses attacks. The earlier 36-case suite scored 35/36 with and without defences. Harder v2 attacks scored guarded 50/54 versus naive 42/54 (exact p=.039), with 3/8 benign failures each; guards and answer prompt change together.
+- Retrieval strict passage hit@8 improved on original/fresh text cases (.167 to .778 / .500 to .941), without demonstrated end-to-end answer gains. The bounded agent beat fixed control flow on development (.897 mean versus .814), with one fixed run, an arithmetic/policy confound and no original-test or fresh-question comparison.
 - Reports and raw answers are not in the repo. Three dataset licences are unverified; 23 document rights are unresolved. A clone's rights scan reports `NOT CHECKED`.
 - This is a single-process prototype. Live calls cost money; the provider-side spend cap is unverified. Do not submit confidential or personal information.
 

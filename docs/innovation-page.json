@@ -13,8 +13,8 @@
       "id": "retrieval", "title": "Retrieval and answer quality",
       "summary": "Validate report tables before adding retrieval complexity.",
       "paragraphs": [
-        {"text": "Retrieval used 128 development text questions. Answer evaluation used 237 development, 31 original-test and 65 fresh-test questions, with two runs per arm. Behaviour accuracy measures answer, abstain, clarify or refuse status, not factual correctness.", "refs": ["retrieval", "final"]},
-        {"text": "Historical fresh-set numerical accuracy was 0.214 (3/14). The attempted tool extension failed its criteria and was rejected.", "refs": ["fresh", "tools"]}
+        {"text": "Development retrieval used 128 text questions. The later literal-question diagnostics used 18 of 31 original-test and 34 of 65 fresh-test questions. Strict first-eight-passages hit@8 was hybrid .167/.500 versus R3 .778/.941 on original/fresh questions. This does not demonstrate end-to-end accuracy gains; no per-case cause investigation was performed. Shared evidence and diagnostic reuse limit independence.", "refs": ["retrieval", "heldout_retrieval", "final"]},
+        {"text": "On 237 development questions, one fixed pipeline run scored .8143 behaviour accuracy versus the agent's two-run mean .8966, a development advantage under the registered criteria. The fixed policy lacks arithmetic records and permits only one statistics lookup; tool-policy and extraction-schema differences confound interpretation. This does not transfer to original-test or fresh questions. Behaviour measures answer/abstain/clarify/refuse status, not factual correctness. Historical fresh numerical accuracy was 3/14; the rejected tool extension failed its criteria.", "refs": ["fixed", "final", "fresh", "tools"]}
       ],
       "tables": ["retrieval", "answers"],
       "proposals": [
@@ -45,7 +45,7 @@
     {
       "id": "security", "title": "Security, privacy and third-party risk",
       "summary": "Require approved access, hosting, retention and model terms.",
-      "paragraphs": [{"text": "Tools are bounded and read-only; retrieved text is isolated and MCP responses validated. Scanner detections rose 10/30 to 23/30; benign flags stayed 9/30. Fresh attacks scored 35/36 across configurations.", "refs": ["scanner", "threat"]}],
+      "paragraphs": [{"text": "Tools are bounded and read-only; retrieved text is isolated and MCP responses validated. Scanner detections rose 10/30 to 23/30; benign flags stayed 9/30. The v1 fresh threat run remains 35/36. In the separate v2 suite, gpt-6-luna majority attack passes were 50/54 guarded versus 42/54 naive over three repeats, +14.8 points, exact McNemar p=.03857. Guards and answer prompt change together; typed tools, MCP controls and length cap stay on in both arms. Each arm fails three of eight benign cases, failing the utility criterion; their causes were not reviewed per question. These hand-written cases do not establish adaptive-attack safety or an individual layer's effect.", "refs": ["scanner", "threat", "threat_v2"]}],
       "tables": [],
       "proposals": [
         {"title": "Access and processing controls", "gap": "Demo access and external model processing lack government approval.", "measure": "Clear licences, rights and publisher agreements. Add SSO/source roles, with an access label on every document and chunk applied as a pre-filter in BM25, vector search and the statistics tools so restricted text never reaches the model (the corpus is public today, so none exists now); approve residency, private endpoints, retention and audit access. Review provider terms; retain exportable evidence and a tested vendor exit plan.", "threshold": "No sensitive deployment before approval. Provider failure returns unavailable or approved cached analysis, never an unvalidated fallback.", "status": "proposal"},
@@ -73,7 +73,7 @@
   ],
   "limitations": [
     "Development shaped the design. Original-test evidence overlaps; fresh-test outcomes are known. Neither final test demonstrates a gain.",
-    "Gold was AI-drafted and reviewed by one person; the main judge is same-family. Two runs do not estimate variance.",
+    "Gold was AI-drafted and reviewed by one person; the main judge is same-family. One fixed run and two agent runs do not establish stability; the primary agent references flip 13/237 behaviour verdicts.",
     "Citations check mechanics; arithmetic can use wrong inputs. Scanner and attack results establish no general defence.",
     "Full comparisons exclude web-only steps and MCP. Costs are list-price estimates. Monitoring, rollback and government readiness are untested."
   ],
@@ -91,7 +91,10 @@
     {"id": "system", "label": "System card", "path": "docs/system-card.md"},
     {"id": "audit", "label": "Audit and feedback", "path": "docs/audit-and-logging.md"},
     {"id": "scanner", "label": "Scanner experiment", "path": "docs/experiments/injection-scanner-v2.md"},
-    {"id": "threat", "label": "Threat experiment", "path": "docs/experiments/t-i06-scorer-v2-rule.md"},
+    {"id": "threat", "label": "V1 threat scorer and history", "path": "docs/experiments/t-i06-scorer-v2-rule.md"},
+    {"id": "threat_v2", "label": "Threat suite v2 results", "path": "docs/experiments/threat-v2-results.md"},
+    {"id": "fixed", "label": "Agent versus fixed pipeline measurements", "path": "docs/experiments/agent-vs-fixed-pipeline-results.md"},
+    {"id": "heldout_retrieval", "label": "Original and fresh retrieval measurements", "path": "docs/experiments/heldout-retrieval-metrics-results.md"},
     {"id": "mcp", "label": "MCP comparison", "path": "docs/experiments/served-chain-mcp-all.md"},
     {"id": "nostats", "label": "Statistics-tool ablation", "path": "docs/experiments/served-chain-no-stats.md"}
   ]
