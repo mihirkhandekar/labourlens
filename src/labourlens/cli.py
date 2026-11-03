@@ -87,6 +87,8 @@ def main(argv: list[str] | None = None) -> int:
     th.add_argument("--source-experiment", help="saved raw experiment to rescore into a new id; . selects original pre-guard runs")
     th.add_argument("--only", help="a category or case id")
     th.add_argument("--experiment", help="new post-fix experiment id; required for generation (frozen results cannot be overwritten)")
+    th.add_argument("--cases", type=Path, help="JSONL case file (default: frozen v1 cases)")
+    th.add_argument("--repeats", type=int, default=1, help="positive number of independent runs per case")
     se = sub.add_parser("scanner-eval", help="offline passage scanner recall and false positives on frozen inputs (no API calls)")
     se.add_argument("--split", required=True, choices=["dev", "test"])
     se.add_argument("--experiment", required=True, help="new output id under experiments/scanner; never overwritten")
@@ -277,11 +279,13 @@ def main(argv: list[str] | None = None) -> int:
         from labourlens.security import threat_suite
 
         if args.rescore:
+            if args.cases is not None or args.repeats != 1:
+                p.error("--cases and --repeats are generation-only; custom-suite rescoring is not supported")
             threat_suite.rescore(args.experiment, args.source_experiment, args.scorer)
         else:
             if args.source_experiment:
                 p.error("--source-experiment requires --rescore")
-            threat_suite.run(args.models, args.only, args.ablation, args.experiment, args.scorer)
+            threat_suite.run(args.models, args.only, args.ablation, args.experiment, args.scorer, args.cases, args.repeats)
         return 0
     if args.cmd == "mcp-agent-demo":
         from labourlens.mcp import agent_demo
