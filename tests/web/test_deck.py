@@ -721,6 +721,7 @@ def test_decisions_api_is_exactly_one_final_appendix_slide_with_frozen_results()
     slides = (STATIC / "presentation/slides.js").read_text()
     graphics = (STATIC / "presentation/graphics.js").read_text()
     results = json.loads((WEB.parent / "experiments/eval/decisions-api-results.json").read_text())
+    fresh = json.loads((WEB.parent / "experiments/eval/decisions-api-v2-results.json").read_text())
     assert "Trying the Decisions API" not in _slides_main_section()
     assert slides.count("title: 'Trying the Decisions API'") == 1
     appendix = slides.split("// ---------- appendix", 1)[1].split("// Appendix index lists", 1)[0]
@@ -729,46 +730,77 @@ def test_decisions_api_is_exactly_one_final_appendix_slide_with_frozen_results()
     assert "id: 'decisions-api'" in last_slide
     assert "title: 'Trying the Decisions API'" in last_slide
     assert "visual: decisionsExperiment()" in last_slide
-    assert "both preregistered screens failed. Not adopted." in last_slide
-    assert "experiments/eval/decisions-api-results.json" in last_slide
+    assert "neither trial passed. Not adopted." in last_slide
+    for source in ("decisions-api-results.json", "decisions-api-v2-results.json"):
+        assert f"experiments/eval/{source}" in last_slide
     notes = last_slide.split("notes:", 1)[1]
     for caveat in ("historical, not contemporaneous", "no generated reply", "441 selected dependent claims",
                    "both generator models", "second-family AI judge", "not human ground truth",
                    "Same-family original-judge", "no verified unsupported negatives",
                    "No judge-latency comparison", "end-to-end swap", "no live adoption",
-                   "original test and fresh questions"):
+                   "original test and fresh questions", "150 AI-authored and AI-labelled",
+                   "not human-reviewed truth", "not 450 independent questions",
+                   "D threshold .7 and iteration 1", "development only", "C generates a reply",
+                   "pure endpoint causality", "no paired cross-trial gain", "F2-070", "F2-072",
+                   "F2-065 in the third repeat", "provider refusals", "failed open to the agent",
+                   "not preregistered", "untested idea", "Both trials failed"):
         assert caveat in notes, caveat
     assert "held-out" not in last_slide and "heldout" not in last_slide
     block = graphics.split("export function decisionsExperiment()", 1)[1].split("return wrap;", 1)[0]
-    for label in ("Routing latency", "Exact route accuracy", "AUROC", "Accuracy", "Balanced accuracy",
-                  "both generator models", "API model: gpt-6-luna only", "False support: 44/58"):
-        assert label in block
-    for identifier in ("DEV-", "HO-", "D-0", "A0", "A70"):
+    for label in ("v2 routing latency", "Exact route accuracy", "AUROC", "Accuracy", "Balanced accuracy",
+                  "API model: gpt-6-luna only", "False support: 44/58", "v1 claim-support check",
+                  "Different populations, not a paired cross-trial gain", "v2 refusal and diversion",
+                  "30/30 serious-harm calls: provider refused", "Refusal → fail open to agent",
+                  "Not a predicted unsafe route", "In-scope diverts: D 6/270 vs C 1/270",
+                  "Both trials failed. No adoption.", "v2 C bar: repeat mean"):
+        assert label in block, label
+    for identifier in ("DEV-", "HO-", "D-0", "F2-", "A0", "A70", "gpt-5.6-luna"):
         assert identifier not in block
-    assert "gpt-5.6-luna" not in block
-    latency = results["triage"]["latency"]
-    assert f"['Historical', {latency['baseline']['p50_s']}," in block
-    assert f"['Decisions', {latency['case_medians']['p50_s']}," in block
-    assert "const routeThreshold = 407 / 409;" in block
+    # Primary timings are contemporaneous paired case medians, not pooled calls or v1 history.
+    for arm, label, colour in (("C", "C control", "--c5"), ("D", "D Decisions", "--accent")):
+        latency = fresh["latency"][f"{arm}_case_medians"]
+        assert latency["n"] == 150
+        assert f"['{label}', {latency['p50_s']}, '{colour}']" in block
+    assert str(results["triage"]["latency"]["case_medians"]["p50_s"]) not in block
+    assert "const routeTrials =" in block
     assert results["triage"]["rules"]["thresholds"]["exact_matches_each_repeat"] == 407
-    for arm, label in (("A0", "No confidence gate"), ("A70", "70% confidence gate")):
-        counts = {v["effective_exact_route"]["numerator"] for v in results["triage"]["arms"][arm]["by_repeat"].values()}
-        assert len(counts) == 1
-        assert f"['{label}', {counts.pop()}]" in block
-    # The historical count is derived from the stored paired deltas, not a new run.
-    baseline = 405 - round(sum(v["A0"] for v in latency["paired_cases"]))
-    assert f"['Baseline', {baseline}]" in block
+    assert "minimum: 407, denominator: 409" in block
+    assert "minimum: 148, denominator: 150" in block
+    assert "148/150 each repeat" in fresh["interpretation"]["exact_quality"]
+    counts = {v["effective_exact_route"]["numerator"]
+              for v in results["triage"]["arms"]["A70"]["by_repeat"].values()}
+    assert len(counts) == 1
+    assert f"['Decisions 70%', {counts.pop()}, '397/409', '--accent']" in block
+    # Historical C count is derived from stored paired deltas, not a new run.
+    baseline = 405 - round(sum(v["A0"] for v in results["triage"]["latency"]["paired_cases"]))
+    assert f"['C historical', {baseline}, '{baseline}/409', '--c5']" in block
+    d_counts = [v["effective_exact_route"]["numerator"] for v in fresh["arms"]["D"]["by_repeat"].values()]
+    c_counts = [v["effective_exact_route"]["numerator"] for v in fresh["arms"]["C"]["by_repeat"].values()]
+    assert d_counts == [138, 138, 138]
+    assert c_counts == [150, 150, 149]
+    assert "['D Decisions', 138, '138/150 each', '--accent']" in block
+    assert f"['C control', {sum(c_counts)} / 3, '150, 150, 149 /150', '--c5']" in block
+    for arm, expected in (("D", 6), ("C", 1)):
+        divert = fresh["arms"][arm]["pooled"]["in_scope_diversions"]
+        assert (divert["numerator"], divert["denominator"]) == (expected, 270)
+    assert fresh["arms"]["D"]["operational"]["errors"]["refusal"] == 30
+    harm = fresh["arms"]["D"]["pooled"]["confusion_matrix"]["unsafe_or_sensitive"]
+    assert harm["in_scope"] == 30 and harm["unsafe_or_sensitive"] == 0
     primary = results["support"]["metrics"]["primary"]["overall"]
     for label, key, threshold in (("AUROC", "auroc", ".80"), ("Accuracy", "all_scheduled_accuracy", ".85"),
                                   ("Balanced accuracy", "balanced_accuracy", ".70")):
         assert f"['{label}', {primary[key]}, {threshold}]" in block
     assert primary["scheduled_n"] == 441
+    assert primary["confusion_matrix"]["fp"] == 44
+    assert primary["frozen_reference_counts"]["partial"] == 58
     assert set(results["support"]["metrics"]["primary"]["strata"]["model"]) == {"gpt-6-luna", "gpt-5.6-luna"}
     assert results["triage"]["decision"] == results["support"]["decision"] == "failed_screen"
+    assert fresh["decision"] == "do_not_adopt"
+    assert not any(fresh["adoption_guards"][key] for key in ("D_safety", "D_quality", "D_operational"))
     css = (STATIC / "css/presentation.css").read_text()
-    assert "const latencyRows =" in block and "const routeRows =" in block
-    assert "latencyRows.forEach" in block and "routeRows.forEach" in block
-    assert "supportMetrics.forEach" in block and "wrap.append(mobile)" in block
+    for shared_data in ("latencyRows.forEach", "routeTrials.forEach", "supportMetrics.forEach"):
+        assert block.count(shared_data) == 2
+    assert "wrap.append(mobile)" in block
     assert ".decisions-experiment > svg { display: none; }" in css
     assert ".decisions-experiment .decisions-mobile { display: grid;" in css
     assert ".decisions-mobile-note, .decisions-mobile-threshold, .decisions-mobile-failed { font-size: 16px;" in css

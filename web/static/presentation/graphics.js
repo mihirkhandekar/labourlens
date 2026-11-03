@@ -1265,11 +1265,11 @@ export function fixedPipeline() {
   return wrap;
 }
 
-/** Frozen Decisions API results, copied from experiments/eval/decisions-api-results.json.
- * Keep these descriptive screens separate from the shipped agent and its answer scores. */
+/** Frozen v1 and v2 Decisions API results from experiments/eval/decisions-api*-results.json.
+ * Separate populations, descriptive screens, no change to the shipped agent. */
 export function decisionsExperiment() {
   const wrap = el('div', 'exp-comparison decisions-experiment');
-  const svg = svgEl('svg', {viewBox: '0 0 1680 660', role: 'img', 'aria-label': 'Decisions API: lower historical routing latency, but routing and claim-support screens both failed.', focusable: 'false'});
+  const svg = svgEl('svg', {viewBox: '0 0 1680 660', role: 'img', 'aria-label': 'Decisions API v1 and v2: faster contemporaneous v2 routing, failed accuracy and safety screens, no adoption. Serious-harm provider refusals fail open to the agent.', focusable: 'false'});
   svg.style.setProperty('width', '100%');
   svg.style.setProperty('height', '100%');
   const label = (x, y, value, size = 26, colour = '--ink-2', weight = 400) => {
@@ -1282,49 +1282,62 @@ export function decisionsExperiment() {
   const rule = (x, y, width, value, height = 26) => {
     svg.append(svgEl('line', {x1: x + width * value, x2: x + width * value, y1: y - 4, y2: y + height, stroke: 'var(--brass)', 'stroke-width': 3}));
   };
-  label(0, 30, 'Routing latency', 32, '--ink', 600);
-  label(0, 67, 'Median seconds · 409 paired questions', 24, '--muted');
-  const latencyRows = [['Historical', 1.563, '--c5'], ['Decisions', 0.3593592920806259, '--accent']];
+  label(0, 30, 'v2 routing latency', 32, '--ink', 600);
+  label(0, 67, '150 paired questions · median of case medians', 24, '--muted');
+  const latencyRows = [['C control', 1.3915125001221895, '--c5'], ['D Decisions', 0.36233662511222064, '--accent']];
   latencyRows.forEach(([name, seconds, colour], i) => {
-    const y = 112 + i * 66;
+    const y = 98 + i * 56;
     label(0, y + 18, name);
     bar(180, y, 410, seconds / 2, colour, 24);
     label(620, y + 21, `${seconds.toFixed(2)} s`, 28, '--ink', 600);
   });
-  label(0, 243, 'Historical comparison, not a causal speed-up', 23, '--muted');
-  label(0, 315, 'Exact route accuracy', 32, '--ink', 600);
-  label(0, 351, 'Same result in each of three Decisions repeats', 24, '--muted');
-  const routeThreshold = 407 / 409;
-  const routeRows = [['Baseline', 408], ['No confidence gate', 405], ['70% confidence gate', 397]];
-  routeRows.forEach(([name, correct], i) => {
-    const y = 393 + i * 63;
-    label(0, y + 18, name, 24);
-    bar(285, y, 300, correct / 409, i === 0 ? '--c5' : '--accent', 23);
-    rule(285, y, 300, routeThreshold);
-    label(610, y + 20, `${correct}/409`, 27, '--ink', 600);
+  label(0, 220, 'Contemporaneous, not pure endpoint causality', 23, '--muted');
+  label(0, 282, 'Exact route accuracy', 32, '--ink', 600);
+  label(0, 318, 'Different populations, not a paired cross-trial gain', 23, '--muted');
+  const routeTrials = [
+    {title: 'v1 · 409 reused questions · each repeat', minimum: 407, denominator: 409,
+      rows: [['C historical', 408, '408/409', '--c5'], ['Decisions 70%', 397, '397/409', '--accent']]},
+    {title: 'v2 · 150 fresh AI-labelled questions', minimum: 148, denominator: 150,
+      rows: [['C control', 449 / 3, '150, 150, 149 /150', '--c5'], ['D Decisions', 138, '138/150 each', '--accent']]}
+  ];
+  routeTrials.forEach((trial, i) => {
+    const y = 354 + i * 143;
+    label(0, y, trial.title, 24, '--ink', 500);
+    trial.rows.forEach(([name, correct, display, colour], j) => {
+      const rowY = y + 21 + j * 39;
+      label(0, rowY + 17, name, 23);
+      bar(235, rowY, 270, correct / trial.denominator, colour, 21);
+      rule(235, rowY, 270, trial.minimum / trial.denominator, 24);
+      label(523, rowY + 18, display, 23, '--ink', 600);
+    });
+    label(235, y + 115, `Preregistered minimum ${trial.minimum}/${trial.denominator}`, 22, '--brass-text');
   });
-  label(285, 603, 'Gold mark: preregistered 407/409 minimum', 22, '--brass-text');
+  label(0, 653, 'v2 C bar: repeat mean; counts shown in repeat order', 22, '--muted');
 
-  svg.append(svgEl('line', {x1: 810, x2: 810, y1: 0, y2: 620, stroke: 'var(--line-strong)'}));
-  label(870, 30, 'Claim-support screen', 32, '--ink', 600);
-  label(870, 67, '441 selected claims · both generator models', 24, '--muted');
-  label(870, 109, 'Second-family AI reference, not human truth', 23, '--muted');
+  svg.append(svgEl('line', {x1: 810, x2: 810, y1: 0, y2: 650, stroke: 'var(--line-strong)'}));
+  label(860, 30, 'v2 refusal and diversion', 32, '--bad', 600);
+  label(860, 78, '30/30 serious-harm calls: provider refused', 27, '--ink', 500);
+  label(860, 117, 'Refusal → fail open to agent', 30, '--bad', 600);
+  label(860, 154, 'Not a predicted unsafe route', 24, '--muted');
+  label(860, 205, 'In-scope diverts: D 6/270 vs C 1/270', 26, '--ink', 500);
+  label(860, 244, 'Both trials failed. No adoption.', 28, '--bad', 600);
+  label(860, 301, 'v1 claim-support check', 29, '--ink', 600);
+  label(860, 335, '441 dependent claims · primary AI reference', 23, '--muted');
+  label(860, 367, 'Not human truth · gold marks: preregistered minima', 22, '--muted');
   const supportMetrics = [
     ['AUROC', 0.829679481408121, .80],
     ['Accuracy', 0.8798185941043084, .85],
     ['Balanced accuracy', 0.6089403079139282, .70]
   ];
   supportMetrics.forEach(([name, value, minimum], i) => {
-    const y = 163 + i * 116;
-    label(870, y, name, 26, '--ink', 500);
-    bar(870, y + 18, 570, value, value >= minimum ? '--accent' : '--bad', 23);
-    rule(870, y + 18, 570, minimum, 28);
-    label(1470, y + 39, value.toFixed(3), 29, '--ink', 600);
-    label(870, y + 75, `Preregistered minimum ${minimum.toFixed(2)}`, 22, '--brass-text');
+    const y = 400 + i * 55;
+    label(860, y + 17, name, 23, '--ink', 500);
+    bar(1090, y, 300, value, value >= minimum ? '--accent' : '--bad', 20);
+    rule(1090, y, 300, minimum, 23);
+    label(1410, y + 18, `${value.toFixed(3)} / ${minimum.toFixed(2)}`, 24, '--ink', 600);
   });
-  label(870, 535, 'False support: 44/58 partial claims (75.9%)', 25, '--bad', 500);
-  label(870, 573, 'Maximum allowed: 20% · also failed', 23, '--muted');
-  label(870, 615, 'API model: gpt-6-luna only', 24, '--muted');
+  label(860, 581, 'False support: 44/58 partial claims (75.9%)', 24, '--bad', 500);
+  label(860, 614, 'Maximum 20% · failed · API model: gpt-6-luna only', 23, '--muted');
   wrap.append(svg);
   // Reflow the same measurements into native text and full-width tracks on phones.
   const mobile = el('div', 'decisions-mobile');
@@ -1350,13 +1363,21 @@ export function decisionsExperiment() {
     }
     row.append(head, track); parent.append(row);
   };
-  const latency = section('Routing latency', 'Median seconds, 409 paired questions');
+  const latency = section('v2 routing latency', '150 paired questions. Median of case medians.');
   latencyRows.forEach(([name, seconds, colour]) => mobileBar(latency, name, seconds / 2, `${seconds.toFixed(2)} s`, colour));
-  latency.append(el('p', 'decisions-mobile-note', 'Historical comparison, not a causal speed-up.'));
-  const routing = section('Exact route accuracy', 'Same result in each of three Decisions repeats');
-  routeRows.forEach(([name, correct], i) => mobileBar(routing, name, correct / 409, `${correct}/409`, i === 0 ? '--c5' : '--accent', routeThreshold));
-  routing.append(el('p', 'decisions-mobile-threshold', 'Gold mark: preregistered 407/409 minimum'));
-  const support = section('Claim-support screen', '441 selected claims from both generator models. Second-family AI reference, not human truth.');
+  latency.append(el('p', 'decisions-mobile-note', 'Contemporaneous, not pure endpoint causality.'));
+  const routing = section('Exact route accuracy', 'Different populations, not a paired cross-trial gain.');
+  routeTrials.forEach(trial => {
+    routing.append(el('h3', '', trial.title));
+    trial.rows.forEach(([name, correct, display, colour]) => mobileBar(routing, name, correct / trial.denominator, display, colour, trial.minimum / trial.denominator));
+    routing.append(el('p', 'decisions-mobile-threshold', `Gold mark: preregistered minimum ${trial.minimum}/${trial.denominator}`));
+  });
+  routing.append(el('p', 'decisions-mobile-note', 'v2 C bar: repeat mean; counts shown in repeat order.'));
+  const safety = section('v2 refusal and diversion', '30/30 serious-harm calls: provider refused.');
+  safety.append(el('p', 'decisions-mobile-failed', 'Refusal → fail open to agent. Not a predicted unsafe route.'),
+    el('p', 'decisions-mobile-note', 'In-scope diverts: D 6/270 vs C 1/270'),
+    el('p', 'decisions-mobile-failed', 'Both trials failed. No adoption.'));
+  const support = section('v1 claim-support check', '441 selected dependent claims. Primary AI reference, not human truth.');
   supportMetrics.forEach(([name, value, minimum]) => {
     mobileBar(support, name, value, value.toFixed(3), value >= minimum ? '--accent' : '--bad', minimum);
     support.append(el('p', 'decisions-mobile-threshold', `Preregistered minimum ${minimum.toFixed(2)}`));

@@ -1,0 +1,95 @@
+{
+  "expected_n": 900,
+  "cases_sha256": "fc431214c64643b5d8e63f76e4ad39a9fd31c6d61566613d9ab372d7016f8a7d",
+  "prompt_sha256": "9d2c5a08d16bed5ac43f4b7f3aad9afe40bf70bcea805586176fa5c864d57a74",
+  "threshold": 0.7,
+  "selected_tuning_id": "decisions-triage-tune-1",
+  "prereg_sha256": "19331f73a66a81835bcf503a9d69653774f499ec608193ce3ff99cf306a257ad",
+  "case_audit": {
+    "n": 150,
+    "sha256": "fc431214c64643b5d8e63f76e4ad39a9fd31c6d61566613d9ab372d7016f8a7d",
+    "cases_sha256": "fc431214c64643b5d8e63f76e4ad39a9fd31c6d61566613d9ab372d7016f8a7d",
+    "counts": {
+      "in_scope": 90,
+      "out_of_scope": 40,
+      "small_talk": 10,
+      "unsafe_or_sensitive": 10
+    },
+    "routes": {
+      "in_scope": 90,
+      "out_of_scope": 40,
+      "small_talk": 10,
+      "unsafe_or_sensitive": 10
+    },
+    "kinds": {
+      "research": 60,
+      "borderline": 35,
+      "injection": 15,
+      "clear": 20,
+      "social": 10,
+      "unrelated-harm": 10
+    },
+    "reference_unique_questions": 500,
+    "reference_sha256": {
+      "/Users/mihir/projects/experiments/zuhl/experiments/gold/ai-review/a.jsonl": "3e29f8ea8f3c022888c177815c5db01037dd41a2f5766a94ba055a351e6cb183",
+      "/Users/mihir/projects/experiments/zuhl/experiments/gold/ai-review/b.jsonl": "a03870b1277e760918b1444f93ab524a721870477fd366311ad393c1bceb0973",
+      "/Users/mihir/projects/experiments/zuhl/experiments/gold/ai-review/base.jsonl": "1d7c659df4653a85e08ff4f71b78bf50d60fd2a40ca243ca68a42677d1eb331d",
+      "/Users/mihir/projects/experiments/zuhl/experiments/gold/ai-review/c.jsonl": "b46c3feab6acf753180a28f1974a53dd28b1b3b375c68e70e18b3884650840cc",
+      "/Users/mihir/projects/experiments/zuhl/experiments/gold/ai-review-2/a.jsonl": "40e53be876f5d9ec56ad5448d4b708d3e9ae5695c84ce0382d621d764c88d7a8",
+      "/Users/mihir/projects/experiments/zuhl/experiments/gold/ai-review-2/b.jsonl": "8ec673b2f2a23d299ac21b073206d50a361b069ee0af69e6fbbf646ac2f2ba77",
+      "/Users/mihir/projects/experiments/zuhl/experiments/gold/ai-review-3/v3.jsonl": "60d50926ef272df3e3294713213d03b74a10a12d2bb0d34dfdf2078e9c77e910",
+      "/Users/mihir/projects/experiments/zuhl/experiments/gold/archive/gold-v3.2.jsonl": "647b26a2f0faa86be30ad897840bc1887b54f55c27268d141565b94cb22998e8",
+      "/Users/mihir/projects/experiments/zuhl/experiments/gold/archive/gold-v3.3.jsonl": "96ec51baf05d9fb998efd3ed37762cb8cedd27b2bf329996d7251adcb01b597e",
+      "/Users/mihir/projects/experiments/zuhl/experiments/gold/archive/gold-v3.4.jsonl": "050bb40b4863cf3a00682da0edc305dc4d9c7de1c35b3098989e8afdd50899b9",
+      "/Users/mihir/projects/experiments/zuhl/experiments/gold/archive/gold-v3.5.jsonl": "aac4b405b51c7cebf019c3b3629509ecb711be32fb830a8e78c4c7b902219e09",
+      "/Users/mihir/projects/experiments/zuhl/experiments/gold/draft_cases.jsonl": "6169a9deca78cb5908c584bdf7d17b1c8dd9a15ff7840b3752f3bbb4febb2f9b",
+      "/Users/mihir/projects/experiments/zuhl/experiments/gold/gold_v3.7-review-log.jsonl": "0cf3df69ce8bfb3043b432ed2586f702d9f4931e6a36fa794e5665dd75525ea8",
+      "/Users/mihir/projects/experiments/zuhl/experiments/gold/gold_v3.7.jsonl": "af3ad02690ed1dabb69e2be7f7bb984f707f1352b95c8bd693d0fb51e9410d8f",
+      "/Users/mihir/projects/experiments/zuhl/experiments/gold/heldout_v2_draft.jsonl": "698940357c090c4beed4ba6532f66967dc7175297a3d1ffcd5fd6325e128fb70",
+      "/Users/mihir/projects/experiments/zuhl/experiments/gold/heldout_v2_structured_draft.jsonl": "1908af28065f1e4d42832fb1525817e845bf7d675895ac521fd593a31192edce",
+      "/Users/mihir/projects/experiments/zuhl/experiments/gold/heldout_v2_v1.jsonl": "e3d16597d542d33d106b4e9291aa3b92ca5fcdf19aa4d3c2b3319c0543efa542",
+      "/Users/mihir/projects/experiments/zuhl/experiments/gold/proposed_label_changes.jsonl": "490745a65b1be2b40bc49fe2dd4e4df005fb7569b4832d693def217cc1a8715c",
+      "/Users/mihir/projects/experiments/zuhl/experiments/threats/cases-v2.jsonl": "34eebafd73db50d21365e02993011f8fa88cbe801d38adc3009a9374b2558497",
+      "/Users/mihir/projects/experiments/zuhl/experiments/threats/cases.jsonl": "17fd3bf5a195f19b40110493f838a929104f41d7009c853332a2b83c8a82b77b",
+      "/Users/mihir/projects/experiments/zuhl/experiments/triage/offtopic_cases.jsonl": "e6170b69260e6c73a1b5a2a0c2f2ee2d1c4d76abdea3b0d1a6003e06d9fee69f",
+      "/Users/mihir/projects/experiments/zuhl/experiments/triage/triage-v1-luna/raw.jsonl": "1029171d0b494ef659b378827bf597c41e58c594ec31ab9bd7721419360c6e7a"
+    },
+    "max_similarity": {
+      "jaccard": {
+        "value": 0.16666666666666666,
+        "pair": [
+          "F2-146",
+          "offtopic_cases.jsonl:OT-020"
+        ]
+      },
+      "sequence_ratio": {
+        "value": 0.7014925373134329,
+        "pair": [
+          "F2-142",
+          "offtopic_cases.jsonl:OT-019"
+        ]
+      }
+    },
+    "thresholds": {
+      "jaccard": 0.35,
+      "sequence_ratio": 0.8
+    },
+    "provenance": "AI-authored and AI-labelled, not human-reviewed"
+  },
+  "workers": 6,
+  "repeats": 3,
+  "model": "gpt-6-luna",
+  "control_prompt": "triage_v1",
+  "control_prompt_sha256": "dcdb8344c3ef9d83fc5fd2935e1b0b645983d2cc909491b528281e34840f4daf",
+  "control_user_prompt_sha256": "37719d7c2d600818d3cee40e71cc7c8cebea11d97ece8bb4fd7e077f8a2574ed",
+  "deadline_s": 8,
+  "max_attempts": 2,
+  "backoff_s": 0.5,
+  "global_cap_usd": 3,
+  "prereg_commit": "9e82d44ea82f13b5d3d4b5096bd15e6365cde17b",
+  "cases_commit": "9e82d44ea82f13b5d3d4b5096bd15e6365cde17b",
+  "selection_commit": "1ba2456b02efd181f1eb1cddac0ccbc02095b7af",
+  "prompt_commit": "1ba2456b02efd181f1eb1cddac0ccbc02095b7af",
+  "git_commit": "1ba2456b02efd181f1eb1cddac0ccbc02095b7af",
+  "started_at": "2026-11-03T06:12:48.094311+00:00"
+}

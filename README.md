@@ -8,7 +8,7 @@ The default model is `gpt-6-luna`. Averaged over two runs, filter then rerank sc
 
 Retrieval-only checks now cover both test sets: strict first-eight-passage hit@8 rose from hybrid .167 to .778 on 18 original-test text cases, and .500 to .941 on 34 fresh text cases, without a demonstrated end-to-end answer gain. On development questions, a fixed pipeline scored .814 against the bounded agent's .897 mean; one fixed run, missing arithmetic and other policy differences limit that comparison. A harder attack suite passed 50/54 guarded versus 42/54 naive (three repeats, case majority, exact p=.039), with 3/8 benign failures in each arm. [Retrieval results](docs/experiments/heldout-retrieval-metrics-results.md), [fixed-pipeline comparison](docs/experiments/agent-vs-fixed-pipeline-results.md), [threat results](docs/experiments/threat-v2-results.md).
 
-The [Decisions API trial](docs/experiments/decisions-api-results.md) was faster on historical routing timings but failed routing safety/quality and verifier threshold screens; it was not adopted in the live agent.
+Neither Decisions API trial was adopted: [v1](docs/experiments/decisions-api-results.md) failed routing/verifier screens; [dev-tuned v2](docs/experiments/decisions-api-v2-results.md) was faster than contemporaneous chat but failed safety, quality and operational guards, including provider refusals on every tested serious-harm presentation. The live agent is unchanged.
 
 ## Quick start
 
