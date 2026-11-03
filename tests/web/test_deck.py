@@ -135,6 +135,8 @@ def test_slide_faces_carry_no_identifiers():
         assert not FACE_FORBIDDEN.search(line), line.strip()[:140]
     for path in [STATIC / "presentation" / "graphics.js"]:
         text = path.read_text()
+        # Evidence-only strings are passed to withTip, never added as face labels.
+        text = re.sub(r"(?m)^ +(?:const suiteSource = )?'(?:tests/|experiments/)[^\n]*\n", "", text)
         assert not re.search(r"ADR-|D-0\d\d|T-I06|\.md\b", text), path.name
 
 
@@ -187,7 +189,7 @@ def test_removed_slides_stay_removed_and_summary_keeps_limitations():
     for caveat in ("one human reviewer", "no demonstrated gain", "23/30 attacks flagged", "provider-side spend cap", "Next:"):
         assert caveat in summary
     graphics = (STATIC / "presentation" / "graphics.js").read_text()
-    assert "10 of 30 test attacks caught before, 23 of 30 after" in graphics
+    assert "10 of 30 to 23 of 30 attacks flagged" in graphics
     assert "not a security boundary" in graphics and "five test attacks each" in graphics
     for wording in ("markup 0 to 5", "sentence 0 to 5", "encoding 0 to 3", "paraphrase 3 to 3", "role-play 3 to 3", "table 4 to 4"):
         assert wording in graphics
@@ -374,14 +376,24 @@ def test_ladder_hides_fresh_results_and_difference_labels_on_deck_only():
     assert "if (showDifference)" in graphics
 
 
-def test_threat_slide_reads_counts_from_the_report_data_and_labels_runs():
+def test_threat_slide_maps_layers_to_checks_without_an_on_off_leaderboard():
     graphics = (STATIC / "presentation" / "graphics.js").read_text()
     block = graphics.split("export function threatMatrix", 1)[1].split("return wrap;", 1)[0]
-    assert "threatRuns(m)" in block and "(2 Nov)" in block and "groups" in block
-    assert "With defences" in block and "Without defences" in block
-    assert "scorer_v2?.fresh?.rows" in graphics
+    assert "threatRuns(m)[0]" in block and "defended.by_category[key]" in block
+    assert "With defences" not in block and "Without defences" not in block
+    for evidence in ("tests/test_security.py", "tests/retrieval/test_crosscheck.py",
+                     "tests/retrieval/test_answer_validate.py", "tests/retrieval/test_agent.py",
+                     "tests/mcp/test_mcp.py", "v2-baseline-test/metrics.json", "v2-selected-test/metrics.json"):
+        assert evidence in block
+    assert "no separate test of sensitive-data refusal" in block
+    assert "No separate test of model obedience" in block
+    assert "planted figure failed again" in block and "T-I06" in block
+    assert "10 of 30 to 23 of 30" in block and "9/30 false alarms" in block
+    assert "gpt-5.6-luna" not in block
     main = _slides_main_section()
-    assert "35/36 with and without defences" in main and "31 Oct run scored 36/36 for defended gpt-6-luna" in main
+    assert "Both arms scored 35/36 on gpt-6-luna" in main
+    assert "suite cannot rank the defences" in main
+    assert "Neither proof they work nor evidence they are useless" in main
 
 
 def test_workbench_slide_names_the_live_only_steps():

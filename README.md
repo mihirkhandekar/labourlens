@@ -71,6 +71,8 @@ flowchart TD
 
 Only statistics lookup crosses MCP in the live app. The all-three-tools MCP route was tested and was slower without an accuracy gain; it is not live. The [architecture](docs/architecture.md) covers failure paths and validation repair, with a [rendered component diagram](docs/img/architecture.svg).
 
+The statistics capability is the `get_series` tool; direct and MCP are routes to it, not different knowledge sources. Direct calls `StatsData.query` in process, with no network or protocol. MCP calls server tool `get_statistic` in a separate process, which runs the same query over the same local `observations.parquet`. Both return observation labels such as `O1` that `calculate_change` accepts as inputs. The live default is `mcp_stats`; the local default is direct and needs no MCP server. Comparing these routes tests transport, not extra information, so a tie is expected but does not prove equivalence. Removing `get_series` is a different experiment: it removes statistics access and the calculation inputs.
+
 ## What I built
 
 - Immutable source snapshots, observation lineage and data contracts.

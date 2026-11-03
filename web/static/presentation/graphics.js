@@ -192,6 +192,8 @@ export function retrievalTuning() {
   return withTip(el('p', 'ex-tuning', 'What I tuned'), 'I chose chunk size and overlap (about 200 words, 40-word overlap), compared a hard period/release filter with a soft bonus, reranked a pool of 30, and changed prompts and tool limits. Reciprocal rank fusion constant 60 was fixed in advance, not searched. These choices used development scores; questions often name a quarter and release, which favours the filter.', 'is-up is-wide');
 }
 
+const STATISTICS_ROUTE = 'get_series is the statistics capability; configuration chooses how it is reached. Direct calls StatsData.query in the app, with no network or protocol. MCP sends get_statistic to a server process, which runs the same query on the same local observations.parquet. Both routes then use the same code to label returned rows O1 onwards; calculate_change accepts only those returned labels. MCP adds no second knowledge source. The live default is mcp_stats; direct is the comparison arm and the default for local runs without an MCP server. A tie is expected because the query and data are identical: this comparison tests transport, not information.';
+
 /** The fixed tool vocabulary, presented as equal rows rather than extra panels. */
 export function toolLegend() {
   const wrap = el('div', 'ex-tools');
@@ -201,13 +203,14 @@ export function toolLegend() {
   wrap.append(head);
   [
     ['search_reports', 'Question → passages', 'App', 'Find report evidence', 'The app searches the passage index and embeddings, filters period and release and reranks. The planner never sees passage text: its catalogue and evidence summaries are separate from the answer writer’s cited passages.'],
-    ['get_series', 'Series + period → rows', 'MCP server (blue outline)', 'Share validated statistics', 'Blue outlines mark the MCP boundary, not a different kind of evidence. The agent calls get_series; the MCP client calls server tool get_statistic with source, periods and dimension. Output rows keep definitions and provenance. The served sample measured equal accuracy to direct calls: no observed loss and no demonstrated gain, not proof of equivalence.'],
+    ['get_series', 'Series + period → rows', 'MCP server (blue outline)', 'Same query, same statistics', 'Blue outlines mark the MCP boundary in the live route. The measured tie is not proof of equivalence. ' + STATISTICS_ROUTE],
     ['calculate_change', 'Two returned rows → change', 'App, plain code', 'Do not invent figures', 'Deterministic Decimal arithmetic checks compatible units and definitions on previously returned observations. It computes an exact difference or percentage change. It cannot invent input values; the base tool does not calculate from report-only figures.']
   ].forEach(([tool, exchange, where, why, detail]) => {
     const row = el('div', 'ex-tools-row'); row.setAttribute('role', 'row');
     [tool, exchange, where, why].forEach(t => { const cell = el('span', '', t); cell.setAttribute('role', 'cell'); row.append(cell); });
     wrap.append(withTip(row, detail, 'is-up is-wide'));
   });
+  wrap.append(el('p', 'tm-limit', 'Statistics is one tool with two routes: direct Python or MCP. Both query the same local data.'));
   return wrap;
 }
 
@@ -822,7 +825,7 @@ export function mcpMap(m) {
   resources.append(tipped('div', 'owner-mcp-resource', 'Source catalogue', 'Resource labourlens://sources returns publisher, URL, rights and coverage metadata for datasets and documents. No report text.'));
   resources.append(tipped('div', 'owner-mcp-resource', 'Source entry', 'Resource template labourlens://source/{source_id} returns one catalogue entry. This second resource capability is a template, not a second fixed resource URI. Full report passages are not exposed. The research agent does not read these resources.'));
   server.append(tipped('p', 'owner-mcp-label', '2 resources', 'One concrete catalogue resource and one source-entry resource template, shown separately from callable tools.'), resources);
-  const store = tipped('div', 'owner-mcp-store', 'Validated store', 'Read-only observations and source catalogue. The server uses StatsData, not the report retriever or embeddings. The host also retains local statistics for the planner catalogue. [INFERENCE] Separate host and server processes may duplicate observation memory; no memory overhead measurement has been recorded, so no size or efficiency claim is made.');
+  const store = tipped('div', 'owner-mcp-store', 'Same local statistics', STATISTICS_ROUTE);
   flow.append(host, arrow(), server, arrow(), store); wrap.append(flow);
   const exchange = el('div', 'owner-mcp-exchange');
   exchange.append(tipped('span', '', 'Typed request', 'Host to server: source_id, period_from, period_to, dimension and optional adjustment and indicator_id, validated against the discovered tool schema.'));
@@ -832,7 +835,7 @@ export function mcpMap(m) {
   if (served) {
     const lunaRow = route => (served.rows || []).find(row => row.route === route && row.model === 'gpt-6-luna')?.metrics?.all;
     const results = (served.rows || []).filter(row => row.route === 'mcp-on').map(row => `${row.model}: ${fmt.pct(row.metrics.all.behavior_accuracy)} behaviour accuracy on 65 served-chain cases.`).join(' ');
-    wrap.append(tipped('span', 'owner-mcp-evidence', 'Live route: over MCP or direct, the answers matched. No loss, no demonstrated gain (65 questions, one run).', `Earlier route, the one used live. ${results} Both routes run the same query code on the same store, so equal answers are expected. MCP earns its place when several clients share the data or a separate team owns the data service; it adds one hop. The assessment requires the server, a client demonstration and a direct comparison, which is why it is built and measured. ${served.limits || ''} Full-set accuracy evaluations used direct calls. The sample does not establish equivalence.`));
+    wrap.append(tipped('span', 'owner-mcp-evidence', 'Live: statistics over MCP. Direct calls query the same local data. Accuracy tied on 65 questions, one run.', `${STATISTICS_ROUTE} ${results} MCP adds a process hop and a standard client interface. ${served.limits || ''} Full-set accuracy evaluations used direct calls. The sample does not establish equivalence.`));
     const all = lunaRow('mcp-all'), on = lunaRow('mcp-on'), direct = lunaRow('direct-on');
     const pairedAll = served.paired?.['mcpall-vs-direct-on']?.['gpt-6-luna'], pairedOn = served.paired?.['mcpall-vs-mcp-on']?.['gpt-6-luna'];
     if (all && on && direct && pairedAll && pairedOn) {
@@ -843,7 +846,7 @@ export function mcpMap(m) {
     }
   }
   wrap.append(tipped('span', 'owner-mcp-evidence is-tested', 'Taking the statistics tool away drops accuracy from 90.8% to 69.2% on these 65 questions; MCP and direct calls tie on this set.',
-    'Experiment only, not a live setting: the planner could search reports and calculate changes but not look up statistics. gpt-6-luna, same 65 questions, one run. Behaviour accuracy 69.2% (45 of 65) against 90.8% (59 of 65) for direct calls and for MCP. Paired difference -21.5 points, 90% interval [-30.8, -13.8] against direct (0 better, 14 worse, exact p .0001) and [-30.8, -12.3] against MCP (1 better, 15 worse, exact p .0005). So removing the store costs about 21 points on this sample, partly by construction because the calculation tool loses its input (0 of 6 correct); MCP against direct is a tie here, not proof of no effect. Fifteen over-abstentions on answerable cases against 1 for direct and 0 for MCP; false answers 3 in each arm. One run, 7 numerical and 4 revision cases, AI-drafted gold, same judge family. Median time 34.6 s, not a clean comparison because the arms ran at different times. A first attempt stopped at 44 of 65 on a command timeout and was not used.'));
+    STATISTICS_ROUTE + ' Removing the statistics capability is different from changing its route. Experiment only, not a live setting: the planner could search reports and calculate changes but not look up statistics. gpt-6-luna, same 65 questions, one run. Behaviour accuracy 69.2% (45 of 65) against 90.8% (59 of 65) for direct calls and for MCP. Paired difference -21.5 points, 90% interval [-30.8, -13.8] against direct (0 better, 14 worse, exact p .0001) and [-30.8, -12.3] against MCP (1 better, 15 worse, exact p .0005). So removing the store costs about 21 points on this sample, partly by construction because the calculation tool loses its input (0 of 6 correct); MCP against direct is a tie here, not proof of no effect. Fifteen over-abstentions on answerable cases against 1 for direct and 0 for MCP; false answers 3 in each arm. One run, 7 numerical and 4 revision cases, AI-drafted gold, same judge family. Median time 34.6 s, not a clean comparison because the arms ran at different times. A first attempt stopped at 44 of 65 on a command timeout and was not used.'));
   return wrap;
 }
 /** The nine remaining asks of the assignment: plain name and what was asked. */
@@ -942,12 +945,12 @@ export function architectureDiagram() {
     if (name === 'Three tools') {
       const mcp = el('div', 'g17-mcp');
       mcp.append(ico('path'), el('strong', '', 'get_series → get_statistic'), el('span', 'g17-mcp-sub', 'MCP client → statistics server'));
-      withTip(mcp, 'The live agent uses an MCP client and a local statistics server. Only series lookups cross this process boundary. The server validates the call and returns typed rows; report search and calculation stay in process.', 'is-up');
+      withTip(mcp, 'Only series lookups cross this process boundary in the live route. ' + STATISTICS_ROUTE, 'is-up is-wide');
       box.append(mcp);
     }
     row.append(box);
   });
-  const flowNote = el('p', 'g17-flow-note', 'The agent calls search_reports, get_series or calculate_change inside its loop. Evidence returns to the agent before it calls again or answers.');
+  const flowNote = el('p', 'g17-flow-note', 'The agent chooses tools inside its loop. Statistics has two routes: direct Python or MCP, both querying the same local data. MCP adds no second knowledge source.');
   const bars = el('div', 'g17-bars');
   [['shield', 'Guardrails', 'Retrieved text is untrusted. Tools are read-only and calls are bounded.'], ['chart-line', 'Evaluation', 'Development and fresh cases, human review and attack tests.']].forEach(([icon, name, text]) => {
     const bar = el('div', 'g17-bar'); bar.append(ico(icon), el('strong', '', name), el('span', '', text)); bars.append(bar);
@@ -1161,60 +1164,41 @@ export function threatRuns(m) {
   return [row('gpt-6-luna'), row('gpt-6-luna+naive'), row('gpt-5.6-luna'), row('gpt-5.6-luna+naive')];
 }
 
-/** Attack, defence and result per category, with and without the defences. Segments are filled for each case passed. */
+/** Defence-layer checks, not an on/off leaderboard. */
 export function threatMatrix(m) {
-  const all = threatRuns(m);
-  const groups = [['gpt-6-luna', all[0], all[1]], ['gpt-5.6-luna', all[2], all[3]]].filter(([, a, b]) => a?.by_category && b?.by_category);
-  if (!groups.length) return null;
-  const runs = groups.flatMap(([, a, b]) => [a, b]), who = groups.flatMap(([name]) => [name, name]), cls = groups.length > 1 ? 'is-four' : 'is-two';
+  const defended = threatRuns(m)[0];
+  if (!defended?.by_category) return null;
   const wrap = el('div', 'tm');
   const head = el('div', 'tm-row tm-head');
-  const models = el('span', 'tm-models'); groups.forEach(([name]) => models.append(el('span', '', `${name} (2 Nov)`)));
-  head.append(el('span', '', 'Attack'), models);
-  const sub = el('div', 'tm-row tm-head tm-sub');
-  const cols = el('span', `tm-models ${cls}`);
-  groups.forEach(() => ['With defences', 'Without defences'].forEach(t => cols.append(el('span', '', t))));
-  sub.append(el('span', ''), cols);
-  wrap.append(head, sub);
+  head.append(el('span', '', 'Defence layer'), el('span', '', 'Separate check and result'), el('span', '', '36-case suite'));
+  wrap.append(head);
+  const suiteSource = 'experiments/threats/ti06-v2-fresh-20261102/SUMMARY.md; 2 Nov, one run, gpt-6-luna. Category passes are end-to-end observations, not isolated proof of a layer.';
   const rows = [
-    ['Question injection and secret requests', 'Input flags; secret and prompt output checks.', 'direct_injection', ''],
-    ['Injection or false figure in a passage', 'Untrusted evidence cannot set instructions; figures are cross-checked against the statistics.', 'indirect_injection_passage', groups.length > 1 ? 'The planted figure fails in all four configurations in the 2 Nov rerun, under both scorers. The naive gpt-6-luna arm also misses figure-conflict detection. The check is not shown stable.' : 'The planted figure fails with and without defences in the 2 Nov rerun, under both scorers. The undefended arm also misses figure-conflict detection. The check is not shown stable.'],
-    ['Sensitive data, credentials, PII', 'Refusal; no personal-data tool exists.', 'sensitive_data', ''],
-    ['Unsupported or causal claim', 'Answer from cited evidence or decline.', 'unsupported_claims', ''],
-    ['Unsafe tool use', 'Typed read-only tools with argument and call caps.', 'unsafe_tool_use', ''],
-    ['Malicious or malformed MCP output', 'Allow-list, schema checks, size and time caps.', 'mcp_server_failure', '']
+    ['Input flags; secret and prompt output checks', '5 deterministic guard tests pass', 'direct_injection',
+      'tests/test_security.py: test_injection_phrases_are_flagged, test_ordinary_labour_statistics_are_not_flagged, test_paraphrase_probes_from_source_review_are_flagged, test_paraphrase_heuristics_leave_clean_statistics_alone, test_output_scan_catches_secrets_and_prompt_leaks. Checks detection and clean examples, not model resistance.'],
+    ['Untrusted passages; planted-figure cross-check', '26 cross-check tests pass; planted figure failed again', 'indirect_injection_passage',
+      'tests/retrieval/test_crosscheck.py: 26 parameterised cases, including correction with two citations, scripted-model graph repair, definition matching, switches and scorer checks. No separate test of model obedience to the untrusted-passage instruction. T-I06 failed again under both scorers; deterministic fixtures do not establish end-to-end reliability.'],
+    ['Sensitive-data refusal; no personal-data tool', 'no separate test of sensitive-data refusal', 'sensitive_data',
+      'Five sensitive-data suite cases pass. No separate deterministic refusal test was found. A read-only tool catalogue is not an independent test of refusal behaviour.'],
+    ['Answer from cited evidence or decline', '6 answer-validation tests pass', 'unsupported_claims',
+      'tests/retrieval/test_answer_validate.py: six tests cover verbatim quotes, citation labels, answer/abstention status rules and number helpers. Ungrounded numbers are a soft finding, not an error. Structural checks, not a separate semantic or causal-claim guarantee.'],
+    ['Typed read-only tools; argument and call caps', '3 tool-boundary tests pass', 'unsafe_tool_use',
+      'tests/retrieval/test_agent.py: test_get_series_enforces_scope_and_known_sources, test_planner_calls_are_capped_per_round_and_rounds_are_capped, test_bad_tool_arguments_are_reported_to_planner_and_can_be_corrected. Checks scope, call limits and argument-error recovery with scripted model replies.'],
+    ['MCP allow-list, schema, size and time caps', '9 boundary checks pass; 10 hostile-server cases', 'mcp_server_failure',
+      'tests/mcp/test_mcp.py: seven parameterised test_faulty_or_hostile_server_fails_closed_with_a_specific_error cases (oversized, malformed, schema drift, slow, crash, wrong version, bad name), test_unexpected_tools_are_ignored_and_reported and test_unlisted_server_and_missing_binary_are_refused. Ten suite fixtures include obvious and subtle instruction injection; client/failure-boundary evidence, not answer-accuracy gains.'],
+    ['Attack scanner', 'Frozen test: 10 of 30 to 23 of 30 attacks flagged', null,
+      'experiments/scanner/v2-baseline-test/metrics.json and experiments/scanner/v2-selected-test/metrics.json. Test split frozen before selection. False alarms stay at 9/30 benign test passages: 9/15 synthetic hard negatives, 0/15 real report passages. Selected recall 95% interval 59 to 88%. Per class, five test attacks each, before to after: markup 0 to 5; sentence 0 to 5; encoding 0 to 3; paraphrase 3 to 3; role-play 3 to 3; table 4 to 4. Matching writing styles and small samples limit generalisation; adaptive attacks can bypass it. Warning layer, not a security boundary.']
   ];
-
-  rows.forEach(([attack, defence, key, extra], i) => {
-    const n = runs[0].by_category[key]?.n;
-    const row = el('div', 'tm-row'); row.style.setProperty('--i', String(i));
-    const strips = el('div', `tm-models ${cls}`);
-    runs.forEach((run, k) => {
-      const passed = run.by_category[key]?.passed;
-      const res = el('div', `tm-res${k % 2 ? ' is-without' : ''}`);
-      const seg = el('div', 'tm-seg'); seg.setAttribute('role', 'img'); seg.setAttribute('aria-label', `${who[k]} ${k % 2 ? 'without' : 'with'} defences: ${passed} of ${n} passed`);
-      for (let c = 0; c < n; c += 1) seg.append(el('i', c < passed ? 'is-pass' : 'is-miss'));
-      res.append(seg, el('span', 'tm-count num', `${passed}/${n}`)); strips.append(res);
-    });
-    const label = el('span', 'tm-attack', attack);
-    withTip(label, `${defence}${extra ? `\n${extra}` : ''}`);
-    row.append(label, strips);
+  rows.forEach(([layer, result, key, source]) => {
+    const row = el('div', 'tm-row');
+    const category = key ? defended.by_category[key] : null;
+    const outcome = el('span', `tm-outcome${key === 'indirect_injection_passage' ? ' is-warning' : ''}`,
+      category ? `${category.passed}/${category.n} passed` : '9/30 false alarms');
+    row.append(el('strong', 'tm-layer', layer), el('span', 'tm-check', result), outcome);
+    withTip(row, `${source}${key ? `\n${suiteSource}` : ''}`, 'is-up is-wide');
     wrap.append(row);
   });
-  const scanner = el('div', 'owner-scanner');
-  const disclosure = 'On 60 AI-written attacks and 60 benign passages, split into development and test sets frozen beforehand, adding markup stripping, leetspeak decoding and a short sentence window raised test recall from 10/30 to 23/30. False alarms stayed at 9/30 on deliberately hard wording and 0/15 on real report passages. The benign test set contains 15 synthetic hard negatives and 15 real passages: nine false alarms are all in the synthetic group. Cases are few and written in matching styles, so intervals are wide, and an adaptive attacker would still get through. The detector warns; it does not guarantee.';
-  scanner.append(el('p', '', 'Attack scanner: 10 of 30 test attacks caught before, 23 of 30 after (95% interval 59 to 88%).'));
-  const pairs = el('div', 'owner-scanner-pairs');
-  // Recorded aggregate test counts, experiments/scanner/v2-{baseline,selected}-test/metrics.json.
-  [['Attacks flagged', 10, 23], ['Harmless flagged', 9, 9]].forEach(([label, before, after]) => {
-    const group = el('div', 'owner-scanner-pair'); group.append(el('strong', '', label));
-    [['Before', before], ['After', after]].forEach(([name, count]) => {
-      const row = el('div', 'owner-scanner-row'); const track = el('span', 'owner-scanner-track'); const fill = el('i'); fill.style.setProperty('--w', `${count / 30 * 100}%`); track.append(fill); row.append(el('span', '', name), track, el('span', '', `${count}/30`)); group.append(row);
-    });
-    withTip(group, `${disclosure}\nPer class, five test attacks each, before to after: markup 0 to 5; sentence 0 to 5; encoding 0 to 3; paraphrase 3 to 3; role-play 3 to 3; table 4 to 4.`, 'is-up is-wide'); pairs.append(group);
-  });
-  scanner.append(pairs, el('p', '', 'It still flags 9 of 30 deliberately hard harmless sentences, and misses paraphrase, role-play and non-English.'), el('p', '', 'One warning layer beside isolation and schema-bound output, not a security boundary.'));
-  wrap.append(scanner);
+  wrap.append(el('p', 'tm-limit', 'Passage instructions: no separate test. Boundary checks do not prove attack resistance.'));
   return wrap;
 }
 
