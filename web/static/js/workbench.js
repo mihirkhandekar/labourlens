@@ -1,6 +1,6 @@
 // The live research workbench: chat, cited answers, source context, charts, activity and feedback.
 // All text from the server or model is rendered as text, never markup.
-import {el, add, icon, svg, safeLink, finite, human, money, seconds} from './dom.js';
+import {el, add, icon, svg, safeLink, finite, human, money, seconds, fmtUnit, UNIT_LABEL} from './dom.js';
 import {lineChart} from './chart.js';
 import {decorateAnswer, dataNotes, renderDataNotes, feedbackTags, selectedTags} from '../answer-audit.js';
 
@@ -73,9 +73,8 @@ export function mountWorkbench(root, {onMode} = {}) {
   add(login, code, unlock); accessCard.append(login); access.append(accessCard);
   const chatHead = el('header', 'wb-chat-head');
   const headCopy = el('div', 'wb-identity');
-  const brand = el('a', 'wb-brand'); brand.href = '/'; brand.setAttribute('aria-label', 'LabourLens report');
-  const brandGlyph = el('img', 'wb-brand-glyph'); brandGlyph.src = '/static/favicon.svg'; brandGlyph.alt = ''; brandGlyph.width = 32; brandGlyph.height = 32; brand.append(brandGlyph);
-  add(headCopy, brand, add(el('div', 'wb-identity-copy'), el('span', 'wb-brand-name', 'LabourLens'), el('h1', '', 'Research workbench')));
+  const brand = el('a', 'wb-brand-name', 'LabourLens'); brand.href = '/'; brand.setAttribute('aria-label', 'LabourLens report');
+  add(headCopy, brand, el('h1', '', 'Research workbench'));
   const headActions = el('div', 'wb-head-actions');
   const reportLink = el('a', 'wb-nav-link', 'Report'); reportLink.href = '/';
   const deckLink = el('a', 'wb-nav-link', 'Presentation'); deckLink.href = '/deck';
@@ -253,7 +252,19 @@ export function mountWorkbench(root, {onMode} = {}) {
     add(li, el('span', 'step-mark'), add(el('div', 'step-body'), el('span', `step-name${mono ? ' mono' : ''}`, name), ...(note ? [el('span', 'step-note small muted', note)] : [])));
     return li;
   }
+  // While a run streams, the Activity list follows its newest step unless the reader scrolls up; reaching the bottom again resumes following.
+  let followActivity = true;
+  const panelAtBottom = () => panel.scrollHeight - panel.scrollTop - panel.clientHeight < 24;
+  function followBottom() {
+    if (!followActivity || !panel.contains(activity)) return;
+    requestAnimationFrame(() => panel.scrollTo({top: panel.scrollHeight, behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth'}));
+  }
+  panel.addEventListener('wheel', event => { if (event.deltaY < 0) followActivity = false; }, {passive: true});
+  panel.addEventListener('touchmove', () => { followActivity = false; }, {passive: true});
+  panel.addEventListener('keydown', event => { if (['PageUp', 'Home', 'ArrowUp'].includes(event.key)) followActivity = false; });
+  panel.addEventListener('scroll', () => { if (panelAtBottom()) followActivity = true; });
   function liveActivity() {
+    followActivity = true;
     activityCore.replaceChildren(activityHead(''));
     const status = el('p', 'small muted run-status', 'Agent working on the server.'); status.setAttribute('role', 'status'); status.setAttribute('aria-live', 'polite');
     const list = el('ol', 'steps'); list.append(simpleStep('ok', 'Question sent'));
@@ -267,6 +278,7 @@ export function mountWorkbench(root, {onMode} = {}) {
         else if (name === 'trace' && data.item) list.append(stepFrom(data.item, 0));
         else if (name === 'tool' && data.phase === 'started') { const li = simpleStep('active', String(data.tool || 'tool'), 'running', true); pending.push(li); list.append(li); }
         else if (name === 'tool' && data.item) { const li = stepFrom(data.item, 0); const old = pending.shift(); if (old) old.replaceWith(li); else list.append(li); }
+        followBottom();
       }
     };
   }
@@ -427,9 +439,9 @@ export function mountWorkbench(root, {onMode} = {}) {
   }
   function skeleton() {
     region.replaceChildren();
-    const card = el('div', 'bezel answer-bezel'); const c = el('div', 'bezel-core'); card.append(c);
-    c.append(el('div', 'skeleton sk-badge'), el('div', 'skeleton sk-line w90'), el('div', 'skeleton sk-line w70'), el('div', 'skeleton sk-line w80'));
-    c.append(el('div', 'skeleton sk-claim'), el('div', 'skeleton sk-claim'));
+    const card = el('div', 'bezel answer-bezel is-loading'); const c = el('div', 'bezel-core'); card.append(c);
+    const claim = () => add(el('div', 'sk-claim-row'), el('div', 'skeleton sk-num'), add(el('div', 'sk-claim-lines'), el('div', 'skeleton sk-line w90'), el('div', 'skeleton sk-line w60')));
+    c.append(el('div', 'skeleton sk-status'), el('div', 'skeleton sk-headline w90'), el('div', 'skeleton sk-headline w60'), claim(), claim());
     region.append(card);
   }
   function failure(message) {
@@ -457,26 +469,29 @@ export function mountWorkbench(root, {onMode} = {}) {
   const argText = value => (typeof value === 'string' ? value : JSON.stringify(value));
 
   function sourceKey(item) { return item.source_id || item.url?.split('#')[0] || item.source_title || item.id || item.label; }
-  function evidenceSummary(labels) {
-    const matches = labels.map(label => evidenceList.find(item => item.label === label));
-    if (matches.some(item => !item)) return `${labels.length} evidence item${labels.length === 1 ? '' : 's'}`;
-    const sources = new Set(matches.map(sourceKey)).size;
-    const kind = matches.every(item => item.kind === 'report') ? 'passage' : matches.every(item => item.kind === 'statistic') ? 'observation' : 'evidence item';
-    return `${labels.length} ${kind}${labels.length === 1 ? '' : 's'} from ${sources} source${sources === 1 ? '' : 's'}`;
+  // The final trace lists only evidence the answer could use; `unused_items` counts what was retrieved and set aside.
+  // Live events can name labels that never reach the answer, so only labels found in the final evidence are listed.
+  function evidenceSummary(labels, unused = 0) {
+    const known = labels.map(label => evidenceList.find(item => item.label === label)).filter(Boolean);
+    const extra = finite(unused) && unused > 0 ? `, +${unused} retrieved, not used` : '';
+    if (!known.length) return `${labels.length} evidence item${labels.length === 1 ? '' : 's'}${extra}`;
+    const sources = new Set(known.map(sourceKey)).size;
+    const kind = known.every(item => item.kind === 'report') ? 'passage' : known.every(item => item.kind === 'statistic') ? 'observation' : 'evidence item';
+    return `${known.length} ${kind}${known.length === 1 ? '' : 's'} from ${sources} source${sources === 1 ? '' : 's'}${extra}`;
   }
-  function evidenceLabelsDisclosure(labels) {
+  function evidenceLabelsDisclosure(labels, unused = 0) {
+    const entries = labels.map(label => evidenceList.find(item => item.label === label)).filter(Boolean);
+    if (!entries.length) return null;
     const box = el('details', 'step-evidence');
-    box.append(el('summary', 'small', `Evidence list (${labels.length})`));
+    box.append(el('summary', 'small', `Evidence list (${entries.length})`));
     const list = el('ul', 'evidence-label-list');
-    labels.forEach(label => {
-      const item = evidenceList.find(entry => entry.label === label);
+    entries.forEach(item => {
       const li = el('li');
-      if (item) {
-        const button = el('button', 'evidence-label-button', `${label}: ${item.source_title || 'Source'}${item.locator ? `, ${item.locator}` : ''}`);
-        button.type = 'button'; button.addEventListener('click', () => openEvidence(evidenceList.indexOf(item), label)); li.append(button);
-      } else li.textContent = `${label}: source not returned`;
+      const button = el('button', 'evidence-label-button', `${item.label}: ${item.source_title || 'Source'}${item.locator ? `, ${item.locator}` : ''}`);
+      button.type = 'button'; button.addEventListener('click', () => openEvidence(evidenceList.indexOf(item), item.label)); li.append(button);
       list.append(li);
     });
+    if (finite(unused) && unused > 0) list.append(el('li', 'small muted', `+${unused} retrieved, not used`));
     box.append(list); return box;
   }
   function stepFrom(event, maxSeconds) {
@@ -491,7 +506,7 @@ export function mountWorkbench(root, {onMode} = {}) {
     if (isTool) {
       note.push(event.event === 'ok' ? 'ok' : event.event === 'error' ? `error${detail.error_kind ? `: ${human(detail.error_kind).toLowerCase()}` : ''}` : human(event.event).toLowerCase());
       if (detail.transport === 'mcp') note.push('via MCP');
-      if (Array.isArray(detail.new_items) && detail.new_items.length) note.push(evidenceSummary(detail.new_items));
+      if (Array.isArray(detail.new_items) && detail.new_items.length) note.push(evidenceSummary(detail.new_items, detail.unused_items));
     } else if (event.node === 'plan_research') {
       if (finite(detail.round)) note.push(`round ${detail.round}`);
       if (event.event === 'gather') note.push(`${detail.n_calls ?? 0} tool call${detail.n_calls === 1 ? '' : 's'} planned`);
@@ -509,7 +524,7 @@ export function mountWorkbench(root, {onMode} = {}) {
       if (maxSeconds > 0) { const bar = el('span', 'step-bar'); bar.setAttribute('aria-hidden', 'true'); const fill = el('span', 'step-fill'); fill.style.transform = `scaleX(${Math.max(0.04, Math.min(1, detail.seconds / maxSeconds))})`; bar.append(fill); aside.append(bar); }
     }
     add(li, mark, body, aside);
-    if (Array.isArray(detail.new_items) && detail.new_items.length) li.append(evidenceLabelsDisclosure(detail.new_items));
+    if (Array.isArray(detail.new_items) && detail.new_items.length) { const disclosure = evidenceLabelsDisclosure(detail.new_items, detail.unused_items); if (disclosure) li.append(disclosure); }
     const args = detail.args && typeof detail.args === 'object' ? Object.entries(detail.args) : [];
     if (args.length) {
       const wrap = el('details', 'step-args'); wrap.append(el('summary', 'small', 'Arguments'));
@@ -548,8 +563,37 @@ export function mountWorkbench(root, {onMode} = {}) {
     else chip.title = 'No evidence record matches this citation.';
     const quote = typeof reference === 'object' && reference.quote ? reference.quote : '';
     chip.addEventListener('click', () => openEvidence(matched ? index : -1, quote));
+    if (matched) {
+      const echo = on => { const entry = sourcePanel.querySelector(`[data-evidence-label="${CSS.escape(label)}"]`); entry?.classList.toggle('is-echo', on); entry?.closest('.source-group')?.classList.toggle('is-echo', on); };
+      ['pointerenter', 'focus'].forEach(name => chip.addEventListener(name, () => echo(true)));
+      ['pointerleave', 'blur'].forEach(name => chip.addEventListener(name, () => echo(false)));
+    }
     claimEvidence.add(label);
     return chip;
+  }
+
+  // Headline figure for a cited series: latest published value, its period, the change from the period before, and a small trend line with gaps left open.
+  function kpiLead(points, unit) {
+    const known = points.filter(p => finite(p.value));
+    if (known.length < 3) return null;
+    const latest = known.at(-1), before = known.at(-2), delta = Number((latest.value - before.value).toFixed(10));
+    const deltaUnit = unit === 'percent' ? 'percentage points' : (UNIT_LABEL[unit] ?? unit);
+    const box = el('div', 'kpi');
+    const direction = delta > 0 ? 'up' : delta < 0 ? 'down' : 'flat';
+    const change = el('p', `kpi-delta is-${direction}`);
+    if (direction !== 'flat') change.append(icon('arrow-r'));
+    change.append(el('span', '', direction === 'flat' ? `No change from ${before.period}` : `${direction === 'up' ? 'Up' : 'Down'} ${fmtUnit(Math.abs(delta), '').trim()}${deltaUnit ? ` ${deltaUnit}` : ''} from ${before.period}`));
+    const values = known.map(p => p.value), lo = Math.min(...values), hi = Math.max(...values), span = hi - lo || 1;
+    const W = 132, H = 40, x = i => 3 + (i * (W - 6)) / (points.length - 1), y = v => H - 5 - ((v - lo) / span) * (H - 10);
+    const spark = svg('svg', {class: 'kpi-spark', viewBox: `0 0 ${W} ${H}`, width: W, height: H, 'aria-hidden': 'true', focusable: 'false'});
+    let d = '', pen = false;
+    points.forEach((p, i) => { if (!finite(p.value)) { pen = false; return; } d += `${pen ? 'L' : 'M'}${x(i).toFixed(1)} ${y(p.value).toFixed(1)}`; pen = true; });
+    const lastIndex = points.lastIndexOf(latest);
+    spark.append(svg('path', {d, class: 'kpi-spark-line'}), svg('circle', {cx: x(lastIndex).toFixed(1), cy: y(latest.value).toFixed(1), r: 3, class: 'kpi-spark-end'}));
+    const gaps = points.length - known.length;
+    add(box, add(el('div', 'kpi-main'), el('p', 'kpi-value num', fmtUnit(latest.value, unit)), el('p', 'kpi-period small muted', `${latest.period}, latest published`), change), spark);
+    if (gaps) box.append(el('p', 'kpi-gaps small muted', `${gaps} period${gaps === 1 ? '' : 's'} without a published value, left open in the line.`));
+    return box;
   }
 
   function renderSources(cited) {
@@ -573,7 +617,9 @@ export function mountWorkbench(root, {onMode} = {}) {
       const passages = items.filter(item => item.kind === 'report').length;
       const observations = items.filter(item => item.kind === 'statistic').length;
       const counts = [passages ? `${passages} passage${passages === 1 ? '' : 's'}` : '', observations ? `${observations} observation${observations === 1 ? '' : 's'}` : '', !passages && !observations ? `${items.length} calculation${items.length === 1 ? '' : 's'}` : ''].filter(Boolean).join(', ');
-      add(summary, icon(kindIcon), add(el('span', 'source-text'), el('span', 'source-title', first.source_title || 'Untitled source'), el('span', 'source-meta small muted', `${counts} retrieved; ${citedItems.length} cited`)), el('span', 'source-disclosure', '+'));
+      const tags = el('span', 'source-tags');
+      [first.publisher, [...new Set(items.map(item => item.date).filter(Boolean))].join(', '), [...new Set(items.map(item => plain(item.release_stage)).filter(Boolean))].join(', ')].filter(Boolean).forEach(text => tags.append(el('span', 'source-tag', text)));
+      add(summary, icon(kindIcon), add(el('span', 'source-text'), el('span', 'source-title', first.source_title || 'Untitled source'), el('span', 'source-meta small muted', `${counts} retrieved; ${citedItems.length} cited`), tags), el('span', 'source-disclosure', '+'));
       group.append(summary);
       const fields = el('dl', 'source-fields');
       const addField = (label, value, required = false) => { if (value || required) fields.append(el('dt', '', label), el('dd', '', value || 'Not recorded')); };
@@ -673,7 +719,8 @@ export function mountWorkbench(root, {onMode} = {}) {
     dataPanel.replaceChildren(el('h2', '', 'Data'));
     series.forEach(s => {
       const holder = el('div', 'bezel chart-bezel'); const hc = el('div', 'bezel-core');
-      hc.append(lineChart({title: s.label ? human(s.label.split(' / ').map(part => part.replaceAll('_', ' ')).join(' · ')) : 'Series', unit: s.unit || '', caption: 'Observations retrieved for this answer. Missing periods are shown as gaps.', series: [{label: 'Value', points: s.points.map(p => ({period: p.period, value: finite(p.value) ? p.value : null}))}], chips: [s.unit ? `Unit: ${s.unit}` : 'Unit not recorded'], headingLevel: 'h3', comparisonPair: true}));
+      const points = s.points.map(p => ({period: p.period, value: finite(p.value) ? p.value : null}));
+      hc.append(lineChart({title: s.label ? human(s.label.split(' / ').map(part => part.replaceAll('_', ' ')).join(' · ')) : 'Series', unit: s.unit || '', caption: 'Observations retrieved for this answer. Missing periods are shown as gaps.', series: [{label: 'Value', points}], chips: s.unit ? [] : ['Unit not recorded'], headingLevel: 'h3', comparisonPair: true, lead: kpiLead(points, s.unit || '')}));
       holder.append(hc); dataPanel.append(holder);
     });
     if (!series.length) dataPanel.append(el('p', 'small muted', 'A chart appears here when the answer uses a cited statistical series.'));
@@ -706,8 +753,9 @@ export function mountWorkbench(root, {onMode} = {}) {
       const d = e.detail ?? {};
       const names = {get_series: 'Read a statistical series', search_reports: 'Searched report passages', calculate_change: 'Calculated a change in code'};
       const labels = Array.isArray(d.new_items) ? d.new_items : [];
-      const item = el('li', '', `${names[d.tool] || d.tool || 'Tool call'}${d.transport === 'mcp' ? ' (through the MCP server)' : ''}. Outcome: ${human(e.event)}. ${labels.length ? evidenceSummary(labels) + '.' : 'No new evidence labels recorded.'}`);
-      if (labels.length) item.append(evidenceLabelsDisclosure(labels));
+      const item = el('li', '', `${names[d.tool] || d.tool || 'Tool call'}${d.transport === 'mcp' ? ' (through the MCP server)' : ''}. Outcome: ${human(e.event)}. ${labels.length ? evidenceSummary(labels, d.unused_items) + '.' : 'No new evidence labels recorded.'}`);
+      const disclosure = labels.length ? evidenceLabelsDisclosure(labels, d.unused_items) : null;
+      if (disclosure) item.append(disclosure);
       steps.append(item);
     });
     if (!tools.length) steps.append(el('li', '', 'No tool calls were recorded for this response.'));
@@ -851,6 +899,7 @@ export function mountWorkbench(root, {onMode} = {}) {
       } else {
         setQuestion(lastQuestion); failure(error.message);
         activityCore.replaceChildren(activityHead(''), el('p', 'small muted', 'No steps to show. A failed run does not establish that evidence is missing.'));
+        if (!userChoseTab) activateTab('data');
       }
     } finally { busy = false; runController = null; syncState(); updateJump(); }
   });

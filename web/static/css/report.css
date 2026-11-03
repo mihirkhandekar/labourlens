@@ -14,9 +14,11 @@
 /* ---------- shared column ---------- */
 .rp-inner, .rp-hero-inner { width: 100%; max-width: 1180px; margin-inline: auto; padding-inline: var(--gutter); min-width: 0; }
 .rp-band > .rp-more { max-width: calc(1180px - 2 * var(--gutter)); margin-inline: max(var(--gutter), calc((100% - 1180px) / 2 + var(--gutter))); min-width: 0; }
+.rp-band > .rp-note { max-width: min(72ch, calc(1180px - 2 * var(--gutter))); margin-block: 16px 0; margin-inline: max(var(--gutter), calc((100% - 1180px) / 2 + var(--gutter))); min-width: 0; }
 @media (min-width: 1200px) {
   .rp-inner, .rp-hero-inner { max-width: 1120px; margin-left: calc(var(--rp-lead) + var(--rp-nav) + 24px); margin-right: auto; padding-left: 0; padding-right: var(--gutter); }
   .rp-band > .rp-more { max-width: calc(1120px - var(--gutter)); margin-left: calc(var(--rp-lead) + var(--rp-nav) + 24px); margin-right: var(--gutter); }
+  .rp-band > .rp-note { max-width: min(72ch, calc(1120px - var(--gutter))); margin-left: calc(var(--rp-lead) + var(--rp-nav) + 24px); margin-right: var(--gutter); }
 }
 
 /* ---------- hero ---------- */
@@ -53,6 +55,8 @@
 .rp-band::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 1px; background: var(--line); }
 @media (min-width: 1200px) { .rp-band::before { left: calc(var(--rp-lead) + var(--rp-nav) + 24px); } }
 .rp-band.is-tint { background: var(--rp-tint); }
+/* Tinted bands start at the content column on wide screens, so the fixed menu never straddles a background edge. */
+@media (min-width: 1200px) { .rp-band.is-tint { background: linear-gradient(to right, transparent calc(var(--rp-lead) + var(--rp-nav) + 24px), var(--rp-tint) 0); } }
 .rp-title { font-size: clamp(2rem, 3.8vw, 3.2rem); letter-spacing: -0.032em; line-height: 1.04; scroll-margin-top: 110px; max-width: 18em; }
 .rp-title:focus { outline: none; }
 .rp-title:focus-visible { outline: 2px solid var(--accent); outline-offset: 6px; }

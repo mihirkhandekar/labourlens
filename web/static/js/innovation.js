@@ -42,26 +42,28 @@ function render(page) {
       ['BM25 keyword search', percent.format(m.retrieval.R0)],
       ['Filter then rerank', percent.format(m.retrieval.R3)]
     ]);
+    if (kind === 'components') return table('Current boundaries and proposed production replacements. Nothing proposed is deployed or verified.', ['Component', 'Current state', 'Proposed production replacement'], c.components.map(item => [item.component, item.current, item.replacement]));
+  }
+  function labelled(label, text) { const p = el('p', 'iv-field'); p.append(el('strong', '', `${label} `), document.createTextNode(text)); return p; }
+  function proposalBlock(proposal) {
+    const block = el('div', 'iv-proposal');
+    const registered = proposal.title.startsWith('Third Decisions attempt:');
+    block.append(el('h3', '', proposal.title), labelled('Proposed change.', proposal.measure), labelled('Why it matters.', proposal.gap), labelled('Check before adoption.', proposal.threshold), el('p', 'iv-status', registered ? 'Status: preregistered plan, untested, not adopted.' : 'Status: proposal, not built.'));
+    return block;
   }
   c.sections.forEach(spec => {
     const section = addSection(spec.id, spec.title);
     section.append(el('p', 'iv-summary', spec.summary));
-    spec.paragraphs.forEach(p => section.append(el('p', '', p.text)));
-    spec.tables.forEach(kind => section.append(results(kind)));
-    spec.proposals.forEach(proposal => {
-      const detail = el('details', 'iv-proposal');
-      const registered = proposal.title.startsWith('Third Decisions attempt:');
-      detail.append(el('summary', '', `${registered ? 'Registered plan, untested' : 'Proposal'}: ${proposal.title}`));
-      const dl = el('dl');
-      [['What I would change', proposal.title], ['Why', proposal.gap], ['Plan', proposal.measure], ['How I would check it', proposal.threshold], ['Status', registered ? 'Preregistered plan; untested; not adopted' : proposal.status]].forEach(([term, text]) => dl.append(el('dt', '', term), el('dd', '', text)));
-      detail.append(dl); section.append(detail);
+    spec.paragraphs.forEach(text => section.append(el('p', '', text)));
+    spec.subsections.forEach(sub => {
+      section.append(el('h3', 'iv-subhead', sub.title));
+      sub.paragraphs.forEach(text => section.append(el('p', '', text)));
+      sub.tables.forEach(kind => section.append(results(kind)));
     });
+    spec.proposals.forEach(proposal => section.append(proposalBlock(proposal)));
   });
   const limitations = addSection('limitations', 'Limitations and threats to validity');
   const list = el('ul'); c.limitations.forEach(text => list.append(el('li', '', text))); limitations.append(list);
-  const components = addSection('components', 'Mocked or unverified components and their production replacements');
-  components.append(el('p', 'iv-summary', 'Production design only. These replacements are not deployed or verified.'));
-  components.append(table('Current boundaries and proposed production architecture.', ['Component', 'Current state', 'Proposed production replacement'], c.components.map(item => [item.component, item.current, item.replacement])));
   documentBody.append(add(el('footer', 'iv-footer'), anchor('Project report', '/'), anchor('Short assessment source', `${repo}docs/innovation.md`)));
   root.replaceChildren(contents, documentBody);
   if ('IntersectionObserver' in window) {

@@ -17,15 +17,17 @@ MCP_ALL_ROUTED = frozenset({"search_reports", "calculate_change", "calculate_fro
 
 # What the web app ships (D-077, D-078): the 2020-Q1 to 2026-Q2 prompts, and the native function-calling planner. Every frozen experiment kept its own
 # prompt files and the structured-output planner; nothing here changes AgentConfig() or make_runner() defaults, so those runs reproduce as before.
-SHIPPED_PROMPTS = {"planner": "planner_v6", "answer": "answer_v8", "triage": "triage_v4", "contextualise": "contextualise_v3"}
+SHIPPED_PROMPTS = {"planner": "planner_v7", "answer": "answer_v9", "triage": "triage_v4", "contextualise": "contextualise_v3"}
 
 
 def shipped_config(run_deadline_s: float | None = 80.0):
     """The served app's native planner, versioned prompts and annual tool set. Frozen AgentConfig defaults remain unchanged."""
     from labourlens.agent.graph import AgentConfig
 
+    from labourlens.agent.graph import SEARCH_TIMEOUT_S
+
     return AgentConfig(planner_prompt=SHIPPED_PROMPTS["planner"], answer_prompt=SHIPPED_PROMPTS["answer"], planner_mode="tools",
-                       tool_set="annual", run_deadline_s=run_deadline_s)
+                       tool_set="annual", run_deadline_s=run_deadline_s, search_timeout_s=SEARCH_TIMEOUT_S)
 
 
 def make_shared(transport: str = DEFAULT_TRANSPORT):

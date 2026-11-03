@@ -242,11 +242,27 @@ def test_shipped_prompts_and_config_are_new_versioned_files_not_edits_of_frozen_
     from labourlens.agent import served
 
     conf = served.shipped_config(80.0)
-    assert (conf.planner_mode, conf.planner_prompt, conf.answer_prompt, conf.run_deadline_s) == ("tools", "planner_v6", "answer_v8", 80.0)
+    assert (conf.planner_mode, conf.planner_prompt, conf.answer_prompt, conf.run_deadline_s) == ("tools", "planner_v7", "answer_v9", 80.0)
     assert conf.planner_model == "gpt-6-luna" and conf.retrieval == "r3" and conf.tool_set == "annual"
-    for old, new in (("planner_v1", "planner_v6"), ("answer_v3", "answer_v8"), ("triage_v1", "triage_v4"), ("contextualise_v1", "contextualise_v3")):
+    for old, new in (("planner_v1", "planner_v7"), ("answer_v3", "answer_v9"), ("triage_v1", "triage_v4"), ("contextualise_v1", "contextualise_v3")):
         assert g.load_prompt(old)[2] != g.load_prompt(new)[2]
     assert "Q1 2024 to Q2 2026" in g.load_prompt("triage_v1")[0] and "Q1 2020 to Q2 2026" in g.load_prompt("triage_v4")[0]
-    assert "1Q 2024 to 2Q 2026" in g.load_prompt("answer_v3")[0] and "1Q 2020 to 2Q 2026" in g.load_prompt("answer_v8")[0]
-    first, later = g.load_prompt("planner_v6")[1].split(g.FOLLOW_UP_MARK, 1)
+    assert "1Q 2024 to 2Q 2026" in g.load_prompt("answer_v3")[0] and "1Q 2020 to 2Q 2026" in g.load_prompt("answer_v9")[0]
+    first, later = g.load_prompt("planner_v7")[1].split(g.FOLLOW_UP_MARK, 1)
     assert "{question}" in first and "{round}" in later and "{question}" not in later
+
+
+def test_served_planner_prompt_requires_statistics_with_every_why_search_and_the_answer_prompt_limits_premise_checks():
+    planner = g.load_prompt("planner_v7")[0]
+    assert "7a. A why question always needs the numbers too" in planner and "never search_reports alone" in planner and "so many" in planner
+    answer = g.load_prompt("answer_v9")[0]
+    assert "explicit claimed increase" in answer and "so many" in answer and "not a premise to dispute" in answer
+    assert g.load_prompt("planner_v6")[2] != g.load_prompt("planner_v7")[2]  # planner_v6 stays as deployed history
+
+
+def test_native_why_plan_with_search_and_statistics_in_round_one_executes_both(shared, monkeypatch):
+    seen = script(monkeypatch, [[tc("search_reports", {"query": "2021 retrenchment reasons", "k": 8}, "s"), tc("get_series", GET, "g")], []])
+    monkeypatch.setattr(tl.Tools, "search_reports", lambda self, query, k=8: tl.ToolResult(True, [], "none"))
+    r = run(shared)
+    tools_used = [e["detail"]["tool"] for e in r["trace"] if e["node"] == "execute_tool"]
+    assert tools_used == ["search_reports", "get_series"] and r["rounds"] == 1 and r["evidence"][0]["label"] == "O1" and len(seen) == 2

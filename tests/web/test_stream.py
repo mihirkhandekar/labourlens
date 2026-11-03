@@ -211,7 +211,7 @@ def test_app_builds_the_shipped_runner_and_the_runner_sends_stage_and_agent_even
     monkeypatch.setattr(served, "make_runner", lambda config=None, **kw: built.update(config=config, **kw) or real(config, **kw))
     create_app_ = __import__("labourlens.report.app", fromlist=["create_app"]).create_app
     create_app_(settings)
-    assert (built["config"].planner_mode, built["config"].planner_prompt, built["config"].answer_prompt, built["config"].tool_set) == ("tools", "planner_v6", "answer_v8", "annual")
+    assert (built["config"].planner_mode, built["config"].planner_prompt, built["config"].answer_prompt, built["config"].tool_set) == ("tools", "planner_v7", "answer_v9", "annual")
     assert (built["triage_prompt"], built["contextualise_prompt"]) == ("triage_v4", "contextualise_v3")
 
     seen = {}

@@ -33,7 +33,7 @@ function describe(series, unit) {
  * @param {{title:string, caption?:string, unit?:string, series:{label:string, points:{period:string,value:number|null}[]}[],
  *          chips?:string[], compact?:boolean, headingLevel?:string}} options
  */
-export function lineChart({title, caption, unit = '', series, chips = [], compact = false, headingLevel = 'h3', comparisonPair = false}) {
+export function lineChart({title, caption, unit = '', series, chips = [], compact = false, headingLevel = 'h3', comparisonPair = false, lead = null}) {
   const periods = [...new Set(series.flatMap(s => s.points.map(p => p.period)))].sort();
   const lookup = series.map(s => new Map(s.points.map(p => [p.period, p.value])));
   const figure = el('figure', `chart${compact ? ' compact' : ''}`);
@@ -43,6 +43,7 @@ export function lineChart({title, caption, unit = '', series, chips = [], compac
   if (chips.length) { const row = el('div', 'chart-chips'); chips.forEach(c => row.append(el('span', 'pill', c))); head.append(row); }
   if (caption) head.append(el('p', 'chart-caption', caption));
   figure.append(head);
+  if (lead) figure.append(lead);
 
   const stage = el('div', 'chart-stage');
   stage.tabIndex = 0;

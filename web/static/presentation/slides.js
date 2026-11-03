@@ -368,7 +368,7 @@ export function slideSpecs(report) {
       chapter: 'Appendix', layout: 'scroll', title: 'D. Agent reference',
       panel: [group(heading('Fixed pipeline comparison'), fixedPipeline()), group(heading('Recorded run, step by step'), graphFig), group(heading('Historical three-tool set'), tools), group(heading(figTitle(calls) || 'Recorded tool calls'), calls), group(heading(figTitle(errors) || 'Tool errors'), errors)],
       source: 'report.json: agent.trace; docs/architecture.md, section 4',
-      notes: ['Recorded runs against the set limits, and the operational failures and repaired answers. This appendix table describes the historical three-tool evaluated set, not the current four-tool served set. Current served prompts are planner_v6, answer_v8, triage_v4 and contextualise_v3; annual averaging, context repair and reasons/abstention changes have not been re-evaluated.']
+      notes: ['Recorded runs against the set limits, and the operational failures and repaired answers. This appendix table describes the historical three-tool evaluated set, not the current four-tool served set. Current served prompts are planner_v7, answer_v9, triage_v4 and contextualise_v3; annual averaging, context repair and reasons/abstention changes have not been re-evaluated.']
     });
   });
 

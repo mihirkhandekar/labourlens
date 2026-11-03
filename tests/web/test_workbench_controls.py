@@ -525,3 +525,71 @@ def test_examples_menu_fills_without_submitting_and_closes(workbench_url, width,
         assert popover.is_visible()
         items.nth(0).click()
         browser.close()
+
+
+STREAM_INIT = """
+window.__events = [];
+const realFetch = window.fetch.bind(window);
+window.fetch = (url, options) => {
+  if (url !== '/api/ask/stream') return realFetch(url, options);
+  const encoder = new TextEncoder();
+  const stream = new ReadableStream({start(controller) { window.__push = (name, data) => controller.enqueue(encoder.encode(`event: ${name}\\ndata: ${JSON.stringify(data)}\\n\\n`)); window.__close = () => controller.close(); }});
+  return Promise.resolve(new Response(stream, {status: 200, headers: {'Content-Type': 'text/event-stream'}}));
+};
+"""
+
+
+@pytest.mark.parametrize("outcome", ["answer", "error"])
+def test_activity_follows_streamed_steps_and_data_opens_at_the_end(workbench_url, outcome):
+    playwright = pytest.importorskip("playwright.sync_api")
+    with playwright.sync_playwright() as runtime:
+        browser = runtime.chromium.launch()
+        page = browser.new_page(viewport={"width": 1440, "height": 700}, reduced_motion="reduce")
+
+        def intercept(route):
+            url = route.request.url
+            if not url.startswith(workbench_url + "/"):
+                route.abort()
+            elif url.endswith("/api/status"):
+                route.fulfill(json={"enabled": True, "authenticated": True})
+            elif "/api/" in url:
+                route.fulfill(json={})
+            else:
+                route.continue_()
+
+        page.route("**/*", intercept)
+        page.add_init_script(STREAM_INIT)
+        page.goto(workbench_url + "/workbench.html")
+        page.wait_for_function("!document.querySelector('#question-input').disabled")
+        page.locator(".wb-example").first.click()
+        page.locator("#question-input").press("Enter")
+        page.wait_for_function("document.querySelector('[data-tab=activity]').getAttribute('aria-selected') === 'true' && !!window.__push")
+        panel = page.locator(".wb-panel")
+
+        def push_steps(start, stop):
+            for n in range(start, stop):
+                page.evaluate("([n]) => window.__push('tool', {item: {node: 'execute_tool', event: 'ok', detail: {tool: 'get_series', seconds: 0.1, args: {n}}}})", [n])
+
+        push_steps(0, 40)
+        page.wait_for_function("(() => { const p = document.querySelector('.wb-panel'); return p.scrollHeight > p.clientHeight + 100 && p.scrollHeight - p.scrollTop - p.clientHeight < 24; })()")
+        # Scrolling up stops the following; new steps do not drag the reader down.
+        panel.hover()
+        page.mouse.wheel(0, -20000)
+        page.wait_for_function("document.querySelector('.wb-panel').scrollTop === 0")
+        push_steps(40, 50)
+        page.wait_for_timeout(200)
+        assert panel.evaluate("n => n.scrollTop") == 0
+        # Returning to the bottom resumes following.
+        panel.evaluate("n => { n.scrollTop = n.scrollHeight; }")
+        page.wait_for_function("document.querySelector('.wb-panel').scrollHeight - document.querySelector('.wb-panel').scrollTop - document.querySelector('.wb-panel').clientHeight < 24")
+        page.wait_for_timeout(150)  # let the scroll event re-enable following
+        push_steps(50, 60)
+        page.wait_for_function("(() => { const p = document.querySelector('.wb-panel'); return p.scrollHeight - p.scrollTop - p.clientHeight < 24; })()")
+        if outcome == "answer":
+            page.evaluate("([body]) => { window.__push('result', body); window.__close(); }", [answered_fixture()])
+            page.locator(".answer-summary").wait_for()
+        else:
+            page.evaluate("() => { window.__push('error', {detail: 'Synthetic stream failure.'}); window.__close(); }")
+            page.locator(".answer-bezel.error").wait_for()
+        assert page.locator('[data-tab="data"]').get_attribute("aria-selected") == "true"
+        browser.close()

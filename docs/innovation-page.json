@@ -7,261 +7,108 @@
     "Compared exact-word keyword search with meaning search based on text embeddings, then combined their results. Period and release filters remove mismatched evidence; a second ranking pass orders what remains.",
     "Built one bounded agent, historically evaluated with three read-only tools. The current served set has four: report search, statistics lookup, change calculation and rates-only annual_average. The last is a simple mean of four non-null quarterly rates from one series, not an official annual rate; it has not been re-evaluated.",
     "Answers have a fixed structure, citations and short quotations. Code checks citation labels, quotations, reported numbers and answer status. These checks cannot prove that a quotation supports a claim.",
-    "The current served prompts are planner_v6, answer_v8, triage_v4 and contextualise_v3. Resolved questions and bounded series/period context support follow-ups as untrusted data. Reasons questions seek attributed MOM commentary, not inferred causation; abstention distinguishes missing observations from missing method or commentary. These changes are unevaluated.",
+    "The current served prompts are planner_v7, answer_v9, triage_v4 and contextualise_v3. Resolved questions and bounded series/period context support follow-ups as untrusted data. Reasons questions seek attributed MOM commentary, not inferred causation; abstention distinguishes missing observations from missing method or commentary. These changes are unevaluated.",
     "Tested retrieval, a fixed workflow against the agent, model candidates, report-table calculation, direct and MCP routes, and synthetic attacks. Separate development, original and fresh question sets show what improved and what did not."
   ],
   "sections": [
     {
-      "id": "retrieval",
-      "title": "Retrieval and answer quality",
-      "summary": "Higher passage retrieval did not establish better answers on the test sets.",
-      "paragraphs": [
-        {
-          "text": "I compared BM25 keyword search, embedding-based meaning search and a hybrid on the same development questions. Filtering by period and release, then reranking the candidates, raised the share of relevant passages in the first eight results from 54% to 97%. This measures passage retrieval, not answer accuracy.",
-          "refs": []
-        },
-        {
-          "text": "Filtering and reranking also found the known passage more often on small original and fresh test subsets. Full-system comparisons did not show a reliable answer gain on either set. Development shaped the design, the original test shares evidence with it, and fresh questions have since been reused. Treat these as diagnostics, not proof of general improvement.",
-          "refs": []
-        },
-        {
-          "text": "I also tested arithmetic on figures extracted from report text. The extension failed pre-set development checks and was not adopted. The current calculator uses validated statistical rows; report tables still need reliable cell, unit and row-to-column extraction before they can be calculation inputs.",
-          "refs": []
-        }
-      ],
-      "tables": [
-        "retrieval"
-      ],
-      "proposals": [
-        {
-          "title": "Verify report tables before calculation",
-          "gap": "Flattened report tables can lose which value belongs to which row or column.",
-          "measure": "Check cell, row and column lineage, units and population against the page. Exclude uncertain cells and test calculations on known cases followed by new blind questions.",
-          "threshold": "Meet the pre-registered numerical threshold without increasing false answers or weakening definition and citation checks.",
-          "status": "proposal"
-        },
-        {
-          "title": "Add coverage carefully",
-          "gap": "Some series, periods, source versions and languages are not represented.",
-          "measure": "Add reviewed MOM, SingStat and other government sources through the same source manifest, rights review and evaluation process.",
-          "threshold": "Keep revision-conflict, definition and citation performance within the approved baseline before serving a new source.",
-          "status": "proposal"
-        }
-      ]
-    },
-    {
-      "id": "drift",
-      "title": "Drift detection",
-      "summary": "Keep source changes visible and test each new build before use.",
-      "paragraphs": [
-        {
-          "text": "The data pipeline stores versioned snapshots and provenance. An operator still has to acquire and rebuild the data; scheduled refresh, automatic drift alerts and rollback have not been implemented. The expanded source corpus and newer served planner were not re-evaluated, so the older scores do not describe those changes.",
-          "refs": []
-        }
-      ],
-      "tables": [],
-      "proposals": [
-        {
-          "title": "Release gates and monitoring",
-          "gap": "A change to data, prompts, retrieval or a model can change answers without warning.",
-          "measure": "Check schema, coverage, release revisions and rights on every source update. Run fixed question probes after each corpus, prompt or model change. Track retrieval, abstention, citation validity, grounded numbers, latency and cost; retain the last approved build for rollback.",
-          "threshold": "Do not publish a build with unexplained regressions. Report what changed and which checks passed.",
-          "status": "proposal"
-        },
-        {
-          "title": "Scheduled refresh and source onboarding",
-          "gap": "Published datasets change, and other government sources may answer new research questions.",
-          "measure": "Fetch approved sources on a schedule into immutable snapshots. Validate schema, coverage, revisions and licence before promotion. Set a freshness expectation per publisher, record the last successful fetch, and alert on missed updates. Keep the prior snapshot marked stale rather than presenting it as current. Add new sources only after definitions, provenance, rights and evaluation cases are recorded; expand to new topics only after an explicit scope decision.",
-          "threshold": "Reject snapshots that fail validation or rights review. Evaluate each new source before serving it, and surface missed freshness targets.",
-          "status": "proposal"
-        }
-      ]
-    },
-    {
-      "id": "review",
-      "title": "Provenance, explainability and review",
-      "summary": "Show the evidence and turn reviewed failures into tests.",
-      "paragraphs": [
-        {
-          "text": "The workbench shows source links, cited passages, answer status and tool activity. Feedback is stored with the run, but it does not yet change the system. A citation validator confirms that labels and quotations came from supplied evidence; it cannot determine whether the evidence entails the claim.",
-          "refs": []
-        }
-      ],
-      "tables": [],
-      "proposals": [
-        {
-          "title": "Independent review",
-          "gap": "One reviewer and AI-drafted labels do not establish independent ground truth.",
-          "measure": "Have at least three analysts label a stratified blind set before seeing AI suggestions, then adjudicate disagreements. Keep behaviour, factual support and calculation correctness as separate measures.",
-          "threshold": "Report reviewer agreement and uncertainty. The proposed targets are kappa of at least 0.70 and an accuracy interval no wider than 0.10.",
-          "status": "proposal"
-        },
-        {
-          "title": "Feedback review loop",
-          "gap": "Votes and comments do not currently produce regression tests.",
-          "measure": "Review every thumbs-down and a sample of thumbs-up. Label failure types and write one test with expected evidence before changing the system. Change one thing at a time; tune on development, then check fresh questions. Pseudonymise comments and limit retention.",
-          "threshold": "Every confirmed failure has a reviewed case and a recorded change. Do not train on unreviewed votes or reuse positive answers as prompts.",
-          "status": "proposal"
-        }
-      ]
-    },
-    {
-      "id": "security",
-      "title": "Security, privacy and third-party risk",
-      "summary": "Treat retrieved content as untrusted and keep tools narrowly scoped.",
-      "paragraphs": [
-        {
-          "text": "The agent has typed, read-only tools, bounded calls and validated MCP replies. Retrieved passages are evidence, not instructions. In one three-repeat synthetic attack comparison, the guarded configuration passed 50 of 54 attack cases, compared with 42 of 54 for the naive configuration. The answer prompt and guards changed together, so this does not identify which defence helped. Both configurations also failed three of eight harmless look-alike cases. These tests do not establish resistance to adaptive attacks or a specific defence layer's effect.",
-          "refs": []
-        }
-      ],
-      "tables": [],
-      "proposals": [
-        {
-          "title": "Approve access and model processing",
-          "gap": "Shared demo codes and external model processing are not approved for government data.",
-          "measure": "Clear source licences and publisher terms. Replace shared codes with government identity and source roles. Use approved private model endpoints, data residency, retention and audit controls. Apply source permissions before retrieval so restricted text never reaches the model.",
-          "threshold": "Do not use sensitive or restricted sources until identity, rights, hosting and retention are approved.",
-          "status": "proposal"
-        },
-        {
-          "title": "Test defences separately",
-          "gap": "The attack comparison changed the prompt and guards together, and its examples were written for the test.",
-          "measure": "Keep least-privilege tools and content isolation. Test each proposed layer against independent paraphrases, hostile passages, unsafe tool requests and harmless look-alikes. Record misses as well as false alarms.",
-          "threshold": "Pass the agreed regression set without weakening tool permissions or increasing harmless-question failures.",
-          "status": "proposal"
-        }
-      ]
-    },
-    {
-      "id": "cost",
+      "id": "improve",
       "title": "How I would improve it",
-      "summary": "Proposed changes, why they matter and the checks required before adoption.",
+      "summary": "Each proposal says what I would change, why, and the check required before adoption. None is built or shown to work.",
       "paragraphs": [
+        "The live agent sends statistics lookup and annual averaging through MCP. The default server has ten read-only tools, two used by the agent. The historical three-tool all-MCP variant was slower with no demonstrated quality gain in a one-run, 65-question sample and was not adopted; removing statistics also removed calculator inputs. Neither measurement evaluates annual averaging or the current prompts.",
+        "Evaluated median answer time was about 14 seconds, with chained model calls. A served native-tool, reasoning-off smoke took 29.8, 7.8 and 9.1 seconds versus 53.1, 8.6 and 12.8 for structured planning: three questions, once each, accuracy unmeasured. Streaming is shipped to show progress, not to shorten full-answer time.",
+        "Neither Decisions API trial was adopted. In v1, the primary router matched 397/409 routes per repeat, diverted one legitimate question and recalled only 19/30 non-in-scope cases; the verifier falsely supported 44/58 partially supported claims. Dev-tuned v2 matched 414/450 repeat rows, diverted two distinct in-scope questions and returned provider refusals on all 30 serious-harm presentations. Its case-median p50/p95 was 0.362/0.426 seconds versus chat's 1.392/1.847, but speed did not repair failed safety, quality and operational gates. These are AI-labelled screens, not human accuracy or an end-to-end speedup."
+      ],
+      "subsections": [
         {
-          "text": "The live agent sends statistics lookup and annual averaging through MCP. The default server has ten read-only tools, two used by the agent. Direct and MCP routes use the same local observations and deterministic operations, not different sources. The historical three-tool all-MCP variant was slower with no demonstrated quality gain in a one-run, 65-question sample and was not adopted. Removing statistics also removed calculator inputs. Those measurements do not evaluate annual averaging or the current served prompts.",
-          "refs": []
+          "id": "retrieval",
+          "title": "Retrieval and answer quality",
+          "paragraphs": [
+            "I compared BM25 keyword search, embedding-based meaning search and a hybrid on the same development questions. Filtering by period and release, then reranking the candidates, raised the share of relevant passages in the first eight results from 54% to 97%. This measures passage retrieval, not answer accuracy.",
+            "Filtering and reranking also found the known passage more often on small original and fresh test subsets. Full-system comparisons did not show a reliable answer gain on either set. Development shaped the design, the original test shares evidence with it, and fresh questions have since been reused. Treat these as diagnostics, not proof of general improvement.",
+            "I also tested arithmetic on figures extracted from report text. The extension failed pre-set development checks and was not adopted. The current calculator uses validated statistical rows; report tables still need reliable cell, unit and row-to-column extraction before they can be calculation inputs."
+          ],
+          "tables": ["retrieval"]
         },
         {
-          "text": "The public prototype currently runs on one DigitalOcean Droplet behind Caddy, with Docker Compose and a GitHub Actions deployment. It uses one application worker. Budget and audit state are local files, and request limits are in memory. Government identity, provider-side spend caps, load behaviour and rollback are not verified.",
-          "refs": []
-        },
-        {
-          "text": "Evaluated median answer time was about 14 seconds, with chained model calls. A served native-tool, reasoning-off smoke took 29.8, 7.8 and 9.1 seconds versus 53.1, 8.6 and 12.8 for structured planning: three questions, once each, accuracy unmeasured. Streaming is shipped to show progress, not to shorten full-answer time.",
-          "refs": []
-        },
-        {
-          "text": "Neither Decisions API trial was adopted. In v1, the primary router matched 397/409 routes per repeat, diverted one legitimate question and recalled only 19/30 non-in-scope cases; the verifier falsely supported 44/58 partially supported claims. Dev-tuned v2 matched 414/450 repeat rows, diverted two distinct in-scope questions and returned provider refusals on all 30 serious-harm presentations. Its case-median p50/p95 was 0.362/0.426 seconds versus chat's 1.392/1.847, but speed did not repair failed safety, quality and operational gates. These are AI-labelled screens, not human accuracy or an end-to-end speedup.",
-          "refs": []
+          "id": "drift",
+          "title": "Drift detection",
+          "paragraphs": [
+            "The data pipeline stores versioned snapshots and provenance. An operator still has to acquire and rebuild the data; scheduled refresh, automatic drift alerts and rollback have not been implemented. The expanded source corpus and newer served planner were not re-evaluated, so the older scores do not describe those changes."
+          ],
+          "tables": []
         }
       ],
-      "tables": [],
       "proposals": [
-        {
-          "title": "Reduce waiting without lowering answer quality",
-          "gap": "Chained calls dominate the evaluated median; the three-question smoke does not measure accuracy.",
-          "measure": "Compare each change with the served baseline on the same 237 development questions: parallel triage with first retrieval/planning; cache query embeddings and repeated series lookups; test prompt and permission-scoped response caching; shorten contextualisation or skip it without history; use a smaller triage model; and speculate independent read-only tools within three calls per round and the existing total budget. Only validated in-scope work may supply an answer. Bound wasted work, cancel or discard unused results, and key caches by permissions, corpus, prompts and model.",
-          "threshold": "Before adoption, report paired p50/p95 full-answer latency, accuracy, false answers, citations, numerical correctness, abstention, safety and cost on development. Require both latency percentiles to improve without lower accuracy or weaker guardrails; confirm on fresh blind questions before claiming general improvement.",
-          "status": "proposal"
-        },
-        {
-          "title": "Third Decisions attempt: preregistered two-way scope gate",
-          "gap": "The four-way design failed; a two-way scope gate has not been tested.",
-          "measure": "Registration, 3 November 2026; untested and no paid execution authorised. Compare frozen chat with Decisions in_scope/out_of_scope only, retaining existing harm and small-talk handling before the scope gate and agent fallback. Freeze prompts, the 0.70 confidence threshold, model and 150 fresh independently human-labelled cases before calls: 90 in-scope, 30 out-of-scope, 15 harm and 15 small-talk. Run each case three times with interleaved arms; low confidence, refusal or error goes to the existing path. Do not tune on this set. Report case-clustered accuracy and latency intervals, harmful/harmless strata, failures, cost and downstream safety.",
-          "threshold": "Each repeat: zero legitimate in-scope diversions, at least 148/150 correct final routes and 29/30 out-of-scope recalls; at most 1% operational failures over 450 scheduled classifications per arm, with gate bypasses and HTTP failures reported separately. Require both case-median p50 and p95 at most 80% of chat, and no downstream safety regression. All gates must pass; preserve failures, do not substitute a diagnostic threshold, and require owner approval before execution or adoption.",
-          "status": "proposal"
-        },
-        {
-          "title": "First: report-table arithmetic",
-          "gap": "The current calculator cannot safely use figures that appear only in report tables.",
-          "measure": "Pre-register one extraction change. Regress against known cases, then test on new blind numerical questions. Compare wrong-answer rates and definition and citation checks.",
-          "threshold": "At least 0.50 accuracy on the predefined numerical cases, without increasing false-answer rate or weakening definition and citation checks.",
-          "status": "proposal"
-        },
-        {
-          "title": "Second: independent review",
-          "gap": "The current label process cannot establish independent accuracy.",
-          "measure": "Have three analysts label a stratified blind set before AI suggestions, then adjudicate. Never tune on it. Report semantic support, numerical correctness and run-to-run variation separately.",
-          "threshold": "Target Fleiss kappa of at least 0.70 and an accuracy interval no wider than 0.10.",
-          "status": "proposal"
-        },
-        {
-          "title": "Evaluate annual averaging and new tools",
-          "gap": "The served annual_average tool and changed prompts have not been re-evaluated; report-only figures still lack safe calculation inputs.",
-          "measure": "Evaluate all four served tools end to end. Check four-quarter completeness, nulls, consistent series/units and period boundaries; distinguish the simple mean from an official annual rate. Add other tools only for a demonstrated evidence gap, with typed read-only contracts and provenance.",
-          "threshold": "Pass deterministic boundary cases and compare answer accuracy, false answers, citations, latency and cost with the three-tool baseline before claiming a gain.",
-          "status": "proposal"
-        },
-        {
-          "title": "Blind re-review and per-layer ablations",
-          "gap": "AI-drafted labels and bundled prompt/guard changes obscure correctness and individual defence effects.",
-          "measure": "Have independent analysts re-review a blind stratified set before AI suggestions. Separately remove or add each retrieval filter, reranker, prompt guard and output check while holding cases, model and budgets fixed; include harmless look-alikes.",
-          "threshold": "Report agreement, semantic support, numerical correctness, attack misses and false alarms per layer; preserve negative results and confirm improvements on new blind cases.",
-          "status": "proposal"
-        },
-        {
-          "title": "Build gold cases for 2020 to 2023",
-          "gap": "The served answer window includes 2020 to 2023, but evaluated questions cover 2024 to 2026 only.",
-          "measure": "Write and independently review fresh 2020 to 2023 questions with expected evidence, definitions, revisions and abstention labels before running the system. Keep development and blind cases separate.",
-          "threshold": "Report retrieval and answer accuracy by year and question family, with uncertainty and failure analysis; do not extrapolate the old scores to the widened window.",
-          "status": "proposal"
-        }
+        {"title": "Reduce waiting without lowering answer quality", "gap": "The evaluated median is about 14 seconds because model calls are chained, and streaming only shows progress.", "measure": "Run triage in parallel with the first retrieval and planning step, cache embeddings and repeated series lookups, test prompt and permission-scoped response caching, skip contextualisation without history, try a smaller triage model, and run independent read-only tools in parallel, up to three calls per round within the existing total budget. Key caches by permissions, corpus, prompts and model.", "threshold": "Compare paired p50 and p95 full-answer latency, accuracy, safety and cost with the served baseline on the same 237 development questions, then on fresh blind cases. Adopt nothing that lowers accuracy or weakens citation, numerical, abstention or safety checks.", "status": "proposal"},
+        {"title": "Third Decisions attempt: preregistered two-way scope gate", "gap": "Both Decisions trials were faster but failed safety, quality and operations, and a two-way scope gate is untested.", "measure": "Untested, with no paid execution authorised: after existing harm and small-talk handling, a frozen in-scope or out-of-scope Decisions gate with agent fallback runs against chat on 150 fresh human-labelled cases (90 in-scope, 30 out-of-scope, 15 harm, 15 small-talk), three interleaved repeats, confidence 0.70 and no tuning.", "threshold": "Each repeat needs zero legitimate diversions, 148/150 correct routes, 29/30 out-of-scope recalls, at most 1% failures over 450 scheduled classifications per arm, p50 and p95 within 80% of chat, and no downstream safety regression. Owner approval comes before execution or adoption.", "status": "proposal"},
+        {"title": "Evaluate annual averaging and new tools", "gap": "annual_average and the new prompts are unevaluated, and its simple mean is not an official annual rate.", "measure": "Evaluate all four served tools end to end, including four-quarter completeness, nulls and series consistency, and add other typed read-only tools only for a demonstrated evidence gap.", "threshold": "Pass deterministic boundary cases, then compare accuracy, false answers, citations, latency and cost with the three-tool baseline.", "status": "proposal"},
+        {"title": "Report-table arithmetic", "gap": "Flattened report tables can attach a value to the wrong row or column, and the earlier extension failed.", "measure": "Pre-register one extraction change that checks cell, row, column, unit and population lineage, excludes uncertain cells and tests known cases before new blind questions.", "threshold": "Reach at least 0.50 accuracy on predefined numerical cases without a higher false-answer rate or weaker definition and citation checks.", "status": "proposal"},
+        {"title": "Blind re-review and per-layer ablations", "gap": "One reviewer, AI-drafted labels and bundled changes cannot show true accuracy or which layer helps.", "measure": "Have three analysts label a stratified blind set before seeing AI suggestions, then adjudicate, and test each retrieval filter, reranker, prompt guard and output check separately with harmless look-alikes.", "threshold": "Target Fleiss kappa of at least 0.70 and an accuracy interval no wider than 0.10, report misses and false alarms per layer, and never tune on the blind set.", "status": "proposal"},
+        {"title": "Gold cases for 2020 to 2023", "gap": "The served window reaches 2020, but every evaluated question covers 2024 to 2026.", "measure": "Write fresh 2020 to 2023 questions with expected evidence, definitions, revisions and abstention labels, independently reviewed before any run.", "threshold": "Report retrieval and answer quality by year and question family with uncertainty, and keep blind cases out of tuning.", "status": "proposal"},
+        {"title": "Scheduled refresh and source onboarding", "gap": "Published datasets change, and a rebuild still needs an operator.", "measure": "Fetch approved sources on a schedule into immutable snapshots, validate schema, coverage, revisions and licence before promotion, and mark old data stale.", "threshold": "Reject failed snapshots, alert on missed freshness targets and evaluate each new source before serving it.", "status": "proposal"},
+        {"title": "Add coverage carefully", "gap": "Some series, periods, source versions and languages are not represented.", "measure": "Add reviewed MOM, SingStat and other government sources through the same manifest, rights review and evaluation process.", "threshold": "Keep revision-conflict, definition and citation performance at the approved baseline before serving a new source.", "status": "proposal"}
       ]
     },
     {
-      "id": "priorities",
-      "title": "Making it ready for government use across departments",
-      "summary": "A proposed operating model, not a deployment or compliance claim.",
+      "id": "production",
+      "title": "Production deployment and security",
+      "summary": "A proposed production design. Nothing here is deployed, or shown to meet a standard.",
       "paragraphs": [
+        "Built today: one DigitalOcean Droplet behind Caddy with Docker Compose and GitHub Actions, an access-code gate, rights-scan checks, a synthetic threat suite and audit IDs. It uses one application worker; budget and audit state are local files and request limits are in memory. Government identity, provider-side spend caps, load behaviour and rollback are not verified."
+      ],
+      "subsections": [
         {
-          "text": "Built today: a DigitalOcean Droplet behind Caddy, access-code gating, a rights scan, synthetic threat-suite checks and audit IDs. These provide prototype evidence, not government SSO, production assurance or legal approval. The following design requires departmental security, legal and operational review.",
-          "refs": []
+          "id": "review",
+          "title": "Provenance, explainability and review",
+          "paragraphs": [
+            "The workbench shows source links, cited passages, answer status and tool activity. Feedback is stored with the run, but it does not yet change the system. A citation validator confirms that labels and quotations came from supplied evidence; it cannot determine whether the evidence entails the claim."
+          ],
+          "tables": []
+        },
+        {
+          "id": "security",
+          "title": "Security, privacy and third-party risk",
+          "paragraphs": [
+            "The agent has typed, read-only tools, bounded calls and validated MCP replies. Retrieved passages are evidence, not instructions. In one three-repeat synthetic attack comparison, the guarded configuration passed 50 of 54 attack cases, compared with 42 of 54 for the naive configuration. The answer prompt and guards changed together, so this does not identify which defence helped. Both configurations also failed three of eight harmless look-alike cases. These tests do not establish resistance to adaptive attacks or a specific defence layer's effect."
+          ],
+          "tables": []
+        },
+        {
+          "id": "components",
+          "title": "Mocked or unverified components and their production replacements",
+          "paragraphs": [
+            "No live capability is mocked; hostile-server cases are synthetic tests. The table lists what is unverified today and the proposed replacement."
+          ],
+          "tables": ["components"]
         }
       ],
-      "tables": [],
       "proposals": [
-        {
-          "title": "Production architecture, not deployed",
-          "gap": "The single-worker prototype cannot establish government identity, shared-state reliability or production scale.",
-          "measure": "Use edge/WAF and SSO before a load balancer and stateless API replicas. A bounded queue feeds research workers; an SSE event store supports progress and reconnects. Separate scheduled ingestion and index builds, publish immutable object storage snapshots, and mount approved search indexes and DuckDB snapshots read-only. Isolate MCP with narrow permissions. Use shared budgets, rate limits and audit state, a secrets manager, and an approved LLM gateway enforcing endpoints, spend and retention. Apply source permissions before retrieval. Add observability, CI quality/security/rights gates, versioned rollback and encrypted backups with restore drills.",
-          "threshold": "Approve identity, rights and model processing first. Demonstrate load, queue exhaustion, reconnect, timeout, rollback and restore behaviour before replicas serve users.",
-          "status": "proposal"
-        },
-        {
-          "title": "Identity, data protection and security",
-          "gap": "Shared codes and public-source tests do not establish per-user authorisation or sensitive-data readiness.",
-          "measure": "Use SSO and per-user RBAC with department and source classifications applied before search, statistics tools and caches. Review residency and provider data use, retention and PDPA obligations with authorised legal/privacy teams. Manage secrets centrally; add WAF and shared rate limits, tamper-evident audit retention, injection controls and allow-listed egress. Review dependencies and images, generate a supply-chain inventory and commission penetration testing.",
-          "threshold": "Demonstrate cross-user access denial, no restricted evidence in caches or prompts, audit integrity, secret rotation and blocked egress. Close assessed critical findings before restricted data is admitted.",
-          "status": "proposal"
-        },
-        {
-          "title": "Governance and human accountability",
-          "gap": "Model outputs are fallible and the current evaluation is not independent ground truth.",
-          "measure": "Use the Singapore Model AI Governance Framework as a review reference, not a certification. Record a risk and impact assessment, accountable owners and permitted uses. Require human-in-the-loop review for consequential policy decisions. Maintain a model/system card, change control, CI evaluation gates and drift monitoring for corpus, prompts, tools and model changes.",
-          "threshold": "Department owners approve risk controls and acceptance criteria; reviewers can inspect evidence, override outputs and report incidents. No claim of framework alignment or compliance is complete without an authorised assessment.",
-          "status": "proposal"
-        },
-        {
-          "title": "Department boundaries and shared evidence services",
-          "gap": "A shared service can leak evidence or silently mix incompatible departmental definitions.",
-          "measure": "Isolate tenants, department corpora, roles, caches and audit access. Share MCP services only through authenticated, authorised read-only contracts. Define ingestion specifications for provenance, units, revisions, classifications and validation. Keep a licence register and source owner for each acquisition; promote approved snapshots atomically.",
-          "threshold": "Test cross-tenant isolation in search, tools, caches and logs; verify source permissions and licence restrictions before onboarding each department.",
-          "status": "proposal"
-        },
-        {
-          "title": "Reliability and sustainable operations",
-          "gap": "One worker and local state have no verified availability or disaster-recovery baseline.",
-          "measure": "Agree SLOs from measured workloads, assign on-call ownership and incident procedures, enforce provider and tenant cost caps, and monitor quality, latency, failures and spend. Test encrypted backups, disaster recovery, failover, queue limits, cancellation and rollback without replaying uncertain work.",
-          "threshold": "Approve recovery objectives and service limits; demonstrate restore and failover drills, budget exhaustion and alert delivery before expanding access.",
-          "status": "proposal"
-        },
-        {
-          "title": "Roll out by evidence, not dates",
-          "gap": "A broad launch would extend unverified operational and data assumptions.",
-          "measure": "Start with a public-data analyst pilot and human review. Move to hardened beta only after identity, security, evaluation and recovery gates pass. Roll out department by department after data-owner approval, isolation tests, training and support readiness.",
-          "threshold": "Record acceptance evidence and accountable sign-off at each stage; retain rollback and stop criteria. No fixed timeline, production-readiness or compliance claim is implied.",
-          "status": "proposal"
-        }
+        {"title": "Production architecture, not deployed", "gap": "The single-worker prototype keeps budget and audit state locally and cannot show shared-state reliability.", "measure": "Put edge/WAF and SSO in front of a load balancer and stateless API replicas, with a bounded queue, research workers and an SSE event store, separate ingestion into immutable object storage, read-only versioned search and DuckDB snapshots, an isolated MCP service, shared budgets, rate limits and audit state, a secrets manager, an approved LLM gateway, observability, CI gates, rollback and encrypted backups with restore drills.", "threshold": "Demonstrate load, queue exhaustion, reconnect, timeout, rollback and restore behaviour before replicas serve users.", "status": "proposal"},
+        {"title": "Identity, roles and data classification", "gap": "Shared access codes cannot separate users or restricted sources.", "measure": "Use SSO with per-user RBAC, and label departments, sources and passages with classifications enforced before retrieval, caching and tool use.", "threshold": "Show cross-user denial and no restricted text in prompts, caches or logs.", "status": "proposal"},
+        {"title": "Secrets, WAF and rate limits", "gap": "Local files and in-memory limits do not survive replicas or restarts.", "measure": "Keep secrets in a managed store with rotation, put a WAF and shared per-user rate limits at the edge, and cap provider spend at the gateway.", "threshold": "Test rotation, rate-limit and budget exhaustion across replicas.", "status": "proposal"},
+        {"title": "Audit retention and tamper evidence", "gap": "Local audit files can be edited or lost.", "measure": "Keep structured, tamper-evident audit records with hash chaining or write-once storage, defined retention and restricted reader access.", "threshold": "Verify that edits and deletions are detected and retention is enforced.", "status": "proposal"},
+        {"title": "Injection and egress controls", "gap": "The synthetic attack tests do not cover adaptive attacks.", "measure": "Keep retrieved text as untrusted data, isolate MCP, allow-list outbound hosts and block other egress from tools and models.", "threshold": "Run independent paraphrases, hostile passages and unsafe tool requests with harmless look-alikes, and record blocked egress.", "status": "proposal"},
+        {"title": "Supply chain and penetration testing", "gap": "The prototype has no independent security assessment.", "measure": "Pin and scan dependencies and images, keep an inventory, and commission independent penetration testing before restricted data is admitted.", "threshold": "Close critical findings and rerun the tests after fixes.", "status": "proposal"},
+        {"title": "Provider data use and PDPA review", "gap": "The external model route has unverified residency and provider terms.", "measure": "Have authorised legal and privacy teams review residency, provider data use, retention and PDPA obligations before choosing model endpoints.", "threshold": "Record the decision and approved endpoints, and block unapproved endpoints at the gateway.", "status": "proposal"},
+        {"title": "Feedback review loop", "gap": "Votes and comments are stored but do not produce regression tests.", "measure": "Review every thumbs-down and a sample of thumbs-up, write one test with expected evidence for each confirmed failure, and change one thing at a time. Pseudonymise comments and limit retention.", "threshold": "Every confirmed failure has a reviewed case and a recorded change; never train on unreviewed votes.", "status": "proposal"},
+        {"title": "Resilience, SLOs and cost caps", "gap": "One Droplet and one worker have no verified recovery.", "measure": "Set SLOs from a measured workload, assign on-call ownership, enforce cost caps, and test backups, disaster recovery and failover.", "threshold": "Approve recovery objectives and show restore, failover and budget-exhaustion drills.", "status": "proposal"},
+        {"title": "Staged technical path", "gap": "A broad launch would extend unverified assumptions.", "measure": "Move from a public-data pilot to a hardened beta only after identity, security, evaluation and recovery gates pass.", "threshold": "Record acceptance evidence, stop criteria and rollback at each stage; no time promise is implied.", "status": "proposal"}
+      ]
+    },
+    {
+      "id": "government",
+      "title": "Making it ready for government use across departments",
+      "summary": "A proposed operating model for several departments. It is not a deployment or a compliance claim.",
+      "paragraphs": [
+        "Departmental security, legal, data-owner and operational approval remain necessary. Nothing here establishes compliance with any framework."
+      ],
+      "subsections": [],
+      "proposals": [
+        {"title": "Governance and human accountability", "gap": "Outputs are fallible and the current evaluation is not independent ground truth.", "measure": "Use the Singapore Model AI Governance Framework as a review reference, with a risk and impact assessment, accountable owners, human-in-the-loop review of consequential decisions, model and system cards, change control, CI evaluation gates and drift monitoring.", "threshold": "Department owners approve controls and acceptance criteria; any framework alignment or compliance claim needs an authorised assessment.", "status": "proposal"},
+        {"title": "Multi-department use", "gap": "A shared service could leak evidence or mix departmental definitions.", "measure": "Isolate tenants, department corpora, roles and caches, share MCP only through authenticated read-only contracts, and require ingestion specifications and a licence register for every source.", "threshold": "Test cross-tenant isolation in search, tools, caches and logs, and verify licences before onboarding.", "status": "proposal"},
+        {"title": "Department rollout", "gap": "Each department adds its own data, definitions and risks.", "measure": "Roll out department by department after data-owner approval, isolation tests, training and support readiness.", "threshold": "Record sign-off and stop criteria for each department; no timeline, readiness or compliance claim is implied.", "status": "proposal"}
       ]
     }
   ],
@@ -272,31 +119,10 @@
     "Final comparisons used an earlier corpus and planner than the expanded live system. The newer corpus and served planner have not been re-evaluated. Monitoring, rollback, government identity, provider limits and production scale remain unverified."
   ],
   "components": [
-    {
-      "component": "Access and API",
-      "current": "Shared demo codes; Caddy and one application worker.",
-      "replacement": "Proposed: edge/WAF, SSO, load balancer and stateless API replicas; source roles checked before retrieval."
-    },
-    {
-      "component": "Research execution",
-      "current": "Request-scoped agent and streamed progress; no durable queue.",
-      "replacement": "Proposed: bounded queue, research workers and SSE event store; shared budget, rate-limit and audit state."
-    },
-    {
-      "component": "Evidence and MCP",
-      "current": "Local snapshots, search indexes, DuckDB and read-only MCP.",
-      "replacement": "Proposed: separate ingestion; immutable object storage; versioned read-only search and DuckDB snapshots; isolated MCP service."
-    },
-    {
-      "component": "Secrets and model processing",
-      "current": "External model route; residency and provider terms unverified.",
-      "replacement": "Proposed: secrets manager and approved LLM gateway enforcing endpoints, spend, retention and audit controls."
-    },
-    {
-      "component": "Release and recovery",
-      "current": "GitHub Actions deployment; production load, rollback and restore unverified.",
-      "replacement": "Proposed: observability, CI quality/security/rights gates, atomic promotion, rollback, encrypted backups and restore drills."
-    }
-  ],
-  "references": []
+    {"component": "Access and API", "current": "Shared demo codes; Caddy and one application worker.", "replacement": "Proposed: edge/WAF, SSO, load balancer and stateless API replicas; source roles checked before retrieval."},
+    {"component": "Research execution", "current": "Request-scoped agent and streamed progress; no durable queue.", "replacement": "Proposed: bounded queue, research workers and SSE event store; shared budget, rate-limit and audit state."},
+    {"component": "Evidence and MCP", "current": "Local snapshots, search indexes, DuckDB and read-only MCP.", "replacement": "Proposed: separate ingestion; immutable object storage; versioned read-only search and DuckDB snapshots; isolated MCP service."},
+    {"component": "Secrets and model processing", "current": "External model route; residency and provider terms unverified.", "replacement": "Proposed: secrets manager and approved LLM gateway enforcing endpoints, spend, retention and audit controls."},
+    {"component": "Release and recovery", "current": "GitHub Actions deployment; production load, rollback and restore unverified.", "replacement": "Proposed: observability, CI quality/security/rights gates, atomic promotion, rollback, encrypted backups and restore drills."}
+  ]
 }

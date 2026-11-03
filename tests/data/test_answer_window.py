@@ -38,7 +38,8 @@ def test_derived_summary_uses_the_window():
 def test_frozen_prompt_files_are_unchanged_and_the_served_ones_are_new_files():
     # Hash-pinned by the frozen experiments (the first four) or already deployed (the next three, superseded by D-080): never edit, add a new version.
     pinned = {"planner_v1": "32c800c83425", "answer_v3": "9a9372faf52e", "triage_v1": "de176c25e4b6", "contextualise_v1": "1fdf71c2fcfc",
-              "planner_v4": "550e97495ed0", "answer_v6": "5e0fbdc5a5bd", "triage_v2": "61695483ac77"}
+              "planner_v4": "550e97495ed0", "answer_v6": "5e0fbdc5a5bd", "triage_v2": "61695483ac77",
+              "planner_v6": "9aef798474f9", "answer_v8": "13ba2b293dfc"}
     assert {name: load_prompt(name)[2] for name in pinned} == pinned
     for new in ("triage_v3", "contextualise_v2"):
         text = load_prompt(new)[0]

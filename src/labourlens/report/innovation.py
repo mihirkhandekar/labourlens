@@ -12,23 +12,21 @@ def project_innovation(root: Path, report: dict) -> dict:
     """Never open raw runs, answers, private files or source passages for this page."""
     raw = (root / CONTENT).read_bytes()
     content = json.loads(raw)
-    if set(content) != {"title", "scope", "abstract", "approach", "sections", "limitations", "components", "references"}:
+    if set(content) != {"title", "scope", "abstract", "approach", "sections", "limitations", "components"}:
         raise ValueError("Unexpected innovation content fields")
     text = json.dumps(content, ensure_ascii=False)
     if any(term in text.lower() for term in ("held-out", "gpt-5.6", "\u2014", "\u2013")):
         raise ValueError("Innovation content contains forbidden presentation copy")
-    if len(content["sections"]) != 6:
-        raise ValueError("Innovation must address six assessment questions")
-    reference_ids = {reference["id"] for reference in content["references"]}
-    for reference in content["references"]:
-        if not reference["path"].startswith("docs/") or ".." in Path(reference["path"]).parts:
-            raise ValueError("References must identify repository documents")
+    if len(content["sections"]) != 3:
+        raise ValueError("Innovation must have three sections")
     for section in content["sections"]:
-        if set(section) != {"id", "title", "summary", "paragraphs", "tables", "proposals"}:
+        if set(section) != {"id", "title", "summary", "paragraphs", "subsections", "proposals"}:
             raise ValueError("Unexpected assessment section fields")
-        for paragraph in section["paragraphs"]:
-            if not set(paragraph["refs"]) <= reference_ids:
-                raise ValueError("Unknown evidence reference")
+        if not all(isinstance(paragraph, str) for paragraph in section["paragraphs"]):
+            raise ValueError("Section paragraphs must be plain text")
+        for sub in section["subsections"]:
+            if set(sub) != {"id", "title", "paragraphs", "tables"}:
+                raise ValueError("Unexpected assessment subsection fields")
         for item in section["proposals"]:
             if set(item) != {"title", "gap", "measure", "threshold", "status"} or item["status"] != "proposal":
                 raise ValueError("Assessment additions must remain explicit proposals")

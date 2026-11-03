@@ -98,7 +98,7 @@ def test_native_schema_args_and_legacy_defaults():
     assert offered_tools(sh, "v2") == base + ["calculate_from_text_values"]
     assert offered_tools(sh, "annual") == base + ["annual_average"]
     assert AgentConfig().tool_set == "base" and AgentConfig().planner_mode == "structured"
-    conf = AgentConfig(tool_set="annual", planner_mode="tools", planner_prompt="planner_v6", answer_prompt="answer_v8")
+    conf = AgentConfig(tool_set="annual", planner_mode="tools", planner_prompt="planner_v7", answer_prompt="answer_v9")
     assert "tools=annual" in conf.key()
     with pytest.raises(ValueError):
         AgentConfig(tool_set="annual")
@@ -169,7 +169,7 @@ def test_native_planner_executes_annual_and_supplies_cited_inputs(monkeypatch):
         return llm.LLMResult(json.dumps(payload), 10, 5, 0, 0.01)
 
     monkeypatch.setattr(llm, "chat", chat)
-    cfg = AgentConfig(tool_set="annual", planner_mode="tools", planner_prompt="planner_v6", answer_prompt="answer_v8")
+    cfg = AgentConfig(tool_set="annual", planner_mode="tools", planner_prompt="planner_v7", answer_prompt="answer_v9")
     result = run_agent("Find the simple mean of four quarterly resident rates in 2025.", shared(), cfg, save_trace=False)
     calls = [e for e in result["trace"] if e["node"] == "execute_tool"]
     assert len(calls) == 1 and calls[0]["event"] == "ok" and calls[0]["detail"]["tool"] == "annual_average"

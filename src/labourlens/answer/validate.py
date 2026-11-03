@@ -13,6 +13,69 @@ MAX_QUOTE_WORDS = 40
 _NUM = re.compile(r"\d{1,3}(?:,\d{3})+(?:\.\d+)?|\d+\.\d+|\d+")
 _YEAR = re.compile(r"^(?:19|20)\d\d$")
 
+# Served annual rights boundary (shared by the validator and the web projection): no RIGHTS_RUN_WORDS consecutive normalised words
+# of a report passage may appear in the model's own prose. Tokens are letters and digits only, NFKC case-folded.
+RIGHTS_RUN_WORDS = 7
+RIGHTS_TOKEN = re.compile(r"[^\W_]+")
+
+
+def rights_tokens(value) -> list[tuple[str, int, int]]:
+    """Normalized words with offsets into the original text, for local span removal.
+
+    Ignore formatting-only characters, but retain punctuation as word boundaries.
+    Offsets survive NFKC expansions and case folding (including full-width text).
+    """
+    text = str(value or "")
+    normalized, offsets = [], []
+    for i, char in enumerate(text):
+        if unicodedata.category(char) == "Cf":
+            continue
+        for folded in unicodedata.normalize("NFKC", char).casefold():
+            normalized.append(folded)
+            offsets.append(i)
+    return [(m.group(), offsets[m.start()], offsets[m.end() - 1] + 1) for m in RIGHTS_TOKEN.finditer("".join(normalized))]
+
+
+def report_windows(texts) -> set[tuple[str, ...]]:
+    n = RIGHTS_RUN_WORDS
+    windows: set[tuple[str, ...]] = set()
+    for text in texts:
+        words = [word for word, _, _ in rights_tokens(text)]
+        windows.update(tuple(words[i:i + n]) for i in range(len(words) - n + 1))
+    return windows
+
+
+def copied_spans(value, windows) -> list[tuple[int, int]]:
+    """Merged (start, end) character spans of ``value`` that reproduce RIGHTS_RUN_WORDS or more consecutive report words."""
+    n = RIGHTS_RUN_WORDS
+    tokens = rights_tokens(value)
+    spans: list[tuple[int, int]] = []
+    for i in range(len(tokens) - n + 1):
+        if tuple(t[0] for t in tokens[i:i + n]) not in windows:
+            continue
+        start, end = tokens[i][1], tokens[i + n - 1][2]
+        if spans and start <= spans[-1][1]:
+            spans[-1] = (spans[-1][0], max(spans[-1][1], end))
+        else:
+            spans.append((start, end))
+    return spans
+
+
+def report_copy_errors(answer: Answer, ctx: list[ContextPassage]) -> list[str]:
+    """Served annual mode: free-text fields must paraphrase report passages. Each error lists only the offending run, which is the
+    model's own wording; no source text beyond it. Citation quotes are exempt (the projection cuts them to six words)."""
+    windows = report_windows(p.text for p in ctx if p.label.startswith("P"))
+    if not windows:
+        return []
+    fields = [("summary", answer.summary), ("reason", answer.reason), ("clarification_question", answer.clarification_question),
+              *((f"caveats[{i}]", c) for i, c in enumerate(answer.caveats)), *((f"claims[{i}].text", c.text) for i, c in enumerate(answer.claims))]
+    errors = []
+    for name, value in fields:
+        for start, end in copied_spans(value, windows):
+            errors.append(f'{name} copies a run of report wording: "{value[start:end][:300]}"; paraphrase it in your own words '
+                          f"(never copy {RIGHTS_RUN_WORDS} or more consecutive words from a report passage; short exact quotes belong only in a citation quote)")
+    return errors
+
 
 def norm(t: str) -> str:
     t = unicodedata.normalize("NFKC", t)
@@ -52,6 +115,22 @@ class Report:
     @property
     def valid(self) -> bool:
         return not self.errors
+
+
+_WHY = re.compile(r"\b(?:why|reasons?|drivers?|caused?|causes?|explain|explanation|because|attribut\w+)\b", re.I)
+_SEARCH_FAILURE_SAID = re.compile(r"\b(?:report|reports|commentary|explanation|explanations)\b.*\b(?:search|searches|unavailable|could not|timed out|failed|not covered|not retrieved)\b"
+                                  r"|\b(?:search|timed out|failed)\b.*\b(?:report|reports|commentary)\b", re.I | re.S)
+
+
+def report_search_failure_errors(answer: Answer, question: str, reason: str) -> list[str]:
+    """Served mode: when report search timed out or failed, no report passage came back and the question asks for reasons, an answered
+    reply must say so in its summary or caveats; a statistics-only answer must not read as complete."""
+    if answer.status != "answered" or not _WHY.search(question or ""):
+        return []
+    said = " ".join([answer.summary, *answer.caveats])
+    return [] if _SEARCH_FAILURE_SAID.search(said) else [
+        f"report search {reason} and the question asks for reasons, but the answer does not say that report evidence could not be collected; "
+        "state this in the caveats and answer only what the statistics show"]
 
 
 def missing_period_errors(answer: Answer, ctx: list[ContextPassage]) -> list[str]:

@@ -114,7 +114,7 @@ export function buildBands(report) {
   });
   system.visual.append(stage(safe('Architecture', architectureDiagram)));
   system.node.append(note('The served agent uses two of the ten statistics server tools. Direct and MCP routes use the same local observations; MCP adds no second knowledge source.'));
-  system.node.append(note('Current served prompts: planner_v6, answer_v8, triage_v4 and contextualise_v3. Follow-ups carry resolved questions and bounded series/period context into rewrite and triage as untrusted data, with fail-open handling. Why questions request report search and attribute MOM-stated drivers without inferring causation. Abstention distinguishes missing observations from missing method or commentary. These changes are unevaluated.'));
+  system.node.append(note('Current served prompts: planner_v7, answer_v9, triage_v4 and contextualise_v3. Follow-ups carry resolved questions and bounded series/period context into rewrite and triage as untrusted data, with fail-open handling. Why questions request report search and attribute MOM-stated drivers without inferring causation. Abstention distinguishes missing observations from missing method or commentary. These changes are unevaluated.'));
   system.node.append(more('Scope, question families and the answer pipeline', pool.rest('scope')));
   bands.system = system;
 

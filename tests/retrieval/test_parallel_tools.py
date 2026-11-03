@@ -27,7 +27,7 @@ def _shared():
 
 def _cfg(annual=True, **kw):
     if annual:
-        return g.AgentConfig(planner_mode="tools", planner_prompt="planner_v6", answer_prompt="answer_v8", tool_set="annual", **kw)
+        return g.AgentConfig(planner_mode="tools", planner_prompt="planner_v7", answer_prompt="answer_v9", tool_set="annual", **kw)
     return g.AgentConfig(planner_mode="tools", planner_prompt="planner_v5", answer_prompt="answer_v7", **kw)
 
 

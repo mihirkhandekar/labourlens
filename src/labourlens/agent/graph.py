@@ -37,6 +37,9 @@ from labourlens.mcp.redact import redact, secret_values
 from labourlens.security.guards import injection_flags, scan_output
 
 MAX_ROUNDS, MAX_CALLS, MAX_CALLS_PER_ROUND, TOOL_TIMEOUT_S, MAX_QUESTION_CHARS = 2, 6, 3, 10.0, 1000
+# Served report search (D-091): its rerank and query-embedding calls are network calls that took 6 to 10 s live, so it gets 25 s and one timeout retry
+# of at most 12 s that is not counted as a tool call. The retry is skipped when it would leave less than ANSWER_RESERVE_S of the run deadline.
+SEARCH_TIMEOUT_S, SEARCH_RETRY_TIMEOUT_S, ANSWER_RESERVE_S, MIN_RETRY_S = 25.0, 12.0, 20.0, 3.0
 # Tool set v2 (D-046): one extra evidence round is granted, once per run, after an unknown-dimension error, so the corrected retry
 # does not consume the round a later calculation needs. The call budget (MAX_CALLS) is unchanged.
 BONUS_ROUNDS = 1
@@ -114,6 +117,9 @@ class AgentConfig:
     # Total wall-clock budget for the planner and answer LLM calls of one run (None = unbounded, as in the evaluated runs).
     # The web app sets it so an abandoned run releases its slot; it is not part of key() and changes no model setting.
     run_deadline_s: float | None = None
+    # Served annual mode only (D-091): search_reports gets this larger budget and one retry after a timeout; every other tool keeps tool_timeout_s.
+    # None (every frozen and test configuration) keeps one budget for all tools. Not part of key().
+    search_timeout_s: float | None = None
     control_flow: str = "agent"
     # "structured" (default, the evaluated planner of every frozen run) or "tools" (native function calling, the shipped web planner, D-078).
     planner_mode: str = "structured"
@@ -133,10 +139,10 @@ class AgentConfig:
             raise ValueError(f"tool_set must be one of {TOOL_SETS}")
         if (self.tool_set == "v2") != (self.planner_prompt == V2_PROMPTS[0] and self.answer_prompt == V2_PROMPTS[1]):
             raise ValueError("tool_set v2 and the prompts planner_v3 + answer_v5 go together: use both or neither")
-        if self.tool_set == "annual" and (self.planner_prompt != "planner_v6" or self.answer_prompt != "answer_v8" or self.planner_mode != "tools"):
-            raise ValueError("tool_set annual requires planner_v6, answer_v8 and native tools mode")
-        if self.tool_set != "annual" and self.planner_prompt == "planner_v6":
-            raise ValueError("planner_v6 requires tool_set annual")
+        if self.tool_set == "annual" and (self.planner_prompt != "planner_v7" or self.answer_prompt != "answer_v9" or self.planner_mode != "tools"):
+            raise ValueError("tool_set annual requires planner_v7, answer_v9 and native tools mode")
+        if self.tool_set != "annual" and self.planner_prompt == "planner_v7":
+            raise ValueError("planner_v7 requires tool_set annual")
 
     def key(self) -> str:
         base = f"planner={self.planner_model}|answer={self.answer_model}|{self.planner_prompt}|{self.answer_prompt}"
@@ -323,6 +329,7 @@ def build_graph(shared: Shared, tools: Tools, cfg: AgentConfig, emit=None):
                                 if not any(line.startswith(f"- {name}(") for name in disabled))
     answer_sys, answer_user, _ = load_prompt(cfg.answer_prompt)
     parallel_rounds = cfg.tool_set == "annual" and cfg.planner_mode == "tools"
+    search_failure = {"reason": None}  # served: why report search returned nothing (timed out or failed), for the answer note and validator
     pool = ThreadPoolExecutor(max_workers=MAX_CALLS * 2 if parallel_rounds else 2)
     schema = plan_schema(shared) if cfg.tool_set == "base" else plan_schema(shared, cfg.tool_set)
     if cfg.control_flow == "fixed":
@@ -394,7 +401,8 @@ def build_graph(shared: Shared, tools: Tools, cfg: AgentConfig, emit=None):
         """The planner's view of one finished call (native planner): a short status line and the labelled evidence lines of the items the call
         added, framed as untrusted data. Same exposure as evidence_summary: report passages appear by label and source only, never as text."""
         if ops_err:
-            body = "operational failure: the tool is unavailable"
+            body = (f"{ops_err.split(': ', 1)[-1]}. Evidence from this search is unavailable; the search was not shown to be empty." if "timed out after" in ops_err
+                    else "operational failure: the tool is unavailable")
         elif res.ok:
             body = "\n".join([f"ok: {res.message[:300]}", *(line for it in res.items for line in item_lines(it))])
         else:
@@ -493,14 +501,24 @@ def build_graph(shared: Shared, tools: Tools, cfg: AgentConfig, emit=None):
         kwargs = {a: call[a] for a in ARGS[name] if call.get(a) is not None}
         from labourlens.retrieval.dense import embedding_deadline
 
+        served_search = name == "search_reports" and parallel_rounds and cfg.search_timeout_s is not None
+
         def invoke(child, timeout):
+            if served_search:
+                child.tool_timeout_s = timeout  # the rerank step budgets against this attempt's limit, not the shared 10 s
             with embedding_deadline(timeout):
                 result = getattr(child, name)(**kwargs)
             return result, child
 
-        for attempt in range(2):  # retry only failures whose worker has finished
-            timeout = cfg.tool_timeout_s
-            if parallel_rounds:
+        timed_out_once = False
+        for attempt in range(2):  # retry only failures whose worker has finished (a served search also retries once after a timeout)
+            timeout = cfg.search_timeout_s if served_search else cfg.tool_timeout_s
+            if timed_out_once:
+                left = llm_budget()
+                timeout = min(SEARCH_RETRY_TIMEOUT_S, (left - ANSWER_RESERVE_S) if left is not None else SEARCH_RETRY_TIMEOUT_S)
+                if timeout < MIN_RETRY_S:
+                    return None, f"TimeoutError: tool {name} timed out after {time.perf_counter() - started:.1f} s (no time left to retry)"
+            elif parallel_rounds:
                 left = llm_budget()
                 timeout = min(timeout - (time.perf_counter() - started), left if left is not None else timeout)
                 if timeout <= 0:
@@ -512,6 +530,11 @@ def build_graph(shared: Shared, tools: Tools, cfg: AgentConfig, emit=None):
                 return result, None
             except FutureTimeout as e:
                 fut.cancel()
+                if served_search and not timed_out_once and attempt == 0:
+                    timed_out_once = True
+                    continue
+                if served_search:
+                    return None, f"TimeoutError: tool {name} timed out after {time.perf_counter() - started:.1f} s (retried once)"
                 return None, f"{type(e).__name__}: tool {name} did not complete"
             except TransientToolError as e:
                 if attempt == 1:
@@ -574,9 +597,15 @@ def build_graph(shared: Shared, tools: Tools, cfg: AgentConfig, emit=None):
                 planner_messages.append(tool_message(call, res, ops_err))
             if ops_err:
                 ops += 1
-                errors.append(f"{name}: operational failure, tool unavailable")
+                timed_out = "timed out after" in ops_err
+                errors.append(f"{name}: {ops_err.split(': ', 1)[-1] if timed_out else 'operational failure, tool unavailable'}")
                 events += _ev("execute_tool", "operational_failure", tool=name, args=args, error=ops_err, seconds=dt,
+                              **({"error_kind": "timeout"} if timed_out else {}),
                               **({"transport": "mcp"} if tools.routed(call["tool"]) else {}))
+                if name == "search_reports" and parallel_rounds:
+                    search_failure["reason"] = "timed out" if timed_out else "failed"
+                    tools._note(f"Report search {search_failure['reason']}: the report evidence for this question could not be collected, so the absence of report "
+                                "passages says nothing about what the reports state. Tell the reader that report search failed and that explanations are therefore not covered.")
             elif res.ok:
                 events += _ev("execute_tool", "ok", tool=name, args=args, result=res.message[:300], new_items=[i.label for i in res.items], seconds=dt,
                               **({"transport": res.transport} if res.transport else {}),
@@ -660,6 +689,10 @@ def build_graph(shared: Shared, tools: Tools, cfg: AgentConfig, emit=None):
             rep = validate.check(checked, evidence)
             if cfg.tool_set == "annual":
                 rep.errors += validate.missing_period_errors(checked, evidence)
+                if s.get("attempts", 0) < 2:  # the repair attempt is still available; afterwards the web projection trims what remains
+                    rep.errors += validate.report_copy_errors(checked, evidence)
+                if search_failure["reason"] and not any(i.label.startswith("P") for i in evidence):
+                    rep.errors += validate.report_search_failure_errors(checked, s["question"], search_failure["reason"])
             extra["answer"] = checked.model_dump()
             errs = rep.errors
             extra.update({"cited_ids": rep.cited_passage_ids, "ungrounded_numbers": rep.ungrounded_numbers, "source_conflicts": conflicts})
@@ -738,7 +771,9 @@ def run_agent(question: str, shared: Shared, cfg: AgentConfig = AgentConfig(), s
     res = {"run_id": run_id, "question": question, "config": cfg.key(), "planner_mode": cfg.planner_mode, "outcome": final["outcome"], "answer": final.get("answer"),
            "errors": final.get("errors") or [], "rounds": final.get("round", 0), "tool_calls": final.get("calls_used", 0),
            "crosscheck_enabled": os.environ.get("LABOURLENS_GUARDS") != "off" and os.environ.get("LABOURLENS_CROSSCHECK") != "off",
-           "evidence": [{"label": i.label, "id": i.passage_id, "source_id": i.source_id} for i in exposed],
+           "evidence": [{"label": i.label, "id": i.passage_id, "source_id": i.source_id, "title": i.title, "date": str(i.published or ""), "stage": i.stage, "locator": i.locator} for i in exposed],
+           "evidence_counts": {"retrieved_passages": sum(1 for i in tools.items if i.label[0] == "P"), "used_passages": sum(1 for i in exposed if i.label[0] == "P"),
+                               "unused_labels": [i.label for i in tools.items if i.label[0] == "P" and i not in exposed]},
            "evidence_text": {i.label: i.text for i in exposed}, "cited_ids": cited, "usage": u,
            "seconds": round(time.perf_counter() - t0, 2), "trace": final["trace"],
            "corpus": shared.corpus if isinstance(getattr(shared, "corpus", None), dict) else None}

@@ -17,7 +17,7 @@ from labourlens.answer import validate
 from labourlens.answer.context import ContextPassage
 from labourlens.answer.schema import Answer
 from labourlens.audit import log as audit_log
-from labourlens.report.app import RIGHTS_NOTICE, create_app, public_result
+from labourlens.report.app import COPYRIGHT_TRIM_NOTE, RIGHTS_NOTICE, create_app, public_result
 from labourlens.retrieval import runtime
 from test_app import ACCESS_CODE, QUESTION, agent_result, client_for, isolated_environment, login, settings  # noqa: F401
 
@@ -120,6 +120,8 @@ def test_short_independent_paraphrase_is_not_withheld():
 def _annual_raw(evidence, claims=None, **answer):
     raw = _raw(evidence, claims or [], **answer)
     raw["tool_set"] = "annual"
+    raw["answer"]["caveats"] = []  # drop the fixture caveat so caveat assertions see only what the projection adds
+    raw["answer"].update(answer)
     return raw
 
 
@@ -137,7 +139,10 @@ def test_served_annual_removes_only_copied_report_spans_including_limits(field):
     answer = public_result(raw, NO_SHARED)["answer"]
     projected = (answer["caveats"][0] if field == "caveats" else
                  answer["claims"][0]["text"] if field == "claim" else answer[field])
-    assert projected == f'Independent context. "{RIGHTS_NOTICE}". Causation remains unproven.'
+    assert projected == "Independent context. Causation remains unproven."
+    if field != "caveats":
+        assert answer["caveats"] == [COPYRIGHT_TRIM_NOTE]
+    assert RIGHTS_NOTICE not in json.dumps(answer)
     assert raw["evidence_text"]["P1"] == source
 
 
@@ -169,14 +174,38 @@ def test_served_annual_does_not_use_compact_character_false_positive():
 ])
 def test_served_annual_normalizes_copy_and_retains_surrounding_prose(copy):
     raw = _annual_raw("alpha beta gamma delta epsilon zeta eta", summary=f"Before: {copy}. After.")
-    assert public_result(raw, NO_SHARED)["answer"]["summary"] == f"Before: {RIGHTS_NOTICE}. After."
+    result = public_result(raw, NO_SHARED)["answer"]
+    assert result["summary"] == "After." and RIGHTS_NOTICE not in json.dumps(result)
 
 
 def test_served_annual_merges_overlapping_spans_but_retains_separate_analysis():
     source = "alpha beta gamma delta epsilon zeta eta theta iota"
     raw = _annual_raw(source, summary=f"{source}; independent assessment; {source}")
-    assert public_result(raw, NO_SHARED)["answer"]["summary"] == (
-        f"{RIGHTS_NOTICE}; independent assessment; {RIGHTS_NOTICE}")
+    result = public_result(raw, NO_SHARED)["answer"]
+    assert result["summary"] == "independent assessment." and result["caveats"] == [COPYRIGHT_TRIM_NOTE]
+
+
+def test_served_annual_copied_run_in_the_middle_of_a_sentence_drops_the_clause_not_a_placeholder():
+    source = "restructuring in outward facing sectors drove most of the rise in layoffs"
+    summary = f"MOM attributed the rise in retrenchments to {source}. Unemployment was stable."
+    answer = public_result(_annual_raw(source, summary=summary), NO_SHARED)["answer"]
+    assert answer["summary"] == "Unemployment was stable." and "withheld" not in json.dumps(answer)
+    assert answer["caveats"] == [COPYRIGHT_TRIM_NOTE]
+
+
+def test_served_annual_copied_run_at_the_end_and_a_fully_copied_field():
+    source = "restructuring in outward facing sectors drove most of the rise in layoffs"
+    raw = _annual_raw(source, summary=f"Layoffs rose. MOM said {source}", reason=source,
+                      claims=[{"text": source, "citations": []}, {"text": "Kept finding.", "citations": []}])
+    answer = public_result(raw, NO_SHARED)["answer"]
+    assert answer["summary"] == "Layoffs rose." and answer["reason"] == ""
+    assert [c["text"] for c in answer["claims"]] == ["Kept finding."]
+    assert answer["caveats"].count(COPYRIGHT_TRIM_NOTE) == 1
+
+
+def test_served_annual_no_note_when_nothing_was_removed():
+    answer = public_result(_annual_raw("alpha beta gamma delta epsilon zeta eta", summary="Independent wording."), NO_SHARED)["answer"]
+    assert answer["caveats"] == []
 
 
 def test_served_annual_caps_citation_and_evidence_card_at_six_normalized_words():
@@ -364,3 +393,31 @@ def test_missing_chunk_vectors_stop_startup_without_calling_the_embeddings_api(t
 def test_container_defaults_forbid_startup_embedding():
     assert "LABOURLENS_ALLOW_EMBED=0" in (ROOT / "Dockerfile").read_text()
     assert 'LABOURLENS_ALLOW_EMBED: "0"' in (ROOT / "deploy/docker-compose.yml").read_text()
+
+
+# ---- evidence payload: unused labels are counted, not listed as sources ------------------------------------------------
+
+def test_evidence_summary_groups_used_passages_and_hides_unused_labels():
+    raw = agent_result()
+    meta = {"title": "Labour Market Report Second Quarter 2026", "date": "2026-09-15", "stage": "final", "locator": "p.17"}
+    raw["evidence"] = [{"label": f"P{n}", "id": f"p{n}", "source_id": "fixture", **(meta if n < 4 else {**meta, "locator": "p.20"})} for n in range(1, 6)]
+    raw["evidence_text"] = {f"P{n}": f"text {n}" for n in range(1, 6)}
+    raw["evidence_counts"] = {"retrieved_passages": 8, "used_passages": 5, "unused_labels": ["P6", "P7", "P8"]}
+    raw["trace"] = [{"node": "execute_tool", "event": "ok", "detail": {"tool": "search_reports", "new_items": [f"P{n}" for n in range(1, 9)], "seconds": 0.1}}]
+    result = public_result(raw, NO_SHARED)
+    assert [c["label"] for c in result["evidence"]] == [f"P{n}" for n in range(1, 6)]
+    assert all(c["source_title"] == "Labour Market Report Second Quarter 2026" for c in result["evidence"])  # resolved without shared metadata
+    assert result["evidence"][0]["locator"] == "p.17" and result["evidence"][4]["locator"] == "p.20"
+    assert result["evidence_summary"] == {"retrieved_passages": 8, "used_passages": 5, "over_limit_labels": 3, "text": "8 retrieved, 5 used"}
+    assert [(g["text"], g["labels"]) for g in result["evidence_sources"]] == [
+        ("Labour Market Report Second Quarter 2026, p.17 (3 passages)", ["P1", "P2", "P3"]),
+        ("Labour Market Report Second Quarter 2026, p.20 (2 passages)", ["P4", "P5"])]
+    detail = result["trace"][0]["detail"]
+    assert detail["new_items"] == [f"P{n}" for n in range(1, 6)] and detail["unused_items"] == 3
+
+
+def test_evidence_summary_without_counts_reports_all_as_used():
+    raw = _raw("alpha beta", [])
+    result = public_result(raw, NO_SHARED)
+    assert result["evidence_summary"] == {"retrieved_passages": 1, "used_passages": 1, "over_limit_labels": 0, "text": "1 retrieved, 1 used"}
+    assert result["evidence_sources"][0]["count"] == 1

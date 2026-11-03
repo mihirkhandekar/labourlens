@@ -26,7 +26,7 @@ from fastapi.responses import FileResponse, JSONResponse, RedirectResponse, Stre
 from fastapi.staticfiles import StaticFiles
 
 from labourlens import paths
-from labourlens.answer.validate import key_numbers, norm, quote_in
+from labourlens.answer.validate import copied_spans, key_numbers, norm, quote_in, report_windows, rights_tokens
 from labourlens.mcp.redact import redact, redact_values
 from labourlens.audit import log as audit_log
 from labourlens.report import audit as web_audit
@@ -119,6 +119,7 @@ def _provenance():
 RIGHTS_WORD_WINDOW = 13
 RIGHTS_CHAR_WINDOW = 80
 _TOKEN = re.compile(r"[^\W_]+")
+COPYRIGHT_TRIM_NOTE = "Some wording was removed to respect the publisher's copyright."
 
 
 def _tokens(text) -> list[str]:
@@ -150,63 +151,37 @@ class _Overlap:
         return any(hash(joined[i:i + c]) in self.chars for i in range(max(0, len(joined) - c + 1)))
 
 
-def _rights_tokens(value):
-    """Normalized words with offsets into the original text, for local span removal.
-
-    Ignore formatting-only characters, but retain punctuation as word boundaries.
-    Offsets survive NFKC expansions and case folding (including full-width text).
-    """
-    text = str(value or "")
-    normalized, offsets = [], []
-    for i, char in enumerate(text):
-        if unicodedata.category(char) == "Cf":
-            continue
-        for folded in unicodedata.normalize("NFKC", char).casefold():
-            normalized.append(folded)
-            offsets.append(i)
-    return [(m.group(), offsets[m.start()], offsets[m.end() - 1] + 1)
-            for m in _TOKEN.finditer("".join(normalized))]
+_CLAUSE_END = re.compile(r"[.!?;][\"')\]]*(?=\s|$)|\n")
 
 
 class _ReportSpans:
-    """Served policy: no seven consecutive normalized report words in prose.
-
-    Unlike the legacy compact-character heuristic, this does not reject a
-    paraphrase merely for sharing 80 letters. Only matching spans are withheld.
-    This is a conservative reproduction boundary, not a legal clearance claim.
-    """
+    """Served policy: no seven consecutive normalized report words in prose (the validator's tokenisation and window length, shared
+    from answer.validate). A sentence or clause containing a copied run is dropped whole, never replaced by a placeholder, and
+    ``trimmed`` records that something was removed so the caller can say so. This is a conservative reproduction boundary, not a
+    legal clearance claim."""
 
     def __init__(self, texts):
-        self.windows = set()
-        for text in texts:
-            words = [word for word, _, _ in _rights_tokens(text)]
-            self.windows.update(tuple(words[i:i + 7]) for i in range(len(words) - 6))
+        self.windows = report_windows(texts)
+        self.trimmed = False
 
     def trim(self, value):
         text = str(value or "")
-        tokens = _rights_tokens(text)
-        spans = []
-        for i in range(len(tokens) - 6):
-            if tuple(t[0] for t in tokens[i:i + 7]) not in self.windows:
-                continue
-            start, end = tokens[i][1], tokens[i + 6][2]
-            if spans and start <= spans[-1][1]:
-                spans[-1] = (spans[-1][0], max(spans[-1][1], end))
-            else:
-                spans.append((start, end))
+        spans = copied_spans(text, self.windows)
         if not spans:
             return text
-        pieces, end = [], 0
-        for start, stop in spans:
-            pieces.extend((text[end:start], RIGHTS_NOTICE))
-            end = stop
-        pieces.append(text[end:])
-        return "".join(pieces)
+        self.trimmed = True
+        bounds, last = [], 0
+        for m in _CLAUSE_END.finditer(text):
+            bounds.append((last, m.end()))
+            last = m.end()
+        bounds.append((last, len(text)))
+        kept = "".join(text[a:b] for a, b in bounds if not any(s < b and e > a for s, e in spans)).strip()
+        return kept[:-1].rstrip() + "." if kept.endswith(";") else kept
 
 
 def _short_report_quote(quote):
     """Keep an actual source substring, never an ellipsis presented as verbatim."""
-    tokens = _rights_tokens(quote)
+    tokens = rights_tokens(quote)
     return quote[:tokens[5][2]] if len(tokens) > 6 else quote
 
 
@@ -227,13 +202,18 @@ def _bounded_answer(answer, evidence_text, *, served_annual=False):
             return overlap.trim(value)
         return RIGHTS_NOTICE if overlap.copies(value) else str(value or "")
 
-    result = {k: free_text(answer.get(k, "")) for k in ("status", "summary", "reason", "clarification_question")}
+    result = {k: (str(answer.get(k, "") or "") if k == "status" and served_annual else free_text(answer.get(k, "")))
+              for k in ("status", "summary", "reason", "clarification_question")}
     result["caveats"] = [free_text(c) for c in answer.get("caveats", [])]
+    if served_annual:
+        result["caveats"] = [c for c, original in zip(result["caveats"], answer.get("caveats", [])) if c or not str(original or "").strip()]
     result["claims"] = []
     seen, total = set(), 0
     per_card = defaultdict(int)
     for claim in answer.get("claims", [])[:12]:
         projected = {k: free_text(v) if isinstance(v, str) else v for k, v in claim.items() if k != "citations"}
+        if served_annual and not str(projected.get("text", "")).strip() and str(claim.get("text", "")).strip():
+            continue  # the whole claim was copied report wording: dropped, not shown as a placeholder
         projected["citations"] = []
         shown = set()  # a quote is listed once per claim; the same quote may support several claims
         for citation in claim.get("citations", [])[:3]:
@@ -258,6 +238,8 @@ def _bounded_answer(answer, evidence_text, *, served_annual=False):
             shown.add((label, normalized))
             projected["citations"].append({**citation, "quote": quote})
         result["claims"].append(projected)
+    if served_annual and overlap.trimmed:
+        result["caveats"].append(COPYRIGHT_TRIM_NOTE)
     return result
 
 
@@ -344,6 +326,8 @@ def public_result(raw: dict, shared) -> dict:
         passage = getattr(shared, "passages_by_id", {}).get(eid, {})
         if not isinstance(passage, dict):
             passage = vars(passage) if hasattr(passage, "__dict__") else {}
+        fallback = {"document_title": item.get("title"), "publication_date": item.get("date"), "release_stage": item.get("stage"), "locator": item.get("locator")}
+        passage = {**{k: v for k, v in fallback.items() if v}, **{k: v for k, v in passage.items() if v}}
         metadata = record if record is not None else passage
         card = {"label": label, "kind": "statistic" if record is not None else ("calculation" if label.startswith("C") else "report"),
                 "source_title": source.get("title", metadata.get("document_title", sid)), "publisher": source.get("publisher", "Ministry of Manpower"),
@@ -374,12 +358,31 @@ def public_result(raw: dict, shared) -> dict:
                 series[key].append({"period": record["period"], "value": float(val), "observation_id": eid})
     chart = {"series": [{"source_id": k[0], "label": " / ".join(str(v) for v in k[1:5] if v), "unit": k[5], "points": sorted(v, key=lambda p: p["period"])} for k, v in series.items()]}
     trace = [public_trace_item(e) for e in raw.get("trace", [])]
+    shown = {c["label"] for c in evidence}
+    for event in trace:
+        labels = event["detail"].get("new_items")
+        if isinstance(labels, list) and any(str(x) not in shown for x in labels):
+            kept = [x for x in labels if str(x) in shown]
+            event["detail"]["new_items"] = kept
+            event["detail"]["unused_items"] = len(labels) - len(kept)  # retrieved but never in the answer context: counted, not listed as sources
+    reports = [c for c in evidence if c["kind"] == "report"]
+    counts = raw.get("evidence_counts") if isinstance(raw.get("evidence_counts"), dict) else {}
+    used = len(reports)
+    retrieved = max(used, int(counts.get("retrieved_passages", used))) if isinstance(counts.get("retrieved_passages", used), int) else used
+    over = len(counts.get("unused_labels", [])) if isinstance(counts.get("unused_labels"), list) else retrieved - used
+    evidence_summary = {"retrieved_passages": retrieved, "used_passages": used, "over_limit_labels": over, "text": f"{retrieved} retrieved, {used} used"}
+    groups: dict[tuple, dict] = {}
+    for c in reports:
+        group = groups.setdefault((c["source_title"], c["locator"]), {"source_title": c["source_title"], "locator": c["locator"], "date": c["date"], "release_stage": c["release_stage"], "url": c["url"], "labels": []})
+        group["labels"].append(c["label"])
+    evidence_sources = [{**g, "count": len(g["labels"]),
+                         "text": f"{g['source_title']}{', ' + g['locator'] if g['locator'] else ''} ({len(g['labels'])} passage{'' if len(g['labels']) == 1 else 's'})"} for g in groups.values()]
     usage = {"cost_usd": raw.get("usage", {}).get("cost_usd", 0), "seconds": raw.get("seconds", 0)}
     for key in ("prompt_tokens", "completion_tokens"):
         value = raw.get("usage", {}).get(key)
         if isinstance(value, int) and not isinstance(value, bool) and value >= 0:
             usage[key] = value
-    result = {"run_id": raw.get("run_id", ""), "answer": answer, "evidence": evidence, "chart": chart, "trace": trace, "usage": usage}
+    result = {"run_id": raw.get("run_id", ""), "answer": answer, "evidence": evidence, "evidence_summary": evidence_summary, "evidence_sources": evidence_sources, "chart": chart, "trace": trace, "usage": usage}
     interpreted = raw.get("interpreted_as")
     if isinstance(interpreted, str) and interpreted.strip():
         result["interpreted_as"] = interpreted[:300]
