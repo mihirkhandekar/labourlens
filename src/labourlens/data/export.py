@@ -14,7 +14,7 @@ from typing import Any
 import pandas as pd
 
 from labourlens import paths
-from labourlens.data import raw_store
+from labourlens.data import catalog, raw_store
 
 EXPORT = paths.DATA / "export"
 SCHEMA = "export-0.1"
@@ -76,7 +76,7 @@ def run() -> None:
     cards = []
     for card_id, label, f, good in KPIS:
         s = _pick(obs, f)
-        s = s[s.period <= "2026-Q2"]
+        s = s[s.period <= catalog.ANSWER_SCOPE_END]
         last, prev = s.iloc[-1], s.iloc[-2]
         same_q_last_year = s[s.period == f"{int(last.period[:4]) - 1}-Q{last.period[-1]}"]
         card = {
@@ -90,12 +90,12 @@ def run() -> None:
             "sparkline": [{"period": r.period, "value": float(r.value)} for r in s[s.period >= "2022-Q1"].itertuples()],
         }
         cards.append(card)
-    _dump("kpis.json", {"schema_version": SCHEMA, "answer_scope": ["2024-Q1", "2026-Q2"], "cards": cards})
+    _dump("kpis.json", {"schema_version": SCHEMA, "answer_scope": [catalog.ANSWER_SCOPE_START, catalog.ANSWER_SCOPE_END], "cards": cards})
 
     series = {}
     for name, f in SERIES.items():
         s = _pick(obs, f)
-        s = s[(s.period >= "2019-Q1") & (s.period <= "2026-Q2")]
+        s = s[(s.period >= "2019-Q1") & (s.period <= catalog.ANSWER_SCOPE_END)]
         series[name] = {"unit": s.iloc[0].unit, "population": s.iloc[0].population, "adjustment": s.iloc[0].adjustment,
                         "points": [{"period": r.period, "value": float(r.value), "observation_id": r.observation_id} for r in s.itertuples()]}
     _dump("series.json", {"schema_version": SCHEMA, "series": series})

@@ -108,7 +108,7 @@ def test_error_kinds_survive_the_real_protocol_and_unknown_ones_become_tool_erro
                 await c.get_statistic(source_id="retrenched_by_industry", period_from="2026-Q1", period_to="2026-Q2")
             assert e.value.kind == "too_large" and "{" not in e.value.message[:2]
             with pytest.raises(McpClientError) as e:
-                await c.get_statistic(**dict(ARGS, period_from="2023-Q1"))
+                await c.get_statistic(**dict(ARGS, period_from="2019-Q1"))
             assert e.value.kind == "invalid_arguments"
     run(go())
 

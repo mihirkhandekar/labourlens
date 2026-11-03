@@ -163,7 +163,7 @@ export function evidenceStores(m) {
     col.append(path, withTip(el('p', 'ex-store-tool', tool), detail, 'is-up'));
     return col;
   };
-  const history = 'The statistics store covers 1980 to Q2 2026, with Q1 2024 to Q2 2026 as the answer scope and 4,300 in-scope rows. It includes unemployment rates and counts for overall, resident and citizen populations; vacancies by industry and occupation and the vacancy-to-unemployed ratio; recruitment and resignation; retrenchment by type; employment change by sector; paid hours; re-entry at 6 and 12 months; unit labour cost; and value added per worker. Units, population, adjustment and provenance stay on each row.';
+  const history = 'The statistics store covers 1980 to Q2 2026, with Q1 2020 to Q2 2026 as the answer scope and 11,228 in-scope rows. It includes unemployment rates and counts for overall, resident and citizen populations; vacancies by industry and occupation and the vacancy-to-unemployed ratio; recruitment and resignation; retrenchment by type; employment change by sector; paid hours; re-entry at 6 and 12 months; unit labour cost; and value added per worker. Units, population, adjustment and provenance stay on each row.';
   wrap.append(
     lane('Statistics tables', `${fmt.int(source.by_type?.dataset_csv)} MOM tables`, [
       ['One structured store', `${fmt.int(source.observations)} observation rows`, history],
@@ -648,7 +648,7 @@ export function agentLoop() {
     ['2 rounds', 'Base configuration: at most two evidence-gathering rounds, at most three planned calls per round and six calls overall. The optional v2 configuration grants one bonus round after an unknown-dimension error, without increasing the six-call cap.'],
     ['6 calls', 'Six planned tool calls across the run. Calls execute sequentially within each round. A tool invocation uses isolated evidence state; only an on-time completion is committed.'],
     ['10 s per call', 'Default agent tool deadline is ten seconds. A timed-out worker is not retried and its late result is not committed. The MCP client has its own eight-second default call deadline and twenty-second connect deadline.'],
-    ['Bounded retries', 'One retry for a JSON parsing failure in planner output. A finished TransientToolError may be retried once; a timed-out tool is not retried. The persistent MCP backend reconnects once after a lost connection. One answer repair is allowed. These are separate controls, not a blanket retry policy.'],
+    ['Bounded retries', 'One retry for a JSON parsing failure in planner output (the evaluated structured-output planner; the shipped native planner has no such retry, a malformed tool call becomes an invalid-arguments tool error). A finished TransientToolError may be retried once; a timed-out tool is not retried. The persistent MCP backend reconnects once after a lost connection. One answer repair is allowed. These are separate controls, not a blanket retry policy.'],
   ].forEach(([text, detail]) => bounds.append(withTip(el('span', '', text), detail, 'is-up is-wide')));
   wrap.append(bounds, toolLegend());
   return wrap;
@@ -891,7 +891,7 @@ export function assignmentBrief() {
 export function challengeGrid() {
   const wrap = el('div', 'g14');
   [['Tables flattened in PDFs', 'Audited samples. Numbers were intact.'], ['Overall or resident, adjusted or not', 'Series names carry both. Ask when open.'], ['Advance and final figures differ', 'Each answer says which stage a figure comes from.'], ['Rights limits on MOM content', 'Reports stay out of the public repository.'],
-    ['Small reference set, AI drafted', 'I signed off the labels. Intervals shown.'], ['Leakage between test sets', 'A fresh set from unseen sources.'], ['Calculation tool gap', 'Tested a fix. It failed its rule.'], ['Questions before 2024', 'It declines. Scope is fixed.']].forEach(([hard, did], i) => {
+    ['Small reference set, AI drafted', 'I signed off the labels. Intervals shown.'], ['Leakage between test sets', 'A fresh set from unseen sources.'], ['Calculation tool gap', 'Tested a fix. It failed its rule.'], ['Questions before 2020', 'It declines. Scope is fixed.']].forEach(([hard, did], i) => {
     const card = el('div', 'g14-card'); card.style.setProperty('--i', String(i));
     card.append(el('h3', '', hard), el('p', '', did));
     wrap.append(card);
@@ -976,7 +976,7 @@ export function myProject() {
   const wrap = el('div', 'g18 is-single');
   const task = el('div', 'g18-panel is-task');
   const tl = el('dl', 'g18-dl');
-  [['Domain', 'The Singapore labour market: official quarterly data, reports and real revisions'], ['Intended Users', 'Policy researchers and analysts'], ['What it answers', 'Facts, changes between quarters, comparisons and revisions, with a cited source'], ['What it asks back', 'Which series, when a question could mean several'], ['What it declines', 'Forecasts, causes, personal advice and anything before 2024'], ['How far', 'Q1 2024 to Q2 2026']].forEach(([k, v]) => { tl.append(el('dt', '', k), el('dd', '', v)); });
+  [['Domain', 'The Singapore labour market: official quarterly data, reports and real revisions'], ['Intended Users', 'Policy researchers and analysts'], ['What it answers', 'Facts, changes between quarters, comparisons and revisions, with a cited source'], ['What it asks back', 'Which series, when a question could mean several'], ['What it declines', 'Forecasts, causes, personal advice and anything before 2020'], ['How far', 'Q1 2020 to Q2 2026']].forEach(([k, v]) => { tl.append(el('dt', '', k), el('dd', '', v)); });
   task.append(tl);
   wrap.append(task);
   return wrap;
@@ -998,7 +998,7 @@ export function assumptionsScope(m) {
       ['Delivery deadline and run budgets', '4 November 2026, Singapore morning.', 'The assessment deadline is 4 November 2026 morning, Singapore time. Experiments and the app have local budget controls; an account-level provider spend cap is not verified. Do not interpret application estimates as a guaranteed provider invoice limit. Sources: project instructions and system card.']
     ]],
     ['Scope done', [
-      ['Q1 2024 to Q2 2026', 'Earlier history is context only.', 'The answer boundary is fixed, but actual period coverage varies by source. Definitions without a time period can remain answerable. Earlier or mixed-period requests needing an earlier endpoint must abstain. Sources: scope decision and system card.'],
+      ['Q1 2020 to Q2 2026', 'Statistics from 2020, report text from 2023.', 'The answer window opened at Q1 2020 on 3 November 2026. Every experiment was run on the earlier Q1 2024 to Q2 2026 window, so the evaluation gold covers 2024 to 2026 and answers for 2020 to 2023 are unevaluated. Statistics cover the whole window; MOM report passages start with the 2023 reports. Actual period coverage varies by source. Requests that need a period before 2020 must abstain. Sources: scope decision and system card.'],
       [finite(count) ? `${fmt.int(count)} official sources` : 'Source count not recorded', 'Statistics and report evidence stores.', 'The current data sheet records 36 statistical datasets and 49 documents. Validated observations and source passages are stored separately, with snapshots, hashes, provenance and revision labels. Source: data sheet, corpus v3.1.'],
       ['Retrieval, agent and MCP', 'Built with traces and cited answers.', 'Keyword, dense and hybrid retrieval were compared; the bounded research loop uses report search, statistical lookup and deterministic calculation. Live statistical lookup uses MCP; report search and calculation stay in process. Sources: README and system card.'],
       ['Evaluation, threats and workbench', 'Measured and deployed, not production-ready.', 'Saved evaluation covers development, original test and fresh questions, with AI judges and documented human sign-off. Threat tests and a deployed workbench exist, with known failures and rights limitations. Sources: README and evaluation report.'],
@@ -1030,7 +1030,7 @@ export function hardParts(m) {
     ['Advance and final differ', 'Each figure keeps its release stage', 'Not done: averaging the two', excerptTable(ex.revisions)],
     ['Tables flattened in PDFs', 'Every quote must appear in its passage', 'Numbers come from the datasets, not table text', exampleBlock('Worked example: a flattened table', [['In the PDF:', 'Row A and Row B each have a value under Q1 and under Q2.'], ['After extraction:', 'One run of text, so the column of each value is unclear.'], ['What stops a wrong number:', 'A claim is rejected unless its quote is found in the cited passage.']], 'A schematic with no real cells.')],
     ['Ratio does not recompute', 'Quote the published ratio', 'Not chosen: the ratio rebuilt from the counts', excerptTable(ex.vacancy_ratio)],
-    ['Figures before 2024', 'A scope guard declines', 'Not chosen: answer when a report states the figure', exampleBlock('Worked example: a question before the period', [['Question:', 'What was the unemployment rate in 2023-Q4?'], ['Result:', 'The agent declines. The supported period is 2024-Q1 to 2026-Q2.']], EXAMPLE_NOTE)]
+    ['Figures before 2020', 'A scope guard declines', 'Not chosen: answer when a report states the figure', exampleBlock('Worked example: a question before the period', [['Question:', 'What was the unemployment rate in 2019-Q4?'], ['Result:', 'The agent declines. The supported period is 2020-Q1 to 2026-Q2.']], EXAMPLE_NOTE)]
   ];
   rows.forEach(([hard, chosen, other, tip], i) => {
     const row = el('div', 'g19-row'); row.style.setProperty('--i', String(i));

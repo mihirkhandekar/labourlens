@@ -215,7 +215,7 @@ def series_summary(stats: StatsData, source_id: str, period_from: str, period_to
     _single_series(g, source_id)
     s = g[(g.period >= period_from) & (g.period <= period_to)].sort_values("period")
     if s.empty:
-        raise AnalysisError("not_found", "no rows in this period range")
+        raise AnalysisError("not_found", f"no data for {period_from} to {period_to}: the selected series has rows from {g.period.min()} to {g.period.max()}")
     pub = _published(s)
     if pub.empty:
         raise AnalysisError("not_found", "no published numbers in this period range")

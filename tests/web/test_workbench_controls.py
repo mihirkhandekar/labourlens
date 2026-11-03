@@ -247,3 +247,165 @@ def test_stop_aborts_and_later_turns_work_and_failed_send_restores_input(workben
         assert field.input_value() == "Restore this offline question"
         assert page.locator(".composer-form button[type=submit]").is_enabled()
         browser.close()
+
+
+# ---- streaming run (D-079): a small real HTTP server, because Playwright cannot fulfil a route incrementally ----------------------------------
+
+def frame(name, data):
+    return f"event: {name}\ndata: {json.dumps(data)}\n\n".encode()
+
+
+@pytest.fixture
+def stream_server():
+    """Serves web/ plus a scripted /api/status, /api/ask/stream and /api/ask. `state["mode"]` picks the stream behaviour; `state["release"]` holds the
+    stream open after its first frames so the test can look at the page mid-run. The stream body has no length: it ends when the handler closes."""
+    state = {"mode": "ok", "release": threading.Event(), "asks": 0, "streams": 0}
+
+    class Handler(SimpleHTTPRequestHandler):
+        def log_message(self, *args):
+            pass
+
+        def send_json(self, status, payload):
+            raw = json.dumps(payload).encode()
+            self.send_response(status)
+            self.send_header("Content-Type", "application/json")
+            self.send_header("Content-Length", str(len(raw)))
+            self.end_headers()
+            self.wfile.write(raw)
+
+        def do_GET(self):
+            if self.path == "/api/status":
+                return self.send_json(200, {"enabled": True, "authenticated": True})
+            if self.path.startswith("/api/"):
+                return self.send_json(200, {})
+            return super().do_GET()
+
+        def do_POST(self):
+            self.rfile.read(int(self.headers.get("Content-Length") or 0))
+            if self.path == "/api/ask":
+                state["asks"] += 1
+                return self.send_json(200, answered_fixture())
+            if self.path != "/api/ask/stream":
+                return self.send_json(200, {})
+            state["streams"] += 1
+            if state["mode"] == "missing":
+                return self.send_json(404, {"detail": "Not Found"})
+            if state["mode"] == "refused":
+                return self.send_json(429, {"detail": "Request limit reached. Try again later."})
+            self.send_response(200)
+            self.send_header("Content-Type", "text/event-stream")
+            self.send_header("Cache-Control", "no-store")
+            self.end_headers()
+            try:
+                self.wfile.write(frame("status", {"stage": "accepted", "state": "done", "text": "Question accepted."}))
+                self.wfile.write(frame("status", {"stage": "planning", "state": "running", "text": "Planning which evidence to collect."}))
+                self.wfile.write(frame("tool", {"phase": "started", "tool": "get_series", "args": {"source_id": "retrenched_employees"}}))
+                self.wfile.flush()
+                if state["mode"] == "hold":
+                    state["release"].wait(15)
+                if state["mode"] == "error":
+                    self.wfile.write(frame("error", {"status": 503, "detail": "Synthetic mid-stream failure."}))
+                    return
+                self.wfile.write(b": keepalive\n\n")
+                self.wfile.write(frame("tool", {"phase": "finished", "item": {"node": "execute_tool", "event": "ok", "detail": {"tool": "get_series", "seconds": 0.2, "new_items": ["O1"]}}}))
+                self.wfile.write(frame("status", {"stage": "answering", "state": "running", "text": "Writing the answer from the evidence."}))
+                self.wfile.write(frame("result", answered_fixture()))
+                self.wfile.flush()
+            except (BrokenPipeError, ConnectionResetError):
+                pass  # the browser stopped the run
+
+    handler = functools.partial(Handler, directory=str(ROOT / "web"))
+    server = ThreadingHTTPServer(("127.0.0.1", 0), handler)
+    worker = threading.Thread(target=server.serve_forever, daemon=True)
+    worker.start()
+    state["url"] = f"http://127.0.0.1:{server.server_port}"
+    yield state
+    state["release"].set()
+    server.shutdown()
+    worker.join()
+    server.server_close()
+
+
+def open_workbench(runtime, state):
+    browser = runtime.chromium.launch()
+    page = browser.new_page(viewport={"width": 1440, "height": 900})
+    page.goto(state["url"] + "/workbench.html")
+    return browser, page
+
+
+def test_stream_shows_live_steps_before_the_answer_and_then_the_validated_answer(stream_server):
+    playwright = pytest.importorskip("playwright.sync_api")
+    stream_server["mode"] = "hold"
+    with playwright.sync_playwright() as runtime:
+        browser, page = open_workbench(runtime, stream_server)
+        field = page.locator("#question-input")
+        field.fill("How did retrenchments change?")
+        field.press("Enter")
+        status = page.locator(".run-status")
+        status.filter(has_text="Planning which evidence to collect.").wait_for()
+        assert status.get_attribute("role") == "status" and status.get_attribute("aria-live") == "polite"
+        running = page.locator(".steps .step.active")
+        running.wait_for()
+        assert "get_series" in running.inner_text() and "running" in running.inner_text()
+        assert page.locator(".answer-summary").count() == 0 and page.locator(".skeleton").count() > 0  # no answer text before validation finishes
+        assert page.locator(".wb-stop").is_visible() and field.input_value() == ""
+        stream_server["release"].set()
+        page.locator(".answer-summary").wait_for()
+        assert "retrenchments increased by 140 persons" in page.locator(".answer-summary").inner_text()
+        assert stream_server["streams"] == 1 and stream_server["asks"] == 0
+        assert page.locator(".wb-stop").is_hidden() and page.locator(".composer-form button[type=submit]").is_enabled()
+        browser.close()
+
+
+def test_stream_error_event_restores_the_question_and_shows_the_message(stream_server):
+    playwright = pytest.importorskip("playwright.sync_api")
+    stream_server["mode"] = "error"
+    with playwright.sync_playwright() as runtime:
+        browser, page = open_workbench(runtime, stream_server)
+        field = page.locator("#question-input")
+        field.fill("Restore this streamed question")
+        field.press("Enter")
+        page.locator(".answer-bezel.error").wait_for()
+        assert "Synthetic mid-stream failure." in page.locator(".answer-bezel.error").inner_text()
+        assert field.input_value() == "Restore this streamed question" and page.locator(".composer-form button[type=submit]").is_enabled()
+        assert stream_server["asks"] == 0  # a failed run is not retried through the other endpoint
+        browser.close()
+
+
+def test_stop_aborts_the_stream(stream_server):
+    playwright = pytest.importorskip("playwright.sync_api")
+    stream_server["mode"] = "hold"
+    with playwright.sync_playwright() as runtime:
+        browser, page = open_workbench(runtime, stream_server)
+        field = page.locator("#question-input")
+        field.fill("Stop this streamed run")
+        field.press("Enter")
+        page.locator(".run-status").filter(has_text="Planning").wait_for()
+        page.locator(".wb-stop").click()
+        page.locator(".wb-stopped").wait_for()
+        assert page.locator(".wb-stop").is_hidden() and field.is_enabled()
+        stream_server["release"].set()
+        field.fill("A later question")
+        stream_server["mode"] = "ok"
+        field.press("Enter")
+        page.locator(".answer-summary").wait_for()
+        browser.close()
+
+
+def test_missing_stream_endpoint_falls_back_to_the_plain_one_but_a_refusal_does_not(stream_server):
+    playwright = pytest.importorskip("playwright.sync_api")
+    stream_server["mode"] = "missing"
+    with playwright.sync_playwright() as runtime:
+        browser, page = open_workbench(runtime, stream_server)
+        field = page.locator("#question-input")
+        field.fill("Use the plain endpoint")
+        field.press("Enter")
+        page.locator(".answer-summary").wait_for()
+        assert stream_server["streams"] == 1 and stream_server["asks"] == 1
+        stream_server["mode"] = "refused"
+        field.fill("Rate limited")
+        field.press("Enter")
+        page.locator(".answer-bezel.error").wait_for()
+        assert "Request limit reached" in page.locator(".answer-bezel.error").inner_text()
+        assert stream_server["asks"] == 1 and field.input_value() == "Rate limited"  # no second attempt at a refused request
+        browser.close()

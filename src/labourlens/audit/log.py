@@ -135,6 +135,7 @@ def run_record(res: dict, channel: str, session: str | None = None, ip: str | No
         "schema": SCHEMA_VERSION, "ts": datetime.now(timezone.utc).isoformat(timespec="seconds"), "run_id": res["run_id"], "channel": channel,
         "session": salted_hash(session), "client": salted_hash(ip), "question": _clip(res["question"], 1200),
         "question_sha256": hashlib.sha256(res["question"].encode()).hexdigest()[:16], "config": res["config"],
+        "planner_mode": res.get("planner_mode"),
         "version": {**_VERSION, "corpus": res.get("corpus")},
         "outcome": res["outcome"], "status": a["status"] if a else None, "errors": [_clip(e, 300) for e in res.get("errors", [])],
         "rounds": res["rounds"], "tool_calls": calls, "operational_failures": sum(1 for c in calls if c["outcome"] == "operational_failure"),

@@ -15,8 +15,10 @@ import re
 import subprocess
 from urllib.parse import urlparse
 
+from labourlens.data import catalog  # the answer-scope constants only; no pipeline code
 
-_SCOPE = ("2024-Q1", "2026-Q2")
+
+_SCOPE = (catalog.ANSWER_SCOPE_START, catalog.ANSWER_SCOPE_END)
 _TOKEN = re.compile(r"[A-Za-z0-9_@.+:=/() -]{1,96}\Z")
 _KEY = re.compile(r"[A-Za-z0-9_@.+:=/-]{1,96}\Z")
 _LABELS = {

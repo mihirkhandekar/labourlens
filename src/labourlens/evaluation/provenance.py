@@ -42,6 +42,6 @@ def sampling_block(cfg, now: str | None = None, temperature=None, top_p=None) ->
                 "max_completion_tokens": max_tokens}
 
     answer_max = inspect.signature(llm.chat).parameters["max_completion_tokens"].default
-    return {"planner": role(cfg.planner_model, cfg.planner_prompt, 1500), "answer": role(cfg.answer_model, cfg.answer_prompt, answer_max),
+    return {"planner": {**role(cfg.planner_model, cfg.planner_prompt, 1500), "mode": getattr(cfg, "planner_mode", "structured")}, "answer": role(cfg.answer_model, cfg.answer_prompt, answer_max),
             "temperature": "provider-default" if temperature is None else temperature, "top_p": "provider-default" if top_p is None else top_p,
             "seed": None, "recorded_at": now or datetime.now(timezone.utc).isoformat(timespec="seconds")}

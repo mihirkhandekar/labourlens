@@ -56,12 +56,12 @@
       "status": "pass"
     },
     {
-      "detail": "quarters expected 2024-Q1 to 2026-Q2; series with gaps=0",
+      "detail": "quarters expected 2020-Q1 to 2026-Q2; series with gaps=0",
       "name": "dataset.resident_unemployment_rate.in_scope_rows_cover_declared_quarters",
       "status": "pass"
     },
     {
-      "detail": "0 of 20 in-scope cells have no published number (reasons: {})",
+      "detail": "0 of 52 in-scope cells have no published number (reasons: {})",
       "name": "dataset.resident_unemployment_rate.in_scope_values_present",
       "status": "pass"
     },
@@ -91,12 +91,12 @@
       "status": "pass"
     },
     {
-      "detail": "quarters expected 2024-Q1 to 2026-Q2; series with gaps=0",
+      "detail": "quarters expected 2020-Q1 to 2026-Q2; series with gaps=0",
       "name": "dataset.vacancy_to_unemployed_ratio.in_scope_rows_cover_declared_quarters",
       "status": "pass"
     },
     {
-      "detail": "0 of 10 in-scope cells have no published number (reasons: {})",
+      "detail": "0 of 26 in-scope cells have no published number (reasons: {})",
       "name": "dataset.vacancy_to_unemployed_ratio.in_scope_values_present",
       "status": "pass"
     },
@@ -126,12 +126,12 @@
       "status": "pass"
     },
     {
-      "detail": "quarters expected 2024-Q1 to 2026-Q2; series with gaps=0",
+      "detail": "quarters expected 2020-Q1 to 2026-Q2; series with gaps=0",
       "name": "dataset.retrenched_employees.in_scope_rows_cover_declared_quarters",
       "status": "pass"
     },
     {
-      "detail": "0 of 10 in-scope cells have no published number (reasons: {})",
+      "detail": "0 of 26 in-scope cells have no published number (reasons: {})",
       "name": "dataset.retrenched_employees.in_scope_values_present",
       "status": "pass"
     },
@@ -161,14 +161,14 @@
       "status": "pass"
     },
     {
-      "detail": "quarters expected 2024-Q1 to 2026-Q2; series with gaps=0",
+      "detail": "quarters expected 2020-Q1 to 2026-Q2; series with gaps=0",
       "name": "dataset.employment_change_by_sector.in_scope_rows_cover_declared_quarters",
       "status": "pass"
     },
     {
-      "detail": "0 of 260 in-scope cells have no published number (reasons: {})",
+      "detail": "32 of 676 in-scope cells have no published number (reasons: {\"source_token:'-'\": np.int64(32)})",
       "name": "dataset.employment_change_by_sector.in_scope_values_present",
-      "status": "pass"
+      "status": "warn"
     },
     {
       "detail": "quarantined=0",
@@ -196,12 +196,12 @@
       "status": "pass"
     },
     {
-      "detail": "quarters expected 2024-Q1 to 2026-Q2; series with gaps=0",
+      "detail": "quarters expected 2020-Q1 to 2026-Q2; series with gaps=0",
       "name": "dataset.overall_unemployment_rate.in_scope_rows_cover_declared_quarters",
       "status": "pass"
     },
     {
-      "detail": "0 of 20 in-scope cells have no published number (reasons: {})",
+      "detail": "0 of 52 in-scope cells have no published number (reasons: {})",
       "name": "dataset.overall_unemployment_rate.in_scope_values_present",
       "status": "pass"
     },
@@ -231,12 +231,12 @@
       "status": "pass"
     },
     {
-      "detail": "quarters expected 2024-Q1 to 2026-Q2; series with gaps=0",
+      "detail": "quarters expected 2020-Q1 to 2026-Q2; series with gaps=0",
       "name": "dataset.citizen_unemployment_rate.in_scope_rows_cover_declared_quarters",
       "status": "pass"
     },
     {
-      "detail": "0 of 20 in-scope cells have no published number (reasons: {})",
+      "detail": "0 of 52 in-scope cells have no published number (reasons: {})",
       "name": "dataset.citizen_unemployment_rate.in_scope_values_present",
       "status": "pass"
     },
@@ -266,12 +266,12 @@
       "status": "pass"
     },
     {
-      "detail": "quarters expected 2024-Q1 to 2026-Q2; series with gaps=0",
+      "detail": "quarters expected 2020-Q1 to 2026-Q2; series with gaps=0",
       "name": "dataset.job_vacancy_rate.in_scope_rows_cover_declared_quarters",
       "status": "pass"
     },
     {
-      "detail": "0 of 10 in-scope cells have no published number (reasons: {})",
+      "detail": "0 of 26 in-scope cells have no published number (reasons: {})",
       "name": "dataset.job_vacancy_rate.in_scope_values_present",
       "status": "pass"
     },
@@ -301,12 +301,12 @@
       "status": "pass"
     },
     {
-      "detail": "quarters expected 2024-Q1 to 2026-Q2; series with gaps=0",
+      "detail": "quarters expected 2020-Q1 to 2026-Q2; series with gaps=0",
       "name": "dataset.job_vacancy_count.in_scope_rows_cover_declared_quarters",
       "status": "pass"
     },
     {
-      "detail": "0 of 10 in-scope cells have no published number (reasons: {})",
+      "detail": "0 of 26 in-scope cells have no published number (reasons: {})",
       "name": "dataset.job_vacancy_count.in_scope_values_present",
       "status": "pass"
     },
@@ -336,12 +336,12 @@
       "status": "pass"
     },
     {
-      "detail": "quarters expected 2024-Q1 to 2026-Q2; series with gaps=0",
+      "detail": "quarters expected 2020-Q1 to 2026-Q2; series with gaps=0",
       "name": "dataset.retrenched_by_industry.in_scope_rows_cover_declared_quarters",
       "status": "pass"
     },
     {
-      "detail": "47 of 420 in-scope cells have no published number (reasons: {'dash_marker_publisher_does_not_define_nil_vs_suppressed': np.int64(47)})",
+      "detail": "123 of 1092 in-scope cells have no published number (reasons: {'dash_marker_publisher_does_not_define_nil_vs_suppressed': np.int64(123)})",
       "name": "dataset.retrenched_by_industry.in_scope_values_present",
       "status": "warn"
     },
@@ -371,12 +371,12 @@
       "status": "pass"
     },
     {
-      "detail": "quarters expected 2024-Q1 to 2026-Q2; series with gaps=0",
+      "detail": "quarters expected 2020-Q1 to 2026-Q2; series with gaps=0",
       "name": "dataset.retrenched_permanent.in_scope_rows_cover_declared_quarters",
       "status": "pass"
     },
     {
-      "detail": "0 of 10 in-scope cells have no published number (reasons: {})",
+      "detail": "0 of 26 in-scope cells have no published number (reasons: {})",
       "name": "dataset.retrenched_permanent.in_scope_values_present",
       "status": "pass"
     },
@@ -406,12 +406,12 @@
       "status": "pass"
     },
     {
-      "detail": "quarters expected 2024-Q1 to 2026-Q2; series with gaps=0",
+      "detail": "quarters expected 2020-Q1 to 2026-Q2; series with gaps=0",
       "name": "dataset.retrenched_term_contract.in_scope_rows_cover_declared_quarters",
       "status": "pass"
     },
     {
-      "detail": "0 of 10 in-scope cells have no published number (reasons: {})",
+      "detail": "0 of 26 in-scope cells have no published number (reasons: {})",
       "name": "dataset.retrenched_term_contract.in_scope_values_present",
       "status": "pass"
     },
@@ -441,12 +441,12 @@
       "status": "pass"
     },
     {
-      "detail": "quarters expected 2024-Q1 to 2026-Q2; series with gaps=0",
+      "detail": "quarters expected 2020-Q1 to 2026-Q2; series with gaps=0",
       "name": "dataset.reentry_6m.in_scope_rows_cover_declared_quarters",
       "status": "pass"
     },
     {
-      "detail": "0 of 10 in-scope cells have no published number (reasons: {})",
+      "detail": "0 of 26 in-scope cells have no published number (reasons: {})",
       "name": "dataset.reentry_6m.in_scope_values_present",
       "status": "pass"
     },
@@ -476,12 +476,12 @@
       "status": "pass"
     },
     {
-      "detail": "quarters expected 2024-Q1 to 2026-Q2; series with gaps=0",
+      "detail": "quarters expected 2020-Q1 to 2026-Q2; series with gaps=0",
       "name": "dataset.reentry_12m.in_scope_rows_cover_declared_quarters",
       "status": "pass"
     },
     {
-      "detail": "0 of 10 in-scope cells have no published number (reasons: {})",
+      "detail": "0 of 26 in-scope cells have no published number (reasons: {})",
       "name": "dataset.reentry_12m.in_scope_values_present",
       "status": "pass"
     },
@@ -511,12 +511,12 @@
       "status": "pass"
     },
     {
-      "detail": "quarters expected 2024-Q1 to 2026-Q2; series with gaps=0",
+      "detail": "quarters expected 2020-Q1 to 2026-Q2; series with gaps=0",
       "name": "dataset.resignation_rate.in_scope_rows_cover_declared_quarters",
       "status": "pass"
     },
     {
-      "detail": "0 of 10 in-scope cells have no published number (reasons: {})",
+      "detail": "0 of 26 in-scope cells have no published number (reasons: {})",
       "name": "dataset.resignation_rate.in_scope_values_present",
       "status": "pass"
     },
@@ -546,12 +546,12 @@
       "status": "pass"
     },
     {
-      "detail": "quarters expected 2024-Q1 to 2026-Q2; series with gaps=0",
+      "detail": "quarters expected 2020-Q1 to 2026-Q2; series with gaps=0",
       "name": "dataset.recruitment_rate.in_scope_rows_cover_declared_quarters",
       "status": "pass"
     },
     {
-      "detail": "0 of 10 in-scope cells have no published number (reasons: {})",
+      "detail": "0 of 26 in-scope cells have no published number (reasons: {})",
       "name": "dataset.recruitment_rate.in_scope_values_present",
       "status": "pass"
     },
@@ -581,12 +581,12 @@
       "status": "pass"
     },
     {
-      "detail": "quarters expected 2024-Q1 to 2026-Q2; series with gaps=0",
+      "detail": "quarters expected 2020-Q1 to 2026-Q2; series with gaps=0",
       "name": "dataset.unemployed_residents.in_scope_rows_cover_declared_quarters",
       "status": "pass"
     },
     {
-      "detail": "0 of 20 in-scope cells have no published number (reasons: {})",
+      "detail": "0 of 52 in-scope cells have no published number (reasons: {})",
       "name": "dataset.unemployed_residents.in_scope_values_present",
       "status": "pass"
     },
@@ -616,12 +616,12 @@
       "status": "pass"
     },
     {
-      "detail": "quarters expected 2024-Q1 to 2026-Q2; series with gaps=0",
+      "detail": "quarters expected 2020-Q1 to 2026-Q2; series with gaps=0",
       "name": "dataset.unemployed_overall.in_scope_rows_cover_declared_quarters",
       "status": "pass"
     },
     {
-      "detail": "0 of 20 in-scope cells have no published number (reasons: {})",
+      "detail": "0 of 52 in-scope cells have no published number (reasons: {})",
       "name": "dataset.unemployed_overall.in_scope_values_present",
       "status": "pass"
     },
@@ -651,12 +651,12 @@
       "status": "pass"
     },
     {
-      "detail": "quarters expected 2024-Q1 to 2026-Q2; series with gaps=0",
+      "detail": "quarters expected 2020-Q1 to 2026-Q2; series with gaps=0",
       "name": "dataset.job_vacancies_by_industry.in_scope_rows_cover_declared_quarters",
       "status": "pass"
     },
     {
-      "detail": "0 of 420 in-scope cells have no published number (reasons: {})",
+      "detail": "0 of 1092 in-scope cells have no published number (reasons: {})",
       "name": "dataset.job_vacancies_by_industry.in_scope_values_present",
       "status": "pass"
     },
@@ -686,12 +686,12 @@
       "status": "pass"
     },
     {
-      "detail": "quarters expected 2024-Q1 to 2026-Q2; series with gaps=0",
+      "detail": "quarters expected 2020-Q1 to 2026-Q2; series with gaps=0",
       "name": "dataset.job_vacancies_by_occupation.in_scope_rows_cover_declared_quarters",
       "status": "pass"
     },
     {
-      "detail": "0 of 50 in-scope cells have no published number (reasons: {})",
+      "detail": "0 of 130 in-scope cells have no published number (reasons: {})",
       "name": "dataset.job_vacancies_by_occupation.in_scope_values_present",
       "status": "pass"
     },
@@ -721,12 +721,12 @@
       "status": "pass"
     },
     {
-      "detail": "quarters expected 2024-Q1 to 2026-Q2; series with gaps=0",
+      "detail": "quarters expected 2020-Q1 to 2026-Q2; series with gaps=0",
       "name": "dataset.job_vacancy_rate_by_industry.in_scope_rows_cover_declared_quarters",
       "status": "pass"
     },
     {
-      "detail": "0 of 420 in-scope cells have no published number (reasons: {})",
+      "detail": "0 of 1092 in-scope cells have no published number (reasons: {})",
       "name": "dataset.job_vacancy_rate_by_industry.in_scope_values_present",
       "status": "pass"
     },
@@ -756,12 +756,12 @@
       "status": "pass"
     },
     {
-      "detail": "quarters expected 2024-Q1 to 2026-Q2; series with gaps=0",
+      "detail": "quarters expected 2020-Q1 to 2026-Q2; series with gaps=0",
       "name": "dataset.job_vacancy_rate_by_occupation.in_scope_rows_cover_declared_quarters",
       "status": "pass"
     },
     {
-      "detail": "0 of 50 in-scope cells have no published number (reasons: {})",
+      "detail": "0 of 130 in-scope cells have no published number (reasons: {})",
       "name": "dataset.job_vacancy_rate_by_occupation.in_scope_values_present",
       "status": "pass"
     },
@@ -791,12 +791,12 @@
       "status": "pass"
     },
     {
-      "detail": "quarters expected 2024-Q1 to 2026-Q2; series with gaps=0",
+      "detail": "quarters expected 2020-Q1 to 2026-Q2; series with gaps=0",
       "name": "dataset.recruitment_rate_by_industry.in_scope_rows_cover_declared_quarters",
       "status": "pass"
     },
     {
-      "detail": "0 of 420 in-scope cells have no published number (reasons: {})",
+      "detail": "0 of 1092 in-scope cells have no published number (reasons: {})",
       "name": "dataset.recruitment_rate_by_industry.in_scope_values_present",
       "status": "pass"
     },
@@ -826,12 +826,12 @@
       "status": "pass"
     },
     {
-      "detail": "quarters expected 2024-Q1 to 2026-Q2; series with gaps=0",
+      "detail": "quarters expected 2020-Q1 to 2026-Q2; series with gaps=0",
       "name": "dataset.recruitment_rate_by_occupation.in_scope_rows_cover_declared_quarters",
       "status": "pass"
     },
     {
-      "detail": "0 of 30 in-scope cells have no published number (reasons: {})",
+      "detail": "0 of 78 in-scope cells have no published number (reasons: {})",
       "name": "dataset.recruitment_rate_by_occupation.in_scope_values_present",
       "status": "pass"
     },
@@ -861,12 +861,12 @@
       "status": "pass"
     },
     {
-      "detail": "quarters expected 2024-Q1 to 2026-Q2; series with gaps=0",
+      "detail": "quarters expected 2020-Q1 to 2026-Q2; series with gaps=0",
       "name": "dataset.resignation_rate_by_industry.in_scope_rows_cover_declared_quarters",
       "status": "pass"
     },
     {
-      "detail": "0 of 420 in-scope cells have no published number (reasons: {})",
+      "detail": "0 of 1092 in-scope cells have no published number (reasons: {})",
       "name": "dataset.resignation_rate_by_industry.in_scope_values_present",
       "status": "pass"
     },
@@ -896,12 +896,12 @@
       "status": "pass"
     },
     {
-      "detail": "quarters expected 2024-Q1 to 2026-Q2; series with gaps=0",
+      "detail": "quarters expected 2020-Q1 to 2026-Q2; series with gaps=0",
       "name": "dataset.resignation_rate_by_occupation.in_scope_rows_cover_declared_quarters",
       "status": "pass"
     },
     {
-      "detail": "0 of 30 in-scope cells have no published number (reasons: {})",
+      "detail": "0 of 78 in-scope cells have no published number (reasons: {})",
       "name": "dataset.resignation_rate_by_occupation.in_scope_values_present",
       "status": "pass"
     },
@@ -931,12 +931,12 @@
       "status": "pass"
     },
     {
-      "detail": "quarters expected 2024-Q1 to 2026-Q2; series with gaps=0",
+      "detail": "quarters expected 2020-Q1 to 2026-Q2; series with gaps=0",
       "name": "dataset.unemployed_citizens.in_scope_rows_cover_declared_quarters",
       "status": "pass"
     },
     {
-      "detail": "0 of 20 in-scope cells have no published number (reasons: {})",
+      "detail": "0 of 52 in-scope cells have no published number (reasons: {})",
       "name": "dataset.unemployed_citizens.in_scope_values_present",
       "status": "pass"
     },
@@ -966,12 +966,12 @@
       "status": "pass"
     },
     {
-      "detail": "quarters expected 2024-Q1 to 2025-Q4; series with gaps=0",
+      "detail": "quarters expected 2020-Q1 to 2025-Q4; series with gaps=0",
       "name": "dataset.short_workweek_temporary_layoff.in_scope_rows_cover_declared_quarters",
       "status": "pass"
     },
     {
-      "detail": "0 of 24 in-scope cells have no published number (reasons: {})",
+      "detail": "0 of 72 in-scope cells have no published number (reasons: {})",
       "name": "dataset.short_workweek_temporary_layoff.in_scope_values_present",
       "status": "pass"
     },
@@ -1001,12 +1001,12 @@
       "status": "pass"
     },
     {
-      "detail": "quarters expected 2024-Q1 to 2026-Q2; series with gaps=0",
+      "detail": "quarters expected 2020-Q1 to 2026-Q2; series with gaps=0",
       "name": "dataset.retrenched_permanent_by_industry.in_scope_rows_cover_declared_quarters",
       "status": "pass"
     },
     {
-      "detail": "50 of 420 in-scope cells have no published number (reasons: {'dash_marker_publisher_does_not_define_nil_vs_suppressed': np.int64(50)})",
+      "detail": "141 of 1092 in-scope cells have no published number (reasons: {'dash_marker_publisher_does_not_define_nil_vs_suppressed': np.int64(141)})",
       "name": "dataset.retrenched_permanent_by_industry.in_scope_values_present",
       "status": "warn"
     },
@@ -1036,12 +1036,12 @@
       "status": "pass"
     },
     {
-      "detail": "quarters expected 2024-Q1 to 2026-Q2; series with gaps=0",
+      "detail": "quarters expected 2020-Q1 to 2026-Q2; series with gaps=0",
       "name": "dataset.retrenched_term_contract_by_industry.in_scope_rows_cover_declared_quarters",
       "status": "pass"
     },
     {
-      "detail": "288 of 420 in-scope cells have no published number (reasons: {'dash_marker_publisher_does_not_define_nil_vs_suppressed': np.int64(288)})",
+      "detail": "725 of 1092 in-scope cells have no published number (reasons: {'dash_marker_publisher_does_not_define_nil_vs_suppressed': np.int64(725)})",
       "name": "dataset.retrenched_term_contract_by_industry.in_scope_values_present",
       "status": "warn"
     },
@@ -1071,12 +1071,12 @@
       "status": "pass"
     },
     {
-      "detail": "quarters expected 2024-Q1 to 2026-Q2; series with gaps=0",
+      "detail": "quarters expected 2020-Q1 to 2026-Q2; series with gaps=0",
       "name": "dataset.retrenched_by_occupation.in_scope_rows_cover_declared_quarters",
       "status": "pass"
     },
     {
-      "detail": "0 of 30 in-scope cells have no published number (reasons: {})",
+      "detail": "0 of 78 in-scope cells have no published number (reasons: {})",
       "name": "dataset.retrenched_by_occupation.in_scope_values_present",
       "status": "pass"
     },
@@ -1106,12 +1106,12 @@
       "status": "pass"
     },
     {
-      "detail": "quarters expected 2024-Q1 to 2026-Q2; series with gaps=0",
+      "detail": "quarters expected 2020-Q1 to 2026-Q2; series with gaps=0",
       "name": "dataset.retrenched_permanent_by_occupation.in_scope_rows_cover_declared_quarters",
       "status": "pass"
     },
     {
-      "detail": "0 of 30 in-scope cells have no published number (reasons: {})",
+      "detail": "0 of 78 in-scope cells have no published number (reasons: {})",
       "name": "dataset.retrenched_permanent_by_occupation.in_scope_values_present",
       "status": "pass"
     },
@@ -1141,12 +1141,12 @@
       "status": "pass"
     },
     {
-      "detail": "quarters expected 2024-Q1 to 2026-Q2; series with gaps=0",
+      "detail": "quarters expected 2020-Q1 to 2026-Q2; series with gaps=0",
       "name": "dataset.retrenched_term_contract_by_occupation.in_scope_rows_cover_declared_quarters",
       "status": "pass"
     },
     {
-      "detail": "3 of 30 in-scope cells have no published number (reasons: {'dash_marker_publisher_does_not_define_nil_vs_suppressed': np.int64(3)})",
+      "detail": "5 of 78 in-scope cells have no published number (reasons: {'dash_marker_publisher_does_not_define_nil_vs_suppressed': np.int64(5)})",
       "name": "dataset.retrenched_term_contract_by_occupation.in_scope_values_present",
       "status": "warn"
     },
@@ -1176,12 +1176,12 @@
       "status": "pass"
     },
     {
-      "detail": "quarters expected 2024-Q1 to 2025-Q4; series with gaps=0",
+      "detail": "quarters expected 2020-Q1 to 2025-Q4; series with gaps=0",
       "name": "dataset.short_workweek_temporary_layoff_by_industry.in_scope_rows_cover_declared_quarters",
       "status": "pass"
     },
     {
-      "detail": "28 of 96 in-scope cells have no published number (reasons: {'dash_marker_publisher_does_not_define_nil_vs_suppressed': np.int64(28)})",
+      "detail": "72 of 288 in-scope cells have no published number (reasons: {'dash_marker_publisher_does_not_define_nil_vs_suppressed': np.int64(72)})",
       "name": "dataset.short_workweek_temporary_layoff_by_industry.in_scope_values_present",
       "status": "warn"
     },
@@ -1211,12 +1211,12 @@
       "status": "pass"
     },
     {
-      "detail": "quarters expected 2024-Q1 to 2026-Q2; series with gaps=0",
+      "detail": "quarters expected 2020-Q1 to 2026-Q2; series with gaps=0",
       "name": "dataset.unit_labour_cost_index_quarterly.in_scope_rows_cover_declared_quarters",
       "status": "pass"
     },
     {
-      "detail": "0 of 260 in-scope cells have no published number (reasons: {})",
+      "detail": "0 of 676 in-scope cells have no published number (reasons: {})",
       "name": "dataset.unit_labour_cost_index_quarterly.in_scope_values_present",
       "status": "pass"
     },
@@ -1246,12 +1246,12 @@
       "status": "pass"
     },
     {
-      "detail": "quarters expected 2024-Q1 to 2026-Q2; series with gaps=0",
+      "detail": "quarters expected 2020-Q1 to 2026-Q2; series with gaps=0",
       "name": "dataset.value_added_per_worker_quarterly.in_scope_rows_cover_declared_quarters",
       "status": "pass"
     },
     {
-      "detail": "0 of 240 in-scope cells have no published number (reasons: {})",
+      "detail": "0 of 624 in-scope cells have no published number (reasons: {})",
       "name": "dataset.value_added_per_worker_quarterly.in_scope_values_present",
       "status": "pass"
     },
@@ -1281,17 +1281,17 @@
       "status": "pass"
     },
     {
-      "detail": "quarters expected 2024-Q1 to 2026-Q2; series with gaps=0",
+      "detail": "quarters expected 2020-Q1 to 2026-Q2; series with gaps=0",
       "name": "dataset.avg_weekly_paid_hours_quarterly.in_scope_rows_cover_declared_quarters",
       "status": "pass"
     },
     {
-      "detail": "0 of 10 in-scope cells have no published number (reasons: {})",
+      "detail": "0 of 26 in-scope cells have no published number (reasons: {})",
       "name": "dataset.avg_weekly_paid_hours_quarterly.in_scope_values_present",
       "status": "pass"
     },
     {
-      "detail": "checked=80 parent/period pairs, max_abs_diff=200 persons, tolerance=100/child, exceeded=[]",
+      "detail": "checked=192 parent/period pairs, skipped_due_to_dash_cells=16, max_abs_diff=200 persons, tolerance=100/child, exceeded=[]",
       "name": "sector.children_sum_to_parent_within_rounding",
       "status": "pass"
     },
@@ -1301,17 +1301,17 @@
       "status": "pass"
     },
     {
-      "detail": "checked=69, skipped_due_to_dash_cells=31, max_abs_diff=20, exceeded=[]",
+      "detail": "checked=174, skipped_due_to_dash_cells=86, max_abs_diff=30, exceeded=[]",
       "name": "industry.children_sum_to_parent_within_rounding",
       "status": "pass"
     },
     {
-      "detail": "in-scope quarters=10, max |perm+term-total|=10.0 persons (source rounds to 10)",
+      "detail": "in-scope quarters=26, max |perm+term-total|=10.0 persons (source rounds to 10)",
       "name": "derived.retrenchment_parts_equal_total",
       "status": "pass"
     },
     {
-      "detail": "in-scope quarters=10, max abs diff=0.6651, mean=0.5956000000000001 (different surveys; a gap is expected, a large one would signal a definition problem)",
+      "detail": "in-scope quarters=26, max abs diff=0.9623, mean=0.6136538461538461 (different surveys; a gap is expected, a large one would signal a definition problem)",
       "name": "derived.vacancy_ratio_recomputed_vs_published",
       "status": "warn"
     },
@@ -1382,7 +1382,7 @@
     }
   ],
   "summary": {
-    "pass": 269,
-    "warn": 7
+    "pass": 268,
+    "warn": 8
   }
 }

@@ -1,6 +1,6 @@
 {
   "title": "Innovation assessment",
-  "scope": "LabourLens researches public Singapore labour statistics and reports for Q1 2024 to Q2 2026. Analysts inspect citations, records and tool calls before using an answer.",
+  "scope": "LabourLens researches public Singapore labour statistics (Q1 2020 to Q2 2026) and MOM and MTI reports (from 2023). Analysts inspect citations, records and tool calls before using an answer.",
   "abstract": "Period filters and reranking select passages; typed read-only tools retrieve series and calculate changes. I measured retrieval, answer behaviour, runtime and attack responses. The next priorities are report-table arithmetic and independent evaluation.",
   "approach": [
     "Numbers come from validated tables or deterministic code; claims cite passages or records.",
@@ -75,7 +75,7 @@
     "Development shaped the design. Original-test evidence overlaps; fresh-test outcomes are known. Neither final test demonstrates a gain.",
     "Gold was AI-drafted and reviewed by one person; the main judge is same-family. One fixed run and two agent runs do not establish stability; the primary agent references flip 13/237 behaviour verdicts.",
     "Citations check mechanics; arithmetic can use wrong inputs. Scanner and attack results establish no general defence.",
-    "Full comparisons exclude web-only steps and MCP. Costs are list-price estimates. Monitoring, rollback and government readiness are untested."
+    "Full comparisons exclude web-only steps and MCP. Every measurement used questions about Q1 2024 to Q2 2026, the structured-output planner and older prompts; the served window (from Q1 2020), function-calling planner and newer prompts were not re-evaluated, so answers about 2020 to 2023 are unevaluated. Costs are list-price estimates. Monitoring, rollback and government readiness are untested."
   ],
   "components": [
     {"component": "Identity", "current": "Shared access code.", "replacement": "Approved SSO/source roles."},

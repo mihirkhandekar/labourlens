@@ -48,7 +48,7 @@ def test_list_datasets_matches_direct_and_filters_by_topic():
     assert everything.dataset_count == len(set(STATS.obs.source_id)) >= 30
     assert filtered.dataset_count and all("retrench" in (d.source_id + d.title).casefold() for d in filtered.datasets)
     d = next(d for d in everything.datasets if d.source_id == "retrenched_employees")
-    assert (d.units, d.populations, d.first_period, d.last_period, d.has_dimensions) == (["persons"], ["establishments"], "2024-Q1", "2026-Q2", False)
+    assert (d.units, d.populations, d.first_period, d.last_period, d.has_dimensions) == (["persons"], ["establishments"], "2020-Q1", "2026-Q2", False)
     assert "Open Data Licence" in d.licence
 
 
@@ -61,7 +61,7 @@ def test_describe_dataset_matches_direct_and_carries_definitions():
     assert r.model_dump() == analysis.describe_dataset(STATS, "resident_unemployment_rate").model_dump()
     assert {i.adjustment for i in r.indicators} == {"seasonally_adjusted", "not_adjusted"} and all(i.unit == "percent" and i.population == "resident" for i in r.indicators)
     assert r.canonical_url.startswith("https://data.gov.sg/") and r.licence_url and r.dimension_count == 0 and r.dimension_kind is None
-    assert r.periods_in_scope[0] == "2024-Q1" and r.periods_in_scope[-1] == "2026-Q2"
+    assert r.periods_in_scope[0] == "2020-Q1" and r.periods_in_scope[-1] == "2026-Q2"
     assert any(i.definition for i in with_client(lambda c: c.describe_dataset("retrenched_employees")).result.indicators)
 
 
@@ -146,7 +146,7 @@ def test_compare_periods_refuses_mixed_series_and_other_correctable_cases():
     assert err.kind == "invalid_arguments" and "2 series" in err.message and "seasonally_adjusted" in err.message
     assert kind_of(lambda c: c.compare_periods("retrenched_by_industry", "2025-Q1", "2026-Q1")) == "invalid_arguments"  # 42 industries
     assert kind_of(lambda c: c.compare_periods(**RET, period_a="2026-Q1", period_b="2026-Q1")) == "invalid_arguments"
-    assert kind_of(lambda c: c.compare_periods(**RET, period_a="2023-Q1", period_b="2026-Q1")) == "invalid_arguments"  # outside the supported range
+    assert kind_of(lambda c: c.compare_periods(**RET, period_a="2019-Q4", period_b="2026-Q1")) == "invalid_arguments"  # outside the supported range
     assert kind_of(lambda c: c.compare_periods(**RET, period_a="Q1 2026", period_b="2026-Q2")) == "invalid_arguments"  # pattern
 
 

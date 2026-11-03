@@ -71,7 +71,7 @@ def test_result_is_public_schema_audited_and_never_calls_a_model(no_model, tmp_p
     assert res["outcome"] == "clarify" and res["usage"]["cost_usd"] == 0 and res["usage"]["calls"] == 0
     Answer.model_validate(res["answer"])
     text = json.dumps(res["answer"])
-    assert "No evidence items" not in text and "Q1 2024 to Q2 2026" in text
+    assert "No evidence items" not in text and "Q1 2020 to Q2 2026" in text
     assert [(e["node"], e["event"]) for e in res["trace"]][0] == ("validate_question", "small_talk_answered_without_searching")
     public = public_result(res, shared)
     assert public["run_id"] == res["run_id"] and public["answer"]["status"] == "clarify" and public["evidence"] == []

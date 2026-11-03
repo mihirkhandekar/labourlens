@@ -1,13 +1,13 @@
-"""Minimal OpenAI chat client with strict structured outputs. Reads the key from OPENAI_API_KEY only. Every call returns
-latency and token usage so cost can be computed from measurements (D-022). Bounded: per-call timeout, limited retries
-on transient errors, no hidden loops."""
+"""Minimal OpenAI chat client: strict structured outputs by default, or native function calling when `tools` is given (the planner of
+the shipped agent, D-078). Reads the key from OPENAI_API_KEY only. Every call returns latency and token usage so cost can be computed
+from measurements (D-022). Bounded: per-call timeout, limited retries on transient errors, no hidden loops."""
 
 from __future__ import annotations
 
 import asyncio
 import os
 import time
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
 import httpx
 
@@ -33,6 +33,23 @@ class LLMResult:
     seconds: float
     refusal: str | None = None
     attempts: int = 1
+    # Native function calling only: [{"id", "name", "arguments"}] with `arguments` exactly as the provider sent it (a JSON string, unparsed,
+    # unvalidated). Empty for a plain reply and for structured-output calls.
+    tool_calls: list[dict] = field(default_factory=list)
+
+
+def parse_tool_calls(message: dict) -> list[dict]:
+    """The function tool calls of a chat message, defensively: anything that is not a well-formed function call entry is skipped, and a
+    non-string `arguments` becomes "" (the caller treats that like malformed JSON). Never raises."""
+    out = []
+    raw = message.get("tool_calls")
+    for call in raw if isinstance(raw, list) else []:
+        fn = call.get("function") if isinstance(call, dict) else None
+        if not isinstance(fn, dict) or call.get("type", "function") != "function":
+            continue
+        args = fn.get("arguments")
+        out.append({"id": str(call.get("id") or ""), "name": str(fn.get("name") or ""), "arguments": args if isinstance(args, str) else ""})
+    return out
 
 
 async def _bounded_post(body: dict, key: str, seconds: float):
@@ -45,13 +62,19 @@ async def _bounded_post(body: dict, key: str, seconds: float):
 
 def chat(model: str, messages: list[dict], max_completion_tokens: int = 6000, extra: dict | None = None,
          schema: dict | None = None, schema_name: str = "answer", timeout_s: float | None = None,
-         max_attempts: int | None = None, retry_backoff_s: float | None = None, retry_all_5xx: bool = False) -> LLMResult:
+         max_attempts: int | None = None, retry_backoff_s: float | None = None, retry_all_5xx: bool = False,
+         tools: list[dict] | None = None, tool_choice: str = "auto", parallel_tool_calls: bool = True) -> LLMResult:
+    """`tools` switches the call from a strict JSON-schema reply to native function calling: the request carries the function
+    definitions and `tool_choice`, no response_format, and the result's `tool_calls` holds what the model asked for."""
     key = os.environ.get("OPENAI_API_KEY")
     if not key:
         raise LLMError("OPENAI_API_KEY is not set")
-    body = {"model": model, "messages": messages, "max_completion_tokens": max_completion_tokens,
-            "response_format": {"type": "json_schema", "json_schema": {"name": schema_name, "strict": True, "schema": schema or json_schema()}},
-            **(extra or {})}
+    body = {"model": model, "messages": messages, "max_completion_tokens": max_completion_tokens}
+    if tools:
+        body.update(tools=tools, tool_choice=tool_choice, parallel_tool_calls=parallel_tool_calls)
+    else:
+        body["response_format"] = {"type": "json_schema", "json_schema": {"name": schema_name, "strict": True, "schema": schema or json_schema()}}
+    body.update(extra or {})
     last = ""
     deadline = None if timeout_s is None else time.perf_counter() + timeout_s
     limit = MAX_RETRIES if max_attempts is None else max_attempts
@@ -81,7 +104,8 @@ def chat(model: str, messages: list[dict], max_completion_tokens: int = 6000, ex
                 msg = d["choices"][0]["message"]
                 u = d["usage"]
                 return LLMResult(msg.get("content") or "", int(u["prompt_tokens"]), int(u["completion_tokens"]),
-                                 (u.get("completion_tokens_details") or {}).get("reasoning_tokens", 0), dt, msg.get("refusal"), attempt + 1)
+                                 (u.get("completion_tokens_details") or {}).get("reasoning_tokens", 0), dt, msg.get("refusal"), attempt + 1,
+                                 parse_tool_calls(msg) if tools else [])
             except (KeyError, IndexError, TypeError, ValueError, AttributeError) as e:  # malformed provider body is an operational failure
                 raise LLMError(f"chat API returned an unexpected response shape: {type(e).__name__}", attempts=attempt + 1) from e
         last = f"{r.status_code}: {r.text[:300]}"

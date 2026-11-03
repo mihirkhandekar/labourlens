@@ -34,8 +34,8 @@ def test_quarter_bounds_handle_month_lengths():
 
 
 def test_scope_window_is_inclusive():
-    assert n.in_scope(2024, 1) and n.in_scope(2026, 2)
-    assert not n.in_scope(2023, 4) and not n.in_scope(2026, 3)
+    assert n.in_scope(2020, 1) and n.in_scope(2026, 2)  # D-077: the window opens at 2020-Q1
+    assert not n.in_scope(2019, 4) and not n.in_scope(2026, 3)
 
 
 def test_missing_token_is_none_with_reason_never_zero():

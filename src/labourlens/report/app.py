@@ -22,7 +22,7 @@ from pathlib import Path
 from urllib.parse import urlparse
 
 from fastapi import FastAPI, HTTPException, Request
-from fastapi.responses import FileResponse, JSONResponse, RedirectResponse
+from fastapi.responses import FileResponse, JSONResponse, RedirectResponse, StreamingResponse
 from fastapi.staticfiles import StaticFiles
 
 from labourlens import paths
@@ -34,6 +34,7 @@ from labourlens.report import audit as web_audit
 COOKIE = "labourlens_session"
 # Conservative admission charge for this bounded demo; provider project budgets remain the hard stop.
 RUN_RESERVATION_USD = 0.05
+STREAM_KEEPALIVE_S = 10.0  # an idle stream sends a comment line this often so a proxy does not close it
 RIGHTS_NOTICE = "Text withheld: excessive verbatim overlap with source evidence."
 
 
@@ -198,6 +199,49 @@ def _ungrounded_numbers(raw: dict) -> list[str]:
     return []
 
 
+_TRACE_DETAIL_KEYS = {"tool", "args", "new_items", "seconds", "round", "n_calls", "observations", "passages", "calculations", "error_kind", "calls_used", "data_quality_notes"}
+
+
+def public_trace_item(e: dict) -> dict:
+    """One trace event as the browser may see it: node, event and an allow-listed subset of the detail (never passage text or model output)."""
+    detail = e.get("detail", {}) if isinstance(e.get("detail"), dict) else {}
+    return {"node": e.get("node", ""), "event": e.get("event", ""),
+            "detail": {**{k: v for k, v in detail.items() if k in _TRACE_DETAIL_KEYS}, **({"transport": "mcp"} if detail.get("transport") == "mcp" else {})}}
+
+
+_STAGE_TEXT = {("contextualise", "running"): "Reading the question in context.", ("contextualise", "done"): "Question read.",
+               ("triage", "running"): "Checking the question is about Singapore labour-market statistics.", ("triage", "done"): "Scope check finished.",
+               ("planning", "running"): "Planning which evidence to collect.", ("answering", "running"): "Writing the answer from the evidence.",
+               ("validating", "running"): "Checking every quote and number against the evidence."}
+_NODE_STAGE = {"plan_research": "planning", "generate_answer": "answering", "validate_answer": "validating"}
+
+
+def public_event(event: dict):
+    """A live runner event as (sse event name, data), or None when it is not shown. Only allow-listed fields pass; there is no model text."""
+    kind = event.get("type")
+    if kind == "stage":
+        stage, state = str(event.get("stage", ""))[:24], str(event.get("state", ""))[:12]
+        data = {"stage": stage, "state": state, "text": _STAGE_TEXT.get((stage, state), "")}
+        if stage == "triage" and state == "done":
+            data["route"] = str(event.get("route", ""))[:24]
+            if data["route"] != "in_scope":
+                data["text"] = "The question is outside the workbench, so it was answered without searching."
+        if stage == "contextualise" and state == "done" and event.get("changed"):
+            data["text"] = "Question rewritten using the earlier turns."
+        return "status", data
+    if kind == "node_started":
+        stage = _NODE_STAGE.get(event.get("node"))
+        return None if stage is None else ("status", {"stage": stage, "state": "running", "text": _STAGE_TEXT[(stage, "running")]})
+    if kind == "trace" and isinstance(event.get("item"), dict):
+        return "trace", {"item": public_trace_item(event["item"])}
+    if kind == "tool_call_started":
+        args = event.get("args") if isinstance(event.get("args"), dict) else {}
+        return "tool", {"phase": "started", "tool": str(event.get("tool", ""))[:64], "args": {str(k)[:40]: (v[:300] if isinstance(v, str) else v) for k, v in args.items()}}
+    if kind == "tool_call_finished" and isinstance(event.get("item"), dict):
+        return "tool", {"phase": "finished", "item": public_trace_item(event["item"])}
+    return None
+
+
 def public_result(raw: dict, shared) -> dict:
     """Expose only cited report fragments, never the tool's full passage registry."""
     answer = raw.get("answer")
@@ -257,7 +301,7 @@ def public_result(raw: dict, shared) -> dict:
                 key = (sid, record.get("indicator_id", ""), record.get("dimension", ""), record.get("population", ""), record.get("adjustment", ""), record.get("unit", ""))
                 series[key].append({"period": record["period"], "value": float(val), "observation_id": eid})
     chart = {"series": [{"source_id": k[0], "label": " / ".join(str(v) for v in k[1:5] if v), "unit": k[5], "points": sorted(v, key=lambda p: p["period"])} for k, v in series.items()]}
-    trace = [{"node": e.get("node", ""), "event": e.get("event", ""), "detail": {**{k: v for k, v in e.get("detail", {}).items() if k in {"tool", "args", "new_items", "seconds", "round", "n_calls", "observations", "passages", "calculations", "error_kind", "calls_used", "data_quality_notes"}}, **({"transport": "mcp"} if e.get("detail", {}).get("transport") == "mcp" else {})}} for e in raw.get("trace", [])]
+    trace = [public_trace_item(e) for e in raw.get("trace", [])]
     usage = {"cost_usd": raw.get("usage", {}).get("cost_usd", 0), "seconds": raw.get("seconds", 0)}
     for key in ("prompt_tokens", "completion_tokens"):
         value = raw.get("usage", {}).get(key)
@@ -283,11 +327,11 @@ def create_app(settings: Settings | None = None, runner=None, shared_factory=Non
     cfg = settings or Settings.from_env()
     injected_runner = runner is not None
     if runner is None:
-        from labourlens.agent.graph import AgentConfig
-        from labourlens.agent.served import make_runner
+        from labourlens.agent.served import SHIPPED_PROMPTS, make_runner, shipped_config
 
-        runner = make_runner(AgentConfig(run_deadline_s=cfg.run_deadline_s),
-                             contextualise_enabled=cfg.contextualise_enabled, triage_enabled=cfg.triage_enabled)
+        # D-077, D-078: the shipped prompts (2020-Q1 window) and the native function-calling planner. Not the evaluated configuration.
+        runner = make_runner(shipped_config(cfg.run_deadline_s), contextualise_enabled=cfg.contextualise_enabled, triage_enabled=cfg.triage_enabled,
+                             triage_prompt=SHIPPED_PROMPTS["triage"], contextualise_prompt=SHIPPED_PROMPTS["contextualise"])
     if shared_factory is None:
         from labourlens.agent.served import make_shared
 
@@ -474,8 +518,10 @@ def create_app(settings: Settings | None = None, runner=None, shared_factory=Non
         return response
 
 
-    @app.post("/api/ask")
-    async def ask(request: Request):
+    async def admit(request):
+        """Everything that must pass before a run starts, shared by /api/ask and /api/ask/stream: session, origin, rate limits, request
+        shape, daily budget, the concurrency slot and the durable spend reservation. Raises HTTPException; on success the slot and the
+        reservation are held and `execute` must run (it releases both). Returns (session id, question, history, reserved day)."""
         sid = authorize(request)
         hit(("session", sid.rsplit("~", 1)[-1]), cfg.session_limit)
         hit(("ip", client_host(request)), cfg.ip_limit)
@@ -496,54 +542,123 @@ def create_app(settings: Settings | None = None, runner=None, shared_factory=Non
             raise HTTPException(503, "Demo busy. Try again shortly.")
         app.state.spent_usd += RUN_RESERVATION_USD
         persist_budget()  # No await between admission, durable reservation and slot acquisition.
-        reserved_day = app.state.day
-        timed_out = False
         app.state.active += 1
+        return sid, question, history, app.state.day
 
-        async def execute():
+    async def execute(request, sid, question, history, reserved_day, run_state, emit=None):
+        """Run one admitted question and return (public payload, JSONResponse of it). `run_state["timed_out"]` is set by the caller when its
+        wait ran out; the run is then charged at least the reservation. `emit(event)` receives live progress events when the runner can send them."""
+        try:
+            context = {"channel": "web", "session": sid, "ip": request.client.host if request.client else None, "extra": {}}
+            parameters = inspect.signature(runner).parameters
+            kwargs = {"audit": context} if "audit" in parameters or any(p.kind == inspect.Parameter.VAR_KEYWORD for p in parameters.values()) else {}
+            if "history" in parameters:
+                kwargs["history"] = history
+            if emit is not None and "emit" in parameters:
+                kwargs["emit"] = emit
+            from labourlens.agent.tools import CALLER_SESSION
+            token = CALLER_SESSION.set(sid)  # tags this visitor's MCP lookups; the context is copied into the worker thread by to_thread
             try:
-                context = {"channel": "web", "session": sid, "ip": request.client.host if request.client else None, "extra": {}}
-                parameters = inspect.signature(runner).parameters
-                kwargs = {"audit": context} if "audit" in parameters or any(p.kind == inspect.Parameter.VAR_KEYWORD for p in parameters.values()) else {}
-                if "history" in parameters:
-                    kwargs["history"] = history
-                from labourlens.agent.tools import CALLER_SESSION
-                token = CALLER_SESSION.set(sid)  # tags this visitor's MCP lookups; the context is copied into the worker thread by to_thread
-                try:
-                    raw = await runner(question, app.state.shared, **kwargs) if inspect.iscoroutinefunction(runner) else await asyncio.to_thread(runner, question, app.state.shared, **kwargs)
-                finally:
-                    CALLER_SESSION.reset(token)
-                if isinstance(raw.get("run_id"), str) and sid in sessions:
-                    session_runs[sid].append(raw["run_id"])
-                if injected_runner:
-                    web_audit.log_injected_run(raw, question, sid, context["ip"])
-                response = redact_values(public_result(raw, app.state.shared), list(cfg.access_codes) + [cfg.session_secret])
-                response = JSONResponse(response)  # Validate serialization before releasing any reservation.
-                cost = float(raw.get("usage", {}).get("cost_usd", 0))
-                if not math.isfinite(cost) or cost < 0:
-                    cost = cfg.daily_budget_usd
-                if timed_out or raw.get("outcome") not in ("answered", "abstained", "clarify", "refused"):
-                    cost = max(RUN_RESERVATION_USD, cost)
-                if app.state.day == reserved_day:
-                    app.state.spent_usd += cost - RUN_RESERVATION_USD
-                    persist_budget()
-                return response
+                raw = await runner(question, app.state.shared, **kwargs) if inspect.iscoroutinefunction(runner) else await asyncio.to_thread(runner, question, app.state.shared, **kwargs)
             finally:
-                app.state.active -= 1
-        task = asyncio.create_task(execute())
+                CALLER_SESSION.reset(token)
+            if isinstance(raw.get("run_id"), str) and sid in sessions:
+                session_runs[sid].append(raw["run_id"])
+            if injected_runner:
+                web_audit.log_injected_run(raw, question, sid, context["ip"])
+            payload = redact_values(public_result(raw, app.state.shared), list(cfg.access_codes) + [cfg.session_secret])
+            response = JSONResponse(payload)  # Validate serialization before releasing any reservation.
+            cost = float(raw.get("usage", {}).get("cost_usd", 0))
+            if not math.isfinite(cost) or cost < 0:
+                cost = cfg.daily_budget_usd
+            if run_state["timed_out"] or raw.get("outcome") not in ("answered", "abstained", "clarify", "refused"):
+                cost = max(RUN_RESERVATION_USD, cost)
+            if app.state.day == reserved_day:
+                app.state.spent_usd += cost - RUN_RESERVATION_USD
+                persist_budget()
+            return payload, response
+        finally:
+            app.state.active -= 1
+
+    def start(coro):
+        task = asyncio.create_task(coro)
         tasks.add(task)
+
         def settled(t):
             tasks.discard(t)
             if not t.cancelled():
                 t.exception()  # consume errors from runs that outlive an HTTP timeout
         task.add_done_callback(settled)
+        return task
+
+    @app.post("/api/ask")
+    async def ask(request: Request):
+        sid, question, history, reserved_day = await admit(request)
+        run_state = {"timed_out": False}
+        task = start(execute(request, sid, question, history, reserved_day, run_state))
         try:
-            return await asyncio.wait_for(asyncio.shield(task), cfg.request_timeout)
+            return (await asyncio.wait_for(asyncio.shield(task), cfg.request_timeout))[1]
         except TimeoutError:
-            timed_out = True
+            run_state["timed_out"] = True
             raise HTTPException(504, "Run timed out. Please try again later.")
         except Exception:
             raise HTTPException(503, "Agent unavailable. Please try again later.")
+
+    @app.post("/api/ask/stream")
+    async def ask_stream(request: Request):
+        """The same run as /api/ask, sent as server-sent events: `status`, `tool` and `trace` events while it runs, then one `result` event whose
+        data is exactly the /api/ask response body, or one `error` event. Every refusal (login, origin, limits, budget, request shape) is an
+        ordinary HTTP error before the stream opens. No model text is streamed: the answer appears only in `result`, after validation."""
+        sid, question, history, reserved_day = await admit(request)
+        run_state = {"timed_out": False}
+        loop = asyncio.get_running_loop()
+        queue: asyncio.Queue = asyncio.Queue()
+        secrets_ = list(cfg.access_codes) + [cfg.session_secret]
+
+        def emit(event):  # called from the runner's worker thread
+            loop.call_soon_threadsafe(queue.put_nowait, event)
+
+        async def job():
+            try:
+                payload, _ = await execute(request, sid, question, history, reserved_day, run_state, emit)
+                queue.put_nowait({"type": "result", "payload": payload})
+            except HTTPException as exc:
+                queue.put_nowait({"type": "error", "status": exc.status_code, "detail": str(exc.detail)})
+            except Exception:
+                queue.put_nowait({"type": "error", "status": 503, "detail": "Agent unavailable. Please try again later."})
+
+        start(job())
+
+        def frame(name, data):
+            return f"event: {name}\ndata: {json.dumps(redact_values(data, secrets_), ensure_ascii=False)}\n\n"
+
+        async def events():
+            yield frame("status", {"stage": "accepted", "state": "done", "text": "Question accepted."})
+            give_up = loop.time() + cfg.request_timeout
+            while True:
+                left = give_up - loop.time()
+                if left <= 0:
+                    run_state["timed_out"] = True
+                    yield frame("error", {"status": 504, "detail": "Run timed out. Please try again later."})
+                    return
+                try:
+                    event = await asyncio.wait_for(queue.get(), min(left, STREAM_KEEPALIVE_S))
+                except TimeoutError:
+                    yield ": keepalive\n\n"  # keeps an idle proxy from closing the connection during a long model call
+                    continue
+                kind = event.get("type")
+                if kind == "result":
+                    yield frame("result", event["payload"])
+                    return
+                if kind == "error":
+                    yield frame("error", {"status": event["status"], "detail": event["detail"]})
+                    return
+                mapped = public_event(event)
+                if mapped is not None:
+                    yield frame(*mapped)
+
+        return StreamingResponse(events(), media_type="text/event-stream",
+                                 headers={"Cache-Control": "no-store", "X-Accel-Buffering": "no"})
 
     def mcp_backend():
         return getattr(app.state.shared, "stats_backend", None)

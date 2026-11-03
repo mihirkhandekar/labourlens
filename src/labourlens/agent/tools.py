@@ -136,9 +136,14 @@ class StatsData:
             if not hit:
                 return None, ToolResult(False, message=f"dimension {dimension!r} not found in {source_id}; available: {names[:40]}", error_kind="not_found")
             g = g[g.dimension == hit[0]]
+        in_series = g
         g = g[(g.period >= period_from) & (g.period <= period_to)]
         if g.empty:
-            return None, ToolResult(False, message="no rows match these filters", error_kind="not_found")
+            if in_series.empty:
+                return None, ToolResult(False, message="no rows match these filters", error_kind="not_found")
+            # The filters match a series, but it has no row in the asked range (a dataset can start after the window opens or end before it closes).
+            return None, ToolResult(False, message=f"no data for {period_from} to {period_to} in {source_id}: its rows run {in_series.period.min()} to {in_series.period.max()} "
+                                                   f"inside the supported window {SCOPE_LO} to {SCOPE_HI}", error_kind="not_found")
         if len(g) > MAX_ROWS:
             dims = sorted(set(g.dimension))
             return None, ToolResult(False, message=f"{len(g)} rows is more than {MAX_ROWS}; set `dimension` (available: {dims[:40]}) or narrow the periods", error_kind="too_large")

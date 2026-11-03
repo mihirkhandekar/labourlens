@@ -9,8 +9,21 @@ import yaml
 
 from labourlens import paths
 
-ANSWER_SCOPE_START = "2024-Q1"
+# D-077 (3 Nov 2026) widened the answer scope from 2024-Q1 to 2020-Q1. Every module that needs the window reads these constants.
+ANSWER_SCOPE_START = "2020-Q1"
 ANSWER_SCOPE_END = "2026-Q2"
+# The evaluation gold set (D-031 to D-076) was written and measured on the earlier 2024-Q1 to 2026-Q2 window; 2020-Q1 to 2023-Q4 answers are unevaluated.
+EVALUATED_WINDOW = ("2024-Q1", "2026-Q2")
+
+
+def quarter_words(period: str) -> str:
+    """'2020-Q1' -> 'Q1 2020'."""
+    return f"{period[-2:]} {period[:4]}"
+
+
+def scope_words() -> str:
+    """The answer window in plain words, for user-facing text: 'Q1 2020 to Q2 2026'."""
+    return f"{quarter_words(ANSWER_SCOPE_START)} to {quarter_words(ANSWER_SCOPE_END)}"
 
 
 @lru_cache(maxsize=1)

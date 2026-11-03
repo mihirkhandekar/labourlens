@@ -4,7 +4,7 @@ Each entry: date, decision, alternatives, why, who approved, how reversible. Lab
 
 **How to read approvals.** An entry that cites an owner approval names it (date, and the quoted reply or the file that holds it). An entry that names no approver had none recorded in this log when this note was written (1 Nov 2026): it is an assistant decision inside the approved experiment protocol (D-016), open to owner reversal. The signed held-out v2 freeze (`experiments/heldout-v2/FREEZE.md`, 31 Oct 2026) is the owner's approval of the 65 held-out v2 cases and of the pre-registered rule of D-042; it does not approve the later entries. The owner confirmation or rollback of D-030 is not recorded.
 
-**Status index.** Settled by the owner: D-000 to D-003, D-005, D-006, D-010, D-012 to D-017, D-019 to D-022, D-024, D-026 to D-028, D-031, D-034 to D-036, D-037 to D-040, D-047. Measured results and assistant decisions inside the protocol: D-018, D-023, D-025, D-029, D-030, D-032, D-033, D-041 to D-046, D-048. Logged first as proposals, outcome noted in the entry: D-004, D-007, D-008, D-009, D-011. D-046 is superseded by D-048.
+**Status index.** Settled by the owner: D-000 to D-003, D-005, D-006, D-010, D-012 to D-017, D-019 to D-022, D-024, D-026 to D-028, D-031, D-034 to D-036, D-037 to D-040, D-047, D-077 to D-079. Measured results and assistant decisions inside the protocol: D-018, D-023, D-025, D-029, D-030, D-032, D-033, D-041 to D-046, D-048. Logged first as proposals, outcome noted in the entry: D-004, D-007, D-008, D-009, D-011. D-046 is superseded by D-048.
 
 ## Settled
 
@@ -225,7 +225,9 @@ Caveats: the reranker and the gold drafter are both LLMs (possible shared bias, 
 
 **Reversibility:** set `AgentConfig(retrieval="hybrid")` to restore the earlier agent retrieval path. No corpus, embedding or answer-prompt migration is required.
 
-### D-031 — Supported analysis period is a hard scope (DECISION, owner, 30 Oct 2026)
+### D-031 — Supported analysis period is a hard scope (DECISION, owner, 30 Oct 2026; window widened to 2020-Q1 by D-077, 3 Nov 2026)
+
+*Update (D-077): the rule itself stands, a request outside the supported period must abstain, but the period now opens at 2020-Q1. The text below records the decision as made on 30 Oct 2026 and the window the evaluation used.*
 
 The supported analysis period is **1Q 2024 to 2Q 2026 inclusive**. Documents concerning earlier periods remain available as context, but questions requesting those earlier-period figures or analyses must receive abstention even when the corpus contains the answer. A publication date within scope does not make a requested 2023 figure in scope. A mixed-period comparison requiring an earlier endpoint also receives abstention when the in-scope portion alone cannot answer the question.
 
@@ -1066,3 +1068,56 @@ All 30 serious-harm presentations received provider-level Decisions refusals rat
 D was faster: case-median p50 0.362 s versus C 1.392 s, ratio .260 [.252, .272]; p95 ratio .231 [.211, .252], all 150 case medians faster. Pooled per-call C median is 1.398 s, a different aggregation. Mean nominal list-price cost was $0.00006371 versus $0.00013106 per call; fresh scoring total $0.0876459, excluding tuning's incomplete cost metadata. Timing is contemporaneous but C generates a reply and D does not, so this is not an isolated endpoint effect.
 
 **DECISION (owner): no adoption; shipped agent and chat triage unchanged.** D failed safety, quality and operations despite passing speed. The fresh set is AI-labelled, not human-reviewed, and repeated observations are dependent; C's own diversion is disclosed. A two-way Decisions scope gate with existing harm/small-talk handling is an untested, unregistered follow-up idea only, not a result or approved cutover. No prompt, threshold, case or frozen result was altered after scoring.
+
+### D-077 - Answer window widened from 2024-Q1 to 2020-Q1 (OWNER DECISION / IMPLEMENTED, NOT EVALUATED, 3 Nov 2026)
+
+**DECISION (owner):** the supported answer period is now **2020-Q1 to 2026-Q2** (26 quarters), not 2024-Q1 to 2026-Q2 (10 quarters). D-031's rule, that a question outside the supported period must abstain, is unchanged; only the lower bound moved. The constants live once in `src/labourlens/data/catalog.py` (`ANSWER_SCOPE_START`, `ANSWER_SCOPE_END`, `EVALUATED_WINDOW`, `scope_words()`); the agent tool guard, the MCP server and analysis, normalisation (`in_answer_scope`), validation, derived indicators, EDA, export, the report build and the small-talk reply read them.
+
+**Options considered.**
+
+| Option | For | Against |
+|---|---|---|
+| A. Keep 2024-Q1 (D-031 as evaluated) | Everything measured applies to what is served. | Throws away 16 quarters of official statistics that are already in the store, including the 2020 shock and recovery. |
+| B. Widen to 2020-Q1 for statistics and report text alike | One simple rule. | There is no report text before the 2023 reports, so the answer step would be asked to explain years it cannot cite. |
+| C. **Widen to 2020-Q1; statistics for the whole window, report commentary only where reports exist (chosen)** | Uses the data that is there; the prompts say plainly that 2020 to 2022 has statistics and no report commentary (earliest report publication date 2023-06-15). | The evaluation gold covers 2024 to 2026 only, so 2020 to 2023 answers are unevaluated. |
+| D. Widen further back (1990s) | More history. | Datasets differ in definition over time; no use case asked for it; more to disclose. |
+
+**VERIFIED FACT, dataset coverage inside the new window** (loaders over `data/processed/observations.parquet` after `labourlens build`): all 36 structured datasets have rows from 2020-Q1; 34 run to 2026-Q2; `short_workweek_temporary_layoff` and `short_workweek_temporary_layoff_by_industry` end at 2025-Q4 (declared in their specs, unchanged). In-scope rows rose from 4,300 to 11,228 of 52,020. Publisher '-' cells stay missing, never zero (for example 32 of 676 in-scope cells of `employment_change_by_sector`, 123 of 1,092 of `retrenched_by_industry`). `get_series` for a period outside the window returns `invalid_arguments` ("supported periods are 2020-Q1 to 2026-Q2"); a period inside the window with no row returns `not_found` ("no data for ... its rows run ... to ..."), so the tool never claims a figure that does not exist. The build still passes all 276 checks; one hierarchy check now skips parents whose own or child cells are '-' (the 2020 sheet has such cells under Other Services Industries), as the industry check already did.
+
+**Prompts.** The frozen prompt files are hash-pinned by the frozen experiments, so none was edited. New versioned files are served: `planner_v4` (550e97495ed0), `answer_v6` (5e0fbdc5a5bd), `triage_v2` (61695483ac77), `contextualise_v2` (41937a337572), each with a `_user` file; the replaced files and hashes are `planner_v1` (32c800c83425), `answer_v3` (9a9372faf52e), `triage_v1` (de176c25e4b6), `contextualise_v1` (1fdf71c2fcfc). The new answer prompt adds a rule: for 2020 to 2022 state statistics only, do not explain causes or describe context, and say in the caveats that no report commentary exists. `AgentConfig()` and `make_runner()` defaults still use the old files, so every frozen command reproduces; the served app selects the new ones (`agent/served.py`, `SHIPPED_PROMPTS`).
+
+**Disclosure (plain).** The evaluation gold covers 2024 to 2026. **Answers for 2020 to 2023 are unevaluated.** Every frozen result still says it was measured on the 2024-Q1 to 2026-Q2 window with the earlier prompts; none was edited or rerun, by the owner's decision. The five 2023 context cases (DEV-601 to 604, DEV-622) remain historical gold that expects abstention under D-031; the served system would now answer them from statistics. Tests that asserted 2024-Q1 as the boundary or abstention for 2023 were updated to the new boundary.
+
+**Reversibility:** set `ANSWER_SCOPE_START` back to `2024-Q1`, rerun `labourlens build`, `export`, `eda`, `build-report`, and serve the old prompt files.
+
+### D-078 - Shipped planner uses native function calling (OWNER DECISION / IMPLEMENTED, NOT RE-EVALUATED, 3 Nov 2026)
+
+**DECISION (owner):** the planner of the served agent now uses OpenAI native function calling instead of strict structured outputs (a JSON object with `decision`, `note` and `calls`).
+
+**Options.** (A) keep structured outputs, which is what every frozen result measured; (B) **native tool calling in the served path, structured planner kept behind a flag (chosen)**; (C) native calling and delete the structured planner. C was rejected because frozen experiment commands (`agent/experiments.py`, `served_exp.py`, the threat suite) import it and must stay reproducible; the flag is a handful of lines.
+
+**What changed.** `AgentConfig.planner_mode` is `"structured"` (default, the evaluated planner) or `"tools"`. In `"tools"` mode the planner request carries strict JSON-schema function definitions for `search_reports`, `get_series` and `calculate_change` (built from the same per-argument schemas as the structured planner, with the catalogue enums), `tool_choice="auto"` and `parallel_tool_calls=true`. A reply with no tool call is the finish decision. At most 3 calls per round are kept (extras are dropped and counted, and the assistant message in the transcript keeps only the calls that ran). Results return as `role: tool` messages with the matching `tool_call_id`, headed as untrusted tool output, containing the status line and the evidence lines the structured planner also saw: report passages by label, source and locator only, never passage text. **Bounds unchanged:** 2 rounds, 6 calls, 3 per round, 10 s per tool call, the 80 s run deadline, argument validation in the tools, one answer repair. The answer step (strict structured output plus deterministic validation), `ToolResult`, the trace shape, usage and audit shape are unchanged.
+
+**Provider behaviours handled.** Empty `tool_calls` is finish. Arguments that are not valid JSON, not an object, carry an unexpected key or a wrongly typed value become `invalid_arguments` tool errors; so does an unknown tool name (clipped to 64 characters in the trace) and a call identical to an earlier one in the run. Each still counts against the call budget, so a looping model is stopped by the existing bounds. Missing or repeated call ids are replaced so the transcript stays valid. A provider failure is an operational failure, as before. The earlier one-retry for malformed planner JSON does not exist in this mode. The OpenAI documentation says strict schemas can be violated when parallel tool calls are generated; the code does not rely on the schema.
+
+**Recorded:** `planner_mode` is in the run result, the `plan_research` trace detail, the audit record, the config key (`|planner_mode=tools`) and the provenance sampling block (`planner.mode`). The served app builds its config with `agent.served.shipped_config()` (`planner_v4`, `answer_v6`, models, retrieval r3 and tool set as evaluated).
+
+**Disclosure (plain).** The shipped planner has **not been re-evaluated**. All frozen results were measured with the structured-output planner; the owner decided not to rerun. Behaviour of the live agent may differ from the measured one in ways this repository does not quantify. The change was built with scripted models; the owner's live smoke run with keys followed (next paragraph).
+
+**Provider constraint found in the live smoke (3 Nov 2026).** The first live call returned HTTP 400: `gpt-6-luna` does not accept function tools on `/v1/chat/completions` while reasoning is on ("set reasoning_effort to 'none'"). The tools-mode planner therefore sends `reasoning_effort: none`. That is a second planner change beside the call mechanism: the structured planner ran at the provider default reasoning. A smoke after the fix (not an experiment, no scores) answered a 2021 versus 2022 unemployment question with one tool call and declined to explain 2020 causes. Wall time on three questions run once each: tools 29.8, 7.8 and 9.1 s; structured 53.1, 8.6 and 12.8 s. Whether accuracy changed is unmeasured.
+
+**Reversibility:** build the served config with `planner_mode="structured"`, `planner_v1`, `answer_v3`; nothing else changes.
+
+### D-079 - The workbench streams live run steps (OWNER DECISION / IMPLEMENTED, 3 Nov 2026)
+
+**DECISION (owner):** stream the run's progress to the browser. **Options:** (A) keep one JSON response; (B) stream model tokens (rejected: it would show text before validation); (C) **stream status events and send the validated answer once at the end (chosen)**.
+
+New `POST /api/ask/stream` (server-sent events) beside the unchanged `POST /api/ask`. It sends `status`, `tool` (started, finished) and `trace` events while the agent runs, then one `result` event whose data is exactly the `/api/ask` body, or one `error` event. The answer text appears only in `result`, after the deterministic validation; a failed validation yields the same abstention or fallback as before. Admission is shared code with `/api/ask`: session cookie, origin check, per-session and per-address rate limits, daily budget reservation, concurrency slot, 8 KiB body limit, CSP. Refusals are ordinary HTTP errors before the stream opens. A 10 s keepalive comment protects idle proxies; the request timeout still ends the stream with a 504 `error` event. The graph takes an optional `on_event` observer (default none; failures in it are swallowed), so frozen runs are unaffected.
+
+Client: `fetch` plus `ReadableStream` (EventSource cannot POST); live steps in the activity timeline; Stop aborts through `AbortController`; a failed run restores the question; `aria-live="polite"` on the status line; no `innerHTML`. It falls back to `/api/ask` when streaming is unsupported, the endpoint answers 404, 405 or 501, or the connection fails before the first event. A refusal (401, 422, 429, 503) is not retried.
+
+**Deployment.** The stream needs unbuffered proxying. `deploy/Caddyfile` now sets `flush_interval -1` and excludes `/api/ask/stream` from compression; the app sends `X-Accel-Buffering: no`; an nginx front end must set `proxy_buffering off` for this route. A proxy that buffers does not break the run, but the live steps arrive together at the end.
+
+**Verified:** scripted tests for event order, final payload equality, mid-stream failure, timeout, the shared gates and the browser behaviour (live steps before the answer, error restore, Stop, fallback); a local uvicorn run with a fake runner showed events arriving at their send times. **Not verified without keys:** a live stream with the real planner and models.
+
+**Reversibility:** the client falls back to `/api/ask`; deleting the route and the client function removes the feature.

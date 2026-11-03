@@ -11,7 +11,7 @@ export const wordCount = text => wordList(text).length;
 // Hand-written summaries for popovers whose first sentence is not the useful one. Matched on the start of the original text.
 // Each keeps the figure the slide is about; the original goes to the speaker notes.
 export const OVERRIDES = [
-  ['The statistics store covers 1980', 'The statistics store holds 4,300 in-scope rows for Q1 2024 to Q2 2026, and older history for context.'],
+  ['The statistics store covers 1980', 'The statistics store holds 11,228 in-scope rows for Q1 2020 to Q2 2026, and older history for context.'],
   ['Input: source, period range and dimension. Output: validated rows', 'You give a source, a period range and a dimension. It returns validated rows with their units and provenance.'],
   ['Input: a question and optional result limit', 'You give a question. The app searches the report index, filters by period and release, reranks and returns labelled chunks.'],
   ['Verified from the local current-build chunk', 'This chunk is from the Q1 2026 final report, pages 2 to 3: 216 words, nine source passages, one vector.'],
@@ -56,7 +56,7 @@ export const OVERRIDES = [
   ['Default graph limits: six total', 'Six tool calls over two evidence rounds, one retry and one repair. No SQL, shell or open browsing.'],
   ['Generation candidates share a provider family', 'Models share one provider family and use default sampling. Two runs do not show run-to-run variance.'],
   ['The assessment deadline is 4 November', 'The deadline is 4 November 2026, morning Singapore time. A provider-side spend cap was not verified.'],
-  ['The answer boundary is fixed', 'Answers cover Q1 2024 to Q2 2026. Requests that need an earlier period must abstain.'],
+  ['The answer boundary is fixed', 'Answers cover Q1 2020 to Q2 2026. Requests that need an earlier period must abstain. Only 2024 to 2026 was evaluated.'],
   ['The current data sheet records 36 statistical', 'The data sheet records 36 datasets and 49 documents. Observations and passages are stored separately with provenance.'],
   ['Keyword, dense and hybrid retrieval were compared', 'Three retrieval methods were compared. The agent uses report search, statistics lookup and exact calculation.'],
   ['Saved evaluation covers development', 'Evaluation covers development, original test and fresh questions, with known failures and rights limits.'],
@@ -73,7 +73,7 @@ export const OVERRIDES = [
   ['Why it did not work', 'The new tool failed two pre-declared rules and was not adopted. The measurements do not show why.'],
   ['The planner sees the question', 'The planner sees the question and catalogue, then picks from three fixed tools.'],
   ['Worked example: a flattened table', 'A flattened table loses its columns, so each value\u2019s quarter is unclear. A claim fails unless its quote is in the passage.'],
-  ['Worked example: a question before the period', 'Asked about 2023-Q4, the agent declines. The supported period is 2024-Q1 to 2026-Q2. An example, not a run.'],
+  ['Worked example: a question before the period', 'Asked about 2019-Q4, the agent declines. The supported period is 2020-Q1 to 2026-Q2. An example, not a run.'],
   ['no separate test of sensitive-data refusal', 'There is no separate test of refusing sensitive data. The refusal policy and absence of a personal-data tool apply to both arms.'],
   ['tests/test_security.py: 5 deterministic guard tests pass, covering input flags', 'Five guard tests pass. They check detection, not whether the model resists.'],
   ['No separate test of model obedience', 'There is no separate test of whether the model obeys passage instructions. Passage isolation stayed on.'],

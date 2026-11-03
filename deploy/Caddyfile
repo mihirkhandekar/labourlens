@@ -8,7 +8,9 @@
 }
 
 {$DOMAIN} {
-	encode zstd gzip
+	# Compression buffers a response. The run stream (server-sent events, D-079) must reach the browser event by event, so it is never compressed.
+	@not_stream not path /api/ask/stream
+	encode @not_stream zstd gzip
 
 	# The app caps request bodies at 8 KiB; refuse anything much larger before it reaches Python.
 	request_body {
@@ -43,6 +45,8 @@
 	}
 
 	reverse_proxy app:8000 {
+		# Send each chunk of a streamed response at once instead of buffering it (/api/ask/stream). -1 means flush immediately.
+		flush_interval -1
 		# Replace, never append: the client's own X-Forwarded-For is discarded and the TCP peer address Caddy sees is the
 		# only value the app receives. The app trusts this header only from Caddy's fixed address (172.30.0.2).
 		header_up X-Forwarded-For {remote_host}

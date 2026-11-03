@@ -1,6 +1,6 @@
 # LabourLens
 
-I built LabourLens for the GenAI Engineer take-home. Singapore labour-market research often means checking a statistics table against several report releases, then working out which definitions and figures belong together. LabourLens takes a question and returns an answer with citations to official statistics or MOM and MTI reports. It covers 2024-Q1 to 2026-Q2; the workbench shows the source evidence and tool calls behind each answer.
+I built LabourLens for the GenAI Engineer take-home. Singapore labour-market research often means checking a statistics table against several report releases, then working out which definitions and figures belong together. LabourLens takes a question and returns an answer with citations to official statistics or MOM and MTI reports. It answers for Q1 2020 to Q2 2026 (statistics cover the whole window; MOM report passages start in 2023); the workbench shows the source evidence and tool calls behind each answer.
 
 ## Result
 
@@ -9,6 +9,8 @@ The default model is `gpt-6-luna`. Averaged over two runs, filter then rerank sc
 Retrieval-only checks now cover both test sets: strict first-eight-passage hit@8 rose from hybrid .167 to .778 on 18 original-test text cases, and .500 to .941 on 34 fresh text cases, without a demonstrated end-to-end answer gain. On development questions, a fixed pipeline scored .814 against the bounded agent's .897 mean; one fixed run, missing arithmetic and other policy differences limit that comparison. A harder attack suite passed 50/54 guarded versus 42/54 naive (three repeats, case majority, exact p=.039), with 3/8 benign failures in each arm. [Retrieval results](docs/experiments/heldout-retrieval-metrics-results.md), [fixed-pipeline comparison](docs/experiments/agent-vs-fixed-pipeline-results.md), [threat results](docs/experiments/threat-v2-results.md).
 
 Neither Decisions API trial was adopted: [v1](docs/experiments/decisions-api-results.md) failed routing/verifier screens; [dev-tuned v2](docs/experiments/decisions-api-v2-results.md) was faster than contemporaneous chat but failed safety, quality and operational guards, including provider refusals on every tested serious-harm presentation. The live agent is unchanged.
+
+**Served system versus evaluated system.** Every figure above was measured on questions about 2024-Q1 to 2026-Q2, with the structured-output planner and the older prompts (`planner_v1`, `answer_v3`). The served app now answers for 2020-Q1 to 2026-Q2 (D-077), plans with native OpenAI function calling and newer prompts (D-078), and can stream its live steps (D-079). The evaluation gold covers 2024 to 2026 only, so answers about 2020 to 2023 are unevaluated, and the shipped planner and prompts were not re-evaluated; I decided not to rerun the experiments. See the [system card](docs/system-card.md#served-versus-evaluated).
 
 ## Quick start
 

@@ -51,10 +51,19 @@ def test_percentage_point_unit_for_rates_and_percent_change(shared):
 
 def test_get_series_enforces_scope_and_known_sources(shared):
     t = tl.Tools(shared)
-    assert t.get_series("retrenched_employees", "2023-Q4", "2026-Q2").error_kind == "invalid_arguments"
+    assert t.get_series("retrenched_employees", "2019-Q4", "2026-Q2").error_kind == "invalid_arguments"
     assert t.get_series("retrenched_employees", "2026-Q1", "2026-Q3").error_kind == "invalid_arguments"
     assert t.get_series("no_such_source", "2026-Q1", "2026-Q2").error_kind == "not_found"
     assert t.get_series("retrenched_employees", "Q1 2026", "2026-Q2").error_kind == "invalid_arguments"
+
+
+def test_window_opens_at_2020_and_a_period_without_rows_says_no_data(shared):
+    from labourlens.data import catalog
+
+    assert (catalog.ANSWER_SCOPE_START, catalog.ANSWER_SCOPE_END) == ("2020-Q1", "2026-Q2") and (tl.SCOPE_LO, tl.SCOPE_HI) == ("2020-Q1", "2026-Q2")
+    assert catalog.scope_words() == "Q1 2020 to Q2 2026" and catalog.EVALUATED_WINDOW == ("2024-Q1", "2026-Q2")
+    r = tl.Tools(shared).get_series("retrenched_employees", "2020-Q1", "2020-Q4")  # inside the window, but this fixture series starts in 2026
+    assert r.error_kind == "not_found" and "no data for 2020-Q1 to 2020-Q4" in r.message and "2026-Q1 to 2026-Q2" in r.message
 
 
 def test_missing_value_is_never_shown_as_zero():

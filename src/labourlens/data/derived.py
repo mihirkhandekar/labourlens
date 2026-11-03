@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import pandas as pd
 
+from labourlens.data import catalog
 from labourlens.models import stable_id
 
 
@@ -63,7 +64,7 @@ def compute(obs: pd.DataFrame) -> dict:
     table = table.sort_values(["indicator_id", "period"], kind="stable").reset_index(drop=True)
 
     def scope(df: pd.DataFrame) -> pd.DataFrame:
-        return df[(df.period >= "2024-Q1") & (df.period <= "2026-Q2")]
+        return df[(df.period >= catalog.ANSWER_SCOPE_START) & (df.period <= catalog.ANSWER_SCOPE_END)]
 
     summary = {}
     for ind in ("retrenchment_components_minus_total", "vacancy_to_unemployed_ratio_recomputed"):

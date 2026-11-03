@@ -16,6 +16,7 @@ import matplotlib.pyplot as plt
 import pandas as pd
 
 from labourlens import paths
+from labourlens.data import catalog
 
 INK, MUTED, GRID = "#1f2933", "#6b7785", "#e4e7eb"
 C_A, C_B, C_C = "#1f6feb", "#d1495b", "#2a9d8f"  # blue=unemployment/final, red=retrenchment/risk, teal=vacancy/dataset
@@ -51,8 +52,9 @@ def fig_vacancy_vs_unemployment(obs: pd.DataFrame, out) -> dict:
     fig, ax = plt.subplots(figsize=(9, 4.2))
     ax.plot(ratio.period.map(_q), ratio.value, color=C_C, lw=2)
     ax.set_xlim(2019, 2026.5)
-    ax.axvspan(2024, 2026.5, color="#f1f5f9", zorder=0)
-    ax.text(2024.05, ax.get_ylim()[1] * 0.97, "answer scope 2024-Q1 to 2026-Q2", fontsize=8, color=MUTED, va="top")
+    scope_start = _q(catalog.ANSWER_SCOPE_START)
+    ax.axvspan(scope_start, 2026.5, color="#f1f5f9", zorder=0)
+    ax.text(scope_start + 0.05, ax.get_ylim()[1] * 0.97, f"answer scope {catalog.ANSWER_SCOPE_START} to {catalog.ANSWER_SCOPE_END}", fontsize=8, color=MUTED, va="top")
     _style(ax, "Vacancies per unemployed person have eased from their 2022 peak", "ratio (vacancies per unemployed person, SA)")
     ax2 = ax.twinx()
     ax2.plot(ur.period.map(_q), ur.value, color=C_A, lw=2, ls="--")
@@ -70,18 +72,18 @@ def fig_vacancy_vs_unemployment(obs: pd.DataFrame, out) -> dict:
     peak = ratio.loc[ratio.value.idxmax()]
     last = ratio.iloc[-1]
     return {"ratio_peak_period": peak.period, "ratio_peak": float(peak.value), "ratio_last_period": last.period,
-            "ratio_last": float(last.value), "ur_last": float(ur.iloc[-1].value), "ur_scope_min": float(ur[ur.period >= "2024-Q1"].value.min()),
-            "ur_scope_max": float(ur[ur.period >= "2024-Q1"].value.max())}
+            "ratio_last": float(last.value), "ur_last": float(ur.iloc[-1].value), "ur_scope_min": float(ur[ur.period >= catalog.ANSWER_SCOPE_START].value.min()),
+            "ur_scope_max": float(ur[ur.period >= catalog.ANSWER_SCOPE_START].value.max())}
 
 
 def fig_retrenchment(obs: pd.DataFrame, out) -> dict:
     tot = _series(obs, source_id="retrenched_employees")
-    tot = tot[(tot.period >= "2024-Q1") & (tot.period <= "2026-Q2")]
+    tot = tot[(tot.period >= catalog.ANSWER_SCOPE_START) & (tot.period <= catalog.ANSWER_SCOPE_END)]
     ind = obs[(obs.source_id == "retrenched_by_industry") & (obs.in_answer_scope) & (obs.sector_level == 1)]
     fig, (a, b) = plt.subplots(1, 2, figsize=(11, 4.2), gridspec_kw={"width_ratios": [1.1, 1]})
     a.bar(tot.period, tot.value, color=[C_B if p == "2026-Q2" else "#e9a3ac" for p in tot.period])
     for x, v in zip(tot.period, tot.value):
-        a.text(x, v + 40, f"{int(v):,}", ha="center", fontsize=7.5, color=INK)
+        a.text(x, v + 40, f"{int(v):,}", ha="center", fontsize=5.5, rotation=90, va="bottom", color=INK)
     a.tick_params(axis="x", rotation=60)
     _style(a, "Retrenchments rose in 2026-Q2", "retrenched employees (persons)")
     pivot = ind.pivot_table(index="period", columns="dimension", values="value", aggfunc="first")
@@ -144,7 +146,7 @@ def run() -> None:
         "",
         f"1. **Vacancy-to-unemployed ratio** peaked at {f1['ratio_peak']:.2f} in {f1['ratio_peak_period']} (since 2019) and stood at "
         f"{f1['ratio_last']:.2f} in {f1['ratio_last_period']}, while the resident unemployment rate (SA) stayed between "
-        f"{f1['ur_scope_min']:.1f}% and {f1['ur_scope_max']:.1f}% across 2024-Q1 to 2026-Q2 (latest {f1['ur_last']:.1f}%). "
+        f"{f1['ur_scope_min']:.1f}% and {f1['ur_scope_max']:.1f}% across {catalog.ANSWER_SCOPE_START} to {catalog.ANSWER_SCOPE_END} (latest {f1['ur_last']:.1f}%). "
         "Figure: `artifacts/figures/fig1_vacancy_vs_unemployment.png`. The ratio is vacancies per unemployed person, not a percentage.",
         f"2. **Retrenchments** rose from {f2['prev']:,.0f} ({f2['prev_period']}) to {f2['last']:,.0f} ({f2['last_period']}), "
         f"{f2['pct_change']:+.1f}%; services were {f2['services_share_last']:.0f}% of the latest quarter's top-level industry total. "

@@ -111,7 +111,7 @@ def _fast_result(question: str, shared, audit: dict | None, save_trace: bool, in
     trace = [{"t": round(time.time(), 3), "node": "validate_question", "event": EVENTS[route], "detail": detail},
              {"t": round(time.time(), 3), "node": "finalize", "event": outcome, "detail": {}}]
     run_id = uuid.uuid4().hex[:12]
-    res = {"run_id": run_id, "question": question, "config": CONFIG, "outcome": outcome, "answer": answer_for(route, info["reply"]), "errors": [],
+    res = {"run_id": run_id, "question": question, "config": f"scope_triage|{info['prompt']}|{info['model']}", "outcome": outcome, "answer": answer_for(route, info["reply"]), "errors": [],
            "rounds": 0, "tool_calls": 0, "crosscheck_enabled": False, "evidence": [], "evidence_text": {}, "cited_ids": [],
            "usage": dict(info["usage"]), "trace": trace, "seconds": info["seconds"],
            "corpus": shared.corpus if isinstance(getattr(shared, "corpus", None), dict) else None}

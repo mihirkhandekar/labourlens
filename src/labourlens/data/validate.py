@@ -16,7 +16,7 @@ from labourlens import paths
 from labourlens.data import catalog, raw_store
 from labourlens.models import sha256_hex
 
-SCOPE_LO, SCOPE_HI = "2024-Q1", "2026-Q2"
+SCOPE_LO, SCOPE_HI = catalog.ANSWER_SCOPE_START, catalog.ANSWER_SCOPE_END
 
 
 def _check(name: str, ok: bool, detail: str, *, warn: bool = False) -> dict[str, Any]:
@@ -128,13 +128,18 @@ def check_hierarchies(obs: pd.DataFrame) -> list[dict]:
     # Sector table: children should sum to the parent within rounding (source rounds to 100 persons).
     spec = catalog.adapter_spec("employment_change_by_sector")
     tol_child = spec["sum_tolerance_per_child"]
-    s = obs[(obs.source_id == "employment_change_by_sector") & obs.in_answer_scope & obs.value.notna()]
-    worst, n_checked, over = 0.0, 0, []
+    # Cells the publisher prints as '-' are missing, not zero: a parent whose own or any child's cell is missing has an indeterminate sum
+    # and is skipped and counted (as in the industry check below). The 2020 sheet has such cells under Other Services Industries.
+    s = obs[(obs.source_id == "employment_change_by_sector") & obs.in_answer_scope]
+    worst, n_checked, skipped, over = 0.0, 0, 0, []
     for period, g in s.groupby("period"):
         by_path = g.set_index("sector_path").value
         for path in by_path.index:
             kids = [p for p in by_path.index if p.startswith(path + " > ") and p.count(" > ") == path.count(" > ") + 1]
             if not kids:
+                continue
+            if by_path[path] != by_path[path] or by_path[kids].isna().any():
+                skipped += 1
                 continue
             diff = abs(by_path[path] - by_path[kids].sum())
             n_checked += 1
@@ -142,7 +147,7 @@ def check_hierarchies(obs: pd.DataFrame) -> list[dict]:
             if diff > tol_child * len(kids):
                 over.append((period, path, float(diff)))
     out.append(_check("sector.children_sum_to_parent_within_rounding", not over,
-                      f"checked={n_checked} parent/period pairs, max_abs_diff={worst:.0f} persons, tolerance={tol_child}/child, exceeded={over[:3]}"))
+                      f"checked={n_checked} parent/period pairs, skipped_due_to_dash_cells={skipped}, max_abs_diff={worst:.0f} persons, tolerance={tol_child}/child, exceeded={over[:3]}"))
     # Industry table: children sum to parent; '-' cells make some sums indeterminate, those are skipped and counted.
     r = obs[(obs.source_id == "retrenched_by_industry") & obs.in_answer_scope]
     spec2 = catalog.adapter_spec("retrenched_by_industry")

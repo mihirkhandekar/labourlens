@@ -161,6 +161,8 @@ Caddy sends HSTS (`max-age=31536000`), `Cross-Origin-Opener-Policy`, `Cross-Orig
 
 The server logs its explicit trusted-proxy setting without secrets. Regression coverage for ignored untrusted forwarding, trusted HTTPS forwarding and the cookie's `Secure` flag is in `tests/web/test_deploy_edge.py` and `tests/web/test_security_fixes.py`; this documentation update did not run it. Caddy's HSTS is the deployed transport policy, not an app-level Host allow-list. Never expose the app port directly or broaden proxy trust to arbitrary peers.
 
+**Streaming route and proxy buffering (D-079).** `POST /api/ask/stream` sends server-sent events, so a proxy must pass each event on as it arrives. `deploy/Caddyfile` sets `flush_interval -1` and does not compress that route, and the app sends `X-Accel-Buffering: no`. Any other proxy, for example nginx, must not buffer it (`proxy_buffering off`); otherwise the live steps arrive all at once at the end, and the answer is unaffected. The app also writes a keepalive comment every 10 s. The workbench falls back to the plain `/api/ask` route if streaming fails before the first event.
+
 ## 9. Verify a deployment
 
 On the Droplet and from your machine:

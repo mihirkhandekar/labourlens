@@ -1,6 +1,6 @@
 # LabourLens data sheet
 
-Corpus: **v3.1** (the current build, `extract-0.3`; identical to v3 in sources, observations and passage count) (manifest generated **2026-10-31T05:38:08+00:00**; rights fields of three dataset entries amended afterwards, see section 7). Analysis window: **2024-Q1 to 2026-Q2** (answer scope). Earlier history is context only, not an answerable earlier subject period. All counts below are read from `data/manifests/manifest.json`, `data/processed/observations.parquet`, `data/passages/*.jsonl` and `artifacts/data-quality/validation.json`; nothing is estimated.
+Corpus: **v3.1** (the current build, `extract-0.3`; identical to v3 in sources, observations and passage count) (manifest generated **2026-10-31T05:38:08+00:00**; rights fields of three dataset entries amended afterwards, see section 7; the processed observations and exports were rebuilt on 3 Nov 2026 for the wider answer scope). Analysis window: **2020-Q1 to 2026-Q2** (answer scope, D-077; it was 2024-Q1 to 2026-Q2 until 3 Nov 2026, and all evaluation results were measured on that earlier window). Periods outside the window are not answerable. **No report text exists for 2020 to 2022:** the earliest report passage source was published on 2023-06-15 (the four 2023 quarterly reports), so statistics cover the whole window while report commentary starts in 2023. All counts below are read from `data/manifests/manifest.json`, `data/processed/observations.parquet`, `data/passages/*.jsonl` and `artifacts/data-quality/validation.json`; nothing is estimated.
 
 **Attribution.** Contains information from data.gov.sg datasets published by the Ministry of Manpower and the Singapore Department of Statistics, accessed 2026-10-30 and 2026-10-31, made available under the [Singapore Open Data Licence v1.0](https://developers.data.gov.sg/open-data-licence) where that licence applies (see the rights column). Not endorsed by any agency. MOM and MTI reports and releases are cited and linked, not redistributed.
 
@@ -8,7 +8,7 @@ Corpus: **v3.1** (the current build, `extract-0.3`; identical to v3 in sources, 
 | | |
 |---|---|
 | Sources | **85**: 36 statistical datasets and 49 documents |
-| Statistical datasets | 36 (4 core, 32 supporting), **52,020** normalised observations, **4,300** in answer scope, 0 quarantined rows |
+| Statistical datasets | 36 (4 core, 32 supporting), **52,020** normalised observations, **11,228** in answer scope (2020-Q1 to 2026-Q2; 4,300 under the earlier 2024-Q1 to 2026-Q2 window), 0 quarantined rows |
 | Documents | 49: 27 PDFs and 22 HTML releases; **16,419** extracted passages in 49 files (`extract-0.3`, corpus v3.1; v3 was `extract-0.2`) |
 | Passage quality flags | 9,052 `ok`, 7,121 `table_unreliable`, 246 `garbled` (all control-character); corpus v3 had 9,040 / 7,093 / 286, the 40 extra `garbled` being symbol-ratio false positives fixed in v3.1 (section 5) |
 | Rights | 33 datasets `verified_open_licence`; **3 datasets `assumed_open_unverified`** (local-only); 26 PDFs `verified_all_rights_reserved`; 23 documents `unresolved` (22 HTML releases and the MTI feature PDF) |
@@ -32,43 +32,45 @@ Core datasets (scope decision record) are the first four rows. Supporting indust
 
 | Source id | Observations | In scope | Coverage | SHA-256 (first 10) | Rights (manifest) |
 |---|---|---|---|---|---|
-| `resident_unemployment_rate` | 276 | 20 | 1992-Q1 to 2026-Q2 | f3be9ef6e2 | open licence (ODL), verified |
-| `vacancy_to_unemployed_ratio` | 114 | 10 | 1998-Q1 to 2026-Q2 | a6767d98d9 | open licence (ODL), verified |
-| `retrenched_employees` | 114 | 10 | 1998-Q1 to 2026-Q2 | 783e51acc3 | open licence (ODL), verified |
-| `employment_change_by_sector` | 3,692 | 260 | 1991-Q1 to 2026-Q2 | 8a5f067e69 | open licence (ODL), verified |
-| `avg_weekly_paid_hours_quarterly` | 114 | 10 | 1998-Q1 to 2026-Q2 | 6efbf95d8d | ODL **assumed, not verified**; local-only |
-| `citizen_unemployment_rate` | 276 | 20 | 1992-Q1 to 2026-Q2 | 56cfa6f25b | open licence (ODL), verified |
-| `job_vacancies_by_industry` | 4,700 | 420 | 1998-Q1 to 2026-Q2 | d1097e7ba3 | open licence (ODL), verified |
-| `job_vacancies_by_occupation` | 450 | 50 | 1998-Q1 to 2026-Q2 | 7ce7b94317 | open licence (ODL), verified |
-| `job_vacancy_count` | 114 | 10 | 1998-Q1 to 2026-Q2 | fb712c4849 | open licence (ODL), verified |
-| `job_vacancy_rate` | 114 | 10 | 1998-Q1 to 2026-Q2 | 26c128e2e0 | open licence (ODL), verified |
-| `job_vacancy_rate_by_industry` | 4,700 | 420 | 1998-Q1 to 2026-Q2 | 2eb9ffdce1 | open licence (ODL), verified |
-| `job_vacancy_rate_by_occupation` | 450 | 50 | 1998-Q1 to 2026-Q2 | cffa55da17 | open licence (ODL), verified |
-| `overall_unemployment_rate` | 276 | 20 | 1992-Q1 to 2026-Q2 | 73166a2b08 | open licence (ODL), verified |
-| `recruitment_rate` | 114 | 10 | 1998-Q1 to 2026-Q2 | 2094a9dede | open licence (ODL), verified |
-| `recruitment_rate_by_industry` | 4,700 | 420 | 1998-Q1 to 2026-Q2 | 99efe67f00 | open licence (ODL), verified |
-| `recruitment_rate_by_occupation` | 342 | 30 | 1998-Q1 to 2026-Q2 | 2068a1fd41 | open licence (ODL), verified |
-| `reentry_12m` | 106 | 10 | 2000-Q1 to 2026-Q2 | 21ad7b0081 | open licence (ODL), verified |
-| `reentry_6m` | 106 | 10 | 2000-Q1 to 2026-Q2 | afc5f10982 | open licence (ODL), verified |
-| `resignation_rate` | 114 | 10 | 1998-Q1 to 2026-Q2 | 1b2ab310fb | open licence (ODL), verified |
-| `resignation_rate_by_industry` | 4,700 | 420 | 1998-Q1 to 2026-Q2 | 7b2e8dfe7c | open licence (ODL), verified |
-| `resignation_rate_by_occupation` | 342 | 30 | 1998-Q1 to 2026-Q2 | 35e9bfd3e0 | open licence (ODL), verified |
-| `retrenched_by_industry` | 4,700 | 420 | 1998-Q1 to 2026-Q2 | 9ac82750b7 | open licence (ODL), verified |
-| `retrenched_by_occupation` | 342 | 30 | 1998-Q1 to 2026-Q2 | 2372ea3b98 | open licence (ODL), verified |
-| `retrenched_permanent` | 114 | 10 | 1998-Q1 to 2026-Q2 | 07915e05ce | open licence (ODL), verified |
-| `retrenched_permanent_by_industry` | 4,700 | 420 | 1998-Q1 to 2026-Q2 | fb1671f718 | open licence (ODL), verified |
-| `retrenched_permanent_by_occupation` | 342 | 30 | 1998-Q1 to 2026-Q2 | ac6b96b757 | open licence (ODL), verified |
-| `retrenched_term_contract` | 114 | 10 | 1998-Q1 to 2026-Q2 | fa2de87c36 | open licence (ODL), verified |
-| `retrenched_term_contract_by_industry` | 4,700 | 420 | 1998-Q1 to 2026-Q2 | 39ebe96980 | open licence (ODL), verified |
-| `retrenched_term_contract_by_occupation` | 342 | 30 | 1998-Q1 to 2026-Q2 | 7156b1b6f4 | open licence (ODL), verified |
-| `short_workweek_temporary_layoff` | 336 | 24 | 1998-Q1 to 2025-Q4 | 0f959d8327 | open licence (ODL), verified |
-| `short_workweek_temporary_layoff_by_industry` | 1,344 | 96 | 1998-Q1 to 2025-Q4 | caff893ccd | open licence (ODL), verified |
-| `unemployed_citizens` | 276 | 20 | 1992-Q1 to 2026-Q2 | b5a0ca2544 | open licence (ODL), verified |
-| `unemployed_overall` | 276 | 20 | 1992-Q1 to 2026-Q2 | e7eb43e553 | open licence (ODL), verified |
-| `unemployed_residents` | 276 | 20 | 1992-Q1 to 2026-Q2 | 04c58b53fe | open licence (ODL), verified |
-| `unit_labour_cost_index_quarterly` | 4,836 | 260 | 1980-Q1 to 2026-Q2 | d6a9eae1cf | ODL **assumed, not verified**; local-only |
-| `value_added_per_worker_quarterly` | 3,408 | 240 | 1991-Q1 to 2026-Q2 | 5a108683ed | ODL **assumed, not verified**; local-only |
-| **Total (36)** | **52,020** | **4,300** | | | |
+| `resident_unemployment_rate` | 276 | 52 | 1992-Q1 to 2026-Q2 | f3be9ef6e2 | open licence (ODL), verified |
+| `vacancy_to_unemployed_ratio` | 114 | 26 | 1998-Q1 to 2026-Q2 | a6767d98d9 | open licence (ODL), verified |
+| `retrenched_employees` | 114 | 26 | 1998-Q1 to 2026-Q2 | 783e51acc3 | open licence (ODL), verified |
+| `employment_change_by_sector` | 3,692 | 676 | 1991-Q1 to 2026-Q2 | 8a5f067e69 | open licence (ODL), verified |
+| `avg_weekly_paid_hours_quarterly` | 114 | 26 | 1998-Q1 to 2026-Q2 | 6efbf95d8d | ODL **assumed, not verified**; local-only |
+| `citizen_unemployment_rate` | 276 | 52 | 1992-Q1 to 2026-Q2 | 56cfa6f25b | open licence (ODL), verified |
+| `job_vacancies_by_industry` | 4,700 | 1,092 | 1998-Q1 to 2026-Q2 | d1097e7ba3 | open licence (ODL), verified |
+| `job_vacancies_by_occupation` | 450 | 130 | 1998-Q1 to 2026-Q2 | 7ce7b94317 | open licence (ODL), verified |
+| `job_vacancy_count` | 114 | 26 | 1998-Q1 to 2026-Q2 | fb712c4849 | open licence (ODL), verified |
+| `job_vacancy_rate` | 114 | 26 | 1998-Q1 to 2026-Q2 | 26c128e2e0 | open licence (ODL), verified |
+| `job_vacancy_rate_by_industry` | 4,700 | 1,092 | 1998-Q1 to 2026-Q2 | 2eb9ffdce1 | open licence (ODL), verified |
+| `job_vacancy_rate_by_occupation` | 450 | 130 | 1998-Q1 to 2026-Q2 | cffa55da17 | open licence (ODL), verified |
+| `overall_unemployment_rate` | 276 | 52 | 1992-Q1 to 2026-Q2 | 73166a2b08 | open licence (ODL), verified |
+| `recruitment_rate` | 114 | 26 | 1998-Q1 to 2026-Q2 | 2094a9dede | open licence (ODL), verified |
+| `recruitment_rate_by_industry` | 4,700 | 1,092 | 1998-Q1 to 2026-Q2 | 99efe67f00 | open licence (ODL), verified |
+| `recruitment_rate_by_occupation` | 342 | 78 | 1998-Q1 to 2026-Q2 | 2068a1fd41 | open licence (ODL), verified |
+| `reentry_12m` | 106 | 26 | 2000-Q1 to 2026-Q2 | 21ad7b0081 | open licence (ODL), verified |
+| `reentry_6m` | 106 | 26 | 2000-Q1 to 2026-Q2 | afc5f10982 | open licence (ODL), verified |
+| `resignation_rate` | 114 | 26 | 1998-Q1 to 2026-Q2 | 1b2ab310fb | open licence (ODL), verified |
+| `resignation_rate_by_industry` | 4,700 | 1,092 | 1998-Q1 to 2026-Q2 | 7b2e8dfe7c | open licence (ODL), verified |
+| `resignation_rate_by_occupation` | 342 | 78 | 1998-Q1 to 2026-Q2 | 35e9bfd3e0 | open licence (ODL), verified |
+| `retrenched_by_industry` | 4,700 | 1,092 | 1998-Q1 to 2026-Q2 | 9ac82750b7 | open licence (ODL), verified |
+| `retrenched_by_occupation` | 342 | 78 | 1998-Q1 to 2026-Q2 | 2372ea3b98 | open licence (ODL), verified |
+| `retrenched_permanent` | 114 | 26 | 1998-Q1 to 2026-Q2 | 07915e05ce | open licence (ODL), verified |
+| `retrenched_permanent_by_industry` | 4,700 | 1,092 | 1998-Q1 to 2026-Q2 | fb1671f718 | open licence (ODL), verified |
+| `retrenched_permanent_by_occupation` | 342 | 78 | 1998-Q1 to 2026-Q2 | ac6b96b757 | open licence (ODL), verified |
+| `retrenched_term_contract` | 114 | 26 | 1998-Q1 to 2026-Q2 | fa2de87c36 | open licence (ODL), verified |
+| `retrenched_term_contract_by_industry` | 4,700 | 1,092 | 1998-Q1 to 2026-Q2 | 39ebe96980 | open licence (ODL), verified |
+| `retrenched_term_contract_by_occupation` | 342 | 78 | 1998-Q1 to 2026-Q2 | 7156b1b6f4 | open licence (ODL), verified |
+| `short_workweek_temporary_layoff` | 336 | 72 | 1998-Q1 to 2025-Q4 | 0f959d8327 | open licence (ODL), verified |
+| `short_workweek_temporary_layoff_by_industry` | 1,344 | 288 | 1998-Q1 to 2025-Q4 | caff893ccd | open licence (ODL), verified |
+| `unemployed_citizens` | 276 | 52 | 1992-Q1 to 2026-Q2 | b5a0ca2544 | open licence (ODL), verified |
+| `unemployed_overall` | 276 | 52 | 1992-Q1 to 2026-Q2 | e7eb43e553 | open licence (ODL), verified |
+| `unemployed_residents` | 276 | 52 | 1992-Q1 to 2026-Q2 | 04c58b53fe | open licence (ODL), verified |
+| `unit_labour_cost_index_quarterly` | 4,836 | 676 | 1980-Q1 to 2026-Q2 | d6a9eae1cf | ODL **assumed, not verified**; local-only |
+| `value_added_per_worker_quarterly` | 3,408 | 624 | 1991-Q1 to 2026-Q2 | 5a108683ed | ODL **assumed, not verified**; local-only |
+| **Total (36)** | **52,020** | **11,228** | | | |
+
+The "In scope" column counts rows with the answer-scope flag under the window now served, 2020-Q1 to 2026-Q2 (D-077, 3 Nov 2026); under the earlier 2024-Q1 to 2026-Q2 window the total was 4,300 and every earlier measured result used that window. **Coverage statement:** all 36 datasets have rows from 2020-Q1; 34 run to 2026-Q2, and the two short-workweek datasets end at 2025-Q4 (declared in their specs). Some in-window cells are publisher `-` markers, kept as missing and never zero (for example 32 of 676 in-scope `employment_change_by_sector` cells and 123 of 1,092 in-scope `retrenched_by_industry` cells).
 
 **What "verified" means here.** The manifest note on every dataset says the Open Data Licence text was read at the licence URL on 2026-10-30 and that the data.gov.sg metadata API exposes no per-dataset licence field, so the dataset-level licence label was not independently read from the script-rendered dataset page. `verified_open_licence` therefore means the licence text was read and the dataset was accepted under the raw-data decision, not that each page was checked. The three corpus-v3 datasets carry an additional caveat (licence assumed from the same platform) and are recorded `assumed_open_unverified` with `redistribution_policy: local_only`. The `fetch` code now derives the status from what was checked: a dataset is `verified_open_licence` only if its spec records `licence_verified_on` or its existing manifest entry was already verified; otherwise it is `assumed_open_unverified` and its raw CSV is stored under `data/raw/` rather than the committed `data/snapshots/`.
 
@@ -125,7 +127,7 @@ Every source has a manifest entry: original URL, publisher, title, publication a
 | Trade-union and arbitration datasets | Outside the selected analytical domain, so not selected. |
 | MTI GDP advance releases and Economic Survey GDP pairs | The owner selected labour-specific evidence instead; GDP revision pairs were not added. See the corpus-v3 decision and [source specification](../specs/sources.d/heldout-v2-expansion.yaml). The selected MTI employment feature article is a separate included source. |
 | `table_unreliable` and `garbled` passages | Retained with provenance in the local passage store but excluded from default retrieval chunks. Figures for calculation must come from validated observations, not guessed PDF tables. |
-| Answer figures outside 2024-Q1 through 2026-Q2 | Stored historical rows and earlier reports can supply context, but cannot extend the answer period. A comparison needing an out-of-scope endpoint must abstain. |
+| Answer figures outside 2020-Q1 through 2026-Q2 | Stored rows before 2020-Q1 and earlier reports can supply context, but cannot extend the answer period (until 3 Nov 2026 the window was 2024-Q1 to 2026-Q2). A comparison needing an out-of-scope endpoint must abstain. For 2020 to 2022 only statistics exist; there is no report commentary. |
 | Restricted reports and documents with unresolved rights | Original documents, extracted text and indexes stay local and are excluded from public packaging, not silently removed from the author's research corpus. Rights uncertainty is not permission to redistribute. |
 | Retrenchments per 1,000 employees and imputed values | No verified denominator supports that derived indicator; missing and suppressed cells are never replaced with invented values. |
 

@@ -16,7 +16,7 @@
    "status": "pass"
   },
   {
-   "detail": "mismatches: []",
+   "detail": "mismatches: []; local-only, not present (not checked): []",
    "name": "manifest.raw_files_match_sha256",
    "status": "pass"
   },
@@ -31,32 +31,37 @@
    "status": "warn"
   },
   {
-   "detail": "47 of 420 in-scope cells have no published number (reasons: {'dash_marker_publisher_does_not_define_nil_vs_suppressed': np.int64(47)})",
+   "detail": "32 of 676 in-scope cells have no published number (reasons: {\"source_token:'-'\": np.int64(32)})",
+   "name": "dataset.employment_change_by_sector.in_scope_values_present",
+   "status": "warn"
+  },
+  {
+   "detail": "123 of 1092 in-scope cells have no published number (reasons: {'dash_marker_publisher_does_not_define_nil_vs_suppressed': np.int64(123)})",
    "name": "dataset.retrenched_by_industry.in_scope_values_present",
    "status": "warn"
   },
   {
-   "detail": "50 of 420 in-scope cells have no published number (reasons: {'dash_marker_publisher_does_not_define_nil_vs_suppressed': np.int64(50)})",
+   "detail": "141 of 1092 in-scope cells have no published number (reasons: {'dash_marker_publisher_does_not_define_nil_vs_suppressed': np.int64(141)})",
    "name": "dataset.retrenched_permanent_by_industry.in_scope_values_present",
    "status": "warn"
   },
   {
-   "detail": "288 of 420 in-scope cells have no published number (reasons: {'dash_marker_publisher_does_not_define_nil_vs_suppressed': np.int64(288)})",
+   "detail": "725 of 1092 in-scope cells have no published number (reasons: {'dash_marker_publisher_does_not_define_nil_vs_suppressed': np.int64(725)})",
    "name": "dataset.retrenched_term_contract_by_industry.in_scope_values_present",
    "status": "warn"
   },
   {
-   "detail": "3 of 30 in-scope cells have no published number (reasons: {'dash_marker_publisher_does_not_define_nil_vs_suppressed': np.int64(3)})",
+   "detail": "5 of 78 in-scope cells have no published number (reasons: {'dash_marker_publisher_does_not_define_nil_vs_suppressed': np.int64(5)})",
    "name": "dataset.retrenched_term_contract_by_occupation.in_scope_values_present",
    "status": "warn"
   },
   {
-   "detail": "28 of 96 in-scope cells have no published number (reasons: {'dash_marker_publisher_does_not_define_nil_vs_suppressed': np.int64(28)})",
+   "detail": "72 of 288 in-scope cells have no published number (reasons: {'dash_marker_publisher_does_not_define_nil_vs_suppressed': np.int64(72)})",
    "name": "dataset.short_workweek_temporary_layoff_by_industry.in_scope_values_present",
    "status": "warn"
   },
   {
-   "detail": "in-scope quarters=10, max abs diff=0.6651, mean=0.5956000000000001 (different surveys; a gap is expected, a large one would signal a definition problem)",
+   "detail": "in-scope quarters=26, max abs diff=0.9623, mean=0.6136538461538461 (different surveys; a gap is expected, a large one would signal a definition problem)",
    "name": "derived.vacancy_ratio_recomputed_vs_published",
    "status": "warn"
   },
@@ -83,7 +88,7 @@
  ],
  "schema_version": "export-0.1",
  "summary": {
-  "pass": 269,
-  "warn": 7
+  "pass": 268,
+  "warn": 8
  }
 }

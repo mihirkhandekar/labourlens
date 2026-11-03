@@ -30,7 +30,7 @@ export function model(report) {
     generatedAt: report?.generated_at || null,
     commit: report?.provenance?.commit || null,
     artifactCount: Array.isArray(report?.provenance?.artifacts) ? report.provenance.artifacts.length : null,
-    scope: report?.summary?.scope || ['2024-Q1', '2026-Q2'],
+    scope: report?.summary?.scope || ['2020-Q1', '2026-Q2'],
     cards: Array.isArray(report?.summary?.cards) ? report.summary.cards : [],
     evalRow: (experiment, name) => find('evaluation', `experiments/eval/agent-${experiment}/${name}`),
     heldRow: (retriever, name) => find('evaluation', `experiments/eval/agent-heldout-H-${retriever}/${name}`),

@@ -51,7 +51,7 @@ def test_mcp_result_equals_direct_query():
 @pytest.mark.parametrize("bad,kind", [
     (dict(ARGS, source_id="nope"), "invalid_arguments"),            # enum: caught by the client's schema check
     (dict(ARGS, period_from="Q1 2026"), "invalid_arguments"),       # pattern
-    (dict(ARGS, period_from="2023-Q1"), "invalid_arguments"),       # out of scope: caught by the server
+    (dict(ARGS, period_from="2019-Q4"), "invalid_arguments"),       # out of scope (D-077: the window opens at 2020-Q1): caught by the server
     (dict(source_id="retrenched_by_industry", period_from="2026-Q1", period_to="2026-Q2"), "too_large"),
     (dict(ARGS, dimension="x" * 500), "invalid_arguments"),         # max_length
 ])
@@ -144,7 +144,7 @@ def test_sync_backend_drives_agent_get_series_through_mcp_and_maps_errors():
         t = Tools(sh)
         r = t.get_series(**ARGS)
         assert r.ok and len(r.items) == 2 and len(backend.calls) == 1
-        assert t.get_series("retrenched_employees", "2023-Q1", "2026-Q2").error_kind == "invalid_arguments"
+        assert t.get_series("retrenched_employees", "2019-Q4", "2026-Q2").error_kind == "invalid_arguments"
         assert t.get_series("retrenched_by_industry", "2026-Q1", "2026-Q2").error_kind == "too_large"
     finally:
         backend.close()

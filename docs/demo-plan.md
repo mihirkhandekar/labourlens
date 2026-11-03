@@ -4,6 +4,8 @@ Show `/deck` and `/workbench` (access code required). Use slide titles, not numb
 
 The deck has 29 main slides and 44 including its appendix. Assumptions, constraints and implemented scope follow My project as slide 4. Evaluation design and review precede the complete-system answer comparison; the calculation limitation and rejected repair share one slide. The planted-figure example is covered by the attack table and notes. Titles below are stable navigation references; the failure-modes and model-choice slides are now 12 and 17, and the appendix index starts at 30.
 
+**Current served setup (3 Nov 2026).** The workbench now answers for 2020-Q1 to 2026-Q2 (D-077) and shows live steps while a question runs, through the streaming endpoint (D-079); it falls back to the plain endpoint if streaming fails. The prepared questions below use 2024 to 2026 periods, inside both the old and new window, and the measured results narrated here come from the earlier 2024-Q1 to 2026-Q2 window, structured-output planner and older prompts. Say plainly that answers about 2020 to 2023 and the new function-calling planner are unevaluated.
+
 | Minutes | Show |
 |---|---|
 | 0:00–3:00 | **Assignment**, **Agentic system**, **Data findings**: users, scope, pipeline, two EDA findings and source limitations. |

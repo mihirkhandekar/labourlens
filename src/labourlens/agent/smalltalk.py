@@ -16,6 +16,7 @@ import unicodedata
 import uuid
 
 from labourlens import paths
+from labourlens.data import catalog
 
 CONFIG = "small_talk_fast_path"
 
@@ -50,7 +51,7 @@ _INTRO = {
     "filler": "I am LabourLens, a research assistant for Singapore labour-market questions.",
     "no_content": "I could not find a question in that message.",
 }
-_CAPABILITY = ("I can look up Ministry of Manpower statistics and report passages for Q1 2024 to Q2 2026, compare figures across "
+_CAPABILITY = (f"I can look up Ministry of Manpower statistics for {catalog.scope_words()} and MOM report passages from 2023 onward, compare figures across "
                "quarters, and cite every source I use. When the evidence is missing or does not support an answer, I say so instead of guessing.")
 _EXAMPLES = ("You could ask: “What was the resident unemployment rate in Q4 2025?” or “How did retrenchments change between Q1 2025 and Q1 2026?” "
              "or “What did the Q2 2026 advance release say about employment growth?”")

@@ -924,7 +924,7 @@ def test_assumptions_slide_follows_project_and_records_real_boundaries():
     for text in ("Assumptions", "Constraints", "Scope done", "Validated rows anchor calculations",
                  "AI-drafted labels, one reviewer", "Licences follow their recorded status",
                  "6 tool calls, 2 rounds, 10 s per call", "4 November 2026, Singapore morning.",
-                 "Q1 2024 to Q2 2026", "Retrieval, agent and MCP", "Evaluation, threats and workbench",
+                 "Q1 2020 to Q2 2026", "Retrieval, agent and MCP", "Evaluation, threats and workbench",
                  "No forecasts or personal advice", "Not all rights have been verified."):
         assert text in visual
     assert "m.section('sources').metrics?.sources" in visual

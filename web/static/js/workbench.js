@@ -197,6 +197,88 @@ export function mountWorkbench(root, {onMode} = {}) {
     } finally { clearTimeout(timeout); }
   }
 
+  // ---------- streaming run (D-079) ----------
+  // POST /api/ask/stream sends server-sent events: `status`, `tool` and `trace` while the run goes on, then one `result` (the same body as
+  // /api/ask, sent only after the server has validated the answer) or one `error`. No model text is streamed. fetch + ReadableStream because
+  // EventSource cannot POST a body. Falls back to /api/ask when streaming is unsupported or breaks before the first event.
+  function parseFrame(frame) {
+    let name = 'message'; const data = [];
+    frame.split('\n').forEach(line => {
+      if (line.startsWith('event:')) name = line.slice(6).trim();
+      else if (line.startsWith('data:')) data.push(line.slice(5).replace(/^ /, ''));
+    });
+    if (!data.length) return null;  // a ": keepalive" comment or an empty frame
+    try { return {name, data: JSON.parse(data.join('\n'))}; } catch { return null; }
+  }
+  function simpleStep(state, name, note = '', mono = false) {
+    const li = el('li', `step ${state}`);
+    add(li, el('span', 'step-mark'), add(el('div', 'step-body'), el('span', `step-name${mono ? ' mono' : ''}`, name), ...(note ? [el('span', 'step-note small muted', note)] : [])));
+    return li;
+  }
+  function liveActivity() {
+    activityCore.replaceChildren(activityHead(''));
+    const status = el('p', 'small muted run-status', 'Agent working on the server.'); status.setAttribute('role', 'status'); status.setAttribute('aria-live', 'polite');
+    const list = el('ol', 'steps'); list.append(simpleStep('ok', 'Question sent'));
+    const clock = el('p', 'elapsed num', '0.0 s'); activityCore.append(status, list, clock);
+    const start = performance.now(); const pending = [];
+    clearInterval(timer);
+    timer = setInterval(() => { clock.textContent = `${((performance.now() - start) / 1000).toFixed(1)} s elapsed`; }, 200);
+    return {
+      handle(name, data) {
+        if (name === 'status') { if (typeof data.text === 'string' && data.text) status.textContent = data.text; }
+        else if (name === 'trace' && data.item) list.append(stepFrom(data.item, 0));
+        else if (name === 'tool' && data.phase === 'started') { const li = simpleStep('active', String(data.tool || 'tool'), 'running', true); pending.push(li); list.append(li); }
+        else if (name === 'tool' && data.item) { const li = stepFrom(data.item, 0); const old = pending.shift(); if (old) old.replaceWith(li); else list.append(li); }
+      }
+    };
+  }
+  async function askStreaming(body, controller, live) {
+    const fallback = () => request('/api/ask', body, controller);
+    if (!(window.ReadableStream && window.TextDecoder && window.Response && 'body' in Response.prototype)) return fallback();
+    const timeout = setTimeout(() => controller.abort(), 95000);
+    let started = false;
+    try {
+      let result;
+      try {
+        result = await fetch('/api/ask/stream', {method: 'POST', credentials: 'same-origin', signal: controller.signal, headers: {'Content-Type': 'application/json', 'Accept': 'text/event-stream'}, body: JSON.stringify(body)});
+      } catch (error) {
+        if (error.name === 'AbortError') throw error;
+        clearTimeout(timeout); return fallback();  // network failure before any event: the run never started on this route
+      }
+      if ([404, 405, 501].includes(result.status) || (result.ok && !(result.headers.get('Content-Type') || '').includes('text/event-stream'))) { clearTimeout(timeout); return fallback(); }
+      if (!result.ok) {
+        let payload = {}; try { payload = await result.json(); } catch { /* keep the generic message */ }
+        if (result.status === 401) { authenticated = false; syncState(); }
+        const detail = payload.detail || payload.error || payload.message;
+        throw new Error(typeof detail === 'string' ? detail : `Request failed (${result.status}). Try again.`);
+      }
+      const reader = result.body.getReader(); const decoder = new TextDecoder(); let buffer = '', final = null;
+      for (;;) {
+        let chunk;
+        try { chunk = await reader.read(); } catch (error) { if (error.name === 'AbortError' || started) throw error; clearTimeout(timeout); return fallback(); }
+        if (chunk.done) break;
+        buffer += decoder.decode(chunk.value, {stream: true});
+        let cut;
+        while ((cut = buffer.indexOf('\n\n')) >= 0) {
+          const frame = parseFrame(buffer.slice(0, cut)); buffer = buffer.slice(cut + 2);
+          if (!frame) continue;
+          started = true;
+          if (frame.name === 'result') final = frame.data;
+          else if (frame.name === 'error') {
+            if (frame.data.status === 401) { authenticated = false; syncState(); }
+            throw new Error(typeof frame.data.detail === 'string' ? frame.data.detail : 'The run failed. Try again.');
+          } else live.handle(frame.name, frame.data);
+        }
+      }
+      if (final) return final;
+      if (!started) { clearTimeout(timeout); return fallback(); }
+      throw new Error('The connection closed before the answer arrived. Try again.');
+    } catch (error) {
+      if (error.name === 'AbortError' && !stopRequested) throw new Error('The request timed out and returned no answer. Try again.');
+      throw error;
+    } finally { clearTimeout(timeout); }
+  }
+
   // MCP tab: what the local MCP server offers, which tool the agent may use, the calls made, and three fixed read-only example calls.
   let mcpLoaded = false, mcpBusy = false, mcpReply = '';
   const mcpArgs = args => Object.entries(args || {}).map(([k, v]) => `${k}: ${v}`).join(', ') || 'no arguments';
@@ -302,7 +384,7 @@ export function mountWorkbench(root, {onMode} = {}) {
     art.append(sheet, lens);
     const copy = el('div', 'empty-copy');
     add(copy, el('h2', '', 'Ask about Singapore labour data'),
-      el('p', 'muted', 'Ask about unemployment, vacancies or retrenchments, from 2024-Q1 to 2026-Q2. The answer and source records will appear here.'));
+      el('p', 'muted', 'Ask about unemployment, vacancies or retrenchments, from 2020-Q1 to 2026-Q2. The answer and source records will appear here.'));
     copy.append(examples);
     add(box, art, copy); region.append(box);
   }
@@ -333,19 +415,6 @@ export function mountWorkbench(root, {onMode} = {}) {
   }
   function idleActivity() {
     activityCore.replaceChildren(activityHead(''), el('p', 'small muted', 'After a question, this tab lists each tool call and its outcome.'));
-  }
-  function runningActivity() {
-    activityCore.replaceChildren(activityHead(''));
-    const list = el('ol', 'steps');
-    const mk = (state, name) => { const li = el('li', `step ${state}`); add(li, el('span', 'step-mark'), add(el('div', 'step-body'), el('span', 'step-name', name))); list.append(li); return li; };
-    mk('ok', 'Question sent');
-    const working = mk('active', 'Agent working on the server');
-    mk('idle', 'Steps, timings and cost');
-    const clock = el('p', 'elapsed num', '0.0 s'); activityCore.append(list, clock);
-    const start = performance.now();
-    clearInterval(timer);
-    timer = setInterval(() => { clock.textContent = `${((performance.now() - start) / 1000).toFixed(1)} s elapsed`; }, 200);
-    return working;
   }
   const outcomeState = (event, detail) => BAD.has(event) || BAD.has(detail?.error_kind) ? 'bad' : WARN.has(event) ? 'warn' : 'ok';
   const argText = value => (typeof value === 'string' ? value : JSON.stringify(value));
@@ -644,10 +713,10 @@ export function mountWorkbench(root, {onMode} = {}) {
     const userMessage = el('p', 'wb-message-user', lastQuestion);
     region = el('div', 'answer-region'); region.setAttribute('aria-busy', 'false');
     add(turn, userMessage, region); messages.append(turn);
-    region.setAttribute('aria-busy', 'true'); skeleton(); runningActivity(); activateTab('activity');
+    region.setAttribute('aria-busy', 'true'); skeleton(); const live = liveActivity(); activateTab('activity');
     ask.classList.add('is-busy'); messages.scrollTo({top: messages.scrollHeight, behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth'});
     try {
-      const response = await request('/api/ask', thread.length ? {question: lastQuestion, history: thread.slice(-3)} : {question: lastQuestion}, runController);
+      const response = await askStreaming(thread.length ? {question: lastQuestion, history: thread.slice(-3)} : {question: lastQuestion}, runController, live);
       if (stopRequested) throw new DOMException('Stopped', 'AbortError');
       busy = false; ask.classList.remove('is-busy'); region.setAttribute('aria-busy', 'false');
       if (typeof response.interpreted_as === 'string' && response.interpreted_as) { const readAs = el('p', 'wb-read-as small muted'); readAs.textContent = `Read as: ${response.interpreted_as}`; userMessage.after(readAs); }

@@ -1,6 +1,6 @@
 # Innovation assessment
 
-LabourLens researches public Singapore labour statistics and reports for Q1 2024 to Q2 2026. Analysts inspect citations, records and tool calls before using an answer.
+LabourLens researches public Singapore labour statistics (Q1 2020 to Q2 2026) and MOM and MTI reports (from 2023). Analysts inspect citations, records and tool calls before using an answer.
 
 **Abstract.** Period filters and reranking select passages; typed read-only tools retrieve series and calculate changes. I measured retrieval, answer behaviour, runtime and attack responses. The next priorities are report-table arithmetic and independent evaluation.
 
@@ -50,7 +50,7 @@ Development median latency was 14.35 s, p95 35.4/34.1 s, cost $0.002845/question
 
 ## Limitations and threats to validity
 
-Development shaped design; original-test evidence overlaps and fresh outcomes are known. Neither final test demonstrates an answer gain. Gold was AI-drafted, reviewed by one person; the main judge is same-family. One fixed run and two agent runs do not establish stability. Citations check mechanics; arithmetic can use wrong inputs. Attacks establish no general defence. Full comparisons exclude web/MCP. Government readiness is untested.
+Development shaped design; original-test evidence overlaps and fresh outcomes are known. Neither final test demonstrates an answer gain. Gold was AI-drafted, reviewed by one person; the main judge is same-family. One fixed run and two agent runs do not establish stability. Citations check mechanics; arithmetic can use wrong inputs. Attacks establish no general defence. Full comparisons exclude web/MCP. Every measurement used questions about Q1 2024 to Q2 2026, the structured-output planner and older prompts; the served window (from Q1 2020), function-calling planner and newer prompts were not re-evaluated, so answers about 2020 to 2023 are unevaluated. Government readiness is untested.
 
 ## Mocked or unverified components and their production replacements
 

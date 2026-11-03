@@ -29,6 +29,8 @@ Principle behind all of it: **never change a number silently, never guess a mean
 | B11 | Observation ids are deterministic hashes of source, snapshot, indicator, period, population, adjustment, dimension | Same input gives the same ids; supports tracing and idempotence | Random ids | `test_build_is_idempotent` |
 | B12 | Nothing was imputed, forecast, seasonally adjusted by us, or converted between units | Out of scope and unverifiable | | |
 
+**Update, 3 Nov 2026 (D-077).** Row B9 is history: the scope flag `in_answer_scope` now covers 2020-Q1 to 2026-Q2, giving 11,228 of 52,020 rows in scope (4,300 under the 2024-Q1 to 2026-Q2 flag; the 3,790 above was corpus v1). Earlier rows are still retained. The data was rebuilt with `labourlens build` (276 checks, 0 failed; the hierarchy check now skips parent rows whose child cells are publisher `-` markers), then `labourlens export`, `labourlens eda` and `labourlens build-report`. Every dataset has rows from 2020-Q1; the two short-workweek datasets end at 2025-Q4. Missing `-` cells stay missing, never zero. The EDA figure ranges in section F were computed on the earlier window; the regenerated EDA over the wider window shows resident unemployment (SA) between 2.5% and 4.6% across 2020-Q1 to 2026-Q2.
+
 ## C. Derived indicators (consistency checks, not answers)
 `derived.py` computes three things so the data checks itself. Each row lists the observation ids it came from.
 1. Retrenchment parts (permanent plus term contract) minus total. Source rounds to 10 persons, so small gaps are expected.

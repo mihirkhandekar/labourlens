@@ -1,5 +1,7 @@
 # Evaluation report
 
+> **Note on the served system (3 Nov 2026, D-077, D-078, D-079).** Every number in this report was measured on questions about **2024-Q1 to 2026-Q2**, with the **structured-output planner** and the prompts `planner_v1`, `answer_v3`, `triage_v1` and `contextualise_v1`. Since then the served app widened its answer window to **2020-Q1 to 2026-Q2**, switched to a **native function-calling planner** with `planner_v4`, `answer_v6`, `triage_v2` and `contextualise_v2`, and added a streaming endpoint (delivery only). The evaluation gold (268 cases) covers 2024 to 2026 only, so **answers about 2020 to 2023 are unevaluated**, and the **shipped planner and prompts were not re-evaluated**; the owner decided not to rerun the experiments. The five 2023 context cases (DEV-601 to 604, 622) remain as historical gold expecting abstention (D-031); the served system would now answer them from statistics. No table below has been altered. See the [system card](system-card.md#served-versus-evaluated).
+
 ## At a glance
 
 All figures are behaviour accuracy (the answer status matches the expected one) unless the row says otherwise, for the default model `gpt-6-luna`, averaged over two runs. Intervals are 95% paired case bootstraps. Details, the second model and every caveat are in the sections below.
