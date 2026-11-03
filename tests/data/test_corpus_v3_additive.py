@@ -294,6 +294,7 @@ def test_corpus_v3_1_changes_only_the_mti_feature_article():
         assert json.loads(v31.read_text())["chunk_corpus_sha256"] == ck.corpus_hash(ck.build_chunks(ck.CONFIGS["merge200"], passages))
 
 
+@pytest.mark.skipif(not _v3_built(), reason="corpus passages are local only")
 def test_corpus_v4_only_adds_documents_and_changes_no_existing_passage_id():
     """D-080: the 2020 to 2022 documents are additive. Every v3.1 passage id survives, and the cached chunks of the earlier documents are unchanged."""
     snaps = paths.EXPERIMENTS / "corpus-snapshots"
