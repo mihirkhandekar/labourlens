@@ -206,3 +206,61 @@ def test_empty_or_oversized_question_is_rejected_without_model_calls(shared, mon
     assert g.run_agent("   ", shared, save_trace=False)["outcome"] == "rejected_input"
     assert g.run_agent("x" * 2000, shared, save_trace=False)["outcome"] == "rejected_input"
     assert counts == {"planner": 0, "answer": 0}
+
+
+@pytest.fixture
+def fixed_search(monkeypatch):
+    # The statistics-only shared fixture has no dense retriever. Keep the
+    # report-tool implementation, but provide an empty offline search backend.
+    monkeypatch.setattr(tl.Tools, "_search", lambda self, query, k: ([], {}, {}, {}, {}))
+
+
+def test_fixed_pipeline_has_one_extraction_and_fixed_search(shared, monkeypatch, fixed_search):
+    counts = _script(monkeypatch, [_plan(calls=[_call()])], [_answer("abstained", reason="x")])
+    result = g.run_agent("q", shared, g.AgentConfig(control_flow="fixed"), save_trace=False)
+    assert counts == {"planner": 1, "answer": 1}
+    assert result["rounds"] == 1 and result["tool_calls"] == 2
+    events = [e["detail"] for e in result["trace"] if e["node"] == "execute_tool"]
+    assert [e["tool"] for e in events] == ["search_reports", "get_series"]
+    assert events[0]["args"] == {"query": "q", "k": 8}
+    assert result["config"].endswith("|control=fixed")
+
+
+def test_fixed_pipeline_does_not_research_again_after_bad_lookup(shared, monkeypatch, fixed_search):
+    counts = _script(monkeypatch, [_plan(calls=[_call(source_id="unknown")])], [_answer("abstained", reason="x")])
+    result = g.run_agent("q", shared, g.AgentConfig(control_flow="fixed"), save_trace=False)
+    assert counts["planner"] == 1 and result["rounds"] == 1
+    assert any(e["event"] == "error" for e in result["trace"] if e["node"] == "execute_tool")
+
+
+def test_fixed_search_is_mandatory_even_without_statistics(shared, monkeypatch, fixed_search):
+    counts = _script(monkeypatch, [_plan("finish")], [_answer("abstained", reason="x")])
+    result = g.run_agent("q", shared, g.AgentConfig(control_flow="fixed"), save_trace=False)
+    assert counts == {"planner": 1, "answer": 1}
+    assert result["tool_calls"] == 1
+    assert g.fixed_calls("q", [_call(tool="calculate_change"), _call(), _call()]) == [
+        {"tool": "search_reports", "query": "q", "k": 8}, _call()]
+
+
+def test_fixed_extraction_schema_and_answer_settings(shared, monkeypatch, fixed_search):
+    seen = []
+
+    def chat(model, messages, max_completion_tokens=6000, extra=None, schema=None, schema_name="answer"):
+        seen.append((model, max_completion_tokens, schema, messages))
+        content = json.dumps(_plan("finish")) if schema_name == "plan" else _answer("abstained", reason="x")
+        return llm.LLMResult(content, 10, 5, 0, .01)
+
+    monkeypatch.setattr(llm, "chat", chat)
+    g.run_agent("q", shared, g.AgentConfig(control_flow="fixed"), save_trace=False)
+    assert seen[0][2]["properties"]["calls"]["items"]["properties"]["tool"]["enum"] == ["get_series"]
+    assert seen[0][2]["properties"]["calls"]["maxItems"] == 1
+    assert [(r[0], r[1]) for r in seen] == [("gpt-6-luna", 1500), ("gpt-6-luna", 6000)]
+    assert seen[1][3][0]["content"] == g.load_prompt("answer_v3")[0]
+
+
+def test_fixed_answer_repair_is_identical_and_not_research(shared, monkeypatch, fixed_search):
+    bad = _answer("answered", claims=[{"text": "x", "citations": [{"label": "P9", "quote": "q"}]}])
+    counts = _script(monkeypatch, [_plan("finish")], [bad, _answer("abstained", reason="x")])
+    result = g.run_agent("q", shared, g.AgentConfig(control_flow="fixed"), save_trace=False)
+    assert counts == {"planner": 1, "answer": 2}
+    assert result["outcome"] == "abstained"

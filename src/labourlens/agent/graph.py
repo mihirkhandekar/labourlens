@@ -53,8 +53,13 @@ class AgentConfig:
     # Total wall-clock budget for the planner and answer LLM calls of one run (None = unbounded, as in the evaluated runs).
     # The web app sets it so an abandoned run releases its slot; it is not part of key() and changes no model setting.
     run_deadline_s: float | None = None
+    control_flow: str = "agent"
 
     def __post_init__(self) -> None:
+        if self.control_flow not in ("agent", "fixed"):
+            raise ValueError("control_flow must be agent or fixed")
+        if self.control_flow == "fixed" and self.tool_set != "base":
+            raise ValueError("fixed control flow requires base tools")
         if self.retrieval not in ("hybrid", "r3", "r3w"):
             raise ValueError("retrieval must be hybrid, r3 or r3w")
         if self.tool_set not in TOOL_SETS:
@@ -65,7 +70,8 @@ class AgentConfig:
     def key(self) -> str:
         base = f"planner={self.planner_model}|answer={self.answer_model}|{self.planner_prompt}|{self.answer_prompt}"
         base = base if self.retrieval == 'hybrid' else f'{base}|retrieval={self.retrieval}'
-        return base if self.tool_set == "base" else f"{base}|tools={self.tool_set}"
+        base = base if self.tool_set == "base" else f"{base}|tools={self.tool_set}"
+        return base if self.control_flow == "agent" else f"{base}|control=fixed"
 
 
 def _nullable(t: str) -> dict:
@@ -143,6 +149,16 @@ def _usage(state: State, model: str, r: llm.LLMResult) -> dict:
     return u
 
 
+def fixed_calls(question: str, extracted: list[dict]) -> list[dict]:
+    """Fixed R3 search, followed by at most one extracted statistics query.
+
+    No feedback, query rewriting or calculation selection. Ignore any unexpected
+    tool selection even when a mocked/provider response violates the schema.
+    """
+    lookup = [c for c in extracted if c.get("tool") == "get_series"][:1]
+    return [{"tool": "search_reports", "query": question, "k": 8}, *lookup]
+
+
 def build_graph(shared: Shared, tools: Tools, cfg: AgentConfig):
     tools.retrieval, tools.tool_timeout_s, tools.tool_set = cfg.retrieval, cfg.tool_timeout_s, cfg.tool_set
     planner_sys, planner_user, _ = load_prompt(cfg.planner_prompt)
@@ -155,6 +171,12 @@ def build_graph(shared: Shared, tools: Tools, cfg: AgentConfig):
     answer_sys, answer_user, _ = load_prompt(cfg.answer_prompt)
     pool = ThreadPoolExecutor(max_workers=2)
     schema = plan_schema(shared) if cfg.tool_set == "base" else plan_schema(shared, cfg.tool_set)
+    if cfg.control_flow == "fixed":
+        # One extraction, never an evidence-conditioned planning loop. Reuse the
+        # catalogue and planner prompt but constrain output to one lookup.
+        item = schema["properties"]["calls"]["items"]
+        item["properties"]["tool"]["enum"] = ["get_series"]
+        schema["properties"]["calls"]["maxItems"] = 1
     clock = {"start": None}
 
     def llm_budget() -> float | None:
@@ -219,6 +241,8 @@ def build_graph(shared: Shared, tools: Tools, cfg: AgentConfig):
             return {"planned": [], "outcome": "operational_failure", "errors": [f"operational failure: planner: {last}"],
                     "trace": _ev("plan_research", "operational_failure", error=last)}
         calls = plan["calls"][: min(MAX_CALLS_PER_ROUND, MAX_CALLS - used)] if plan["decision"] == "gather" else []
+        if cfg.control_flow == "fixed":
+            calls = fixed_calls(s["question"], calls)
         return {"planned": calls, "usage": _usage(s, cfg.planner_model, r), "tool_errors": [],
                 "trace": _ev("plan_research", plan["decision"], round=rnd + 1, note=plan["note"][:200], n_calls=len(calls),
                              dropped=max(0, len(plan["calls"]) - len(calls)) if plan["decision"] == "gather" else 0)}
@@ -294,6 +318,8 @@ def build_graph(shared: Shared, tools: Tools, cfg: AgentConfig):
                 **({"bonus_rounds": bonus} if bonus else {})}
 
     def after_execute(s: State):
+        if cfg.control_flow == "fixed":
+            return "assess_evidence"
         return "plan_research" if s["round"] < MAX_ROUNDS + s.get("bonus_rounds", 0) and s["calls_used"] < MAX_CALLS else "assess_evidence"
 
     def assess_evidence(s: State):

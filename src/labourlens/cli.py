@@ -67,6 +67,7 @@ def main(argv: list[str] | None = None) -> int:
     ag.add_argument("--planner-prompt", default="planner_v1")
     ag.add_argument("--retrieval", choices=["hybrid", "r3", "r3w"], default="hybrid")
     ag.add_argument("--tool-set", choices=["base", "v2"], default="base", help="v2 (D-046) needs --planner-prompt planner_v3 --answer-prompt answer_v5")
+    ag.add_argument("--control-flow", choices=["agent", "fixed"], default="agent", help="fixed: one statistics extraction, fixed report search, no research loop or arithmetic")
     sx = sub.add_parser("served-exp", help="evaluate the served web chain (calls the OpenAI API)")
     sx.add_argument("--split", choices=["dev", "heldout"], default="dev")
     sx.add_argument("--gold", type=Path)
@@ -130,6 +131,10 @@ def main(argv: list[str] | None = None) -> int:
     pr.add_argument("--force", action="store_true", help="overwrite an existing --out file deliberately; gold checks still apply")
     pr.add_argument("--n-boot", type=int, default=20000)
     pr.add_argument("--seed", type=int, default=20261031)
+    fp = sub.add_parser("fixed-compare", help="compare a scored fixed pipeline to FIN and FIN2, offline")
+    fp.add_argument("--gold", type=Path, required=True)
+    fp.add_argument("--candidate", required=True)
+    fp.add_argument("--out", type=Path, required=True)
     sub.add_parser("audit-report", help="summarise the audit and feedback logs (data/audit)")
     asw = sub.add_parser("audit-show", help="print the timeline of one run")
     asw.add_argument("run_id")
@@ -259,7 +264,8 @@ def main(argv: list[str] | None = None) -> int:
     if args.cmd == "agent-exp":
         from labourlens.agent import experiments as agx
 
-        agx.run(args.split, args.pairs, args.answer_prompt, args.tag, args.retrieval, args.planner_prompt, gold_path=args.gold, force=args.force, tool_set=args.tool_set)
+        agx.run(args.split, args.pairs, args.answer_prompt, args.tag, args.retrieval, args.planner_prompt, gold_path=args.gold,
+                force=args.force, tool_set=args.tool_set, control_flow=args.control_flow)
         return 0
     if args.cmd == "served-exp":
         from labourlens.evaluation import served_exp
@@ -313,6 +319,13 @@ def main(argv: list[str] | None = None) -> int:
 
         result = paired.run(args.gold, args.candidate, args.baseline, args.models, args.out, args.n_boot, args.seed, args.allow_gold_mismatch, force=args.force)
         print(_json.dumps(result, indent=1))
+        return 0
+    if args.cmd == "fixed-compare":
+        import json as _json
+
+        from labourlens.evaluation import fixed
+
+        print(_json.dumps(fixed.run(args.gold, args.candidate, args.out), indent=1))
         return 0
     if args.cmd in ("audit-report", "audit-show", "audit-prune"):
         from labourlens.audit import log as al
