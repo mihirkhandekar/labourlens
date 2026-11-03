@@ -34,6 +34,7 @@ const WARN = new Set(['invalid', 'no_evidence', 'budget_exhausted']);
 export function mountWorkbench(root, {onMode} = {}) {
   let enabled = false, authenticated = false, busy = false, statusKnown = false;
   let evidenceList = [], timer = null, lastQuestion = '', thread = [];  // thread: the last finished turns, kept in memory only and sent with the next question (D-054)
+  let runController = null, stopRequested = false, userScrolledUp = false;
 
   const access = el('section', 'access-screen'); access.setAttribute('aria-labelledby', 'access-title');
   const accessCard = el('div', 'access-card');
@@ -71,8 +72,10 @@ export function mountWorkbench(root, {onMode} = {}) {
   const ask = el('button', 'btn btn-primary'); ask.type = 'submit'; ask.title = 'Ask (Enter)';
   const askLabel = el('span', '', 'Ask'); const askIcon = el('span', 'btn-ico'); askIcon.append(icon('send')); ask.append(askLabel, askIcon);
   const clearChat = el('button', 'btn small plain', 'Clear chat'); clearChat.type = 'button';
+  const stop = el('button', 'btn small plain wb-stop', 'Stop'); stop.type = 'button'; stop.hidden = true;
+  stop.addEventListener('click', () => { if (runController) { stopRequested = true; stop.disabled = true; runController.abort(); } });
   const composerMeta = el('div', 'composer-meta'); add(composerMeta, count);
-  add(form, field, add(el('div', 'composer-foot'), composerMeta, add(el('div', 'wb-composer-actions'), clearChat, ask)));
+  add(form, field, add(el('div', 'composer-foot'), composerMeta, add(el('div', 'wb-composer-actions'), clearChat, stop, ask)));
   const examples = el('div', 'wb-start-examples'); examples.setAttribute('role', 'group'); examples.setAttribute('aria-label', 'Example questions');
   const exButtons = [];
   FAMILIES.forEach(family => {
@@ -109,10 +112,15 @@ export function mountWorkbench(root, {onMode} = {}) {
   clearChat.addEventListener('click', () => { if (!busy) { clearDialog.showModal(); cancelClear.focus(); } });
   clearDialog.addEventListener('close', () => clearChat.focus());
   cancelClear.addEventListener('click', () => clearDialog.close());
-  confirmClear.addEventListener('click', () => { messages.replaceChildren(); region = el('div', 'answer-region'); messages.append(region, jumpLatest); evidenceList = []; thread = []; emptyState(); idleActivity(); question.value = ''; sizeQuestion(); count.textContent = `0 / ${MAX_QUESTION}`; clearDialog.close(); announce.textContent = 'Chat cleared.'; });
-  const jumpLatest = el('button', 'btn small plain wb-jump-latest', 'Jump to latest'); jumpLatest.type = 'button'; jumpLatest.hidden = true; messages.append(jumpLatest);
-  jumpLatest.addEventListener('click', () => { messages.scrollTo({top: messages.scrollHeight, behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth'}); });
-  messages.addEventListener('scroll', () => { jumpLatest.hidden = messages.scrollHeight - messages.scrollTop - messages.clientHeight < 72; });
+  confirmClear.addEventListener('click', () => { messages.replaceChildren(); region = el('div', 'answer-region'); messages.append(region); evidenceList = []; thread = []; userScrolledUp = false; updateJump(); emptyState(); idleActivity(); resetEvidencePanels(); setQuestion(''); clearDialog.close(); announce.textContent = 'Chat cleared.'; });
+  const jumpLatest = el('button', 'btn small plain wb-jump-latest', 'Jump to latest'); jumpLatest.type = 'button'; jumpLatest.hidden = true; main.prepend(jumpLatest);
+  function updateJump() { const atLatest = messages.scrollHeight - messages.scrollTop - messages.clientHeight < 72; if (atLatest) userScrolledUp = false; jumpLatest.hidden = !userScrolledUp || atLatest; }
+  jumpLatest.addEventListener('click', () => { userScrolledUp = false; jumpLatest.hidden = true; messages.scrollTo({top: messages.scrollHeight, behavior: 'instant'}); });
+  messages.addEventListener('wheel', event => { if (event.deltaY < 0) userScrolledUp = true; }, {passive: true});
+  messages.addEventListener('touchmove', () => { userScrolledUp = true; }, {passive: true});
+  messages.addEventListener('keydown', event => { if (['PageUp', 'Home', 'ArrowUp'].includes(event.key)) userScrolledUp = true; });
+  messages.addEventListener('pointerdown', event => { if (event.target === messages) userScrolledUp = true; });
+  messages.addEventListener('scroll', updateJump);
   panelToggle.addEventListener('click', () => { const open = rail.classList.toggle('is-open'); panelToggle.setAttribute('aria-expanded', String(open)); panelToggle.textContent = open ? 'Close details' : 'Sources and context'; if (open) tabs.querySelector('[aria-selected="true"]')?.focus(); });
   const dismissPanel = () => { rail.classList.remove('is-open'); panelToggle.setAttribute('aria-expanded', 'false'); panelToggle.textContent = 'Sources and context'; panelToggle.focus(); };
   closePanel.addEventListener('click', dismissPanel);
@@ -147,6 +155,7 @@ export function mountWorkbench(root, {onMode} = {}) {
   function syncState() {
     const ready = enabled && authenticated && !busy;
     ask.disabled = !ready; question.disabled = !ready; clearChat.disabled = busy;
+    stop.hidden = !busy; stop.disabled = !busy || stopRequested;
     exButtons.forEach(b => { b.disabled = !ready; });
     access.hidden = enabled && authenticated;
     grid.hidden = !(enabled && authenticated);
@@ -168,8 +177,7 @@ export function mountWorkbench(root, {onMode} = {}) {
     else { ask.removeAttribute('aria-label'); composerMeta.querySelector('.run-state')?.remove(); }
   }
 
-  async function request(path, body) {
-    const controller = new AbortController();
+  async function request(path, body, controller = new AbortController()) {
     const timeout = setTimeout(() => controller.abort(), 95000);
     try {
       const options = {credentials: 'same-origin', signal: controller.signal};
@@ -184,7 +192,7 @@ export function mountWorkbench(root, {onMode} = {}) {
       }
       return payload;
     } catch (error) {
-      if (error.name === 'AbortError') throw new Error('The request timed out and returned no answer. Try again.');
+      if (error.name === 'AbortError' && !stopRequested) throw new Error('The request timed out and returned no answer. Try again.');
       throw error;
     } finally { clearTimeout(timeout); }
   }
@@ -293,7 +301,7 @@ export function mountWorkbench(root, {onMode} = {}) {
     lens.append(svg('circle', {cx: 190, cy: 118, r: 38, class: 'art-ring'}), svg('line', {x1: 217, y1: 145, x2: 262, y2: 190, class: 'art-handle'}), svg('path', {d: 'M166 128 Q186 100 214 108', class: 'art-glint'}));
     art.append(sheet, lens);
     const copy = el('div', 'empty-copy');
-    add(copy, el('h2', '', 'No question submitted'),
+    add(copy, el('h2', '', 'Ask about Singapore labour data'),
       el('p', 'muted', 'Ask about unemployment, vacancies or retrenchments, from 2024-Q1 to 2026-Q2. The answer and source records will appear here.'));
     copy.append(examples);
     add(box, art, copy); region.append(box);
@@ -324,10 +332,7 @@ export function mountWorkbench(root, {onMode} = {}) {
     return h;
   }
   function idleActivity() {
-    activityCore.replaceChildren(activityHead(''));
-    const ghost = el('ol', 'steps ghost'); ghost.setAttribute('aria-hidden', 'true');
-    ['Check question', 'Plan', 'Tool call', 'Assess evidence', 'Draft answer', 'Validate answer'].forEach(name => ghost.append(add(el('li', 'step idle'), el('span', 'step-mark'), el('span', 'step-name', name))));
-    activityCore.append(ghost);
+    activityCore.replaceChildren(activityHead(''), el('p', 'small muted', 'After a question, this tab lists each tool call and its outcome.'));
   }
   function runningActivity() {
     activityCore.replaceChildren(activityHead(''));
@@ -479,11 +484,19 @@ export function mountWorkbench(root, {onMode} = {}) {
         const li = el('li'); const b = el('button', `source-item${cited.has(item.label) ? ' is-cited' : ''}`); b.type = 'button'; b.dataset.evidenceLabel = item.label;
         const [kindIcon, kindName] = KIND[item.kind] ?? ['passage', 'Evidence'];
         add(b, el('span', 'cite-chip static', String(i + 1)), add(el('span', 'source-text'), el('span', 'source-title', item.source_title || item.label || 'Untitled'), el('span', 'source-meta small muted', `${kindName}${item.locator ? ` · ${item.locator}` : ''}${cited.has(item.label) ? ' · cited' : ' · retrieved, not cited'}`)), icon(kindIcon));
-        b.querySelector('.source-text').append(el('span', 'source-details small muted', [`Publisher: ${item.publisher || 'Not recorded'}`, `Date: ${item.date || 'Not recorded'}`, `Period: ${item.period || item.locator || 'Not recorded'}`, `Value: ${finite(item.value) ? item.value : 'Not recorded'}${item.unit ? ` ${item.unit}` : ''}`, `Release: ${item.release_stage || 'Not recorded'}`, `Definition: ${[item.population, item.dimension, item.adjustment].filter(Boolean).join(' · ') || 'Not recorded'}`].join(' | ')));
-        b.addEventListener('click', () => openEvidence(i, item.label)); li.append(b);
+        const fields = el('dl', 'source-fields');
+        const plain = value => value && value !== 'not_applicable' ? human(String(value).replaceAll('_', ' ')) : '';
+        const addField = (label, value, required = false) => { if (value || required) fields.append(el('dt', '', label), el('dd', '', value || 'Not recorded')); };
+        addField('Period', item.period, item.kind === 'statistic');
+        addField('Value', finite(item.value) ? `${item.value.toLocaleString('en-SG')}${item.unit ? ` ${plain(item.unit).toLowerCase()}` : ''}` : '', item.kind === 'statistic');
+        addField('Publisher', item.publisher, item.kind !== 'calculation');
+        addField('Published', item.date);
+        addField('Release stage', plain(item.release_stage));
+        addField('Definition', [item.population, item.dimension, item.adjustment].map(plain).filter(Boolean).join(', '));
+        b.addEventListener('click', () => openEvidence(i, item.label)); li.append(b, fields);
         const quotes = Array.isArray(item.quotes) ? item.quotes : [];
-        quotes.forEach(quote => li.append(add(el('blockquote', `quote${cited.has(item.label) ? ' is-cited' : ''}`), el('p', '', quote))));
-        if (!quotes.length) li.append(el('p', 'small muted', 'No short excerpt was returned for this item.'));
+        if (item.kind === 'report') quotes.forEach(quote => li.append(add(el('blockquote', `quote${cited.has(item.label) ? ' is-cited' : ''}`), el('p', '', quote))));
+        else if (item.kind === 'calculation' && quotes.length) li.append(el('p', 'source-calculation small', quotes[0]));
         const link = safeLink(item.url, 'Open source'); if (link) li.append(link);
         ul.append(li);
       });
@@ -493,12 +506,12 @@ export function mountWorkbench(root, {onMode} = {}) {
     // Calculation cards remain with the answer so their inputs and result stay together.
     const events = Array.isArray(response.trace) ? response.trace : response.trace?.events ?? [];
     c.append(explanation(response, events));
-    evidenceList.forEach((item, index) => { if (item.kind === 'calculation') stack.append(calculationCard(item, index, claims, events)); });
+    evidenceList.forEach((item, index) => { if (item.kind === 'calculation') c.append(calculationCard(item, index, claims, events)); });
     const series = Array.isArray(response.chart?.series) ? response.chart.series.filter(s => Array.isArray(s.points) && s.points.length) : [];
     dataPanel.replaceChildren(el('h2', '', 'Data'));
     series.forEach(s => {
       const holder = el('div', 'bezel chart-bezel'); const hc = el('div', 'bezel-core');
-      hc.append(lineChart({title: s.label ? human(s.label.split(' / ').map(part => part.replaceAll('_', ' ')).join(' · ')) : 'Series', unit: s.unit || '', caption: 'Observations retrieved for this answer. Missing periods are shown as gaps.', series: [{label: 'Value', points: s.points.map(p => ({period: p.period, value: finite(p.value) ? p.value : null}))}], chips: [s.unit ? `Unit: ${s.unit}` : 'Unit not recorded'], headingLevel: 'h3'}));
+      hc.append(lineChart({title: s.label ? human(s.label.split(' / ').map(part => part.replaceAll('_', ' ')).join(' · ')) : 'Series', unit: s.unit || '', caption: 'Observations retrieved for this answer. Missing periods are shown as gaps.', series: [{label: 'Value', points: s.points.map(p => ({period: p.period, value: finite(p.value) ? p.value : null}))}], chips: [s.unit ? `Unit: ${s.unit}` : 'Unit not recorded'], headingLevel: 'h3', comparisonPair: true}));
       holder.append(hc); dataPanel.append(holder);
     });
     if (!series.length) dataPanel.append(el('p', 'small muted', 'A chart appears here when the answer uses a cited statistical series.'));
@@ -506,11 +519,11 @@ export function mountWorkbench(root, {onMode} = {}) {
     if (notes.length) { const nc = el('div', 'bezel-core notes'); renderDataNotes(nc, notes); dataPanel.append(nc); }
     // Feedback
     const runId = response.run_id || response.answer?.run_id;
-    if (runId) stack.append(feedback(runId));
+    if (runId) c.append(feedback(runId));
     region.append(stack);
     announce.textContent = `Answer ready. Status: ${info?.label ?? 'unknown'}. ${claims.length} claim${claims.length === 1 ? '' : 's'}, ${evidenceList.length} evidence item${evidenceList.length === 1 ? '' : 's'}.`;
     title.focus({preventScroll: true});
-    revealTop(card);
+    revealTop(card.closest('.wb-turn') || card);
   }
 
   function revealTop(node) {
@@ -549,10 +562,10 @@ export function mountWorkbench(root, {onMode} = {}) {
   }
 
   function calculationCard(item, index, claims, events) {
-    const holder = el('section', 'bezel calc-bezel'); holder.setAttribute('aria-label', `Calculation ${item.label}`);
-    const c = el('div', 'bezel-core calc'); holder.append(c);
-    add(c, add(el('div', 'calc-head'), icon('calc', 'lg'), add(el('div'), el('h3', '', `${item.label}: ${item.source_title || 'Calculation'}`))),
-      el('p', 'small muted', 'Computed in code from validated observations. The model does not do this arithmetic.'));
+    const holder = el('details', 'calculation-disclosure'); holder.setAttribute('aria-label', `Calculation ${item.label}`);
+    const summary = el('summary', '', `${item.label}: ${item.source_title || 'Calculation'}`); holder.append(summary);
+    const c = el('div', 'calc'); holder.append(c);
+    c.append(el('p', 'small muted', 'Computed in code from validated observations. The model does not do this arithmetic.'));
     const call = events.find(e => e.node === 'execute_tool' && e.detail?.tool === 'calculate_change' && Array.isArray(e.detail.new_items) && e.detail.new_items.includes(item.label));
     const args = call?.detail?.args ?? {};
     const inputs = [args.obs_a, args.obs_b].filter(Boolean).length ? [args.obs_a, args.obs_b].filter(Boolean) : String(item.locator || '').split(',').map(s => s.trim()).filter(Boolean);
@@ -593,8 +606,9 @@ export function mountWorkbench(root, {onMode} = {}) {
   }
 
   function feedback(runId) {
-    const holder = el('section', 'bezel soft feedback-bezel'); holder.setAttribute('aria-label', 'Feedback');
-    const c = el('div', 'bezel-core'); holder.append(c);
+    const holder = el('details', 'feedback-disclosure'); holder.setAttribute('aria-label', 'Feedback');
+    holder.append(el('summary', '', 'Rate this answer'));
+    const c = el('div', 'feedback-content'); holder.append(c);
     const formEl = el('form', 'feedback');
     add(formEl, el('h3', '', 'Was this useful?'), el('p', 'small muted', 'Your rating is stored with the run ID. It is not an evaluation score.'));
     let rating = '';
@@ -624,16 +638,17 @@ export function mountWorkbench(root, {onMode} = {}) {
   form.addEventListener('submit', async event => {
     event.preventDefault();
     if (busy || !enabled || !authenticated || !question.value.trim()) return;
-    busy = true; lastQuestion = question.value.trim(); syncState();
-    if (messages.querySelector('.empty')) messages.replaceChildren(jumpLatest);
+    busy = true; stopRequested = false; runController = new AbortController(); lastQuestion = question.value.trim(); setQuestion(''); syncState();
+    if (messages.querySelector('.empty')) messages.replaceChildren();
     const turn = el('article', 'wb-turn');
     const userMessage = el('p', 'wb-message-user', lastQuestion);
     region = el('div', 'answer-region'); region.setAttribute('aria-busy', 'false');
-    add(turn, userMessage, region); messages.insertBefore(turn, jumpLatest);
+    add(turn, userMessage, region); messages.append(turn);
     region.setAttribute('aria-busy', 'true'); skeleton(); runningActivity(); activateTab('activity');
     ask.classList.add('is-busy'); messages.scrollTo({top: messages.scrollHeight, behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth'});
     try {
-      const response = await request('/api/ask', thread.length ? {question: lastQuestion, history: thread.slice(-3)} : {question: lastQuestion});
+      const response = await request('/api/ask', thread.length ? {question: lastQuestion, history: thread.slice(-3)} : {question: lastQuestion}, runController);
+      if (stopRequested) throw new DOMException('Stopped', 'AbortError');
       busy = false; ask.classList.remove('is-busy'); region.setAttribute('aria-busy', 'false');
       if (typeof response.interpreted_as === 'string' && response.interpreted_as) { const readAs = el('p', 'wb-read-as small muted'); readAs.textContent = `Read as: ${response.interpreted_as}`; userMessage.after(readAs); }
       const a = response.answer && typeof response.answer === 'object' ? response.answer : {};
@@ -642,18 +657,27 @@ export function mountWorkbench(root, {onMode} = {}) {
       renderAnswer(response); finalActivity(response); if (mcpLoaded) loadMcp();
     } catch (error) {
       busy = false; ask.classList.remove('is-busy'); region.setAttribute('aria-busy', 'false'); clearInterval(timer);
-      failure(error.message);
-      activityCore.replaceChildren(activityHead(''), el('p', 'small muted', 'No steps to show. A failed run does not establish that evidence is missing.'));
-    } finally { busy = false; syncState(); }
+      if (stopRequested) {
+        region.replaceChildren(el('p', 'wb-stopped', 'Stopped. No answer was saved for this turn.'));
+        announce.textContent = 'Request stopped. You can ask another question.';
+        activityCore.replaceChildren(activityHead(''), el('p', 'small muted', 'The request was stopped in this browser. Server-side work may still finish.'));
+      } else {
+        setQuestion(lastQuestion); failure(error.message);
+        activityCore.replaceChildren(activityHead(''), el('p', 'small muted', 'No steps to show. A failed run does not establish that evidence is missing.'));
+      }
+    } finally { busy = false; runController = null; syncState(); updateJump(); }
   });
   question.addEventListener('keydown', event => {
     if (event.key === 'Enter' && !event.shiftKey && !event.isComposing) { event.preventDefault(); form.requestSubmit(); }
   });
 
   emptyState();
-  sourcePanel.append(el('h2', '', 'Sources and context'), el('p', 'small muted', 'Retrieved report passages and statistical rows will appear here after a question.'));
-  dataPanel.append(el('h2', '', 'Data'), el('p', 'small muted', 'A chart appears here when an answer uses a cited statistical series.'));
-  mcpPanel.append(el('h2', '', 'MCP server'), el('p', 'small muted', 'Open this tab after signing in.'));
+  function resetEvidencePanels() {
+    sourcePanel.replaceChildren(el('h2', '', 'Sources and context'), el('p', 'small muted', 'After a question, this tab shows cited statistics, report passages and their sources.'));
+    dataPanel.replaceChildren(el('h2', '', 'Data'), el('p', 'small muted', 'After a question, this tab shows cited values, comparisons and data tables.'));
+  }
+  resetEvidencePanels();
+  mcpPanel.append(el('h2', '', 'MCP server'), el('p', 'small muted', 'This tab shows the read-only tools, resources and recent MCP calls.'));
   idleActivity();
   syncState();
   return {

@@ -33,7 +33,7 @@ function describe(series, unit) {
  * @param {{title:string, caption?:string, unit?:string, series:{label:string, points:{period:string,value:number|null}[]}[],
  *          chips?:string[], compact?:boolean, headingLevel?:string}} options
  */
-export function lineChart({title, caption, unit = '', series, chips = [], compact = false, headingLevel = 'h3'}) {
+export function lineChart({title, caption, unit = '', series, chips = [], compact = false, headingLevel = 'h3', comparisonPair = false}) {
   const periods = [...new Set(series.flatMap(s => s.points.map(p => p.period)))].sort();
   const lookup = series.map(s => new Map(s.points.map(p => [p.period, p.value])));
   const figure = el('figure', `chart${compact ? ' compact' : ''}`);
@@ -89,6 +89,16 @@ export function lineChart({title, caption, unit = '', series, chips = [], compac
   });
   toolbar.append(toggle);
   figure.append(summary, toolbar, wrap);
+  if (comparisonPair && series.length === 1 && periods.length === 2 && periods.every(p => finite(lookup[0].get(p)))) {
+    const pair = el('dl', 'chart-pair');
+    periods.forEach(period => { const cell = el('div'); cell.append(el('dt', '', period), el('dd', 'num', fmtUnit(lookup[0].get(period), unit))); pair.append(cell); });
+    const change = lookup[0].get(periods[1]) - lookup[0].get(periods[0]);
+    const cell = el('div'); cell.append(el('dt', '', 'Change'), el('dd', 'num', `${change > 0 ? '+' : ''}${fmtUnit(Number(change.toFixed(10)), unit === 'percent' ? 'percentage points' : unit)}`)); pair.append(cell);
+    stage.replaceWith(pair); live.remove(); figure.dataset.presentation = 'before-after';
+    return figure;
+  }
+  const rateAxis = /percent|percentage|\brate\b|%/i.test(unit);
+  const axisNote = el('p', 'chart-axis-note small muted'); axisNote.hidden = true; head.append(axisNote);
 
   // ---- drawing ----
   let active = -1;
@@ -135,8 +145,11 @@ export function lineChart({title, caption, unit = '', series, chips = [], compac
     const values = series.flatMap(s => s.points.map(p => p.value)).filter(finite);
     const lo = values.length ? Math.min(...values) : 0, hi = values.length ? Math.max(...values) : 1;
     const pad = (hi - lo || Math.abs(hi) || 1) * 0.12;
-    const ticks = nice(lo - pad, hi + pad, compact ? 3 : 5);
+    const ticks = nice(rateAxis ? lo - pad : Math.min(0, lo), rateAxis ? hi + pad : Math.max(0, hi + pad), compact ? 3 : 5);
     const y0 = ticks[0], y1 = ticks.at(-1);
+    figure.dataset.axisMinimum = String(y0);
+    axisNote.hidden = y0 === 0;
+    axisNote.textContent = y0 === 0 ? '' : 'The axis does not start at zero.';
     const n = periods.length;
     const x = i => left + (n === 1 ? plotW / 2 : (i * plotW) / (n - 1));
     const y = v => top + plotH - ((v - y0) / (y1 - y0 || 1)) * plotH;

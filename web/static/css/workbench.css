@@ -283,7 +283,8 @@ body:has(dialog[open]) .nav-wrap { opacity: 0; pointer-events: none; transition:
  .wb-composer-actions { display: flex; gap: 6px; align-items: center; }
  .composer-meta { min-height: 26px; }
  .run-state { color: var(--accent); }
- .wb-jump-latest { position: sticky; bottom: 8px; align-self: center; z-index: 1; box-shadow: 0 4px 20px color-mix(in srgb, var(--ink) 15%, transparent); }
+ .wb-jump-latest { position: static; align-self: center; margin-bottom: 10px; box-shadow: none; }
+ .wb-jump-latest[hidden], .wb-stop[hidden] { display: none; }
  .wb-rail { display: flex; flex-direction: column; min-width: 0; min-height: 0; height: 100%; overflow: hidden; position: relative; top: auto; gap: 0; padding: 18px; }
  .wb-tabs { display: flex; gap: 4px; border-bottom: var(--hair); }
  .wb-tab { min-height: 44px; padding: 8px 12px; color: var(--muted); border-bottom: 2px solid transparent; }
@@ -294,7 +295,18 @@ body:has(dialog[open]) .nav-wrap { opacity: 0; pointer-events: none; transition:
  .wb-source-panel .source-list { gap: 18px; }
  .wb-source-panel .source-item { grid-template-columns: auto minmax(0, 1fr) auto; padding: 12px; }
  .wb-source-panel .source-item.is-cited, .wb-source-panel .source-item.is-focused { border-color: var(--accent); background: var(--accent-soft); }
- .wb-source-panel .source-details { margin-top: 8px; line-height: 1.5; }
+ .source-fields { display: grid; grid-template-columns: minmax(80px, auto) minmax(0, 1fr); gap: 6px 14px; margin: 0; padding: 4px 12px; font-size: .84rem; line-height: 1.5; }
+ .source-fields dt { color: var(--muted); }
+ .source-fields dd { margin: 0; min-width: 0; overflow-wrap: anywhere; }
+ .source-calculation { padding-inline: 12px; }
+ .chart-pair { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; margin: 10px 0; padding: 18px 0; border-block: var(--hair); }
+ .chart-pair > div:last-child { grid-column: 1 / -1; }
+ .chart-pair dt { font-size: .85rem; color: var(--muted); }
+ .chart-pair dd { margin: 6px 0 0; font-size: 1.2rem; font-weight: 600; overflow-wrap: anywhere; }
+ .feedback-disclosure, .calculation-disclosure { margin-top: 20px; padding-top: 14px; border-top: var(--hair); }
+ .feedback-disclosure > summary, .calculation-disclosure > summary { cursor: pointer; font-weight: 500; }
+ .feedback-content, .calculation-disclosure > .calc { padding-top: 16px; }
+ .wb-stopped { padding: 18px; border: var(--hair); border-radius: var(--r-sm); color: var(--ink-2); }
  .wb-source-panel .quote { margin: 8px 0 0; font-size: .94rem; }
  .wb-source-panel .quote.is-cited { border-left-color: var(--accent); }
  .wb-data-panel .chart-bezel { border: 0; }
