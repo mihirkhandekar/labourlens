@@ -98,6 +98,14 @@ def main(argv: list[str] | None = None) -> int:
     tc.add_argument("--experiment", required=True, help="new experiment id; written to experiments/triage/<id>/ and never overwritten")
     tc.add_argument("--yes", action="store_true", help="actually spend: without it only the plan is printed")
     tc.add_argument("--rescore", action="store_true", help="recompute metrics from saved raw outputs, no API calls")
+    for command in ("decisions-triage-check", "decisions-support-check"):
+        dc = sub.add_parser(command, help="registered Decisions experiment; dry run unless --yes")
+        dc.add_argument("--experiment", required=True, help="new immutable experiment id")
+        dc.add_argument("--yes", action="store_true", help="spend against the shared $3 Decisions budget")
+    da = sub.add_parser("decisions-analyse", help="offline preregistered Decisions metrics, never overwrites")
+    da.add_argument("--triage", type=Path, required=True, help="triage experiment directory")
+    da.add_argument("--support", type=Path, required=True, help="support experiment directory")
+    da.add_argument("--out", type=Path, default=Path("experiments/eval/decisions-api-results.json"))
     cc = sub.add_parser("context-check", help="measure the D-054 conversation-context rewrite: free pass-through audit, then 30 conversation cases (calls the OpenAI API with --yes)")
     cc.add_argument("--experiment", required=True, help="new experiment id; written to experiments/context/<id>/ and never overwritten")
     cc.add_argument("--yes", action="store_true", help="actually spend: without it only the plan and the free pass-through audit are printed")
@@ -277,6 +285,19 @@ def main(argv: list[str] | None = None) -> int:
         from labourlens.evaluation import triage_check
 
         return triage_check.run(args.experiment, args.yes, args.rescore)
+    if args.cmd in ("decisions-triage-check", "decisions-support-check"):
+        from labourlens.evaluation import decisions_exp
+
+        try:
+            return decisions_exp.run("triage" if args.cmd == "decisions-triage-check" else "support", args.experiment, args.yes)
+        except (ValueError, FileExistsError, FileNotFoundError) as exc:
+            print(f"Decisions experiment: {exc}", file=sys.stderr)
+            return 2
+    if args.cmd == "decisions-analyse":
+        from labourlens.evaluation.decisions_analysis import analyse
+
+        analyse(args.triage, args.support, args.out)
+        return 0
     if args.cmd == "context-check":
         from labourlens.evaluation import context_check
 
