@@ -1,0 +1,33 @@
+{
+  "task": "triage",
+  "expected_n": 1227,
+  "inputs_sha256": {
+    "experiments/gold/gold_v3.7.jsonl": "af3ad02690ed1dabb69e2be7f7bb984f707f1352b95c8bd693d0fb51e9410d8f",
+    "experiments/gold/heldout_v2_v1.jsonl": "e3d16597d542d33d106b4e9291aa3b92ca5fcdf19aa4d3c2b3319c0543efa542",
+    "experiments/threats/cases.jsonl": "17fd3bf5a195f19b40110493f838a929104f41d7009c853332a2b83c8a82b77b",
+    "experiments/triage/offtopic_cases.jsonl": "e6170b69260e6c73a1b5a2a0c2f2ee2d1c4d76abdea3b0d1a6003e06d9fee69f",
+    "experiments/triage/triage-v1-luna/raw.jsonl": "1029171d0b494ef659b378827bf597c41e58c594ec31ab9bd7721419360c6e7a",
+    "experiments/triage/triage-v1-luna/metrics.json": "a544504444a2a00327e7ad7c5a85299787e2bc248477f56e9a4cb4e1827d90eb"
+  },
+  "prompt_sha256": "5032f9003961c60ec9ab8de350901dfd2460a3c0746dda9bd48c1bda2df5f2ad",
+  "registration_sha256": "66684b69aee8f4f53d4106eafefa6b58eb9a294ddc15f5398b0ba70d759346a7",
+  "config": {
+    "model": "gpt-6-luna",
+    "endpoint": "https://api.openai.com/v1/decisions",
+    "timeout_s": 8,
+    "retries": 1,
+    "backoff_s": 0.5,
+    "workers": 6,
+    "max_usd": 3,
+    "budget_path": "/Users/mihir/projects/experiments/zuhl/data/runs/decisions-api-budget.json",
+    "one_attempt_conservative_usd": 2.4579675,
+    "two_attempt_conservative_usd": 4.915935,
+    "estimated_uncached_usd": 0.28588410000000003,
+    "estimate_method": "UTF-8 bytes/3 plus 1024 protocol tokens per request; heuristic, not measured usage",
+    "price_source": "https://developers.openai.com/api/docs/guides/decisions#pricing-and-availability",
+    "second_judge_cost": "attempt list prices, cached attempts included; row metadata preserves cache/retry status"
+  },
+  "registration_commit": "f950867d7b86ad79f2c3af703002378d5e2855eb",
+  "git_commit": "3fd16ba019b360425388d603573e0bfc72d1629e",
+  "started_at": "2026-11-03T05:37:48.757122+00:00"
+}

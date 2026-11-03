@@ -8,6 +8,8 @@ The default model is `gpt-6-luna`. Averaged over two runs, filter then rerank sc
 
 Retrieval-only checks now cover both test sets: strict first-eight-passage hit@8 rose from hybrid .167 to .778 on 18 original-test text cases, and .500 to .941 on 34 fresh text cases, without a demonstrated end-to-end answer gain. On development questions, a fixed pipeline scored .814 against the bounded agent's .897 mean; one fixed run, missing arithmetic and other policy differences limit that comparison. A harder attack suite passed 50/54 guarded versus 42/54 naive (three repeats, case majority, exact p=.039), with 3/8 benign failures in each arm. [Retrieval results](docs/experiments/heldout-retrieval-metrics-results.md), [fixed-pipeline comparison](docs/experiments/agent-vs-fixed-pipeline-results.md), [threat results](docs/experiments/threat-v2-results.md).
 
+The [Decisions API trial](docs/experiments/decisions-api-results.md) was faster on historical routing timings but failed routing safety/quality and verifier threshold screens; it was not adopted in the live agent.
+
 ## Quick start
 
 You need Git, [uv](https://docs.astral.sh/uv/) and make. uv can install Python 3.12. From the repository root:
@@ -20,7 +22,7 @@ LABOURLENS_DEMO_ENABLED=false make serve
 
 Open <http://127.0.0.1:8000> for the report, `/deck` for the presentation or `/workbench` for the research page. These commands need no API key and make no paid calls. `mcp-demo` exercises the statistics server with a real MCP client. [Reproduce](docs/reproduce.md) explains corpus setup and how to recompute the saved results.
 
-The presentation has 28 main slides and 42 including the appendix. Evaluation design leads into the answer comparison, the merged calculation-gap experiment and the attack-type table.
+The presentation has 28 main slides and 43 including the appendix. Evaluation design leads into the answer comparison, the merged calculation-gap experiment and the attack-type table; the final appendix records the rejected Decisions API trial.
 
 Live demo: <https://labourlens.navig.me>. Workbench access codes are sent separately. The [innovation page](https://labourlens.navig.me/innovation) presents the proposed next steps.
 

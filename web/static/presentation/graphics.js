@@ -1265,6 +1265,108 @@ export function fixedPipeline() {
   return wrap;
 }
 
+/** Frozen Decisions API results, copied from experiments/eval/decisions-api-results.json.
+ * Keep these descriptive screens separate from the shipped agent and its answer scores. */
+export function decisionsExperiment() {
+  const wrap = el('div', 'exp-comparison decisions-experiment');
+  const svg = svgEl('svg', {viewBox: '0 0 1680 660', role: 'img', 'aria-label': 'Decisions API: lower historical routing latency, but routing and claim-support screens both failed.', focusable: 'false'});
+  svg.style.setProperty('width', '100%');
+  svg.style.setProperty('height', '100%');
+  const label = (x, y, value, size = 26, colour = '--ink-2', weight = 400) => {
+    svg.append(svgEl('text', {x, y, fill: `var(${colour})`, 'font-size': size, 'font-weight': weight}, value));
+  };
+  const bar = (x, y, width, value, colour, height = 19) => {
+    svg.append(svgEl('rect', {x, y, width, height, rx: 3, fill: 'var(--paper-3)'}),
+      svgEl('rect', {x, y, width: width * value, height, rx: 3, fill: `var(${colour})`}));
+  };
+  const rule = (x, y, width, value, height = 26) => {
+    svg.append(svgEl('line', {x1: x + width * value, x2: x + width * value, y1: y - 4, y2: y + height, stroke: 'var(--brass)', 'stroke-width': 3}));
+  };
+  label(0, 30, 'Routing latency', 32, '--ink', 600);
+  label(0, 67, 'Median seconds · 409 paired questions', 24, '--muted');
+  const latencyRows = [['Historical', 1.563, '--c5'], ['Decisions', 0.3593592920806259, '--accent']];
+  latencyRows.forEach(([name, seconds, colour], i) => {
+    const y = 112 + i * 66;
+    label(0, y + 18, name);
+    bar(180, y, 410, seconds / 2, colour, 24);
+    label(620, y + 21, `${seconds.toFixed(2)} s`, 28, '--ink', 600);
+  });
+  label(0, 243, 'Historical comparison, not a causal speed-up', 23, '--muted');
+  label(0, 315, 'Exact route accuracy', 32, '--ink', 600);
+  label(0, 351, 'Same result in each of three Decisions repeats', 24, '--muted');
+  const routeThreshold = 407 / 409;
+  const routeRows = [['Baseline', 408], ['No confidence gate', 405], ['70% confidence gate', 397]];
+  routeRows.forEach(([name, correct], i) => {
+    const y = 393 + i * 63;
+    label(0, y + 18, name, 24);
+    bar(285, y, 300, correct / 409, i === 0 ? '--c5' : '--accent', 23);
+    rule(285, y, 300, routeThreshold);
+    label(610, y + 20, `${correct}/409`, 27, '--ink', 600);
+  });
+  label(285, 603, 'Gold mark: preregistered 407/409 minimum', 22, '--brass-text');
+
+  svg.append(svgEl('line', {x1: 810, x2: 810, y1: 0, y2: 620, stroke: 'var(--line-strong)'}));
+  label(870, 30, 'Claim-support screen', 32, '--ink', 600);
+  label(870, 67, '441 selected claims · both generator models', 24, '--muted');
+  label(870, 109, 'Second-family AI reference, not human truth', 23, '--muted');
+  const supportMetrics = [
+    ['AUROC', 0.829679481408121, .80],
+    ['Accuracy', 0.8798185941043084, .85],
+    ['Balanced accuracy', 0.6089403079139282, .70]
+  ];
+  supportMetrics.forEach(([name, value, minimum], i) => {
+    const y = 163 + i * 116;
+    label(870, y, name, 26, '--ink', 500);
+    bar(870, y + 18, 570, value, value >= minimum ? '--accent' : '--bad', 23);
+    rule(870, y + 18, 570, minimum, 28);
+    label(1470, y + 39, value.toFixed(3), 29, '--ink', 600);
+    label(870, y + 75, `Preregistered minimum ${minimum.toFixed(2)}`, 22, '--brass-text');
+  });
+  label(870, 535, 'False support: 44/58 partial claims (75.9%)', 25, '--bad', 500);
+  label(870, 573, 'Maximum allowed: 20% · also failed', 23, '--muted');
+  label(870, 615, 'API model: gpt-6-luna only', 24, '--muted');
+  wrap.append(svg);
+  // Reflow the same measurements into native text and full-width tracks on phones.
+  const mobile = el('div', 'decisions-mobile');
+  const section = (title, subtitle) => {
+    const node = el('div', 'decisions-mobile-section');
+    node.append(el('h3', '', title), el('p', 'decisions-mobile-note', subtitle));
+    mobile.append(node);
+    return node;
+  };
+  const mobileBar = (parent, name, value, display, colour, threshold = null) => {
+    const row = el('div', 'decisions-mobile-row');
+    const head = el('p', 'decisions-mobile-label');
+    head.append(el('span', '', name), el('strong', '', display));
+    const track = el('div', 'decisions-mobile-track');
+    const fill = el('span', 'decisions-mobile-fill');
+    fill.style.setProperty('--value', `${value * 100}%`);
+    fill.style.setProperty('--bar-colour', `var(${colour})`);
+    track.append(fill);
+    if (threshold !== null) {
+      const mark = el('span', 'decisions-mobile-rule');
+      mark.style.setProperty('--threshold', `${threshold * 100}%`);
+      track.append(mark);
+    }
+    row.append(head, track); parent.append(row);
+  };
+  const latency = section('Routing latency', 'Median seconds, 409 paired questions');
+  latencyRows.forEach(([name, seconds, colour]) => mobileBar(latency, name, seconds / 2, `${seconds.toFixed(2)} s`, colour));
+  latency.append(el('p', 'decisions-mobile-note', 'Historical comparison, not a causal speed-up.'));
+  const routing = section('Exact route accuracy', 'Same result in each of three Decisions repeats');
+  routeRows.forEach(([name, correct], i) => mobileBar(routing, name, correct / 409, `${correct}/409`, i === 0 ? '--c5' : '--accent', routeThreshold));
+  routing.append(el('p', 'decisions-mobile-threshold', 'Gold mark: preregistered 407/409 minimum'));
+  const support = section('Claim-support screen', '441 selected claims from both generator models. Second-family AI reference, not human truth.');
+  supportMetrics.forEach(([name, value, minimum]) => {
+    mobileBar(support, name, value, value.toFixed(3), value >= minimum ? '--accent' : '--bad', minimum);
+    support.append(el('p', 'decisions-mobile-threshold', `Preregistered minimum ${minimum.toFixed(2)}`));
+  });
+  support.append(el('p', 'decisions-mobile-failed', 'False support: 44/58 partial claims (75.9%). Maximum allowed: 20%, also failed.'),
+    el('p', 'decisions-mobile-note', 'API model: gpt-6-luna only'));
+  wrap.append(mobile);
+  return wrap;
+}
+
 /** A screenshot and scannable link to the workbench, served locally. */
 export function workbenchShot() {
   const wrap = el('div', 'g22');

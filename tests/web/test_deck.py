@@ -119,7 +119,8 @@ def test_every_slide_has_a_heading_and_speaker_notes():
     specs = re.findall(r"\badd\(\{", main)
     assert len(specs) == 28, len(specs)
     total = len(re.findall(r"\badd\(\{", (STATIC / "presentation" / "slides.js").read_text()))
-    assert total == 42  # 28 main slides, appendix index, and references A to M
+    assert total == 43  # 28 main slides, appendix index, and references A to N
+    assert total - len(specs) == 15
     for block in re.split(r"\badd\(\{", main)[1:]:
         assert "notes:" in block, block[:100]
         assert "title:" in block, block[:100]
@@ -657,7 +658,7 @@ def test_three_frozen_experiments_are_integrated_without_changing_slide_count():
     for helper in ("threatComparison", "unseenRetrieval", "fixedPipeline"):
         assert f"export function {helper}" in graphics
         assert helper in slides and helper in story
-    assert len(re.findall(r"\badd\(\{", slides)) == 42
+    assert len(re.findall(r"\badd\(\{", slides)) == 43
     threat = json.loads((root / "experiments/threats/threat-v2-analysis.json").read_text())
     assert (threat["guarded_majority_pass"], threat["naive_majority_pass"]) == (50, 42)
     assert (threat["guarded_only"], threat["naive_only"]) == (10, 2)
@@ -714,3 +715,60 @@ def test_evaluation_story_separates_rules_from_judges_and_merges_the_tool_gap():
     assert "after saved runs had been scored" in main
     for forbidden in ("same query on the same local", "two routes", "adds no new knowledge", "adds no second knowledge"):
         assert forbidden not in slides
+
+
+def test_decisions_api_is_exactly_one_final_appendix_slide_with_frozen_results():
+    slides = (STATIC / "presentation/slides.js").read_text()
+    graphics = (STATIC / "presentation/graphics.js").read_text()
+    results = json.loads((WEB.parent / "experiments/eval/decisions-api-results.json").read_text())
+    assert "Trying the Decisions API" not in _slides_main_section()
+    assert slides.count("title: 'Trying the Decisions API'") == 1
+    appendix = slides.split("// ---------- appendix", 1)[1].split("// Appendix index lists", 1)[0]
+    assert len(re.findall(r"\badd\(\{", appendix)) == 15
+    last_slide = appendix.rsplit("add({", 1)[1]
+    assert "id: 'decisions-api'" in last_slide
+    assert "title: 'Trying the Decisions API'" in last_slide
+    assert "visual: decisionsExperiment()" in last_slide
+    assert "both preregistered screens failed. Not adopted." in last_slide
+    assert "experiments/eval/decisions-api-results.json" in last_slide
+    notes = last_slide.split("notes:", 1)[1]
+    for caveat in ("historical, not contemporaneous", "no generated reply", "441 selected dependent claims",
+                   "both generator models", "second-family AI judge", "not human ground truth",
+                   "Same-family original-judge", "no verified unsupported negatives",
+                   "No judge-latency comparison", "end-to-end swap", "no live adoption",
+                   "original test and fresh questions"):
+        assert caveat in notes, caveat
+    assert "held-out" not in last_slide and "heldout" not in last_slide
+    block = graphics.split("export function decisionsExperiment()", 1)[1].split("return wrap;", 1)[0]
+    for label in ("Routing latency", "Exact route accuracy", "AUROC", "Accuracy", "Balanced accuracy",
+                  "both generator models", "API model: gpt-6-luna only", "False support: 44/58"):
+        assert label in block
+    for identifier in ("DEV-", "HO-", "D-0", "A0", "A70"):
+        assert identifier not in block
+    assert "gpt-5.6-luna" not in block
+    latency = results["triage"]["latency"]
+    assert f"['Historical', {latency['baseline']['p50_s']}," in block
+    assert f"['Decisions', {latency['case_medians']['p50_s']}," in block
+    assert "const routeThreshold = 407 / 409;" in block
+    assert results["triage"]["rules"]["thresholds"]["exact_matches_each_repeat"] == 407
+    for arm, label in (("A0", "No confidence gate"), ("A70", "70% confidence gate")):
+        counts = {v["effective_exact_route"]["numerator"] for v in results["triage"]["arms"][arm]["by_repeat"].values()}
+        assert len(counts) == 1
+        assert f"['{label}', {counts.pop()}]" in block
+    # The historical count is derived from the stored paired deltas, not a new run.
+    baseline = 405 - round(sum(v["A0"] for v in latency["paired_cases"]))
+    assert f"['Baseline', {baseline}]" in block
+    primary = results["support"]["metrics"]["primary"]["overall"]
+    for label, key, threshold in (("AUROC", "auroc", ".80"), ("Accuracy", "all_scheduled_accuracy", ".85"),
+                                  ("Balanced accuracy", "balanced_accuracy", ".70")):
+        assert f"['{label}', {primary[key]}, {threshold}]" in block
+    assert primary["scheduled_n"] == 441
+    assert set(results["support"]["metrics"]["primary"]["strata"]["model"]) == {"gpt-6-luna", "gpt-5.6-luna"}
+    assert results["triage"]["decision"] == results["support"]["decision"] == "failed_screen"
+    css = (STATIC / "css/presentation.css").read_text()
+    assert "const latencyRows =" in block and "const routeRows =" in block
+    assert "latencyRows.forEach" in block and "routeRows.forEach" in block
+    assert "supportMetrics.forEach" in block and "wrap.append(mobile)" in block
+    assert ".decisions-experiment > svg { display: none; }" in css
+    assert ".decisions-experiment .decisions-mobile { display: grid;" in css
+    assert ".decisions-mobile-note, .decisions-mobile-threshold, .decisions-mobile-failed { font-size: 16px;" in css

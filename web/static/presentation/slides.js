@@ -8,6 +8,7 @@ import {model, metricOf, goldOf, contextSentence} from './model.js';
 import {stat, textStat, countRunner, dataTable} from './ui.js';
 import {threeAnswers, twoSources, buildTimeline, flattening, mcpMap, retrievalStaircase, experimentStaircase, agentLoop, evidenceTrace, assignmentBrief, challengeGrid, architectureDiagram, myProject, hardParts, failureModes, keywordVsMeaning, modelChoice, RESPONSIBLE_AI, HYPOTHESES, contentMetricsText, reviewStreams, workbenchShot, conceptGrid, cardRow, toolFixFlow, threatMatrix, threatRuns, buildProcess, rowsAffordance, finalComparison, finalFacts, finalSentence, finalCostFacts, provenanceTable, secondJudgeFacts, secondJudgeNote, secondJudgeQa, secondJudgeSentence, SUPPORT_LABEL} from './graphics.js';
 import {evidenceStores, questionSets, retrievalTuning, metricComparison, threatComparison, unseenRetrieval, fixedPipeline} from './graphics.js';
+import {decisionsExperiment} from './graphics.js';
 import {renderScope} from './ch1-scope.js';
 import {renderData} from './ch2-data.js';
 import {renderRetrieval} from './ch3-retrieval.js';
@@ -492,6 +493,23 @@ export function slideSpecs(report) {
       panel: blocks.map(b => { const whole = el('div'); whole.append(heading(text(b, '.pr-block-title')), ...[...b.children].filter(n => !n.classList.contains('pr-block-head'))); return group(whole); }).concat(takeAll(c.serving, '.pr-callout').map(n => group(n))),
       source: 'report.json: serving, mcp; docs/decisions.md; experiments/triage; experiments/corpus-snapshots',
       notes: [`Five things differ between the live app and the system the experiments measured: a small-talk reply, a scope check, a rewrite of follow-up questions, statistics lookups through MCP and document build v3.1. ${contextSentence(serving)} The scope check was measured alone on ${fmt.int(tri.n_calls)} calls: ${fmt.int((tri.gold_and_fresh || {}).false_out_of_scope)} of ${fmt.int((tri.gold_and_fresh || {}).n)} reference and fresh questions wrongly turned away, ${fmt.int((tri.threats || {}).false_out_of_scope)} of ${fmt.int((tri.threats || {}).n)} threat cases turned away (a request to decode a base64 string, declined politely), ${fmt.int((tri.offtopic || {}).recall_not_in_scope)} of ${fmt.int((tri.offtopic || {}).expected_not_in_scope)} off-topic messages caught, cost $${(triCl.total_cost_usd ?? 0).toFixed(4)}, median ${triCl.latency_p50_s} s and 95th percentile ${triCl.latency_p95_s} s. The sets are small and hand-written, with one run and the same model family. A separate 65-case served-chain sample covers the statistics-only MCP route and all web steps: 90.8% for both models, no observed loss versus direct calls. It includes 51 reused development cases and 14 hand-written probes, one run, same judge family; it is not the fresh 65, and not independent evidence.`]
+    });
+  });
+
+  appendix('N', 'Trying the Decisions API', () => {
+    add({
+      id: 'decisions-api', chapter: 'Appendix', layout: 'solo', title: 'Trying the Decisions API',
+      visual: decisionsExperiment(),
+      caption: 'Faster routing calls, but both preregistered screens failed. Not adopted.',
+      source: 'experiments/eval/decisions-api-results.json',
+      notes: [
+        'Frozen completed experiment, not a shipped agent change. The Decisions API model was gpt-6-luna only. Routing compared the historical baseline with A0 (no confidence gate) and A70 (70% confidence gate). Each of three repeats scored 405/409 for A0 and 397/409 for A70, below the preregistered 407/409 minimum. Baseline 408/409 is recoverable from the paired accuracy deltas in the immutable results.',
+        'Timings are case-paired historical, not contemporaneous. The chart compares historical median 1.563 s with the median of Decisions per-case medians, 0.3593592921 s, on 409 questions. The task differs: Decisions returns a classification with no generated reply. This does not demonstrate a causal speed-up or an end-to-end swap. No judge-latency comparison was made and there was no live adoption.',
+        'The claim-support screen used 441 selected dependent claims from saved answers from both generator models, gpt-6-luna and gpt-5.6-luna, across development, original test and fresh questions and both retrieval arms. These are not 441 independent questions. Three judge-omitted records were excluded before the frozen selection; this is not a subset-only verifier metric.',
+        'The primary reference is a second-family AI judge, not human ground truth. Primary AUROC .8296794814, accuracy .8798185941 and balanced accuracy .6089403079 are compared with preregistered minima .80, .85 and .70. Coverage was 441/441. False support was 44/58 (.7586206897), exceeding the .20 maximum; the negatives here are AI-labelled partial claims, not verified unsupported negatives.',
+        'Same-family original-judge labels are a sensitivity analysis, not the primary reference: AUROC .7857487767, accuracy .8163265306, balanced accuracy .5738958280. There are no verified unsupported negatives, so neither reference establishes unsupported-claim detection. AI reference errors, selection, dependent claims and repeated questions limit generalisation. Cluster-bootstrap intervals and strata remain in the immutable results; the face shows point estimates, not independent-sample confidence claims.',
+        'Both routing and support screens failed their preregistered rules. Faster classification alone does not justify changing the live scope check, evaluator or agent.'
+      ]
     });
   });
 

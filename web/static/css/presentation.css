@@ -1321,3 +1321,22 @@ th[aria-sort="descending"] .pr-sort::after { content: " \2193"; }
   .measurement-process .sj-sub, .calculation-status { font-size: 16px; }
   .calculation-change { font-size: 40px; }
 }
+
+/* The Decisions appendix keeps desktop charts, but reflows their shared data on phones. */
+.decisions-mobile { display: none; }
+@media (max-width: 800px) {
+  .decisions-experiment { height: auto; display: block; }
+  .decisions-experiment > svg { display: none; }
+  .decisions-experiment .decisions-mobile { display: grid; gap: 28px; }
+  .decisions-mobile-section { display: grid; gap: 12px; min-width: 0; border-top: 1px solid var(--line-strong); padding-top: 18px; }
+  .decisions-mobile-section h3 { font-size: 22px; line-height: 1.2; font-weight: 600; }
+  .decisions-mobile-note, .decisions-mobile-threshold, .decisions-mobile-failed { font-size: 16px; line-height: 1.4; color: var(--muted); }
+  .decisions-mobile-threshold { color: var(--brass-text); }
+  .decisions-mobile-failed { color: var(--bad); }
+  .decisions-mobile-row { display: grid; gap: 8px; padding-top: 6px; }
+  .decisions-mobile-label { display: flex; justify-content: space-between; gap: 12px; font-size: 17px; line-height: 1.3; color: var(--ink-2); }
+  .decisions-mobile-label strong { flex-shrink: 0; font-weight: 600; color: var(--ink); }
+  .decisions-mobile-track { position: relative; height: 16px; background: var(--paper-3); border-radius: 3px; }
+  .decisions-mobile-fill { display: block; width: var(--value); height: 100%; background: var(--bar-colour); border-radius: 3px; }
+  .decisions-mobile-rule { position: absolute; left: var(--threshold); top: -3px; bottom: -3px; width: 3px; background: var(--brass); }
+}
