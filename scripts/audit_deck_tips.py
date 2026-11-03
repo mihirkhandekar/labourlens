@@ -66,6 +66,11 @@ def audit(url: str, width: int, height: int, chrome: str | None) -> dict:
         page = browser.new_page(viewport={"width": width, "height": height})
         page.goto(url, wait_until="networkidle")
         page.wait_for_selector(".reveal .slides > section")
+        # References are intentionally detached until double-A reveals them.
+        page.wait_for_selector(".deck-bar")
+        page.keyboard.press("a")
+        page.keyboard.press("a")
+        page.wait_for_function("document.querySelector('.reveal .slides > section[data-appendix]') !== null")
         total = page.locator(".reveal .slides > section").count()
         page.add_style_tag(content="*{transition:none!important;animation:none!important}")
         for number in range(1, total + 1):

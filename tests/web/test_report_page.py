@@ -22,7 +22,7 @@ HOME = (STATIC / "js" / "home.js").read_text(encoding="utf-8")
 REQUIRED_STEPS = {
     "assignment": "Assignment", "problem": "My project", "system": "Agentic system", "data": "Choosing the data",
     "eda": "Data findings", "hard": "Challenges with the data", "build": "Report processing", "retrieval": "Retrieval Strategies", "agent": "Agent",
-    "models": "Models", "tools": "Tools and MCP", "ops": "Agent Workbench", "review": "Human Review of Dataset", "safety": "Safety", "process": "How I built it",
+    "models": "Models", "tools": "Tools and MCP", "ops": "Agent Workbench", "review": "Review provenance", "safety": "Safety", "process": "How I built it",
     "limits": "Limits", "run": "Run it",
 }
 REVIEW_SENTENCE = "I signed off four separate review streams"
@@ -79,8 +79,8 @@ def test_hero_has_name_pitch_and_three_buttons():
 def test_report_copy_explains_transit_system_and_sources():
     assert "Public transport" not in STORY and "transit data" not in STORY
     assert "Agentic system" in STORY
-    assert "Only the live get_series path crosses the MCP client/server" in STORY
-    assert "Passage retrieval is not run before the agent" in STORY
+    assert "Statistics lookup and annual averaging cross MCP" in STORY
+    assert "The planner sees the question and catalogue, not passage text" in STORY
     assert "The structured records are quarterly statistical observations" in STORY
     assert "Statistics give the numbers and reports give the explanations" not in STORY
     assert "One answer, each part cited" not in STORY

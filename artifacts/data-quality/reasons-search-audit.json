@@ -1,0 +1,462 @@
+{
+  "date": "2026-11-03",
+  "method": "Offline inspection only. Loaded local passages, built merge200 chunks and BM25Index with BM25Config defaults. No embeddings, reranking, keys, network or model calls. No tests executed.",
+  "named_live_question_follow_up": {
+    "question_requested": "why was unemployment highest in 2021 Q3",
+    "trace_found": false,
+    "scan": {
+      "roots": ["data/audit", "data/runs"],
+      "file_types": [".json", ".jsonl"],
+      "files_scanned": 11746,
+      "fields": ["question", "original_question", "resolved_question", "message", "query"],
+      "matching": "Case-insensitive string-field search for unemployment together with highest, or unemployment together with why and 2021; recursively inspected nested objects and arrays.",
+      "matching_fields": 0,
+      "limitations": "Local point-in-time files only; no deployment access, private history, compressed logs or non-JSON logs. A missing match does not establish that the live question was never asked."
+    },
+    "tool_arguments": null,
+    "outcome": null,
+    "selected_live_series": null,
+    "conclusion": "The exact live failure and selected series cannot be established from the available saved traces. Do not attribute a particular tool error or abstention to this named turn.",
+    "premise_check": {
+      "source": "data/processed/observations.parquet",
+      "unit": "percent",
+      "supported_window": ["2020-Q1", "2026-Q2"],
+      "method": "Grouped the three unemployment source IDs by adjustment and compared 2021-Q3 with maxima within calendar 2021 and the full supported window.",
+      "conclusion": "2021-Q3 is not the maximum for any of the six overall, resident or citizen series, whether seasonally adjusted or unadjusted, in either comparison window. This does not identify which series the unavailable live turn selected.",
+      "series": [
+        {
+          "source_id": "resident_unemployment_rate",
+          "adjustment": "seasonally_adjusted",
+          "q3_2021": {"value": 3.4, "observation_id": "4e9407e0478a6f0b"},
+          "max_2021": {"period": "2021-Q1", "value": 3.9, "observation_id": "babad0478bbba0ac"},
+          "max_supported_window": {"period": "2020-Q3", "value": 4.6, "observation_id": "dd27a5a2cda24d2e"}
+        },
+        {
+          "source_id": "resident_unemployment_rate",
+          "adjustment": "not_adjusted",
+          "q3_2021": {"value": 3.2, "observation_id": "8b4a4909c3cb2cd4"},
+          "max_2021": {"period": "2021-Q2", "value": 4.6, "observation_id": "18fc6cc88dcb7646"},
+          "max_supported_window": {"period": "2020-Q2", "value": 5.2, "observation_id": "892a849913913ed8"}
+        },
+        {
+          "source_id": "citizen_unemployment_rate",
+          "adjustment": "seasonally_adjusted",
+          "q3_2021": {"value": 3.6, "observation_id": "fc35290873f37b8d"},
+          "max_2021": {"period": "2021-Q1", "value": 4.1, "observation_id": "e7ead8377380f702"},
+          "max_supported_window": {"period": "2020-Q3", "value": 4.7, "observation_id": "cf2b622d4a50518e"}
+        },
+        {
+          "source_id": "citizen_unemployment_rate",
+          "adjustment": "not_adjusted",
+          "q3_2021": {"value": 3.4, "observation_id": "14cf2d9560b138b3"},
+          "max_2021": {"period": "2021-Q2", "value": 4.9, "observation_id": "49f11fae5efa7990"},
+          "max_supported_window": {"period": "2020-Q2", "value": 5.5, "observation_id": "eff0fcc89e222d0d"}
+        },
+        {
+          "source_id": "overall_unemployment_rate",
+          "adjustment": "seasonally_adjusted",
+          "q3_2021": {"value": 2.6, "observation_id": "c8be060903036542"},
+          "max_2021": {"period": "2021-Q1", "value": 2.9, "observation_id": "32ddd5516704c559"},
+          "max_supported_window": {"period": "2020-Q3", "value": 3.4, "observation_id": "87c2b59bd1b5a6ac"}
+        },
+        {
+          "source_id": "overall_unemployment_rate",
+          "adjustment": "not_adjusted",
+          "q3_2021": {"value": 2.5, "observation_id": "789430e72f6ab2f6"},
+          "max_2021": {"period": "2021-Q2", "value": 3.4, "observation_id": "c768ef5d52931de8"},
+          "max_supported_window": {"period": "2020-Q2", "value": 3.8, "observation_id": "07c12b731faae0e3"}
+        }
+      ]
+    }
+  },
+  "corpus": {
+    "passages": 29760,
+    "chunks": 3632,
+    "sources_with_passages": 102
+  },
+  "queries": [
+    "2021-Q3 unemployment retrenchment reasons restrictions Phase 2 heightened alert",
+    "2020 retrenchment unemployment reasons recession COVID pandemic",
+    "2021 retrenchment reasons reorganisation restructuring downturn",
+    "2022 retrenchment unemployment reasons reorganisation restructuring recession",
+    "2021-Q3 retrenchment reasons reorganisation restructuring unemployment mismatch",
+    "2020 unemployment recession weak demand hiring pandemic",
+    "2021 unemployment decline economic recovery demand labour",
+    "2022 unemployment decline tight labour market economic recovery",
+    "2022-Q4 retrenchments business downturn electronics wholesale trade information communications"
+  ],
+  "evidence": [
+    {
+      "topic": "2021-Q3 retrenchment",
+      "source_id": "mom-2021-q3-final",
+      "passage_id": "mom-2021-q3-final:p017:b015:d7eadfd8",
+      "url": "https://stats.mom.gov.sg/Pages/Labour-Market-Report-3Q-2021.aspx",
+      "locator": "p.17 (printed 11)",
+      "release_stage": "final",
+      "paraphrase": "MOM identifies business restructuring as the leading layoff reason. The quarter-on-quarter fall was spread across industries, with manufacturing contributing most."
+    },
+    {
+      "topic": "2021-Q3 unemployment context",
+      "source_id": "mom-2021-q3-final",
+      "passage_id": "mom-2021-q3-final:p008:b001:97cf51a0",
+      "url": "https://stats.mom.gov.sg/Pages/Labour-Market-Report-3Q-2021.aspx",
+      "locator": "p.8 (printed 2)",
+      "release_stage": "final",
+      "paraphrase": "MOM describes recovering demand as travel and dining rules eased. It also warns that uneven sector recovery can make job matching harder for older or less-qualified displaced workers, explaining persistently high long-duration resident unemployment. This does not isolate a causal effect on the headline rate."
+    },
+    {
+      "topic": "2020 unemployment composition",
+      "source_id": "mom-2020-q2-final",
+      "passage_id": "mom-2020-q2-final:p012:b010:c2b75330",
+      "url": "https://stats.mom.gov.sg/Pages/Labour-Market-Report-2Q-2020.aspx",
+      "locator": "p.12 (printed 6)",
+      "release_stage": "final",
+      "paraphrase": "MOM attributes the quarterly resident unemployment increase to more short-duration unemployment, rather than rising long-duration unemployment. This is a descriptive decomposition, not identification of a policy cause."
+    },
+    {
+      "topic": "2020 retrenchment",
+      "source_id": "mom-2020-q4-final",
+      "passage_id": "mom-2020-q4-final:p031:b038:a440c6fa",
+      "url": "https://stats.mom.gov.sg/Pages/Labour-Market-Report-4Q-2020.aspx",
+      "locator": "p.31 (printed 25)",
+      "release_stage": "final",
+      "paraphrase": "MOM reports industry downturn as the leading reason, accounting for 59% in 2020. Pandemic-exposed aviation, recreation and administrative services were particularly affected; firms reduced costs in weak conditions. Respondents could select multiple reasons."
+    },
+    {
+      "topic": "2021 unemployment context",
+      "source_id": "mom-2021-q4-final-release",
+      "passage_id": "mom-2021-q4-final-release:s02:i001:6fea64f3",
+      "url": "https://www.mom.gov.sg/newsroom/press-releases/2022/0314-statement-on-labour-market-developments-in-2021",
+      "locator": "section: INTRODUCTION, item 1",
+      "release_stage": "final",
+      "paraphrase": "MOM places improving unemployment alongside a broad recovery, stronger resident employment and increased hiring as economic growth accelerated. Border controls constrained foreign labour supply. This provides reported context, not a quantified causal decomposition."
+    },
+    {
+      "topic": "2021 retrenchment",
+      "source_id": "mom-2021-q4-final",
+      "passage_id": "mom-2021-q4-final:p033:b002:a558bea9",
+      "url": "https://stats.mom.gov.sg/Pages/Labour-Market-Report-4Q-2021.aspx",
+      "locator": "p.33 (printed 27)",
+      "release_stage": "final",
+      "paraphrase": "MOM identifies business restructuring as the leading 2021 layoff reason, linked to preparing for growth, unlike the downturn-related pattern in 2020."
+    },
+    {
+      "topic": "2022 unemployment explanation",
+      "source_id": "mom-2022-q4-advance",
+      "passage_id": "mom-2022-q4-advance:s01:i007:17a6256f",
+      "url": "https://www.mom.gov.sg/newsroom/press-releases/2023/0131-labour-market-advance-release-2022",
+      "locator": "section: Labour Market Advance Release 2022, item 7",
+      "release_stage": "advance",
+      "paraphrase": "The advance release attributes improving unemployment to economic recovery and labour-market tightness. Its published annual unemployment averages are separate source measures, not averages calculated from quarterly end-period rates."
+    },
+    {
+      "topic": "2022 retrenchment",
+      "source_id": "mom-2022-q4-final",
+      "passage_id": "mom-2022-q4-final:p028:b001:4b59ae80",
+      "url": "https://stats.mom.gov.sg/Pages/Labour-Market-Report-4Q-2022.aspx",
+      "locator": "p.28 (printed 22)",
+      "release_stage": "final",
+      "paraphrase": "MOM again identifies restructuring as the leading layoff reason. Downturn explanations became less prevalent; supply disruption and rising costs did not produce a proportionate increase in layoffs."
+    },
+    {
+      "topic": "2022-Q3 retrenchment",
+      "source_id": "mom-2022-q3-final-release",
+      "passage_id": "mom-2022-q3-final-release:s01:i009:cf3f1cfd",
+      "url": "https://www.mom.gov.sg/newsroom/press-releases/2022/1215-labour-market-report-third-quarter-2022",
+      "locator": "section: Labour Market Report Third Quarter 2022, item 9",
+      "release_stage": "final",
+      "paraphrase": "MOM links most of the quarterly increase to technology firms and interprets continued high vacancies as suggesting restructuring. Preserve that tentative interpretation, rather than presenting it as proven causation."
+    },
+    {
+      "topic": "2022-Q4 retrenchment",
+      "source_id": "mom-2022-q4-final",
+      "passage_id": "mom-2022-q4-final:p021:b017:3e9886e9",
+      "url": "https://stats.mom.gov.sg/Pages/Labour-Market-Report-4Q-2022.aspx",
+      "locator": "p.21 (printed 15)",
+      "release_stage": "final",
+      "paraphrase": "MOM locates most layoffs in information and communications, wholesale and electronics manufacturing, describes external economic headwinds, and identifies restructuring as the leading reason."
+    }
+  ],
+  "scan": {
+    "population": {
+      "experiments_files": 685,
+      "experiments_records": 30185,
+      "data_files": 11914,
+      "data_records": 65327,
+      "artifacts_files": 13,
+      "artifacts_records": 13
+    },
+    "file_total": 12612,
+    "record_total": 95525,
+    "malformed": [],
+    "search_execute_tool_occurrences": 21181,
+    "search_execute_tool_unique_exact_events": 11399,
+    "invalid_arguments_occurrences": 50,
+    "invalid_arguments_unique_exact_events": 27,
+    "files_with_invalid_arguments": 38,
+    "causes_occurrences": {
+      "k must be an integer from 1 to 10": 49,
+      "missing required argument(s): ['query']": 1
+    },
+    "causes_unique": {
+      "k must be an integer from 1 to 10": 26,
+      "missing required argument(s): ['query']": 1
+    },
+    "deduplication": "Exact JSON event equality, including timestamp and all detail fields. Copies in run JSON and JSONL count separately in occurrences, once in unique events. Repeated calls at different timestamps remain separate.",
+    "limitations": "Recursively scanned all existing .json and .jsonl files under experiments, data and artifacts, including ignored files. Counted canonical node=execute_tool detail.tool=search_reports records only. Does not count planner proposals, summaries, test code, private files, compressed logs or non-JSON logs. Data may be written concurrently; this is a point-in-time local scan, not a complete deployment history. No rate or evaluation-gain claim follows from these counts."
+  },
+  "invalid_events": [
+    {
+      "file": "data/runs/served-dev-S65-mcp-on/gpt-5.6-luna.jsonl",
+      "location": "line:24/trace/3",
+      "timestamp": 1793586242.665,
+      "k": 86030615,
+      "message": "k must be an integer from 1 to 10"
+    },
+    {
+      "file": "data/runs/served-dev-S65-nostats-b/gpt-6-luna.jsonl",
+      "location": "line:30/trace/5",
+      "timestamp": 1793631286.331,
+      "k": null,
+      "message": "missing required argument(s): ['query']"
+    },
+    {
+      "file": "data/runs/agent/1936e3fc7388.json",
+      "location": "/trace/2",
+      "timestamp": 1793589425.13,
+      "k": 804,
+      "message": "k must be an integer from 1 to 10"
+    },
+    {
+      "file": "data/runs/agent/95aa038463cd.json",
+      "location": "/trace/2",
+      "timestamp": 1793344234.96,
+      "k": 803,
+      "message": "k must be an integer from 1 to 10"
+    },
+    {
+      "file": "data/runs/agent/844712bddc5c.json",
+      "location": "/trace/2",
+      "timestamp": 1793344930.734,
+      "k": 82024,
+      "message": "k must be an integer from 1 to 10"
+    },
+    {
+      "file": "data/runs/agent/8a1c57c6c858.json",
+      "location": "/trace/2",
+      "timestamp": 1793352572.075,
+      "k": 807,
+      "message": "k must be an integer from 1 to 10"
+    },
+    {
+      "file": "data/runs/agent/2d8b029a86f4.json",
+      "location": "/trace/2",
+      "timestamp": 1793353206.028,
+      "k": 803,
+      "message": "k must be an integer from 1 to 10"
+    },
+    {
+      "file": "data/runs/agent/d5c273b3fe78.json",
+      "location": "/trace/2",
+      "timestamp": 1793353492.729,
+      "k": 802,
+      "message": "k must be an integer from 1 to 10"
+    },
+    {
+      "file": "data/runs/agent/a098a007bd66.json",
+      "location": "/trace/2",
+      "timestamp": 1793353650.734,
+      "k": 8026,
+      "message": "k must be an integer from 1 to 10"
+    },
+    {
+      "file": "data/runs/agent/0bc6c7774d88.json",
+      "location": "/trace/5",
+      "timestamp": 1793340922.074,
+      "k": 802,
+      "message": "k must be an integer from 1 to 10"
+    },
+    {
+      "file": "data/runs/agent/f80d0cb2a751.json",
+      "location": "/trace/2",
+      "timestamp": 1793340974.535,
+      "k": 801,
+      "message": "k must be an integer from 1 to 10"
+    },
+    {
+      "file": "data/runs/agent/dd76ff80d44e.json",
+      "location": "/trace/2",
+      "timestamp": 1793341377.727,
+      "k": 804,
+      "message": "k must be an integer from 1 to 10"
+    },
+    {
+      "file": "data/runs/served-dev-S65-direct-off/gpt-5.6-luna.jsonl",
+      "location": "line:2/trace/4",
+      "timestamp": 1793591247.429,
+      "k": 806,
+      "message": "k must be an integer from 1 to 10"
+    },
+    {
+      "file": "data/runs/agent-heldout-FIN2V2-hybrid/gpt-5.6-luna.jsonl",
+      "location": "line:35/trace/2",
+      "timestamp": 1793590204.567,
+      "k": 86030,
+      "message": "k must be an integer from 1 to 10"
+    },
+    {
+      "file": "data/runs/agent-heldout-FIN2V2-r3/gpt-5.6-luna.jsonl",
+      "location": "line:21/trace/2",
+      "timestamp": 1793587421.727,
+      "k": 82026,
+      "message": "k must be an integer from 1 to 10"
+    },
+    {
+      "file": "data/runs/agent/72815361bf44.json",
+      "location": "/trace/2",
+      "timestamp": 1793331643.84,
+      "k": 845,
+      "message": "k must be an integer from 1 to 10"
+    },
+    {
+      "file": "data/runs/agent-dev-X3/gpt-5.6-luna.jsonl",
+      "location": "line:118/trace/5",
+      "timestamp": 1793498306.436,
+      "k": 83,
+      "message": "k must be an integer from 1 to 10"
+    },
+    {
+      "file": "data/runs/agent-dev-X1/gpt-5.6-luna.jsonl",
+      "location": "line:24/trace/2",
+      "timestamp": 1793421082.081,
+      "k": 860264,
+      "message": "k must be an integer from 1 to 10"
+    },
+    {
+      "file": "data/runs/agent-dev-FIN-hybrid/gpt-5.6-luna.jsonl",
+      "location": "line:24/trace/2",
+      "timestamp": 1793549093.154,
+      "k": 82025,
+      "message": "k must be an integer from 1 to 10"
+    },
+    {
+      "file": "data/runs/agent-dev-FIN2-r3/gpt-5.6-luna.jsonl",
+      "location": "line:214/trace/2",
+      "timestamp": 1793586414.653,
+      "k": 82026,
+      "message": "k must be an integer from 1 to 10"
+    },
+    {
+      "file": "data/runs/agent-dev-FIN2-r3/gpt-5.6-luna.jsonl",
+      "location": "line:113/trace/2",
+      "timestamp": 1793585792.666,
+      "k": 88,
+      "message": "k must be an integer from 1 to 10"
+    },
+    {
+      "file": "data/runs/agent-dev-X3/gpt-5.6-luna.jsonl",
+      "location": "line:26/trace/5",
+      "timestamp": 1793497910.825,
+      "k": 803,
+      "message": "k must be an integer from 1 to 10"
+    },
+    {
+      "file": "data/runs/agent-heldout-FIN2V2-hybrid/gpt-5.6-luna.jsonl",
+      "location": "line:33/trace/2",
+      "timestamp": 1793590189.92,
+      "k": 86025,
+      "message": "k must be an integer from 1 to 10"
+    },
+    {
+      "file": "data/runs/agent-dev-A1/gpt-5.6-luna.jsonl",
+      "location": "line:235/trace/2",
+      "timestamp": 1793337529.967,
+      "k": 803,
+      "message": "k must be an integer from 1 to 10"
+    },
+    {
+      "file": "data/runs/agent-dev-FIN2-r3/gpt-5.6-luna.jsonl",
+      "location": "line:122/trace/5",
+      "timestamp": 1793585878.609,
+      "k": 81995,
+      "message": "k must be an integer from 1 to 10"
+    },
+    {
+      "file": "data/runs/agent-heldout-FIN2V2-hybrid/gpt-5.6-luna.jsonl",
+      "location": "line:39/trace/2",
+      "timestamp": 1793590223.328,
+      "k": 82025,
+      "message": "k must be an integer from 1 to 10"
+    },
+    {
+      "file": "data/runs/agent-dev-X1/gpt-5.6-luna.jsonl",
+      "location": "line:217/trace/2",
+      "timestamp": 1793422063.127,
+      "k": 807,
+      "message": "k must be an integer from 1 to 10"
+    }
+  ],
+  "schema_findings": [
+    "Structured and native planner schemas previously allowed any integer for k, whereas the runtime only accepts 1 through 10. All 26 unique k errors were excessive integers; observed range 83 to 86030615.",
+    "One unique missing-query event also carried statistics-tool fields despite naming search_reports. No evidence supports aliases, integer coercion or clamping.",
+    "Tools.search_reports previously called strip on arbitrary truthy query types and accepted True as integer k. Method now returns typed correctable errors before retrieval.",
+    "Annual served schema bounds added by AnnualAverage owner; frozen base and v2 schemas intentionally unchanged."
+  ],
+  "q2_2026_retrenchment_drivers_follow_up": {
+    "date": "2026-11-03",
+    "question_shape": "Why did layoffs increase in 2Q 2026: AI displacement or COVID?",
+    "method": "Offline only. Loaded local passages, built merge200 chunks and BM25Index with default BM25Config; queried four period+topic wordings (reasons/restructuring/downturn/AI, 2026-Q2 and 2Q 2026). No embeddings, reranking, keys, network or model calls. No tests executed. Wording below is paraphrased; no publisher quotation exceeds six words.",
+    "claimed_increase_check": {
+      "supported": true,
+      "finding": "MOM reports a quarter-on-quarter rise in retrenchments from 1Q 2026 to 2Q 2026: 3,830 to 4,500 in the advance release and 3,830 to 4,620 in the final report and final release. The final report also gives incidence rising from 1.6 to 2.0 per 1,000 employees. The advance and final headline counts differ and the final supersedes the advance.",
+      "caveat": "The question does not say which comparison period it means; the preceding quarter is the publisher's own comparison. Rounding is to the nearest 10 in the report."
+    },
+    "stated_drivers": [
+      {
+        "source_id": "mom-2026-q2-final",
+        "passage_ids": ["mom-2026-q2-final:p017:b002:3f08c05b", "mom-2026-q2-final:p017:b003:b470386b", "mom-2026-q2-final:p017:b005:52b01814"],
+        "url": "https://stats.mom.gov.sg/Pages/Labour-Market-Report-2Q-2026.aspx",
+        "locator": "p.17 (printed 11)",
+        "release_stage": "final",
+        "paraphrase": "MOM says the rise was concentrated in outward-oriented sectors, with Manufacturing, Information & Communications and Financial Services singled out, and that business reorganisation or restructuring continued to be the leading reason firms gave. Firms may give more than one reason."
+      },
+      {
+        "source_id": "mom-2026-q2-final",
+        "passage_ids": ["mom-2026-q2-final:p007:b020:cff04626", "mom-2026-q2-final:p007:b021:b2101272"],
+        "url": "https://stats.mom.gov.sg/Pages/Labour-Market-Report-2Q-2026.aspx",
+        "locator": "p.7 (printed 1)",
+        "release_stage": "final",
+        "paraphrase": "The report summary repeats that the increase was in outward-oriented sectors and that restructuring remained the main reason."
+      },
+      {
+        "source_id": "mom-2026-q2-final-release",
+        "passage_ids": ["mom-2026-q2-final-release:s02:i003:1d7fc2bc"],
+        "locator": "Main Findings, item 3",
+        "release_stage": "final",
+        "paraphrase": "The final press release attributes the increase to business reorganisation and restructuring in those outward-oriented sectors, and separately reports that the six-month re-entry rate for retrenched residents fell while the twelve-month rate was broadly stable."
+      },
+      {
+        "source_id": "mom-2026-q2-advance",
+        "passage_ids": ["mom-2026-q2-advance:s06:i001:86484167"],
+        "locator": "section: Retrenchments rose but remained concentrated in outward-oriented sectors, item 1",
+        "release_stage": "advance",
+        "paraphrase": "The advance release also describes the rise as concentrated in some outward-oriented sectors and driven mainly by restructuring, and says the level stayed below typical downturn levels. It is superseded by the final figures."
+      }
+    ],
+    "ai_and_covid_search": {
+      "mom_2026_q2_report_passages_mentioning_ai": 0,
+      "mom_2026_q2_report_passages_mentioning_covid": 1,
+      "covid_context": "One MOM Q2 2026 advance passage (mom-2026-q2-advance:s09:i006:b3e95f5a) compares downturn-era retrenchment ranges for the global financial crisis and the Covid-19 pandemic. It is a level comparison, not a stated driver of the Q2 2026 increase.",
+      "ai_context": "The nearest AI passages are the separate MTI Economic Survey feature on AI and employment (mti-2026-q2-feature-ai-employment, e.g. p.5, p.14, p.15). They are not period-specific MOM retrenchment explanations: the study covers firm AI use up to 2024 and its own caveat says it reflects early AI effects. They rank for lexical overlap on AI, so a generic query can retrieve them.",
+      "conclusion": "No local MOM Q2 2026 retrenchment passage attributes the increase to AI displacement or to COVID. An answer can attribute restructuring in outward-oriented sectors to MOM and state that AI and COVID are not named as drivers there; it must not conclude that AI is not a cause."
+    },
+    "retrieval_observation": {
+      "best_query": "2Q 2026 retrenchments increased reasons reorganisation",
+      "note": "Queries containing only period, retrenchment and reasons/restructuring ranked the mom-2026-q2-final p.17 chunk, p.7 summary, and final-release main findings above older reports for other years. Adding 'AI' to the query pulled in the MTI AI feature and an older MOM job vacancy release, which is the loosely related AI evidence a causal question can surface.",
+      "chunk_note": "The p.17 chunk that holds the driver sentence also holds many unrelated footnote/table-fragment passages, so a total passage budget must preserve returned chunk rank and per-source diversity rather than only the first passages of each chunk."
+    },
+    "limits": "BM25 lexical rank only, local snapshot of corpus v4 on 2026-11-03. This does not test the live reranker or any model. The final report URL is the canonical_url in data/manifests/manifest.json; the final-release and advance-release passages carry no URL in the passage records and are identified by source_id."
+  },
+  "recommended_planner_instruction": "For a why, reasons or drivers question, search_reports can retrieve publisher explanations. Use a short query containing the period, topic and words such as reasons or restructuring. k is the number of ranked chunks, from 1 to 10; use 8, never append a year or other digits. If an argument error occurs, correct the named argument within the existing call budget; do not repeat the same invalid call. For search_reports supply only query and k, not statistics filters.",
+  "recommended_answer_instruction": "Distinguish an unsupported causal inference from an explanation explicitly attributed to the publisher. When passages state reasons or drivers, summarise those reasons with citations, preserving qualifiers such as suggests and separating source interpretation from established causal effects. Do not blanket-abstain on why questions when relevant publisher explanations exist. If only contextual associations are supported, provide those as context and state that the evidence does not establish a causal effect. Never treat a missing or failed tool call as proof that a report contains no explanation."
+}

@@ -23,15 +23,6 @@ function table(caption, headers, rows) {
 }
 function render(page) {
   const c = page.content; const m = page.measurements;
-  const references = new Map(c.references.map((reference, i) => [reference.id, {...reference, number: i + 1}]));
-  function cited(text, refs = []) {
-    const p = el('p', '', text);
-    refs.forEach(id => {
-      const ref = references.get(id); if (!ref) return;
-      const a = anchor(`[${ref.number}]`, `${repo}${ref.path}`); a.setAttribute('aria-label', `Reference ${ref.number}: ${ref.label}`);
-      p.append(document.createTextNode(' '), add(el('sup'), a));
-    }); return p;
-  }
   const contents = el('nav', 'iv-contents'); contents.setAttribute('aria-label', 'Assessment contents');
   contents.append(el('p', 'iv-contents-title', 'Contents'));
   const documentBody = el('article', 'iv-document');
@@ -55,22 +46,22 @@ function render(page) {
   c.sections.forEach(spec => {
     const section = addSection(spec.id, spec.title);
     section.append(el('p', 'iv-summary', spec.summary));
-    spec.paragraphs.forEach(p => section.append(cited(p.text, p.refs)));
+    spec.paragraphs.forEach(p => section.append(el('p', '', p.text)));
     spec.tables.forEach(kind => section.append(results(kind)));
     spec.proposals.forEach(proposal => {
       const detail = el('details', 'iv-proposal');
-      detail.append(el('summary', '', `Proposal: ${proposal.title}`));
+      const registered = proposal.title.startsWith('Third Decisions attempt:');
+      detail.append(el('summary', '', `${registered ? 'Registered plan, untested' : 'Proposal'}: ${proposal.title}`));
       const dl = el('dl');
-      [['Proposal', proposal.title], ['Evidence gap it closes', proposal.gap], ['Measure', proposal.measure], ['Success threshold', proposal.threshold], ['Status', proposal.status]].forEach(([term, text]) => dl.append(el('dt', '', term), el('dd', '', text)));
+      [['What I would change', proposal.title], ['Why', proposal.gap], ['Plan', proposal.measure], ['How I would check it', proposal.threshold], ['Status', registered ? 'Preregistered plan; untested; not adopted' : proposal.status]].forEach(([term, text]) => dl.append(el('dt', '', term), el('dd', '', text)));
       detail.append(dl); section.append(detail);
     });
   });
   const limitations = addSection('limitations', 'Limitations and threats to validity');
   const list = el('ul'); c.limitations.forEach(text => list.append(el('li', '', text))); limitations.append(list);
   const components = addSection('components', 'Mocked or unverified components and their production replacements');
-  components.append(table('Table 4. Current boundaries and required production replacements.', ['Component', 'Current state', 'Production replacement'], c.components.map(item => [item.component, item.current, item.replacement])));
-  const refs = addSection('references', 'References');
-  const refList = el('ol', 'iv-references'); c.references.forEach(reference => refList.append(add(el('li'), anchor(reference.label, `${repo}${reference.path}`)))); refs.append(refList);
+  components.append(el('p', 'iv-summary', 'Production design only. These replacements are not deployed or verified.'));
+  components.append(table('Current boundaries and proposed production architecture.', ['Component', 'Current state', 'Proposed production replacement'], c.components.map(item => [item.component, item.current, item.replacement])));
   documentBody.append(add(el('footer', 'iv-footer'), anchor('Project report', '/'), anchor('Short assessment source', `${repo}docs/innovation.md`)));
   root.replaceChildren(contents, documentBody);
   if ('IntersectionObserver' in window) {

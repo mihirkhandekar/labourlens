@@ -117,9 +117,9 @@ def test_every_slide_has_a_heading_and_speaker_notes():
     assert "el('aside', 'notes')" in builder and "if (!notes.children.length) notes.append(" in builder
     main = _slides_main_section()
     specs = re.findall(r"\badd\(\{", main)
-    assert len(specs) == 28, len(specs)
+    assert len(specs) == 29, len(specs)
     total = len(re.findall(r"\badd\(\{", (STATIC / "presentation" / "slides.js").read_text()))
-    assert total == 44  # 28 main slides, appendix index, and references A to O
+    assert total == 45  # 29 main slides, appendix index, and references A to O
     assert total - len(specs) == 16
     for block in re.split(r"\badd\(\{", main)[1:]:
         assert "notes:" in block, block[:100]
@@ -151,8 +151,8 @@ def test_no_bridge_sentences_or_pills_on_faces():
 
 REQUIRED_TITLES = [
     "Assignment", "My project", "Assumptions, constraints and scope", "System architecture", "Choosing the data", "Two kinds of evidence", "Data findings", "Retrenchments rose, data gives no cause", "Advance and final figures differ", "Challenges with the data",
-    "Processing reports", "Retrieval Strategies", "Does filtering help?", "Statistics lookup through MCP", "Agent loop", "Three example runs", "Checking the answer", "How I evaluated", "Human Review of Dataset", "Choosing models",
-    "Does better retrieval improve answers?", "Where the system still fails", "Attacks and defences", "Agent Workbench", "How I built it", "Next steps", "Summary",
+    "Processing reports", "Retrieval Strategies", "Does filtering help?", "Statistics lookup through MCP", "Agent loop", "Three example runs", "Checking the answer", "How I evaluated", "Choosing models",
+    "Does better retrieval improve answers?", "Where the system still fails", "Attacks and defences", "Agent Workbench", "How I built it", "Next steps", "Improve the system", "Deploy in production", "Summary",
 ]
 
 
@@ -166,7 +166,7 @@ def test_main_deck_follows_the_navigation_flow_and_has_short_plain_titles():
     main = _slides_main_section()
     defined = set(re.findall(r"\btitle: '([^']+)'", main))
     rows = _flow_rows()
-    assert len(rows) == 28
+    assert len(rows) == 29
     assert [r[0] for r in rows[1:]] == REQUIRED_TITLES
     for title, _, _ in rows:
         assert title in defined or "Singapore AI Agent" in title, title
@@ -179,7 +179,7 @@ def test_main_deck_follows_the_navigation_flow_and_has_short_plain_titles():
     assert "['Sources', 'Processing', 'Retrieval', 'Agent', 'Answer', 'Checks']" in (STATIC / "presentation" / "deck.js").read_text()
     for title in [r[0] for r in rows][1:]:
         assert len(title.split()) <= 9, title
-    assert len(re.findall(r"\badd\(\{", main)) == 28
+    assert len(re.findall(r"\badd\(\{", main)) == 29
 
 
 def test_removed_slides_stay_removed_and_summary_keeps_limitations():
@@ -243,12 +243,12 @@ def test_review_wording_is_plain_and_has_no_timing_claims():
 
 
 
-def test_home_page_has_no_logo_or_favicon_file():
+def test_home_page_has_no_logo_mark_and_all_pages_link_the_l_favicon():
     app = (STATIC / "app.js").read_text()
     assert "brandMark" not in app and "brand-mark" not in app
-    assert not (STATIC / "favicon.svg").exists()
-    for page in ("index.html", "deck.html", "workbench.html"):
-        assert "favicon.svg" not in (WEB / page).read_text()
+    assert (STATIC / "favicon.svg").exists()
+    for page in ("index.html", "deck.html", "workbench.html", "innovation.html"):
+        assert '<link rel="icon" type="image/svg+xml" href="/static/favicon.svg">' in (WEB / page).read_text()
     assert "Mihir Khandekar" in (STATIC / "js" / "home.js").read_text()
 
 
@@ -359,15 +359,15 @@ def test_deck_presents_gpt_6_luna_alone_and_the_report_keeps_both():
 def test_mcp_slide_states_where_mcp_sits():
     graphics = (STATIC / "presentation" / "graphics.js").read_text()
     block = _graphics_block(graphics, "export function mcpMap", "/** The nine remaining")
-    for needle in ("LabourLens host", "MCP client", "MCP server", "get_statistic", "labourlens://sources", "compare_quarters", "outputSchema", "stdio", "1 tool in use", "2 resources"):
+    for needle in ("LabourLens host", "MCP client", "MCP server", "get_statistic", "labourlens://sources", "compare_quarters", "stdio", "2 tools in use", "2 resources"):
         assert needle in block, needle
-    assert "not in the base planner schema" in block and "Full-set accuracy evaluations used direct calls" in block
+    assert "outside the planner schema" in block and "Full-set accuracy evaluations used direct calls" in block
     loop = graphics.split("export function agentLoop", 1)[1].split("return wrap;", 1)[0]
     for needle in ("Search reports", "BM25 + embeddings", "Structured statistics", "MCP server → rows", "Calculate in code", "Stop gathering", "Review returned evidence", "2 rounds", "6 calls"):
         assert needle in loop, needle
     assert "series only" not in loop
     assert "step('wrench', 'Agent sends a series request'" in graphics and "step('path', 'MCP server returns rows'" in graphics and "Rows returned to the agent" in graphics
-    assert "calculate_change" in graphics and "Search reports" in graphics and "Only the live get_series path crosses" in (STATIC / "js" / "report-story.js").read_text()
+    assert "calculate_change" in graphics and "Search reports" in graphics and "Statistics lookup and annual averaging cross MCP" in (STATIC / "js" / "report-story.js").read_text()
 
 
 def test_mcp_slide_labels_the_all_tools_arm_as_tested_and_not_live():
@@ -511,7 +511,7 @@ def test_mcp_wording_is_exact():
     mcp = (STATIC / "presentation" / "ch7-mcp.js").read_text(encoding="utf-8")
     assert "another protocol version" not in mcp and "unexpected version string" in mcp and "client default is 8 s" in mcp
     slides = (STATIC / "presentation" / "slides.js").read_text(encoding="utf-8")
-    assert "advertised input schemas" in slides and "hard-coded in code" in slides and "2025-11-25" in slides
+    assert "advertised input/output schemas" in slides and "planner list is fixed" in slides and "Negotiated protocol revision: 2025-11" in slides
 
 
 def test_report_processing_path_matches_the_runtime_and_discloses_table_limits():
@@ -681,7 +681,7 @@ def test_three_frozen_experiments_are_integrated_without_changing_slide_count():
     for helper in ("threatComparison", "unseenRetrieval", "fixedPipeline"):
         assert f"export function {helper}" in graphics
         assert helper in slides and helper in story
-    assert len(re.findall(r"\badd\(\{", slides)) == 44
+    assert len(re.findall(r"\badd\(\{", slides)) == 45
     threat = json.loads((root / "experiments/threats/threat-v2-analysis.json").read_text())
     assert (threat["guarded_majority_pass"], threat["naive_majority_pass"]) == (50, 42)
     assert (threat["guarded_only"], threat["naive_only"]) == (10, 2)
@@ -905,9 +905,10 @@ def test_failure_modes_routing_trial_does_not_replace_live_baseline():
     assert "F2-070 and F2-072" in source and "diverted in every repeat" in source
     slides = (STATIC / "presentation/slides.js").read_text()
     declaration = slides.split("title: 'Where the system still fails'", 1)[1].split("  });", 1)[0]
-    assert "six of 270" in declaration and "two distinct" in declaration
-    assert "Neither result replaces the earlier live-baseline observation of 0/333" in declaration
-    assert "No observed instance in the runs" in declaration
+    assert "failureResults(m)" in declaration and "FAILURE_NOTES" in declaration
+    graphics = (STATIC / "presentation/graphics.js").read_text()
+    assert "Do not pool with the earlier live-baseline 0/333" in graphics and "6/270 in-scope presentations, two distinct questions" in graphics
+    assert "No observed instance in the runs" in graphics
 
 
 def test_assumptions_slide_follows_project_and_records_real_boundaries():
@@ -968,10 +969,6 @@ def test_attack_gains_and_hover_examples_match_the_frozen_threat_runs():
         assert (int(without), int(with_)) == (naive[case], guarded[case]) == (3, 3), case
     for key in ("data_exfiltration", "cost_abuse"):
         assert (categories[key]["cases"], categories[key]["naive"], categories[key]["guarded"]) == (4, 3, 3)
-    open_cases = re.findall(r"^  \['([^']+)', '(T2-\d+)', .*, (\d), (\d)\],?$", flows, flags=re.M)
-    assert [c[1] for c in open_cases] == ["T2-024", "T2-053"]
-    for _, case, without, with_ in open_cases:
-        assert (int(without), int(with_)) == (naive[case], guarded[case]) and naive[case] < 2 and guarded[case] < 2
     assert (analysis["naive_majority_pass"], analysis["guarded_majority_pass"]) == (42, 50)
     assert "42 of 54" in flows and "50 of 54" in flows
     assert len(analysis["guarded_only_ids"]) - len(analysis["naive_only_ids"]) == sum(int(w) - int(wo) for _, _, wo, w, *_ in gains)
@@ -987,7 +984,7 @@ def test_next_steps_is_dom_text_without_the_removed_footer_caption():
     block = graphics.split("export function nextSteps()", 1)[1].split("return wrap;", 1)[0]
     assert "el('div', 'ns-col')" in block and "el('section', 'ns-col')" not in block
     data = graphics.split("const NEXT = [", 1)[1].split("\n];", 1)[0]
-    for heading in ("Improve the system", "Deploy in production", "Keep the data current", "Extend"):
+    for heading in ("Re-exploring the Decisions API", "Keep the data current", "Extend"):
         assert heading in data
     css = (STATIC / "css/presentation.css").read_text()
     assert ".deck-page .slides section.present .ns * { user-select: text; -webkit-user-select: text; }" in css
@@ -998,13 +995,13 @@ def test_summary_is_a_results_board_read_from_report_data():
     assert "summaryBoard(m)" in slides and "cardRow" not in slides
     graphics = (STATIC / "presentation" / "graphics.js").read_text(encoding="utf-8")
     block = graphics.split("export function summaryBoard(m)", 1)[1]
-    for read in ("finalFacts(m)", "finalCostFacts(m)", "m.methodsV31", "m.ladder", "m.section('mcp').metrics", "m.scope"):
+    for read in ("finalFacts(m)", "finalCostFacts(m)", "m.methodsV31", "m.ladder", "m.section('mcp').metrics"):
         assert read in block
-    assert "m.section('serving').corpus?.document_files" in block
-    assert "106 report documents" not in block
-    for heading in ("What changed after the evaluation", "Limits", "Behaviour accuracy, gpt-6-luna", "Retrieval hit@8", "Threat suite"):
+    assert "What changed after the evaluation" not in block
+    assert "sb-changed" not in block
+    for heading in ("Limits", "Behaviour accuracy, gpt-6-luna", "Retrieval hit@8", "Threat suite"):
         assert heading in block
-    for phrase in ("unevaluated", "native function-calling planner", "streaming", "Decisions API trials were rejected", "signed off by one reviewer", "Scanner can be bypassed", "source rights unverified"):
+    for phrase in ("see appendix M", "signed off by one reviewer", "Scanner can be bypassed", "source rights unverified"):
         assert phrase in block
     assert "held-out" not in block and "gpt-5.6-luna" not in block and "innerHTML" not in block
     for dash in ("\u2013", "\u2014"):
@@ -1024,3 +1021,49 @@ def test_summary_board_css_grows_bars_on_entry_only_and_collapses():
     assert ".sb { grid-template-columns: minmax(0, 1fr)" in mobile
     for size in re.findall(r"font-size: (\d+)px", mobile):
         assert int(size) >= 16
+
+
+def test_owner_removals_and_new_follow_through_slides():
+    main = _slides_main_section()
+    flows = (STATIC / "presentation/graphics-flows.js").read_text()
+    graphics = (STATIC / "presentation/graphics.js").read_text()
+    for removed in ("Human Review of Dataset", "Majority result of three repeats over", "The agent proposed"):
+        assert removed not in main
+    for removed in ("Not solved by either arm", "Typed read-only tools, the MCP checks", "Other topics"):
+        assert removed not in flows
+    assert "rights-scan hits on my machine" not in graphics
+    assert "failureResults(m)" in main and "failureModes(m)" not in main
+    assert "title: 'Improve the system'" in main and "title: 'Deploy in production'" in main
+    assert "three-per-round cap" in main and "29.8, 7.8 and 9.1" in main
+    assert "Preregister" in flows and "untested" in flows
+
+
+def test_failure_family_counts_match_both_frozen_scored_runs():
+    code = (STATIC / "presentation/failure-results.js").read_text()
+    families = re.findall(r"id: '([^']+)', label: '[^']+',\n    counts: (\[[^\n]+\])", code)
+    assert len(families) == 6
+    split_runs = [
+        ("agent-dev-FIN-r3", "agent-dev-FIN2-r3"),
+        ("agent-heldout-FIN-r3", "agent-heldout-FIN2-r3"),
+        ("agent-heldout-FINV2-r3", "agent-heldout-FIN2V2-r3"),
+    ]
+    for family, encoded in families:
+        for counts, runs in zip(json.loads(encoded), split_runs, strict=True):
+            n, first, repeat = counts
+            for expected, run in zip((first, repeat), runs, strict=True):
+                rows = [json.loads(line) for line in (WEB.parent / "experiments/eval" / run / "gpt-6-luna.cases.jsonl").read_text().splitlines()]
+                selected = [row for row in rows if row["family"] == family]
+                assert len(selected) == n
+                assert sum(row["behavior_ok"] is False for row in selected) == expected
+    assert "not a factual-correctness verdict" in code
+    assert "Effect on these failures unmeasured" in code
+
+
+def test_production_destination_is_complete_and_not_claimed_built():
+    code = (STATIC / "presentation/production.js").read_text()
+    for label in ("Edge / CDN", "Identity", "Load balancer", "Async queue", "LLM gateway",
+                  "Immutable snapshots", "Managed search", "Read-only MCP service", "Analytical store",
+                  "Secrets manager", "Observability and audit", "CI/CD evaluation gates", "Backup and recovery"):
+        assert label in code
+    assert "Built today" in code and "Proposed, not implemented or load-tested" in code
+    assert "production-mobile" in code and "innerHTML" not in code

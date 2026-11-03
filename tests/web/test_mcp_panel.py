@@ -108,8 +108,9 @@ def test_overview_shape_and_roles(settings):
         assert r.status_code == 200
         body = r.json()
         assert body["enabled"] and body["connected"] and body["server"]["name"] == "labourlens-stats"
-        assert body["used_by_agent"] == ["get_statistic"] and body["agent_tool_name"] == "get_series"
-        assert len(body["not_given_to_agent"]) == 8 and "get_statistic" not in body["not_given_to_agent"]
+        assert body["used_by_agent"] == ["get_statistic", "annual_average"] and body["agent_tool_name"] == "get_series"
+        assert body["agent_tools"] == {"get_statistic": "get_series", "annual_average": "annual_average"}
+        assert len(body["not_given_to_agent"]) == 8 and not {"get_statistic", "annual_average"} & set(body["not_given_to_agent"])
         assert {t["name"]: t["used_by_agent"] for t in body["tools"]} == {"get_statistic": True, "list_datasets": False}
         assert body["resources"][0]["uri"] == "labourlens://sources" and body["prompts"][0]["name"] == "compare_quarters"
         assert {e["id"] for e in body["examples"]} == set(MCP_EXAMPLES)
@@ -244,6 +245,6 @@ def test_overview_shows_each_visitor_only_their_own_calls_and_never_the_session_
 def test_workbench_shell_has_the_mcp_tab():
     from pathlib import Path
     script = (Path(__file__).resolve().parents[2] / "web/static/js/workbench.js").read_text()
-    assert "['mcp', 'MCP']" in script and "role', 'tab'" in script and "% 4]" in script
+    assert "['mcp', 'MCP']" in script and "role', 'tab'" in script
     assert "/api/mcp/try" in script and "Used by the agent" in script and "Not given to the agent" in script
     assert "innerHTML" not in script

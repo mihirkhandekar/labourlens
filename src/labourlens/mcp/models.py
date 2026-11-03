@@ -42,6 +42,27 @@ class StatisticResult(_Untrusted):
     rows: list[Observation]
 
 
+class AnnualInput(BaseModel):
+    observation_id: str
+    period: str
+    value: str
+    release_stage: str
+
+
+class AnnualAverageResult(_Untrusted):
+    year: int
+    source_id: str
+    indicator_id: str
+    population: str
+    adjustment: str
+    dimension: str
+    unit: Literal["percent"]
+    value: str = Field(pattern=r"^-?\d+\.\d{2}$")
+    inputs: list[AnnualInput] = Field(min_length=4, max_length=4)
+    method: str
+    formula: str
+
+
 class DatasetEntry(BaseModel):
     source_id: str
     title: str
@@ -317,6 +338,7 @@ class DescribeCorpusResult(_Untrusted):
 # tool name -> result model. The client validates replies against these and only these.
 RESULT_MODELS: dict[str, type[BaseModel]] = {
     "get_statistic": StatisticResult,
+    "annual_average": AnnualAverageResult,
     "list_datasets": ListDatasetsResult,
     "describe_dataset": DescribeDatasetResult,
     "get_dimension_values": DimensionValuesResult,

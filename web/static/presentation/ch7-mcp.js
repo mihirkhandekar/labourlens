@@ -13,9 +13,9 @@ const CHECKS = {
 
 function diagramFigure() {
   const boxes = [
-    {id: 'agent', title: 'Agent', sub: 'plans and answers', text: 'get_series requests validated observation rows from MCP tool get_statistic. Report search and calculation stay in the app.'},
+    {id: 'agent', title: 'Agent', sub: 'plans and answers', text: 'Four served tools. Statistics lookup and annual averaging use MCP; search and change calculation stay in process. Evaluation used three tools.'},
     {id: 'client', title: 'MCP client', sub: 'treats the server as untrusted', text: 'Allow-listed launch, minimal environment, name and version checks, tool allow-list, input and output schemas, deadlines, size caps, typed result validation, and quarantine of instruction-like content.'},
-    {id: 'server', title: 'MCP server', sub: '9 tools, 2 resources, 1 prompt', text: 'labourlens-stats. Serves statistics and catalogue metadata only. MOM report text is excluded. Default transport is stdio; an optional loopback HTTP transport needs a bearer token.'},
+    {id: 'server', title: 'MCP server', sub: '10 tools, 2 resources, 1 prompt', text: 'Current default labourlens-stats server: ten tools, two used by the served agent for lookup and annual averaging. Historical measurements used nine tools. Serves statistics and catalogue metadata, not MOM text by default. stdio or optional authenticated loopback HTTP.'},
     {id: 'store', title: 'Validated statistics', sub: 'observations and catalogue', text: 'Validated observations carry identifiers, units, release stage and source provenance.'}
   ];
   return figure({

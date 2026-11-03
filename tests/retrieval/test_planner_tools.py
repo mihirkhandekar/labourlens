@@ -242,11 +242,11 @@ def test_shipped_prompts_and_config_are_new_versioned_files_not_edits_of_frozen_
     from labourlens.agent import served
 
     conf = served.shipped_config(80.0)
-    assert (conf.planner_mode, conf.planner_prompt, conf.answer_prompt, conf.run_deadline_s) == ("tools", "planner_v5", "answer_v7", 80.0)
-    assert conf.planner_model == "gpt-6-luna" and conf.retrieval == "r3" and conf.tool_set == "base"
-    for old, new in (("planner_v1", "planner_v5"), ("answer_v3", "answer_v7"), ("triage_v1", "triage_v3"), ("contextualise_v1", "contextualise_v2")):
+    assert (conf.planner_mode, conf.planner_prompt, conf.answer_prompt, conf.run_deadline_s) == ("tools", "planner_v6", "answer_v8", 80.0)
+    assert conf.planner_model == "gpt-6-luna" and conf.retrieval == "r3" and conf.tool_set == "annual"
+    for old, new in (("planner_v1", "planner_v6"), ("answer_v3", "answer_v8"), ("triage_v1", "triage_v4"), ("contextualise_v1", "contextualise_v3")):
         assert g.load_prompt(old)[2] != g.load_prompt(new)[2]
-    assert "Q1 2024 to Q2 2026" in g.load_prompt("triage_v1")[0] and "Q1 2020 to Q2 2026" in g.load_prompt("triage_v3")[0]
-    assert "1Q 2024 to 2Q 2026" in g.load_prompt("answer_v3")[0] and "1Q 2020 to 2Q 2026" in g.load_prompt("answer_v7")[0]
-    first, later = g.load_prompt("planner_v5")[1].split(g.FOLLOW_UP_MARK, 1)
+    assert "Q1 2024 to Q2 2026" in g.load_prompt("triage_v1")[0] and "Q1 2020 to Q2 2026" in g.load_prompt("triage_v4")[0]
+    assert "1Q 2024 to 2Q 2026" in g.load_prompt("answer_v3")[0] and "1Q 2020 to 2Q 2026" in g.load_prompt("answer_v8")[0]
+    first, later = g.load_prompt("planner_v6")[1].split(g.FOLLOW_UP_MARK, 1)
     assert "{question}" in first and "{round}" in later and "{question}" not in later

@@ -238,7 +238,7 @@ export function renderAgent(m, ctx) {
     id: 'agent',
     title: b ? `I used one bounded agent (6 tool calls, 2 rounds, 1 repair); ${fmt.int(b.total)} recorded cases peaked at ${b.maxCalls} calls and ${b.maxRounds} rounds` : 'I used one bounded agent: 6 tool calls, 2 rounds, 1 repair',
     bullets: [
-      'LangGraph state graph with seven nodes and three read-only tools. Code does the arithmetic.',
+      'LangGraph state graph with seven nodes and four served read-only tools. Historical evaluations used three. Code does the arithmetic; annual averaging has not been re-evaluated.',
       b ? `Recorded runs: ${fmt.int(b.errors)} tool errors, ${fmt.int(b.ops)} operational failures, ${fmt.int(b.repaired)} repaired answers.` : 'No recorded runs available.',
       'Limits are enforced in code. A tool outage ends as operational_failure, not as an abstention.',
       'Caveat: the stepper replays one statistics-only smoke run with no report passages.'

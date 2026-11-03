@@ -117,6 +117,104 @@ def test_short_independent_paraphrase_is_not_withheld():
     assert public_result(_raw(EVIDENCE, [], summary=summary), NO_SHARED)["answer"]["summary"] == summary
 
 
+def _annual_raw(evidence, claims=None, **answer):
+    raw = _raw(evidence, claims or [], **answer)
+    raw["tool_set"] = "annual"
+    return raw
+
+
+@pytest.mark.parametrize("field", ["summary", "reason", "clarification_question", "caveats", "claim"])
+def test_served_annual_removes_only_copied_report_spans_including_limits(field):
+    source = "business reorganisation affected several outward oriented sectors"
+    text = f'Independent context. "{source}". Causation remains unproven.'
+    raw = _annual_raw(source)
+    if field == "caveats":
+        raw["answer"]["caveats"] = [text]
+    elif field == "claim":
+        raw["answer"]["claims"] = [{"text": text, "citations": []}]
+    else:
+        raw["answer"][field] = text
+    answer = public_result(raw, NO_SHARED)["answer"]
+    projected = (answer["caveats"][0] if field == "caveats" else
+                 answer["claims"][0]["text"] if field == "claim" else answer[field])
+    assert projected == f'Independent context. "{RIGHTS_NOTICE}". Causation remains unproven.'
+    assert raw["evidence_text"]["P1"] == source
+
+
+def test_served_annual_keeps_paraphrase_and_six_word_common_phrase():
+    source = "business reorganisation affected several outward oriented sectors"
+    paraphrase = "Corporate restructuring was reported; neither AI nor COVID is established as the cause."
+    six_words = "business reorganisation affected several outward oriented"
+    raw = _annual_raw(source, summary=paraphrase, caveats=[six_words])
+    answer = public_result(raw, NO_SHARED)["answer"]
+    assert answer["summary"] == paraphrase
+    assert answer["caveats"] == [six_words]
+
+
+def test_served_annual_does_not_use_compact_character_false_positive():
+    shared = "internationalisation telecommunications manufacturing reorganisation competitiveness transformation"
+    assert len(shared.replace(" ", "")) > 80
+    summary = shared + " differ."
+    raw = _annual_raw(shared + " increased.", summary=summary)
+    assert public_result(raw, NO_SHARED)["answer"]["summary"] == summary
+    # Historical projection intentionally remains identical, not silently rescored.
+    raw.pop("tool_set")
+    assert public_result(raw, NO_SHARED)["answer"]["summary"] == RIGHTS_NOTICE
+
+
+@pytest.mark.parametrize("copy", [
+    "ALPHA, beta; gamma\ndelta epsilon zeta eta",
+    "alpha beta gam\u200bma delta epsilon zeta eta",
+    "ａｌｐｈａ beta gamma delta epsilon zeta eta",
+])
+def test_served_annual_normalizes_copy_and_retains_surrounding_prose(copy):
+    raw = _annual_raw("alpha beta gamma delta epsilon zeta eta", summary=f"Before: {copy}. After.")
+    assert public_result(raw, NO_SHARED)["answer"]["summary"] == f"Before: {RIGHTS_NOTICE}. After."
+
+
+def test_served_annual_merges_overlapping_spans_but_retains_separate_analysis():
+    source = "alpha beta gamma delta epsilon zeta eta theta iota"
+    raw = _annual_raw(source, summary=f"{source}; independent assessment; {source}")
+    assert public_result(raw, NO_SHARED)["answer"]["summary"] == (
+        f"{RIGHTS_NOTICE}; independent assessment; {RIGHTS_NOTICE}")
+
+
+def test_served_annual_caps_citation_and_evidence_card_at_six_normalized_words():
+    source = "alpha beta gamma delta epsilon zeta eta theta iota"
+    claims = [{"text": "Independent finding.", "citations": [
+        {"label": "P1", "quote": source},
+        {"label": "P1", "quote": "alpha beta gamma delta epsilon zeta"},
+    ]}]
+    raw = _annual_raw(source, claims)
+    result = public_result(raw, NO_SHARED)
+    short = "alpha beta gamma delta epsilon zeta"
+    assert result["answer"]["claims"][0]["citations"] == [{"label": "P1", "quote": short}]
+    assert result["evidence"][0]["quotes"] == [short]
+    assert raw["answer"]["claims"][0]["citations"][0]["quote"] == source
+
+
+def test_served_annual_citation_cap_counts_hyphenated_words_not_whitespace():
+    source = "alpha-beta gamma-delta epsilon-zeta eta-theta"
+    raw = _annual_raw(source, [{"text": "Finding.", "citations": [{"label": "P1", "quote": source}]}])
+    quote = public_result(raw, NO_SHARED)["answer"]["claims"][0]["citations"][0]["quote"]
+    assert quote == "alpha-beta gamma-delta epsilon-zeta"
+    assert validate.quote_in(quote, source)
+
+
+def test_served_annual_rejects_invalid_quotes_and_does_not_guard_open_data_rows():
+    source = "alpha beta gamma delta epsilon zeta eta"
+    claims = [{"text": source, "citations": [
+        {"label": "O1", "quote": source},
+        {"label": "P1", "quote": "unsupported quote"},
+    ]}]
+    raw = _annual_raw("A separate report passage.", claims, summary=source, caveats=[source])
+    raw["evidence_text"].update(O1=source, C1=source)
+    result = public_result(raw, NO_SHARED)["answer"]
+    assert result["summary"] == source and result["caveats"] == [source]
+    assert result["claims"][0]["text"] == source
+    assert result["claims"][0]["citations"] == [{"label": "O1", "quote": source}]
+
+
 # ---- login lock default values / feedback binding / health -------------------------------------------------------
 
 def test_feedback_is_bound_to_the_session_that_started_the_run(settings):

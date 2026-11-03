@@ -45,6 +45,60 @@ PLANNER_MODES = ("structured", "tools")
 PARALLEL_TOOL_CALLS = True  # the model may ask for up to MAX_CALLS_PER_ROUND calls in one turn; extra calls are dropped and counted
 FOLLOW_UP_MARK = "\n=====\n"  # planner_v4_user.md holds the first-round template, this line, then the later-round template
 
+SERVED_REPORT_PASSAGE_BUDGET = 20
+SERVED_SOURCE_PASSAGE_CAP = 8
+
+
+def answer_evidence(items, tool_set: str, report_ranks=None):
+    """Bound the served run's report passages (all rounds together); the full registry stays in `tools.items`.
+
+    Order is the returned (chunk rank, offset in chunk) of each passage's best hit, ties in registry order. These are
+    ordinal positions, not comparable scores, and no score is invented. Duplicate ids, and identical normalized text within
+    one source release, are dropped; the same wording in independent releases is kept. A first pass takes at most
+    SERVED_SOURCE_PASSAGE_CAP passages per source so one report cannot fill the budget; a second pass fills any remainder in
+    rank order. Statistics and calculation items (O, C) are always kept. Other tool sets are returned unchanged.
+    """
+    if tool_set != "annual":
+        return items
+    ranks = report_ranks or {}
+    ranked = sorted((i for i in items if i.label.startswith("P")), key=lambda i: ranks.get(i.passage_id, (len(items), 0)))
+    unique, ids, texts = [], set(), set()
+    for item in ranked:
+        text_key = (item.source_id, item.stage, " ".join(item.text.split()).casefold())
+        if item.passage_id in ids or text_key in texts:
+            continue
+        ids.add(item.passage_id)
+        texts.add(text_key)
+        unique.append(item)
+    chosen: list = []
+    per_source: dict[str, int] = {}
+    for item in unique:
+        if len(chosen) < SERVED_REPORT_PASSAGE_BUDGET and per_source.get(item.source_id, 0) < SERVED_SOURCE_PASSAGE_CAP:
+            chosen.append(item)
+            per_source[item.source_id] = per_source.get(item.source_id, 0) + 1
+    for item in unique:
+        if len(chosen) >= SERVED_REPORT_PASSAGE_BUDGET:
+            break
+        if item not in chosen:
+            chosen.append(item)
+    keep = {i.label for i in chosen}
+    return [i for i in items if not i.label.startswith("P") or i.label in keep]
+
+
+class _SelectedTools:
+    """The part of a Tools registry the served answer may use: crosscheck reads `items` from it and every other attribute
+    (statistics, `_add`, `_note`) from the real registry, so a recorded conflict observation is a real registry item."""
+
+    def __init__(self, tools, pick) -> None:
+        self._tools, self._pick = tools, pick
+
+    @property
+    def items(self):
+        return self._pick()
+
+    def __getattr__(self, name):
+        return getattr(self._tools, name)
+
 
 @dataclass(frozen=True)
 class AgentConfig:
@@ -79,6 +133,10 @@ class AgentConfig:
             raise ValueError(f"tool_set must be one of {TOOL_SETS}")
         if (self.tool_set == "v2") != (self.planner_prompt == V2_PROMPTS[0] and self.answer_prompt == V2_PROMPTS[1]):
             raise ValueError("tool_set v2 and the prompts planner_v3 + answer_v5 go together: use both or neither")
+        if self.tool_set == "annual" and (self.planner_prompt != "planner_v6" or self.answer_prompt != "answer_v8" or self.planner_mode != "tools"):
+            raise ValueError("tool_set annual requires planner_v6, answer_v8 and native tools mode")
+        if self.tool_set != "annual" and self.planner_prompt == "planner_v6":
+            raise ValueError("planner_v6 requires tool_set annual")
 
     def key(self) -> str:
         base = f"planner={self.planner_model}|answer={self.answer_model}|{self.planner_prompt}|{self.answer_prompt}"
@@ -121,6 +179,14 @@ def plan_schema(shared: Shared, tool_set: str = "base") -> dict:
             item["properties"].update({f"passage_{side}": _nullable("string"), f"value_{side}": _nullable("string"), f"unit_{side}": enum(TEXT_UNITS),
                                        f"basis_{side}": _nullable("string"), f"period_{side}": _nullable("string")})
         item["required"] = item["required"] + [a for a in TEXT_CALC_ARGS if a != "kind"]
+    if tool_set == "annual":
+        item = base["properties"]["calls"]["items"]
+        item["properties"].update(year=_nullable("integer"), population=enum(set(shared.obs.population)))
+        item["required"] = item["required"] + ["year", "population"]
+        from labourlens.agent.tools import MAX_K, MAX_QUERY_CHARS
+
+        item["properties"]["k"].update(minimum=1, maximum=MAX_K)
+        item["properties"]["query"].update(minLength=1, maxLength=MAX_QUERY_CHARS)
     base["properties"]["calls"]["items"]["properties"]["tool"]["enum"] = offered_tools(shared, tool_set)
     return base
 
@@ -130,6 +196,7 @@ _TOOL_DESCRIPTIONS = {
     "get_series": "Return published statistics from one official dataset, one observation per period, for a period range inside the supported window.",
     "calculate_change": "Exact arithmetic on two observation labels (O1, O2, ...) that get_series returned in an EARLIER round. obs_a is the earlier period, obs_b the later.",
     "calculate_from_text_values": "Exact arithmetic on two figures printed in report passages (P1, P2, ...) that search_reports returned in an EARLIER round.",
+    "annual_average": "Derived simple mean of four quarterly percent rates for a complete calendar year. Requires explicit source, indicator, population and adjustment; select one dimension. Never averages counts, ratios, missing quarters or incomplete 2026.",
 }
 
 
@@ -168,12 +235,12 @@ def parse_tool_call(tc: dict, offered: list[str]) -> dict:
     for key, value in args.items():
         if value is None:
             continue
-        if key == "k":
+        if key in ("k", "year"):
             ok = isinstance(value, int) and not isinstance(value, bool)
         else:
             ok = isinstance(value, str)
         if not ok:
-            call["_error"] = ("invalid_arguments", f"argument {key} must be {'an integer' if key == 'k' else 'a string'}")
+            call["_error"] = ("invalid_arguments", f"argument {key} must be {'an integer' if key in ('k', 'year') else 'a string'}")
             return call
     call.update(args)
     return call
@@ -184,9 +251,11 @@ def _call_key(call: dict) -> str:
 
 
 ARGS = {"search_reports": ("query", "k"), "get_series": ("source_id", "period_from", "period_to", "dimension", "adjustment", "indicator_id"),
-        "calculate_change": ("obs_a", "obs_b", "kind"), "calculate_from_text_values": TEXT_CALC_ARGS}
+        "calculate_change": ("obs_a", "obs_b", "kind"), "calculate_from_text_values": TEXT_CALC_ARGS,
+        "annual_average": ("year", "source_id", "indicator_id", "population", "adjustment", "dimension")}
 REQUIRED = {"search_reports": ("query",), "get_series": ("source_id", "period_from", "period_to"), "calculate_change": ("obs_a", "obs_b"),
-            "calculate_from_text_values": TEXT_CALC_REQUIRED}
+            "calculate_from_text_values": TEXT_CALC_REQUIRED,
+            "annual_average": ("year", "source_id", "indicator_id", "population", "adjustment")}
 
 
 class State(TypedDict, total=False):
@@ -205,6 +274,7 @@ class State(TypedDict, total=False):
     outcome: str
     usage: dict
     source_conflicts: list[dict]
+    selected_evidence_labels: list[str]
     trace: Annotated[list[dict], operator.add]
 
 
@@ -252,7 +322,8 @@ def build_graph(shared: Shared, tools: Tools, cfg: AgentConfig, emit=None):
         planner_sys = "\n".join(line for line in planner_sys.split("\n")
                                 if not any(line.startswith(f"- {name}(") for name in disabled))
     answer_sys, answer_user, _ = load_prompt(cfg.answer_prompt)
-    pool = ThreadPoolExecutor(max_workers=2)
+    parallel_rounds = cfg.tool_set == "annual" and cfg.planner_mode == "tools"
+    pool = ThreadPoolExecutor(max_workers=MAX_CALLS * 2 if parallel_rounds else 2)
     schema = plan_schema(shared) if cfg.tool_set == "base" else plan_schema(shared, cfg.tool_set)
     if cfg.control_flow == "fixed":
         # One extraction, never an evidence-conditioned planning loop. Reuse the
@@ -262,6 +333,23 @@ def build_graph(shared: Shared, tools: Tools, cfg: AgentConfig, emit=None):
         schema["properties"]["calls"]["maxItems"] = 1
     clock = {"start": None}
     tool_seen: set[str] = set()  # native planner: every call already asked for in this run (duplicates are not run twice)
+
+
+    def selected_items(s: State):
+        labels = s.get("selected_evidence_labels")
+        if labels is None:
+            return tools.items
+        return [i for i in tools.items if i.label[0] != "P" or i.label in labels]
+
+    def selected_view(s: State):
+        return _SelectedTools(tools, lambda: selected_items(s))
+
+    def selected_notes(s: State):
+        labels = s.get("selected_evidence_labels")
+        if labels is None:
+            return tools.notes
+        return [note for note in tools.notes if not note.startswith("Source conflict: ")
+                or any(note.startswith(f"Source conflict: {label} ") for label in labels)]
 
     def llm_budget() -> float | None:
         """Seconds left for the next LLM call under cfg.run_deadline_s (never negative), or None when unbounded."""
@@ -389,11 +477,15 @@ def build_graph(shared: Shared, tools: Tools, cfg: AgentConfig, emit=None):
             return "finalize"
         return "execute_tool" if s.get("planned") else "assess_evidence"
 
-    def _run_one(call: dict) -> tuple[ToolResult | None, str | None]:
+    def _run_one(call: dict, registry: Tools | None = None) -> tuple[ToolResult | None, str | None]:
+        registry = tools if registry is None else registry
+        started = time.perf_counter()
         name = call["tool"]
         if name in getattr(shared, "disabled_tools", frozenset()):
             return ToolResult(False, message=f"tool {name} is disabled for this experiment", error_kind="disabled_tool"), None
         if name == "calculate_from_text_values" and cfg.tool_set != "v2":
+            return ToolResult(False, message="tool not available", error_kind="invalid_arguments"), None
+        if name == "annual_average" and cfg.tool_set != "annual":
             return ToolResult(False, message="tool not available", error_kind="invalid_arguments"), None
         missing = [a for a in REQUIRED[name] if call.get(a) in (None, "")]
         if missing:
@@ -401,16 +493,22 @@ def build_graph(shared: Shared, tools: Tools, cfg: AgentConfig, emit=None):
         kwargs = {a: call[a] for a in ARGS[name] if call.get(a) is not None}
         from labourlens.retrieval.dense import embedding_deadline
 
-        def invoke(child):
-            with embedding_deadline(cfg.tool_timeout_s):
+        def invoke(child, timeout):
+            with embedding_deadline(timeout):
                 result = getattr(child, name)(**kwargs)
             return result, child
 
         for attempt in range(2):  # retry only failures whose worker has finished
-            fut = pool.submit(invoke, tools.fork())
+            timeout = cfg.tool_timeout_s
+            if parallel_rounds:
+                left = llm_budget()
+                timeout = min(timeout - (time.perf_counter() - started), left if left is not None else timeout)
+                if timeout <= 0:
+                    return None, f"TimeoutError: tool {name} did not complete"
+            fut = pool.submit(invoke, registry.fork(), timeout)
             try:
-                result, child = fut.result(timeout=cfg.tool_timeout_s)
-                tools.commit(child)
+                result, child = fut.result(timeout=timeout)
+                registry.commit(child)
                 return result, None
             except FutureTimeout as e:
                 fut.cancel()
@@ -426,17 +524,52 @@ def build_graph(shared: Shared, tools: Tools, cfg: AgentConfig, emit=None):
         events, errors, ops, bonus = [], [], s.get("tool_ops_failures", 0), 0
         usage = dict(s.get("usage") or {})
         planner_messages = list(s.get("planner_messages") or [])
-        for call in s["planned"]:
+        pending = []
+        if parallel_rounds:
+            # Every call sees the same pre-round registry, including calculations.
+            # In particular a guessed O1 from a sibling get_series never succeeds
+            # depending on thread scheduling. Publish and label only below.
+            snapshots = [tools.fork() for _ in s["planned"]]
+
+            def run_isolated(call, snapshot):
+                t0 = time.perf_counter()
+                if call.get("_error"):
+                    result, error = ToolResult(False, message=call["_error"][1], error_kind=call["_error"][0]), None
+                else:
+                    result, error = _run_one(call, snapshot)
+                return result, error, snapshot, round(time.perf_counter() - t0, 3)
+
+            with ThreadPoolExecutor(max_workers=MAX_CALLS_PER_ROUND) as round_pool:
+                for call, snapshot in zip(s["planned"], snapshots):
+                    notify({"type": "tool_call_started", "tool": str(call["tool"])[:64],
+                            "args": {k: v for k, v in call.items() if k not in ("tool", "id", "_error") and v is not None}})
+                    pending.append(round_pool.submit(run_isolated, call, snapshot))
+            # Join completion is bounded inside _run_one. Late invocation workers
+            # retain only their detached child, never a live registry reference.
+        for index, call in enumerate(s["planned"]):
             name = str(call["tool"])[:64]  # a native planner can name any string; clipped before it reaches a trace or a message
             args = {k: v for k, v in call.items() if k not in ("tool", "id", "_error") and v is not None}
-            notify({"type": "tool_call_started", "tool": name, "args": args})
+            if not parallel_rounds:
+                notify({"type": "tool_call_started", "tool": name, "args": args})
             first_event = len(events)
-            t0 = time.perf_counter()
-            if call.get("_error"):  # native planner: the call was malformed, unknown or a duplicate, so nothing runs
-                res, ops_err = ToolResult(False, message=call["_error"][1], error_kind=call["_error"][0]), None
+            if parallel_rounds:
+                res, ops_err, child, dt = pending[index].result()
+                if res is not None and not ops_err:
+                    res = tools.merge(child, res)
+                    if res.ok and call["tool"] == "search_reports":
+                        res.message = f"{len(res.items)} new passages from {len({i.source_id for i in res.items})} documents: " + ", ".join(f"{i.label}={i.source_id}" for i in res.items[:12])
+                    elif res.ok and call["tool"] == "get_series":
+                        suffix = res.message[res.message.index(" ("):] if " (" in res.message else ""
+                        res.message = f"{len(res.items)} new observations: " + ", ".join(f"{i.label}={tools._obs[i.label]['period']}" for i in res.items[:20]) + suffix
+                    elif res.ok and not res.items and call["tool"] in ("calculate_change", "annual_average"):
+                        res.message = "this calculation was already done"
             else:
-                res, ops_err = _run_one(call)
-            dt = round(time.perf_counter() - t0, 3)
+                t0 = time.perf_counter()
+                if call.get("_error"):  # native planner: the call was malformed, unknown or a duplicate, so nothing runs
+                    res, ops_err = ToolResult(False, message=call["_error"][1], error_kind=call["_error"][0]), None
+                else:
+                    res, ops_err = _run_one(call)
+                dt = round(time.perf_counter() - t0, 3)
             if cfg.planner_mode == "tools":
                 planner_messages.append(tool_message(call, res, ops_err))
             if ops_err:
@@ -476,9 +609,19 @@ def build_graph(shared: Shared, tools: Tools, cfg: AgentConfig, emit=None):
         from labourlens.answer import crosscheck
 
         enabled = os.environ.get("LABOURLENS_GUARDS") != "off" and os.environ.get("LABOURLENS_CROSSCHECK") != "off"
-        conflicts = crosscheck.annotate(tools) if enabled else []
-        n = {k: sum(1 for i in tools.items if i.label[0] == k) for k in "POC"}
-        return {"source_conflicts": conflicts, "trace": _ev("assess_evidence", "evidence_ready" if tools.items else "no_evidence", passages=n["P"], observations=n["O"], calculations=n["C"], data_quality_notes=list(tools.notes),
+        selection: dict = {}
+        if cfg.tool_set == "annual":
+            kept = answer_evidence(tools.items, cfg.tool_set, tools.report_ranks)
+            labels = [i.label for i in kept if i.label.startswith("P")]
+            selection = {"selected_evidence_labels": labels,
+                         "trace": _ev("assess_evidence", "answer_evidence_selected", passage_budget=SERVED_REPORT_PASSAGE_BUDGET,
+                                      source_cap=SERVED_SOURCE_PASSAGE_CAP, selected_passages=labels,
+                                      registry_passages=sum(1 for i in tools.items if i.label[0] == "P"),
+                                      ordering="returned chunk rank then offset in chunk; per-source cap; no synthetic score")}
+            s = {**s, **selection}
+        conflicts = crosscheck.annotate(selected_view(s) if cfg.tool_set == "annual" else tools) if enabled else []
+        n = {k: sum(1 for i in selected_items(s) if i.label[0] == k) for k in "POC"}
+        return {**selection, "source_conflicts": conflicts, "trace": selection.get("trace", []) + _ev("assess_evidence", "evidence_ready" if tools.items else "no_evidence", passages=n["P"], observations=n["O"], calculations=n["C"], data_quality_notes=list(selected_notes(s)),
                              crosscheck_enabled=enabled, source_conflicts=conflicts, unresolved_tool_errors=len(s.get("tool_errors") or []))}
 
     def after_assess(s: State):
@@ -488,7 +631,7 @@ def build_graph(shared: Shared, tools: Tools, cfg: AgentConfig, emit=None):
         msgs = s.get("messages")
         if not msgs:
             msgs = [{"role": "system", "content": answer_sys},
-                    {"role": "user", "content": answer_user.format(context=cx.render(tools.items, tools.notes) if tools.items else "(no evidence items were collected)", question=s["question"])}]
+                    {"role": "user", "content": answer_user.format(context=cx.render(selected_items(s), selected_notes(s)) if selected_items(s) else "(no evidence items were collected)", question=s["question"])}]
         try:
             r = llm.chat(cfg.answer_model, msgs, 6000, **deadline())
         except Exception as e:  # LLMError, or a provider/shape failure: operational, never an escaped exception
@@ -511,9 +654,12 @@ def build_graph(shared: Shared, tools: Tools, cfg: AgentConfig, emit=None):
 
             original = Answer.model_validate(s["answer"])
             enabled = os.environ.get("LABOURLENS_GUARDS") != "off" and os.environ.get("LABOURLENS_CROSSCHECK") != "off"
-            conflicts = crosscheck.annotate(tools, original) if enabled else []
-            checked = crosscheck.enforce(original, tools.items, conflicts)
-            rep = validate.check(checked, tools.items)
+            conflicts = crosscheck.annotate(selected_view(s) if cfg.tool_set == "annual" else tools, original) if enabled else []
+            evidence = selected_items(s)
+            checked = crosscheck.enforce(original, evidence, conflicts)
+            rep = validate.check(checked, evidence)
+            if cfg.tool_set == "annual":
+                rep.errors += validate.missing_period_errors(checked, evidence)
             extra["answer"] = checked.model_dump()
             errs = rep.errors
             extra.update({"cited_ids": rep.cited_passage_ids, "ungrounded_numbers": rep.ungrounded_numbers, "source_conflicts": conflicts})
@@ -585,19 +731,31 @@ def run_agent(question: str, shared: Shared, cfg: AgentConfig = AgentConfig(), s
     run_id = uuid.uuid4().hex[:12]
     u = final.get("usage") or {"calls": 0, "prompt_tokens": 0, "completion_tokens": 0, "cost_usd": 0.0, "llm_seconds": 0.0}
     cited = next((e["detail"].get("cited_ids", []) for e in reversed(final["trace"]) if e["node"] == "validate_answer"), [])
+    exposed = answer_evidence(tools.items, cfg.tool_set, tools.report_ranks)
+    if cfg.tool_set == "annual" and "selected_evidence_labels" in final:
+        selected_labels = set(final["selected_evidence_labels"])
+        exposed = [i for i in tools.items if i.label[0] != "P" or i.label in selected_labels]
     res = {"run_id": run_id, "question": question, "config": cfg.key(), "planner_mode": cfg.planner_mode, "outcome": final["outcome"], "answer": final.get("answer"),
            "errors": final.get("errors") or [], "rounds": final.get("round", 0), "tool_calls": final.get("calls_used", 0),
            "crosscheck_enabled": os.environ.get("LABOURLENS_GUARDS") != "off" and os.environ.get("LABOURLENS_CROSSCHECK") != "off",
-           "evidence": [{"label": i.label, "id": i.passage_id, "source_id": i.source_id} for i in tools.items],
-           "evidence_text": {i.label: i.text for i in tools.items}, "cited_ids": cited, "usage": u,
+           "evidence": [{"label": i.label, "id": i.passage_id, "source_id": i.source_id} for i in exposed],
+           "evidence_text": {i.label: i.text for i in exposed}, "cited_ids": cited, "usage": u,
            "seconds": round(time.perf_counter() - t0, 2), "trace": final["trace"],
            "corpus": shared.corpus if isinstance(getattr(shared, "corpus", None), dict) else None}
+    if cfg.tool_set == "annual":
+        res["tool_set"] = cfg.tool_set
     if save_trace:
         d = paths.DATA / "runs" / "agent"
         d.mkdir(parents=True, exist_ok=True)
         saved = dict(res)
         saved["evidence"] = [{**item, "sha256": hashlib.sha256(res["evidence_text"][item["label"]].encode()).hexdigest()}
                              for item in res["evidence"]]
+        if cfg.tool_set == "annual":
+            saved["evidence_registry"] = [
+                {"label": i.label, "id": i.passage_id, "source_id": i.source_id,
+                 "sha256": hashlib.sha256(i.text.encode()).hexdigest(),
+                 "answer_selected": i.label in {x.label for x in exposed}}
+                for i in tools.items]
         if os.environ.get("LABOURLENS_DEBUG_EVIDENCE", "").lower() != "true":
             saved.pop("evidence_text", None)
         (d / f"{run_id}.json").write_text(redact(json.dumps(saved, indent=1, default=str)))

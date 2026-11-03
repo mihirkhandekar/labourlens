@@ -4,8 +4,8 @@ One short structured call to the primary model decides whether a message that di
 the workbench at all. Only a clearly unrelated message (general knowledge, coding, medical or legal advice, personal employment
 advice, creative writing, chit-chat beyond the closed list) is answered here, briefly, without searching. Everything else, including
 hostile, causal, forecast and out-of-period questions, goes to the unchanged agent so its defences and refusals still run. The user
-message is untrusted data: it is passed inside tags and escaped, the prompt says it has no authority, and the model's reply text is
-only ever shown, never executed. Any failure (no key, timeout, provider error, invalid output) fails open to the agent.
+message, proposed resolved question and bounded relevant history are untrusted data: they are escaped inside tags; only newer
+served prompts consume the extra context. Reply text is only ever shown, never executed. Any failure fails open to the agent.
 
 This module is used only by the web runner. `run_agent`, the experiments and the threat test never call it."""
 
@@ -22,6 +22,7 @@ from pydantic import BaseModel, ConfigDict, ValidationError
 
 from labourlens import paths, prices
 from labourlens.agent.smalltalk import _EXAMPLES
+from labourlens.agent.contextualise import render_history
 from labourlens.answer import llm
 from labourlens.answer.pipeline import load_prompt
 from labourlens.mcp.redact import redact
@@ -58,7 +59,8 @@ def clean_reply(text: str) -> str:
     return redact(_SPACE.sub(" ", text).strip())[:MAX_REPLY_CHARS].strip()
 
 
-def classify(question: str, model: str = MODEL, prompt: str = PROMPT, timeout_s: float = TIMEOUT_S) -> dict:
+def classify(question: str, model: str = MODEL, prompt: str = PROMPT, timeout_s: float = TIMEOUT_S, *,
+             history: list[dict] | None = None, original_question: str | None = None) -> dict:
     """One triage call. Never raises: any failure returns route 'in_scope' with `error` set (fail open).
 
     Returns {route, reply, error, usage, model, prompt, prompt_sha256, seconds}. `route` is the effective route; `reply` is non-empty
@@ -71,7 +73,9 @@ def classify(question: str, model: str = MODEL, prompt: str = PROMPT, timeout_s:
     t0 = time.perf_counter()
     r = None
     try:
-        message = user.format(question=html.escape(question, quote=False))
+        message = user.format(question=html.escape(question, quote=False),
+                              original_question=html.escape((original_question or question)[:MAX_QUESTION_CHARS], quote=False),
+                              history=render_history(history or []))
         r = llm.chat(model, [{"role": "system", "content": system}, {"role": "user", "content": message}],
                      max_completion_tokens=MAX_COMPLETION_TOKENS, schema=json_schema(), schema_name="triage", timeout_s=timeout_s)
         u = out["usage"]

@@ -582,9 +582,9 @@ export function provenanceTable(m) {
 }
 
 const LOOP_TIPS = [
-  'The planner sees the question and a dataset catalogue, not report passages. Its three-tool list is fixed in code.',
+  'The planner sees the question and dataset catalogue, not report passages. Its fixed served set has four tools; historical evaluations used three.',
   'Inside the agent loop, the planner chooses one tool. search_reports runs BM25 plus dense embeddings, filters by period and release, reranks and returns chunks for evidence checking. Retrieval is not a pre-step. It runs in the app in the live system.',
-  'Only the statistics lookup uses MCP in the live app. The client sends tools/call get_statistic over stdio with source, period range and dimension. The server validates the request, reads validated observations and returns structured rows. The client checks outputSchema, its typed model, size and time limits. Report search and calculation run in the app. A tested variant sent all three tools over MCP; it was slower with no accuracy gain and is not used live.',
+  'Statistics lookup and annual averaging use MCP in the live app. get_series maps to get_statistic; annual_average requires four non-null quarterly percentage rates from one series and returns no partial average. The mean is not an official annual rate. Client schemas, typed models and size/time limits apply. Search and change calculation stay in process. The historical all-three-tools MCP variant was slower without demonstrated accuracy gain and is not live. Current additions are unevaluated.',
   'Assess data returned by the chosen tool. Search returns report chunks; statistics returns validated rows. If there is a gap, make another tool call, up to two rounds.',
   'Write a structured answer with claims tied to evidence. The model does not do arithmetic.',
   'Check the answer schema, citation labels, quote presence and numbers against evidence.',
@@ -631,7 +631,7 @@ export function agentLoop() {
   node(25, 240, 230, 110, ['Planner', 'Choose actions'], 'Input validation runs first. The planner sees the question, dataset catalogue, prior evidence summaries and tool errors. The base tool names and argument schemas are fixed in code: search_reports, get_series and calculate_change. It may request up to three calls in a round or stop gathering. It does not discover or choose freely among all MCP server tools.', 'is-planner');
   node(345, 35, 480, 130, ['Search reports', 'BM25 + embeddings', 'Filter, rerank, return passages'], LOOP_TIPS[1]);
   node(345, 205, 480, 120, ['Structured statistics', 'MCP server → rows'], LOOP_TIPS[2], 'is-mcp');
-  node(345, 380, 480, 90, ['Calculate in code', 'Returned observations → change'], 'calculate_change uses deterministic Decimal arithmetic on previously collected, compatible observation rows. The model does not calculate the change. It runs in the app in the live system. The separately configured v2 experiment adds passage-value calculation; it is not part of the base three-tool choice.');
+  node(345, 380, 480, 90, ['Calculate in code', 'Rows → change or annual mean'], 'calculate_change uses deterministic Decimal arithmetic on compatible returned rows in the app. annual_average uses four non-null quarterly percentage rates from one consistent series through the statistics route, not an official annual rate. The separately configured report-value calculation experiment is not shipped. Historical evaluation used three tools.'),
   node(345, 515, 480, 70, ['Stop gathering'], 'The planner can stop without calling a tool. A stop decision, exhausted round budget or exhausted call budget proceeds to final evidence assessment. It does not bypass evidence or answer validation.');
   node(925, 235, 210, 120, ['Review', 'evidence'], 'Logical evidence checkpoint: after tool execution, the planner receives evidence summaries and errors for another bounded round. In the actual graph, execute_tool routes back to plan_research while budget remains. When gathering stops, assess_evidence annotates source conflicts and coverage notes before generation. assess_evidence itself does not loop back.', 'is-guard');
   node(1205, 165, 280, 100, ['Write answer'], LOOP_TIPS[4]);
@@ -754,15 +754,15 @@ export function mcpMap(m, {showMeasurements = true} = {}) {
     return withTip(n, detail, 'is-up is-wide');
   };
   const host = el('div', 'owner-mcp-host');
-  host.append(tipped('h3', '', 'LabourLens host', 'The application owns the agent, user interaction and MCP client. The agent has a fixed three-tool base schema. get_series is mapped to server tool get_statistic; search_reports and calculate_change remain in process. It does not discover all nine server tools as new agent choices.'));
-  host.append(tipped('div', 'owner-mcp-client', 'MCP client', 'A persistent stdio session negotiates capabilities, discovers schemas and sends tools/call get_statistic. Arguments include source, period range, dimension and optional adjustment and indicator filters. The client validates input schema, advertised outputSchema and local typed models; screens untrusted strings; caps replies at 200 KB; and enforces time limits. Default call: 8 s. Connect: 20 s. Lost connections reconnect once; there is no silent direct-call fallback.'));
+  host.append(tipped('h3', '', 'LabourLens host', 'The served agent has four fixed tool choices: search_reports, get_series, calculate_change and annual_average. get_series maps to MCP get_statistic; annual_average also uses MCP. Search and change calculation stay in process. Historical evaluations used the three-tool base schema; current additions are unevaluated.'));
+  host.append(tipped('div', 'owner-mcp-client', 'MCP client', 'A persistent stdio session discovers schemas and sends typed get_statistic or annual_average calls. The client validates advertised schemas and local typed models, screens untrusted strings, caps replies at 200 KB and enforces time limits. Default call: 8 s. Connect: 20 s. Lost connections reconnect once; no silent direct-call fallback.'));
   const arrow = () => { const n = el('span', 'owner-mcp-arrow'); n.append(ico('arrow-right')); n.setAttribute('aria-hidden', 'true'); return n; };
   const server = el('div', 'owner-mcp-server');
-  server.append(tipped('h3', '', 'MCP server', 'The server exposes nine read-only statistics tools, one catalogue resource, one source-entry resource template and a compare_quarters prompt. The prompt is available but not used by the research agent. Resources are application-selected context, not agent tool calls. Other compatible hosts could connect; this does not claim a third-party host has been demonstrated. The tested all-tools variant starts the server with an agent profile that adds search_reports, calculate_change, calculate_from_text_values and describe_corpus on top of these nine. The live app does not use that profile.'));
+  server.append(tipped('h3', '', 'MCP server', 'The default server now exposes ten read-only statistics tools, a catalogue resource, a source-entry resource template and compare_quarters prompt. Resources are application-selected context, not agent tool calls. Historical protocol and route measurements used nine tools before annual_average. The optional agent profile adds report search and calculation; it is not the live route. No third-party host demonstration is claimed.'));
   const tools = el('div', 'owner-mcp-tools is-single');
-  tools.setAttribute('role', 'group'); tools.setAttribute('aria-label', 'The statistics tool used by the live agent.');
-  tools.append(tipped('div', 'owner-mcp-tool is-active', 'get_statistic', 'Server tool get_statistic. Used by the live agent through get_series. Returns matching observation rows with values, units, quarters, population, adjustment, release stage and provenance.'));
-  server.append(tipped('p', 'owner-mcp-label', '1 tool in use', 'The server offers eight other read-only tools (list_datasets, describe_dataset, get_dimension_values, latest_value, compare_periods, series_summary, get_revisions, get_provenance). They are not in the base planner schema; Appendix G lists them. Full-set accuracy evaluations used direct calls.'), tools);
+  tools.setAttribute('role', 'group'); tools.setAttribute('aria-label', 'The two statistics server tools used by the live agent.');
+  tools.append(tipped('div', 'owner-mcp-tool is-active', 'get_statistic + annual_average', 'get_series uses get_statistic for provenance-backed observation rows. annual_average computes a simple mean of four non-null quarterly percentage rates from one series, not an official annual rate; missing quarters return no partial mean. Annual averaging has not been re-evaluated.'));
+  server.append(tipped('p', 'owner-mcp-label', '2 tools in use', 'Eight other server tools remain outside the planner schema: list_datasets, describe_dataset, get_dimension_values, latest_value, compare_periods, series_summary, get_revisions and get_provenance. Historical full-set accuracy evaluations used three agent tools and direct calls.'), tools);
   server.append(el('p', 'owner-mcp-more', 'The server offers 8 other tools. Appendix G lists them.'));
   const resources = el('div', 'owner-mcp-resources');
   resources.append(tipped('div', 'owner-mcp-resource', 'Source catalogue', 'Resource labourlens://sources returns publisher, URL, rights and coverage metadata for datasets and documents. No report text.'));
@@ -1407,7 +1407,7 @@ export function workbenchShot() {
 /** GenAI concepts and where this build uses each one. */
 export function conceptGrid() {
   const wrap = el('div', 'g12 is-concepts');
-  [['stack', 'Tokens and context', 'Questions capped at 1,000 characters. Answers capped at 6,000 output tokens.'], ['database', 'Embeddings', 'text-embedding-3-large, with keyword search beside it.'], ['arrows-in-simple', 'Reranking', 'A model reorders the top 30 passages.'], ['note', 'Prompts', 'Versioned planner and answer prompts. Strict JSON output, validated.'], ['chart-line', 'Evaluators', 'Code scores numbers. An AI judge scores claim support.'], ['wrench', 'Agents', 'One bounded loop. Six tool calls at most.'], ['path', 'MCP', 'Nine read-only tools and two resources, behind a client that distrusts them.'], ['clock', 'Observability', 'A record per run: outcome, tool calls, cost and timings.']].forEach(([icon, name, text], i) => {
+  [['stack', 'Tokens and context', 'Questions capped at 1,000 characters. Answers capped at 6,000 output tokens.'], ['database', 'Embeddings', 'text-embedding-3-large, with keyword search beside it.'], ['arrows-in-simple', 'Reranking', 'A model reorders the top 30 passages.'], ['note', 'Prompts', 'Versioned planner and answer prompts. Strict JSON output, validated.'], ['chart-line', 'Evaluators', 'Code scores numbers. An AI judge scores claim support.'], ['wrench', 'Agents', 'One bounded loop. Six tool calls at most.'], ['path', 'MCP', 'Ten read-only tools and two resources. Two server tools used by the served agent; historical measurements used nine.'], ['clock', 'Observability', 'A record per run: outcome, tool calls, cost and timings.']].forEach(([icon, name, text], i) => {
     const tile = el('div', 'g12-tile'); tile.style.setProperty('--i', String(i));
     const head = el('div', 'g12-head'); head.append(ico(icon), el('h3', '', name));
     tile.append(head, el('p', 'g12-ask', text));
@@ -1464,7 +1464,7 @@ export function buildProcess(decisionCount) {
     const li = el('li', 'g24-lane'); li.style.setProperty('--i', String(i)); li.append(el('strong', '', head), el('span', '', text)); lanes.append(li);
   });
   const nums = el('div', 'g24-nums');
-  [[finite(decisionCount) ? String(decisionCount) : 'many', 'decisions logged'], ['5', 'end-to-end AI reviews'], ['0', 'rights-scan hits on my machine']].forEach(([n, label]) => { const d = el('div', 'g24-num'); d.append(el('p', 'num', n), el('p', '', label)); nums.append(d); });
+  [[finite(decisionCount) ? String(decisionCount) : 'many', 'decisions logged'], ['5', 'end-to-end AI reviews']].forEach(([n, label]) => { const d = el('div', 'g24-num'); d.append(el('p', 'num', n), el('p', '', label)); nums.append(d); });
   wrap.append(loop, el('div', 'g24-body', ''), nums);
   wrap.querySelector('.g24-body').append(lanes);
   return wrap;
@@ -1472,8 +1472,8 @@ export function buildProcess(decisionCount) {
 
 /** Threat suite v2 totals. These are not in report.json yet; same source and numbers as threatComparison: experiments/threats/threat-v2-analysis.json. */
 const THREAT_V2 = {guarded: 50, naive: 42, n: 54, benignFailed: 3, benignN: 8};
-/** The statistics server's tool count, as stated on the MCP slides (not in report.json). */
-const MCP_TOOLS = 9;
+/** Current default server capability, not a measured result. Historical protocol runs used nine tools. */
+const MCP_TOOLS = 10;
 
 /** Closing results board. Evaluated figures and the served corpus come from the report, except the documented threat totals and MCP tool count above. */
 export function summaryBoard(m) {
@@ -1549,20 +1549,19 @@ export function summaryBoard(m) {
     return withTip(f, tip, 'is-up');
   };
   facts2.append(
-    fact(`${MCP_TOOLS} tools`, mcp.different_outputs === 0 ? `Direct and MCP calls returned identical rows on all ${accepted} queries both accepted.` : `Direct and MCP calls matched on ${mcp.identical_datasets} of ${accepted} accepted queries.`, 'The statistics server exposes nine read-only tools. The agent uses one. Oversized queries were refused by both paths.'),
+    fact(`${MCP_TOOLS} tools now`, mcp.different_outputs === 0 ? `Historical direct and MCP calls returned identical rows on all ${accepted} queries both accepted.` : `Historical direct and MCP calls matched on ${mcp.identical_datasets} of ${accepted} accepted queries.`, 'Current server: ten read-only tools; the served agent uses two. The recorded comparison used nine tools and one planner-facing statistics tool. Annual averaging is unevaluated. Oversized queries were refused by both historical paths.'),
     fact(`${Math.round(cost.p50)} s`, `Median answer time, about $${cost.cost.toFixed(4)} per question.`, 'Final evaluation, filter then rerank, development questions. The 95th percentile is slower.')
   );
 
-  // What changed: the one emphasised row.
-  const [from, to] = m.scope, documents = m.section('serving').corpus?.document_files, qtr = p => (/^(\d{4})-Q(\d)$/.exec(p) ? `Q${/^(\d{4})-Q(\d)$/.exec(p)[2]} ${/^(\d{4})-Q(\d)$/.exec(p)[1]}` : p);
-  const changed = el('div', 'sb-changed');
-  changed.append(heading('What changed after the evaluation'), el('p', '', `The served system is not the one I measured. It answers from ${qtr(from)} to ${qtr(to)}, with ${finite(documents) ? fmt.int(documents) : 'unrecorded'} report documents; 2020 to 2022 answers are unevaluated. It also uses a native function-calling planner and streaming. Decisions API trials were rejected.`));
 
   const limits = el('div', 'sb-limits');
   const list = el('ul', 'sb-limit-list');
   ['AI-drafted labels, signed off by one reviewer', 'Judge and answer models share a provider', 'Scanner can be bypassed', 'Three dataset licences and some source rights unverified'].forEach(t => list.append(el('li', '', t)));
   limits.append(heading('Limits', 'is-small'), list);
+  const liveNote = el('p', 'sb-live-note', 'The live app differs from the measured build; ');
+  const appendixLink = el('a', '', 'see appendix M.'); appendixLink.href = '#/served-versus-evaluated';
+  liveNote.append(appendixLink); limits.append(liveNote);
 
-  wrap.append(acc, side, facts2, changed, limits);
+  wrap.append(acc, side, facts2, limits);
   return wrap;
 }

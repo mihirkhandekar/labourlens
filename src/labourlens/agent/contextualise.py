@@ -2,8 +2,8 @@
 
 The workbench keeps no server-side conversation. The browser may send the last three finished turns with a new message; one short
 structured call to the primary model then rewrites the message into ONE standalone question, resolving what only the conversation
-or the clock can resolve ("I mean retrenched employees", "and for 2025?", "last year", "laid off"). The rewrite then goes through
-the unchanged small-talk check, triage and agent as if the user had typed it, so every guard still sees a single question.
+or the clock can resolve ("I mean retrenched employees", "and for 2025?", "last year", "laid off"). After the small-talk fast path,
+the rewrite goes through triage and the agent. Triage also receives bounded context so a failed rewrite does not erase referents.
 
 Safety properties: history and the message are untrusted data (escaped, inside tags, the prompt says so); the output must be a single
 short line, must not carry an injection pattern the user's own message lacked, and must not introduce a number or capitalised name
@@ -37,6 +37,7 @@ MAX_REWRITE_CHARS = 300
 MAX_TURNS = 3
 MAX_SUMMARY_CHARS = 600  # per history field handed to the model
 MAX_STATUS_CHARS = 20
+MAX_ANSWER_CONTEXT_CHARS = 1200  # series definitions and periods, never an evidence substitute
 SGT = timezone(timedelta(hours=8))  # Singapore has no daylight saving
 
 _SPACE = re.compile(r"\s+")
@@ -100,25 +101,40 @@ def parse_history(raw) -> list[dict]:
         raise ValueError(f"history must be a list of at most {MAX_TURNS} turns")
     turns = []
     for item in raw:
-        if not isinstance(item, dict) or set(item) != {"question", "status", "summary"}:
-            raise ValueError("each history turn must have only question, status and summary")
-        q, s, a = item["question"], item["status"], item["summary"]
-        if not all(isinstance(v, str) for v in (q, s, a)):
+        required = {"question", "status", "summary"}
+        optional = {"resolved_question", "answer_context"}
+        if not isinstance(item, dict) or not required <= set(item) or set(item) - required - optional:
+            raise ValueError("each history turn must contain question, status and summary, with optional resolved_question and answer_context")
+        limits = {"question": MAX_QUESTION_CHARS, "status": MAX_STATUS_CHARS, "summary": MAX_SUMMARY_CHARS,
+                  "resolved_question": MAX_QUESTION_CHARS, "answer_context": MAX_ANSWER_CONTEXT_CHARS}
+        if any(not isinstance(v, str) for v in item.values()):
             raise ValueError("history fields must be strings")
-        if len(q) > MAX_QUESTION_CHARS or len(s) > MAX_STATUS_CHARS or len(a) > MAX_SUMMARY_CHARS:
+        if any(len(v) > limits[k] for k, v in item.items()):
             raise ValueError("history field too long")
-        turns.append({"question": q, "status": s, "summary": a})
+        turns.append(dict(item))
     return turns
 
 
-def _render_history(history: list[dict]) -> str:
-    def esc(text: str) -> str:
-        return html.escape(_SPACE.sub(" ", text).strip()[:MAX_SUMMARY_CHARS], quote=False)
+def render_history(history: list[dict], *, include_context: bool = True) -> str:
+    """Render bounded conversation data for rewriting and scope triage, never as trusted evidence."""
+    def esc(text: str, limit: int = MAX_SUMMARY_CHARS) -> str:
+        return html.escape(_SPACE.sub(" ", text).strip()[:limit], quote=False)
 
     if not history:
         return "(no earlier turns)"
-    return "\n".join(f"<turn n=\"{i}\"><user_question>{esc(t['question'])}</user_question><workbench_status>{esc(t['status'])}</workbench_status>"
-                     f"<workbench_reply>{esc(t['summary'])}</workbench_reply></turn>" for i, t in enumerate(history, 1))
+    if not include_context:
+        # Preserve the exact assembly used by frozen contextualise_v1/v2 evaluations.
+        return "\n".join(f'<turn n="{i}"><user_question>{esc(t["question"])}</user_question>'
+                         f'<workbench_status>{esc(t["status"])}</workbench_status>'
+                         f'<workbench_reply>{esc(t["summary"])}</workbench_reply></turn>'
+                         for i, t in enumerate(history[-MAX_TURNS:], 1))
+    return "\n".join(
+        f'<turn n="{i}"><user_question>{esc(t["question"], MAX_QUESTION_CHARS)}</user_question>'
+        f'<resolved_question>{esc(t.get("resolved_question", t["question"]), MAX_QUESTION_CHARS)}</resolved_question>'
+        f'<workbench_status>{esc(t["status"], MAX_STATUS_CHARS)}</workbench_status>'
+        f'<workbench_reply>{esc(t["summary"])}</workbench_reply>'
+        f'<answer_context>{esc(t.get("answer_context", ""), MAX_ANSWER_CONTEXT_CHARS)}</answer_context></turn>'
+        for i, t in enumerate(history[-MAX_TURNS:], 1))
 
 
 def _clean(candidate: str, message: str, history: list[dict], today: date) -> str | None:
@@ -128,8 +144,12 @@ def _clean(candidate: str, message: str, history: list[dict], today: date) -> st
         return None
     if injection_flags(q) and not injection_flags(message):
         return None
-    # Earlier replies are untrusted and may carry figures or planted text: only a clarification question (which restates the options) may lend words.
-    allowed_text = " ".join([message, *(t["question"] + (f" {t['summary']}" if t["status"] == "clarify" else "") for t in history), date_facts(today)])
+    # History only supplies referents, never evidence. Answer metadata may lend series and periods
+    # omitted from the question; ordinary answer prose still cannot lend new numbers or names.
+    allowed_text = " ".join([
+        message, *(t["question"] + " " + t.get("resolved_question", "") + " " + t.get("answer_context", "")
+                   + (f" {t['summary']}" if t["status"] == "clarify" else "") for t in history),
+        date_facts(today)])
     allowed_numbers = set(_NUMBER.findall(allowed_text))
     allowed_words = {w.lower() for w in _WORD.findall(allowed_text)} | _ALWAYS_ALLOWED
     if any(n not in allowed_numbers for n in _NUMBER.findall(q)):
@@ -149,7 +169,7 @@ def contextualise(message: str, history: list[dict] | None = None, today: date |
                   timeout_s: float = TIMEOUT_S, force: bool = False) -> dict:
     """Never raises. Returns {question, original, changed, called, error, usage, model, prompt, prompt_sha256, seconds}.
     `question` is the rewrite when one was produced and accepted, else the original message."""
-    history = history or []
+    history = (history or [])[-MAX_TURNS:]
     system, user, digest = load_prompt(prompt)
     out = passthrough(message, model, prompt, digest)
     if not force and not needs_rewrite(message, history):
@@ -161,7 +181,9 @@ def contextualise(message: str, history: list[dict] | None = None, today: date |
     t0 = time.perf_counter()
     out["called"] = True
     try:
-        body = user.format(dates=date_facts(today), history=_render_history(history), message=html.escape(message, quote=False))
+        body = user.format(dates=date_facts(today),
+                           history=render_history(history, include_context=prompt not in {"contextualise_v1", "contextualise_v2"}),
+                           message=html.escape(message, quote=False))
         r = llm.chat(model, [{"role": "system", "content": system}, {"role": "user", "content": body}],
                      max_completion_tokens=MAX_COMPLETION_TOKENS, schema=json_schema(), schema_name="contextualise", timeout_s=timeout_s)
         out["usage"].update(calls=1, prompt_tokens=r.prompt_tokens, completion_tokens=r.completion_tokens, llm_seconds=round(r.seconds, 2),

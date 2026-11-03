@@ -68,6 +68,7 @@ function buildSlide(spec) {
   if (spec.id) section.id = spec.id;
   section.dataset.chapter = spec.chapter || '';
   section.dataset.title = spec.title || '';
+  if (spec.chapter === 'Appendix' || spec.layout === 'appendix') section.dataset.appendix = '';
   const inner = el('div', `deck-slide is-${spec.layout}${spec.cls ? ` ${spec.cls}` : ''}${spec.warn ? ' is-warn' : ''}`);
   const heading = el(spec.layout === 'title' ? 'h1' : 'h2', 'deck-title', spec.title);
   if (spec.layout !== 'title') inner.append(heading);
@@ -153,12 +154,63 @@ function main(report) {
   scrubDom(slidesHost);
 
   const slides = () => [...slidesHost.querySelectorAll(':scope > section')];
+  // Detach, rather than visually hide, references so every Reveal view uses the same slide set.
+  const allSlides = slides();
+  const appendixSlides = allSlides.filter(slide => 'appendix' in slide.dataset);
+  const mainSlides = allSlides.filter(slide => !('appendix' in slide.dataset));
+  function appendixTarget(hash) {
+    let path;
+    try { path = decodeURIComponent(hash.replace(/^#\/?/, '')); } catch { return null; }
+    const [name] = path.split('/');
+    if (/^\d+$/.test(name)) {
+      const target = allSlides[Number(name) - 1]; // hashOneBasedIndex
+      return appendixSlides.includes(target) ? target : null;
+    }
+    if (!name) return null;
+    return appendixSlides.find(slide => slide.id === name || [...slide.querySelectorAll('[id], [data-id]')].some(node => node.id === name || node.dataset.id === name)) || null;
+  }
+  let appendicesVisible = Boolean(appendixTarget(location.hash));
+  appendixSlides.forEach(slide => slide.remove());
+  if (appendicesVisible) slidesHost.append(...appendixSlides);
   const deck = new Reveal(root, {
     ...sizeConfig(), center: false, controls: false, progress: true, slideNumber: false, hash: true, hashOneBasedIndex: true,
     transition: reduced() ? 'none' : 'fade', transitionSpeed: 'default', backgroundTransition: 'none', autoAnimate: false,
     touch: true, keyboard: true, overview: true, help: true, pause: false, mouseWheel: false, fragments: true, fragmentInURL: false,
     scrollActivationWidth: null, pdfSeparateFragments: false, navigationMode: 'linear', display: 'block', previewLinks: false, respondToHashChanges: true
   });
+
+  function setAppendices(visible, target = null) {
+    if (visible !== appendicesVisible) {
+      // Move first while the current appendix still belongs to Reveal's slide set.
+      if (!visible && appendixSlides.includes(deck.getCurrentSlide())) {
+        deck.slide(Math.max(0, mainSlides.length - 1));
+        // Reveal writes the hash after a delay; clear the appendix target now so the same link works again.
+        history.replaceState(null, '', `#/${mainSlides.length}`);
+      }
+      appendicesVisible = visible;
+      if (visible) slidesHost.append(...appendixSlides);
+      else appendixSlides.forEach(slide => slide.remove());
+      deck.sync();
+    }
+    if (target) deck.slide(slides().indexOf(target));
+    sync({type: 'ready'});
+  }
+  // Run before Reveal's bubbling hash listener: restore the target, sync and jump before
+  // Reveal tries resolving a detached id. This also handles numeric appendix bookmarks.
+  window.addEventListener('hashchange', () => {
+    const target = appendixTarget(location.hash);
+    if (target) setAppendices(true, target);
+  }, true);
+  // Reveal clamps numeric slide links itself, so reveal appendix link targets before it sees the click.
+  document.addEventListener('click', event => {
+    const link = event.target instanceof Element ? event.target.closest('a[href^="#"]') : null;
+    const target = link ? appendixTarget(link.getAttribute('href')) : null;
+    if (!target) return;
+    event.preventDefault();
+    event.stopPropagation();
+    setAppendices(true, target);
+    history.replaceState(null, '', link.getAttribute('href'));
+  }, true);
 
   // ---------- toolbar ----------
   const bar = el('div', 'deck-bar'); bar.setAttribute('role', 'toolbar'); bar.setAttribute('aria-label', 'Presentation controls');
@@ -225,6 +277,25 @@ function main(report) {
     if (now - lastX < 450) { lastX = 0; toggleNotes(); } else lastX = now;
   });
   deck.addKeyBinding({keyCode: 84, key: 'T', description: 'Light or dark theme'}, toggleTheme);
+  // Reveal normally assigns A to auto-slide. Reserve it explicitly and handle the
+  // double press in capture phase, including while the overview is open.
+  deck.addKeyBinding({keyCode: 65, key: 'A A', description: 'Show or hide appendices (double press within 400 ms)'}, () => {});
+  deck.registerKeyboardShortcut('X X', 'Show or hide speaker notes (double press within 450 ms)');
+  let lastA = null;
+  document.addEventListener('keydown', event => {
+    if (event.key.toLowerCase() !== 'a') { lastA = null; return; }
+    const target = event.target;
+    if (event.repeat || event.ctrlKey || event.metaKey || event.altKey ||
+        target instanceof HTMLElement && (target.isContentEditable || ['INPUT', 'TEXTAREA', 'SELECT'].includes(target.tagName))) {
+      lastA = null;
+      return;
+    }
+    event.preventDefault();
+    event.stopImmediatePropagation();
+    const now = performance.now();
+    if (lastA !== null && now - lastA <= 400) { lastA = null; setAppendices(!appendicesVisible); }
+    else lastA = now;
+  }, true);
 
   // ---------- slide entry effects ----------
   const rects = new Map();

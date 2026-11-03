@@ -211,8 +211,8 @@ def test_app_builds_the_shipped_runner_and_the_runner_sends_stage_and_agent_even
     monkeypatch.setattr(served, "make_runner", lambda config=None, **kw: built.update(config=config, **kw) or real(config, **kw))
     create_app_ = __import__("labourlens.report.app", fromlist=["create_app"]).create_app
     create_app_(settings)
-    assert (built["config"].planner_mode, built["config"].planner_prompt, built["config"].answer_prompt) == ("tools", "planner_v5", "answer_v7")
-    assert (built["triage_prompt"], built["contextualise_prompt"]) == ("triage_v3", "contextualise_v2")
+    assert (built["config"].planner_mode, built["config"].planner_prompt, built["config"].answer_prompt, built["config"].tool_set) == ("tools", "planner_v6", "answer_v8", "annual")
+    assert (built["triage_prompt"], built["contextualise_prompt"]) == ("triage_v4", "contextualise_v3")
 
     seen = {}
     info = {"question": "q", "original": "q", "changed": False, "called": True, "error": None, "usage": triage._empty_usage(), "model": "m", "prompt": "p", "prompt_sha256": "h", "seconds": 0.0}
@@ -227,9 +227,10 @@ def test_app_builds_the_shipped_runner_and_the_runner_sends_stage_and_agent_even
 
     monkeypatch.setattr(graph, "run_agent", fake_run_agent)
     events = []
-    runner = served.make_runner(served.shipped_config(), triage_prompt="triage_v3", contextualise_prompt="contextualise_v2", save_trace=False)
+    runner = served.make_runner(served.shipped_config(), triage_prompt="triage_v4", contextualise_prompt="contextualise_v3", save_trace=False)
     result = runner("q", SimpleNamespace(), emit=events.append)
-    assert seen["triage"] == {"prompt": "triage_v3"} and seen["ctx"] == {"prompt": "contextualise_v2"} and seen["cfg"].planner_mode == "tools"
+    assert seen["triage"] == {"prompt": "triage_v4", "history": None, "original_question": "q"}
+    assert seen["ctx"] == {"prompt": "contextualise_v3"} and seen["cfg"].planner_mode == "tools"
     assert [(e["type"], e.get("stage") or e.get("node"), e.get("state")) for e in events] == [
         ("stage", "contextualise", "running"), ("stage", "contextualise", "done"), ("stage", "triage", "running"), ("stage", "triage", "done"), ("node_started", "plan_research", None)]
     assert result["outcome"] == "answered"

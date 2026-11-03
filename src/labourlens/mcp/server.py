@@ -43,13 +43,13 @@ from labourlens.mcp.analysis import AnalysisError
 from labourlens.mcp.models import (EMBEDDING_DIMENSION, MAX_K, MAX_QUERY_CHARS, MAX_QUESTION_CHARS, UNTRUSTED_NOTE, VECTOR_B64_CHARS, CalculateChangeResult,
                                    ComparePeriodsResult, DescribeCorpusResult, DescribeDatasetResult, DimensionValuesResult, LatestValueResult,
                                    ListDatasetsResult, Observation, ProvenanceResult, RevisionsResult, SearchReportsResult, SeriesSummaryResult,
-                                   StatisticResult, TextChangeResult)
+                                   AnnualAverageResult, StatisticResult, TextChangeResult)
 from labourlens.mcp.redact import RedactingFilter
 
 log = logging.getLogger("labourlens.mcp.server")
 SERVER_NAME, SERVER_VERSION = "labourlens-stats", "0.1.0"  # unchanged on purpose: added tools are additive and older clients ignore unknown tools
 TOOL_NAME = "get_statistic"
-NEW_TOOLS = ("list_datasets", "describe_dataset", "get_dimension_values", "latest_value", "compare_periods", "series_summary", "get_revisions", "get_provenance")
+NEW_TOOLS = ("list_datasets", "describe_dataset", "get_dimension_values", "latest_value", "compare_periods", "series_summary", "get_revisions", "get_provenance", "annual_average")
 ALL_TOOLS = (TOOL_NAME,) + NEW_TOOLS
 
 _data: StatsData | None = None
@@ -112,6 +112,23 @@ def _call(name: str, fn, *args):
         raise ToolError(json.dumps({"error_kind": e.kind, "message": e.message})) from None
     log.info("%s ok ms=%s", name, round((time.perf_counter() - t0) * 1000, 1))
     return res
+
+
+@mcp.tool(name="annual_average", annotations=_tool_annotations("Derived annual average of quarterly rates"))
+def annual_average(
+    year: Annotated[int, Field(strict=True, description="Complete calendar year inside the supported window; incomplete 2026 is refused")],
+    source_id: Annotated[SourceId, Field(description="Dataset id from list_datasets")],
+    indicator_id: Annotated[str, Field(min_length=1, max_length=120)],
+    population: Annotated[str, Field(min_length=1, max_length=120)],
+    adjustment: Annotated[Literal[ADJUSTMENTS], Field(description="Explicit adjustment of one series")],  # type: ignore[valid-type]
+    dimension: Dimension = None,
+) -> AnnualAverageResult:
+    """Derived simple mean of exactly four quarterly percent rates, Decimal half-up to 2dp. Not an official annual estimate.
+    Rejects mixed series, missing quarters or values, counts and ratios. Inputs include all observation ids and release stages."""
+    out, err = data().annual_average(year, source_id, indicator_id, population, adjustment, dimension)
+    if err is not None:
+        raise ToolError(json.dumps({"error_kind": err.error_kind, "message": err.message}))
+    return AnnualAverageResult(**out)
 
 
 @mcp.tool(name="list_datasets", annotations=_tool_annotations("List datasets"))

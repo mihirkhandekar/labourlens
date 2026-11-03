@@ -1,0 +1,44 @@
+{
+  "generated": "2026-11-03T21:53:56",
+  "query": "2025-Q4 retrenchment reasons",
+  "stages": {
+    "rerank_llm": {
+      "boundary": "network",
+      "status": "network_not_measured"
+    },
+    "cold_query_embedding": {
+      "boundary": "network",
+      "status": "network_not_measured"
+    },
+    "process_cache_hit": {
+      "boundary": "local",
+      "median_ms": 0.0017,
+      "max_ms": 0.0511,
+      "runs": 30
+    },
+    "bm25": {
+      "boundary": "local",
+      "median_ms": 0.1299,
+      "max_ms": 0.7673,
+      "runs": 30
+    },
+    "cosine_synthetic_query_vector": {
+      "boundary": "local",
+      "median_ms": 1.0492,
+      "max_ms": 4.7397,
+      "runs": 30
+    },
+    "hybrid_rrf": {
+      "boundary": "local",
+      "median_ms": 1.2535,
+      "max_ms": 2.5015,
+      "runs": 30
+    },
+    "corpus": {
+      "passage_set_sha256": "62bcfab7e8e5",
+      "content_sha256": "0c21dfea5c07",
+      "passages": 29760,
+      "chunks": 3632
+    }
+  }
+}

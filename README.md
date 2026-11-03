@@ -12,6 +12,8 @@ Neither Decisions API trial was adopted: [v1](docs/experiments/decisions-api-res
 
 **Served system versus evaluated system.** Every figure above was measured on questions about 2024-Q1 to 2026-Q2, on corpus v3.1 (49 documents), with the structured-output planner and the older prompts (`planner_v1`, `answer_v3`). The served app now answers for 2020-Q1 to 2026-Q2 (D-077), searches a larger corpus v4 of 106 documents (D-080), plans with native OpenAI function calling and newer prompts (D-078), and can stream its live steps (D-079). The evaluation gold covers 2024 to 2026 only, so answers about 2020 to 2023 and from the 57 added documents are unevaluated, more documents now compete in retrieval, and the shipped planner and prompts were not re-evaluated; I decided not to rerun the experiments. See the [system card](docs/system-card.md#served-versus-evaluated).
 
+**Current served additions (3 November 2026, D-083 to D-086, unevaluated).** The served prompts are `planner_v6`, `answer_v8`, `triage_v4` and `contextualise_v3`. The agent has four read-only tools: `search_reports`, `get_series`, `calculate_change` and `annual_average`. The last computes a simple mean of four quarterly percentage rates, not an official annual statistic. It requires one consistent series and all four non-null quarters inside the supported window; missing quarters produce `not_found`, not a partial mean. Follow-ups carry the resolved question and bounded series/period answer context into rewriting and triage as untrusted data. Why questions request report search and may attribute MOM-stated drivers, not infer causation. Abstention distinguishes missing observations from missing methodology or commentary. None of these changes has been re-evaluated.
+
 ## Quick start
 
 You need Git, [uv](https://docs.astral.sh/uv/) and make. uv can install Python 3.12. From the repository root:
@@ -24,7 +26,7 @@ LABOURLENS_DEMO_ENABLED=false make serve
 
 Open <http://127.0.0.1:8000> for the report, `/deck` for the presentation or `/workbench` for the research page. These commands need no API key and make no paid calls. `mcp-demo` exercises the statistics server with a real MCP client. [Reproduce](docs/reproduce.md) explains corpus setup and how to recompute the saved results.
 
-The presentation has 28 main slides and 44 including the appendix. The flow now moves from the data and its limits, to report and statistics retrieval, the agent and answer checks, then evaluation and results. It ends with next steps before the summary.
+The presentation has 29 main slides and 45 with the appendix revealed. References are hidden from navigation, overview, progress and the counter by default. Press **A twice within 400 ms** to show or hide them; appendix links also reveal their target. Press **X twice** for speaker notes, **T** for theme and **?** for keyboard help. The deck ends with measured failures, proposed improvements, production architecture and Summary.
 
 Live demo: <https://labourlens.navig.me>. Workbench access codes are sent separately. A link of the form `/workbench#code=<code>` fills the access field but never submits or stores it (D-081). The [innovation page](https://labourlens.navig.me/innovation) presents the proposed next steps.
 
@@ -68,18 +70,20 @@ flowchart TD
   P --> R["search_reports: in app"]
   P --> M["get_series: MCP get_statistic"]
   P --> K["calculate_change: code"]
+  P --> Y["annual_average: MCP, four quarterly rates"]
   R --> E["Evidence"]
   M --> E
   K --> E
+  Y --> E
   E -->|within limits| P
   P -->|finish| A["Answer writer"]
   A --> V["Validators: schema, citations, grounded numbers"]
   V --> O["Cited answer or abstention"]
 ```
 
-Only statistics lookup crosses MCP in the live app. The all-three-tools MCP route was tested and was slower without an accuracy gain; it is not live. The [architecture](docs/architecture.md) covers failure paths and validation repair, with a [rendered component diagram](docs/img/architecture.svg).
+Statistics lookup and `annual_average` cross MCP in the live app; report search and `calculate_change` stay in process. The historical all-three-tools MCP route was tested and was slower without an accuracy gain; it is not live. The [architecture](docs/architecture.md) covers failure paths and validation repair, with a [rendered component diagram](docs/img/architecture.svg).
 
-The statistics capability is the `get_series` tool; direct and MCP are routes to it, not different knowledge sources. Direct calls `StatsData.query` in process, with no network or protocol. MCP calls server tool `get_statistic` in a separate process, which runs the same query over the same local `observations.parquet`. Both return observation labels such as `O1` that `calculate_change` accepts as inputs. The live default is `mcp_stats`; the local default is direct and needs no MCP server. Comparing these routes tests transport, not extra information, so a tie is expected but does not prove equivalence. Removing `get_series` is a different experiment: it removes statistics access and the calculation inputs.
+The default MCP statistics server now exposes ten read-only tools, two resources and one prompt. The served agent uses two of those server tools: `get_series` maps to `get_statistic`, and `annual_average` keeps its name. The other eight server tools are not planner choices. Direct and MCP routes use the same local observations and deterministic operations, not different knowledge sources. The frozen three-tool agent and historical route comparisons remain unchanged: they tested `get_series` transport and removal, not the new annual-average capability.
 
 ## What I built
 

@@ -17,7 +17,6 @@
 .iv-summary { font-weight: 500; color: var(--ink); }
 .iv-document a { color: var(--ink-2); text-decoration: underline; text-underline-offset: 3px; text-decoration-color: var(--line-strong); overflow-wrap: anywhere; }
 .iv-document a:hover { color: var(--accent); }
-.iv-document sup { font-size: 11px; white-space: nowrap; }
 .iv-contents { position: sticky; top: 28px; display: grid; align-content: start; gap: 13px; font-size: 13px; line-height: 1.45; }
 .iv-contents-title { font-size: 13px; color: var(--ink); margin: 0 0 5px; font-weight: 600; }
 .iv-contents a { color: var(--muted); text-decoration: none; }
@@ -39,7 +38,6 @@
 .iv-proposal dd { margin: 0; }
 .iv-document ul, .iv-document ol { padding-left: 22px; margin: 0; }
 .iv-document li { padding-left: 3px; margin-bottom: 14px; }
-.iv-references { font-size: 14px; }
 .iv-footer { display: flex; flex-wrap: wrap; gap: 24px; margin-top: 48px; padding-top: 20px; border-top: 1px solid var(--line); font-size: 13px; }
 .iv-main :focus-visible, .iv-nav :focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
 @media (max-width: 1100px) { .iv-main { grid-template-columns: minmax(0, 72ch); justify-content: center; margin-top: 40px; } .iv-contents { position: static; display: flex; flex-wrap: wrap; gap: 10px 22px; padding-bottom: 24px; border-bottom: 1px solid var(--line); } .iv-contents-title { width: 100%; } }
@@ -60,5 +58,5 @@
   .iv-proposal { padding: 8pt 0; } .iv-proposal summary { font-size: 10pt; break-after: avoid; }
   .iv-proposal::details-content { display: block; content-visibility: visible; }
   .iv-proposal dl { font-size: 9pt; margin-top: 8pt; } .iv-table { font-size: 9pt; } .iv-table caption { font-size: 8pt; } .iv-table tr { break-inside: avoid; }
-  .iv-document a { color: #111; } .iv-document sup { font-size: 7pt; }
+  .iv-document a { color: #111; }
 }

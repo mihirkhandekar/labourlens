@@ -17,14 +17,15 @@ MCP_ALL_ROUTED = frozenset({"search_reports", "calculate_change", "calculate_fro
 
 # What the web app ships (D-077, D-078): the 2020-Q1 to 2026-Q2 prompts, and the native function-calling planner. Every frozen experiment kept its own
 # prompt files and the structured-output planner; nothing here changes AgentConfig() or make_runner() defaults, so those runs reproduce as before.
-SHIPPED_PROMPTS = {"planner": "planner_v5", "answer": "answer_v7", "triage": "triage_v3", "contextualise": "contextualise_v2"}
+SHIPPED_PROMPTS = {"planner": "planner_v6", "answer": "answer_v8", "triage": "triage_v4", "contextualise": "contextualise_v3"}
 
 
 def shipped_config(run_deadline_s: float | None = 80.0):
-    """The AgentConfig of the served app. Same models, retrieval (r3), bounds and tools as the evaluated agent; different planner mode and prompts."""
+    """The served app's native planner, versioned prompts and annual tool set. Frozen AgentConfig defaults remain unchanged."""
     from labourlens.agent.graph import AgentConfig
 
-    return AgentConfig(planner_prompt=SHIPPED_PROMPTS["planner"], answer_prompt=SHIPPED_PROMPTS["answer"], planner_mode="tools", run_deadline_s=run_deadline_s)
+    return AgentConfig(planner_prompt=SHIPPED_PROMPTS["planner"], answer_prompt=SHIPPED_PROMPTS["answer"], planner_mode="tools",
+                       tool_set="annual", run_deadline_s=run_deadline_s)
 
 
 def make_shared(transport: str = DEFAULT_TRANSPORT):
@@ -38,11 +39,14 @@ def make_shared(transport: str = DEFAULT_TRANSPORT):
     if transport not in TRANSPORTS:
         raise ValueError(f"transport must be one of {TRANSPORTS}")
     if transport == "direct":
-        return Shared()
+        shared = Shared()
+        shared.served_search_cache = True
+        return shared
     from labourlens.mcp.client import SyncStatsBackend
 
     all_tools = transport == "mcp_all"
     sh = Shared(world=(None, {}, {})) if all_tools else Shared()
+    sh.served_search_cache = True
     sh.tool_transport = transport
     sh.stats_backend = backend = SyncStatsBackend(AGENT_SERVER if all_tools else "labourlens-stats")
     if all_tools:
@@ -110,7 +114,7 @@ def make_runner(config=None, *, contextualise_enabled=True, triage_enabled=True,
         def classifier(message):
             start = time.perf_counter()
             tell({"type": "stage", "stage": "triage", "state": "running"})
-            result = classify(message, **({"prompt": triage_prompt} if triage_prompt else {}))
+            result = classify(message, history=history, original_question=question, **({"prompt": triage_prompt} if triage_prompt else {}))
             tell({"type": "stage", "stage": "triage", "state": "done", "route": result["route"]})
             note("triage", time.perf_counter() - start, result["usage"], route=result["route"], error=result["error"], diverted=result["route"] != "in_scope")
             return result

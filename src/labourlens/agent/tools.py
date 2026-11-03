@@ -37,7 +37,7 @@ MAX_K = 10
 MAX_ROWS = 40
 ADJUSTMENTS = ("seasonally_adjusted", "not_adjusted", "unspecified", "not_applicable")
 CHANGE_KINDS = ("difference", "percent_change")
-TOOL_SETS = ("base", "v2")
+TOOL_SETS = ("base", "v2", "annual")
 BASE_TOOLS = ("search_reports", "get_series", "calculate_change")
 TEXT_UNITS = ("percent", "persons", "dollars", "ratio", "vacancies")
 TEXT_CALC_ARGS = ("passage_a", "value_a", "unit_a", "basis_a", "period_a", "passage_b", "value_b", "unit_b", "basis_b", "period_b", "kind")
@@ -87,7 +87,7 @@ def _transported(fn):
 
 def offered_tools(shared, tool_set: str = "base") -> list[str]:
     """Runtime tool catalogue; experiments may disable tools without changing frozen prompts or live transports."""
-    names = BASE_TOOLS + (("calculate_from_text_values",) if tool_set == "v2" else ())
+    names = BASE_TOOLS + (("calculate_from_text_values",) if tool_set == "v2" else ("annual_average",) if tool_set == "annual" else ())
     disabled = getattr(shared, "disabled_tools", frozenset())
     return [name for name in names if name not in disabled]
 
@@ -155,6 +155,57 @@ class StatsData:
                          "dimension": r.dimension, "period": r.period, "population": r.population, "adjustment": r.adjustment, "unit": r.unit,
                          "value": None if pd.isna(r.value) else float(r.value), "display": disp, "release_stage": r.release_stage})
         return rows, None
+
+    def annual_average(self, year: int, source_id: str, indicator_id: str, population: str,
+                       adjustment: str, dimension: str | None = None) -> tuple[dict | None, ToolResult | None]:
+        """Simple, unweighted mean of exactly four quarterly percent rates, never a publisher's annual estimate."""
+        def fail(message, kind="invalid_arguments"):
+            return None, ToolResult(False, message=message, error_kind=kind)
+
+        if not isinstance(year, int) or isinstance(year, bool):
+            return fail("year must be an integer")
+        if year < _q(SCOPE_LO)[0] or year > _q(SCOPE_HI)[0]:
+            return fail(f"year must be inside the supported window {SCOPE_LO} to {SCOPE_HI}")
+        if _q(f"{year}-Q1") < _q(SCOPE_LO) or _q(f"{year}-Q4") > _q(SCOPE_HI):
+            missing = [f"{year}-Q{q}" for q in range(1, 5) if not _q(SCOPE_LO) <= _q(f"{year}-Q{q}") <= _q(SCOPE_HI)]
+            return fail(f"annual_average requires four in-scope published quarters; missing quarters: {', '.join(missing)}", "not_found")
+        if any(not isinstance(v, str) or not v.strip() for v in (source_id, indicator_id, population, adjustment)):
+            return fail("source_id, indicator_id, population and adjustment must be explicit non-empty strings")
+        if dimension is not None and not isinstance(dimension, str):
+            return fail("dimension must be a string or null")
+        if adjustment not in ADJUSTMENTS:
+            return fail(f"adjustment must be one of {ADJUSTMENTS}")
+        if source_id not in set(self.obs.source_id):
+            return fail(f"unknown source_id {source_id!r}", "not_found")
+        g = self.obs[(self.obs.source_id == source_id) & (self.obs.indicator_id == indicator_id)
+                     & (self.obs.population == population) & (self.obs.adjustment == adjustment)]
+        if dimension is not None:
+            g = g[g.dimension.str.casefold() == dimension.casefold()]
+        if g.empty:
+            return fail("no rows match these series filters", "not_found")
+        keys = ["source_id", "indicator_id", "population", "adjustment", "dimension", "unit"]
+        if len(g[keys].drop_duplicates()) != 1:
+            return fail("filters leave mixed series; select exactly one dimension and percent rate series")
+        if set(g.unit) != {"percent"}:
+            return fail("annual_average supports percent rates only, not counts, ratios or other units")
+        periods = [f"{year}-Q{q}" for q in range(1, 5)]
+        g = g[g.period.isin(periods)].sort_values("period")
+        if len(g) != 4 or list(g.period) != periods or g.value.isna().any():
+            missing = [p for p in periods if g[g.period == p].empty or g[g.period == p].value.isna().any()]
+            duplicates = [p for p in periods if len(g[g.period == p]) > 1]
+            detail = f"missing quarters: {', '.join(missing)}" if missing else f"duplicate quarters: {', '.join(duplicates)}"
+            return fail(f"annual_average requires four complete quarterly rates; {detail}; no partial-year average is computed", "not_found")
+        values = [Decimal(str(v)) for v in g.value]
+        if not all(v.is_finite() for v in values):
+            return fail("all four quarterly rates must be finite published numbers", "not_found")
+        shown = f"{(sum(values) / Decimal(4)).quantize(Decimal('0.01'), rounding=ROUND_HALF_UP):.2f}"
+        r = next(g.itertuples())
+        inputs = [{"observation_id": row.observation_id, "period": row.period, "value": str(value), "release_stage": row.release_stage}
+                  for row, value in zip(g.itertuples(), values)]
+        return {"year": year, "source_id": source_id, "indicator_id": indicator_id, "population": population,
+                "adjustment": adjustment, "dimension": r.dimension, "unit": "percent", "value": shown, "inputs": inputs,
+                "method": "Simple unweighted arithmetic mean of four published quarterly percent rates; not an official published annual estimate.",
+                "formula": f"({' + '.join(str(v) for v in values)}) / 4"}, None
 
 
 class Shared:
@@ -341,6 +392,8 @@ class Tools:
         self.tool_set = "base"  # "v2" enables calculate_from_text_values and the actionable unknown-dimension error (set by build_graph)
         self.items: list[ContextPassage] = []
         self._ids: set[str] = set()
+        # Served answer selection uses actual returned chunk order, never a synthetic relevance score.
+        self.report_ranks: dict[str, tuple[int, int]] = {}
         self._obs: dict[str, dict] = {}  # label -> observation facts, for calculate_change
         self._n = {"P": 0, "O": 0, "C": 0}
         # Deterministic data-quality notes about missing data and conflicting versions. Written by code, not by a model,
@@ -357,11 +410,49 @@ class Tools:
         child._obs = {k: dict(v) for k, v in self._obs.items()}
         child._n = dict(self._n)
         child.notes = list(self.notes)
+        child._fork_ids = frozenset(self._ids)
+        child.report_ranks = dict(getattr(self, "report_ranks", {}))
         return child
 
     def commit(self, child: Tools) -> None:
         self.items, self._ids, self._obs = child.items, child._ids, child._obs
         self._n, self.notes = child._n, child.notes
+        self.report_ranks = child.report_ranks
+
+    def merge(self, child: Tools, result: ToolResult) -> ToolResult:
+        """Merge an on-time round snapshot in planned order, never replace sibling evidence.
+
+        Calls can only read labels present at the start of their round. New labels are
+        assigned here, not by worker completion order; calculation inputs therefore
+        always refer to unchanged, previously committed labels.
+        """
+        from dataclasses import replace
+
+        baseline = child._fork_ids
+        labels, added = {}, {}
+        by_id = {item.passage_id: item for item in self.items}
+        for item in child.items:
+            if item.passage_id in baseline:
+                continue
+            canonical = by_id.get(item.passage_id)
+            if canonical is None:
+                canonical = replace(item, label=self._label(item.label[0]))
+                self._vintage_note(canonical.source_id)
+                self.items.append(canonical)
+                self._ids.add(canonical.passage_id)
+                by_id[canonical.passage_id] = canonical
+                added[canonical.passage_id] = canonical
+                if item.label in child._obs:
+                    self._obs[canonical.label] = {**child._obs[item.label], "label": canonical.label}
+            labels[item.label] = canonical.label
+        for note in child.notes:
+            self._note(note)
+        for pid, rank in child.report_ranks.items():
+            self.report_ranks[pid] = min(rank, self.report_ranks.get(pid, rank))
+        # Replace simultaneously: e.g. P1->P2 and P2->P3 must not cascade.
+        message = re.sub(r"\b[POC]\d+\b", lambda m: labels.get(m[0], m[0]), result.message)
+        return replace(result, items=[added[i.passage_id] for i in result.items if i.passage_id in added],
+                       message=message)
 
     def _note(self, text: str) -> None:
         if text not in self.notes and len(self.notes) < MAX_NOTES:
@@ -371,7 +462,7 @@ class Tools:
         """True when this agent tool runs on the MCP server (transport mcp_all; get_series also in mcp_stats)."""
         if getattr(self.sh, "stats_backend", None) is None:
             return False
-        return tool == "get_series" or tool in getattr(self.sh, "mcp_routed", ())
+        return tool in ("get_series", "annual_average") or tool in getattr(self.sh, "mcp_routed", ())
 
     def _invoke(self, tool: str, **args):
         """Run an agent tool on the MCP backend. Records that this tool call used MCP (the trace says transport=mcp) and re-attaches the run's
@@ -433,7 +524,49 @@ class Tools:
         return it
 
     # ---- search_reports -------------------------------------------------------------------------------------------
+    def _served_cache_enabled(self) -> bool:
+        return (self.tool_set == "annual" and bool(getattr(self.sh, "served_search_cache", False))
+                and bool(getattr(self.sh, "corpus", None)))
+
     def _search(self, query: str, k: int) -> tuple[list, dict, dict, dict, dict]:
+        if not self._served_cache_enabled():
+            return self._search_uncached(query, k)
+        from labourlens.retrieval import candidates, rerank
+        from labourlens.retrieval.runtime import EMBEDDING_MODEL, CHUNK_CONFIG
+        from labourlens.retrieval.served_cache import SEARCHES, identity, normalise
+
+        query = normalise(query)
+        model = getattr(getattr(getattr(self.sh.retriever, "dense", None), "cfg", None), "model", EMBEDDING_MODEL)
+        key = identity("annual-search-v1", self.sh.corpus, normalise(self.question), query, self.retrieval, k,
+                       model, CHUNK_CONFIG, rerank.MODEL, rerank.load_prompt()[2], candidates.POOL,
+                       rerank.POOL, rerank.KEEP, self.routed("search_reports"),
+                       getattr(self.sh, "tool_transport", "direct"))
+
+        def compute():
+            ranked, trace, usage, chunks, passages = self._search_uncached(query, k)
+            # Retain only returned evidence, never a second complete corpus per query.
+            selected = {cid: chunks[cid] for cid, _ in ranked}
+            pids = {pid for c in selected.values() for pid in c.source_passage_ids}
+            return ranked, trace, usage, selected, {pid: passages[pid] for pid in pids if pid in passages}
+
+        result, hit = SEARCHES.get_or_compute(
+            key, compute, timeout_s=self.tool_timeout_s,
+            eligible=lambda r: bool(r[0]) and not r[1].get("rerank_fallback")
+            and not r[1].get("cache_ineligible"))
+        ranked, trace, usage, chunks, passages = result
+        trace = dict(trace)
+        trace["search_cache_hit"] = hit
+        if hit:
+            trace.update(rerank_cost_usd=0.0, rerank_seconds=0.0)
+            usage = {"calls": 0, "prompt_tokens": 0, "completion_tokens": 0, "cost_usd": 0.0, "llm_seconds": 0.0}
+            if self.routed("search_reports"):
+                self._mcp_used = True
+                for pid, p in passages.items():
+                    self.sh.passages_by_id[pid] = {x: p[x] for x in ("document_title", "publication_date", "release_stage", "locator", "source_id")}
+        trace.pop("cache_ineligible", None)
+        return list(ranked), trace, dict(usage), chunks, passages
+
+    def _search_uncached(self, query: str, k: int) -> tuple[list, dict, dict, dict, dict]:
         """Returns (ranked, trace, usage, chunks_by_id, passages_by_id); the last two resolve the ranked chunks to passages.
 
         Union of the planner-query and original-question period/stage hints (retrieval.candidates.select). Default (hybrid) uses
@@ -447,7 +580,14 @@ class Tools:
 
         started = time.perf_counter()
         retr, chunks = sh.retriever, sh.chunks_by_id
-        ranked, trace = candidates.select(retr, chunks, query, self.question, self.retrieval, lambda depth: retr.dense.search(query, depth))
+        if self._served_cache_enabled():
+            from labourlens.retrieval.served_cache import query_vector
+
+            vector = query_vector(sh.corpus, retr.dense.cfg.model, query, self.tool_timeout_s)
+            dense_search = lambda depth: retr.dense.search_vector(vector, depth)
+        else:
+            dense_search = lambda depth: retr.dense.search(query, depth)
+        ranked, trace = candidates.select(retr, chunks, query, self.question, self.retrieval, dense_search)
         ranked, trace, usage = self._rerank_stage(query, ranked, trace, [chunks[cid] for cid, _ in ranked[:candidates.POOL]], started, k)
         return ranked, trace, usage, chunks, sh.passages_by_id
 
@@ -463,7 +603,12 @@ class Tools:
         from labourlens.retrieval.runtime import EMBEDDING_MODEL
 
         started = time.perf_counter()
-        vec = dense.embed(EMBEDDING_MODEL, [query], purpose="queries")[0]
+        if self._served_cache_enabled():
+            from labourlens.retrieval.served_cache import query_vector
+
+            vec = query_vector(self.sh.corpus, EMBEDDING_MODEL, query, self.tool_timeout_s)
+        else:
+            vec = dense.embed(EMBEDDING_MODEL, [query], purpose="queries")[0]
         reply, err = self._invoke(
             "search_reports", query=query, question=self.question, retrieval=self.retrieval, k=k,
             query_vector_b64=base64.b64encode(np.asarray(vec, dtype="<f4").tobytes()).decode("ascii"))
@@ -483,11 +628,14 @@ class Tools:
         for pid, p in passages.items():  # remember the metadata the web card needs (never the text) for evidence cited later
             self.sh.passages_by_id[pid] = {x: p[x] for x in ("document_title", "publication_date", "release_stage", "locator", "source_id")}
         ranked = [(c.chunk_id, c.score) for c in usable]
+        incomplete = bool(reply.quarantined) or len(usable) != len(r.chunks)
         if self.retrieval == "hybrid":
-            return ranked[:k], {}, {}, chunks, passages
+            return ranked[:k], ({"cache_ineligible": True} if incomplete else {}), {}, chunks, passages
         from labourlens.retrieval.candidates import POOL
 
         ranked, trace, usage = self._rerank_stage(query, ranked, r.trace.model_dump(), usable[:POOL], started, k)
+        if incomplete:
+            trace["cache_ineligible"] = True
         return ranked, trace, usage, chunks, passages
 
     def _rerank_stage(self, query: str, ranked: list, trace: dict, candidates: list, started: float, k: int) -> tuple[list, dict, dict]:
@@ -515,20 +663,29 @@ class Tools:
 
     @_transported
     def search_reports(self, query: str, k: int = 8) -> ToolResult:
-        q = (query or "").strip()
-        if not q or len(q) > MAX_QUERY_CHARS:
-            return ToolResult(False, message=f"query must be 1 to {MAX_QUERY_CHARS} characters", error_kind="invalid_arguments")
-        if not isinstance(k, int) or not 1 <= k <= MAX_K:
-            return ToolResult(False, message=f"k must be an integer from 1 to {MAX_K}", error_kind="invalid_arguments")
+        if not isinstance(query, str):
+            return ToolResult(False, message="query must be a string containing the period and report topic; for example, 2021-Q3 retrenchment reasons", error_kind="invalid_arguments")
+        q = query.strip()
+        if not q:
+            return ToolResult(False, message="query must contain a search phrase, not an empty or whitespace-only string; include the period and report topic", error_kind="invalid_arguments")
+        if len(q) > MAX_QUERY_CHARS:
+            return ToolResult(False, message=f"query has {len(q)} characters after trimming; the maximum is {MAX_QUERY_CHARS}. Shorten it to the period and report topic", error_kind="invalid_arguments")
+        if not isinstance(k, int) or isinstance(k, bool):
+            return ToolResult(False, message=f"k must be an integer from 1 to {MAX_K}, not a boolean, string or other type; use k=8 or omit k", error_kind="invalid_arguments")
+        if not 1 <= k <= MAX_K:
+            return ToolResult(False, message=f"k={k} is outside the allowed range 1 to {MAX_K}; k counts ranked chunks, not a year or character limit. Use k=8 or omit k", error_kind="invalid_arguments")
         new = []
         try:
             ranked, retrieval_trace, usage, chunks_by_id, passages_by_id = self._search(q, k)
         except _SearchRejected as e:
             return e.result
-        for cid, _ in ranked:
-            for pid in chunks_by_id[cid].source_passage_ids:
+        for chunk_rank, (cid, _) in enumerate(ranked):
+            for offset, pid in enumerate(chunks_by_id[cid].source_passage_ids):
                 p = passages_by_id.get(pid)
                 if p:
+                    if self.tool_set == "annual":
+                        rank = (chunk_rank, offset)
+                        self.report_ranks[pid] = min(self.report_ranks.get(pid, rank), rank)
                     it = self._add("P", pid, p["source_id"], p["document_title"], p["publication_date"], p["release_stage"], p["locator"], p["text"])
                     if it:
                         new.append(it)
@@ -588,6 +745,36 @@ class Tools:
         msg = (f"dimension {dimension!r} not found in {source_id}. Retry get_series with exactly one of the {len(names)} valid labels "
                f"(case-insensitive): {listing}all: {names[:80]}. This retry does not use up an evidence round.")
         return ToolResult(False, message=msg[:1800], error_kind="not_found")
+
+    @_transported
+    def annual_average(self, year: int, source_id: str, indicator_id: str, population: str,
+                       adjustment: str, dimension: str | None = None) -> ToolResult:
+        if "annual_average" in getattr(self.sh, "disabled_tools", ()):
+            return ToolResult(False, message="tool annual_average is disabled for this experiment", error_kind="disabled_tool")
+        args = dict(year=year, source_id=source_id, indicator_id=indicator_id, population=population, adjustment=adjustment, dimension=dimension)
+        if self.routed("annual_average"):
+            reply, err = self._invoke("annual_average", **args)
+            if err is not None:
+                return err
+            if reply.quarantined:
+                raise RuntimeError("mcp unsafe annual_average reply")
+            out = reply.result.model_dump()
+            if any(out[k] != args[k] for k in ("year", "source_id", "indicator_id", "population", "adjustment")):
+                raise RuntimeError("mcp malformed: annual_average reply does not match the request")
+            if dimension is not None and out["dimension"].casefold() != dimension.casefold():
+                raise RuntimeError("mcp malformed: annual_average dimension does not match the request")
+        else:
+            out, err = self.sh.stats.annual_average(**args)
+            if err is not None:
+                return err
+        inputs = ", ".join(f"{r['period']}={r['value']}% (observation {r['observation_id']}, {r['release_stage']})" for r in out["inputs"])
+        text = (f"Derived annual average for {out['year']}: {out['indicator_id']} ({out['dimension'] or 'all'}; "
+                f"{out['population']}, {out['adjustment']}). {out['method']} "
+                f"{out['formula']} = {out['value']} percent. Inputs: {inputs}.")
+        cid = "annual:" + hashlib.sha256(text.encode()).hexdigest()[:12]
+        it = self._add("C", cid, out["source_id"], f"Annual average on {self.sh.titles[out['source_id']]}",
+                       None, "calculated", ",".join(r["observation_id"] for r in out["inputs"]), text)
+        return ToolResult(True, [it] if it else [], f"{it.label} = {out['value']} percent (derived annual average)" if it else "this calculation was already done")
 
     # ---- calculate_change -----------------------------------------------------------------------------------------
     @_transported

@@ -21,18 +21,21 @@ def answered_fixture():
         "answer": {"status": "answered", "summary": "Synthetic browser fixture: retrenchments increased by 140 persons.",
                    "claims": [{"text": "The fixture compares two quarterly counts.", "citations": [{"label": "O1"}, {"label": "C1"}, {"label": "P1", "quote": "Synthetic report context for browser checks."}]}], "caveats": []},
         "evidence": [
-            {"kind": "statistic", "label": "O1", "source_title": "Quarterly retrenchments (synthetic fixture)", "publisher": "Fixture publisher",
+            {"kind": "statistic", "label": "O1", "source_id": "stat-a", "source_title": "Quarterly retrenchments (synthetic fixture)", "publisher": "Fixture publisher",
              "period": "2026-Q1", "value": 3830, "unit": "persons", "release_stage": "dataset_snapshot", "population": "establishments", "adjustment": "not_applicable",
              "url": "https://example.org/statistic", "quotes": ["3830 persons dataset_snapshot not_applicable"]},
-            {"kind": "calculation", "label": "C1", "source_title": "Quarterly change (synthetic fixture)", "release_stage": "calculated", "quotes": ["3830 - 3690 = 140 persons"]},
-            {"kind": "report", "label": "P1", "source_title": "Synthetic report fixture", "publisher": "Fixture publisher", "release_stage": "final",
+            {"kind": "calculation", "label": "C1", "source_id": "calc-a", "source_title": "Quarterly change (synthetic fixture)", "release_stage": "calculated", "quotes": ["3830 - 3690 = 140 persons"]},
+            {"kind": "report", "label": "P1", "source_id": "report-a", "source_title": "Synthetic report fixture", "publisher": "Fixture publisher", "release_stage": "final", "date": "2026-09-22", "locator": "p. 1",
              "url": "https://example.org/report", "quotes": ["Synthetic report context for browser checks."]},
+            *[{"kind": "report", "label": f"P{n}", "source_id": "report-a" if n < 8 else "report-b", "source_title": "Synthetic report fixture" if n < 8 else "Second synthetic report", "publisher": "Fixture publisher",
+               "release_stage": "final", "date": "2026-09-22", "locator": f"p. {n}", "url": "https://example.org/report" if n < 8 else "https://example.org/second",
+               "quotes": [f"Uncited synthetic passage {n}."]} for n in range(2, 13)],
         ],
         "chart": {"series": [
             {"label": "Quarterly counts (synthetic fixture)", "unit": "persons", "points": [{"period": "2025-Q3", "value": 3500}, {"period": "2025-Q4", "value": 3690}, {"period": "2026-Q1", "value": 3830}]},
             {"label": "Quarterly comparison (synthetic fixture)", "unit": "persons", "points": [{"period": "2025-Q4", "value": 3690}, {"period": "2026-Q1", "value": 3830}]},
             {"label": "Rate (synthetic fixture)", "unit": "percent", "points": [{"period": "2025-Q3", "value": 2.8}, {"period": "2025-Q4", "value": 2.9}, {"period": "2026-Q1", "value": 3.0}]},
-        ]}, "trace": [], "usage": {}, "seconds": 0,
+        ]}, "trace": [{"node": "execute_tool", "event": "ok", "detail": {"tool": "search_reports", "new_items": [f"P{n}" for n in range(1, 13)], "seconds": 0.1}}], "usage": {}, "seconds": 0,
     }
 
 
@@ -52,7 +55,7 @@ def workbench_url():
     server.server_close()
 
 
-@pytest.mark.parametrize("width", [1440, 1024, 390])
+@pytest.mark.parametrize("width", [1920, 1440, 1024, 390])
 @pytest.mark.parametrize("theme", ["light", "dark"])
 def test_empty_examples_and_safe_clear_dialog(workbench_url, width, theme):
     playwright = pytest.importorskip("playwright.sync_api")
@@ -102,8 +105,8 @@ def test_empty_examples_and_safe_clear_dialog(workbench_url, width, theme):
         field.press("Enter")
         page.locator(".wb-message-user").wait_for()
         assert examples.count() == 0
-        trigger = page.locator(".wb-composer-actions > button").first
-        page.wait_for_function("!document.querySelector('.wb-composer-actions > button').disabled")
+        trigger = page.get_by_role("button", name="Clear chat", exact=True)
+        page.wait_for_function("![...document.querySelectorAll('.wb-composer-actions > button')].find(b => b.textContent === 'Clear chat').disabled")
         assert field.input_value() == ""
         assert page.locator(".composer-meta .count").inner_text() == "0 / 1,000"
         assert page.locator(".wb-jump-latest").is_hidden()
@@ -117,16 +120,29 @@ def test_empty_examples_and_safe_clear_dialog(workbench_url, width, theme):
         page.wait_for_function("document.querySelector('.wb-message-user').getBoundingClientRect().top >= document.querySelector('.wb-messages').getBoundingClientRect().top")
         if width < 761:
             page.locator(".wb-panel-toggle").click()
-        page.locator('[data-tab=\"sources\"]').click()
+        assert page.locator('[data-tab="data"]').get_attribute("aria-selected") == "true"
         sources = page.locator(".wb-source-panel")
-        fields = sources.locator(".source-fields").first
-        assert fields.locator("dt").all_text_contents() == ["Period", "Value", "Publisher", "Release stage", "Definition"]
-        assert fields.locator("dd").all_text_contents() == ["2026-Q1", "3,830 persons", "Fixture publisher", "Dataset snapshot", "Establishments"]
+        assert sources.is_visible() and page.locator(".wb-data-panel").is_visible()
+        assert sources.evaluate("n => !n.closest('.wb-panel') && getComputedStyle(n).overflowY === 'auto'")
+        assert page.locator(".wb-tabs [role=tab]").all_text_contents() == ["Activity", "Data", "MCP"]
+        statistic = sources.locator('[data-source-key="stat-a"] .source-fields')
+        assert statistic.locator("dt").all_text_contents() == ["Period", "Value", "Publisher", "Release stage", "Definition"]
+        assert statistic.locator("dd").all_text_contents() == ["2026-Q1", "3,830 persons", "Fixture publisher", "Dataset snapshot", "Establishments"]
         assert "dataset_snapshot" not in sources.inner_text()
         assert "not_applicable" not in sources.inner_text()
+        assert sources.locator(".source-group").count() == 4
+        assert sources.locator('[data-source-key="report-a"]').count() == 1
+        assert sources.locator('[data-source-key="report-a"] .source-item').count() == 1
+        assert "7 passages retrieved; 1 cited" in sources.locator('[data-source-key="report-a"] .source-meta').inner_text()
+        assert sources.locator('[data-source-key="report-b"]').evaluate("n => !n.open && !!n.closest('.source-uncited')")
+        assert sources.locator("blockquote").count() == 12
         assert sources.locator(".source-calculation").count() == 1
-        assert sources.locator("blockquote").count() == 1
-        assert sources.locator("a").count() == 2
+        activity = page.locator('[data-tab="activity"]'); activity.click()
+        step = page.locator(".steps .step", has_text="search_reports")
+        assert "12 passages from 2 sources" in step.inner_text()
+        assert "P1, P2" not in step.inner_text()
+        assert step.locator(".step-evidence li").count() == 12
+        page.locator('[data-tab="data"]').click()
         page.screenshot(path=str(output / f"answered-sources-{width}-{theme}.png"), full_page=True)
         page.locator('[data-tab=\"data\"]').click()
         counts = page.locator(".wb-data-panel figure").nth(0)
@@ -408,4 +424,104 @@ def test_missing_stream_endpoint_falls_back_to_the_plain_one_but_a_refusal_does_
         page.locator(".answer-bezel.error").wait_for()
         assert "Request limit reached" in page.locator(".answer-bezel.error").inner_text()
         assert stream_server["asks"] == 1 and field.input_value() == "Rate limited"  # no second attempt at a refused request
+        browser.close()
+
+
+@pytest.mark.parametrize("manual", [False, True])
+def test_activity_while_running_then_data_unless_user_chose_a_tab(workbench_url, manual):
+    playwright = pytest.importorskip("playwright.sync_api")
+    with playwright.sync_playwright() as runtime:
+        browser = runtime.chromium.launch()
+        page = browser.new_page(viewport={"width": 1440, "height": 900})
+        pending = []
+
+        def intercept(route):
+            url = route.request.url
+            if not url.startswith(workbench_url + "/"):
+                route.abort()
+            elif url.endswith("/api/status"):
+                route.fulfill(json={"enabled": True, "authenticated": True})
+            elif url.endswith("/api/ask"):
+                pending.append(route)
+            elif "/api/" in url:
+                route.fulfill(json={})
+            else:
+                route.continue_()
+
+        page.route("**/*", intercept)
+        page.goto(workbench_url + "/workbench.html")
+        assert page.locator('[data-tab="data"]').get_attribute("aria-selected") == "true"
+        page.locator(".wb-example").first.click()
+        page.locator("#question-input").press("Enter")
+        page.wait_for_function("document.querySelector('[data-tab=activity]').getAttribute('aria-selected') === 'true'")
+        if manual:
+            page.locator('[data-tab="mcp"]').click()
+        while not pending:
+            page.wait_for_timeout(20)
+        pending[0].fulfill(json=answered_fixture())
+        page.locator(".answer-summary").wait_for()
+        expected = "mcp" if manual else "data"
+        assert page.locator(f'[data-tab="{expected}"]').get_attribute("aria-selected") == "true"
+        assert page.locator(".wb-source-panel .source-group").count() == 4
+        browser.close()
+
+
+@pytest.mark.parametrize("width", [1440, 390])
+@pytest.mark.parametrize("theme", ["light", "dark"])
+def test_examples_menu_fills_without_submitting_and_closes(workbench_url, width, theme):
+    playwright = pytest.importorskip("playwright.sync_api")
+    with playwright.sync_playwright() as runtime:
+        browser = runtime.chromium.launch()
+        page = browser.new_page(viewport={"width": width, "height": 900}, reduced_motion="reduce")
+        asks = []
+
+        def intercept(route):
+            url = route.request.url
+            if not url.startswith(workbench_url + "/"):
+                route.abort()
+            elif url.endswith("/api/status"):
+                route.fulfill(json={"enabled": True, "authenticated": True})
+            elif "/api/ask" in url:
+                asks.append(url)
+                route.fulfill(json=answered_fixture())
+            elif "/api/" in url:
+                route.fulfill(json={})
+            else:
+                route.continue_()
+
+        page.route("**/*", intercept)
+        page.add_init_script("localStorage.setItem('labourlens-theme', '" + theme + "')")
+        page.goto(workbench_url + "/workbench.html")
+        button = page.get_by_role("button", name="Examples", exact=True)
+        popover = page.locator("#wb-examples-popover")
+        field = page.locator("#question-input")
+        page.wait_for_function("!document.querySelector('#question-input').disabled")
+        assert button.get_attribute("aria-expanded") == "false" and popover.is_hidden()
+        assert button.evaluate("n => n.nextElementSibling.textContent") == "Clear chat"
+        button.click()
+        assert button.get_attribute("aria-expanded") == "true" and popover.is_visible()
+        items = popover.locator("button")
+        assert items.count() == 9
+        assert items.evaluate_all("nodes => nodes.every(n => n.type === 'button' && n.querySelector('.wb-example-label') && n.querySelector('.wb-example-question'))")
+        box = popover.bounding_box()
+        assert box["x"] >= 0 and box["x"] + box["width"] <= width
+        out = Path("/tmp/labourlens-workbench-review"); out.mkdir(exist_ok=True)
+        page.screenshot(path=str(out / f"examples-menu-{width}-{theme}.png"))
+        page.keyboard.press("Escape")
+        assert popover.is_hidden() and button.evaluate("n => n === document.activeElement")
+        button.click()
+        page.mouse.click(5, 5)
+        assert popover.is_hidden()
+        button.click()
+        chosen = items.nth(8).locator(".wb-example-question").inner_text()
+        items.nth(8).click()
+        assert popover.is_hidden() and field.input_value() == chosen
+        assert field.evaluate("n => n === document.activeElement") and not asks
+        field.press("Enter")
+        page.locator(".wb-message-user").wait_for()
+        assert page.locator(".wb-start-examples").count() == 0
+        page.wait_for_function("!document.querySelector('#question-input').disabled")
+        button.click()
+        assert popover.is_visible()
+        items.nth(0).click()
         browser.close()

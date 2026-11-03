@@ -150,14 +150,81 @@ class _Overlap:
         return any(hash(joined[i:i + c]) in self.chars for i in range(max(0, len(joined) - c + 1)))
 
 
-def _bounded_answer(answer, evidence_text):
-    """Rights boundary independent of model compliance and internal answer validators.
+def _rights_tokens(value):
+    """Normalized words with offsets into the original text, for local span removal.
 
-    Only report passages (labels P*) are guarded. Statistic records (O*) and calculation lines (C*) are ~100-letter templated rows of open-licensed
-    data or our own arithmetic; the 80-character window covers a whole row, so merely naming a row in a caveat or a clarifying question tripped it (D-054)."""
-    overlap = _Overlap(text for label, text in evidence_text.items() if str(label).startswith("P"))
+    Ignore formatting-only characters, but retain punctuation as word boundaries.
+    Offsets survive NFKC expansions and case folding (including full-width text).
+    """
+    text = str(value or "")
+    normalized, offsets = [], []
+    for i, char in enumerate(text):
+        if unicodedata.category(char) == "Cf":
+            continue
+        for folded in unicodedata.normalize("NFKC", char).casefold():
+            normalized.append(folded)
+            offsets.append(i)
+    return [(m.group(), offsets[m.start()], offsets[m.end() - 1] + 1)
+            for m in _TOKEN.finditer("".join(normalized))]
+
+
+class _ReportSpans:
+    """Served policy: no seven consecutive normalized report words in prose.
+
+    Unlike the legacy compact-character heuristic, this does not reject a
+    paraphrase merely for sharing 80 letters. Only matching spans are withheld.
+    This is a conservative reproduction boundary, not a legal clearance claim.
+    """
+
+    def __init__(self, texts):
+        self.windows = set()
+        for text in texts:
+            words = [word for word, _, _ in _rights_tokens(text)]
+            self.windows.update(tuple(words[i:i + 7]) for i in range(len(words) - 6))
+
+    def trim(self, value):
+        text = str(value or "")
+        tokens = _rights_tokens(text)
+        spans = []
+        for i in range(len(tokens) - 6):
+            if tuple(t[0] for t in tokens[i:i + 7]) not in self.windows:
+                continue
+            start, end = tokens[i][1], tokens[i + 6][2]
+            if spans and start <= spans[-1][1]:
+                spans[-1] = (spans[-1][0], max(spans[-1][1], end))
+            else:
+                spans.append((start, end))
+        if not spans:
+            return text
+        pieces, end = [], 0
+        for start, stop in spans:
+            pieces.extend((text[end:start], RIGHTS_NOTICE))
+            end = stop
+        pieces.append(text[end:])
+        return "".join(pieces)
+
+
+def _short_report_quote(quote):
+    """Keep an actual source substring, never an ellipsis presented as verbatim."""
+    tokens = _rights_tokens(quote)
+    return quote[:tokens[5][2]] if len(tokens) > 6 else quote
+
+
+def _bounded_answer(answer, evidence_text, *, served_annual=False):
+    """Rights boundary independent of model compliance and internal validators.
+
+    Only P* report passages are guarded, not open-data O* or computed C* rows.
+    Annual served runs trim seven-word report spans and cap report quotations at
+    six normalized words, including quotations embedded in reasons/caveats.
+    Frozen/nonannual projections retain the historical 13-word/80-character
+    whole-field heuristic and 40-word citation allowance for reproducibility.
+    """
+    texts = [text for label, text in evidence_text.items() if str(label).startswith("P")]
+    overlap = _ReportSpans(texts) if served_annual else _Overlap(texts)
 
     def free_text(value):
+        if served_annual:
+            return overlap.trim(value)
         return RIGHTS_NOTICE if overlap.copies(value) else str(value or "")
 
     result = {k: free_text(answer.get(k, "")) for k in ("status", "summary", "reason", "clarification_question")}
@@ -177,6 +244,11 @@ def _bounded_answer(answer, evidence_text):
             if (not count or count > 40 or (label, normalized) in shown
                     or not quote_in(quote, str(evidence_text.get(label, "")))):
                 continue
+            if served_annual and label.startswith("P"):
+                quote = _short_report_quote(quote)
+                count, normalized = len(quote.split()), norm(quote)
+                if (label, normalized) in shown:
+                    continue
             if normalized not in seen:  # reuse of an already shown quote discloses nothing new, so it costs no quote budget
                 if total + count > 120 or per_card[label] + count > 120:
                     continue
@@ -247,7 +319,7 @@ def public_result(raw: dict, shared) -> dict:
     answer = raw.get("answer")
     if not isinstance(answer, dict) or raw.get("outcome") not in ("answered", "abstained", "clarify", "refused"):
         answer = {"status": "abstained", "summary": "The run did not produce a validated answer.", "claims": [], "caveats": [], "reason": "Evidence or service unavailable.", "clarification_question": ""}
-    answer = _bounded_answer(answer, raw.get("evidence_text", {}))
+    answer = _bounded_answer(answer, raw.get("evidence_text", {}), served_annual=raw.get("tool_set") == "annual")
     flagged = _ungrounded_numbers(raw)
     answer["ungrounded_numbers"] = flagged
     if flagged:
@@ -533,7 +605,7 @@ def create_app(settings: Settings | None = None, runner=None, shared_factory=Non
         try:
             history = parse_history(data.get("history"))
         except ValueError:
-            raise HTTPException(422, "History must be at most 3 turns of question, status and summary text within the size limits.")
+            raise HTTPException(422, "History must be at most 3 turns of bounded question, status and summary text, optionally resolved_question and answer_context.")
         if app.state.day != date.today():
             app.state.day, app.state.spent_usd = date.today(), 0.0
         if app.state.spent_usd + RUN_RESERVATION_USD > cfg.daily_budget_usd:
@@ -678,7 +750,8 @@ def create_app(settings: Settings | None = None, runner=None, shared_factory=Non
             return out
         out["recent_calls"] = [{k: v for k, v in c.items() if k != "session"} for c in list(backend.calls) if c.get("session") == sid][-20:]  # this visitor's lookups only
         routed = getattr(app.state.shared, "mcp_routed", ()) or ()  # what this process really routes over MCP besides get_series (set by make_shared)
-        agent_map = {TOOL_NAME: "get_series", **{t: t for t in ("search_reports", "calculate_change") if t in routed}}  # the base tool set; v2's text calculation is not offered by the app
+        agent_map = {TOOL_NAME: "get_series", "annual_average": "annual_average",
+                     **{t: t for t in ("search_reports", "calculate_change") if t in routed}}
         used = list(agent_map)
         out["used_by_agent"] = used
         out["agent_tool_name"] = "get_series"

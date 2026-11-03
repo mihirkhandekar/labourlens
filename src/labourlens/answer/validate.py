@@ -54,6 +54,23 @@ class Report:
         return not self.errors
 
 
+def missing_period_errors(answer: Answer, ctx: list[ContextPassage]) -> list[str]:
+    """Narrow contradiction check for served abstentions, not a semantic judge.
+
+    Only explicit 'no data for YYYY-Qn' assertions about quarterly statistics are
+    checked. Report commentary may genuinely be absent despite an O item.
+    Missing-value observations never prove that a published value exists.
+    """
+    if answer.status != "abstained":
+        return []
+    present = {p for item in ctx if item.label.startswith("O") and not item.flags and "no published number" not in item.text.casefold()
+               for p in re.findall(r"\b20\d\d-Q[1-4]\b", item.text)}
+    pattern = r"\bno (?:quarterly )?(?:data|observations|statistics|figures|values)(?: (?:is|are) available)? (?:for|in) (20\d\d-Q[1-4])\b"
+    denied = {p.upper() for p in re.findall(pattern, answer.reason, re.I)}
+    return [f"abstention says no data for {p}, but a published observation for that quarter is supplied; identify the missing method, series or commentary instead"
+            for p in sorted(denied & present)]
+
+
 def check(answer: Answer, ctx: list[ContextPassage]) -> Report:
     by_label = {p.label: p for p in ctx}
     rep = Report()

@@ -38,12 +38,13 @@ def test_six_assessment_questions_match_the_short_deliverable():
     headings = re.findall(r"^## (.+)$", (ROOT / "docs/innovation.md").read_text(), re.M)
     assert len(groups) == 6
     assert [group["title"] for group in groups] == headings[1:7]
-    priorities = groups[-1]["proposals"]
-    assert len(priorities) == 2
-    assert "0.50" in priorities[0]["threshold"] and "false-answer" in priorities[0]["threshold"]
-    assert "blind" in priorities[0]["measure"]
-    assert all(term in priorities[1]["threshold"] for term in ("kappa", "0.70", "0.10"))
-    assert "blind" in priorities[1]["measure"]
+    improvements = groups[4]["proposals"]
+    arithmetic = next(item for item in improvements if item["title"] == "First: report-table arithmetic")
+    review = next(item for item in improvements if item["title"] == "Second: independent review")
+    assert "0.50" in arithmetic["threshold"] and "false-answer" in arithmetic["threshold"]
+    assert "blind" in arithmetic["measure"]
+    assert all(term in review["threshold"] for term in ("kappa", "0.70", "0.10"))
+    assert "blind" in review["measure"]
     assert len(headings) == 9 and headings[0] == "Current approach"
 
 
@@ -106,7 +107,7 @@ def test_document_layout_keeps_tables_references_feedback_and_print_without_deco
     assert all(term in feedback["measure"] for term in ("thumbs-down", "expected evidence", "one thing", "pseudonymise".capitalize()))
     js = (WEB / "static/js/innovation.js").read_text()
     css = (WEB / "static/css/innovation.css").read_text()
-    for token in ("el('table'", "el('caption'", "el('dl'", "el('sup'"):
+    for token in ("el('table'", "el('caption'", "el('dl'"):
         assert token in js
     for token in ("box-shadow", "gradient(", "iv-enter", "animation:", "transition:"):
         assert token not in css
@@ -124,6 +125,110 @@ def test_every_github_link_on_the_innovation_page_points_to_a_tracked_file():
         tracked = set(subprocess.run(["git", "ls-files"], cwd=ROOT, capture_output=True, text=True, check=True).stdout.splitlines())
     except (OSError, subprocess.CalledProcessError):
         pytest.skip("not a git checkout")
-    paths = [reference["path"] for reference in json.loads((ROOT / CONTENT).read_text())["references"]]
-    assert paths
-    assert [path for path in paths if path not in tracked] == []
+    content = json.loads((ROOT / CONTENT).read_text())
+    assert content["references"] == []
+    assert all(not paragraph["refs"] for group in content["sections"] for paragraph in group["paragraphs"])
+    assert "docs/innovation.md" in tracked
+
+
+def test_production_design_is_complete_but_remains_a_proposal():
+    content = json.loads((ROOT / CONTENT).read_text())
+    production = content["sections"][5]["proposals"][0]
+    assert production["status"] == "proposal"
+    assert "not deployed" in production["title"]
+    short = (ROOT / "docs/innovation.md").read_text()
+    for text in (production["measure"], short):
+        for component in (
+            "edge/WAF", "SSO", "load balancer", "stateless API", "queue", "SSE",
+            "object storage", "DuckDB", "MCP", "secrets manager", "LLM gateway",
+            "observability", "CI", "rollback", "backups", "restore",
+        ):
+            assert component.lower() in text.lower()
+    script = (WEB / "static/js/innovation.js").read_text()
+    assert "Production design only." in script
+    assert "proposed production architecture" in script
+
+
+def test_latency_plan_separates_smoke_streaming_and_adoption_evidence():
+    content = json.loads((ROOT / CONTENT).read_text())
+    cost = content["sections"][4]
+    paragraphs = " ".join(item["text"] for item in cost["paragraphs"])
+    short = (ROOT / "docs/innovation.md").read_text()
+    for text in (paragraphs, short):
+        for value in ("14", "29.8", "7.8", "9.1", "53.1", "8.6", "12.8"):
+            assert value in text
+        assert "accuracy unmeasured" in text
+        assert "Streaming" in text
+        assert "full-answer time" in text
+    latency = next(item for item in cost["proposals"] if item["title"] == "Reduce waiting without lowering answer quality")
+    assert latency["status"] == "proposal"
+    for text in (latency["measure"], short):
+        for term in ("237", "triage", "embeddings", "series lookups", "prompt",
+                     "response", "without history", "smaller", "three calls per round",
+                     "permissions", "corpus", "model"):
+            assert term in text
+    for term in ("p50", "p95", "accuracy", "safety", "cost", "fresh blind"):
+        assert term in latency["threshold"]
+
+
+def test_third_decisions_registration_cannot_erase_two_failed_trials():
+    content = json.loads((ROOT / CONTENT).read_text())
+    cost = content["sections"][4]
+    outcomes = " ".join(item["text"] for item in cost["paragraphs"])
+    short = (ROOT / "docs/innovation.md").read_text()
+    for text in (outcomes, short):
+        for value in ("397/409", "19/30", "44/58", "414/450", "0.362", "0.426", "1.392", "1.847"):
+            assert value in text
+        assert "neither decisions api trial was adopted" in text.lower()
+    registered = next(item for item in cost["proposals"] if item["title"].startswith("Third Decisions attempt:"))
+    assert registered["status"] == "proposal"
+    assert "preregistered two-way" in registered["title"]
+    for term in ("untested", "no paid execution authorised", "0.70", "150 fresh",
+                 "90 in-scope", "30 out-of-scope", "15 harm", "15 small-talk",
+                 "three", "interleaved", "fallback", "Do not tune"):
+        assert term in registered["measure"]
+    for term in ("zero legitimate", "148/150", "29/30", "1%", "450",
+                 "80%", "p50", "p95", "downstream safety", "owner approval"):
+        assert term in registered["threshold"]
+    assert "Registered plan, untested" in (WEB / "static/js/innovation.js").read_text()
+
+
+def test_short_assessment_keeps_two_page_editorial_budget_and_served_disclosures():
+    short = (ROOT / "docs/innovation.md").read_text()
+    assert len(short.split()) <= 1400
+    for term in ("annual_average", "non-null", "never a partial", "ten tools",
+                 "planner_v6", "answer_v8", "triage_v4", "contextualise_v3",
+                 "untrusted data", "missing observations", "missing method/commentary",
+                 "unevaluated"):
+        assert term in short
+    assert not any(char in short for char in ("\u2014", "\u2013"))
+
+
+def test_government_readiness_and_improvement_plans_are_separate_and_proposed():
+    content = json.loads((ROOT / CONTENT).read_text())
+    improve, government = content["sections"][4:]
+    assert improve["title"] == "How I would improve it"
+    assert government["title"] == "Making it ready for government use across departments"
+    for item in improve["proposals"] + government["proposals"]:
+        assert item["status"] == "proposal"
+        assert all(item[key] for key in ("title", "gap", "measure", "threshold"))
+    improvement_text = json.dumps(improve)
+    for term in ("annual_average", "2020 to 2023", "ablation", "blind", "237"):
+        assert term in improvement_text
+    government_text = json.dumps(government)
+    for term in ("RBAC", "PDPA", "residency", "tamper-evident", "egress",
+                 "supply-chain", "penetration", "Model AI Governance Framework",
+                 "human-in-the-loop", "change control", "drift", "tenants",
+                 "licence register", "SLO", "on-call", "cost caps", "failover",
+                 "pilot", "hardened beta", "department"):
+        assert term in government_text
+
+
+def test_innovation_omits_inline_reference_markers_and_reference_block():
+    short = (ROOT / "docs/innovation.md").read_text()
+    script = (WEB / "static/js/innovation.js").read_text()
+    assert not re.search(r"\[[^\]]+\]\(", short)
+    assert "## References" not in short
+    assert "addSection('references'" not in script
+    assert "el('sup'" not in script
+    assert "ref.number" not in script

@@ -42,7 +42,7 @@ from pydantic import BaseModel, ValidationError
 from labourlens.agent.tools import CALLER_SESSION, ToolResult, TransientToolError
 from labourlens.mcp.http_server import MIN_TOKEN_CHARS, TOKEN_ENV, is_loopback
 from labourlens.mcp.models import (AGENT_RESULT_MODELS, RESULT_MODELS, ComparePeriodsResult, DescribeDatasetResult, DimensionValuesResult, LatestValueResult,
-                                   ListDatasetsResult, ProvenanceResult, RevisionsResult, SeriesSummaryResult)
+                                   AnnualAverageResult, ListDatasetsResult, ProvenanceResult, RevisionsResult, SeriesSummaryResult)
 from labourlens.mcp.server import AGENT_TOOLS, ALL_TOOLS, SERVER_NAME, SERVER_VERSION, SOURCE_IDS, TOOL_NAME
 from labourlens.security.guards import injection_flags, sanitize_text
 
@@ -449,6 +449,11 @@ class McpStatsClient:
         return StatsReply(rows, r.quarantined, r.ignored_tools, r.seconds, r.bytes)
 
     # ---- typed convenience methods: one per tool, same checks as `call` -----------------------------------------------------
+    async def annual_average(self, year: int, source_id: str, indicator_id: str, population: str,
+                             adjustment: str, dimension: str | None = None) -> ToolReply[AnnualAverageResult]:
+        return await self.call("annual_average", year=year, source_id=source_id, indicator_id=indicator_id,
+                               population=population, adjustment=adjustment, dimension=dimension)
+
     async def list_datasets(self, topic: str | None = None) -> ToolReply[ListDatasetsResult]:
         return await self.call("list_datasets", topic=topic)
 

@@ -59,7 +59,7 @@ def test_shell_keeps_page_fixed_and_scrolls_only_thread_and_panels():
     assert "grid-template-rows: minmax(0, 1fr)" in CSS
     assert ".wb-chat { display: flex; flex-direction: column; min-width: 0; min-height: 0; height: 100%; overflow: hidden;" in CSS
     assert ".wb-rail { display: flex; flex-direction: column; min-width: 0; min-height: 0; height: 100%; overflow: hidden;" in CSS
-    assert ".wb-panel { flex: 1 1 0; min-height: 0; overflow-y: auto;" in CSS
+    assert ".wb-panel { flex: 2 1 0; min-height: 0; overflow-y: auto;" in CSS
     assert ".wb-messages { position: relative; display: flex; flex: 1 1 0;" in CSS
     assert ".wb-messages > * { flex: none; min-width: 0; }" in CSS
     # No scrollIntoView: it can scroll the fixed page ancestors and clip the top of an answer.

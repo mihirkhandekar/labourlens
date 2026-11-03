@@ -66,8 +66,8 @@ def test_the_mcp_tab_lists_the_tools_that_really_run_over_mcp(settings):  # noqa
             return (await client.get("/api/mcp")).json()
 
     body = asyncio.run(go())
-    assert body["used_by_agent"] == ["get_statistic", "search_reports", "calculate_change"] and body["agent_tool_name"] == "get_series"
-    assert body["agent_tools"] == {"get_statistic": "get_series", "search_reports": "search_reports", "calculate_change": "calculate_change"}
+    assert body["used_by_agent"] == ["get_statistic", "annual_average", "search_reports", "calculate_change"] and body["agent_tool_name"] == "get_series"
+    assert body["agent_tools"] == {"get_statistic": "get_series", "annual_average": "annual_average", "search_reports": "search_reports", "calculate_change": "calculate_change"}
     assert set(body["not_given_to_agent"]) >= {"calculate_from_text_values", "describe_corpus", "list_datasets"} and "search_reports" not in body["not_given_to_agent"]
     assert {t["name"]: t["used_by_agent"] for t in body["tools"]}["search_reports"] is True
     assert {t["name"]: t["used_by_agent"] for t in body["tools"]}["describe_corpus"] is False
