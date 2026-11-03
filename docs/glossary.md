@@ -59,7 +59,7 @@ The decision log ([decisions.md](decisions.md)) numbers its entries from `D-000`
 | Hosted embeddings; answer format; abstention policy | D-021, D-024, D-026 |
 | Agent design and its three tools; MCP server and threat controls | D-027, D-028 |
 | Retrieval improvements and default retrieval | D-029, D-030 |
-| Supported analysis period is a hard scope (2024-Q1 to 2026-Q2) | D-031 |
+| Supported analysis period is a hard scope (2024-Q1 to 2026-Q2 when D-031 was made; widened to 2020-Q1 to 2026-Q2 on 3 Nov 2026 by D-077) | D-031, D-077 |
 | Planner prompt tested, not adopted | D-032 |
 | Original test run, post-run gold adjudications and owner review | D-033 to D-036 |
 | Extraction corrections; corpus v2 working corpus | D-037, D-041 |

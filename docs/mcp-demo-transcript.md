@@ -1,6 +1,6 @@
 # MCP client demo transcript
 
-Recorded 2026-11-02 by `uv run labourlens mcp-demo`, a session of real calls in a fixed order chosen by a script, not by an agent planner. Every line below is the observed result of a real call to a real server subprocess (stdio transport; section 16 uses loopback HTTP). Nothing is mocked except that steps 7 to 12 deliberately talk to a hostile or faulty fixture server (`src/labourlens/mcp/evil.py`), registered on the allow-list for this demo only.
+Recorded under the earlier answer window (2024-Q1 to 2026-Q2). The window is now 2020-Q1 to 2026-Q2 (D-077), so the period-range refusal and the dataset ranges below show the old bounds; the transcript has not been re-recorded. Recorded 2026-11-02 by `uv run labourlens mcp-demo`, a session of real calls in a fixed order chosen by a script, not by an agent planner. Every line below is the observed result of a real call to a real server subprocess (stdio transport; section 16 uses loopback HTTP). Nothing is mocked except that steps 7 to 12 deliberately talk to a hostile or faulty fixture server (`src/labourlens/mcp/evil.py`), registered on the allow-list for this demo only.
 
 ## 1. Discovery
 

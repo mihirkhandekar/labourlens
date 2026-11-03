@@ -1159,7 +1159,7 @@ Totals: 142 sources, 106 documents, **29,760 passages (was 16,419), 3,632 chunks
 
 A link may carry the code as `#code=` (preferred) or `?code=`. The workbench copies it into the access field only (never submits it, never stores it), and removes it from the address bar at once with `history.replaceState`. A deck opened as `/deck?code=...` builds its on-screen "Try the workbench" link as `https://labourlens.navig.me/workbench#code=...` (a fragment, so it never reaches a server log; the owner's brief said `?code=`, the fragment form was chosen for that reason and the workbench accepts both). The printed QR is a static image and never carries a code; the presenter generates their own from the fragment URL. No real code is in any committed file, and a code shown to an audience must be rotated afterwards. Tests use a fake code. Reversibility: remove `takeAccessCodeFromUrl` and `workbenchHref`.
 
-### D-082 - Evidence-first presentation sequence and plain-language innovation page (OWNER APPROVED, IMPLEMENTED IN WORKING TREE, 3 Nov 2026)
+### D-082 - Evidence-first presentation sequence and plain-language innovation page (OWNER APPROVED, IMPLEMENTED, 3 Nov 2026)
 
 The owner approved a data-first story: project and scope, system map, data and its quality issues, report processing and retrieval, the statistics MCP path, then the agent and answer checks. Evaluation design and human review precede model choice and end-to-end results. The main deck adds a saved-run example slide and an answer-validation slide, moves the failure summary after results, places next steps before Summary and keeps the concepts reference and calculation experiment in the appendix. The worked-run slide uses the plain title “Three example runs”.
 

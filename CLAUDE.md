@@ -35,7 +35,7 @@ The exact PDF always wins over paraphrased text above. Any checklist item withou
 ## Approved scope and LangGraph architecture (30 October 2026)
 **Project:** LabourLens — Singapore Labour Market Intelligence.
 **Research users:** Singapore policy researchers and labour-market analysts.
-**Supported analysis period:** Q1 2024 through Q2 2026 inclusive. This is the bounded answer scope, not a guarantee every dataset has every quarter; verify actual coverage during ingestion.
+**Supported analysis period:** Q1 2020 through Q2 2026 inclusive (widened from Q1 2024 on 3 Nov 2026, D-077). The evaluated question window is Q1 2024 to Q2 2026; answers for 2020 to 2023 are unevaluated. This is the bounded answer scope, not a guarantee every dataset has every quarter.
 **Four structured dataset candidates, approved as the source scope subject to access/schema validation:**
 1. MOM resident unemployment rate, quarterly — https://data.gov.sg/datasets/d_d1d755e060dd6b01a8024ba60b21b831/view
 2. MOM job vacancy to unemployed person ratio, quarterly — https://data.gov.sg/datasets/d_80c0cf251ee9a26d240808297f52c820/view
@@ -114,4 +114,4 @@ Several agents may work on this project, and any agent may be interrupted. Work 
 6. **Published vs private.** `docs/` is published to reviewers. `study/` and `private/` are the owner's, gitignored, and never copied into `docs/`. Interview prep, rehearsal answers and scratch research go there. If unsure, use `private/` and ask.
 7. **Commit hygiene:** small commits per substep with a message naming the substep ID (for example `M1.2: acquisition with throttle and hashes`). Propose commits; do not push or rewrite history without approval.
 8. **Repository policy (D-001):** private repo shared with reviewers, designed as if it could become public. MOM report PDFs and extracted MOM passage text are never committed.
-9. The expanded structured-data scope (D-003) was approved and implemented (corpus v3: 85 sources); see `docs/data-sheet.md`.
+9. The expanded structured-data scope (D-003) was approved and implemented (corpus v3: 85 sources; corpus v4, D-080: 142 sources, 106 documents); see `docs/data-sheet.md`.
