@@ -1,6 +1,6 @@
 {
   "schema_version": "report-1.0",
-  "generated_at": "2026-11-03T06:34:50.498116+00:00",
+  "generated_at": "2026-11-03T07:42:24.295249+00:00",
   "summary": {
     "title": "LabourLens research workbench",
     "scope": [
@@ -79107,7 +79107,7 @@
     "The population basis of the dataset employment series is unverified."
   ],
   "provenance": {
-    "commit": "3cb287a17923241bd3140eff71cf01950919963b",
+    "commit": "31d662e215fa152b1727b1bc705e448d939faf73",
     "artifacts": [
       {
         "path": "data/export/sources.json",
@@ -80345,7 +80345,7 @@
       {
         "path": "docs/progress.md",
         "status": "available",
-        "sha256": "1100240c30e6c869d7148b07cdb092123b09c4dd6d5ef7e3b756b7175f05085f"
+        "sha256": "9273fa421476db178281ad57559d9e741974c5122e4be6904384559d7af87387"
       }
     ],
     "policy": "Committed artifacts only; numeric fields only."
@@ -80789,7 +80789,7 @@
     "source": {
       "path": "docs/innovation-page.json",
       "sha256": "549ad5f8881853d66377b621092d5c7453f5298493e57e98c65c070997e271f2",
-      "evidence_commit": "3cb287a17923241bd3140eff71cf01950919963b"
+      "evidence_commit": "31d662e215fa152b1727b1bc705e448d939faf73"
     }
   }
 }
