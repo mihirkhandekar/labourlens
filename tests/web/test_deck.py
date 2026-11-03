@@ -1000,6 +1000,8 @@ def test_summary_is_a_results_board_read_from_report_data():
     block = graphics.split("export function summaryBoard(m)", 1)[1]
     for read in ("finalFacts(m)", "finalCostFacts(m)", "m.methodsV31", "m.ladder", "m.section('mcp').metrics", "m.scope"):
         assert read in block
+    assert "m.section('serving').corpus?.document_files" in block
+    assert "106 report documents" not in block
     for heading in ("What changed after the evaluation", "Limits", "Behaviour accuracy, gpt-6-luna", "Retrieval hit@8", "Threat suite"):
         assert heading in block
     for phrase in ("unevaluated", "native function-calling planner", "streaming", "Decisions API trials were rejected", "signed off by one reviewer", "Scanner can be bypassed", "source rights unverified"):

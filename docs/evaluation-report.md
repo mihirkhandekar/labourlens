@@ -343,7 +343,7 @@ This index groups related experiments rather than treating repeated runs as inde
 
 | Question | Change | Set | Headline result with interval | Verdict and artefacts |
 |---|---|---|---|---|
-| Which retrieval method finds evidence? | Keyword, dense and hybrid retrieval | 128 development report questions, current corpus | Hit@8: .477 [.391, .562], .367 [.289, .453], .539 [.453, .625] | Hybrid versus keyword is inconclusive; [methods](../experiments/runs/dev-R-V31-methods/). |
+| Which retrieval method finds evidence? | Keyword, dense and hybrid retrieval | 128 development report questions, corpus v3.1 | Hit@8: .477 [.391, .562], .367 [.289, .453], .539 [.453, .625] | Hybrid versus keyword is inconclusive; [methods](../experiments/runs/dev-R-V31-methods/). |
 | Do metadata and reranking help retrieval? | Filter, rerank and their combination | Same 128 development questions | Combined hit@8 .969 [.938, .992], hybrid .539 [.453, .625] | Strong development retrieval effect; [ladder](../experiments/runs/dev-R-V31/). |
 | Is evidence availability the bottleneck? | Retrieved versus oracle context | Earlier 30 development questions | Primary-model behaviour .60 versus .87; no interval in the earlier summary | Diagnostic only; [answer study](experiments/m3-answer-generation.md). |
 | Which initial agent changes help? | Answer prompt, filter/rerank, widening and planner prompt | 235 or 237 development questions, original corpus | Filter then rerank primary behaviour .903 [.865, .937]; prompt and widening gains not demonstrated | Different denominators, not a paired claim; [saved scores](../experiments/eval/), [study](experiments/m6-agent-end-to-end.md). |

@@ -1533,12 +1533,12 @@ th[aria-sort="descending"] .pr-sort::after { content: " \2193"; }
 .deck-page .slides section.present .ns * { user-select: text; -webkit-user-select: text; }
 
 /* Summary results board: hierarchy by size and weight; one accent for the filter-then-rerank and guarded results. */
-.sb { display: grid; grid-template-columns: minmax(0, 1fr) 600px; column-gap: 96px; row-gap: 22px; align-content: start; height: 100%; min-height: 0; }
+.sb { display: grid; grid-template-columns: minmax(0, 1fr) 600px; column-gap: 96px; row-gap: 12px; align-content: start; height: 100%; min-height: 0; }
 .sb-h { font-size: 30px; font-weight: 600; letter-spacing: -0.01em; line-height: 1.15; }
 .sb-h.is-small { font-size: 22px; color: var(--muted); font-weight: 600; }
 .sb-sub { font-size: 22px; line-height: 1.3; color: var(--muted); margin-top: 4px; }
-.sb-acc { display: grid; align-content: start; row-gap: 12px; min-width: 0; }
-.sb-drow { display: grid; grid-template-columns: 250px minmax(0, 1fr) 250px; column-gap: 28px; row-gap: 2px; align-items: center; padding: 4px 0; }
+.sb-acc { display: grid; align-content: start; row-gap: 8px; min-width: 0; }
+.sb-drow { display: grid; grid-template-columns: 250px minmax(0, 1fr) 250px; column-gap: 28px; row-gap: 2px; align-items: center; }
 .sb-dname { display: grid; line-height: 1.15; }
 .sb-dname strong { font-size: 28px; font-weight: 600; }
 .sb-dname span { font-size: 22px; color: var(--muted); }
@@ -1568,7 +1568,7 @@ th[aria-sort="descending"] .pr-sort::after { content: " \2193"; }
 .sb-bvalue { font-size: 28px; font-weight: 600; text-align: right; }
 .sb-aside { font-size: 22px; line-height: 1.3; color: var(--muted); }
 .sb-facts, .sb-changed, .sb-limits { grid-column: 1 / -1; }
-.sb-facts { display: grid; grid-template-columns: 1fr 1fr; column-gap: 96px; padding-top: 18px; border-top: 1px solid var(--line); }
+.sb-facts { display: grid; grid-template-columns: 1fr 1fr; column-gap: 96px; padding-top: 10px; border-top: 1px solid var(--line); }
 .sb-fact { display: flex; align-items: baseline; gap: 20px; min-width: 0; }
 .sb-fact strong { font-size: 40px; font-weight: 600; line-height: 1; white-space: nowrap; }
 .sb-fact span { font-size: 24px; line-height: 1.25; color: var(--ink-2); }

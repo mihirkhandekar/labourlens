@@ -1475,7 +1475,7 @@ const THREAT_V2 = {guarded: 50, naive: 42, n: 54, benignFailed: 3, benignN: 8};
 /** The statistics server's tool count, as stated on the MCP slides (not in report.json). */
 const MCP_TOOLS = 9;
 
-/** The closing results board. Every figure is read from report.json through the model, except the threat totals and tool count above and the served-build document count. */
+/** Closing results board. Evaluated figures and the served corpus come from the report, except the documented threat totals and MCP tool count above. */
 export function summaryBoard(m) {
   const facts = finalFacts(m), cost = finalCostFacts(m);
   const sets = ['dev', 'registered', 'fresh'].map(id => {
@@ -1554,9 +1554,9 @@ export function summaryBoard(m) {
   );
 
   // What changed: the one emphasised row.
-  const [from, to] = m.scope, qtr = p => (/^(\d{4})-Q(\d)$/.exec(p) ? `Q${/^(\d{4})-Q(\d)$/.exec(p)[2]} ${/^(\d{4})-Q(\d)$/.exec(p)[1]}` : p);
+  const [from, to] = m.scope, documents = m.section('serving').corpus?.document_files, qtr = p => (/^(\d{4})-Q(\d)$/.exec(p) ? `Q${/^(\d{4})-Q(\d)$/.exec(p)[2]} ${/^(\d{4})-Q(\d)$/.exec(p)[1]}` : p);
   const changed = el('div', 'sb-changed');
-  changed.append(heading('What changed after the evaluation'), el('p', '', `The served system is not the one I measured. It answers from ${qtr(from)} to ${qtr(to)}, with statistics from 2020 and 106 report documents; 2020 to 2022 answers are unevaluated. It also uses a native function-calling planner and streaming. Decisions API trials were rejected.`));
+  changed.append(heading('What changed after the evaluation'), el('p', '', `The served system is not the one I measured. It answers from ${qtr(from)} to ${qtr(to)}, with ${finite(documents) ? fmt.int(documents) : 'unrecorded'} report documents; 2020 to 2022 answers are unevaluated. It also uses a native function-calling planner and streaming. Decisions API trials were rejected.`));
 
   const limits = el('div', 'sb-limits');
   const list = el('ul', 'sb-limit-list');

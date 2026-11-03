@@ -93,14 +93,14 @@ uv run labourlens paired --gold experiments/gold/heldout_v2_v1.jsonl --candidate
 
 `web/static/data/report.json` is generated output: rebuilding changes its timestamp and commit provenance, so byte identity is not expected. `final_mean.py` reads saved scores, not new model answers.
 
-### Tagged current-corpus retrieval (paid reranking/possible embeddings)
+### Tagged corpus v3.1 retrieval (paid reranking/possible embeddings)
 
 ```sh
 # tag V31 = the corpus v3.1 retrieval re-run (128 development report questions, build v3.1)
 uv run labourlens retrieval-exp2 --tag V31
 ```
 
-Historical command (`V31` tags the current-corpus retrieval re-run); it now refuses because that tag exists. Use a new tag for a new run. It writes isolated corpus/model-keyed caches, per-configuration directories `dev-R-<tag>-R*` and a sibling summary directory. Saved [current-corpus summary](../experiments/runs/dev-R-V31/SUMMARY.md) records 1,847 chunks, gold v3.6 and the actual corpus hash. Do not overwrite or pool the frozen v1 ladder.
+Historical command (`V31` tags the corpus v3.1 retrieval re-run); it now refuses because that tag exists. Use a new tag for a new run. It writes isolated corpus/model-keyed caches, per-configuration directories `dev-R-<tag>-R*` and a sibling summary directory. Saved [v3.1 retrieval summary](../experiments/runs/dev-R-V31/SUMMARY.md) records 1,847 chunks, gold v3.6 and the actual corpus hash. Do not overwrite or pool the frozen v1 ladder.
 
 ### Served research chain (paid generation and judging)
 
