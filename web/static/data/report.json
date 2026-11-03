@@ -1,6 +1,6 @@
 {
   "schema_version": "report-1.0",
-  "generated_at": "2026-11-03T07:55:47.106700+00:00",
+  "generated_at": "2026-11-03T08:42:09.128379+00:00",
   "summary": {
     "title": "LabourLens research workbench",
     "scope": [
@@ -121,7 +121,7 @@
         "release_html": 22
       },
       "observations": 52020,
-      "in_scope_observations": 4300,
+      "in_scope_observations": 11228,
       "period_from": "1980-Q1",
       "period_to": "2026-Q2"
     },
@@ -3514,13 +3514,13 @@
           "series": "All retrenched",
           "publisher": "Ministry of Manpower",
           "dataset_id": "d_000d49cda016c13522d7d5be6a050f59",
-          "period": "2024-Q1",
-          "value": 3030.0,
+          "period": "2020-Q1",
+          "value": 3220.0,
           "unit": "persons",
           "release_stage": "dataset_snapshot",
           "date_kind": "snapshot",
           "date": "2026-10-30",
-          "observation_id": "0f99b5c79172c310"
+          "observation_id": "7b1e16237faf64da"
         },
         {
           "series": "All retrenched",
@@ -3562,50 +3562,50 @@
       "note": "The dataset holds counts only. It has no column for a cause."
     },
     "vacancy_ratio": {
-      "title": "Published ratio against the counts, 2024-Q2",
+      "title": "Published ratio against the counts, 2021-Q3",
       "rows": [
         {
           "series": "Vacancies per unemployed person (published), seasonally adjusted",
           "publisher": "Ministry of Manpower",
           "dataset_id": "d_80c0cf251ee9a26d240808297f52c820",
-          "period": "2024-Q2",
-          "value": 1.72,
+          "period": "2021-Q3",
+          "value": 2.09,
           "unit": "ratio",
           "release_stage": "dataset_snapshot",
           "date_kind": "snapshot",
           "date": "2026-10-30",
-          "observation_id": "a84eaacb4cda2a28"
+          "observation_id": "8916a7f505649858"
         },
         {
           "series": "Job vacancies",
           "publisher": "Ministry of Manpower",
           "dataset_id": "d_59a34aef12e0ecf666de5746e50586e8",
-          "period": "2024-Q2",
-          "value": 82600.0,
+          "period": "2021-Q3",
+          "value": 104200.0,
           "unit": "vacancies",
           "release_stage": "dataset_snapshot",
           "date_kind": "snapshot",
           "date": "2026-10-30",
-          "observation_id": "3b8f727d6c9eb9a4"
+          "observation_id": "d25c4c9b60bd12ce"
         },
         {
           "series": "Unemployed persons, seasonally adjusted",
           "publisher": "Ministry of Manpower",
           "dataset_id": "d_3fb7b082cd455ec9493ef5e994ef0db7",
-          "period": "2024-Q2",
-          "value": 78300.0,
+          "period": "2021-Q3",
+          "value": 92400.0,
           "unit": "persons",
           "release_stage": "dataset_snapshot",
           "date_kind": "snapshot",
           "date": "2026-10-30",
-          "observation_id": "40613bc409e415d3"
+          "observation_id": "6be8c432b1451800"
         },
         {
           "series": "Vacancies divided by unemployed (calculated)",
           "publisher": "Calculated here",
           "dataset_id": null,
-          "period": "2024-Q2",
-          "value": 1.05,
+          "period": "2021-Q3",
+          "value": 1.13,
           "unit": "ratio",
           "release_stage": "derived",
           "date_kind": "",
@@ -79520,8 +79520,8 @@
     "status": "available",
     "summary": "Validation outcomes, including warnings.",
     "metrics": {
-      "pass": 269,
-      "warn": 7
+      "pass": 268,
+      "warn": 8
     },
     "rows": [
       {
@@ -79546,6 +79546,10 @@
       },
       {
         "id": "rights.unresolved_sources_listed",
+        "status": "warn"
+      },
+      {
+        "id": "dataset.employment_change_by_sector.in_scope_values_present",
         "status": "warn"
       },
       {
@@ -79849,7 +79853,7 @@
         "status": "DECISION",
         "date": "30 Oct 2026",
         "alternatives": "",
-        "summary": "The supported analysis period is 1Q 2024 to 2Q 2026 inclusive"
+        "summary": "Update (D-077): the rule itself stands, a request outside the supported period must abstain, but the period now opens at 2020-Q1"
       },
       {
         "id": "D-032",
@@ -80210,6 +80214,30 @@
         "date": "3 Nov 2026",
         "alternatives": "",
         "summary": "The v2 preregistration and 150 AI-labelled fresh cases were committed as 9e82d44; iteration 1's selected prompt and confidence threshold 0.70 were committed as 1ba2456 before fresh scoring"
+      },
+      {
+        "id": "D-077",
+        "title": "Answer window widened from 2024-Q1 to 2020-Q1",
+        "status": "OWNER DECISION / IMPLEMENTED",
+        "date": "3 Nov 2026",
+        "alternatives": "",
+        "summary": "DECISION (owner): the supported answer period is now 2020-Q1 to 2026-Q2 (26 quarters), not 2024-Q1 to 2026-Q2 (10 quarters)"
+      },
+      {
+        "id": "D-078",
+        "title": "Shipped planner uses native function calling",
+        "status": "OWNER DECISION / IMPLEMENTED",
+        "date": "3 Nov 2026",
+        "alternatives": "",
+        "summary": "DECISION (owner): the planner of the served agent now uses OpenAI native function calling instead of strict structured outputs (a JSON object with decision, note and calls)."
+      },
+      {
+        "id": "D-079",
+        "title": "The workbench streams live run steps",
+        "status": "OWNER DECISION / IMPLEMENTED",
+        "date": "3 Nov 2026",
+        "alternatives": "",
+        "summary": "DECISION (owner): stream the run's progress to the browser"
       }
     ],
     "milestones": [],
@@ -80227,7 +80255,7 @@
     "The population basis of the dataset employment series is unverified."
   ],
   "provenance": {
-    "commit": "d81a2ad52a364db556418bc1f3abeeaee3f8bab7",
+    "commit": "ea9071b375d07d77b65f66130a12f551d4bc86b9",
     "artifacts": [
       {
         "path": "data/export/sources.json",
@@ -80237,7 +80265,7 @@
       {
         "path": "data/processed/observations.parquet",
         "status": "available",
-        "sha256": "bb5d14d8df1c5eaaa8e18a8979dab4b6eb40eaf4059002f4884b04975165b7d3"
+        "sha256": "46fca00a4e4d7cd4ab166c81ee73cecf37efc97b1275931b85c4bf511f12cec8"
       },
       {
         "path": "data/export/series.json",
@@ -80247,7 +80275,7 @@
       {
         "path": "data/export/kpis.json",
         "status": "available",
-        "sha256": "e42d9536d48575acd664ceab355121b35f6e0bec711079fde1668f8414249e7a"
+        "sha256": "c1ec01860eb53f2c9a49f2f61c2448d4c00beb5356d232022bbf75ff2cd3c2cf"
       },
       {
         "path": "experiments/runs/dev-E1-chunking/blocks.metrics.json",
@@ -81232,7 +81260,7 @@
       {
         "path": "data/export/quality.json",
         "status": "available",
-        "sha256": "9d873de6ff2bbd601c5c68084fff65c20027753cd2616b01fe89482d9ec93190"
+        "sha256": "a542eb46f68048b9e602da07576771f446eadffead38f2f0db6891d4909522b4"
       },
       {
         "path": "docs/mcp-demo-transcript.md",
@@ -81460,12 +81488,12 @@
       {
         "path": "docs/decisions.md",
         "status": "available",
-        "sha256": "06fc40226f7d2e87dc5c2173eecf2e81d4cd1c302ecfa5912497ecd562432464"
+        "sha256": "485b433768f770c69f4a2b5741b3679813618a8450b0625314231448767bc5da"
       },
       {
         "path": "docs/progress.md",
         "status": "available",
-        "sha256": "9273fa421476db178281ad57559d9e741974c5122e4be6904384559d7af87387"
+        "sha256": "42a4789fb3259d8728b3d932e9a2ea7ffd1c7dcfc4e2c2af60469d37ee9f1e7e"
       }
     ],
     "policy": "Committed artifacts only; numeric fields only."
@@ -81473,7 +81501,7 @@
   "innovation": {
     "content": {
       "title": "Innovation assessment",
-      "scope": "LabourLens researches public Singapore labour statistics and reports for Q1 2024 to Q2 2026. Analysts inspect citations, records and tool calls before using an answer.",
+      "scope": "LabourLens researches public Singapore labour statistics (Q1 2020 to Q2 2026) and MOM and MTI reports (from 2023). Analysts inspect citations, records and tool calls before using an answer.",
       "abstract": "Period filters and reranking select passages; typed read-only tools retrieve series and calculate changes. I measured retrieval, answer behaviour, runtime and attack responses. The next priorities are report-table arithmetic and independent evaluation.",
       "approach": [
         "Numbers come from validated tables or deterministic code; claims cite passages or records.",
@@ -81674,7 +81702,7 @@
         "Development shaped the design. Original-test evidence overlaps; fresh-test outcomes are known. Neither final test demonstrates a gain.",
         "Gold was AI-drafted and reviewed by one person; the main judge is same-family. One fixed run and two agent runs do not establish stability; the primary agent references flip 13/237 behaviour verdicts.",
         "Citations check mechanics; arithmetic can use wrong inputs. Scanner and attack results establish no general defence.",
-        "Full comparisons exclude web-only steps and MCP. Costs are list-price estimates. Monitoring, rollback and government readiness are untested."
+        "Full comparisons exclude web-only steps and MCP. Every measurement used questions about Q1 2024 to Q2 2026, the structured-output planner and older prompts; the served window (from Q1 2020), function-calling planner and newer prompts were not re-evaluated, so answers about 2020 to 2023 are unevaluated. Costs are list-price estimates. Monitoring, rollback and government readiness are untested."
       ],
       "components": [
         {
@@ -81908,8 +81936,8 @@
     },
     "source": {
       "path": "docs/innovation-page.json",
-      "sha256": "549ad5f8881853d66377b621092d5c7453f5298493e57e98c65c070997e271f2",
-      "evidence_commit": "d81a2ad52a364db556418bc1f3abeeaee3f8bab7"
+      "sha256": "4fe089b33a72fc9373c087d69899b261bd6315abc02fe22f789e2efc604b09bd",
+      "evidence_commit": "ea9071b375d07d77b65f66130a12f551d4bc86b9"
     }
   }
 }
