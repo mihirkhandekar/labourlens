@@ -1,6 +1,6 @@
 {
   "schema_version": "report-1.0",
-  "generated_at": "2026-11-03T10:09:37.595986+00:00",
+  "generated_at": "2026-11-03T10:10:23.667009+00:00",
   "summary": {
     "title": "LabourLens research workbench",
     "scope": [
@@ -114,11 +114,11 @@
     "status": "available",
     "summary": "Metadata for official sources.",
     "metrics": {
-      "sources": 85,
+      "sources": 142,
       "by_type": {
         "dataset_csv": 36,
-        "report_pdf": 27,
-        "release_html": 22
+        "release_html": 43,
+        "report_pdf": 63
       },
       "observations": 52020,
       "in_scope_observations": 11228,
@@ -242,6 +242,390 @@
         "snapshot_id": "20261030-cffa55da17b2",
         "type": "dataset_csv",
         "url": "https://data.gov.sg/datasets/d_1e10046c33418c507bb2483c26dca489/view"
+      },
+      {
+        "source_id": "mom-2020-q1-advance",
+        "publisher": "Ministry of Manpower",
+        "publication_date": "2020-04-29",
+        "release_stage": "advance",
+        "rights_status": "unresolved",
+        "redistribution": "local_only",
+        "sha256": "3f459a85d3bf87899262e8718c128dcb0700b885dd0dad0c118385f009f067bc",
+        "snapshot_id": "20261103-3f459a85d3bf",
+        "type": "release_html",
+        "url": "https://www.mom.gov.sg/newsroom/press-releases/2020/0429-labour-market-advance-release-1q-202"
+      },
+      {
+        "source_id": "mom-2020-q1-final",
+        "publication_date": "2020-06-15",
+        "release_stage": "final",
+        "rights_status": "verified_all_rights_reserved",
+        "redistribution": "local_only",
+        "sha256": "2922f993590052539989e8e8a6a110f31c617377a7cc76854866fc61fc690d28",
+        "snapshot_id": "20261103-2922f9935900",
+        "type": "report_pdf",
+        "url": "https://stats.mom.gov.sg/Pages/Labour-Market-Report-1Q-2020.aspx"
+      },
+      {
+        "source_id": "mom-2020-q1-final-release",
+        "publisher": "Ministry of Manpower",
+        "publication_date": "2020-06-15",
+        "release_stage": "final",
+        "rights_status": "unresolved",
+        "redistribution": "local_only",
+        "sha256": "52a33ed090138c2a572e1de28d412ddb52a8b7f6d011896ff570cf177ae06ea1",
+        "snapshot_id": "20261103-52a33ed09013",
+        "type": "release_html",
+        "url": "https://www.mom.gov.sg/newsroom/press-releases/2020/0615-labour-market-report-first-quarter-2020"
+      },
+      {
+        "source_id": "mom-2020-q2-advance",
+        "publisher": "Ministry of Manpower",
+        "publication_date": "2020-07-29",
+        "release_stage": "advance",
+        "rights_status": "unresolved",
+        "redistribution": "local_only",
+        "sha256": "c786c1fc9b14390745c1ce5bbf167a445fdcae3082165c0337adbd2bcf23133d",
+        "snapshot_id": "20261103-c786c1fc9b14",
+        "type": "release_html",
+        "url": "https://www.mom.gov.sg/newsroom/press-releases/2020/0729-labour-market-advance-release-second-quarter-2020"
+      },
+      {
+        "source_id": "mom-2020-q2-final",
+        "publication_date": "2020-09-17",
+        "release_stage": "final",
+        "rights_status": "verified_all_rights_reserved",
+        "redistribution": "local_only",
+        "sha256": "60128e6d950c68b6e98418c190f31fc0b423e55e02db8339617c86310b7e11e0",
+        "snapshot_id": "20261103-60128e6d950c",
+        "type": "report_pdf",
+        "url": "https://stats.mom.gov.sg/Pages/Labour-Market-Report-2Q-2020.aspx"
+      },
+      {
+        "source_id": "mom-2020-q3-advance",
+        "publisher": "Ministry of Manpower",
+        "publication_date": "2020-10-30",
+        "release_stage": "advance",
+        "rights_status": "unresolved",
+        "redistribution": "local_only",
+        "sha256": "387ffdb9551c67d9acf8050f9c2ecd74dcf8510dfc196b0fd857880c9aec6cc8",
+        "snapshot_id": "20261103-387ffdb9551c",
+        "type": "release_html",
+        "url": "https://www.mom.gov.sg/newsroom/press-releases/2020/1030-labour-market-advance-release-3q-2020"
+      },
+      {
+        "source_id": "mom-2020-q3-final",
+        "publication_date": "2020-12-17",
+        "release_stage": "final",
+        "rights_status": "verified_all_rights_reserved",
+        "redistribution": "local_only",
+        "sha256": "5e4b523f0f87fbfeecab8ed47c978f948b802010d1fddd8e79d03c1d3a95be54",
+        "snapshot_id": "20261103-5e4b523f0f87",
+        "type": "report_pdf",
+        "url": "https://stats.mom.gov.sg/Pages/Labour-Market-Report-3Q-2020.aspx"
+      },
+      {
+        "source_id": "mom-2020-q3-final-release",
+        "publisher": "Ministry of Manpower",
+        "publication_date": "2020-12-17",
+        "release_stage": "final",
+        "rights_status": "unresolved",
+        "redistribution": "local_only",
+        "sha256": "3bb52cd332f6c175dd2fa02ca145bfdb24f8aed0b22cf0bb3acd26333e867cbf",
+        "snapshot_id": "20261103-3bb52cd332f6",
+        "type": "release_html",
+        "url": "https://www.mom.gov.sg/newsroom/press-releases/2020/1217-labour-market-report-3q-2020"
+      },
+      {
+        "source_id": "mom-2020-q4-advance",
+        "publisher": "Ministry of Manpower",
+        "publication_date": "2021-01-28",
+        "release_stage": "advance",
+        "rights_status": "unresolved",
+        "redistribution": "local_only",
+        "sha256": "f0c48bab0658c367a39550c126bbe62da142026ace40c8d0b49240cd73c463f3",
+        "snapshot_id": "20261103-f0c48bab0658",
+        "type": "release_html",
+        "url": "https://www.mom.gov.sg/newsroom/press-releases/2021/0128-4q-lmar-2020"
+      },
+      {
+        "source_id": "mom-2020-q4-final",
+        "publication_date": "2021-03-16",
+        "release_stage": "final",
+        "rights_status": "verified_all_rights_reserved",
+        "redistribution": "local_only",
+        "sha256": "97678cd4f4d4f03ad18f49ac9c39f3869701d7c5a254bd38ee96cb130c0e9982",
+        "snapshot_id": "20261103-97678cd4f4d4",
+        "type": "report_pdf",
+        "url": "https://stats.mom.gov.sg/Pages/Labour-Market-Report-4Q-2020.aspx"
+      },
+      {
+        "source_id": "mom-2021-q1-advance",
+        "publisher": "Ministry of Manpower",
+        "publication_date": "2021-04-28",
+        "release_stage": "advance",
+        "rights_status": "unresolved",
+        "redistribution": "local_only",
+        "sha256": "f0ecdf646deffbeabc338053c9f58141177e97a4009970e5f15f6165e8d71332",
+        "snapshot_id": "20261103-f0ecdf646def",
+        "type": "release_html",
+        "url": "https://www.mom.gov.sg/newsroom/press-releases/2021/0428-labour-market-advance-release-1q-2021"
+      },
+      {
+        "source_id": "mom-2021-q1-final",
+        "publication_date": "2021-06-17",
+        "release_stage": "final",
+        "rights_status": "verified_all_rights_reserved",
+        "redistribution": "local_only",
+        "sha256": "406ed60a405b1a0e3dfe1cb08edeb027da5ecbba9d70682bd75badd7a256f83a",
+        "snapshot_id": "20261103-406ed60a405b",
+        "type": "report_pdf",
+        "url": "https://stats.mom.gov.sg/Pages/Labour-Market-Report-1Q-2021.aspx"
+      },
+      {
+        "source_id": "mom-2021-q1-final-release",
+        "publisher": "Ministry of Manpower",
+        "publication_date": "2021-06-17",
+        "release_stage": "final",
+        "rights_status": "unresolved",
+        "redistribution": "local_only",
+        "sha256": "f9dc3444c2f83fe54f882740f0bd9ce5fe15e9591d70102cfb7e8909eadedbd9",
+        "snapshot_id": "20261103-f9dc3444c2f8",
+        "type": "release_html",
+        "url": "https://www.mom.gov.sg/newsroom/press-releases/2021/0617-press-release-on-labour-market-report-1q-2021"
+      },
+      {
+        "source_id": "mom-2021-q2-advance",
+        "publisher": "Ministry of Manpower",
+        "publication_date": "2021-07-30",
+        "release_stage": "advance",
+        "rights_status": "unresolved",
+        "redistribution": "local_only",
+        "sha256": "b75f4e156bd96a9f3a1c5481ea0db1c4180f2a5a09e2e5fd562e23d60d75b2b0",
+        "snapshot_id": "20261103-b75f4e156bd9",
+        "type": "release_html",
+        "url": "https://www.mom.gov.sg/newsroom/press-releases/2021/0730-labour-market-advance-release-2q-2021"
+      },
+      {
+        "source_id": "mom-2021-q2-final",
+        "publication_date": "2021-09-17",
+        "release_stage": "final",
+        "rights_status": "verified_all_rights_reserved",
+        "redistribution": "local_only",
+        "sha256": "da24304262f6e9ac415abcbd8d194ebfa068ce793cfd56b53b5e0803fa85a7f5",
+        "snapshot_id": "20261103-da24304262f6",
+        "type": "report_pdf",
+        "url": "https://stats.mom.gov.sg/Pages/Labour-Market-Report-2Q-2021.aspx"
+      },
+      {
+        "source_id": "mom-2021-q3-advance",
+        "publisher": "Ministry of Manpower",
+        "publication_date": "2021-10-29",
+        "release_stage": "advance",
+        "rights_status": "unresolved",
+        "redistribution": "local_only",
+        "sha256": "c0a3abf1bfa32d1e1bfe13350aa9c05e0f89d5c105a3c0d0df97311f91d9a818",
+        "snapshot_id": "20261103-c0a3abf1bfa3",
+        "type": "release_html",
+        "url": "https://www.mom.gov.sg/newsroom/press-releases/2021/1029-labour-market-advance-release-third-quarter-2021"
+      },
+      {
+        "source_id": "mom-2021-q3-final",
+        "publication_date": "2021-12-15",
+        "release_stage": "final",
+        "rights_status": "verified_all_rights_reserved",
+        "redistribution": "local_only",
+        "sha256": "80da9c98d25ff876d73a300cced81b0073db91eb718acf74eabca6cab7533208",
+        "snapshot_id": "20261103-80da9c98d25f",
+        "type": "report_pdf",
+        "url": "https://stats.mom.gov.sg/Pages/Labour-Market-Report-3Q-2021.aspx"
+      },
+      {
+        "source_id": "mom-2021-q3-final-release",
+        "publisher": "Ministry of Manpower",
+        "publication_date": "2021-12-15",
+        "release_stage": "final",
+        "rights_status": "unresolved",
+        "redistribution": "local_only",
+        "sha256": "0b2a6d35d1cf932ec8558478610319d082a3f9c42af0050c00702ccca31130b1",
+        "snapshot_id": "20261103-0b2a6d35d1cf",
+        "type": "release_html",
+        "url": "https://www.mom.gov.sg/newsroom/press-releases/2021/1215-labour-market-report-third-quarter-2021"
+      },
+      {
+        "source_id": "mom-2021-q4-advance",
+        "publisher": "Ministry of Manpower",
+        "publication_date": "2022-01-28",
+        "release_stage": "advance",
+        "rights_status": "unresolved",
+        "redistribution": "local_only",
+        "sha256": "728e499245b08de323c2c15e46aadca46b0d63d508d156f62295d4bb569dd16a",
+        "snapshot_id": "20261103-728e499245b0",
+        "type": "release_html",
+        "url": "https://www.mom.gov.sg/newsroom/press-releases/2022/0128-labour-market-advance-release-2021"
+      },
+      {
+        "source_id": "mom-2021-q4-final",
+        "publication_date": "2022-03-14",
+        "release_stage": "final",
+        "rights_status": "verified_all_rights_reserved",
+        "redistribution": "local_only",
+        "sha256": "5441429f99f072a960387790201daf9063dc06a282a168bd025f2ad42c4f8ae0",
+        "snapshot_id": "20261103-5441429f99f0",
+        "type": "report_pdf",
+        "url": "https://stats.mom.gov.sg/Pages/Labour-Market-Report-4Q-2021.aspx"
+      },
+      {
+        "source_id": "mom-2021-q4-final-release",
+        "publisher": "Ministry of Manpower",
+        "publication_date": "2022-03-14",
+        "release_stage": "final",
+        "rights_status": "unresolved",
+        "redistribution": "local_only",
+        "sha256": "d3872940146348273e6ffd39ba647d651a1be49431597fed9ab6a512c581dd56",
+        "snapshot_id": "20261103-d38729401463",
+        "type": "release_html",
+        "url": "https://www.mom.gov.sg/newsroom/press-releases/2022/0314-statement-on-labour-market-developments-in-2021"
+      },
+      {
+        "source_id": "mom-2022-q1-advance",
+        "publisher": "Ministry of Manpower",
+        "publication_date": "2022-04-28",
+        "release_stage": "advance",
+        "rights_status": "unresolved",
+        "redistribution": "local_only",
+        "sha256": "c25b6a51cc7e8df74bd63ce30a6cb5fe638743435d90fc7403c7046d661349fd",
+        "snapshot_id": "20261103-c25b6a51cc7e",
+        "type": "release_html",
+        "url": "https://www.mom.gov.sg/newsroom/press-releases/2022/0428-labour-market-advance-release-q1-2022"
+      },
+      {
+        "source_id": "mom-2022-q1-final",
+        "publication_date": "2022-06-17",
+        "release_stage": "final",
+        "rights_status": "verified_all_rights_reserved",
+        "redistribution": "local_only",
+        "sha256": "de43deb69bfc5ca7254f848f54eaf4c3081b76e897a8663e1b27bead991d3890",
+        "snapshot_id": "20261103-de43deb69bfc",
+        "type": "report_pdf",
+        "url": "https://stats.mom.gov.sg/Pages/Labour-Market-Report-1Q-2022.aspx"
+      },
+      {
+        "source_id": "mom-2022-q1-final-release",
+        "publisher": "Ministry of Manpower",
+        "publication_date": "2022-06-17",
+        "release_stage": "final",
+        "rights_status": "unresolved",
+        "redistribution": "local_only",
+        "sha256": "f1716046eceac1790bd1df09de657ceb03075eabfe54adc1cd748e743d21b55b",
+        "snapshot_id": "20261103-f1716046ecea",
+        "type": "release_html",
+        "url": "https://www.mom.gov.sg/newsroom/press-releases/2022/0617-labour-market-report-1q-2022"
+      },
+      {
+        "source_id": "mom-2022-q2-advance",
+        "publisher": "Ministry of Manpower",
+        "publication_date": "2022-07-29",
+        "release_stage": "advance",
+        "rights_status": "unresolved",
+        "redistribution": "local_only",
+        "sha256": "54e348a422afc48629ae3f4347f397ae78fce487e8780bd6c2cc4187633180e9",
+        "snapshot_id": "20261103-54e348a422af",
+        "type": "release_html",
+        "url": "https://www.mom.gov.sg/newsroom/press-releases/2022/0729-labour-market-advance-release-2q-2022"
+      },
+      {
+        "source_id": "mom-2022-q2-final",
+        "publication_date": "2022-09-14",
+        "release_stage": "final",
+        "rights_status": "verified_all_rights_reserved",
+        "redistribution": "local_only",
+        "sha256": "043b7460437510f7817847f368f40e6faa833d72cebc03802eb4ffd776400c7c",
+        "snapshot_id": "20261103-043b74604375",
+        "type": "report_pdf",
+        "url": "https://stats.mom.gov.sg/Pages/Labour-Market-Report-2Q-2022.aspx"
+      },
+      {
+        "source_id": "mom-2022-q2-final-release",
+        "publisher": "Ministry of Manpower",
+        "publication_date": "2022-09-14",
+        "release_stage": "final",
+        "rights_status": "unresolved",
+        "redistribution": "local_only",
+        "sha256": "ccc5a5fd674eea0171b9e1ac0a58cc7e781068864c179317461a1845926a1822",
+        "snapshot_id": "20261103-ccc5a5fd674e",
+        "type": "release_html",
+        "url": "https://www.mom.gov.sg/newsroom/press-releases/2022/0914-statement-on-labour-market-developments-in-1h2022"
+      },
+      {
+        "source_id": "mom-2022-q3-advance",
+        "publisher": "Ministry of Manpower",
+        "publication_date": "2022-10-28",
+        "release_stage": "advance",
+        "rights_status": "unresolved",
+        "redistribution": "local_only",
+        "sha256": "3bd116946177b97668e93125c4fd750d8645db9d73a7c10eba218d44cf2a3fa1",
+        "snapshot_id": "20261103-3bd116946177",
+        "type": "release_html",
+        "url": "https://www.mom.gov.sg/newsroom/press-releases/2022/1028-lmar-3q"
+      },
+      {
+        "source_id": "mom-2022-q3-final",
+        "publication_date": "2022-12-15",
+        "release_stage": "final",
+        "rights_status": "verified_all_rights_reserved",
+        "redistribution": "local_only",
+        "sha256": "da8df4d7b3db14ffcfd55782d2fafc82c264fd7af892a1cb1d319e0c39c64688",
+        "snapshot_id": "20261103-da8df4d7b3db",
+        "type": "report_pdf",
+        "url": "https://stats.mom.gov.sg/Pages/Labour-Market-Report-3Q-2022.aspx"
+      },
+      {
+        "source_id": "mom-2022-q3-final-release",
+        "publisher": "Ministry of Manpower",
+        "publication_date": "2022-12-15",
+        "release_stage": "final",
+        "rights_status": "unresolved",
+        "redistribution": "local_only",
+        "sha256": "edc1046ffd8f9044b5fb333b7df35a75f27cb1e545cb0d20f5e5efde8e4a9120",
+        "snapshot_id": "20261103-edc1046ffd8f",
+        "type": "release_html",
+        "url": "https://www.mom.gov.sg/newsroom/press-releases/2022/1215-labour-market-report-third-quarter-2022"
+      },
+      {
+        "source_id": "mom-2022-q4-advance",
+        "publisher": "Ministry of Manpower",
+        "publication_date": "2023-01-31",
+        "release_stage": "advance",
+        "rights_status": "unresolved",
+        "redistribution": "local_only",
+        "sha256": "a6e074f0a056b6a38ebd2703c9c478fa97782d10a07e10bf554c116209b67118",
+        "snapshot_id": "20261103-a6e074f0a056",
+        "type": "release_html",
+        "url": "https://www.mom.gov.sg/newsroom/press-releases/2023/0131-labour-market-advance-release-2022"
+      },
+      {
+        "source_id": "mom-2022-q4-final",
+        "publication_date": "2023-03-15",
+        "release_stage": "final",
+        "rights_status": "verified_all_rights_reserved",
+        "redistribution": "local_only",
+        "sha256": "6cb6ad2cf974c2e3faaa76ef258a674a590ee8832a385f3043c2918b73052ea2",
+        "snapshot_id": "20261103-6cb6ad2cf974",
+        "type": "report_pdf",
+        "url": "https://stats.mom.gov.sg/Pages/Labour-Market-Report-4Q-2022.aspx"
+      },
+      {
+        "source_id": "mom-2022-q4-final-release",
+        "publisher": "Ministry of Manpower",
+        "publication_date": "2023-03-15",
+        "release_stage": "final",
+        "rights_status": "unresolved",
+        "redistribution": "local_only",
+        "sha256": "4931c7e20f56c44d87ff50edef93e585f844fe9ac4c18bae6120b06a3e876d64",
+        "snapshot_id": "20261103-4931c7e20f56",
+        "type": "release_html",
+        "url": "https://www.mom.gov.sg/newsroom/press-releases/2023/0315-labour-market-report-2022"
       },
       {
         "source_id": "mom-2023-q1-final",
@@ -638,6 +1022,50 @@
         "url": "https://www.mom.gov.sg/newsroom/press-releases/2026/0921-labour-market-report---second-quarter-2026"
       },
       {
+        "source_id": "mom-jv2020",
+        "publication_date": "2021-04-01",
+        "release_stage": "annual",
+        "rights_status": "verified_all_rights_reserved",
+        "redistribution": "local_only",
+        "sha256": "1a3c39b8209072a2897c9d28cde720bdab9a7201b72b7f572b26a2ee4894effa",
+        "snapshot_id": "20261103-1a3c39b82090",
+        "type": "report_pdf",
+        "url": "https://stats.mom.gov.sg/Pages/Job-Vacancies-2020.aspx"
+      },
+      {
+        "source_id": "mom-jv2021",
+        "publication_date": "2022-04-05",
+        "release_stage": "annual",
+        "rights_status": "verified_all_rights_reserved",
+        "redistribution": "local_only",
+        "sha256": "c11f4e991dca4a51fb1f4dc9b2cb686f2b21e06d4bbdb8b8438293b494741279",
+        "snapshot_id": "20261103-c11f4e991dca",
+        "type": "report_pdf",
+        "url": "https://stats.mom.gov.sg/Pages/Job-Vacancies-2021.aspx"
+      },
+      {
+        "source_id": "mom-jv2022",
+        "publication_date": "2023-03-01",
+        "release_stage": "annual",
+        "rights_status": "verified_all_rights_reserved",
+        "redistribution": "local_only",
+        "sha256": "ecf6cb40582bd24568868c08509e8408051e11720db30dfff1f9622e8595cf47",
+        "snapshot_id": "20261103-ecf6cb40582b",
+        "type": "report_pdf",
+        "url": "https://stats.mom.gov.sg/Pages/Job-Vacancies-2022.aspx"
+      },
+      {
+        "source_id": "mom-jv2023",
+        "publication_date": "2024-03-01",
+        "release_stage": "annual",
+        "rights_status": "verified_all_rights_reserved",
+        "redistribution": "local_only",
+        "sha256": "e0a4101c9b01cc188842424fc4016baa6c482904df6a483e1a35fcc70f2dd1ba",
+        "snapshot_id": "20261103-e0a4101c9b01",
+        "type": "report_pdf",
+        "url": "https://stats.mom.gov.sg/Pages/Job-Vacancies-2023.aspx"
+      },
+      {
         "source_id": "mom-jv2025",
         "publication_date": "2026-03-20",
         "release_stage": "annual",
@@ -659,6 +1087,182 @@
         "snapshot_id": "20261030-343c461d0b7b",
         "type": "release_html",
         "url": "https://www.mom.gov.sg/newsroom/press-releases/2026/0320-job-vacancies-report-2025"
+      },
+      {
+        "source_id": "mom-lf2020-copyright",
+        "publication_date": "2021-05-01",
+        "release_stage": "annual",
+        "rights_status": "verified_all_rights_reserved",
+        "redistribution": "local_only",
+        "sha256": "43b21ffa921fc3c27f047260c256d00dd2169dddb390f8f35c02b442ea63186f",
+        "snapshot_id": "20261103-43b21ffa921f",
+        "type": "report_pdf",
+        "url": "https://stats.mom.gov.sg/Pages/Labour-Force-In-Singapore-2020.aspx"
+      },
+      {
+        "source_id": "mom-lf2020-coverage-methodology",
+        "publication_date": "2021-05-01",
+        "release_stage": "annual",
+        "rights_status": "verified_all_rights_reserved",
+        "redistribution": "local_only",
+        "sha256": "1abb7fb460b01b9ff48cf09cecaaa1854cb116b810e647b10401c97afd54514c",
+        "snapshot_id": "20261103-1abb7fb460b0",
+        "type": "report_pdf",
+        "url": "https://stats.mom.gov.sg/Pages/Labour-Force-In-Singapore-2020.aspx"
+      },
+      {
+        "source_id": "mom-lf2020-survey-findings",
+        "publication_date": "2021-05-01",
+        "release_stage": "annual",
+        "rights_status": "verified_all_rights_reserved",
+        "redistribution": "local_only",
+        "sha256": "c91cf1fb8335f0da0450efa6c9af38d4e20a2adcaf77e03b49f5f5c43b60d87e",
+        "snapshot_id": "20261103-c91cf1fb8335",
+        "type": "report_pdf",
+        "url": "https://stats.mom.gov.sg/Pages/Labour-Force-In-Singapore-2020.aspx"
+      },
+      {
+        "source_id": "mom-lf2020-survey-highlights",
+        "publication_date": "2021-05-01",
+        "release_stage": "annual",
+        "rights_status": "verified_all_rights_reserved",
+        "redistribution": "local_only",
+        "sha256": "7088c3bc4d75b64eae81760fa9e78a72b57620e19a275bc389383694e65a9afd",
+        "snapshot_id": "20261103-7088c3bc4d75",
+        "type": "report_pdf",
+        "url": "https://stats.mom.gov.sg/Pages/Labour-Force-In-Singapore-2020.aspx"
+      },
+      {
+        "source_id": "mom-lf2021-copyright",
+        "publication_date": "2022-01-01",
+        "release_stage": "annual",
+        "rights_status": "verified_all_rights_reserved",
+        "redistribution": "local_only",
+        "sha256": "f26dfa8af029570c02f0dd90cc559f4306c6284fa2c0424e2c3c0e4d9df113a5",
+        "snapshot_id": "20261103-f26dfa8af029",
+        "type": "report_pdf",
+        "url": "https://stats.mom.gov.sg/Pages/Labour-Force-In-Singapore-2021.aspx"
+      },
+      {
+        "source_id": "mom-lf2021-coverage-methodology",
+        "publication_date": "2022-01-01",
+        "release_stage": "annual",
+        "rights_status": "verified_all_rights_reserved",
+        "redistribution": "local_only",
+        "sha256": "fba0471ec9c4d7ebf1f61afa4e61ecbf4910a787961ebf4f01c2f77f1cd47a38",
+        "snapshot_id": "20261103-fba0471ec9c4",
+        "type": "report_pdf",
+        "url": "https://stats.mom.gov.sg/Pages/Labour-Force-In-Singapore-2021.aspx"
+      },
+      {
+        "source_id": "mom-lf2021-survey-findings",
+        "publication_date": "2022-01-01",
+        "release_stage": "annual",
+        "rights_status": "verified_all_rights_reserved",
+        "redistribution": "local_only",
+        "sha256": "b6222335d8a9e8505f00b116d4bbaf0db5d21fe508196bb9e42da849bede3b1c",
+        "snapshot_id": "20261103-b6222335d8a9",
+        "type": "report_pdf",
+        "url": "https://stats.mom.gov.sg/Pages/Labour-Force-In-Singapore-2021.aspx"
+      },
+      {
+        "source_id": "mom-lf2021-survey-highlights",
+        "publication_date": "2022-01-01",
+        "release_stage": "annual",
+        "rights_status": "verified_all_rights_reserved",
+        "redistribution": "local_only",
+        "sha256": "cdad3e05704ff377b0ba99ef136a159500e8f2fcfec304ac5e778a9f8381657c",
+        "snapshot_id": "20261103-cdad3e05704f",
+        "type": "report_pdf",
+        "url": "https://stats.mom.gov.sg/Pages/Labour-Force-In-Singapore-2021.aspx"
+      },
+      {
+        "source_id": "mom-lf2022-copyright",
+        "publication_date": "2023-03-22",
+        "release_stage": "annual",
+        "rights_status": "verified_all_rights_reserved",
+        "redistribution": "local_only",
+        "sha256": "e01bd6717af54619733756cf7b498962f466d212ef6944789a00f10af522fc2b",
+        "snapshot_id": "20261103-e01bd6717af5",
+        "type": "report_pdf",
+        "url": "https://stats.mom.gov.sg/Pages/Labour-Force-In-Singapore-2022.aspx"
+      },
+      {
+        "source_id": "mom-lf2022-coverage-methodology",
+        "publication_date": "2023-03-22",
+        "release_stage": "annual",
+        "rights_status": "verified_all_rights_reserved",
+        "redistribution": "local_only",
+        "sha256": "b743e60f9d89695f2b07a02078973ba26490bf932ed9cda0a8f47df54d0fd443",
+        "snapshot_id": "20261103-b743e60f9d89",
+        "type": "report_pdf",
+        "url": "https://stats.mom.gov.sg/Pages/Labour-Force-In-Singapore-2022.aspx"
+      },
+      {
+        "source_id": "mom-lf2022-survey-findings",
+        "publication_date": "2023-03-22",
+        "release_stage": "annual",
+        "rights_status": "verified_all_rights_reserved",
+        "redistribution": "local_only",
+        "sha256": "77ec906c03e9ab06dca8146900cbe1d793762fa3fc10c84d1230e1bbd78472d6",
+        "snapshot_id": "20261103-77ec906c03e9",
+        "type": "report_pdf",
+        "url": "https://stats.mom.gov.sg/Pages/Labour-Force-In-Singapore-2022.aspx"
+      },
+      {
+        "source_id": "mom-lf2022-survey-highlights",
+        "publication_date": "2023-03-22",
+        "release_stage": "annual",
+        "rights_status": "verified_all_rights_reserved",
+        "redistribution": "local_only",
+        "sha256": "8f1fd4704c23777aaa712a7bb2ced44b3b351cb7ca7174a59c0818101b432a2e",
+        "snapshot_id": "20261103-8f1fd4704c23",
+        "type": "report_pdf",
+        "url": "https://stats.mom.gov.sg/Pages/Labour-Force-In-Singapore-2022.aspx"
+      },
+      {
+        "source_id": "mom-lf2023-copyright",
+        "publication_date": "2024-03-01",
+        "release_stage": "annual",
+        "rights_status": "verified_all_rights_reserved",
+        "redistribution": "local_only",
+        "sha256": "755a96806ee259751cbde208ebafc38d750545364e6157d61db92cb0db754949",
+        "snapshot_id": "20261103-755a96806ee2",
+        "type": "report_pdf",
+        "url": "https://stats.mom.gov.sg/Pages/Labour-Force-In-Singapore-2023.aspx"
+      },
+      {
+        "source_id": "mom-lf2023-coverage-methodology",
+        "publication_date": "2024-03-01",
+        "release_stage": "annual",
+        "rights_status": "verified_all_rights_reserved",
+        "redistribution": "local_only",
+        "sha256": "d5054612b09d825513fc0648b29f7a3b9ac6bbd91ca0496d1f76be438be00118",
+        "snapshot_id": "20261103-d5054612b09d",
+        "type": "report_pdf",
+        "url": "https://stats.mom.gov.sg/Pages/Labour-Force-In-Singapore-2023.aspx"
+      },
+      {
+        "source_id": "mom-lf2023-survey-findings",
+        "publication_date": "2024-03-01",
+        "release_stage": "annual",
+        "rights_status": "verified_all_rights_reserved",
+        "redistribution": "local_only",
+        "sha256": "c963a5261893afd753f8b5ffa3621425317b7e3ebd49b8357d678b43e2c603cd",
+        "snapshot_id": "20261103-c963a5261893",
+        "type": "report_pdf",
+        "url": "https://stats.mom.gov.sg/Pages/Labour-Force-In-Singapore-2023.aspx"
+      },
+      {
+        "source_id": "mom-lf2023-survey-highlights",
+        "publication_date": "2024-03-01",
+        "release_stage": "annual",
+        "rights_status": "verified_all_rights_reserved",
+        "redistribution": "local_only",
+        "sha256": "fc9c71deb6f486b26a4360264d7ed98857787103015d00cdbb695fc4a817966a",
+        "snapshot_id": "20261103-fc9c71deb6f4",
+        "type": "report_pdf",
+        "url": "https://stats.mom.gov.sg/Pages/Labour-Force-In-Singapore-2023.aspx"
       },
       {
         "source_id": "mom-lf2024-copyright",
@@ -754,6 +1358,50 @@
         "snapshot_id": "20261031-9e49b9683c62",
         "type": "report_pdf",
         "url": "https://stats.mom.gov.sg/iMAS_PdfLibrary/mrsd-Wage-Adjustments-and-Adoption-of-NWC-Guidelines-for-Lower-Wage-Employees-2025.pdf"
+      },
+      {
+        "source_id": "mom-wage-practices2020",
+        "publication_date": "2021-05-01",
+        "release_stage": "annual",
+        "rights_status": "unresolved",
+        "redistribution": "local_only",
+        "sha256": "8fc93b4afe588d0b7d5abd6e337d4127666ee49e0dcd04795f5d3352fa35d92f",
+        "snapshot_id": "20261103-8fc93b4afe58",
+        "type": "report_pdf",
+        "url": "https://stats.mom.gov.sg/Pages/Report-On-Wage-Practices-2020.aspx"
+      },
+      {
+        "source_id": "mom-wage-practices2021",
+        "publication_date": "2022-05-01",
+        "release_stage": "annual",
+        "rights_status": "verified_all_rights_reserved",
+        "redistribution": "local_only",
+        "sha256": "f53e0d257b19f344379d6633d949c106281fc19146beb335d9d47b50cfaa9006",
+        "snapshot_id": "20261103-f53e0d257b19",
+        "type": "report_pdf",
+        "url": "https://stats.mom.gov.sg/Pages/Report-On-Wage-Practices-2021.aspx"
+      },
+      {
+        "source_id": "mom-wage-practices2022",
+        "publication_date": "2023-05-01",
+        "release_stage": "annual",
+        "rights_status": "verified_all_rights_reserved",
+        "redistribution": "local_only",
+        "sha256": "188b8965f78a3e546d9c7034dc0ce33194b36f3daa915efdd878cd697f33f8be",
+        "snapshot_id": "20261103-188b8965f78a",
+        "type": "report_pdf",
+        "url": "https://stats.mom.gov.sg/Pages/Report-On-Wage-Practices-2022.aspx"
+      },
+      {
+        "source_id": "mom-wage-practices2023",
+        "publication_date": "2024-06-01",
+        "release_stage": "annual",
+        "rights_status": "verified_all_rights_reserved",
+        "redistribution": "local_only",
+        "sha256": "28b0c56d6d9e0037bc627ba7f37464f4bc1c2f23218410f04297ba92831d7f71",
+        "snapshot_id": "20261103-28b0c56d6d9e",
+        "type": "report_pdf",
+        "url": "https://stats.mom.gov.sg/Pages/Report-On-Wage-Practices-2023.aspx"
       },
       {
         "source_id": "mom-wage-practices2024",
@@ -3761,13 +4409,25 @@
           "experiments/corpus-snapshots/v3.1.json"
         ],
         "rerun": "The final evaluation ran on this build, two runs per arm, reported as their mean. For gpt-6-luna, filter then rerank against hybrid scored 89.7% against 82.7% on the 237 development questions, 83.9% against 80.6% on the 31 original test and 71.5% against 74.6% on the 65 fresh questions."
+      },
+      {
+        "id": "v4",
+        "name": "Current build (v4)",
+        "passages": 29760,
+        "documents": 106,
+        "purpose": "Adds the 2020 to 2022 quarterly reports and the 2020 to 2023 annual reports (57 documents). Not evaluated.",
+        "current": true,
+        "provenance": [
+          "experiments/corpus-snapshots/v4.json"
+        ]
       }
     ],
     "provenance": [
       "experiments/corpus-snapshots/v1.json",
       "experiments/corpus-snapshots/v2.json",
       "experiments/corpus-snapshots/v3.1.json",
-      "experiments/corpus-snapshots/v3.json"
+      "experiments/corpus-snapshots/v3.json",
+      "experiments/corpus-snapshots/v4.json"
     ]
   },
   "heldout_v31": {
@@ -64326,10 +64986,71 @@
         ]
       }
     },
+    "corpus": {
+      "label": "v4",
+      "sources": 142,
+      "document_files": 106,
+      "passages": 29760,
+      "chunks": 3632,
+      "parser_before": "extract-0.2",
+      "parser_after": "extract-0.3",
+      "quality_flags": {
+        "all_before": {
+          "garbled": 286,
+          "ok": 9040,
+          "table_unreliable": 7093
+        },
+        "all_after": {
+          "garbled": 246,
+          "ok": 9052,
+          "table_unreliable": 7121
+        },
+        "mti_before": {
+          "ok": 163,
+          "garbled": 40,
+          "table_unreliable": 15
+        },
+        "mti_after": {
+          "ok": 175,
+          "table_unreliable": 43
+        },
+        "control_character_garbled_before": 246,
+        "control_character_garbled_after": 246,
+        "new_garbled": 0
+      },
+      "flag_transitions": {
+        "garbled_to_ok": 16,
+        "garbled_to_table_unreliable": 24,
+        "ok_to_table_unreliable": 4
+      },
+      "chunks_changed": {
+        "before": 1847,
+        "after": 1847,
+        "ids_removed": 4,
+        "ids_added": 4,
+        "non_mti_ids_identical": true,
+        "non_mti_chunks": 1800,
+        "mti_before": 47,
+        "mti_after": 47
+      },
+      "embeddings": {
+        "cache_keys_before": 5113,
+        "unique_inputs_before": 1383,
+        "unique_inputs_after": 1383,
+        "unique_inputs_missing_from_cache_after": 10,
+        "cache_keys_no_longer_used": 3740
+      }
+    },
+    "evaluated_corpus": {
+      "label": "v3.1",
+      "document_files": 49,
+      "passages": 16419,
+      "chunks": 1847
+    },
     "rights": {
       "datasets_unverified": 3,
-      "sources_unresolved": 23,
-      "sources_all_rights_reserved": 26
+      "sources_unresolved": 45,
+      "sources_all_rights_reserved": 61
     },
     "chain": {
       "rows": [
@@ -79466,8 +80187,8 @@
     "status": "available",
     "summary": "Validation outcomes, including warnings.",
     "metrics": {
-      "pass": 268,
-      "warn": 8
+      "pass": 267,
+      "warn": 9
     },
     "rows": [
       {
@@ -79520,6 +80241,10 @@
       },
       {
         "id": "derived.vacancy_ratio_recomputed_vs_published",
+        "status": "warn"
+      },
+      {
+        "id": "passages.low_yield_documents",
         "status": "warn"
       },
       {
@@ -80184,6 +80909,30 @@
         "date": "3 Nov 2026",
         "alternatives": "",
         "summary": "DECISION (owner): stream the run's progress to the browser"
+      },
+      {
+        "id": "D-080",
+        "title": "Corpus v4: the 2020 to 2022 reports and 2020 to 2023 annual reports",
+        "status": "OWNER DECISION / IMPLEMENTED",
+        "date": "3 Nov 2026",
+        "alternatives": "",
+        "summary": "DECISION (owner): add the official MOM reports for the part of the widened window (D-077) that had statistics but no report text."
+      },
+      {
+        "id": "D-081",
+        "title": "Access code from the shared link",
+        "status": "OWNER REQUEST / IMPLEMENTED",
+        "date": "3 Nov 2026",
+        "alternatives": "",
+        "summary": "A link may carry the code as #code= (preferred) or ?code=. The workbench copies it into the access field only (never submits it, never stores it), and removes it from the address bar at once with history.replaceState"
+      },
+      {
+        "id": "D-082",
+        "title": "Evidence-first presentation sequence and plain-language innovation page",
+        "status": "OWNER APPROVED",
+        "date": "3 Nov 2026",
+        "alternatives": "considered: retain the old order; put MCP after the agent; keep each evaluation-method slide separate; present more experiment tables",
+        "summary": "The owner approved a data-first story: project and scope, system map, data and its quality issues, report processing and retrieval, the statistics MCP path, then the agent and answer checks"
       }
     ],
     "milestones": [],
@@ -80201,12 +80950,12 @@
     "The population basis of the dataset employment series is unverified."
   ],
   "provenance": {
-    "commit": "28b4aa5ae250372fb78fe080a82787dcab43817b",
+    "commit": "9a8bb81274d0a263d82a788fc2e8bdc704d39b00",
     "artifacts": [
       {
         "path": "data/export/sources.json",
         "status": "available",
-        "sha256": "5f5f7333e56ef67efc3af11b1945f2b5d7866611865d8865c706f8880a60b3a9"
+        "sha256": "2be39ae567e735c5339c59f6bb513d7246443a0f6e24d077dde0e8e648bdb039"
       },
       {
         "path": "data/processed/observations.parquet",
@@ -81206,7 +81955,7 @@
       {
         "path": "data/export/quality.json",
         "status": "available",
-        "sha256": "a542eb46f68048b9e602da07576771f446eadffead38f2f0db6891d4909522b4"
+        "sha256": "3a88e2726ad4bd855bc3c57f6f4e1c9d1c1092fb9b51c3747581d0dfc79b5060"
       },
       {
         "path": "docs/mcp-demo-transcript.md",
@@ -81235,7 +81984,8 @@
       },
       {
         "path": "experiments/corpus-snapshots/v4.json",
-        "status": "unavailable"
+        "status": "available",
+        "sha256": "2aa14f17bb934c7244a1ce25787113d452ae82feca5f59605c55944e1f2545f8"
       },
       {
         "path": "experiments/runs/web-live-smoke.trace.json",
@@ -81438,12 +82188,12 @@
       {
         "path": "docs/decisions.md",
         "status": "available",
-        "sha256": "485b433768f770c69f4a2b5741b3679813618a8450b0625314231448767bc5da"
+        "sha256": "943c90d75c99f4fe71e74b6843d4ce06b5bf93ab7eb6ff10e150cacf731fba05"
       },
       {
         "path": "docs/progress.md",
         "status": "available",
-        "sha256": "42a4789fb3259d8728b3d932e9a2ea7ffd1c7dcfc4e2c2af60469d37ee9f1e7e"
+        "sha256": "b49572a0bafc96e6b8521ef50e16b7208be5e2e31458ce949776eac9592f03d7"
       }
     ],
     "policy": "Committed artifacts only; numeric fields only."
@@ -81878,7 +82628,7 @@
     "source": {
       "path": "docs/innovation-page.json",
       "sha256": "4245cf254b922ed9ad22102159873b404040a9bc19a9008c584573ac6a8ae8c4",
-      "evidence_commit": "28b4aa5ae250372fb78fe080a82787dcab43817b"
+      "evidence_commit": "9a8bb81274d0a263d82a788fc2e8bdc704d39b00"
     }
   }
 }

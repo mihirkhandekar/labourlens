@@ -480,7 +480,7 @@ def test_build_row_reads_the_final_evaluation_and_the_headline_numbers_come_from
     report = json.loads((STATIC / "data" / "report.json").read_text(encoding="utf-8"))
     final = report["final_evaluation"]
     assert [s["id"] for s in final["splits"]] == ["dev", "registered", "fresh"]
-    rerun = next(row["rerun"] for row in report["corpus_builds"]["rows"] if row.get("current"))
+    rerun = next(row["rerun"] for row in report["corpus_builds"]["rows"] if row["id"] == "v3.1")
     assert "final evaluation ran on this build" in rerun and "two runs per arm" in rerun
     dev = next(s for s in final["splits"] if s["id"] == "dev")
     r3 = next(a for a in dev["arms"] if a["arm"] == "r3" and a["model"] == "gpt-6-luna")
