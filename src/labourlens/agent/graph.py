@@ -696,6 +696,14 @@ def build_graph(shared: Shared, tools: Tools, cfg: AgentConfig, emit=None):
                 if search_failure["reason"] and not any(i.label.startswith("P") for i in evidence):
                     rep.errors += validate.report_search_failure_errors(checked, s["question"], search_failure["reason"])
             extra["answer"] = checked.model_dump()
+            if cfg.tool_set == "annual" and rep.errors and s.get("attempts", 0) >= 2:
+                recovered = validate.recover_quote_errors(checked, evidence, rep.errors)
+                if recovered is not None:  # D-093: the repair attempt is spent; drop only unverifiable citations, never other errors
+                    dropped = sum(len(c.citations) for c in checked.claims) - sum(len(c.citations) for c in recovered.claims)
+                    checked = recovered
+                    rep = validate.check(checked, evidence)
+                    extra["answer"] = checked.model_dump()
+                    extra["quote_recovery"] = {"citations_dropped": dropped, "claims_dropped": len(original.claims) - len(recovered.claims)}
             errs = rep.errors
             extra.update({"cited_ids": rep.cited_passage_ids, "ungrounded_numbers": rep.ungrounded_numbers, "source_conflicts": conflicts})
         checked_answer = extra.pop("answer", None)

@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import html
 import re
 import unicodedata
 from dataclasses import dataclass, field
@@ -48,6 +49,7 @@ def annual_missing_quarter_abstention(answer: Answer, trace: list[dict]) -> Answ
 # of a report passage may appear in the model's own prose. Tokens are letters and digits only, NFKC case-folded.
 RIGHTS_RUN_WORDS = 7
 RIGHTS_TOKEN = re.compile(r"[^\W_]+")
+_ENTITY = re.compile(r"&(?:#[xX][0-9a-fA-F]+;?|#[0-9]+;?|[A-Za-z][A-Za-z0-9]+;?)")
 
 
 def rights_tokens(value) -> list[tuple[str, int, int]]:
@@ -58,13 +60,22 @@ def rights_tokens(value) -> list[tuple[str, int, int]]:
     """
     text = str(value or "")
     normalized, offsets = [], []
-    for i, char in enumerate(text):
+    # Decode entities while retaining offsets into the original text for clause
+    # removal and six-word public prefixes. Each decoded character maps to its
+    # complete source entity, so a prefix never cuts an entity in half.
+    units, last = [], 0
+    for match in _ENTITY.finditer(text):
+        units.extend((char, i, i + 1) for i, char in enumerate(text[last:match.start()], last))
+        units.extend((char, match.start(), match.end()) for char in html.unescape(match.group()))
+        last = match.end()
+    units.extend((char, i, i + 1) for i, char in enumerate(text[last:], last))
+    for char, start, end in units:
         if unicodedata.category(char) == "Cf":
             continue
         for folded in unicodedata.normalize("NFKC", char).casefold():
             normalized.append(folded)
-            offsets.append(i)
-    return [(m.group(), offsets[m.start()], offsets[m.end() - 1] + 1) for m in RIGHTS_TOKEN.finditer("".join(normalized))]
+            offsets.append((start, end))
+    return [(m.group(), offsets[m.start()][0], offsets[m.end() - 1][1]) for m in RIGHTS_TOKEN.finditer("".join(normalized))]
 
 
 def report_windows(texts) -> set[tuple[str, ...]]:
@@ -109,7 +120,7 @@ def report_copy_errors(answer: Answer, ctx: list[ContextPassage]) -> list[str]:
 
 
 def norm(t: str) -> str:
-    t = unicodedata.normalize("NFKC", t)
+    t = unicodedata.normalize("NFKC", html.unescape(t))
     t = t.translate({0x2018: "'", 0x2019: "'", 0x201C: '"', 0x201D: '"', 0x2013: "-", 0x2014: "-", 0x00A0: " "})
     return re.sub(r"\s+", " ", t).strip().casefold()
 
@@ -117,7 +128,7 @@ def norm(t: str) -> str:
 def quote_in(quote: str, text: str) -> bool:
     """The single definition of 'quote is verbatim in text', shared by the validator and the web projection.
 
-    Case, NFKC, curly quotes, dashes and any run of whitespace (including PDF hard line breaks) are ignored."""
+    HTML entities, case, NFKC, curly quotes, dashes and whitespace (including PDF hard line breaks) are ignored on both sides."""
     q = norm(quote)
     return bool(q) and q in norm(text)
 
@@ -225,3 +236,27 @@ def check(answer: Answer, ctx: list[ContextPassage]) -> Report:
         rep.ungrounded_numbers += [f"{where}: {n}" for n in sorted(key_numbers(text) - context_numbers)]
     rep.cited_passage_ids = list(dict.fromkeys(cited))
     return rep
+
+
+def recover_quote_errors(answer: Answer, ctx: list[ContextPassage], errors: list[str]) -> Answer | None:
+    """Served-only, after repair: discard bad quotes/unsupported claims, never bypass other errors.
+
+    This availability tradeoff retains a possibly less-supported summary with a
+    visible caveat. It is not semantic verification of the surviving claims.
+    """
+    allowed = r"claim \d+ quote (?:is not verbatim in \S+|from \S+ is longer than \d+ words)"
+    if answer.status != "answered" or not errors or any(not re.fullmatch(allowed, error) for error in errors):
+        return None
+    by_label = {p.label: p for p in ctx}
+    claims = []
+    for claim in answer.claims:
+        citations = [c for c in claim.citations if c.label in by_label and not by_label[c.label].flags
+                     and len(c.quote.split()) <= MAX_QUOTE_WORDS and quote_in(c.quote, by_label[c.label].text)]
+        if citations:
+            claims.append(claim.model_copy(update={"citations": citations}))
+    if not claims:
+        return None
+    caveat = "Some supporting quotes could not be verified and were removed."
+    candidate = answer.model_copy(update={"claims": claims, "caveats": list(dict.fromkeys([*answer.caveats, caveat]))})
+    checked = check(candidate, ctx)
+    return candidate if not checked.errors and not any(n.startswith("claim ") for n in checked.ungrounded_numbers) else None

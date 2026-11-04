@@ -300,7 +300,9 @@ def public_result(raw: dict, shared) -> dict:
     """Expose only cited report fragments, never the tool's full passage registry."""
     answer = raw.get("answer")
     if not isinstance(answer, dict) or raw.get("outcome") not in ("answered", "abstained", "clarify", "refused"):
-        answer = {"status": "abstained", "summary": "The run did not produce a validated answer.", "claims": [], "caveats": [], "reason": "Evidence or service unavailable.", "clarification_question": ""}
+        reason = ("The drafted answer did not pass the citation checks, so I did not show it. Try rephrasing or ask again."
+                  if raw.get("outcome") == "invalid" else "Evidence or service unavailable.")
+        answer = {"status": "abstained", "summary": "The run did not produce a validated answer.", "claims": [], "caveats": [], "reason": reason, "clarification_question": ""}
     answer = _bounded_answer(answer, raw.get("evidence_text", {}), served_annual=raw.get("tool_set") == "annual")
     flagged = _ungrounded_numbers(raw)
     answer["ungrounded_numbers"] = flagged
