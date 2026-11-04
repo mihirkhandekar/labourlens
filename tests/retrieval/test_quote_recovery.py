@@ -11,7 +11,7 @@ from labourlens.answer.context import ContextPassage
 from labourlens.answer.schema import Answer
 from labourlens.answer.validate import check, quote_in, recover_quote_errors, rights_tokens
 
-TEXT = "(from 670 to 870), Information & Communications (from 530 to 720) and Financial Services (from"
+TEXT = "Sector A rose, Information & Communications rose too, and Financial Services also rose"
 
 
 def passage(label="P1", text=TEXT, flags=()):
