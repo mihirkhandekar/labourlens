@@ -1488,9 +1488,7 @@ export function buildProcess(decisionCount) {
     const li = el('li'); li.append(el('strong', '', head), el('code', '', cmd)); list.append(li);
   });
   steps.append(list);
-  const note = el('p', 'g24-note');
-  note.append(el('strong', '', finite(decisionCount) ? String(decisionCount) : 'Many'), document.createTextNode(' decisions logged. Five end-to-end AI reviews found real defects; they were AI, not human.'));
-  wrap.append(loop, cols, steps, note);
+  wrap.append(loop, cols, steps);
   return wrap;
 }
 
