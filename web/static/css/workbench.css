@@ -305,6 +305,9 @@ body:has(dialog[open]) .nav-wrap { opacity: 0; pointer-events: none; transition:
  .wb-panel > * { display: grid; align-content: start; gap: 14px; }
  .wb-panel h2 { font-size: 1.2rem; }
  .wb-source-panel { flex: 1 1 0; min-height: 0; overflow-y: auto; overflow-x: hidden; overscroll-behavior: contain; display: grid; align-content: start; gap: 14px; padding: 16px 2px 4px; border-top: var(--hair); }
+ /* Each scroll viewport owns its positioned descendants and paint. Without a
+    containing block, tab content can paint across the divider into Sources. */
+ .wb-panel, .wb-source-panel { position: relative; contain: paint; isolation: isolate; }
  .wb-source-panel h2 { font-size: 1.2rem; }
  .wb-source-panel .source-list { gap: 18px; }
  .wb-source-panel .source-item { grid-template-columns: auto minmax(0, 1fr) auto; padding: 12px; }

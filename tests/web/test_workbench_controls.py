@@ -593,3 +593,106 @@ def test_activity_follows_streamed_steps_and_data_opens_at_the_end(workbench_url
             page.locator(".answer-bezel.error").wait_for()
         assert page.locator('[data-tab="data"]').get_attribute("aria-selected") == "true"
         browser.close()
+
+
+@pytest.mark.parametrize("width", [1920, 1440, 1024, 390])
+@pytest.mark.parametrize("theme", ["light", "dark"])
+def test_split_rail_clips_each_scroll_area_before_sources(workbench_url, width, theme):
+    """Painted tab content must stop at the Sources boundary, including long Data notes."""
+    playwright = pytest.importorskip("playwright.sync_api")
+    with playwright.sync_playwright() as runtime:
+        browser = runtime.chromium.launch()
+        page = browser.new_page(viewport={"width": width, "height": 900}, reduced_motion="reduce")
+        errors, external = [], []
+        page.on("pageerror", lambda error: errors.append(str(error)))
+        result = answered_fixture()
+        result["evidence"][0]["date"] = "2026-09-22"
+        result["trace"].extend([
+            {"node": "execute_tool", "event": "ok", "detail": {
+                "tool": "get_series", "seconds": 0.1, "args": {"period": f"Fixture {n}"},
+            }} for n in range(30)
+        ])
+        result["trace"].append({"node": "assess_evidence", "event": "evidence_ready", "detail": {
+            "data_quality_notes": [
+                "Synthetic fixture note: definitions must be compared before combining observations.",
+                {"period": "2026-Q1", "definition": "Synthetic fixture definition for overflow review."},
+                "Synthetic fixture final note, retained at the bottom of the Data scroll area.",
+            ],
+        }})
+
+        def intercept(route):
+            url = route.request.url
+            if not url.startswith(workbench_url + "/"):
+                external.append(url)
+                route.abort()
+            elif url.endswith("/api/status"):
+                route.fulfill(json={"enabled": True, "authenticated": True})
+            elif url.endswith("/api/ask/stream"):
+                route.fulfill(json={})  # unsupported stream media type: use the offline JSON route
+            elif url.endswith("/api/ask"):
+                route.fulfill(json=result)
+            elif "/api/" in url:
+                route.fulfill(json={})
+            else:
+                route.continue_()
+
+        page.route("**/*", intercept)
+        page.add_init_script(f"localStorage.setItem('labourlens-theme', '{theme}')")
+        page.goto(workbench_url + "/workbench.html")
+        page.wait_for_function("!document.querySelector('#question-input').disabled")
+        page.locator(".wb-example").first.click()
+        page.locator("#question-input").press("Enter")
+        page.locator(".answer-summary").wait_for()
+        if width < 761:
+            page.locator(".wb-panel-toggle").click()
+        panel = page.locator(".wb-panel")
+        sources = page.locator(".wb-source-panel")
+        assert page.locator(".data-notes").count() == 1
+        output = Path("/tmp/labourlens-workbench-review/scroll-boundary")
+        output.mkdir(parents=True, exist_ok=True)
+
+        def assert_separate_paint():
+            # Off-screen descendants legitimately have layout boxes beyond the scroller.
+            # Inspect their *painted* intersections, not those unclipped layout boxes:
+            # neither viewport may paint content over its neighbour.
+            return page.evaluate("""() => {
+                const panel = document.querySelector('.wb-panel');
+                const sources = document.querySelector('.wb-source-panel');
+                const a = panel.getBoundingClientRect(), b = sources.getBoundingClientRect();
+                if (a.bottom > b.top + 1) return 'scroll viewports overlap';
+                for (const [origin, neighbour] of [[panel, sources], [sources, panel]]) {
+                    const boundary = neighbour.getBoundingClientRect();
+                    for (const node of origin.querySelectorAll('*')) {
+                        const r = node.getBoundingClientRect();
+                        const left = Math.max(r.left, boundary.left), right = Math.min(r.right, boundary.right);
+                        const top = Math.max(r.top, boundary.top), bottom = Math.min(r.bottom, boundary.bottom);
+                        if (right <= left || bottom <= top) continue;
+                        for (const fx of [.1, .5, .9]) {
+                            for (const fy of [.1, .5, .9]) {
+                                const x = left + (right - left) * fx, y = top + (bottom - top) * fy;
+                                if (document.elementsFromPoint(x, y).some(hit => hit === node))
+                                    return `${node.tagName}.${node.className} paints across the scroll boundary`;
+                            }
+                        }
+                    }
+                }
+                return '';
+            }""")
+
+        for tab in ("data", "activity", "mcp"):
+            page.locator(f'[data-tab="{tab}"]').click()
+            for fraction in (0, .25, .5, .75, 1):
+                for source_fraction in (0, 1):
+                    panel.evaluate("(n, f) => { n.scrollTop = (n.scrollHeight - n.clientHeight) * f; }", fraction)
+                    sources.evaluate("(n, f) => { n.scrollTop = (n.scrollHeight - n.clientHeight) * f; }", source_fraction)
+                    assert assert_separate_paint() == ""
+            if tab == "data":
+                # Notes remain reachable and visible above the divider, not merely hidden.
+                final_note = page.locator(".data-notes .detail-list > li").last
+                note_box, panel_box = final_note.bounding_box(), panel.bounding_box()
+                assert note_box["y"] >= panel_box["y"]
+                assert note_box["y"] + note_box["height"] <= panel_box["y"] + panel_box["height"] + 1
+                page.screenshot(path=str(output / f"data-notes-{width}-{theme}.png"))
+        assert not errors
+        assert not external
+        browser.close()

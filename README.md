@@ -1,5 +1,7 @@
 # LabourLens
 
+[![CI](https://github.com/mihirkhandekar/labourlens/actions/workflows/ci.yml/badge.svg)](https://github.com/mihirkhandekar/labourlens/actions/workflows/ci.yml)
+
 I built LabourLens for the GenAI Engineer take-home. Singapore labour-market research often means checking a statistics table against several report releases, then working out which definitions and figures belong together. LabourLens takes a question and returns an answer with citations to official statistics or MOM and MTI reports. It answers for Q1 2020 to Q2 2026 (statistics and MOM report passages both cover the whole window); the workbench shows the source evidence and tool calls behind each answer.
 
 - Statistical values and calculations come from validated rows and deterministic code, not model arithmetic.
@@ -84,6 +86,21 @@ Statistics lookup and `annual_average` cross MCP in the live app; report search 
 
 The default MCP statistics server now exposes ten read-only tools, two resources and one prompt. The served agent uses two of those server tools: `get_series` maps to `get_statistic`, and `annual_average` keeps its name. The other eight server tools are not planner choices. Direct and MCP routes use the same local observations and deterministic operations, not different knowledge sources. The frozen three-tool agent and historical route comparisons remain unchanged: they tested `get_series` transport and removal, not the new annual-average capability.
 
+## Scope
+
+| Area | Choice | Why |
+|---|---|---|
+| Users | Policy researchers and labour-market analysts | I focus on checking figures, definitions and report evidence together. |
+| Period | Q1 2020 to Q2 2026 | I bound answers to the available collection; evaluation covers only 2024 to 2026. |
+| Sources | data.gov.sg statistics, MOM and MTI reports | Official tables provide figures; reports add context and release comparisons. |
+| Out of scope | Forecasting, causal claims, individual advice and open-web research | The collection cannot support predictions, establish causation or answer unrestricted questions. |
+| Agent | One bounded agent with read-only tools | Call and round limits constrain research; tools cannot change source data. |
+| Numbers | Computed by code from validated records | I keep arithmetic separate from model-generated prose and retain input definitions. |
+| Storage | Files and in-memory indexes, no database server or queue | The corpus is small and files are auditable. For production I would use a managed database and queue; see the [Innovation page](https://labourlens.navig.me/innovation). |
+| Models | Hosted language and embedding models | I avoid running a model server, but live answers depend on an outside provider and paid calls. |
+
+The [decisions](docs/decisions.md), [storage guide](docs/storage.md) and [system card](docs/system-card.md) record the choices and their limits.
+
 ## Sample queries
 
 - “How many people were retrenched in Q1 2026, according to the total dataset?” A table lookup.
@@ -96,6 +113,8 @@ The default MCP statistics server now exposes ten read-only tools, two resources
 The empty workbench offers six short, editable examples: lookup, comparison, cross-source context, preliminary/final figures, causal limits and injection resistance. Selecting one fills and focuses the composer; Enter submits and Shift+Enter adds a line. Sending clears the composer; a failed request restores the question. **Stop** aborts the browser request and marks the turn as stopped, although server-side work may still finish. Source cards show labelled provenance fields. Count charts include zero; a non-zero rate axis is labelled, and two observations use a before/after comparison with a data table. Calculation details and feedback sit in collapsed disclosures within the answer. **Jump to latest** appears above the composer only after scrolling away from recent content. Examples disappear with the first message and return after clearing. The clear confirmation initially focuses **Keep chat**; Escape cancels and closing returns focus to **Clear chat**. These are starting questions, not pre-recorded answers or a general safety guarantee.
 
 Offline browser regression coverage: `uv run --with playwright pytest tests/web/test_workbench_controls.py` (requires Playwright Chromium, installed with `uv run --with playwright playwright install chromium`). It uses intercepted API requests and local fixture servers, and checks both themes at 1920, 1440, 1024 and 390 pixels. Review screenshots are written to `/tmp/labourlens-workbench-review`.
+
+The Data, Activity and MCP area scrolls independently above the persistent Sources ledger. Both viewports clip their own content, including Data notes and expanded source metadata, so scrolling either area does not draw over the other.
 
 ## Result
 
