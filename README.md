@@ -6,9 +6,14 @@ I built LabourLens for the GenAI Engineer take-home. Singapore labour-market res
 - Claims require citations, with quoted text checked against the source passage; the system declines when evidence is missing. These checks do not prove that a passage supports a claim.
 - Research tools are read-only, and retrieved text is treated as untrusted data.
 
-[![Workbench demo: a question, the cited answer, the data chart and the activity trace](docs/media/workbench-poster.png)](docs/media/workbench-demo.mp4)
+
+
+
+
 
 *Workbench demo (click to play), sped up to 2x. A live answer takes roughly 10 to 40 seconds, so the recording is shortened.*
+
+https://github.com/user-attachments/assets/4fb2b0a3-efc0-47fc-9fe0-d74143fd739f
 
 ## What I built
 
