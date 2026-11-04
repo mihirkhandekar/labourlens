@@ -1,6 +1,6 @@
 {
   "schema_version": "report-1.0",
-  "generated_at": "2026-11-04T00:17:26.012389+00:00",
+  "generated_at": "2026-11-04T01:22:40.130552+00:00",
   "summary": {
     "title": "LabourLens research workbench",
     "scope": [
@@ -81013,6 +81013,14 @@
         "date": "3 Nov 2026",
         "alternatives": "",
         "summary": "Observed live: annualaverage refused 2026 with notfound and listed 2026-Q3 and 2026-Q4, but the model's abstention omitted that useful explanation"
+      },
+      {
+        "id": "D-093",
+        "title": "Entity-tolerant quotes, served quote recovery and an accurate validation-failure message",
+        "status": "OWNER APPROVED",
+        "date": "4 Nov 2026",
+        "alternatives": "",
+        "summary": "Live failure (run 4eeb720535f3): \"why were the layoffs highest in 2026 Q2?\" ended invalid and the user saw \"Evidence or service unavailable\". Both the draft and the repair failed on one citation: the model quoted Inform…"
       }
     ],
     "milestones": [],
@@ -81030,7 +81038,7 @@
     "The population basis of the dataset employment series is unverified."
   ],
   "provenance": {
-    "commit": "374950eae86ba5cbd3980efdb8423fae58e9d90d",
+    "commit": "b5add74f63c8c229004c5d3423eec385eb1f88d7",
     "artifacts": [
       {
         "path": "data/export/sources.json",
@@ -82268,12 +82276,12 @@
       {
         "path": "docs/decisions.md",
         "status": "available",
-        "sha256": "44911026f48f86fe03f717eb3dc473a11863f1020f40bab3f1f4fabc8954543c"
+        "sha256": "b01ceaf3b0197069d13b70a3ae70026eb5a0b56c899cdd4a0a2ffabdb421e011"
       },
       {
         "path": "docs/progress.md",
         "status": "available",
-        "sha256": "b374078083a53f8c37dac84240f32d7151d9d11b81aeb4dfc136cc68664aa82b"
+        "sha256": "cc06ef039634316eb76e2c384a4d14a9aa72a4e5118d09b7aa0db166a0fe8261"
       }
     ],
     "policy": "Committed artifacts only; numeric fields only."
@@ -82626,7 +82634,7 @@
     "source": {
       "path": "docs/innovation-page.json",
       "sha256": "c1c26c5e488c2ed268dc41a327c2f0fca1e696928f0acac9736a6681ec2623c5",
-      "evidence_commit": "374950eae86ba5cbd3980efdb8423fae58e9d90d"
+      "evidence_commit": "b5add74f63c8c229004c5d3423eec385eb1f88d7"
     }
   }
 }
