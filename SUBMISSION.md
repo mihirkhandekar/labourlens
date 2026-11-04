@@ -8,7 +8,7 @@ I built a Singapore labour-market research assistant for the GenAI Engineer take
 2. [Architecture](docs/architecture.md)
 3. [Evaluation report](docs/evaluation-report.md)
 4. [AI-assisted development](docs/ai-assisted-development.md)
-5. [Requirements matrix](docs/requirements-matrix.md). `partial` there means my sign-off or an external check is still open, not that work is missing.
+5. [Requirements matrix](docs/requirements-matrix.md). `Done` there means working evidence exists; the Limit column says what you should still know.
 
 ## Run it
 
