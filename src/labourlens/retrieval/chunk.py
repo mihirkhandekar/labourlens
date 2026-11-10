@@ -46,6 +46,8 @@ CONFIGS = {
     "merge120": ChunkConfig("merge120", "merge", 120, 30),
     "merge200": ChunkConfig("merge200", "merge", 200, 40),
     "fixed150": ChunkConfig("fixed150", "fixed", 150, 30),
+    "merge300": ChunkConfig("merge300", "merge", 300, 60),
+    "merge400": ChunkConfig("merge400", "merge", 400, 80),
 }
 
 

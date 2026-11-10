@@ -1,0 +1,183 @@
+{
+  "label": "merge120",
+  "config": {
+    "chunk": {
+      "name": "merge120",
+      "mode": "merge",
+      "target_words": 120,
+      "overlap_words": 30,
+      "include_flags": [
+        "ok"
+      ]
+    },
+    "bm25": {
+      "k1": 1.5,
+      "b": 0.75,
+      "tok": {
+        "stem": false,
+        "stopwords": true,
+        "period_normalise": true
+      }
+    },
+    "retriever": "bm25"
+  },
+  "metrics": {
+    "n_cases": 128,
+    "n_chunks": 2494,
+    "corpus_hash": "b17cfb061f371cb846e7a891545e1ce1bcb24c05d048cbf202b92a8f289abe8d",
+    "hit@1": 0.1797,
+    "hit@3": 0.3281,
+    "hit@5": 0.4062,
+    "hit@10": 0.5156,
+    "page_hit@5": 0.4219,
+    "page_hit@10": 0.5391,
+    "mrr": 0.2753,
+    "passage_recall@5": 0.3626,
+    "ctx_words@5": 573.7,
+    "latency_ms_p50": 0.191,
+    "by_family_hit@5": {
+      "adversarial": {
+        "n": 13,
+        "hit@5": 0.385
+      },
+      "ambiguity_insufficient_causal": {
+        "n": 2,
+        "hit@5": 0.0
+      },
+      "cross_source_synthesis": {
+        "n": 34,
+        "hit@5": 0.265
+      },
+      "factual_lookup": {
+        "n": 50,
+        "hit@5": 0.48
+      },
+      "numerical_comparison": {
+        "n": 10,
+        "hit@5": 0.9
+      },
+      "revision_conflict": {
+        "n": 19,
+        "hit@5": 0.263
+      }
+    },
+    "hit@8": 0.4766,
+    "by_family_hit@8": {
+      "adversarial": {
+        "n": 13,
+        "hit@8": 0.3846
+      },
+      "ambiguity_insufficient_causal": {
+        "n": 2,
+        "hit@8": 0.5
+      },
+      "cross_source_synthesis": {
+        "n": 34,
+        "hit@8": 0.3235
+      },
+      "factual_lookup": {
+        "n": 50,
+        "hit@8": 0.54
+      },
+      "numerical_comparison": {
+        "n": 10,
+        "hit@8": 1.0
+      },
+      "revision_conflict": {
+        "n": 19,
+        "hit@8": 0.3684
+      }
+    },
+    "mean_chunk_words": 96.39,
+    "total_chunk_words": 240406,
+    "chunk_config_hash": "f462aa03",
+    "chunk_ids_sha256": "2a6288fef3d75546703fe8bd2b74337565f488e9a48c75a9134244259293b5a0",
+    "gold_passages_in_at_least_4x_chunk": 33,
+    "deterministic_rebuild": true,
+    "paired_vs_merge200": {
+      "rank_better": 31,
+      "rank_worse": 24,
+      "rank_same": 73,
+      "hit8_better": 9,
+      "hit8_worse": 9,
+      "hit8_same": 110,
+      "hit8_difference": 0.0,
+      "hit8_difference_bootstrap95": [
+        -0.0625,
+        0.0625
+      ]
+    },
+    "paired_vs_merge120": {
+      "rank_better": 0,
+      "rank_worse": 0,
+      "rank_same": 128,
+      "hit8_better": 0,
+      "hit8_worse": 0,
+      "hit8_same": 128,
+      "hit8_difference": 0.0,
+      "hit8_difference_bootstrap95": [
+        0.0,
+        0.0
+      ]
+    }
+  },
+  "secondary": {
+    "n_cases": 23,
+    "hit@1": 0.1304,
+    "hit@3": 0.3913,
+    "hit@5": 0.4348,
+    "hit@8": 0.4783,
+    "hit@10": 0.4783,
+    "mrr": 0.2678,
+    "passage_recall@5": 0.3333,
+    "ctx_words@5": 578.1,
+    "by_family_hit@8": {
+      "adversarial": {
+        "n": 2,
+        "hit@8": 1.0
+      },
+      "cross_source_synthesis": {
+        "n": 7,
+        "hit@8": 0.2857
+      },
+      "factual_lookup": {
+        "n": 8,
+        "hit@8": 0.5
+      },
+      "numerical_comparison": {
+        "n": 2,
+        "hit@8": 1.0
+      },
+      "revision_conflict": {
+        "n": 4,
+        "hit@8": 0.25
+      }
+    },
+    "paired_vs_merge200": {
+      "rank_better": 2,
+      "rank_worse": 4,
+      "rank_same": 17,
+      "hit8_better": 0,
+      "hit8_worse": 1,
+      "hit8_same": 22,
+      "hit8_difference": -0.0435,
+      "hit8_difference_bootstrap95": [
+        -0.1304,
+        0.0
+      ]
+    },
+    "paired_vs_merge120": {
+      "rank_better": 0,
+      "rank_worse": 0,
+      "rank_same": 23,
+      "hit8_better": 0,
+      "hit8_worse": 0,
+      "hit8_same": 23,
+      "hit8_difference": 0.0,
+      "hit8_difference_bootstrap95": [
+        0.0,
+        0.0
+      ]
+    }
+  }
+}

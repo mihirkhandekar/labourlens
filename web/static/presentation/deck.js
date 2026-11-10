@@ -6,6 +6,7 @@ import {el, reduced, setTipFormatter} from '../charts.js';
 import {slideSpecs} from './slides.js';
 import {withoutSecondModel, scrubDom} from './model.js';
 import {chartLines, tightenLabels, tipNotes} from './tooltips.js';
+import {experimentsSpec, experimentTarget, revealExperiment} from './experiments.js';
 
 const DESIGN_W = 1920, DESIGN_H = 1080, CHART_W = 600;
 const printing = /[?&]print-pdf/.test(location.search);
@@ -69,6 +70,7 @@ function buildSlide(spec) {
   section.dataset.chapter = spec.chapter || '';
   section.dataset.title = spec.title || '';
   if (spec.chapter === 'Appendix' || spec.layout === 'appendix') section.dataset.appendix = '';
+  if (spec.id === 'experiments') section.dataset.experiments = '';
   const inner = el('div', `deck-slide is-${spec.layout}${spec.cls ? ` ${spec.cls}` : ''}${spec.warn ? ' is-warn' : ''}`);
   const heading = el(spec.layout === 'title' ? 'h1' : 'h2', 'deck-title', spec.title);
   if (spec.layout !== 'title') inner.append(heading);
@@ -151,13 +153,15 @@ function main(report) {
     slidesHost.append(buildSlide({layout: 'text', title: 'The report data could not be loaded', bullets: ['Rebuild it with: uv run labourlens build-report.'], notes: ['report.json is missing or malformed.']}));
   }
   specs.forEach(spec => slidesHost.append(buildSlide(spec)));
+  if (specs.length) slidesHost.append(buildSlide(experimentsSpec()));
   scrubDom(slidesHost);
 
   const slides = () => [...slidesHost.querySelectorAll(':scope > section')];
   // Detach, rather than visually hide, references so every Reveal view uses the same slide set.
   const allSlides = slides();
   const appendixSlides = allSlides.filter(slide => 'appendix' in slide.dataset);
-  const mainSlides = allSlides.filter(slide => !('appendix' in slide.dataset));
+  const experimentSlides = allSlides.filter(slide => 'experiments' in slide.dataset);
+  const mainSlides = allSlides.filter(slide => !('appendix' in slide.dataset) && !('experiments' in slide.dataset));
   function appendixTarget(hash) {
     let path;
     try { path = decodeURIComponent(hash.replace(/^#\/?/, '')); } catch { return null; }
@@ -172,6 +176,8 @@ function main(report) {
   let appendicesVisible = Boolean(appendixTarget(location.hash));
   appendixSlides.forEach(slide => slide.remove());
   if (appendicesVisible) slidesHost.append(...appendixSlides);
+  let experimentsVisible = false;
+  experimentSlides.forEach(slide => slide.remove());
   const deck = new Reveal(root, {
     ...sizeConfig(), center: false, controls: false, progress: true, slideNumber: false, hash: true, hashOneBasedIndex: true,
     transition: reduced() ? 'none' : 'fade', transitionSpeed: 'default', backgroundTransition: 'none', autoAnimate: false,
@@ -188,12 +194,39 @@ function main(report) {
         history.replaceState(null, '', `#/${mainSlides.length}`);
       }
       appendicesVisible = visible;
-      if (visible) slidesHost.append(...appendixSlides);
+      if (visible) {
+        // References retain their original indices, even when the notebook is open.
+        experimentSlides.forEach(slide => slide.remove());
+        slidesHost.append(...appendixSlides);
+        if (experimentsVisible) slidesHost.append(...experimentSlides);
+      }
       else appendixSlides.forEach(slide => slide.remove());
       deck.sync();
     }
     if (target) deck.slide(slides().indexOf(target));
     sync({type: 'ready'});
+  }
+  let experimentReturn = null;
+  function setExperiments(visible) {
+    deck.toggleOverview(false);
+    if (visible) {
+      experimentReturn = deck.getCurrentSlide();
+      const card = experimentTarget(experimentReturn);
+      experimentsVisible = true;
+      slidesHost.append(...experimentSlides);
+      deck.sync();
+      deck.slide(slides().indexOf(experimentSlides[0]));
+      sync({type: 'ready'});
+      revealExperiment(experimentSlides[0], card);
+      return;
+    }
+    const back = slides().indexOf(experimentReturn);
+    deck.slide(back >= 0 ? back : mainSlides.length - 1);
+    experimentsVisible = false;
+    experimentSlides.forEach(slide => slide.remove());
+    deck.sync();
+    sync({type: 'ready'});
+    experimentReturn = null;
   }
   // Run before Reveal's bubbling hash listener: restore the target, sync and jump before
   // Reveal tries resolving a detached id. This also handles numeric appendix bookmarks.
@@ -281,6 +314,24 @@ function main(report) {
   // double press in capture phase, including while the overview is open.
   deck.addKeyBinding({keyCode: 65, key: 'A A', description: 'Show or hide appendices (double press within 400 ms)'}, () => {});
   deck.registerKeyboardShortcut('X X', 'Show or hide speaker notes (double press within 450 ms)');
+  // E is unassigned by Reveal; reserve it so a single press cannot trigger another action.
+  deck.addKeyBinding({keyCode: 69, key: 'E E', description: 'Show or hide experiments (double press within 400 ms)'}, () => {});
+  let lastE = null;
+  document.addEventListener('keydown', event => {
+    if (event.key.toLowerCase() !== 'e') { lastE = null; return; }
+    const target = event.target;
+    if (event.repeat || event.ctrlKey || event.metaKey || event.altKey ||
+        target instanceof HTMLElement && (target.isContentEditable || ['INPUT', 'TEXTAREA', 'SELECT'].includes(target.tagName))) {
+      lastE = null;
+      return;
+    }
+    event.preventDefault();
+    event.stopImmediatePropagation();
+    lastA = null;
+    const now = performance.now();
+    if (lastE !== null && now - lastE <= 400) { lastE = null; setExperiments(!experimentsVisible); }
+    else lastE = now;
+  }, true);
   let lastA = null;
   document.addEventListener('keydown', event => {
     if (event.key.toLowerCase() !== 'a') { lastA = null; return; }
@@ -327,10 +378,11 @@ function main(report) {
     const slide = deck.getCurrentSlide();
     const all = slides();
     const index = all.indexOf(slide);
-    counter.textContent = `${index + 1} / ${all.length}`;
+    const counted = all.filter(node => !('experiments' in node.dataset));
+    counter.textContent = experimentSlides.includes(slide) ? `Experiments · ${mainSlides.length} main` : `${counted.indexOf(slide) + 1} / ${counted.length}`;
     chapter.textContent = slide?.dataset.chapter || '';
     prev.disabled = index <= 0; next.disabled = index >= all.length - 1;
-    live.textContent = `Slide ${index + 1} of ${all.length}: ${slide?.dataset.title || ''}`;
+    live.textContent = experimentSlides.includes(slide) ? 'Experiment notebook' : `Slide ${counted.indexOf(slide) + 1} of ${counted.length}: ${slide?.dataset.title || ''}`;
     if (!drawer.hidden) renderNotes();
     if (event?.type !== 'ready') enter(slide, event?.previousSlide); else enter(slide, null);
     setTimeout(() => remember(slide), 700);

@@ -1658,3 +1658,46 @@ ul.g24-list { list-style: none; padding-left: 0; }
   .fr-family h3 { font-size: 20px; } .fr-count { font-size: 16px; } .fr-count strong { font-size: 19px; }
   .fr-served, .failure-results-quality, .failure-results-caveat { font-size: 16px; }
 }
+
+/* The hidden experiment notebook uses the reference slide's scroll region and theme. */
+.experiments-content { font-size: 28px; line-height: 1.45; min-width: 0; }
+.experiments-intro { max-width: 90ch; margin-bottom: 26px; color: var(--ink-2); }
+.experiment-entry { border-top: 1px solid var(--line-strong); padding: 20px 0; }
+.experiment-entry > summary { cursor: pointer; font-size: 32px; font-weight: 600; color: var(--ink); }
+.experiment-entry > summary:focus-visible { outline: 3px solid var(--accent); outline-offset: 5px; }
+.experiment-entry > p { margin: 18px 0; max-width: 95ch; }
+.experiment-entry h3 { font-size: 28px; margin-top: 28px; }
+.experiment-table { overflow-x: auto; margin: 24px 0; padding-bottom: 8px; }
+.experiment-table table { border-collapse: collapse; width: 100%; font-size: 25px; font-variant-numeric: tabular-nums; }
+.experiment-table caption { text-align: left; color: var(--ink-2); margin-bottom: 12px; }
+.experiment-table th, .experiment-table td { padding: 12px 18px; text-align: left; border-bottom: 1px solid var(--line); white-space: nowrap; }
+.experiment-table th { font-weight: 600; color: var(--ink); }
+.experiment-table td { color: var(--ink-2); }
+.experiment-source { font-size: 22px; color: var(--muted); overflow-wrap: anywhere; margin-top: 12px; }
+.experiment-takeaway { color: var(--accent); font-weight: 500; }
+.experiment-index { position: sticky; top: 0; z-index: 3; display: flex; gap: 36px; padding: 18px 0; background: var(--paper); border-bottom: 1px solid var(--line-strong); }
+.experiment-index a { color: var(--accent); font-weight: 600; }
+.experiment-overview th, .experiment-overview td { white-space: normal; min-width: 10ch; vertical-align: top; }
+.experiment-overview td:nth-child(2) { width: 30%; }
+.experiment-overview td:nth-child(3) { width: 40%; }
+.experiment-group-title { font-size: 42px; margin-top: 44px; padding-bottom: 16px; }
+.experiment-entry, .experiment-group-title { scroll-margin-top: 90px; }
+@media (max-width: 1100px) {
+  .experiments-content { font-size: 32px; }
+  .experiment-entry > summary { font-size: 36px; }
+  .experiment-table table { font-size: 30px; }
+  .experiment-source { font-size: 28px; }
+}
+@media (max-width: 800px) {
+  .experiments-content { font-size: 16px; }
+  .experiment-entry > summary { font-size: 20px; }
+  .experiment-table table, .experiment-source { font-size: 16px; }
+  .experiment-index { gap: 20px; flex-wrap: wrap; }
+  .experiment-group-title { font-size: 26px; }
+}
+@media print {
+  .experiment-index { position: static; }
+  .experiment-entry:not([open]) { display: none; }
+  .experiment-table { overflow: visible; }
+  .experiment-table th, .experiment-table td { white-space: normal; overflow-wrap: anywhere; }
+}

@@ -1,0 +1,197 @@
+{
+  "label": "merge400",
+  "config": {
+    "chunk": {
+      "name": "merge400",
+      "mode": "merge",
+      "target_words": 400,
+      "overlap_words": 80,
+      "include_flags": [
+        "ok"
+      ]
+    },
+    "bm25": {
+      "k1": 1.5,
+      "b": 0.75,
+      "tok": {
+        "stem": false,
+        "stopwords": true,
+        "period_normalise": true
+      }
+    },
+    "retriever": "bm25"
+  },
+  "metrics": {
+    "n_cases": 128,
+    "n_chunks": 1494,
+    "corpus_hash": "9c6fe55d12e34824360b42b97b37120cb4c8fc0fa691f0e3c181373341e2cc1a",
+    "hit@1": 0.1641,
+    "hit@3": 0.3359,
+    "hit@5": 0.4297,
+    "hit@10": 0.5312,
+    "page_hit@5": 0.4297,
+    "page_hit@10": 0.5312,
+    "mrr": 0.2733,
+    "passage_recall@5": 0.3553,
+    "ctx_words@5": 1246.7,
+    "latency_ms_p50": 0.173,
+    "by_family_hit@5": {
+      "adversarial": {
+        "n": 13,
+        "hit@5": 0.462
+      },
+      "ambiguity_insufficient_causal": {
+        "n": 2,
+        "hit@5": 0.0
+      },
+      "cross_source_synthesis": {
+        "n": 34,
+        "hit@5": 0.265
+      },
+      "factual_lookup": {
+        "n": 50,
+        "hit@5": 0.58
+      },
+      "numerical_comparison": {
+        "n": 10,
+        "hit@5": 0.7
+      },
+      "revision_conflict": {
+        "n": 19,
+        "hit@5": 0.211
+      }
+    },
+    "hit@8": 0.5,
+    "by_family_hit@8": {
+      "adversarial": {
+        "n": 13,
+        "hit@8": 0.4615
+      },
+      "ambiguity_insufficient_causal": {
+        "n": 2,
+        "hit@8": 0.0
+      },
+      "cross_source_synthesis": {
+        "n": 34,
+        "hit@8": 0.3235
+      },
+      "factual_lookup": {
+        "n": 50,
+        "hit@8": 0.66
+      },
+      "numerical_comparison": {
+        "n": 10,
+        "hit@8": 0.9
+      },
+      "revision_conflict": {
+        "n": 19,
+        "hit@8": 0.2632
+      }
+    },
+    "mean_chunk_words": 157.15,
+    "total_chunk_words": 234785,
+    "chunk_config_hash": "74645ed2",
+    "chunk_ids_sha256": "1d63a6d01d4a71c6f98e3700c5d1c5f4bccf19428b785c3633a3da1c62225be3",
+    "gold_passages_in_at_least_4x_chunk": 84,
+    "deterministic_rebuild": true,
+    "estimated_fresh_embedding": {
+      "tokens": 312264,
+      "assumption_tokens_per_word": 1.33,
+      "usd_by_model": {
+        "text-embedding-3-small": 0.006245,
+        "text-embedding-3-large": 0.040594,
+        "text-embedding-ada-002": 0.031226
+      }
+    },
+    "estimated_R3_candidate_text_only": {
+      "tokens": 802606,
+      "model": "gpt-6-luna",
+      "input_usd": 0.080261
+    },
+    "paired_vs_merge200": {
+      "rank_better": 28,
+      "rank_worse": 21,
+      "rank_same": 79,
+      "hit8_better": 7,
+      "hit8_worse": 4,
+      "hit8_same": 117,
+      "hit8_difference": 0.0234,
+      "hit8_difference_bootstrap95": [
+        -0.0234,
+        0.0703
+      ]
+    },
+    "paired_vs_merge120": {
+      "rank_better": 28,
+      "rank_worse": 27,
+      "rank_same": 73,
+      "hit8_better": 12,
+      "hit8_worse": 9,
+      "hit8_same": 107,
+      "hit8_difference": 0.0234,
+      "hit8_difference_bootstrap95": [
+        -0.0469,
+        0.0938
+      ]
+    }
+  },
+  "secondary": {
+    "n_cases": 23,
+    "hit@1": 0.2174,
+    "hit@3": 0.4348,
+    "hit@5": 0.5652,
+    "hit@8": 0.5652,
+    "hit@10": 0.5652,
+    "mrr": 0.3471,
+    "passage_recall@5": 0.3576,
+    "ctx_words@5": 1268.2,
+    "by_family_hit@8": {
+      "adversarial": {
+        "n": 2,
+        "hit@8": 1.0
+      },
+      "cross_source_synthesis": {
+        "n": 7,
+        "hit@8": 0.2857
+      },
+      "factual_lookup": {
+        "n": 8,
+        "hit@8": 0.625
+      },
+      "numerical_comparison": {
+        "n": 2,
+        "hit@8": 1.0
+      },
+      "revision_conflict": {
+        "n": 4,
+        "hit@8": 0.5
+      }
+    },
+    "paired_vs_merge200": {
+      "rank_better": 5,
+      "rank_worse": 2,
+      "rank_same": 16,
+      "hit8_better": 1,
+      "hit8_worse": 0,
+      "hit8_same": 22,
+      "hit8_difference": 0.0435,
+      "hit8_difference_bootstrap95": [
+        0.0,
+        0.1304
+      ]
+    },
+    "paired_vs_merge120": {
+      "rank_better": 7,
+      "rank_worse": 2,
+      "rank_same": 14,
+      "hit8_better": 2,
+      "hit8_worse": 0,
+      "hit8_same": 21,
+      "hit8_difference": 0.087,
+      "hit8_difference_bootstrap95": [
+        0.0,
+        0.2174
+      ]
+    }
+  }
+}
