@@ -22,6 +22,15 @@ OLD = {
 }
 
 
+def short_locators(row):
+    """Saved case files keep at most six words of a heading locator (rights policy: quotes of at most six words)."""
+    ranked = []
+    for x in row["ranked"]:
+        words = x["locator"].split()
+        ranked.append({**x, "locator": x["locator"] if len(words) <= 6 else " ".join(words[:6]) + " …"})
+    return {**row, "ranked": ranked}
+
+
 def sha(data: bytes) -> str:
     return hashlib.sha256(data).hexdigest()
 
@@ -146,7 +155,7 @@ def main() -> None:
     exclusive(out / "provenance.json", json.dumps(provenance, indent=2) + "\n")
     for name, r in results.items():
         exclusive(out / f"{name}.metrics.json", json.dumps({"label": name, "config": r["config"], "metrics": r["metrics"], "secondary": r["secondary"]}, indent=2) + "\n")
-        exclusive(out / f"{name}.cases.jsonl", "\n".join(json.dumps(row) for row in r["rows"]) + "\n")
+        exclusive(out / f"{name}.cases.jsonl", "\n".join(json.dumps(short_locators(row)) for row in r["rows"]) + "\n")
     exclusive(summary_path, "\n".join(lines) + "\n")
     print("\n".join(lines))
     print("PASS: six configs rebuilt twice; identical rows and all non-timing metrics; old config/chunk ids unchanged; v3.1 files and merge200 corpus fingerprint verified.")

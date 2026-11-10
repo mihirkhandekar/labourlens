@@ -1675,6 +1675,12 @@ ul.g24-list { list-style: none; padding-left: 0; }
 .experiment-table td { color: var(--ink-2); }
 .experiment-source { font-size: 22px; color: var(--muted); overflow-wrap: anywhere; margin-top: 12px; }
 .experiment-takeaway { color: var(--accent); font-weight: 500; }
+.experiment-field > strong, .experiment-calculated > strong, .experiment-takeaway > strong, .experiment-decision > strong { color: var(--ink); font-weight: 600; }
+.experiment-calculated, .experiment-decision { border-left: 4px solid var(--accent); padding: 6px 0 6px 20px; background: transparent; }
+.experiment-decision { font-weight: 500; }
+.experiment-terms { margin: 22px 0; padding: 4px 0 4px 20px; border-left: 4px solid var(--line-strong); font-size: 0.9em; color: var(--ink-2); }
+.experiment-term { margin: 10px 0; }
+.experiment-term > strong { color: var(--ink); }
 .experiment-index { position: sticky; top: 0; z-index: 3; display: flex; gap: 36px; padding: 18px 0; background: var(--paper); border-bottom: 1px solid var(--line-strong); }
 .experiment-index a { color: var(--accent); font-weight: 600; }
 .experiment-overview th, .experiment-overview td { white-space: normal; min-width: 10ch; vertical-align: top; }

@@ -1248,7 +1248,7 @@ export const EXPERIMENTS_B = [
         "Hard validation passed."
       ]
     },
-    "takeaway": "The original comparison demonstrates a gain under the registered rule.",
+    "takeaway": "r3 scored higher than hybrid on the 31 original cases (.871 against .710), but the paired interval [0.000, 0.323] reaches zero, so no gain is demonstrated.",
     "doesNotShow": "Rescoring old answers after label changes is not a fresh prospective test; sources also disagree on whole-set evidence reuse: 15/31 in evaluation-report.md versus 14/31 in decisions.md.",
     "status": "measured",
     "sources": [

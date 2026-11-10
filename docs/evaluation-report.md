@@ -91,6 +91,13 @@ The development retrieval headline needs its definition alongside it: **96.9% ve
 
 The table below is the compact experiment index. Unless specified, answer-status results use the primary model, `gpt-6-luna`. Final comparisons average two runs and use 95% paired case-bootstrap intervals. Other studies have their own denominators and designs; their links preserve the full tables.
 
+**How to read each row.** Every row compares two settings on the same questions.
+
+- **What was calculated.** *Behaviour* is the share of questions where the system chose the expected status: answer, abstain, clarify or refuse. It does not show that an answer's contents are correct. *Hit@8* is the share of questions where a labelled evidence passage sits in the first eight chunks returned. A *point* is one percentage point. An interval in square brackets is a 95% paired case-bootstrap interval: if it includes zero, no difference is demonstrated.
+- **What the result means.** The *Interpretation* column says what a row does and does not show. Development rows describe questions that shaped the design, so they are not independent tests.
+- **What was chosen.** Filter-then-rerank stays the provisional retrieval setting, with no demonstrated answer-status gain on either test set (D-056, D-061). The bounded agent stays rather than the fixed workflow (D-073, D-074). Statistics lookup stays, and live MCP routes statistics only. The report-arithmetic tool bundle (D-048) and the Decisions API replacements (D-076) were rejected. `gpt-6-luna` stays primary on cost, not accuracy (D-061).
+- **Every experiment, in one format.** The [experiment notebook](experiments/experiment-notebook.md) lists all 52 saved experiments (retrieval, generation, agent, threat). Each card gives what we wanted to know, what we changed, what we calculated, the result, what we found, what we chose and what it does not show. It is generated from the same data as the deck's experiment page (press E twice in the deck).
+
 ### Experiment table
 
 | Comparison | Questions | Measured result | Interpretation and evidence |

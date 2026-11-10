@@ -29,7 +29,7 @@ Run date: 2026-11-10. All 49 passage-file hashes, all 16,419 passages, and the s
 
 B/W/S compares first relevant rank, not binary hits. For paired **hit@8 versus merge200**, merge300 has 3 better / 4 worse / 121 same, difference −0.78 percentage points, bootstrap 95% interval [−4.69, +3.12] points. Merge400 has 7 better / 4 worse / 117 same, difference +2.34 points, interval [−2.34, +7.03] points. One primary case is 0.78125 points. Both intervals include zero; these are exploratory, correlated development cases, not a claim of significance or independent test performance.
 
-Full primary/secondary tables, family hit@8, and worked-example records: [isolated summary](../../experiments/runs/dev-E1b-chunk-size-SUMMARY.md). Per-config `*.metrics.json` and `*.cases.jsonl`, and `provenance.json`, are in `experiments/runs/dev-E1b-chunk-size/`. Metrics contain both baseline paired comparisons, including binary hit@8 intervals; cases contain ranked ids/scores/locators/word counts without passage text.
+Full primary/secondary tables, family hit@8, and worked-example records: [isolated summary](../../experiments/runs/dev-E1b-chunk-size-SUMMARY.md). Per-config `*.metrics.json` and `*.cases.jsonl`, and `provenance.json`, are in `experiments/runs/dev-E1b-chunk-size/`. Metrics contain both baseline paired comparisons, including binary hit@8 intervals; cases contain ranked ids/scores/locators/word counts without passage text. Heading locators longer than six words are cut to their first six words followed by an ellipsis, to stay within the six-word quotation limit (rights scan); the cut was applied to the saved files and to the runner.
 
 ### Secondary: original E1 ids identified, but one label changed
 

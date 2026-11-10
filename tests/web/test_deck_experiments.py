@@ -262,3 +262,30 @@ def test_notebook_group_links_layout_and_offline_requests(deck_page, width, them
     assert p.locator(".experiment-index").evaluate("n => getComputedStyle(n).position") == "sticky"
     press_e(p, [2000, 2100])
     assert p.locator("#experiments").count() == 0
+
+
+def test_cards_explain_their_short_labels(deck_page):
+    p = deck_page
+    n = p.evaluate("t => [...document.querySelectorAll('.slides > section')].findIndex(s => s.dataset.title === t) + 1", "Does filtering help?")
+    p.evaluate("n => { location.hash = '#/' + n; }", n)
+    press_e(p, [1000, 1100])
+    p.wait_for_timeout(300)
+    card = p.locator("#experiment-r-series")
+    labels = card.locator(".experiment-terms").inner_text()
+    for term in ["R0", "R1a", "R1b", "R2", "R3", "hit@k"]:
+        assert term in labels
+    assert "Hard period/release filter" in labels
+    glossary = p.locator("#experiment-glossary")
+    glossary.locator("summary").click()
+    assert "Reciprocal rank fusion" in glossary.inner_text()
+
+
+def test_report_notebook_page_matches_deck_data():
+    import shutil
+    import subprocess
+
+    node = shutil.which("node")
+    if node is None:
+        pytest.skip("node is not installed")
+    run = subprocess.run([node, str(ROOT / "scripts/build_experiment_notebook.mjs"), "--check"], capture_output=True, text=True, cwd=ROOT)
+    assert run.returncode == 0, run.stderr

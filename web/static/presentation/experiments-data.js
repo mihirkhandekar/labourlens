@@ -549,7 +549,7 @@ export default {
               "relevant": 1,
               "words": 323,
               "source_id": "mom-2026-q2-final-release",
-              "locator": "section: Main Findings, item 1 to section: Main Findings, item 4"
+              "locator": "section: Main Findings, item 1 to …"
             },
             {
               "chunk_id": "cd969a40acea313e",
