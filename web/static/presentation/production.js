@@ -58,21 +58,19 @@ export function productionArchitecture() {
     node.addEventListener('blur', hide);
     node.addEventListener('keydown', event => { if (event.key === 'Escape') hide(); });
   };
-  const box = (x, y, w, h, title, lines, detail, {accent = false, dashed = false} = {}) => {
+  const box = (x, y, w, h, title, lines, detail, group, {accent = false} = {}) => {
     const node = svgEl('g', {class: 'production-node'});
-    const attrs = {
-      x, y, width: w, height: h, rx: 12,
+    node.append(svgEl('rect', {
+      x, y, width: w, height: h, rx: 14,
       fill: accent ? 'var(--paper-2)' : 'var(--paper)',
       stroke: accent ? 'var(--accent)' : 'var(--line-strong)',
       'stroke-width': accent ? 2 : 1.5
-    };
-    if (dashed) attrs['stroke-dasharray'] = '7 5';
-    node.append(svgEl('rect', attrs));
-    text(node, x + 17, y + 32, title, 26, accent ? '--accent' : '--ink', 600);
-    lines.forEach((value, i) => text(node, x + 17, y + 62 + i * 27, value, 24));
+    }));
+    text(node, x + 22, y + 44, title, 32, accent ? '--accent' : '--ink', 600);
+    lines.forEach((value, i) => text(node, x + 22, y + 86 + i * 34, value, 26));
     attachTip(node, x + w / 2, title, detail);
     svg.append(node);
-    entries.push({group: y < 300 ? 'Proposed request flow' : y < 550 ? 'Proposed evidence services' : 'Proposed operational controls', title, lines, detail});
+    entries.push({group, title, lines, detail});
     return node;
   };
 
@@ -83,79 +81,65 @@ export function productionArchitecture() {
     fill: 'var(--paper-2)', stroke: 'var(--accent)', 'stroke-width': 2
   }));
   text(current, 32, 46, 'Built today', 29, '--accent', 600);
-  text(current, 260, 46, 'Single Droplet: Caddy → Docker → LabourLens', 27, '--ink', 500);
-  text(current, 1000, 46, 'Controls below are proposed, not deployed.', 25, '--muted');
+  text(current, 260, 46, 'One Droplet: Caddy → Docker → LabourLens', 27, '--ink', 500);
+  text(current, 1100, 46, 'Everything below is proposed.', 25, '--muted');
   attachTip(current, 840, 'Built today', 'The current deployment uses one Droplet, Caddy and Docker. Replication, managed services and the production controls below are proposals, not completed work.');
   svg.append(current);
   entries.push({
     group: 'Current deployment',
     title: 'Built today',
-    lines: ['Single Droplet', 'Caddy → Docker → LabourLens', 'Controls below are proposed, not deployed.'],
+    lines: ['One Droplet', 'Caddy → Docker → LabourLens', 'Everything below is proposed.'],
     detail: 'The current deployment uses one Droplet, Caddy and Docker. Replication, managed services and the production controls below are proposals, not completed work.'
   });
 
-  text(svg, 25, 119, 'Proposed production architecture', 34, '--ink', 600);
-  text(svg, 25, 151, 'Authenticated access, bounded execution and versioned evidence. Read only at answer time.', 25, '--muted');
+  text(svg, 25, 125, 'Proposed production design', 34, '--ink', 600);
+  text(svg, 25, 164, 'A question travels left to right; evidence is read only at answer time.', 26, '--muted');
 
-  // Solid arrows carry requests or evidence. The return path carries server-sent events.
-  line('M305 230 H350');
-  line('M645 230 H690');
-  line('M1000 230 H1045');
-  line('M1340 230 H1385');
-  line('M1192 285 V319 H167 V285');
-  text(svg, 370, 310, 'SSE: task state, tool activity and final answer', 24, '--muted');
+  const path = 'Proposed request path';
+  box(25, 190, 385, 140, 'Protected access', ['CDN, WAF, rate limits', 'SSO, per-user credentials'],
+    'Cache public assets, filter hostile requests and limit abuse before traffic reaches the application. Use SSO with short-lived sessions and per-user credentials, and authorise every request. Never cache private answers in a shared CDN.', path);
+  box(440, 190, 385, 140, 'API replicas', ['Behind a load balancer', 'Job state kept outside'],
+    'Balance requests across stateless API replicas. Keep job state outside the replicas so a reconnecting user can resume their own event stream.', path);
+  box(855, 190, 385, 140, 'Queued workers', ['Deadlines and retries', 'Progress streamed to user'],
+    'Queue research and ingestion separately. Workers enforce deadlines, limited retries and cancellation; persisted job events let any API replica stream progress by server-sent events.', path);
+  box(1270, 190, 385, 140, 'Model gateway', ['Budgets, PII redaction', 'Evaluated-model failover'],
+    'Redact personal data before provider calls. Enforce user budgets, isolate caches by access scope and version, and fail over only to models that have been evaluated.', path, {accent: true});
+  line('M410 260 H440');
+  line('M825 260 H855');
+  line('M1240 260 H1270');
 
-  box(25, 175, 280, 110, 'Edge / CDN', ['WAF and rate limits', 'Browser access / TLS'],
-    'Cache public assets, filter hostile requests and limit abuse before traffic reaches the application. Never cache private answers in the shared CDN.');
-  box(350, 175, 295, 110, 'Identity', ['SSO and user sessions', 'Per-user credentials'],
-    'Use SSO with short-lived sessions and per-user credentials. Authorise each request and bind queued jobs, evidence access and event streams to the user.');
-  box(690, 175, 310, 110, 'Load balancer', ['Stateless API replicas', 'External job state'],
-    'Balance requests across stateless API replicas. Keep job state outside replicas so reconnecting users can resume their own event stream.');
-  box(1045, 175, 295, 110, 'Async queue', ['Async workers', 'Research and ingestion'],
-    'Queue research and ingestion separately. Workers enforce deadlines, limited retries and cancellation; persisted job events let API replicas stream progress through SSE.');
-  box(1385, 175, 270, 110, 'LLM gateway', ['Budget and failover', 'Cache / PII redaction'],
-    'Redact personal data before provider calls. Enforce user budgets, isolate caches by access scope and version, and fail over only to evaluated models.', {accent: true});
+  // Workers reach evidence through read-only services, not arbitrary network destinations.
+  text(svg, 330, 402, 'Read-only evidence, versioned', 28, '--ink', 600);
+  line('M1047 330 V360 H272 V420');
+  line('M1047 360 V420');
+  line('M1047 360 H1412 V420');
+  const evidence = 'Read-only evidence';
+  box(25, 420, 495, 140, 'Versioned sources', ['Immutable snapshots, checksums', 'Rights-aware access'],
+    'Preserve immutable source snapshots and checksums. Restrict PDFs and extracted text according to source rights; do not assume public availability permits redistribution.', evidence);
+  box(592, 420, 495, 140, 'Search and statistics', ['Hybrid BM25 + dense index', 'Versioned Parquet, exact maths'],
+    'Keep keyword and vector indexes on the same evidence version and apply access and release filters before retrieval, keeping passage provenance for every citation. Store validated observations as versioned Parquet with definitions, units and revision status, and run read-only deterministic calculations.', evidence);
+  box(1160, 420, 495, 140, 'Read-only MCP service', ['Separate network boundary', 'Allowlists, no write access'],
+    'Expose typed read-only tools from a separate service. Enforce service identity, schemas, timeouts and network policy; treat all returned content as untrusted.', evidence);
 
-  // Worker evidence access branches to search and the isolated MCP service, not arbitrary network destinations.
-  line('M1192 285 V344 H585 V375');
-  line('M1192 344 H965 V375');
-  line('M1192 344 H205 V375', {dashed: true});
-  text(svg, 1215, 365, 'Evidence services', 24, '--muted', 500);
-  line('M1140 440 H1175');
-  line('M380 440 H415', {dashed: true});
+  // These controls span the whole environment rather than forming steps in an answer.
+  const around = svgEl('g', {class: 'production-node'});
+  around.append(svgEl('rect', {x: 25, y: 600, width: 1630, height: 80, rx: 14, fill: 'var(--paper)', stroke: 'var(--line-strong)', 'stroke-width': 1.5, 'stroke-dasharray': '7 5'}));
+  text(around, 47, 648, 'Around everything', 30, '--ink', 600);
+  text(around, 380, 648, 'Secrets manager · Audit and tracing · Evaluation release gates · Backups with restore drills', 28);
+  const aroundDetail = 'Secrets: scoped service credentials, rotated keys, none in prompts or logs. Audit: traces, metrics and alerts for latency, cost, failures and retrieval drift, with redacted access logs. Release gates: deterministic, retrieval, answer and adversarial checks before a canary rollout, with rollback. Backups: encrypted, versioned copies outside the primary failure domain, with practised restores.';
+  attachTip(around, 840, 'Around everything', aroundDetail);
+  svg.append(around);
+  entries.push({group: 'Around everything', title: 'Controls across the environment', lines: ['Secrets manager', 'Audit and tracing', 'Evaluation release gates', 'Backups with restore drills'], detail: aroundDetail});
 
-  box(25, 375, 355, 130, 'Immutable snapshots', ['Object storage and PDFs', 'Rights-aware access', 'Checksums and versions'],
-    'Preserve immutable source snapshots and checksums. Restrict PDFs and extracted text according to source rights; do not assume public availability permits redistribution.');
-  box(415, 375, 345, 130, 'Managed search', ['BM25 + dense/vector', 'Evidence version filters', 'Passage-level citations'],
-    'Keep keyword and vector indexes on the same evidence version. Apply access and release filters before retrieval; retain passage provenance for every citation.');
-  box(795, 375, 345, 130, 'Read-only MCP service', ['Separate network boundary', 'Tool and network allowlists', 'No shell or write access'],
-    'Expose typed read-only tools from a separate service. Enforce service identity, schemas, timeouts and network policy; treat all returned content as untrusted.');
-  box(1175, 375, 480, 130, 'Analytical store', ['Versioned Parquet + DuckDB', 'Read-only analytical queries', 'Deterministic calculations'],
-    'Store validated observations as versioned Parquet. Run bounded read-only DuckDB queries and deterministic calculations; keep definitions, units and revision status attached.');
-
-  // These controls span the target environment rather than forming extra steps in an answer.
-  line('M25 538 H1655', {dashed: true, arrow: false});
-  [217, 632, 1047, 1462].forEach(x => line(`M${x} 538 V555`, {dashed: true, arrow: false}));
-  text(svg, 25, 530, 'Cross-cutting controls', 24, '--ink', 600);
-  text(svg, 500, 530, 'Dashed: ingestion / control scope. Solid: requests, evidence and SSE.', 24, '--muted');
-  box(25, 555, 385, 130, 'Secrets manager', ['Scoped service identities', 'Key rotation / least privilege', 'No secrets in prompts or logs'],
-    'Issue scoped credentials to each service, rotate provider keys and avoid shared administrator tokens. Keep secrets out of prompts, traces and source control.', {dashed: true});
-  box(440, 555, 385, 130, 'Observability and audit', ['Traces, metrics and alerts', 'Retrieval and answer drift', 'Access and tool audit trail'],
-    'Trace requests, tool calls and provider usage. Monitor latency, cost, failures and retrieval drift; retain access audits with redaction and defined retention.', {dashed: true});
-  box(855, 555, 385, 130, 'CI/CD evaluation gates', ['Retrieval, safety, MCP checks', 'Versioned release artefacts', 'Canary rollout and rollback'],
-    'Gate releases on deterministic, retrieval, answer and adversarial checks. Canary API, worker and index versions together; roll back on breached quality or service limits.', {dashed: true});
-  box(1270, 555, 385, 130, 'Backup and recovery', ['Separate failure domain', 'Encrypted versioned backups', 'Restore drills and targets'],
-    'Back up source objects, manifests and job state outside the primary failure domain. Rebuild indexes from snapshots and practise restores against agreed recovery targets.', {dashed: true});
-
-  text(svg, 25, 716, 'Proposed, not implemented or load-tested. Managed services and recovery targets need workload, rights and security review.', 24, '--muted');
+  text(svg, 25, 710, 'Proposed, not implemented or load-tested. Managed services and recovery targets need workload, rights and security review.', 24, '--muted');
   const mobile = el('div', 'production-mobile');
   let group;
   entries.forEach(entry => {
     if (entry.group !== group) {
       group = entry.group;
       mobile.append(el('h3', 'production-mobile-group', group));
-      if (group === 'Proposed request flow') {
-        mobile.append(el('p', 'production-mobile-flow', 'Edge → identity → load balancer and APIs → queued workers → LLM gateway. SSE returns task state, tool activity and the final answer.'));
+      if (group === 'Proposed request path') {
+        mobile.append(el('p', 'production-mobile-flow', 'Protected access → API replicas → queued workers → model gateway. Server-sent events return progress and the final answer.'));
       }
     }
     const article = el('article', 'production-mobile-entry');

@@ -157,21 +157,21 @@ def press_e(page, times, **flags):
 
 def test_experiments_hidden_by_default_and_no_key_clash(deck_page):
     p = deck_page
-    assert counts(p)["total"] == 28
+    assert counts(p)["total"] == 29
     assert p.locator("#experiments").count() == 0
     press_e(p, [0, 401])
     assert p.locator("#experiments").count() == 0
     press_e(p, [801])
     assert p.locator("#experiments.present").count() == 1
-    assert p.locator(".deck-counter").inner_text() == "Experiments · 28 main"
+    assert p.locator(".deck-counter").inner_text() == "Experiments · 29 main"
     assert p.locator(".playback").count() == 0
     press_e(p, [1000, 1100])
     assert p.locator("#experiments").count() == 0
     assert p.locator(".slides > section.present").get_attribute("data-chapter") == "Start"
-    assert counts(p)["counter"] == "1 / 28"
+    assert counts(p)["counter"] == "1 / 29"
     assert p.locator(".progress span").evaluate("n => n.style.transform") == "scaleX(0)"
     p.keyboard.press("o")
-    assert p.locator(".slides > section").count() == 28
+    assert p.locator(".slides > section").count() == 29
 
 
 def test_toggle_from_references_and_summary_preserves_a_a(deck_page):
@@ -185,12 +185,12 @@ def test_toggle_from_references_and_summary_preserves_a_a(deck_page):
     assert p.locator(".slides > section.present").get_attribute("data-chapter") == "Appendix"
     press_e(p, [4000, 4100])
     assert p.locator("#experiments.present").count() == 1
-    assert p.locator(".slides > section").count() == 46
+    assert p.locator(".slides > section").count() == 47
     press_e(p, [5000, 5100])
     assert p.locator(".slides > section.present").get_attribute("data-chapter") == "Appendix"
     assert p.locator(".slides > section.present").get_attribute("data-title").startswith("P. ")
     press_a(p, [6000, 6100])
-    assert counts(p)["total"] == 28
+    assert counts(p)["total"] == 29
 
 
 @pytest.mark.parametrize(

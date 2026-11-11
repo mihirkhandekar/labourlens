@@ -51,7 +51,7 @@ export const OVERRIDES = [
   ['The 65 questions were written blind', 'Sixty-five questions on six new sources, written blind. Once run they became known and are no longer unseen.'],
   ['Official observations are the numerical reference', 'Official data is the numerical reference, with population, unit, adjustment and release kept separate.'],
   ['The gold questions and evidence labels were drafted', 'AI helped draft the questions and labels. One human reviewer signed them off after scoring.'],
-  ['The data sheet records 33 dataset licences', 'Of 36 datasets, 33 licences are verified. 23 document rights are still unresolved.'],
+  ['The data sheet records 33 dataset licences', 'Of 36 datasets, 33 licences are verified. 45 document rights are still unresolved.'],
   ['Official public sources only', 'Official public sources only. Restricted text and indexes stay local; public material is linked and attributed.'],
   ['Default graph limits: six total', 'Six tool calls over two evidence rounds, one retry and one repair. No SQL, shell or open browsing.'],
   ['Generation candidates share a provider family', 'Models share one provider family and use default sampling. Two runs do not show run-to-run variance.'],

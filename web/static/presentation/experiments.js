@@ -11,6 +11,7 @@ const BY_TITLE = {
   'Retrieval Strategies': 'e6',
   'Does filtering help?': 'r-series',
   'Statistics lookup through MCP': 'agent-mcp-all-tools',
+  'How a question is answered': 'agent-m4-bounded-tools',
   'Agent loop': 'agent-versus-fixed',
   'Three example runs': 'agent-m4-bounded-tools',
   'Checking the answer': 'generation-groundedness',

@@ -207,7 +207,7 @@ export function toolLegend() {
   wrap.append(head);
   [
     ['search_reports', 'Question → passages', 'App', 'Find report evidence', 'The app searches the passage index and embeddings, filters period and release and reranks. The planner never sees passage text: its catalogue and evidence summaries are separate from the answer writer’s cited passages.'],
-    ['get_series', 'Series + period → rows', 'MCP server (blue outline)', 'Read validated statistics', 'Calls server tool get_statistic. Returned rows carry values, units, periods, release stage and provenance, and receive labels O1 onwards for citation and calculation.'],
+    ['get_series', 'Series + period → rows', 'MCP server', 'Read validated statistics', 'Calls server tool get_statistic. Returned rows carry values, units, periods, release stage and provenance, and receive labels O1 onwards for citation and calculation.'],
     ['calculate_change', 'Two returned rows → change', 'App, plain code', 'Do not invent figures', 'Deterministic Decimal arithmetic checks compatible units and definitions on previously returned observations. It computes an exact difference or percentage change. It cannot invent input values; the base tool does not calculate from report-only figures.']
   ].forEach(([tool, exchange, where, why, detail]) => {
     const row = el('div', 'ex-tools-row'); row.setAttribute('role', 'row');
@@ -591,6 +591,26 @@ const LOOP_TIPS = [
   'Return an answer, clarification, abstention or refusal.'
 ];
 /** G6: the agent loop, drawn from the fixed design. Labels are plain words. */
+/** Short, early overview of how a question is answered; the full loop and its limits come later on the Agent loop slide. */
+export function agentOverview() {
+  const steps = [
+    ['1', 'Question', 'Checked first: in scope, no instructions to override the rules.'],
+    ['2', 'Plan', 'The planner picks tools from a fixed list. It sees the question and a catalogue, never report text.'],
+    ['3', 'Gather evidence', 'Search the reports, look up statistics, or calculate in code. At most 2 rounds and 6 tool calls.'],
+    ['4', 'Write', 'One answer: every claim cites a passage with a verbatim quote, or the system declines.'],
+    ['5', 'Check', 'Code confirms each quote is in its passage. One repair, then the answer is marked invalid.']
+  ];
+  const wrap = el('div', 'agent-overview');
+  wrap.append(el('p', 'agent-overview-query', 'Example question: "What was the seasonally adjusted overall unemployment rate in Q4 2024?"'));
+  steps.forEach(([n, title, text], i) => {
+    const step = el('div', 'agent-overview-step');
+    step.append(el('span', 'agent-overview-n', n), el('h3', '', title), el('p', '', text));
+    wrap.append(step);
+    if (i < steps.length - 1) wrap.append(el('span', 'agent-overview-arrow', '→'));
+  });
+  return wrap;
+}
+
 export function agentLoop() {
   const W = 1560, H = 450, yScale = H / 680;
   const wrap = el('div', 'owner-agent');
@@ -628,6 +648,8 @@ export function agentLoop() {
   edge('M1345 415 V475');
   edge('M1030 355 V630 H140 V350', true);
   edge('M1485 370 H1535 V215 H1485', true);
+  edge('M140 160 V240');
+  node(25, 50, 230, 110, ['Question', 'e.g. rate in Q4 2024'], 'The user\'s question, for example: What was the seasonally adjusted overall unemployment rate in Q4 2024? It is validated first, then handed to the planner. The planner turns it into tool calls; it never sees report text.', 'is-input');
   node(25, 240, 230, 110, ['Planner', 'Choose actions'], 'Input validation runs first. The planner sees the question, dataset catalogue, prior evidence summaries and tool errors. The base tool names and argument schemas are fixed in code: search_reports, get_series and calculate_change. It may request up to three calls in a round or stop gathering. It does not discover or choose freely among all MCP server tools.', 'is-planner');
   node(345, 35, 480, 130, ['Search reports', 'BM25 + embeddings', 'Filter, rerank, return passages'], LOOP_TIPS[1]);
   node(345, 205, 480, 120, ['Structured statistics', 'MCP server → rows'], LOOP_TIPS[2], 'is-mcp');
@@ -919,7 +941,7 @@ export function assumptionsScope(m) {
   const count = m.section('sources').metrics?.sources;
   const groups = [
     ['Assumptions and constraints', [
-      ['Licences follow their recorded status', 'Not all rights have been verified.', 'The data sheet records 33 dataset licences verified, three assumed and unverified, and 23 document rights unresolved. These statuses are not blanket permission to redistribute publisher material. Source: data sheet, At a glance.'],
+      ['Licences follow their recorded status', 'Not all rights have been verified.', 'The data sheet records 33 dataset licences verified, three assumed and unverified, and 45 document rights unresolved. These statuses are not blanket permission to redistribute publisher material. Source: data sheet, At a glance.'],
       ['Public sources; report text stays local', 'No redistribution of full MOM PDFs.', 'Official public sources only. Restricted documents, passages, indexes and raw answers stay local. Public material uses links, attribution and short excerpts under the recorded rights limits. Sources: data sheet and system card.'],
       ['Read-only, bounded research', 'Six tool calls over two rounds.', 'Default graph limits: six total tool calls across two evidence rounds, at most three calls per round, one transient tool retry and one answer repair. No arbitrary SQL, shell execution or unrestricted browsing. Sources: agent graph, orchestration decision and README.'],
       ['Default sampling; one provider family', 'Generation settings were not tuned.', 'Generation candidates share a provider family; temperature and top_p use provider defaults and no seed. A separate second-family judge sensitivity check exists, but is not human review. Two final runs do not estimate run-to-run variance. Source: system card.']
@@ -1038,7 +1060,7 @@ export function keywordVsMeaning(m) {
 ${question}
 It also finds a passage that says jobless rate, because vectors capture meaning. It can pull in passages about nearby quarters, which costs it here.
 ${pairText('hybrid_minus_dense_hit@8', 'meaning search')}`},
-    {label: 'Both\ntogether', value: hit('hybrid'), ci: ci('hybrid'), kind: 'accent', tag: 'Hybrid RRF\nBM25 + embeddings', tip: `Hybrid: reciprocal rank fusion with c=60 over the top 50 of each list. ${fmt.pct(hit('hybrid'))}${range(methods.hybrid)}. This is the baseline bar on the next slide.
+    {label: 'Both\ntogether', value: hit('hybrid'), ci: ci('hybrid'), kind: 'accent', tag: 'Hybrid RRF\nBM25 + embeddings', tip: `Hybrid: reciprocal rank fusion with c=60 over the top 50 of each list. ${fmt.pct(hit('hybrid'))}${range(methods.hybrid)}. The next slide starts from this same bar, measured the same way on the same 128 questions, then adds filtering and reranking.
 ${question}
 Each list gives a passage 1 divided by (60 plus its rank). A passage ranked 1st by keyword and 4th by meaning scores ${rrf(1).toFixed(4)} plus ${rrf(4).toFixed(4)}, which is ${both.toFixed(4)}; one ranked 2nd in a single list scores ${one.toFixed(4)}.
 Hybrid over keyword search is not demonstrated: the interval includes zero.
@@ -1052,7 +1074,7 @@ ${history}`}
     withTip(node, item.tip, 'is-down'); paths.append(node);
   });
   const merge = el('div', 'owner-retrieval-merge');
-  merge.append(el('span', '', 'Combine rankings →'), el('h3', '', 'Hybrid search'), el('strong', '', fmt.pct(hit('hybrid'))), el('p', '', 'Relevant passage in the first eight'));
+  merge.append(el('span', '', 'Combine rankings →'), el('h3', '', 'Hybrid search'), el('strong', '', fmt.pct(hit('hybrid'))), el('p', '', 'Relevant passage in one of the first eight chunks'));
   withTip(merge, items[2].tip, 'is-up');
   wrap.append(paths, merge);
   return wrap;
@@ -1240,10 +1262,25 @@ function comparisonBars(label, rows) {
 
 export function unseenRetrieval() {
   const wrap = el('div', 'exp-comparison');
-  wrap.append(el('p', 'exp-measure', 'Strict hit@8: first eight distinct context passages'),
+  wrap.append(el('p', 'exp-measure', 'Strict hit@8 (stricter than chunk hit@8): first eight distinct context passages, on 18 original-test and 34 fresh questions, not the 128 development questions'),
     comparisonBars('Original test · 18 text questions', [['Hybrid', .166667, false], ['Filter then rerank', .777778, true]]),
     comparisonBars('Fresh questions · 34 text questions', [['Hybrid', .5, false], ['Filter then rerank', .941176, true]]),
     el('p', 'exp-limit', 'Original test shares development evidence; fresh questions have been reused. Literal questions, retrieval only.'));
+  return wrap;
+}
+
+/** The four retrieval steps on one measure (chunk hit@8) and three question sets, so the first bar matches the Hybrid bar of the
+ * methods slide. Values are frozen: dev-R-V31-R{0,1a,2,3} metrics (128 development questions) and
+ * heldout-retrieval-20261103-paid metrics (18 original-test, 34 fresh); tests/web/test_deck.py compares them to those files. */
+export function retrievalLadder() {
+  const steps = ['Hybrid', 'Hybrid + filter', 'Hybrid + rerank', 'Hybrid + filter + rerank'];
+  const panel = (title, values) => comparisonBars(title, steps.map((name, i) => [name, values[i], i === 3]));
+  const wrap = el('div', 'exp-comparison is-ladder');
+  wrap.append(el('p', 'exp-measure', 'Chunk hit@8: a relevant passage is in one of the first eight chunks (same measure as the previous slide)'),
+    panel('Development · 128 questions', [.5391, .8516, .7422, .9688]),
+    panel('Original test · 18 text questions', [.444444, .777778, .722222, .888889]),
+    panel('Fresh questions · 34 text questions', [.882353, .911765, .970588, .970588]),
+    el('p', 'exp-limit', 'Development questions shaped the design. Original test shares development evidence; fresh questions have been reused. Literal questions, retrieval only. Counting distinct passages is stricter and gives lower scores (hybrid on the 128: 25.8%).'));
   return wrap;
 }
 
@@ -1493,98 +1530,43 @@ export function buildProcess(decisionCount) {
 }
 
 /** Threat suite v2 totals. These are not in report.json yet; same source and numbers as threatComparison: experiments/threats/threat-v2-analysis.json. */
-const THREAT_V2 = {guarded: 50, naive: 42, n: 54, benignFailed: 3, benignN: 8};
-/** Current default server capability, not a measured result. Historical protocol runs used nine tools. */
-const MCP_TOOLS = 10;
+const THREAT_V2 = {guarded: 50, naive: 42, n: 54};
 
-/** Closing results board. Evaluated figures and the served corpus come from the report, except the documented threat totals and MCP tool count above. */
-export function summaryBoard(m) {
-  const facts = finalFacts(m), cost = finalCostFacts(m);
-  const sets = ['dev', 'registered', 'fresh'].map(id => {
-    const s = facts?.sets.find(x => x.id === id), a = s?.models.find(x => x.model === 'gpt-6-luna');
-    return s && a && finite(a.r3rate) && finite(a.hyrate) ? {id, label: s.label, n: s.n, r3: a.r3rate, hy: a.hyrate} : null;
-  });
-  const bm25 = m.methodsV31?.methods?.bm25?.['hit@8'], rerank = m.ladder?.configs?.R3?.['hit@8'], hitN = m.ladder?.n_cases;
-  const mcp = m.section('mcp').metrics || {};
-  if (sets.some(s => !s) || !finite(bm25) || !finite(rerank) || !finite(mcp.identical_datasets) || !cost) return null;
-  const points = d => `${d >= 0 ? '+' : '-'}${Math.abs(d * 100).toFixed(1)} points`;
-  const wrap = el('div', 'sb');
-  const heading = (text, cls = '') => el('h3', `sb-h ${cls}`.trim(), text);
-
-  // Behaviour accuracy: a shared 60 to 100% axis, hybrid ring to filter-then-rerank dot.
-  const LO = 0.6, HI = 1, pos = v => Math.min(100, Math.max(0, ((v - LO) / (HI - LO)) * 100));
-  const acc = el('div', 'sb-acc');
-  acc.append(heading('Behaviour accuracy, gpt-6-luna'), el('p', 'sb-sub', 'Hybrid (ring) against filter then rerank (dot). Mean of two runs.'));
-  const NOTE = {dev: 'Choices were tuned here, so this is optimistic.', registered: 'Reuses development evidence.', fresh: 'No gain on questions written after the choices.'};
-  const TIP = {dev: 'Development questions shaped the retrieval choices, so this gain is optimistic.', registered: 'The original test reuses some development evidence, so it is not a clean check.', fresh: 'Fresh questions were written after the choices. Filtering then reranking showed no gain.'};
-  sets.forEach(s => {
-    const d = s.r3 - s.hy;
-    const row = el('div', 'sb-drow');
-    const name = el('p', 'sb-dname'); name.append(el('strong', '', s.label), el('span', '', `${fmt.int(s.n)} questions`));
-    const track = el('div', 'sb-track'); track.setAttribute('aria-hidden', 'true');
-    const seg = el('span', `sb-seg${d < 0 ? ' is-down' : ''}`);
-    seg.style.setProperty('--lo', `${pos(Math.min(s.r3, s.hy))}%`); seg.style.setProperty('--span', `${Math.abs(pos(s.r3) - pos(s.hy))}%`);
-    const ring = el('span', 'sb-dot is-base'), dot = el('span', 'sb-dot');
-    ring.style.setProperty('--p', `${pos(s.hy)}%`); dot.style.setProperty('--p', `${pos(s.r3)}%`);
-    track.append(seg, ring, dot);
-    const nums = el('p', 'sb-dnums');
-    nums.append(el('span', 'sb-dbase', fmt.pct(s.hy)), el('span', 'sb-darrow', 'to'), el('strong', 'sb-dnow', fmt.pct(s.r3)));
-    row.append(name, track, nums, el('p', `sb-dnote${d <= 0 ? ' is-flat' : ''}`, `${points(d)}. ${NOTE[s.id]}`));
-    row.setAttribute('aria-label', `${s.label}: hybrid ${fmt.pct(s.hy)}, filter then rerank ${fmt.pct(s.r3)}. ${NOTE[s.id]}`);
-    acc.append(withTip(row, TIP[s.id], 'is-up'));
-  });
-  const axis = el('div', 'sb-axis'); axis.setAttribute('aria-hidden', 'true');
-  [LO, 0.8, HI].forEach(v => axis.append(el('span', '', fmt.pct(v, 0))));
-  acc.append(axis);
-
-  // Retrieval and threat bars, one scale each.
-  const side = el('div', 'sb-side');
-  const bars = (title, sub, rows) => {
-    const g = el('div', 'sb-bars');
-    g.append(heading(title), el('p', 'sb-sub', sub));
-    rows.forEach(([label, w, value, accent, tip]) => {
-      const row = el('div', 'sb-brow');
-      const track = el('div', 'sb-btrack'); track.setAttribute('aria-hidden', 'true');
-      const bar = el('span', `sb-bar${accent ? ' is-accent' : ''}`); bar.style.setProperty('--w', `${w * 100}%`); track.append(bar);
-      row.append(el('span', 'sb-blabel', label), track, el('strong', 'sb-bvalue', value));
-      g.append(withTip(row, tip, 'is-up'));
-    });
-    return g;
+/** Closing summary: what the agent is, what it can do and how I would improve it. Retrieval figures come from the report data;
+ * the threat totals are the documented constants above. */
+export function agentSummary(m) {
+  const before = m.ladder?.configs?.R0?.['hit@8'], after = m.ladder?.configs?.R3?.['hit@8'], hitN = m.ladder?.n_cases;
+  if (!finite(before) || !finite(after) || !finite(hitN)) return null;
+  const wrap = el('div', 'as');
+  const column = (title, sub) => { const c = el('div', 'as-col'); c.setAttribute('role', 'group'); c.setAttribute('aria-label', title); c.append(el('h3', 'as-h', title), el('p', 'as-sub', sub)); wrap.append(c); return c; };
+  const item = (parent, head, body, tip) => {
+    const row = el('div', 'as-item');
+    row.append(el('strong', '', head), el('span', '', body));
+    parent.append(tip ? withTip(row, tip, 'is-up') : row);
   };
-  side.append(
-    bars('Retrieval hit@8', `${finite(hitN) ? fmt.int(hitN) : 'The'} development questions`, [
-      ['BM25', bm25, fmt.pct(bm25), false, 'BM25 is the keyword baseline. Hit@8 counts questions whose needed passage is in the first eight results.'],
-      ['Filter then rerank', rerank, fmt.pct(rerank), true, 'Filter by named period and release, then rerank the top 30. Measured on the development questions only.']
-    ]),
-    bars('Threat suite', `${THREAT_V2.n} attacks, majority of three repeats`, [
-      ['Naive', THREAT_V2.naive / THREAT_V2.n, `${THREAT_V2.naive}/${THREAT_V2.n}`, false, 'The naive arm has no guards or hardened answer prompt. Same typed tools and MCP boundary.'],
-      ['Guarded', THREAT_V2.guarded / THREAT_V2.n, `${THREAT_V2.guarded}/${THREAT_V2.n}`, true, 'Guards and the answer prompt changed together, so no single layer is credited. Exact McNemar p = .039.']
-    ]),
-    el('p', 'sb-aside', `Both arms failed ${THREAT_V2.benignFailed} of ${THREAT_V2.benignN} benign look-alike questions.`)
-  );
-
-  // MCP parity and cost, as two plain figures.
-  const accepted = mcp.identical_datasets + (finite(mcp.different_outputs) ? mcp.different_outputs : 0);
-  const facts2 = el('div', 'sb-facts');
-  const fact = (big, text, tip) => {
-    const f = el('div', 'sb-fact'); f.append(el('strong', '', big), el('span', '', text));
-    return withTip(f, tip, 'is-up');
-  };
-  facts2.append(
-    fact(`${MCP_TOOLS} tools now`, mcp.different_outputs === 0 ? `Historical direct and MCP calls returned identical rows on all ${accepted} queries both accepted.` : `Historical direct and MCP calls matched on ${mcp.identical_datasets} of ${accepted} accepted queries.`, 'Current server: ten read-only tools; the served agent uses two. The recorded comparison used nine tools and one planner-facing statistics tool. Annual averaging is unevaluated. Oversized queries were refused by both historical paths.'),
-    fact(`${Math.round(cost.p50)} s`, `Median answer time, about $${cost.cost.toFixed(4)} per question.`, 'Final evaluation, filter then rerank, development questions. The 95th percentile is slower.')
-  );
-
-
-  const limits = el('div', 'sb-limits');
-  const list = el('ul', 'sb-limit-list');
-  ['AI-drafted labels, signed off by one reviewer', 'Judge and answer models share a provider', 'Scanner can be bypassed', 'Three dataset licences and some source rights unverified'].forEach(t => list.append(el('li', '', t)));
-  limits.append(heading('Limits', 'is-small'), list);
-  const liveNote = el('p', 'sb-live-note', 'The live app differs from the measured build; ');
-  const appendixLink = el('a', '', 'see appendix M'); appendixLink.href = '#/served-versus-evaluated';
-  const failuresLink = el('a', '', 'appendix P'); failuresLink.href = '#/where-it-fails';
-  liveNote.append(appendixLink, document.createTextNode('. Failure counts by question type: '), failuresLink, document.createTextNode('.')); limits.append(liveNote);
-
-  wrap.append(acc, side, facts2, limits);
+  const what = column('What it is', 'One bounded research agent for Singapore labour-market questions.');
+  item(what, 'Plans, then gathers', 'A planner picks typed tools from a fixed list. It never reads report text.');
+  item(what, 'Writes one cited answer', 'Every claim carries a quote. Code checks the quote is in the passage.');
+  item(what, 'Stays inside limits', 'At most 2 rounds and 6 tool calls, each call timed. It declines when evidence is missing.');
+  const can = column('What it can do', 'Measured on the evaluated build, except where noted.');
+  item(can, 'Look up official statistics', 'Validated MOM series with units, periods and release stage, served over MCP.');
+  item(can, 'Search the reports', `Filter by period, then rerank: hit@8 ${fmt.pct(before)} to ${fmt.pct(after)} on ${fmt.int(hitN)} development questions.`,
+    'Chunk hit@8 on the development questions that shaped the design. Original test and fresh questions show no demonstrated answer gain.');
+  item(can, 'Calculate exactly', 'Changes are computed in code, not by the model. Annual averages are live but not evaluated.');
+  item(can, 'Resist planted instructions', `Guarded ${THREAT_V2.guarded} of ${THREAT_V2.n} attacks passed, naive ${THREAT_V2.naive}. A modest margin; one attack is unstable.`,
+    'Guards and the answer prompt changed together, so no single layer is credited. Exact McNemar p = .039.');
+  item(can, 'Show its steps', 'The live workbench streams the plan, tool calls and checks as they happen.');
+  const better = column('How I would improve it', 'In order of what would change my confidence most.');
+  item(better, '1. Re-test the live build', 'The live planner, corpus and annual average were never re-evaluated.');
+  item(better, '2. Independent review', 'A second reviewer, and labels fixed before scoring. Replace the same-family judge.');
+  item(better, '3. Check every claim', 'Test that each cited passage supports its claim, not only that the quote exists.');
+  item(better, '4. New blind questions', 'The fresh 65 have been reused. Write a new set before any tuning.');
+  item(better, '5. Close known gaps', 'Planted false figures, paraphrased attacks and arithmetic on report-only figures.');
+  item(better, '6. Faster and cheaper', 'Speculative triage, wider caching and smaller models. Live speed gains are still unmeasured.');
+  const limits = el('p', 'as-limits', 'Limits: labels signed off by one reviewer after scoring; no shown answer gain on the original or fresh sets; spend cap and some source rights open. ');
+  const live = el('a', '', 'The live app differs from the measured build (appendix M)'); live.href = '#/served-versus-evaluated';
+  const fails = el('a', '', 'failure counts by question type (appendix P)'); fails.href = '#/where-it-fails';
+  limits.append(live, document.createTextNode('; '), fails, document.createTextNode('.'));
+  wrap.append(limits);
   return wrap;
 }
