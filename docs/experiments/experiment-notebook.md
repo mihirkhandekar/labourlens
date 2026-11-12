@@ -93,6 +93,7 @@ Hit@k: share of questions with at least one labelled passage in the first k chun
 | generation-e2e-ladder | [Earlier A1/A3 · retrieval through to answers](#earlier-a1a3--retrieval-through-to-answers) | Adopted provisionally (D-030): use period/release filtering followed by reranking, while retaining planner_v1 and answer_v3. The reduced over-abstention was accepted with extra latency and cost. |
 | generation-prompt-hypothesis | [A2 · missing/conflicting-data prompt](#a2--missingconflicting-data-prompt) | Not adopted (D-030): keep answer_v3 because the extra missing/conflicting-data instruction showed no demonstrated benefit. The existing code-generated notes remain in both settings. |
 | generation-widening-hypothesis | [A4 · widen weak filtered pools](#a4--widen-weak-filtered-pools) | Not adopted (D-030): retain r3 without the widening rule because the development comparison showed no consistent improvement. This does not prove the two methods equivalent. |
+| generation-question-cohorts | [Question cohorts and human review](#question-cohorts-and-human-review) | Report the three question sets separately and treat the two retrieval subsets as retrieval-only. The single reviewer and the review after scoring stay disclosed limits. |
 | generation-final-dev | [FIN / FIN2 · Development](#fin--fin2--development) | D-061 makes the two-run mean the headline and keeps gpt-6-luna on cost rather than an accuracy win. The r3 default retained in D-056 remains provisional: the development advantage does not establish generalisation. |
 | generation-final-registered | [FIN / FIN2 · Registered original test](#fin--fin2--registered-original-test) | No retrieval change (D-056 and D-061): retain r3 provisionally, not as a demonstrated original-test winner. Report the two-run mean and both runs because the paired interval includes zero. |
 | generation-final-fresh | [FIN / FIN2 · Fresh questions, subsequently reused](#fin--fin2--fresh-questions-subsequently-reused) | No default change (D-056 and D-061): retain r3 provisionally while explicitly reporting no demonstrated fresh-set answer-status gain. These known questions are not another untouched test. |
@@ -1003,6 +1004,50 @@ Source: `experiments/eval/agent-dev-A4/gpt-6-luna.metrics.json`
 **What this does not show:** Overlapping intervals do not establish equivalence or prove widening can never help.
 
 **Worked example.** DEV-013: Chose a different non-answer status from the reference. Hard validation passed.
+
+### Question cohorts and human review
+
+- **What we wanted to know:** Which questions were used for what, how independent are they, and how much was reviewed by a person?
+- **What we changed:** None: this card describes the question sets and the review sample. It does not compare configurations.
+- **What stayed fixed:** Gold files and case identifiers as frozen for each run Counts are questions, not runs or judged claims
+- **What we calculated:** Cohort sizes count the questions in each gold file. Overlap is the number of original-test questions that share at least one evidence passage with development. The review rows count my verdicts on 40 saved answers; agreement compares a verdict derived from the scored behaviour and the judged content with my verdict, using kappa.
+- **How it was measured:** Question inventory and review sample; descriptive counts, not a scored comparison.; n=333. Build: Gold v3.7 for the 268 original questions (237 development, 31 original test); 65 fresh questions written on six newer sources; corpus v3.1 for the two retrieval subsets.. Cases per cohort Evidence overlap between original test and development Human review sample: verdicts and agreement with a derived verdict
+
+*Labels on this card:* **Behaviour accuracy**: Share of cases where the system chose the expected status: answer, abstain, clarify or refuse. It is scored by rule, without an AI judge, and it does not show that an answer’s contents are correct.
+
+**Question cohorts**
+
+| Cohort | Cases | Purpose | Caveat |
+|---|---|---|---|
+| Development | 237 | Tune and debug | Shaped the design, so optimistic |
+| Original test | 31 | Frozen before the registered runs | 25 of 31 share evidence with development |
+| Fresh questions | 65 | Written on six newer sources | Now known and partly reused |
+| Development text retrieval | 128 | Compare retrieval configurations | Subset of development; retrieval only |
+| Fresh text retrieval | 34 | Additional retrieval comparison | Subset of fresh; retrieval only |
+
+Source: `docs/evaluation-report.md`
+
+**Human review sample of saved answers**
+
+| Measure | Value |
+|---|---|
+| Saved baseline answers reviewed | 40 |
+| Selection | Fixed seed: six per family plus four status mismatches |
+| Marked correct | 25 |
+| Marked partly correct | 6 |
+| Marked wrong | 9 |
+| Derived verdict agrees with the reviewer | 31 of 40, kappa 0.64 |
+| Reviewers | 1 |
+
+Source: `docs/human-review/judge-vs-owner.md`
+
+**What we found:** Results are strongest as engineering evidence for this build and weaker as claims about future questions.
+
+**What we chose:** Report the three question sets separately and treat the two retrieval subsets as retrieval-only. The single reviewer and the review after scoring stay disclosed limits.
+
+**What this does not show:** Independent agreement between reviewers: there was one reviewer, after scoring. The 40-answer sample is failure-enriched, so its proportions are not population accuracy.
+
+**Worked example.** Reading the retrieval subsets: 128 development text questions and 34 fresh text questions are subsets used only to compare retrieval configurations. They are not additional end-to-end populations.
 
 ### FIN / FIN2 · Development
 

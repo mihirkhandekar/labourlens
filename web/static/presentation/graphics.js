@@ -179,7 +179,7 @@ export function toolLegend() {
   wrap.append(head);
   [
     ['search_reports', 'Question → passages', 'App', 'Find report evidence', 'The app searches the passage index and embeddings, filters period and release and reranks. The planner never sees passage text: its catalogue and evidence summaries are separate from the answer writer’s cited passages.'],
-    ['get_series', 'Series + period → rows', 'MCP server', 'Read validated statistics', 'Calls server tool get_statistic. Returned rows carry values, units, periods, release stage and provenance, and receive labels O1 onwards for citation and calculation.'],
+    ['get_series', 'Series + period → rows', 'MCP: get_statistic', 'Read validated statistics', 'The agent tool get_series calls server tool get_statistic. Returned rows carry values, units, periods, release stage and provenance, and receive labels O1 onwards for citation and calculation.'],
     ['calculate_change', 'Two returned rows → change', 'App, plain code', 'Do not invent figures', 'Deterministic Decimal arithmetic checks compatible units and definitions on previously returned observations. It computes an exact difference or percentage change. It cannot invent input values; the base tool does not calculate from report-only figures.']
   ].forEach(([tool, exchange, where, why, detail]) => {
     const row = el('div', 'ex-tools-row'); row.setAttribute('role', 'row');
@@ -755,7 +755,7 @@ export function mcpMap(m, {showMeasurements = true} = {}) {
   server.append(tipped('h3', '', 'MCP server', 'The default server now exposes ten read-only statistics tools, a catalogue resource, a source-entry resource template and compare_quarters prompt. Resources are application-selected context, not agent tool calls. Historical protocol and route measurements used nine tools before annual_average. The optional agent profile adds report search and calculation; it is not the live route. No third-party host demonstration is claimed.'));
   const tools = el('div', 'owner-mcp-tools is-single');
   tools.setAttribute('role', 'group'); tools.setAttribute('aria-label', 'The two statistics server tools used by the live agent.');
-  tools.append(tipped('div', 'owner-mcp-tool is-active', 'get_statistic + annual_average', 'get_series uses get_statistic for provenance-backed observation rows. annual_average computes a simple mean of four non-null quarterly percentage rates from one series, not an official annual rate; missing quarters return no partial mean. Annual averaging has not been re-evaluated.'));
+  tools.append(tipped('div', 'owner-mcp-tool is-active', 'get_statistic (agent: get_series) + annual_average', 'get_series uses get_statistic for provenance-backed observation rows. annual_average computes a simple mean of four non-null quarterly percentage rates from one series, not an official annual rate; missing quarters return no partial mean. Annual averaging has not been re-evaluated.'));
   server.append(tipped('p', 'owner-mcp-label', '2 tools in use', 'Eight other server tools remain outside the planner schema: list_datasets, describe_dataset, get_dimension_values, latest_value, compare_periods, series_summary, get_revisions and get_provenance. Historical full-set accuracy evaluations used three agent tools and direct calls.'), tools);
   server.append(el('p', 'owner-mcp-more', 'The server offers 8 other tools. Appendix G lists them.'));
   const resources = el('div', 'owner-mcp-resources');
@@ -787,6 +787,27 @@ export function mcpMap(m, {showMeasurements = true} = {}) {
     'Experiment only, not a live setting: the planner could search reports and calculate changes but not look up statistics. gpt-6-luna, 65 questions, one run. Behaviour accuracy 69.2% (45 of 65) against 90.8% (59 of 65) with statistics. Paired difference -21.5 points, 90% interval [-30.8, -13.8] against direct (0 better, 14 worse, exact p .0001) and [-30.8, -12.3] against MCP (1 better, 15 worse, exact p .0005). Part of this loss is by construction because the calculation tool loses its input (0 of 6 correct). Fifteen over-abstentions on answerable cases against 1 for direct and 0 for MCP; false answers 3 in each arm. One run, 7 numerical and 4 revision cases, AI-drafted gold, same judge family. Median time 34.6 s, not a clean comparison because the arms ran at different times. A first attempt stopped at 44 of 65 on a command timeout and was not used.'));
   return wrap;
 }
+/** Four recorded MCP scenarios from the protocol demo transcript: a valid call, rejected arguments, a failed server, and instruction-like content. Faults are injected on a test server. */
+export function mcpFailureScenarios() {
+  const rows = [
+    ['Valid request', 'get_statistic for one dataset and two quarters', 'Two rows back in 27 ms, each with value, unit, period and source.', 'is-ok'],
+    ['Invalid arguments', 'An unknown dataset, a malformed period, 84 rows with no dimension', 'Rejected before any data is returned. The server refuses the same calls if the client check is bypassed.', 'is-ok'],
+    ['Timeout or server down', 'A slow server (1.5 s limit) and a server that dies mid-call', 'Fails closed as timeout or unavailable. Never reported as no data, and nothing is invented.', 'is-ok'],
+    ['Instruction in content', 'A result row that carries an instruction to the assistant', 'The flagged row is quarantined; the rest stay data. A phrasing the heuristics miss still gets through the client: a known limit.', 'is-limit']
+  ];
+  const wrap = el('div', 'mf');
+  const head = el('div', 'mf-row is-head');
+  ['Scenario', 'What was sent', 'What happened'].forEach(t => head.append(el('span', '', t)));
+  wrap.append(head);
+  rows.forEach(([name, sent, result, cls], i) => {
+    const row = el('div', `mf-row ${cls}`); row.style.setProperty('--i', String(i));
+    row.append(el('strong', '', name), el('span', '', sent), el('span', '', result));
+    wrap.append(row);
+  });
+  wrap.append(el('p', 'mf-note', 'Recorded against a test server. The faults are injected, not observed in production.'));
+  return wrap;
+}
+
 /** The nine remaining asks of the assignment: plain name and what was asked. */
 const REQUIREMENTS = [
   ['database', 'Data', 'Two source types, two findings'],
@@ -1073,6 +1094,12 @@ export function modelChoice(m) {
     withTip(row, `${name}: ${right} of ${n} right (${fmt.pct(x.behavior_accuracy)}), 95% Wilson interval ${wilson(right, n)}. Wrongly declined ${over} of ${x.n_answer_cases} answerable questions. False answers ${bad} of ${x.n_nonanswer_cases} questions with no answer in the data (${fmt.pct(x.false_answer_rate)}). Wrong response type ${other}: a decline of the wrong kind, such as abstaining where a clarifying question was needed. $${x.cost_per_case_usd.toFixed(5)} per question. First prototype, one run on 30 questions, so the interval is wide.`, 'is-down is-wide');
     early.append(row);
   });
+  const picked = rows.find(r => r.name === 'gpt-6-luna'), peak = rows.find(r => r.name === 'gpt-4.1-mini');
+  if (picked && peak) {
+    const tally = ({x}) => ({right: Math.round(x.behavior_accuracy * x.n), over: Math.round(x.over_abstention_rate * x.n_answer_cases), bad: Math.round(x.false_answer_rate * x.n_nonanswer_cases)});
+    const a = tally(picked), b = tally(peak);
+    early.append(el('p', 'owner-model-tradeoff', `gpt-4.1-mini: ${b.right} of ${picked.x.n} right, but ${b.bad} of ${picked.x.n_nonanswer_cases} unanswerable questions answered falsely, $${peak.x.cost_per_case_usd.toFixed(5)} each. gpt-6-luna: ${a.right} right, ${a.over} answerable questions wrongly declined, ${a.bad} false answers, $${picked.x.cost_per_case_usd.toFixed(5)} each.`));
+  }
   const final = el('div', 'owner-model-final');
   final.append(el('h3', 'owner-model-heading', 'Final system on 237 questions'), el('p', 'owner-model-sub', 'gpt-6-luna, mean of two runs. Each question lands in exactly one group.'));
   const arms = m.finalEvaluation?.splits?.find(s => s.id === 'dev')?.arms || [];
@@ -1491,32 +1518,20 @@ export function buildProcess(decisionCount) {
 /** Threat suite v2 totals. These are not in report.json yet; same source and numbers as threatComparison: experiments/threats/threat-v2-analysis.json. */
 const THREAT_V2 = {guarded: 50, naive: 42, n: 54};
 
-/** Closing summary: what the agent is, what it can do and what is still open. Retrieval figures come from the report data;
- * the threat totals are the documented constants above. */
+/** Closing summary: three takeaways. The retrieval figures come from the report data; the threat totals are the documented constants above. */
 export function agentSummary(m) {
   const before = m.ladder?.configs?.R0?.['hit@8'], after = m.ladder?.configs?.R3?.['hit@8'], hitN = m.ladder?.n_cases;
   if (!finite(before) || !finite(after) || !finite(hitN)) return null;
-  const wrap = el('div', 'as');
-  const column = (title, sub) => { const c = el('div', 'as-col'); c.setAttribute('role', 'group'); c.setAttribute('aria-label', title); c.append(el('h3', 'as-h', title), el('p', 'as-sub', sub)); wrap.append(c); return c; };
-  const item = (parent, head, body, tip) => {
-    const row = el('div', 'as-item');
-    row.append(el('strong', '', head), el('span', '', body));
-    parent.append(tip ? withTip(row, tip, 'is-up') : row);
+  const wrap = el('div', 'as is-takeaways');
+  const take = (head, body, tip) => {
+    const c = el('div', 'as-take'); c.setAttribute('role', 'group'); c.setAttribute('aria-label', head);
+    c.append(el('h3', 'as-big', head), el('p', 'as-line', body));
+    wrap.append(tip ? withTip(c, tip, 'is-up') : c);
   };
-  const what = column('What it is', 'One bounded research agent for Singapore labour-market questions.');
-  item(what, 'Plans, then gathers', 'A planner picks typed tools from a fixed list. It never reads report text.');
-  item(what, 'Writes one cited answer', 'Every claim carries a quote. Code checks the quote is in the passage.');
-  item(what, 'Stays inside limits', 'At most 2 rounds and 6 tool calls, each call timed. It declines when evidence is missing.');
-  const can = column('What it can do', 'Measured on the evaluated build, except where noted.');
-  item(can, 'Look up and calculate', 'Validated MOM series served over MCP. Changes are computed in code, not by the model.');
-  item(can, 'Search the reports', `Filter by period, then rerank: hit@8 ${fmt.pct(before)} to ${fmt.pct(after)} on ${fmt.int(hitN)} development questions.`,
-    'Chunk hit@8 on the development questions that shaped the design. Original test and fresh questions show no demonstrated answer gain.');
-  item(can, 'Resist planted instructions', `Guarded ${THREAT_V2.guarded} of ${THREAT_V2.n} attacks passed, naive ${THREAT_V2.naive}. A modest margin.`,
-    'Guards and the answer prompt changed together, so no single layer is credited. Exact McNemar p = .039.');
-  const open = column('What is still open', 'Stated plainly.');
-  item(open, 'Live build not re-tested', 'The live planner, corpus and annual average were never re-evaluated.');
-  item(open, 'One reviewer', 'Labels signed off by one reviewer after scoring, with a same-family judge.');
-  item(open, 'No answer gain shown', 'Retrieval improved, but the original and fresh question sets show no demonstrated answer gain.');
+  take('Evidence first', 'Every claim cites a passage or a validated statistic. Code checks that the quote is really there.');
+  take('Bounded and validated execution', 'Read-only tools, at most 2 rounds and 6 calls, typed statistics over MCP, and one repair before an answer is refused.');
+  take('Evaluated with known limitations', `Retrieval hit@8 rose from ${fmt.pct(before)} to ${fmt.pct(after)} on ${fmt.int(hitN)} development questions. The live build is not re-tested, and labels have one reviewer.`,
+    `Guarded ${THREAT_V2.guarded} of ${THREAT_V2.n} attacks passed against ${THREAT_V2.naive} without the guards (exact McNemar p = .039). The original and fresh question sets show no demonstrated answer gain.`);
   const limits = el('p', 'as-limits');
   const live = el('a', '', 'The live app differs from the measured build (appendix M)'); live.href = '#/served-versus-evaluated';
   const fails = el('a', '', 'failure counts by question type (appendix P)'); fails.href = '#/where-it-fails';

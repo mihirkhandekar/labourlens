@@ -185,10 +185,10 @@ def test_toggle_from_references_and_summary_preserves_a_a(deck_page):
     assert p.locator(".slides > section.present").get_attribute("data-chapter") == "Appendix"
     press_e(p, [4000, 4100])
     assert p.locator("#experiments.present").count() == 1
-    assert p.locator(".slides > section").count() == 44
+    assert p.locator(".slides > section").count() == 45
     press_e(p, [5000, 5100])
     assert p.locator(".slides > section.present").get_attribute("data-chapter") == "Appendix"
-    assert p.locator(".slides > section.present").get_attribute("data-title").startswith("P. ")
+    assert p.locator(".slides > section.present").get_attribute("data-title").startswith("Q. ")
     press_a(p, [6000, 6100])
     assert counts(p)["total"] == 26
 

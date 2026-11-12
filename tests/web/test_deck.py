@@ -119,8 +119,8 @@ def test_every_slide_has_a_heading_and_speaker_notes():
     specs = re.findall(r"\badd\(\{", main)
     assert len(specs) == 26, len(specs)
     total = len(re.findall(r"\badd\(\{", (STATIC / "presentation" / "slides.js").read_text()))
-    assert total == 43  # 26 main slides, appendix index, and references A to P
-    assert total - len(specs) == 17
+    assert total == 44  # 26 main slides, appendix index, and references A to P
+    assert total - len(specs) == 18
     for block in re.split(r"\badd\(\{", main)[1:]:
         assert "notes:" in block, block[:100]
         assert "title:" in block, block[:100]
@@ -151,8 +151,8 @@ def test_no_bridge_sentences_or_pills_on_faces():
 
 REQUIRED_TITLES = [
     "Assignment", "Project Scope", "System architecture", "How the agent answers a question", "Data sources", "Finding 1", "Finding 2", "Finding 3", "Challenges with the data",
-    "Processing Unstructured Reports for RAG", "Retrieval Strategies", "Does filtering help?", "Statistics lookup through MCP", "Agent - Functional Architecture", "Three example runs", "Checking the answer", "How I evaluated", "Choosing models",
-    "Does better retrieval improve answers?", "Attacks and defences", "Agent Workbench", "How I built it", "Next steps", "Deploy in production", "Summary",
+    "Processing Unstructured Reports for RAG", "Retrieval Strategies", "Does filtering help?", "Statistics lookup through MCP", "Agent - Functional Architecture", "Three example runs", "Agent Workbench", "Checking the answer", "How I evaluated", "Choosing models",
+    "Does better retrieval improve answers?", "Attacks and defences", "How I built it", "Next steps", "Deploy in production", "Summary",
 ]
 
 
@@ -562,7 +562,7 @@ def test_tool_legend_lists_the_three_tools_with_inputs_outputs_where_and_why():
         assert f"['{tool}'," in block, tool
     for exchange in ("Question → passages", "Series + period → rows", "Two returned rows → change"):
         assert exchange in block, exchange
-    for where in ("'App'", "'MCP server'", "'App, plain code'"):
+    for where in ("'App'", "'MCP: get_statistic'", "'App, plain code'"):
         assert where in block, where
     assert "Read validated statistics" in block and "the base tool does not calculate from report-only figures" in block
 
@@ -645,7 +645,7 @@ def test_pipeline_steps_have_no_top_border_and_agent_limits_are_aligned():
     for label in ("2 rounds", "6 calls", "Bounded retries"):
         assert label in loop, label
     legend = _graphics_block(graphics, "export function toolLegend()", "export function buildTimeline(m)")
-    assert "MCP server" in legend and "Calls server tool get_statistic" in legend
+    assert "MCP: get_statistic" in legend and "calls server tool get_statistic" in legend
     assert re.search(r"\.owner-agent \.owner-agent-node\.is-mcp rect\s*\{[^}]*stroke:\s*var\(--c3\)", css)
 
 
@@ -683,7 +683,7 @@ def test_three_frozen_experiments_are_integrated_without_changing_slide_count():
     for helper in ("threatComparison", "unseenRetrieval", "fixedPipeline"):
         assert f"export function {helper}" in graphics
         assert helper in slides and helper in story
-    assert len(re.findall(r"\badd\(\{", slides)) == 43
+    assert len(re.findall(r"\badd\(\{", slides)) == 44
     threat = json.loads((root / "experiments/threats/threat-v2-analysis.json").read_text())
     assert (threat["guarded_majority_pass"], threat["naive_majority_pass"]) == (50, 42)
     assert (threat["guarded_only"], threat["naive_only"]) == (10, 2)
@@ -750,7 +750,7 @@ def test_decisions_api_is_exactly_one_final_appendix_slide_with_frozen_results()
     assert "Trying the Decisions API" not in _slides_main_section()
     assert slides.count("title: 'Trying the Decisions API'") == 1
     appendix = slides.split("// ---------- appendix", 1)[1].split("// Appendix index lists", 1)[0]
-    assert len(re.findall(r"\badd\(\{", appendix)) == 17
+    assert len(re.findall(r"\badd\(\{", appendix)) == 18
     last_slide = appendix.split("appendix('O', 'Trying the Decisions API'", 1)[1].split("appendix('P'", 1)[0]
     assert "id: 'decisions-api'" in last_slide
     assert "title: 'Trying the Decisions API'" in last_slide
@@ -986,10 +986,14 @@ def test_next_steps_is_dom_text_without_the_removed_footer_caption():
     assert "visual: nextSteps()" in slide and "Proposals only" not in slide
     assert "None of this is built" not in slide
     graphics = (STATIC / "presentation/graphics-flows.js").read_text()
-    data = graphics.split("const NEXT = [", 1)[1].split("\n];", 1)[0]
-    assert data.count("\n  ['") == 6
-    for heading in ("Make answers arrive sooner", "Keep the data up to date", "Make misuse harder"):
+    data = graphics.split("const PRIORITIES = [", 1)[1].split("\n];", 1)[0]
+    assert data.count("\n  ['") == 2 and data.count("Success") == 0
+    side = graphics.split("const SECONDARY = [", 1)[1].split("\n];", 1)[0]
+    assert side.count("\n  ['") == 4
+    for heading in ("Check the live system again", "Make misuse harder"):
         assert heading in data
+    for heading in ("Make answers arrive sooner", "Keep the data up to date"):
+        assert heading in side
     assert "About 14 s" not in graphics and "improvementPlan" not in graphics
 
 
@@ -998,11 +1002,11 @@ def test_summary_describes_the_agent_its_capabilities_and_improvements():
     assert "agentSummary(m)" in slides and "summaryBoard" not in slides
     graphics = (STATIC / "presentation" / "graphics.js").read_text(encoding="utf-8")
     block = graphics.split("export function agentSummary(m)", 1)[1]
-    for heading in ("What it is", "What it can do", "What is still open"):
+    for heading in ("Evidence first", "Bounded and validated execution", "Evaluated with known limitations"):
         assert heading in block
     for read in ("m.ladder?.configs?.R0", "m.ladder?.configs?.R3", "m.ladder?.n_cases"):
         assert read in block
-    for phrase in ("appendix M", "appendix P", "Live build not re-tested", "One reviewer"):
+    for phrase in ("appendix M", "appendix P", "live build is not re-tested", "labels have one reviewer"):
         assert phrase in block
     assert "summaryBoard" not in graphics and "gpt-5.6-luna" not in block and "innerHTML" not in block
     for dash in ("\u2013", "\u2014"):
@@ -1121,3 +1125,28 @@ def test_owner_edit_round_keeps_public_faces_and_examples_consistent():
     ladder = main.split("title: 'Does filtering help?'", 1)[1].split("\n  });", 1)[0]
     assert "Original test" not in ladder and "original test" not in ladder
     assert "both sets" in ladder and "fresh questions have been reused" in ladder.lower()
+
+
+def test_reviewer_round_workbench_order_cohorts_tradeoff_and_mcp_failures():
+    order = [row[0] for row in _flow_rows()]
+    assert order.index("Agent Workbench") == order.index("Three example runs") + 1
+    graphics = (STATIC / "presentation/graphics.js").read_text()
+    flows = (STATIC / "presentation/graphics-flows.js").read_text()
+    assert "cohortTable" not in graphics and "ev-cohorts" not in (STATIC / "css/presentation.css").read_text()
+    assert "questionSets(m)" in flows
+    experiments = (STATIC / "presentation/experiments-data-b.js").read_text()
+    card = experiments.split('"id": "generation-question-cohorts"', 1)[1].split('"id": "generation-final-dev"', 1)[0]
+    for cohort in ("Development text retrieval", "Fresh text retrieval", "retrieval only", "Human review sample"):
+        assert cohort in card
+    assert "'How I evaluated': 'generation-question-cohorts'" in (STATIC / "presentation/experiments.js").read_text()
+    assert "A verified citation proves that evidence exists. It does not necessarily prove that the claim follows from the evidence." in flows
+    main = _slides_main_section()
+    assert "Model selection prioritised lower false-answer risk and cost over maximum initial answer rate." in main
+    assert "owner-model-tradeoff" in graphics
+    assert "get_statistic (agent: get_series)" in graphics and "MCP: get_statistic" in graphics
+    slides = (STATIC / "presentation/slides.js").read_text()
+    q = slides.split("title: 'Q. MCP and injection failure scenarios'", 1)[1].split("\n    });", 1)[0]
+    assert "mcpFailureScenarios()" in q and "known limit" in q
+    scenarios = _graphics_block(graphics, "export function mcpFailureScenarios()", "/** The nine remaining asks")
+    for scenario in ("Valid request", "Invalid arguments", "Timeout or server down", "Instruction in content"):
+        assert scenario in scenarios

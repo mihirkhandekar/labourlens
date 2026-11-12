@@ -1223,6 +1223,14 @@ ul.g24-list { list-style: none; padding-left: 0; }
 .owner-models .mc-stack, .owner-models .mc-track { height: 30px; }
 .owner-model-final { border-top: 3px solid var(--accent); padding-top: 10px; margin-top: 0; min-width: 0; }
 .owner-model-sub { font-size: 20px; color: var(--muted); margin: 6px 0 10px; }
+.owner-model-tradeoff { font-size: 20px; line-height: 1.35; color: var(--ink-2); margin-top: 10px; }
+.mf { display: grid; gap: 0; align-content: start; }
+.mf-row { display: grid; grid-template-columns: 280px minmax(0, 1fr) minmax(0, 1.3fr); gap: 36px; padding: 20px 0; border-top: 1px solid var(--line-strong); font-size: 26px; line-height: 1.3; color: var(--ink-2); }
+.mf-row.is-head { font-size: 20px; color: var(--muted); padding: 0 0 10px; border-top: 0; border-bottom: 2px solid var(--line-strong); }
+.mf-row strong { color: var(--ink); font-weight: 600; }
+.mf-row.is-limit > span:last-child { color: var(--warn); }
+.mf-note { margin-top: 22px; font-size: 22px; color: var(--muted); }
+@media (max-width: 900px) { .mf-row { grid-template-columns: 1fr; gap: 6px; font-size: 17px; } .mf-row.is-head { display: none; } .mf-note { font-size: 15px; } }
 .owner-model-final-row { display: grid; grid-template-columns: 1.4fr repeat(4, 1fr); gap: 18px; padding: 10px 0; font-size: 23px; border-top: 1px solid var(--line); }
 .owner-model-final-row > span { font-size: 20px; color: var(--muted); }
 .owner-models .mc-cell { grid-template-columns: minmax(0, 1fr) 112px; gap: 10px; }
@@ -1431,7 +1439,7 @@ ul.g24-list { list-style: none; padding-left: 0; }
 .xr .deck-tip { font-size: 22px; max-width: 760px; }
 
 /* Checking the answer */
-.ac { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); grid-template-rows: 1fr auto; gap: 40px 72px; align-content: center; height: 100%; }
+.ac { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); grid-template-rows: 1fr auto auto; gap: 40px 72px; align-content: center; height: 100%; }
 .ac h3 { font-size: 34px; font-weight: 600; margin-bottom: 20px; }
 .ac-write, .ac-checks { align-self: center; }
 .ac-schema { margin: 0; padding: 28px 30px; border: 1px solid var(--line-strong); border-radius: var(--r); background: var(--paper-2); font: 500 24px/1.5 var(--mono, ui-monospace, monospace); white-space: pre-wrap; color: var(--ink); }
@@ -1440,8 +1448,8 @@ ul.g24-list { list-style: none; padding-left: 0; }
 .ac-item { position: relative; display: grid; grid-template-columns: 52px 1fr; align-items: center; padding: 15px 0; border-top: 1px solid var(--line); font-size: 29px; cursor: help; }
 .ac-item:last-child { border-bottom: 1px solid var(--line); }
 .ac-no { font-size: 26px; color: var(--accent); font-weight: 600; }
-.ac-fail { grid-column: 1 / -1; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 56px; padding-top: 24px; border-top: 2px solid var(--accent); font-size: 25px; line-height: 1.35; color: var(--ink-2); }
-.ac-fail .ac-limit { color: var(--warn); }
+.ac-fail { grid-column: 1 / -1; display: grid; grid-template-columns: 1fr 1fr; gap: 56px; padding-top: 24px; border-top: 2px solid var(--accent); font-size: 25px; line-height: 1.35; color: var(--ink-2); }
+.ac-claim { grid-column: 1 / -1; font-size: 34px; line-height: 1.3; font-weight: 600; color: var(--warn); max-width: 1500px; }
 .ac .deck-tip { font-size: 22px; max-width: 620px; }
 
 /* How I evaluated: both parts on one slide */
@@ -1501,7 +1509,7 @@ ul.g24-list { list-style: none; padding-left: 0; }
   .xr-row, .xr-row.is-head { grid-template-columns: 1fr; gap: 14px; padding: 18px 0; }
   .xr-row.is-head { display: none; }
   .xr-question { font-size: 19px; } .xr-step code, .xr-status, .xr-text { font-size: 17px; } .xr-step span, .xr-id { font-size: 15px; }
-  .ac { grid-template-columns: 1fr; height: auto; } .ac h3 { font-size: 22px; } .ac-schema { font-size: 14px; padding: 16px; } .ac-item { font-size: 17px; } .ac-fail { grid-template-columns: 1fr; gap: 10px; font-size: 16px; }
+  .ac { grid-template-columns: 1fr; height: auto; } .ac h3 { font-size: 22px; } .ac-schema { font-size: 14px; padding: 16px; } .ac-item { font-size: 17px; } .ac-fail { grid-template-columns: 1fr; gap: 10px; font-size: 16px; } .ac-claim { font-size: 20px; }
   .ev { height: auto; } .ev-block > h3 { font-size: 20px; } .ev .ex-sets { grid-template-columns: 1fr; gap: 24px; }
   .tg { height: auto; } .tg-kpis, .tg-rest { grid-template-columns: 1fr; gap: 18px; } .tg-value { font-size: 40px; } .tg-table { font-size: 15px; } .tg-layer { display: none; } .tg-chip, .tg-group h3 { font-size: 15px; }
   .ns { grid-template-columns: 1fr; height: auto; gap: 24px; } .ns-col h3 { font-size: 22px; } .ns-list strong { font-size: 17px; } .ns-list span { font-size: 15px; }
@@ -1554,18 +1562,15 @@ ul.g24-list { list-style: none; padding-left: 0; }
 
 /* Summary: what the agent is, what it can do, how I would improve it. */
 .as { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); column-gap: 56px; row-gap: 16px; align-items: start; }
-.as-col { display: grid; gap: 12px; align-content: start; border-top: 3px solid var(--accent); padding-top: 18px; }
-.as-col:nth-child(3) { border-top-color: var(--brass); }
-.as-h { font-size: 32px; font-weight: 600; line-height: 1.15; }
-.as-sub { font-size: 22px; color: var(--muted); line-height: 1.3; }
-.as-item { display: grid; gap: 4px; }
-.as-item strong { font-size: 24px; font-weight: 600; color: var(--ink); }
-.as-item span { font-size: 21px; color: var(--ink-2); line-height: 1.3; }
+.as-take { display: grid; gap: 18px; align-content: start; border-top: 3px solid var(--accent); padding-top: 22px; }
+.as-take:nth-child(3) { border-top-color: var(--brass); }
+.as-big { font-size: 46px; font-weight: 600; line-height: 1.1; letter-spacing: -0.02em; }
+.as-line { font-size: 27px; color: var(--ink-2); line-height: 1.35; }
 .as-limits a { color: var(--accent); }
 .as-limits { grid-column: 1 / -1; font-size: 20px; color: var(--muted); line-height: 1.35; border-top: 1px solid var(--line-strong); padding-top: 16px; }
 @media (max-width: 900px) {
   .as { grid-template-columns: minmax(0, 1fr); row-gap: 20px; }
-  .as-h { font-size: 22px; } .as-sub, .as-item span, .as-limits { font-size: 16px; } .as-item strong { font-size: 18px; }
+  .as-big { font-size: 26px; } .as-line, .as-limits { font-size: 17px; }
 }
 
 /* Follow-through: measured failures, bounded speed proposals and a production destination. */
@@ -1577,11 +1582,17 @@ ul.g24-list { list-style: none; padding-left: 0; }
 .production-tip-host .deck-tip { width: 540px; max-width: 540px; }
 .production-tip-host .is-production-right { left: auto; right: 0; }
 .production-mobile { display: none; }
-.improve-plan { display: grid; gap: 32px; align-content: start; }
-.improve-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 34px 54px; }
-.improve-item { border-top: 1px solid var(--line-strong); padding-top: 16px; }
-.improve-item h3 { font-size: 29px; font-weight: 600; margin-bottom: 12px; }
-.improve-item p { font-size: 24px; line-height: 1.35; color: var(--ink-2); }
+.ns2 { display: grid; gap: 40px; align-content: start; }
+.ns2-top { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 56px; }
+.ns2-main { display: grid; gap: 12px; align-content: start; border-top: 4px solid var(--accent); padding-top: 18px; }
+.ns2-kicker { font-size: 20px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; color: var(--accent); }
+.ns2-main h3 { font-size: 40px; font-weight: 600; line-height: 1.15; letter-spacing: -0.02em; }
+.ns2-body { font-size: 25px; line-height: 1.35; color: var(--ink-2); }
+.ns2-success { font-size: 25px; line-height: 1.35; padding: 14px 18px; border-radius: 10px; background: var(--paper-2); color: var(--ink); }
+.ns2-rest { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 32px; }
+.ns2-side { border-top: 1px solid var(--line-strong); padding-top: 12px; }
+.ns2-side h3 { font-size: 22px; font-weight: 600; margin-bottom: 6px; color: var(--ink-2); }
+.ns2-side p { font-size: 19px; line-height: 1.35; color: var(--muted); }
 .failure-results { display: grid; gap: 20px; align-content: start; }
 .failure-results-summary { display: grid; grid-template-columns: repeat(3, 1fr); gap: 36px; }
 .fr-split { display: flex; align-items: baseline; gap: 16px; font-size: 24px; color: var(--ink-2); }
@@ -1608,9 +1619,8 @@ ul.g24-list { list-style: none; padding-left: 0; }
   .production-mobile-lines { padding-left: 20px; font-size: 16px; line-height: 1.4; color: var(--ink-2); }
   .production-mobile-group { color: var(--accent); margin-top: 10px; }
   .production-mobile p { font-size: 16px; line-height: 1.4; color: var(--ink-2); }
-  .improve-plan { gap: 24px; }
-  .improve-grid { grid-template-columns: 1fr; gap: 24px; }
-  .improve-item h3 { font-size: 20px; } .improve-item p { font-size: 16px; }
+  .ns2 { gap: 24px; } .ns2-top, .ns2-rest { grid-template-columns: 1fr; gap: 20px; }
+  .ns2-main h3 { font-size: 24px; } .ns2-body, .ns2-success { font-size: 17px; } .ns2-side h3 { font-size: 17px; } .ns2-side p { font-size: 15px; }
   .failure-results-summary, .failure-results-grid { grid-template-columns: 1fr; gap: 22px; }
   .fr-split { font-size: 17px; } .fr-split strong { font-size: 24px; }
   .fr-family h3 { font-size: 20px; } .fr-count { font-size: 16px; } .fr-count strong { font-size: 19px; }

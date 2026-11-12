@@ -80,9 +80,9 @@ export function answerChecks() {
   const fail = el('div', 'ac-fail');
   fail.append(
     el('p', '', 'A failed check sends the errors back for one repair.'),
-    el('p', '', 'A second failure ends as invalid. It is never shown as a supported answer.'),
-    el('p', 'ac-limit', 'The checks confirm that a quote exists in its passage. They cannot confirm that it supports the claim.'));
-  wrap.append(write, check, fail);
+    el('p', '', 'A second failure ends as invalid. It is never shown as a supported answer.'));
+  const claim = el('p', 'ac-claim', 'A verified citation proves that evidence exists. It does not necessarily prove that the claim follows from the evidence.');
+  wrap.append(write, check, fail, claim);
   return wrap;
 }
 
@@ -146,23 +146,30 @@ export function threatGains() {
   return wrap;
 }
 
-/** Six proposals, each a plain-language aim with one technical line. Nothing here is measured unless the line says so. */
-const NEXT = [
-  ['Make answers arrive sooner', 'Overlap triage with the first plan. Cache embeddings and series lookups by revision and access policy. Test a smaller triage model and compare p50 and p95 latency.'],
-  ['Route off-topic questions more cheaply', 'A third Decisions API attempt: a two-way scope gate, preregistered. Measure false diversions, route accuracy, provider refusals, latency and cost on new frozen cases.'],
-  ['Keep the data up to date', 'Scheduled fetches into immutable, hashed snapshots. Accept one only after schema, period and revision checks pass. Alert on late updates and label the old snapshot stale.'],
-  ['Cover more official sources', 'More series, quarters and languages behind the same quality gates. A new source joins the catalogue once its licence, definitions and snapshot are recorded.'],
-  ['Check the live system again', 'Re-evaluate the served build on the 237 development questions, then on new blind questions. Its accuracy is unmeasured today.'],
-  ['Make misuse harder', 'Protected access, rate limits, per-user budgets, an isolated MCP service, secrets management and redaction. Re-run the attack suite, including the benign look-alikes that failed 3 of 8.']
+/** Six proposals, each a plain-language aim with one technical line. The first two are the priorities and carry a proposed success criterion. Nothing here is built or measured. */
+const PRIORITIES = [
+  ['Check the live system again', 'Re-evaluate the served build on the 237 development questions, then on new blind questions. Its accuracy is unmeasured today.', 'At least 80% behaviour accuracy and at most 3% false answers on 100 new blind questions, with intervals.'],
+  ['Make misuse harder', 'Protected access, rate limits, per-user budgets, an isolated MCP service, secrets management and redaction. Re-run the attack suite on new cases.', 'No benign look-alike failures (3 of 8 today) and at least 50 of 54 attacks passed on a new suite.']
+];
+const SECONDARY = [
+  ['Make answers arrive sooner', 'Overlap triage with the first plan. Cache embeddings and series lookups by revision and access policy. Test a smaller triage model.'],
+  ['Route off-topic questions more cheaply', 'A third Decisions API attempt: a two-way scope gate, preregistered, measured on new frozen cases.'],
+  ['Keep the data up to date', 'Scheduled fetches into immutable, hashed snapshots. Accept one only after schema, period and revision checks pass.'],
+  ['Cover more official sources', 'More series, quarters and languages behind the same quality gates, each with its licence and snapshot recorded.']
 ];
 
-/** Proposals only. Nothing here is built or measured. */
+/** Proposals only. Nothing here is built or measured; the success criteria are proposed targets, set before any run. */
 export function nextSteps() {
-  const wrap = el('div', 'improve-plan');
-  const list = el('div', 'improve-grid');
-  NEXT.forEach(([title, body]) => {
-    const item = el('div', 'improve-item'); item.append(el('h3', '', title), el('p', '', body)); list.append(item);
+  const wrap = el('div', 'ns2');
+  const top = el('div', 'ns2-top');
+  PRIORITIES.forEach(([title, body, success], i) => {
+    const item = el('div', 'ns2-main');
+    item.append(el('p', 'ns2-kicker', `Priority ${i + 1}`), el('h3', '', title), el('p', 'ns2-body', body));
+    const s = el('p', 'ns2-success'); s.append(el('strong', '', 'Success: '), document.createTextNode(success));
+    item.append(s); top.append(item);
   });
-  wrap.append(list);
+  const rest = el('div', 'ns2-rest');
+  SECONDARY.forEach(([title, body]) => { const item = el('div', 'ns2-side'); item.append(el('h3', '', title), el('p', '', body)); rest.append(item); });
+  wrap.append(top, rest);
   return wrap;
 }

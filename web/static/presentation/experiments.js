@@ -16,7 +16,7 @@ const BY_TITLE = {
   'Three example runs': 'agent-m4-bounded-tools',
   'Checking the answer': 'generation-groundedness',
   'Choosing models': 'generation-m3-g1',
-  'How I evaluated': 'generation-final-dev',
+  'How I evaluated': 'generation-question-cohorts',
   'Does better retrieval improve answers?': 'generation-final-dev',
   'Attacks and defences': 'threat-v2-challenge',
   'Agent Workbench': 'agent-served-chain-s65',

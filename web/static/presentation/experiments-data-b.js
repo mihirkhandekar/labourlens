@@ -707,6 +707,72 @@ export const EXPERIMENTS_B = [
     ]
   },
   {
+    "id": "generation-question-cohorts",
+    "group": "generation",
+    "title": "Question cohorts and human review",
+    "question": "Which questions were used for what, how independent are they, and how much was reviewed by a person?",
+    "factorsChanged": [
+      "None: this card describes the question sets and the review sample. It does not compare configurations."
+    ],
+    "heldFixed": [
+      "Gold files and case identifiers as frozen for each run",
+      "Counts are questions, not runs or judged claims"
+    ],
+    "measurement": {
+      "cases": "Question inventory and review sample; descriptive counts, not a scored comparison.",
+      "n": 333,
+      "corpusOrSystem": "Gold v3.7 for the 268 original questions (237 development, 31 original test); 65 fresh questions written on six newer sources; corpus v3.1 for the two retrieval subsets.",
+      "metrics": [
+        "Cases per cohort",
+        "Evidence overlap between original test and development",
+        "Human review sample: verdicts and agreement with a derived verdict"
+      ]
+    },
+    "example": {
+      "title": "Reading the retrieval subsets",
+      "lines": [
+        "128 development text questions and 34 fresh text questions are subsets used only to compare retrieval configurations.",
+        "They are not additional end-to-end populations."
+      ]
+    },
+    "takeaway": "Results are strongest as engineering evidence for this build and weaker as claims about future questions.",
+    "doesNotShow": "Independent agreement between reviewers: there was one reviewer, after scoring. The 40-answer sample is failure-enriched, so its proportions are not population accuracy.",
+    "status": "measured",
+    "sources": [
+      "docs/evaluation-report.md",
+      "docs/human-review/judge-vs-owner.md",
+      "experiments/eval/final-mean.json"
+    ],
+    "tables": [
+      {
+        "caption": "Question cohorts",
+        "columns": ["Cohort", "Cases", "Purpose", "Caveat"],
+        "rows": [
+          ["Development", "237", "Tune and debug", "Shaped the design, so optimistic"],
+          ["Original test", "31", "Frozen before the registered runs", "25 of 31 share evidence with development"],
+          ["Fresh questions", "65", "Written on six newer sources", "Now known and partly reused"],
+          ["Development text retrieval", "128", "Compare retrieval configurations", "Subset of development; retrieval only"],
+          ["Fresh text retrieval", "34", "Additional retrieval comparison", "Subset of fresh; retrieval only"]
+        ],
+        "source": "docs/evaluation-report.md"
+      },
+      {
+        "caption": "Human review sample of saved answers",
+        "columns": ["Measure", "Value"],
+        "rows": [
+          ["Saved baseline answers reviewed", "40"],
+          ["Selection", "Fixed seed: six per family plus four status mismatches"],
+          ["Marked correct", "25"],
+          ["Marked partly correct", "6"],
+          ["Marked wrong", "9"],
+          ["Derived verdict agrees with the reviewer", "31 of 40, kappa 0.64"],
+          ["Reviewers", "1"]
+        ],
+        "source": "docs/human-review/judge-vs-owner.md"
+      }
+    ]
+  },
+  {
     "id": "generation-final-dev",
     "group": "generation",
     "title": "FIN / FIN2 · Development",

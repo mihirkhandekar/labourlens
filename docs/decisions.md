@@ -1308,3 +1308,19 @@ Verification: `uv run pytest -q tests/retrieval/test_annual_abstention.py` passe
 **Alternatives.** Keep two slides for next steps and improvements (rejected: overlap). Delete "Choosing models" or "Does better retrieval improve answers?" (not done; left for the owner).
 
 **Reversibility.** Deck source only; `git revert`. No data or evaluation changed.
+
+## D-099 (12 Nov 2026): reviewer feedback round on the deck
+
+**Decision (owner request).**
+- **Agent Workbench** moves to follow **Three example runs**, so the panel sees the product before the evaluation slides.
+- **How I evaluated** keeps its three question-set cards. The five-cohort table (development 237, original test 31, fresh 65, development text retrieval 128, fresh text retrieval 34, with the retrieval subsets marked retrieval-only) and the 40-answer human-review sample (25 correct, 6 partly correct, 9 wrong; one reviewer) are a new card in the experiment notebook (E twice), which opens from that slide. The review detail is also in the speaker notes. An on-slide table was tried and reverted at the owner's request.
+- **Choosing models** carries the headline "Model selection prioritised lower false-answer risk and cost over maximum initial answer rate", with the two models' counts and costs beside the screen.
+- **Checking the answer** states that a verified citation proves the evidence exists, not that the claim follows from it.
+- The MCP slides use one name: the agent tool `get_series` calls the server tool `get_statistic`.
+- New appendix **Q** shows four recorded MCP scenarios (valid call, invalid arguments, timeout or unavailable server, instruction in content) from `docs/mcp-demo-transcript.md`. The faults are injected on a test server; one instruction phrasing passes the client heuristics, a known limit.
+- **Summary** shows three takeaways (Evidence first; Bounded and validated execution; Evaluated with known limitations).
+- **Next steps** highlights two priorities, each with a proposed success criterion: re-evaluate the live build (at least 80% behaviour accuracy and at most 3% false answers on 100 new blind questions) and harden against misuse (no benign look-alike failures, at least 50 of 54 attacks passed on a new suite). The thresholds are proposals, not results.
+
+**Alternatives.** Moving "How I built it" to the appendix (not done; it is a timing option). Quoting the early model counts only in notes (rejected: the trade-off was easy to miss).
+
+**Reversibility.** Deck source only. 26 main slides, 44 with references (appendix index 27, references A to Q 28 to 44).

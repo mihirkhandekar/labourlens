@@ -75,6 +75,10 @@ export const NOTES = {
     calculated: "On the same development cases, behaviour accuracy counts expected-status matches and over-abstention counts withheld expected answers over all cases. Claim support pools supported judged claims, while fact coverage pools covered reference facts in judged answers. These compare the ordinary filtered search with a fallback that broadens weak candidate pools.",
     decision: "Not adopted (D-030): retain r3 without the widening rule because the development comparison showed no consistent improvement. This does not prove the two methods equivalent."
   },
+  "generation-question-cohorts": {
+    calculated: "Cohort sizes count the questions in each gold file. Overlap is the number of original-test questions that share at least one evidence passage with development. The review rows count my verdicts on 40 saved answers; agreement compares a verdict derived from the scored behaviour and the judged content with my verdict, using kappa.",
+    decision: "Report the three question sets separately and treat the two retrieval subsets as retrieval-only. The single reviewer and the review after scoring stay disclosed limits."
+  },
   "generation-final-dev": {
     calculated: "FIN and FIN2 report expected-status agreement on the same development cases; Mean averages each case's two outcomes, not full factual correctness. The paired difference and 95% interval compare those case means by resampling cases together; over-abstention and false-answer rates both use all cases in this final aggregate. USD is usage-priced cost per case, and p50 is each run's median wall time, not a pooled median.",
     decision: "D-061 makes the two-run mean the headline and keeps gpt-6-luna on cost rather than an accuracy win. The r3 default retained in D-056 remains provisional: the development advantage does not establish generalisation."
