@@ -7,12 +7,12 @@ import {GROUPS, DEFINITIONS, allExperiments} from './experiments-model.js';
 // Most relevant card for each main slide (by title), then a chapter fallback. Unmatched slides
 // open at the top of the notebook.
 const BY_TITLE = {
-  'Processing reports': 'e1b',
+  'Processing Unstructured Reports for RAG': 'e1b',
   'Retrieval Strategies': 'e6',
   'Does filtering help?': 'r-series',
   'Statistics lookup through MCP': 'agent-mcp-all-tools',
   'How the agent answers a question': 'agent-m4-bounded-tools',
-  'Agent loop': 'agent-versus-fixed',
+  'Agent - Functional Architecture': 'agent-versus-fixed',
   'Three example runs': 'agent-m4-bounded-tools',
   'Checking the answer': 'generation-groundedness',
   'Choosing models': 'generation-m3-g1',

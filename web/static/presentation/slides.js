@@ -7,8 +7,8 @@ import {el, fmt, finite} from '../charts.js';
 import {model, metricOf, goldOf, contextSentence} from './model.js';
 import {stat, textStat, countRunner, dataTable} from './ui.js';
 import {threeAnswers, twoSources, buildTimeline, flattening, mcpMap, retrievalStaircase, experimentStaircase, agentLoop, assignmentBrief, challengeGrid, architectureDiagram, myProject, hardParts, keywordVsMeaning, modelChoice, RESPONSIBLE_AI, HYPOTHESES, contentMetricsText, workbenchShot, conceptGrid, threatLayerTable, threatRuns, buildProcess, rowsAffordance, finalComparison, finalFacts, finalSentence, finalCostFacts, provenanceTable, secondJudgeFacts, secondJudgeNote, secondJudgeQa, secondJudgeSentence, SUPPORT_LABEL} from './graphics.js';
-import {retrievalTuning, metricComparison, threatComparison, unseenRetrieval, retrievalLadder, agentOverview, fixedPipeline, assumptionsScope} from './graphics.js';
-import {exampleRuns, answerChecks, evaluationDesign, threatGains, nextSteps, improvementPlan} from './graphics-flows.js';
+import {retrievalTuning, metricComparison, threatComparison, unseenRetrieval, retrievalLadder, agentOverview, fixedPipeline} from './graphics.js';
+import {exampleRuns, answerChecks, evaluationDesign, threatGains, nextSteps} from './graphics-flows.js';
 import {agentSummary} from './graphics.js';
 import {decisionsExperiment} from './graphics.js';
 import {productionArchitecture} from './production.js';
@@ -134,14 +134,9 @@ export function slideSpecs(report) {
     notes: ['This slide states the assessment brief and the capabilities the submission must demonstrate.', 'Traceable means a reader can follow an answer back to its evidence, called provenance. Retrieval selects evidence; evaluation checks behaviour and errors; responsible AI covers uncertainty, misuse and rights. MCP provides a typed client-server interface to tools.', 'Not shown: proof that every requirement is met, a user study, or a comparison with an existing research workflow.']
   });
   add({
-    layout: 'solo', chapter: 'Why this problem', title: 'My project', visual: myProject(),
+    layout: 'solo', chapter: 'Why this problem', title: 'Project Scope', visual: myProject(m),
     source: 'LabourLens scope and data records',
-    notes: ['This slide defines the project, its users and the questions it will or will not answer.', 'The live answer window is Q1 2020 to Q2 2026. The evaluated window was Q1 2024 to Q2 2026. Facts and quarter-to-quarter changes are supported tasks; a missing population, adjustment or year may require clarification. Unsupported causal attribution is outside scope, although attributed publisher commentary may be cited.', 'Not shown: forecasts, causal estimates, personal advice or demonstrated accuracy for the newly added 2020 to 2023 coverage. Sources: scope decision, source catalogue and system card.']
-  });
-  add({
-    layout: 'solo', chapter: 'Scope', title: 'Scope', visual: assumptionsScope(m),
-    source: 'Scope and orchestration decisions; data sheet; system card; README; evaluation report',
-    notes: ['This slide shows five delivered scope items: the answer period, official sources, retrieval and agent tools, evaluation and workbench, and excluded tasks.', 'The current 142 sources comprise 36 datasets and 106 documents. They are inventory counts, not independent studies. The live window is Q1 2020 to Q2 2026; evaluated questions start in 2024. Public-source rights remain limited, tools are read only and bounded, and generation settings use provider defaults.', 'Not shown: blanket redistribution permission, independent human validation or production readiness. The 2020 to 2023 coverage and current serving changes have not been re-evaluated.'],
+    notes: ['This slide defines the project, its users, the questions it will or will not answer and the evidence behind it.', 'The live answer window is Q1 2020 to Q2 2026. The evaluated window was Q1 2024 to Q2 2026. Facts and quarter-to-quarter changes are supported tasks; a missing population, adjustment or year may require clarification. Unsupported causal attribution is outside scope, although attributed publisher commentary may be cited.', 'The current 142 sources comprise 36 datasets and 106 documents. They are inventory counts, not independent studies. Validated observations and source passages are stored separately, with snapshots, hashes, provenance and revision labels. Tools are read only and bounded; generation settings use provider defaults.', 'Not shown: forecasts, causal estimates, personal advice, blanket redistribution permission, independent human validation, production readiness or demonstrated accuracy for the newly added 2020 to 2023 coverage. Sources: scope decision, data sheet and system card.']
   });
   add({
     layout: 'solo', chapter: 'System', title: 'System architecture', visual: architectureDiagram(),
@@ -151,7 +146,6 @@ export function slideSpecs(report) {
 
   add({
     id: 'agent-overview', layout: 'solo', chapter: 'System', title: 'How the agent answers a question', visual: agentOverview(),
-    caption: 'A bounded loop: plan, gather evidence, then write and check one cited answer. Later slides open each step, including the full loop.',
     source: 'Agent design and answer validation',
     notes: ['This slide illustrates five stages for a question about unemployment trends in 2025 and 2026, through the available Q2 2026 boundary.', 'The illustrated plan selects quarterly unemployment statistics and may search reports for context. It is not a saved run and presents no numerical result. Because the question names no population, the answer states which series it uses, such as overall seasonally adjusted unemployment. Each claim cites gathered evidence.', 'Code checks citations, quotes and numbers with one repair allowed. These checks do not prove semantic support or guarantee a successful answer. The planner sees the question and catalogue, not report text; the writer sees evidence.'],
   });
@@ -167,26 +161,26 @@ export function slideSpecs(report) {
     notes: ['This slide shows separate ingestion paths for structured statistics and report text.', 'Corpus v4 inventory contains 52,020 observation rows across 36 datasets, including 11,228 rows in the live Q1 2020 to Q2 2026 window. Historical storage starts in 1980 but does not widen answering scope. Statistics stay as rows, without chunking or embeddings.', 'The report store contains 106 documents, 29,760 passages and 3,632 eligible chunks. Table-like PDF passages are flagged table_unreliable and excluded from default chunks, not repaired. These are current inventory counts, not evaluated v3.1 counts. Raw MOM and MTI material and report indexes remain local; this slide does not establish reliable PDF table reconstruction or redistribution permission.']
   });
   // ---------- EDA ----------
-  add({...figSlide('fig-unemployment', {title: 'Data findings'}), title: 'Data findings', id: 'eda', chapter: 'Sources', layout: 'split', human: 'MOM unemployment rates via data.gov.sg',
-    bullets: ['Multiple unemployment rates, depending on the type of population.'], rows: rowsAffordance(m.excerpts.unemployment, 'Show the real rows'),
+  add({...figSlide('fig-unemployment', {title: 'Data findings'}), title: 'Understanding the Data', subtitle: 'Finding 1 - Multiple unemployment rates', flowKey: 'Finding 1', id: 'eda', chapter: 'Sources', layout: 'split', human: 'MOM unemployment rates via data.gov.sg',
+    rows: rowsAffordance(m.excerpts.unemployment, 'Show the real rows'),
     detail: {label: 'How to read this', content: 'Quarterly unemployment rates by population and seasonal adjustment.\nPopulation: overall, resident, citizen.\nAdjustment: seasonally adjusted and resident unadjusted.\n26 observations from Q1 2020 to Q2 2026; no confidence intervals in the published series.'},
     notes: ['This chart shows four official unemployment series whose definitions produce different values.', 'The horizontal axis covers 26 quarters from Q1 2020 to Q2 2026; the vertical axis is per cent of the relevant labour force. Solid lines distinguish resident, overall and citizen seasonally adjusted rates. The dashed resident line is unadjusted. Adjustment removes recurring seasonal patterns; it does not change who counts as resident.', 'At Q2 2026 the resident adjusted rate is 2.9%, overall 1.9%, citizen 3.0% and resident unadjusted 3.5%. Each point is a published observation, not a model estimate. The annotation marks the largest absolute adjusted-versus-unadjusted resident gap in the displayed window. Source: report.json charts and observation export.',]});
-  add({...figSlide('fig-retrenchments', {title: 'Retrenchments'}), title: 'Retrenchment counts and their causes', chapter: 'Sources', layout: 'split', human: 'MOM retrenched employees via data.gov.sg',
-    bullets: ['The datasets give counts, not reasons.', 'Where MOM commentary gives a reason, the answer attributes it to MOM.'], rows: rowsAffordance(m.excerpts.retrenchments, 'Show the real rows'),
+  add({...figSlide('fig-retrenchments', {title: 'Retrenchments'}), title: 'Understanding the Data', subtitle: 'Finding 2 - Counts without causes', flowKey: 'Finding 2', chapter: 'Sources', layout: 'split', human: 'MOM retrenched employees via data.gov.sg',
+    rows: rowsAffordance(m.excerpts.retrenchments, 'Show the real rows'),
     detail: {label: 'How to read this', content: 'Stacked quarterly counts of permanent and term-contract retrenchments, with the total compared in the source table.\nUnit: persons.\n26 quarters; no confidence intervals in the published series.'},
     notes: ['This chart shows quarterly retrenchment counts, not the reasons for retrenchment.', 'Each stacked bar is one of 26 quarters from Q1 2020 to Q2 2026. The segments count permanent and term-contract employees in persons; their sum is the total. The highlighted bar marks the largest total in the window. Totals start at 3,220, peak at 9,120 in Q3 2020 and end at 4,620. Source: report.json charts and dataset rows.', 'Not shown: causal variables, employee identities, a forecast or confidence intervals. Hovering the row affordance reveals source rows and the permanent/term-contract split, not report text.']
   });
-  add({...figSlide('fig-revisions', {title: 'Advance and final figures'}), title: 'Advance and final figures differ', chapter: 'Sources', layout: 'split', human: 'MOM advance and final reports, and the SingStat sector dataset',
-    bullets: ['Each figure comes from an advance or a final release.'], rows: rowsAffordance(m.excerpts.revisions, 'Show the same quarter in each release'),
+  add({...figSlide('fig-revisions', {title: 'Advance and final figures'}), title: 'Understanding the Data', subtitle: 'Finding 3 - Advance and final figures differ', flowKey: 'Finding 3', chapter: 'Sources', layout: 'split', human: 'MOM advance and final reports, and the SingStat sector dataset',
+    rows: rowsAffordance(m.excerpts.revisions, 'Show the same quarter in each release'),
     detail: {label: 'How to read this', content: 'Each row compares the advance release, final MOM report and sector dataset total for one quarter.\nUnit: persons.\nFour quarters in the reconciliation export; this is a source-vintage comparison, not a confidence interval.'},
     notes: ['This chart compares employment-change figures for the same quarter across release vintages and the sector dataset.', 'Each row is one quarter, with markers for advance, final and sector-dataset totals in persons. The four advance/final/dataset triples are Q3 2025: 24,800/25,100/30,200; Q4 2025: 19,600/17,700/20,800; Q1 2026: 5,000/9,400/13,000; Q2 2026: 10,700/11,400/14,700. Connecting marks show numerical distance, not uncertainty. Source: report.json reconciliation and linked release and observation records.', 'Not shown: confidence intervals, a revision-detection service or proof all three measures have identical coverage. The four rows are a source-vintage comparison, not four agent test cases.']});
   add({
-    layout: 'solo', chapter: 'Sources', title: 'Challenges with the data', visual: hardParts(m), caption: 'Each finding about the data became a design decision. Rows that rest on data show the real rows on hover or focus.',
+    layout: 'solo', chapter: 'Sources', title: 'Challenges with the data', visual: hardParts(m),
     source: 'LabourLens data findings and design notes',
     notes: ['This slide maps six data difficulties to the design choices they motivated.', 'Four unemployment rates require typed population and adjustment; absent definitions trigger clarification. Counts without causes require attributed commentary or a decline. Advance/final differences require release labels, not averaging. Flattened tables require exclusion and checks. A published vacancy ratio can differ by up to 0.67 from the ratio rebuilt from counts because survey bases differ; use the published ratio. Before-2020 requests are outside live scope.', 'Not shown: six independently measured fixes, a reliable PDF table parser or a causal analysis. The scope example is schematic; the statistical popovers show actual source rows.']
   });
   add({
-    layout: 'solo', chapter: 'Processing', title: 'Processing reports', visual: flattening(m),
+    layout: 'solo', chapter: 'Processing', title: 'Processing Unstructured Reports for RAG', visual: flattening(m),
     source: 'Current corpus metadata, parser, chunking and retrieval implementation',
     detail: {label: 'Current document build', content: 'Corpus v4, the live build, has 142 sources, including 106 documents, 29,760 extracted passages and 3,632 runtime chunks; it adds the 2020 to 2022 reports and the 2020 to 2023 annual reports to v3.1 and has not been evaluated. Corpus v3.1, the build the final evaluation ran on, has 85 sources, including 49 documents, 16,419 extracted passages and 1,847 runtime chunks. Compared with v3, v3.1 relabelled 40 MTI passages after refining the garbled-text rule; the source, passage and chunk counts stayed unchanged. These are extraction and quality-label facts, not measured retrieval gains.'},
     notes: ['This slide follows a report from local extraction to two indexes over the same eligible chunks.', 'Current corpus v4 has 142 sources, including 106 documents, 29,760 passages and 3,632 chunks. Evaluated v3.1 had 85 sources, 49 documents, 16,419 passages and 1,847 chunks. These count different units and builds. Runtime merge200 targets about 200 words with 40 words of whole-passage overlap; only quality_flag=ok enters default chunking.', 'BM25 indexes words; dense embeddings represent meaning as 3,072-number vectors. The worked eligible chunk has 216 words and nine source passages on pages 2 to 3 of the Q1 2026 final report. A table-like block on page 28 is excluded, not repaired. This is an extraction illustration, not a retrieval score. Source: runtime.py, chunk metadata and local cached vector metadata.',]
@@ -210,7 +204,7 @@ export function slideSpecs(report) {
 
   // ---------- agent ----------
   add({
-    id: 'agent', layout: 'solo', chapter: 'Agent', title: 'Agent loop', visual: agentLoop(), caption: 'The planner chooses tools or stops.',
+    id: 'agent', layout: 'solo', chapter: 'Agent', title: 'Agent - Functional Architecture', visual: agentLoop(), caption: 'The planner chooses tools or stops.',
     source: 'LangGraph agent and planner/answer prompts',
     detail: {label: 'Planner and answer prompts', content: 'PLANNER\nGather evidence in round 1. Use round 2 only for a calculation or another lookup after an error or gap. Then stop gathering.\n\nANSWER\nEach claim cites supplied evidence and includes an exact quote. Quote existence is not proof of semantic support.\n\nEvaluated/default limits: 2 rounds, 6 calls total, 3 per round, 10 seconds per tool call, 1 transient retry and 1 answer repair. The unadopted report-arithmetic experiment allowed one bonus round after a bad dimension label, keeping the six-call budget.\nCurrent serving: report search has 25 seconds plus one conditional timeout retry of at most 12 seconds within the run deadline; other tools keep ten seconds. This served exception was not evaluated.'},
     // Transport choices are implementation facts; hypothetical memory costs are not measurements.
@@ -274,19 +268,14 @@ export function slideSpecs(report) {
     notes: ['This slide summarises the planning, implementation, measurement and review process.', 'The decision count comes from report.json work.decisions, not a quality score. A frozen run keeps configuration, prompts, gold identity, usage and scores. A paired comparison measures the same questions under two conditions. Registration records intentions but cannot enforce good design by itself. The three harnesses are coding-agent gates, evaluation, and synthetic threats/MCP fixtures.', 'The try-it row separates offline and paid work. LABOURLENS_DEMO_ENABLED=false make serve opens the report locally. make verify runs project gates; labourlens rights-scan needs the private corpus and otherwise reports NOT CHECKED, not clearance. scripts/final_mean.py recomputes saved scores; labourlens mcp-demo exercises the protocol. The live workbench needs a code and paid calls.', 'Not shown: independent review of every change, certification or complete model replay from a public clone. Full model replay needs the rights-restricted corpus and paid credentials. Offline reproducibility of saved scores is a narrower claim.']
   });
   add({
-    layout: 'solo', chapter: 'Next', title: 'Improve the system', visual: improvementPlan(m),
-    source: 'Final evaluation and native-planner smoke; proposals need new measurements',
-    notes: ['This slide separates the measured latency starting point from proposed and newly shipped optimisation work.', 'About 14 seconds is the rounded 14.35-second mean of two development run medians for filter then rerank, not a pooled median or live-app target. The 237 questions are development cases. p50 is the median; p95 is the time below which 95% finish. The native-planner smoke took 29.8, 7.8 and 9.1 seconds versus structured 53.1, 8.6 and 12.8 on three once-only questions, not a controlled experiment.', 'Overlapping triage, broader revision/access-aware series, prompt and response caches, and smaller models remain proposals. D-089 implements concurrent independent calls within the three-per-round cap and a 300-second corpus-keyed query/search cache; D-088 caps report context at 20 passages. Native calling and streaming are also implemented. Current code supersedes the older proposal wording on the slide, but the quality and live speed effects remain unmeasured.', 'Not shown: a controlled speed-up from these changes. Speculation can cost money; stale or cross-user caches can be incorrect; streaming does not prove faster completion. A controlled comparison would measure status accuracy, p50/p95 and cost, followed by new blind questions. Sources: final-mean.json, native-planner smoke and D-088/D-089.']
-  });
-  add({
     layout: 'solo', chapter: 'Next', title: 'Deploy in production', visual: productionArchitecture(),
     source: 'Proposed architecture; current deployment is one Droplet with Caddy and Docker',
-    notes: ['This diagram separates the single-machine deployment built today from a proposed production architecture.', 'The top bar is one Droplet with Caddy and Docker. The four proposed request-path boxes are protected access, API replicas, queued workers and a model gateway. Authentication and rate limits control entry; replicas hold no local job state; bounded workers execute jobs; the gateway enforces budgets, redaction and evaluated-model failover. Arrows show responsibilities, not measured throughput.', 'The three lower boxes are read-only versioned sources, search/statistics and an isolated MCP service. They preserve rights, checksums, evidence versions and typed access. The surrounding strip applies secrets management, audit/tracing, evaluation release gates and backups across all services. It is not another step in answering a question.',]
+    notes: ['This diagram separates the single-machine deployment built today from a proposed production architecture.', 'The top bar is one Droplet with Caddy and Docker. The four proposed boxes are protected access, API and workers, a model gateway and read-only evidence. Authentication and rate limits control entry; replicas hold no local job state; bounded workers execute jobs; the gateway enforces budgets, redaction and evaluated-model failover; evidence stays versioned, rights-aware and behind a read-only MCP service. Arrows show responsibilities, not measured throughput.', 'The strip below applies secrets management, audit and tracing, evaluation release gates and backups across all services. It is not another step in answering a question. The hover text names example technologies such as SSO and OpenTelemetry; none is selected. Proposed, not implemented or load-tested; managed services and recovery targets would need workload, rights and security review.']
   });
   add({
     layout: 'solo', chapter: 'Next', title: 'Next steps', visual: nextSteps(),
-    source: 'Innovation assessment, deployment notes and project decision log',
-    notes: ['This slide proposes three directions: narrower routing, fresh data and wider source coverage.', 'A two-way scope gate would decide only whether a question belongs to the domain. It is a third proposed Decisions API attempt, not a shipped classifier. The two earlier four-way trials were faster but failed registered safety, routing or operational rules. Faster classification is not automatically faster or safer end-to-end answering.', 'Not shown: an adopted accuracy gain, scheduled refresh reliability, multilingual evaluation or permission to ingest every government source. The fuller discussion is at /innovation; references can be revealed with A twice.']
+    source: 'Evaluation records, deployment notes and project decision log',
+    notes: ['This slide lists six proposed improvements. Each has a plain-language aim and a technical line.', 'Nothing here is built or measured. Native function calling, streaming, concurrent independent calls and a short search cache are already served, but the live build was not re-evaluated. The evaluated mean of two development run medians for filter then rerank was 14.35 seconds; that is not a live-app target. p50 is the median; p95 is the time below which 95% finish.', 'A two-way scope gate would decide only whether a question belongs to the domain. It is a third proposed Decisions API attempt, not a shipped classifier; the two earlier four-way trials were faster but failed registered safety, routing or operational rules. The security point rests on the frozen threat suite: guarded 50 of 54 against naive 42 of 54, with benign look-alikes failing 3 of 8 in each arm. Production controls are proposed on the next slide.', 'Not shown: an adopted accuracy gain, a controlled speed-up, scheduled refresh reliability, multilingual evaluation or permission to ingest every government source. The fuller discussion is at /innovation; references can be revealed with A twice.']
   });
 
   // ---------- limits and next ----------
@@ -294,7 +283,7 @@ export function slideSpecs(report) {
   add({
     layout: 'solo', chapter: 'Close', title: 'Summary', visual: agentSummary(m) || missing('The agent summary'),
     source: 'Assessment PDF and LabourLens evaluation records',
-    notes: ['This slide summarises what the agent is, what it can do and six improvements ranked by the confidence they would add.', 'The left column describes a bounded planner and checked answer. Two rounds and six calls are budgets, not averages. Ten seconds per tool is the evaluated/default limit; current served search gets 25 seconds plus one conditional retry up to 12 seconds within the run deadline. The middle mixes measured evidence and serving: chunk hit@8 rose from 53.9% to 96.9% on 128 development text questions; guarded attacks passed 50/54 versus 42/54. MCP, annual averages and streaming are current functionality, not re-evaluated system quality. Annual averages are simple means of four quarterly rates.', 'The ranked actions are re-test serving, independent review, semantic support checks, new blind questions, known attack/arithmetic gaps, then measured speed and cost work. Evaluated v3.1 used structured planning, planner_v1/answer_v3 and three direct tools. Served v4 uses native function calling, planner_v7/answer_v9 and four tools, not re-evaluated. Labels were signed off by one human reviewer after scoring; the fresh 65 have been reused.', 'Filtering and reranking improved development retrieval, with no demonstrated gain in answer status on either test set. The separate detector test reached 23/30 attacks flagged with unchanged 9/30 benign flags; semantic and non-English bypasses remain. Report arithmetic failed its adoption rules. A provider-side spend cap and some source rights remain unresolved. Next: live-build re-evaluation, independent review and new blind questions.', 'Not shown: production readiness, stable resistance to every planted figure or proof that a quote supports a claim. Sources: final evaluation, threat/scanner artefacts, served.py, graph.py and the decision record.']
+    notes: ['This slide summarises what the agent is, what it can do and what is still open.', 'The left column describes a bounded planner and checked answer. Two rounds and six calls are budgets, not averages. Ten seconds per tool is the evaluated/default limit; current served search gets 25 seconds plus one conditional retry up to 12 seconds within the run deadline. The middle mixes measured evidence and serving: chunk hit@8 rose from 53.9% to 96.9% on 128 development text questions; guarded attacks passed 50/54 versus 42/54. MCP and annual averages are current functionality, not re-evaluated system quality. Annual averages are simple means of four quarterly rates.', 'The open items: the live build (native function calling, planner_v7/answer_v9, four tools, corpus v4) was not re-evaluated, whereas evaluated v3.1 used structured planning, planner_v1/answer_v3 and three direct tools. Labels were signed off by one human reviewer after scoring, with a same-family primary judge; the fresh 65 have been reused. Filtering and reranking improved development retrieval, with no demonstrated gain in answer status on either test set.', 'The separate detector test reached 23/30 attacks flagged with unchanged 9/30 benign flags; semantic and non-English bypasses remain. Report arithmetic failed its adoption rules. A provider-side spend cap and some source rights remain unresolved. Next: live-build re-evaluation, independent review and new blind questions, listed on the Next steps slide.', 'Not shown: production readiness, stable resistance to every planted figure or proof that a quote supports a claim. Sources: final evaluation, threat and scanner artefacts, served.py, graph.py and the decision record.']
   });
 
   // ---------- appendix ----------
@@ -540,20 +529,19 @@ export function slideSpecs(report) {
   const FLOW = [
     ['Singapore AI Agent for Workforce Policy Researchers', null, 'Start'],
     ['Assignment', null, 'Problem'],
-    ['My project', null, 'Project'],
-    ['Scope', null, 'Scope'],
+    ['Project Scope', null, 'Project'],
     ['System architecture', 'all', 'System'],
     ['How the agent answers a question', 'all', 'System'],
     ['Data sources', 0, 'Sources'],
-    ['Data findings', 0, 'Sources'],
-    ['Retrenchment counts and their causes', 0, 'Sources'],
-    ['Advance and final figures differ', 0, 'Sources'],
+    ['Finding 1', 0, 'Sources'],
+    ['Finding 2', 0, 'Sources'],
+    ['Finding 3', 0, 'Sources'],
     ['Challenges with the data', 0, 'Sources'],
-    ['Processing reports', 1, 'Processing'],
+    ['Processing Unstructured Reports for RAG', 1, 'Processing'],
     ['Retrieval Strategies', 2, 'Retrieval'],
     ['Does filtering help?', 2, 'Retrieval'],
     ['Statistics lookup through MCP', 2, 'Retrieval'],
-    ['Agent loop', 3, 'Agent'],
+    ['Agent - Functional Architecture', 3, 'Agent'],
     ['Three example runs', 3, 'Agent'],
     ['Checking the answer', 4, 'Answer'],
     ['How I evaluated', 5, 'Checks'],
@@ -563,13 +551,12 @@ export function slideSpecs(report) {
     ['Agent Workbench', null, 'Workbench'],
     ['How I built it', null, 'How I worked'],
     ['Next steps', null, 'Next'],
-    ['Improve the system', null, 'Next'],
     ['Deploy in production', null, 'Next'],
     ['Summary', null, 'Close'],
   ];
   const main = specs.filter(s => s.chapter !== 'Appendix' && s.layout !== 'appendix');
   main.forEach(s => {
-    const at = FLOW.findIndex(f => f[0] === s.title);
+    const at = FLOW.findIndex(f => f[0] === (s.flowKey || s.title));
     if (at < 0) throw new Error(`Slide "${s.title}" has no row in the flow table`);
     [, s.stage, s.chapter] = FLOW[at];
     s.flowAt = at;

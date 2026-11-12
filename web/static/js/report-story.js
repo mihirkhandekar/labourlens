@@ -98,7 +98,7 @@ export function buildBands(report) {
     id: 'problem', title: 'My project', layout: 'split',
     lede: [`I chose the Singapore labour market because official quarterly statistics and reports give checkable revisions, ambiguity and calculation questions. The agent is for policy researchers and analysts. The answer period is fixed at ${fmt.quarter(from)} to ${fmt.quarter(to)}${nQuarters ? `, ${nQuarters} quarters` : ''}, and earlier figures are out of scope.`]
   });
-  problem.visual.append(stage(safe('My project', myProject), {design: 1100}));
+  problem.visual.append(stage(safe('My project', () => myProject(m)), {design: 1100}));
   problem.node.append(more('Other domains I considered', group('', 'Recorded alternatives were housing affordability, which has confounded transaction-level data, and cost of living, which has index methods and causal complexity. They are not on the slide face.')));
   bands.problem = problem;
   const contract = band({

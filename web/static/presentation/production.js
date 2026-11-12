@@ -5,7 +5,7 @@ let graphicSerial = 0;
 
 /** The current deployment and a proposed production topology, not an implementation claim. */
 export function productionArchitecture() {
-  const width = 1680, height = 720;
+  const width = 1680, height = 520;
   const wrap = el('div', 'production-architecture has-tip-host');
   const entries = [];
   const svg = svgEl('svg', {
@@ -15,7 +15,7 @@ export function productionArchitecture() {
     height: '100%',
     'font-family': 'inherit',
     role: 'group',
-    'aria-label': 'Production architecture. Built today: one Droplet with Caddy and Docker. Everything below is proposed: protected access, replicated APIs, queued workers, isolated evidence services and operational controls.'
+    'aria-label': 'Production architecture. Built today: one Droplet with Caddy and Docker. Everything below is proposed: protected access, API and workers, a model gateway, read-only evidence and operational controls.'
   });
   const serial = ++graphicSerial;
   const defs = svgEl('defs');
@@ -103,45 +103,30 @@ export function productionArchitecture() {
   });
 
   text(svg, 25, 125, 'Proposed production design', 34, '--ink', 600);
-  text(svg, 25, 164, 'A question travels left to right; evidence is read only at answer time.', 26, '--muted');
 
   const path = 'Proposed request path';
-  box(25, 190, 385, 140, 'Protected access', ['CDN, WAF, rate limits', 'SSO, per-user credentials'],
-    'Options, not selected: SSO through Entra ID or Okta, or a managed edge access layer. Authorise every request, use short-lived sessions and never cache private answers in a shared CDN.', path);
-  box(440, 190, 385, 140, 'API replicas', ['Behind a load balancer', 'Job state kept outside'],
-    'Options, not selected: containers on ECS Fargate, Cloud Run or Kubernetes behind a load balancer. Keep job state outside stateless API replicas so users can resume their own event streams.', path);
-  box(855, 190, 385, 140, 'Queued workers', ['Deadlines and retries', 'Progress streamed to user'],
-    'Options, not selected: SQS, Pub/Sub or Redis with worker containers, limited retries and a dead-letter queue. Separate research and ingestion; enforce deadlines and cancellation, and persist progress events.', path);
-  box(1270, 190, 385, 140, 'Model gateway', ['Budgets, PII redaction', 'Evaluated-model failover'],
-    'Options, not selected: LiteLLM or a cloud provider managed gateway for keys, budgets, routing and logging. Redact personal data and fail over only to evaluated models. These are examples, not vendor endorsements.', path, {accent: true});
-  line('M410 260 H440');
-  line('M825 260 H855');
-  line('M1240 260 H1270');
-
-  // Workers reach evidence through read-only services, not arbitrary network destinations.
-  text(svg, 330, 402, 'Read-only evidence, versioned', 28, '--ink', 600);
-  line('M1047 330 V360 H272 V420');
-  line('M1047 360 V420');
-  line('M1047 360 H1412 V420');
-  const evidence = 'Read-only evidence';
-  box(25, 420, 495, 140, 'Versioned sources', ['Immutable snapshots, checksums', 'Rights-aware access'],
-    'Options, not selected: S3 or GCS object storage with versioning and hashes. Restrict PDFs and extracted text according to source rights; public availability does not permit redistribution.', evidence);
-  box(592, 420, 495, 140, 'Search and statistics', ['Hybrid BM25 + dense index', 'Versioned Parquet, exact maths'],
-    'Options, not selected: OpenSearch or pgvector for search, with Parquet or a warehouse for statistics. Keep indexes on the same evidence version, preserve provenance and use read-only deterministic calculations.', evidence);
-  box(1160, 420, 495, 140, 'Read-only MCP service', ['Separate network boundary', 'Allowlists, no write access'],
-    'An option, not selected: a small container with a read-only role behind the same access layer. Enforce service identity, schemas, timeouts and network policy; treat returned content as untrusted.', evidence);
+  box(25, 160, 385, 140, 'Protected access', ['Login, rate limits', 'Per-user credentials'],
+    'Authorise every request, use short-lived sessions and never cache private answers in a shared CDN. For example SSO, a web application firewall and rate limits.', path);
+  box(440, 160, 385, 140, 'API and workers', ['Stateless replicas', 'Queued jobs with deadlines'],
+    'Keep job state outside the API replicas so users can resume their own event streams. Workers enforce deadlines, limited retries and cancellation, and stream progress.', path);
+  box(855, 160, 385, 140, 'Model gateway', ['Budgets, redaction', 'Evaluated-model failover'],
+    'One place for keys, budgets, routing and logging. Redact personal data and fail over only to evaluated models. Any vendor is an example, not an endorsement.', path, {accent: true});
+  box(1270, 160, 385, 140, 'Read-only evidence', ['Versioned sources and search', 'Statistics and MCP service'],
+    'Immutable snapshots with checksums, indexes on the same evidence version and a read-only MCP service behind an allowlist. Restrict report text according to source rights.', path);
+  line('M410 230 H440');
+  line('M825 230 H855');
+  line('M1240 230 H1270');
 
   // These controls span the whole environment rather than forming steps in an answer.
   const around = svgEl('g', {class: 'production-node'});
-  around.append(svgEl('rect', {x: 25, y: 600, width: 1630, height: 80, rx: 14, fill: 'var(--paper)', stroke: 'var(--line-strong)', 'stroke-width': 1.5, 'stroke-dasharray': '7 5'}));
-  text(around, 47, 648, 'Around everything', 30, '--ink', 600);
-  text(around, 380, 648, 'Secrets manager · Audit and tracing · Evaluation release gates · Backups with restore drills', 28);
-  const aroundDetail = 'Options, not selected: OpenTelemetry logs and traces with Grafana or Datadog; secrets in a vault; budget alerts; evaluation as a CI gate. Use scoped credentials and redacted logs. Keep encrypted backups outside the primary failure domain and practise restores.';
+  around.append(svgEl('rect', {x: 25, y: 360, width: 1630, height: 80, rx: 14, fill: 'var(--paper)', stroke: 'var(--line-strong)', 'stroke-width': 1.5, 'stroke-dasharray': '7 5'}));
+  text(around, 47, 408, 'Around everything', 30, '--ink', 600);
+  text(around, 380, 408, 'Secrets manager · Audit and tracing · Evaluation release gates · Backups with restore drills', 28);
+  const aroundDetail = 'OpenTelemetry logs and traces, secrets in a vault, budget alerts and evaluation as a CI gate. Use scoped credentials and redacted logs. Keep encrypted backups outside the primary failure domain and practise restores.';
   attachTip(around, 840, 'Around everything', aroundDetail);
   svg.append(around);
   entries.push({group: 'Around everything', title: 'Controls across the environment', lines: ['Secrets manager', 'Audit and tracing', 'Evaluation release gates', 'Backups with restore drills'], detail: aroundDetail});
 
-  text(svg, 25, 710, 'Proposed, not implemented or load-tested. Managed services and recovery targets need workload, rights and security review.', 24, '--muted');
   const mobile = el('div', 'production-mobile');
   let group;
   entries.forEach(entry => {
@@ -149,7 +134,7 @@ export function productionArchitecture() {
       group = entry.group;
       mobile.append(el('h3', 'production-mobile-group', group));
       if (group === 'Proposed request path') {
-        mobile.append(el('p', 'production-mobile-flow', 'Protected access → API replicas → queued workers → model gateway. Server-sent events return progress and the final answer.'));
+        mobile.append(el('p', 'production-mobile-flow', 'Protected access → API and workers → model gateway → read-only evidence. Server-sent events return progress and the final answer.'));
       }
     }
     const article = el('article', 'production-mobile-entry');
@@ -158,7 +143,6 @@ export function productionArchitecture() {
     article.append(el('h4', '', entry.title), lines, el('p', 'production-mobile-tip', entry.detail));
     mobile.append(article);
   });
-  mobile.append(el('p', 'production-mobile-note', 'Proposed, not implemented or load-tested. Managed services and recovery targets need workload, rights and security review.'));
   wrap.append(svg, mobile);
   return wrap;
 }

@@ -68,11 +68,12 @@ function buildSlide(spec) {
   const section = el('section', 'deck-section');
   if (spec.id) section.id = spec.id;
   section.dataset.chapter = spec.chapter || '';
-  section.dataset.title = spec.title || '';
+  section.dataset.title = spec.subtitle ? `${spec.title}: ${spec.subtitle}` : (spec.title || '');
   if (spec.chapter === 'Appendix' || spec.layout === 'appendix') section.dataset.appendix = '';
   if (spec.id === 'experiments') section.dataset.experiments = '';
   const inner = el('div', `deck-slide is-${spec.layout}${spec.cls ? ` ${spec.cls}` : ''}${spec.warn ? ' is-warn' : ''}`);
   const heading = el(spec.layout === 'title' ? 'h1' : 'h2', 'deck-title', spec.title);
+  if (spec.subtitle) heading.append(el('span', 'deck-subtitle', spec.subtitle));
   if (spec.layout !== 'title') inner.append(heading);
   if (spec.stage != null && spec.layout !== 'title') {
     inner.classList.add('has-flow');

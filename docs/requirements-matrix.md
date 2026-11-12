@@ -26,7 +26,7 @@ This table maps each requirement in the assessment PDF (Section 1 core requireme
 | 2 Structured and unstructured synthesis | [Agent tools](../src/labourlens/agent/tools.py), [evaluation report](evaluation-report.md) | Done | Report-only arithmetic is weak |
 | 3 Deterministic calculation | [Agent tests](../tests/retrieval/test_agent.py), [agent tools](../src/labourlens/agent/tools.py) | Done | Calculation from report text was tested and not adopted |
 | 4 Abstention or clarification | [Gold cases](../experiments/gold/gold_v3.7.jsonl), [evaluation report](evaluation-report.md) | Done | Reference answers were AI-drafted |
-| 5 Conflicting sources | [Reconciliation](../artifacts/data-quality/reconciliation.json), [data sheet](data-sheet.md), deck slide "Advance and final figures differ" | Done | Gold conflict cases are AI-drafted |
+| 5 Conflicting sources | [Reconciliation](../artifacts/data-quality/reconciliation.json), [data sheet](data-sheet.md), deck slide "Understanding the Data" (Finding 3, advance and final figures differ) | Done | Gold conflict cases are AI-drafted |
 | 6 Prompt-injection resistance | [Threat summary](../experiments/threats/SUMMARY.md), deck slide "Attacks and defences" | Done | Scanner heuristic; the 36-case suite cannot separate defended from naive |
 | 7 Recovery from tool failure | [MCP fault transcript](mcp-demo-transcript.md), [tests](../tests/mcp/) | Done | Faults are injected, not observed in production |
 | 8 Discover and invoke MCP, grounded answer | [Transcript](mcp-demo-transcript.md), [agent run](../artifacts/mcp-agent-demo.md) | Done | One recorded agent run, one question |

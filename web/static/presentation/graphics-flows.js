@@ -146,53 +146,23 @@ export function threatGains() {
   return wrap;
 }
 
+/** Six proposals, each a plain-language aim with one technical line. Nothing here is measured unless the line says so. */
 const NEXT = [
-  ['Re-exploring the Decisions API', [
-    ['Two-way scope gate', 'A third attempt would decide only in scope or out of scope, separate from unsafe intent. Preregister it before running.'],
-    ['Why try again?', 'Both four-way trials were faster but failed safety or quality rules. A narrower task might help; it is untested.'],
-    ['Check before adoption', 'Measure false diversions, route accuracy, provider refusals, p50/p95 latency and total cost on new frozen cases.']
-  ]],
-  ['Keep the data current', [
-    ['Scheduled fetches', 'Fetch each dataset on a schedule and keep immutable, hashed snapshots.'],
-    ['Release gates', 'Accept a snapshot only after schema, period and revision checks pass.'],
-    ['Freshness and drift', 'Record the last successful fetch, alert on late updates and label the previous snapshot as stale.']
-  ]],
-  ['Extend', [
-    ['More datasets', 'More series, quarters and languages behind the same quality gates.'],
-    ['Other government sources', 'A new source joins the catalogue once its licence, definitions and snapshot are recorded.'],
-  ]]
+  ['Make answers arrive sooner', 'Overlap triage with the first plan. Cache embeddings and series lookups by revision and access policy. Test a smaller triage model and compare p50 and p95 latency.'],
+  ['Route off-topic questions more cheaply', 'A third Decisions API attempt: a two-way scope gate, preregistered. Measure false diversions, route accuracy, provider refusals, latency and cost on new frozen cases.'],
+  ['Keep the data up to date', 'Scheduled fetches into immutable, hashed snapshots. Accept one only after schema, period and revision checks pass. Alert on late updates and label the old snapshot stale.'],
+  ['Cover more official sources', 'More series, quarters and languages behind the same quality gates. A new source joins the catalogue once its licence, definitions and snapshot are recorded.'],
+  ['Check the live system again', 'Re-evaluate the served build on the 237 development questions, then on new blind questions. Its accuracy is unmeasured today.'],
+  ['Make misuse harder', 'Protected access, rate limits, per-user budgets, an isolated MCP service, secrets management and redaction. Re-run the attack suite, including the benign look-alikes that failed 3 of 8.']
 ];
 
 /** Proposals only. Nothing here is built or measured. */
 export function nextSteps() {
-  const wrap = el('div', 'ns');
-  NEXT.forEach(([title, items], i) => {
-    const col = el('div', 'ns-col'); col.style.setProperty('--i', String(i));
-    col.append(el('h3', '', title));
-    const ul = el('ul', 'ns-list');
-    items.forEach(([head, body]) => { const li = el('li'); li.append(el('strong', '', head), el('span', '', body)); ul.append(li); });
-    col.append(ul); wrap.append(col);
-  });
-  return wrap;
-}
-
-/** A measured starting point, followed by proposals rather than promised speed-ups. */
-export function improvementPlan(m) {
   const wrap = el('div', 'improve-plan');
-  const intro = el('p', 'improve-intro');
-  intro.append(el('strong', '', 'About 14 s'), el('span', '', 'Evaluated median answer time. Chained model calls add delay.'));
-  wrap.append(intro);
   const list = el('div', 'improve-grid');
-  [
-    ['Overlap independent work', 'Try triage alongside the first plan or retrieval. Cancel speculative work if the question is out of scope.'],
-    ['Reuse valid work', 'Cache embeddings, repeated series lookups, prompts and responses by revision, access policy and question.'],
-    ['Use fewer or smaller calls', 'Shorten or skip context rewriting without history. Test a smaller triage model.'],
-    ['Parallel tools within limits', 'Try independent calls together, keeping the three-per-round cap and measuring extra cost.'],
-    ['Already served, not re-evaluated', 'Native function calling uses reasoning off. Streaming shows progress; it does not prove faster completion.'],
-    ['Measure before adoption', 'Compare p50/p95 latency, behaviour accuracy and cost on 237 development questions. Then use new blind questions.']
-  ].forEach(([title, body]) => {
+  NEXT.forEach(([title, body]) => {
     const item = el('div', 'improve-item'); item.append(el('h3', '', title), el('p', '', body)); list.append(item);
   });
-  wrap.append(list, el('p', 'improve-limit', 'All speed levers are proposals unless labelled already served. Accuracy effects are unmeasured.'));
+  wrap.append(list);
   return wrap;
 }

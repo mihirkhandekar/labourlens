@@ -805,7 +805,7 @@ export function assignmentBrief() {
   const statement = el('div', 'ab-col'); statement.append(el('h3', '', 'The brief'));
   ['Policy researchers work with statistics and reports that can be incomplete, inconsistent or hard to search.',
     'Build an assistant that answers analytical questions with traceable evidence, and says plainly when it is unsure.'].forEach(t => statement.append(el('p', 'ab-text', t)));
-  const asks = el('div', 'ab-col'); asks.append(el('h3', '', 'The asks'));
+  const asks = el('div', 'ab-col'); asks.append(el('h3', '', 'Project Asks'));
   const list = el('ul', 'ab-list');
   REQUIREMENTS.forEach(([, name, ask]) => { const li = el('li', ''); li.append(el('strong', '', name), el('span', '', ask)); list.append(li); });
   asks.append(list);
@@ -898,11 +898,13 @@ export function architectureDiagram() {
 }
 
 /** What the agent is for: the domain I chose, who it is for, and what it does and declines. */
-export function myProject() {
+export function myProject(m) {
   const wrap = el('div', 'g18 is-single');
   const task = el('div', 'g18-panel is-task');
   const tl = el('dl', 'g18-dl');
-  [['Domain', 'The Singapore labour market: official quarterly data, reports and real revisions'], ['Intended Users', 'Policy researchers and analysts'], ['What it answers', 'Facts, changes between quarters, comparisons and revisions, with a cited source'], ['What it declines', 'Forecasts, causes, personal advice and anything before 2020'], ['How far', 'Q1 2020 to Q2 2026']].forEach(([k, v]) => { tl.append(el('dt', '', k), el('dd', '', v)); });
+  const count = m?.section('sources').metrics?.sources;
+  [['Domain', 'The Singapore labour market: official quarterly data, reports and real revisions'], ['Intended Users', 'Policy researchers and analysts'], ['What it answers', 'Facts, changes between quarters, comparisons and revisions, with a cited source'], ['What it declines', 'Forecasts, causes, personal advice and anything before 2020'], ['How far', 'Q1 2020 to Q2 2026'],
+    finite(count) ? ['Sources', `${fmt.int(count)} official sources: statistics and reports, kept in separate evidence stores`] : null].filter(Boolean).forEach(([k, v]) => { tl.append(el('dt', '', k), el('dd', '', v)); });
   task.append(tl);
   wrap.append(task);
   return wrap;
@@ -1489,7 +1491,7 @@ export function buildProcess(decisionCount) {
 /** Threat suite v2 totals. These are not in report.json yet; same source and numbers as threatComparison: experiments/threats/threat-v2-analysis.json. */
 const THREAT_V2 = {guarded: 50, naive: 42, n: 54};
 
-/** Closing summary: what the agent is, what it can do and how I would improve it. Retrieval figures come from the report data;
+/** Closing summary: what the agent is, what it can do and what is still open. Retrieval figures come from the report data;
  * the threat totals are the documented constants above. */
 export function agentSummary(m) {
   const before = m.ladder?.configs?.R0?.['hit@8'], after = m.ladder?.configs?.R3?.['hit@8'], hitN = m.ladder?.n_cases;
@@ -1506,21 +1508,16 @@ export function agentSummary(m) {
   item(what, 'Writes one cited answer', 'Every claim carries a quote. Code checks the quote is in the passage.');
   item(what, 'Stays inside limits', 'At most 2 rounds and 6 tool calls, each call timed. It declines when evidence is missing.');
   const can = column('What it can do', 'Measured on the evaluated build, except where noted.');
-  item(can, 'Look up official statistics', 'Validated MOM series with units, periods and release stage, served over MCP.');
+  item(can, 'Look up and calculate', 'Validated MOM series served over MCP. Changes are computed in code, not by the model.');
   item(can, 'Search the reports', `Filter by period, then rerank: hit@8 ${fmt.pct(before)} to ${fmt.pct(after)} on ${fmt.int(hitN)} development questions.`,
     'Chunk hit@8 on the development questions that shaped the design. Original test and fresh questions show no demonstrated answer gain.');
-  item(can, 'Calculate exactly', 'Changes are computed in code, not by the model. Annual averages are live but not evaluated.');
-  item(can, 'Resist planted instructions', `Guarded ${THREAT_V2.guarded} of ${THREAT_V2.n} attacks passed, naive ${THREAT_V2.naive}. A modest margin; one attack is unstable.`,
+  item(can, 'Resist planted instructions', `Guarded ${THREAT_V2.guarded} of ${THREAT_V2.n} attacks passed, naive ${THREAT_V2.naive}. A modest margin.`,
     'Guards and the answer prompt changed together, so no single layer is credited. Exact McNemar p = .039.');
-  item(can, 'Show its steps', 'The live workbench streams the plan, tool calls and checks as they happen.');
-  const better = column('How I would improve it', 'In order of what would change my confidence most.');
-  item(better, '1. Re-test the live build', 'The live planner, corpus and annual average were never re-evaluated.');
-  item(better, '2. Independent review', 'A second reviewer, and labels fixed before scoring. Replace the same-family judge.');
-  item(better, '3. Check every claim', 'Test that each cited passage supports its claim, not only that the quote exists.');
-  item(better, '4. New blind questions', 'The fresh 65 have been reused. Write a new set before any tuning.');
-  item(better, '5. Close known gaps', 'Planted false figures, paraphrased attacks and arithmetic on report-only figures.');
-  item(better, '6. Faster and cheaper', 'Speculative triage, wider caching and smaller models. Live speed gains are still unmeasured.');
-  const limits = el('p', 'as-limits', 'Limits: labels signed off by one reviewer after scoring; no shown answer gain on the original or fresh sets; spend cap and some source rights open. ');
+  const open = column('What is still open', 'Stated plainly.');
+  item(open, 'Live build not re-tested', 'The live planner, corpus and annual average were never re-evaluated.');
+  item(open, 'One reviewer', 'Labels signed off by one reviewer after scoring, with a same-family judge.');
+  item(open, 'No answer gain shown', 'Retrieval improved, but the original and fresh question sets show no demonstrated answer gain.');
+  const limits = el('p', 'as-limits');
   const live = el('a', '', 'The live app differs from the measured build (appendix M)'); live.href = '#/served-versus-evaluated';
   const fails = el('a', '', 'failure counts by question type (appendix P)'); fails.href = '#/where-it-fails';
   limits.append(live, document.createTextNode('; '), fails, document.createTextNode('.'));

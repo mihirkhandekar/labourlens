@@ -1293,3 +1293,18 @@ Verification: `uv run pytest -q tests/retrieval/test_annual_abstention.py` passe
 
 **Decision (owner request).** When the answer check fails, the workbench Activity tab lists fixed categories for the failure, for example a cited quote not found in its passage, a claim with no citation, or copied report wording. `validate.error_categories` maps each validator error to one of eleven codes with counts, `validate_answer` adds them to its trace item as `error_kinds`, and `public_trace_item` in `src/labourlens/report/app.py` lets only known codes with integer counts (and the attempt number) through to the browser. **Why not show the messages:** they are written for the repair prompt and some embed the model's wording or up to 300 characters of report text, which the rights position does not allow on a public page. **Scope:** display only; validation, repair and outcomes are unchanged, and the evaluated results are not affected. Needs a deploy to reach the live site. **Reversibility:** remove the two trace fields and the panel in `workbench.js`.
 
+
+## D-098 (12 Nov 2026): deck simplification round
+
+**Decision (owner request).** The main deck goes from 28 to 26 slides (43 with references).
+- "My project" becomes **Project Scope** and absorbs the Scope slide (a Sources row is added); the Scope slide is removed.
+- The assignment column is titled **Project Asks**; the agent overview and data-challenge captions are removed.
+- The three data slides share the title **Understanding the Data** with subtitles **Finding 1 - Multiple unemployment rates**, **Finding 2 - Counts without causes** and **Finding 3 - Advance and final figures differ**; their bullet points are removed. Slides can now carry a `subtitle`, and `flowKey` keys the flow table when titles repeat.
+- **Processing Unstructured Reports for RAG** and **Agent - Functional Architecture** replace the earlier titles.
+- "Next steps" and "Improve the system" merge into one **Next steps** slide of six proposals: a plain-language aim with one technical line each, including a security point. The "About 14 s" line is removed.
+- **Summary** shrinks to three columns of three points (what it is, what it can do, what is still open).
+- **Deploy in production** shows four proposed boxes and one controls strip; the "Options, not selected" wording and the two explanatory captions are removed from the slide face.
+
+**Alternatives.** Keep two slides for next steps and improvements (rejected: overlap). Delete "Choosing models" or "Does better retrieval improve answers?" (not done; left for the owner).
+
+**Reversibility.** Deck source only; `git revert`. No data or evaluation changed.

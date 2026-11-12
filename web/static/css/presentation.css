@@ -55,6 +55,7 @@ html.deck-page, .deck-page body { margin: 0; background: var(--paper); color: va
 /* ---------- slide layout (design size 1920 x 1080) ---------- */
 .deck-slide { position: relative; z-index: 1; height: 100%; display: grid; grid-template-rows: auto minmax(0, 1fr) auto; row-gap: 36px; padding: 76px 120px 96px; }
 .deck-title { font-size: 52px; line-height: 1.1; font-weight: 600; letter-spacing: -0.025em; max-width: 1500px; text-wrap: balance; }
+.deck-subtitle { display: block; margin-top: 10px; font-size: 34px; line-height: 1.2; font-weight: 400; letter-spacing: -0.01em; color: var(--muted); }
 .deck-body { display: grid; grid-template-columns: minmax(0, 560px) minmax(0, 1fr); column-gap: 72px; align-items: start; min-height: 0; }
 .deck-body.is-solo { grid-template-columns: minmax(0, 1fr); }
 .deck-bullets { display: grid; gap: 22px; padding: 0; list-style: none; font-size: 30px; line-height: 1.32; color: var(--ink-2); }
@@ -922,7 +923,7 @@ ul.g24-list { list-style: none; padding-left: 0; }
   .deck-page .reveal section.present .g5-bar, .deck-page .reveal section.present .g6-box, .deck-page .reveal section.present .g9-bar, .tcard { animation: none; }
 }
 @media (max-width: 800px) {
-  .deck-title { font-size: 26px; } .deck-caption { font-size: 18px; }
+  .deck-title { font-size: 26px; } .deck-subtitle { font-size: 17px; margin-top: 6px; } .deck-caption { font-size: 18px; }
   .deck-slide.is-title { display: block; padding: 40px 20px 90px; } .deck-slide.is-title .tl-left { padding-left: 20px; gap: 24px; } .deck-slide.is-title .deck-title { font-size: 34px; margin: 18px 0; } .tcard { margin-top: 24px; padding: 20px; } .tcard-a { font-size: 26px; } .tcard-q { font-size: 17px; } .tcard-cite { font-size: 14px; }
   .tl-author { font-size: 20px; } .tl-role { font-size: 15px; } .deck-wordmark { font-size: 18px; }
   .deck-two2 { grid-template-columns: 1fr; gap: 24px; } .deck-col h3 { font-size: 22px; } .deck-col .deck-list { font-size: 17px; }
@@ -1577,14 +1578,10 @@ ul.g24-list { list-style: none; padding-left: 0; }
 .production-tip-host .is-production-right { left: auto; right: 0; }
 .production-mobile { display: none; }
 .improve-plan { display: grid; gap: 32px; align-content: start; }
-.improve-intro { display: flex; align-items: baseline; gap: 30px; }
-.improve-intro strong { font-size: 56px; color: var(--accent); }
-.improve-intro span { font-size: 27px; color: var(--ink-2); }
 .improve-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 34px 54px; }
 .improve-item { border-top: 1px solid var(--line-strong); padding-top: 16px; }
 .improve-item h3 { font-size: 29px; font-weight: 600; margin-bottom: 12px; }
 .improve-item p { font-size: 24px; line-height: 1.35; color: var(--ink-2); }
-.improve-limit { font-size: 23px; line-height: 1.35; color: var(--muted); }
 .failure-results { display: grid; gap: 20px; align-content: start; }
 .failure-results-summary { display: grid; grid-template-columns: repeat(3, 1fr); gap: 36px; }
 .fr-split { display: flex; align-items: baseline; gap: 16px; font-size: 24px; color: var(--ink-2); }
@@ -1611,10 +1608,9 @@ ul.g24-list { list-style: none; padding-left: 0; }
   .production-mobile-lines { padding-left: 20px; font-size: 16px; line-height: 1.4; color: var(--ink-2); }
   .production-mobile-group { color: var(--accent); margin-top: 10px; }
   .production-mobile p { font-size: 16px; line-height: 1.4; color: var(--ink-2); }
-  .improve-plan { gap: 24px; } .improve-intro { display: grid; gap: 6px; }
-  .improve-intro strong { font-size: 34px; } .improve-intro span { font-size: 18px; }
+  .improve-plan { gap: 24px; }
   .improve-grid { grid-template-columns: 1fr; gap: 24px; }
-  .improve-item h3 { font-size: 20px; } .improve-item p, .improve-limit { font-size: 16px; }
+  .improve-item h3 { font-size: 20px; } .improve-item p { font-size: 16px; }
   .failure-results-summary, .failure-results-grid { grid-template-columns: 1fr; gap: 22px; }
   .fr-split { font-size: 17px; } .fr-split strong { font-size: 24px; }
   .fr-family h3 { font-size: 20px; } .fr-count { font-size: 16px; } .fr-count strong { font-size: 19px; }
