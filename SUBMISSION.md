@@ -20,7 +20,7 @@ make verify && uv run labourlens mcp-demo
 LABOURLENS_DEMO_ENABLED=false make serve
 ```
 
-Open <http://127.0.0.1:8000>, `/deck` or `/workbench`. These commands make no paid calls. The deck has 29 main slides and 46 including the appendix; press X twice quickly for speaker notes. Full commands are in [Reproduce](docs/reproduce.md).
+Open <http://127.0.0.1:8000>, `/deck` or `/workbench`. These commands make no paid calls. The deck has 28 main slides and 45 including the appendix; press X twice quickly for speaker notes. Full commands are in [Reproduce](docs/reproduce.md).
 
 ## Inputs
 

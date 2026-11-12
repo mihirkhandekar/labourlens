@@ -1,4 +1,5 @@
 import {el, svgEl} from '../charts.js';
+import {withTip} from './graphics.js';
 
 let graphicSerial = 0;
 
@@ -17,9 +18,6 @@ export function productionArchitecture() {
     'aria-label': 'Production architecture. Built today: one Droplet with Caddy and Docker. Everything below is proposed: protected access, replicated APIs, queued workers, isolated evidence services and operational controls.'
   });
   const serial = ++graphicSerial;
-  const tip = el('div', 'deck-tip is-svg');
-  tip.id = `production-tip-${serial}`;
-  tip.setAttribute('role', 'tooltip');
   const defs = svgEl('defs');
   const markerId = `production-arrow-${serial}`;
   const marker = svgEl('marker', {
@@ -41,22 +39,34 @@ export function productionArchitecture() {
     svg.append(svgEl('path', attrs));
   };
   const attachTip = (node, x, label, detail) => {
+    const host = withTip(el('div', 'production-tip-host'), detail, `${x > width * .7 ? 'is-production-right ' : ''}is-up`, detail);
+    host.tabIndex = -1;
     node.setAttribute('tabindex', '0');
     node.setAttribute('role', 'img');
-    node.setAttribute('aria-label', `${label}. ${detail}`);
-    node.setAttribute('aria-describedby', tip.id);
+    node.setAttribute('aria-label', label);
+    node.setAttribute('aria-describedby', host.getAttribute('aria-describedby'));
     node.classList.add('is-tipped');
     const show = () => {
-      tip.textContent = detail;
-      tip.style.setProperty('--at', `${Math.max(12, Math.min(88, x / width * 100))}%`);
-      tip.classList.add('is-on');
+      const bounds = node.getBoundingClientRect(), parent = wrap.getBoundingClientRect();
+      const scaleX = parent.width / wrap.offsetWidth, scaleY = parent.height / wrap.offsetHeight;
+      host.style.left = `${(bounds.left - parent.left) / scaleX}px`;
+      host.style.top = `${(bounds.top - parent.top) / scaleY}px`;
+      host.style.width = `${bounds.width / scaleX}px`;
+      host.classList.add('is-active');
     };
-    const hide = () => tip.classList.remove('is-on');
+    const hide = () => host.classList.remove('is-active');
     node.addEventListener('mouseenter', show);
     node.addEventListener('mouseleave', hide);
     node.addEventListener('focus', show);
     node.addEventListener('blur', hide);
-    node.addEventListener('keydown', event => { if (event.key === 'Escape') hide(); });
+    node.addEventListener('keydown', event => {
+      if (event.key === 'Escape') {
+        hide();
+        event.preventDefault();
+        event.stopPropagation();
+      }
+    });
+    wrap.append(host);
   };
   const box = (x, y, w, h, title, lines, detail, group, {accent = false} = {}) => {
     const node = svgEl('g', {class: 'production-node'});
@@ -97,13 +107,13 @@ export function productionArchitecture() {
 
   const path = 'Proposed request path';
   box(25, 190, 385, 140, 'Protected access', ['CDN, WAF, rate limits', 'SSO, per-user credentials'],
-    'Cache public assets, filter hostile requests and limit abuse before traffic reaches the application. Use SSO with short-lived sessions and per-user credentials, and authorise every request. Never cache private answers in a shared CDN.', path);
+    'Options, not selected: SSO through Entra ID or Okta, or a managed edge access layer. Authorise every request, use short-lived sessions and never cache private answers in a shared CDN.', path);
   box(440, 190, 385, 140, 'API replicas', ['Behind a load balancer', 'Job state kept outside'],
-    'Balance requests across stateless API replicas. Keep job state outside the replicas so a reconnecting user can resume their own event stream.', path);
+    'Options, not selected: containers on ECS Fargate, Cloud Run or Kubernetes behind a load balancer. Keep job state outside stateless API replicas so users can resume their own event streams.', path);
   box(855, 190, 385, 140, 'Queued workers', ['Deadlines and retries', 'Progress streamed to user'],
-    'Queue research and ingestion separately. Workers enforce deadlines, limited retries and cancellation; persisted job events let any API replica stream progress by server-sent events.', path);
+    'Options, not selected: SQS, Pub/Sub or Redis with worker containers, limited retries and a dead-letter queue. Separate research and ingestion; enforce deadlines and cancellation, and persist progress events.', path);
   box(1270, 190, 385, 140, 'Model gateway', ['Budgets, PII redaction', 'Evaluated-model failover'],
-    'Redact personal data before provider calls. Enforce user budgets, isolate caches by access scope and version, and fail over only to models that have been evaluated.', path, {accent: true});
+    'Options, not selected: LiteLLM or a cloud provider managed gateway for keys, budgets, routing and logging. Redact personal data and fail over only to evaluated models. These are examples, not vendor endorsements.', path, {accent: true});
   line('M410 260 H440');
   line('M825 260 H855');
   line('M1240 260 H1270');
@@ -115,18 +125,18 @@ export function productionArchitecture() {
   line('M1047 360 H1412 V420');
   const evidence = 'Read-only evidence';
   box(25, 420, 495, 140, 'Versioned sources', ['Immutable snapshots, checksums', 'Rights-aware access'],
-    'Preserve immutable source snapshots and checksums. Restrict PDFs and extracted text according to source rights; do not assume public availability permits redistribution.', evidence);
+    'Options, not selected: S3 or GCS object storage with versioning and hashes. Restrict PDFs and extracted text according to source rights; public availability does not permit redistribution.', evidence);
   box(592, 420, 495, 140, 'Search and statistics', ['Hybrid BM25 + dense index', 'Versioned Parquet, exact maths'],
-    'Keep keyword and vector indexes on the same evidence version and apply access and release filters before retrieval, keeping passage provenance for every citation. Store validated observations as versioned Parquet with definitions, units and revision status, and run read-only deterministic calculations.', evidence);
+    'Options, not selected: OpenSearch or pgvector for search, with Parquet or a warehouse for statistics. Keep indexes on the same evidence version, preserve provenance and use read-only deterministic calculations.', evidence);
   box(1160, 420, 495, 140, 'Read-only MCP service', ['Separate network boundary', 'Allowlists, no write access'],
-    'Expose typed read-only tools from a separate service. Enforce service identity, schemas, timeouts and network policy; treat all returned content as untrusted.', evidence);
+    'An option, not selected: a small container with a read-only role behind the same access layer. Enforce service identity, schemas, timeouts and network policy; treat returned content as untrusted.', evidence);
 
   // These controls span the whole environment rather than forming steps in an answer.
   const around = svgEl('g', {class: 'production-node'});
   around.append(svgEl('rect', {x: 25, y: 600, width: 1630, height: 80, rx: 14, fill: 'var(--paper)', stroke: 'var(--line-strong)', 'stroke-width': 1.5, 'stroke-dasharray': '7 5'}));
   text(around, 47, 648, 'Around everything', 30, '--ink', 600);
   text(around, 380, 648, 'Secrets manager · Audit and tracing · Evaluation release gates · Backups with restore drills', 28);
-  const aroundDetail = 'Secrets: scoped service credentials, rotated keys, none in prompts or logs. Audit: traces, metrics and alerts for latency, cost, failures and retrieval drift, with redacted access logs. Release gates: deterministic, retrieval, answer and adversarial checks before a canary rollout, with rollback. Backups: encrypted, versioned copies outside the primary failure domain, with practised restores.';
+  const aroundDetail = 'Options, not selected: OpenTelemetry logs and traces with Grafana or Datadog; secrets in a vault; budget alerts; evaluation as a CI gate. Use scoped credentials and redacted logs. Keep encrypted backups outside the primary failure domain and practise restores.';
   attachTip(around, 840, 'Around everything', aroundDetail);
   svg.append(around);
   entries.push({group: 'Around everything', title: 'Controls across the environment', lines: ['Secrets manager', 'Audit and tracing', 'Evaluation release gates', 'Backups with restore drills'], detail: aroundDetail});
@@ -149,6 +159,6 @@ export function productionArchitecture() {
     mobile.append(article);
   });
   mobile.append(el('p', 'production-mobile-note', 'Proposed, not implemented or load-tested. Managed services and recovery targets need workload, rights and security review.'));
-  wrap.append(svg, mobile, tip);
+  wrap.append(svg, mobile);
   return wrap;
 }

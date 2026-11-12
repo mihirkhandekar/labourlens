@@ -20,7 +20,7 @@ GRAPHICS = (STATIC / "presentation" / "graphics.js").read_text(encoding="utf-8")
 HOME = (STATIC / "js" / "home.js").read_text(encoding="utf-8")
 
 REQUIRED_STEPS = {
-    "assignment": "Assignment", "problem": "My project", "system": "Agentic system", "data": "Choosing the data",
+    "assignment": "Assignment", "problem": "My project", "scope-contract": "Scope", "system": "Agentic system", "data": "Data sources",
     "eda": "Data findings", "hard": "Challenges with the data", "build": "Report processing", "retrieval": "Retrieval Strategies", "agent": "Agent",
     "models": "Models", "tools": "Tools and MCP", "ops": "Agent Workbench", "review": "Review provenance", "safety": "Safety", "process": "How I built it",
     "limits": "Limits", "run": "Run it",
@@ -30,7 +30,7 @@ REVIEW_SENTENCE = "I signed off four separate review streams"
 
 def _steps():
     block = re.search(r"export const STEPS = \[(.*?)\n\];", STORY, re.S).group(1)
-    return dict(re.findall(r"\['([a-z]+)', '([^']+)'\]", block))
+    return dict(re.findall(r"\['([a-z-]+)', '([^']+)'\]", block))
 
 
 def test_index_loads_report_styles_and_not_the_workbench_sheet():

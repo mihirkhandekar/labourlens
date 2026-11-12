@@ -117,9 +117,9 @@ def test_every_slide_has_a_heading_and_speaker_notes():
     assert "el('aside', 'notes')" in builder and "if (!notes.children.length) notes.append(" in builder
     main = _slides_main_section()
     specs = re.findall(r"\badd\(\{", main)
-    assert len(specs) == 29, len(specs)
+    assert len(specs) == 28, len(specs)
     total = len(re.findall(r"\badd\(\{", (STATIC / "presentation" / "slides.js").read_text()))
-    assert total == 46  # 29 main slides, appendix index, and references A to P
+    assert total == 45  # 28 main slides, appendix index, and references A to P
     assert total - len(specs) == 17
     for block in re.split(r"\badd\(\{", main)[1:]:
         assert "notes:" in block, block[:100]
@@ -150,7 +150,7 @@ def test_no_bridge_sentences_or_pills_on_faces():
 
 
 REQUIRED_TITLES = [
-    "Assignment", "My project", "Assumptions, constraints and scope", "System architecture", "How a question is answered", "Choosing the data", "Two kinds of evidence", "Data findings", "Retrenchments rose, data gives no cause", "Advance and final figures differ", "Challenges with the data",
+    "Assignment", "My project", "Scope", "System architecture", "How the agent answers a question", "Data sources", "Data findings", "Retrenchment counts and their causes", "Advance and final figures differ", "Challenges with the data",
     "Processing reports", "Retrieval Strategies", "Does filtering help?", "Statistics lookup through MCP", "Agent loop", "Three example runs", "Checking the answer", "How I evaluated", "Choosing models",
     "Does better retrieval improve answers?", "Attacks and defences", "Agent Workbench", "How I built it", "Next steps", "Improve the system", "Deploy in production", "Summary",
 ]
@@ -166,7 +166,7 @@ def test_main_deck_follows_the_navigation_flow_and_has_short_plain_titles():
     main = _slides_main_section()
     defined = set(re.findall(r"\btitle: '([^']+)'", main))
     rows = _flow_rows()
-    assert len(rows) == 29
+    assert len(rows) == 28
     assert [r[0] for r in rows[1:]] == REQUIRED_TITLES
     for title, _, _ in rows:
         assert title in defined or "Singapore AI Agent" in title, title
@@ -179,7 +179,7 @@ def test_main_deck_follows_the_navigation_flow_and_has_short_plain_titles():
     assert "['Sources', 'Processing', 'Retrieval', 'Agent', 'Answer', 'Checks']" in (STATIC / "presentation" / "deck.js").read_text()
     for title in [r[0] for r in rows][1:]:
         assert len(title.split()) <= 9, title
-    assert len(re.findall(r"\badd\(\{", main)) == 29
+    assert len(re.findall(r"\badd\(\{", main)) == 28
 
 
 def test_removed_slides_stay_removed_and_summary_keeps_limitations():
@@ -529,14 +529,16 @@ def _graphics_block(graphics, start, end):
     return graphics.split(start, 1)[1].split(end, 1)[0]
 
 
-def test_evidence_stores_keeps_statistics_free_of_chunks_and_sources_report_counts_from_corpus():
+def test_data_sources_keeps_statistics_free_of_chunks_and_sources_report_counts_from_corpus():
     graphics = (STATIC / "presentation" / "graphics.js").read_text(encoding="utf-8")
-    block = _graphics_block(graphics, "export function evidenceStores(m)", "export function questionSets(m)")
+    block = _graphics_block(graphics, "export function twoSources(m)", "export function questionSets(m)")
     assert "serving').corpus" in block, "report counts must read the serving.corpus section, not hard-coded numbers"
     assert "No chunking or embeddings" in block, "the statistics lane must state there is no chunk/embedding path"
     assert "corpus.quality_flags?.all_after?.table_unreliable" in block and "table_unreliable" in block
-    assert "source.observations" in block and "source.by_type?.dataset_csv" in block
-    assert "get_series → MCP → get_statistic" in block and "search_reports → passages" in block
+    assert "source.observations" in block and "types.dataset_csv" in block
+    assert "get_series → MCP → get_statistic" not in block and "search_reports → passages" not in block
+    for value in ("corpus.document_files", "corpus.passages", "corpus.chunks", "source.in_scope_observations", "source.period_from"):
+        assert value in block
 
 
 def test_question_sets_show_three_equal_sets_with_known_evidence_limits():
@@ -681,7 +683,7 @@ def test_three_frozen_experiments_are_integrated_without_changing_slide_count():
     for helper in ("threatComparison", "unseenRetrieval", "fixedPipeline"):
         assert f"export function {helper}" in graphics
         assert helper in slides and helper in story
-    assert len(re.findall(r"\badd\(\{", slides)) == 46
+    assert len(re.findall(r"\badd\(\{", slides)) == 45
     threat = json.loads((root / "experiments/threats/threat-v2-analysis.json").read_text())
     assert (threat["guarded_majority_pass"], threat["naive_majority_pass"]) == (50, 42)
     assert (threat["guarded_only"], threat["naive_only"]) == (10, 2)
@@ -914,24 +916,23 @@ def test_failure_modes_routing_trial_does_not_replace_live_baseline():
 def test_assumptions_slide_follows_project_and_records_real_boundaries():
     main = _slides_main_section()
     order = [row[0] for row in _flow_rows()]
-    assert order[2:5] == ["My project", "Assumptions, constraints and scope", "System architecture"]
-    block = main.split("title: 'Assumptions, constraints and scope'", 1)[1].split("\n  });", 1)[0]
+    assert order[2:5] == ["My project", "Scope", "System architecture"]
+    block = main.split("title: 'Scope'", 1)[1].split("\n  });", 1)[0]
     assert "assumptionsScope(m)" in block and "notes:" in block
     assert "gpt-5.6-luna" not in block
     graphics = (STATIC / "presentation" / "graphics.js").read_text()
     visual = graphics.split("export function assumptionsScope(m)", 1)[1].split("\n/**", 1)[0]
-    for text in ("Assumptions and constraints", "Scope done", "Licences follow their recorded status",
-                 "Public sources; report text stays local", "Read-only, bounded research", "Default sampling; one provider family",
-                 "Q1 2020 to Q2 2026", "Retrieval, agent and MCP", "Evaluation, threats and workbench",
-                 "No forecasts or personal advice", "Not all rights have been verified."):
+    for text in ("Q1 2020 to Q2 2026", "Retrieval, agent and MCP", "Evaluation, threats and workbench",
+                 "No forecasts or personal advice"):
         assert text in visual
-    for removed in ("Validated rows anchor calculations", "AI-drafted labels, one reviewer", "4 November 2026, Singapore morning.", "10 s per call"):
+    for removed in ("Assumptions and constraints", "Scope done", "Licences follow their recorded status",
+                    "Public sources; report text stays local", "Read-only, bounded research", "Default sampling; one provider family"):
         assert removed not in visual
     assert "m.section('sources').metrics?.sources" in visual
     report = json.loads((STATIC / "data" / "report.json").read_text())
     assert report["sources"]["metrics"]["sources"] == 142
     story = (STATIC / "js" / "report-story.js").read_text()
-    assert "['scope-contract', 'Assumptions and constraints']" in story
+    assert "['scope-contract', 'Scope']" in story
     assert "assumptionsScope(m)" in story
     css = (STATIC / "css" / "presentation.css").read_text()
     assert ".scope-contract" in css and ".scope-contract { grid-template-columns: 1fr;" in css
@@ -1063,6 +1064,10 @@ def test_production_destination_is_complete_and_not_claimed_built():
         assert label in code
     assert "Built today" in code and "Proposed, not implemented or load-tested" in code
     assert "production-mobile" in code and "innerHTML" not in code
+    for option in ("withTip", "Entra ID", "Okta", "ECS Fargate", "Cloud Run", "Kubernetes", "SQS",
+                   "Pub/Sub", "Redis", "LiteLLM", "S3", "GCS", "OpenSearch", "pgvector", "OpenTelemetry",
+                   "Grafana", "Datadog", "CI gate", "not selected"):
+        assert option in code
 
 
 def test_process_slide_is_graphic_first_and_commands_come_from_the_docs():
@@ -1084,11 +1089,35 @@ def test_retrieval_ladder_literals_match_the_frozen_metrics():
     graphics = (STATIC / "presentation/graphics.js").read_text()
     block = graphics.split("export function retrievalLadder()", 1)[1].split("return wrap;", 1)[0]
     panels = re.findall(r"panel\('([^']+)', \[([^\]]+)\]\)", block)
-    assert [title.split(" · ")[0] for title, _ in panels] == ["Development", "Original test", "Fresh questions"]
+    assert [title.split(" · ")[0] for title, _ in panels] == ["Development", "Fresh questions"]
     values = [[float(v) for v in raw.split(",")] for _, raw in panels]
     dev = [json.loads((root / f"experiments/runs/dev-R-V31-{c}/metrics.json").read_text())["metrics"]["hit@8"] for c in ("R0", "R1a", "R2", "R3")]
     assert [round(v, 4) for v in values[0]] == [round(v, 4) for v in dev]
     held = json.loads((root / "experiments/eval/heldout-retrieval-20261103-paid/metrics.json").read_text())["results"]
-    for column, key in ((1, "registered31"), (2, "fresh65")):
+    for column, key in ((1, "fresh65"),):
         expected = [held[key]["metrics"][c]["chunk_hit@8"]["mean"] for c in ("hybrid", "R1a", "R2", "R3")]
         assert [round(v, 6) for v in values[column]] == [round(v, 6) for v in expected]
+
+
+def test_owner_edit_round_keeps_public_faces_and_examples_consistent():
+    main = _slides_main_section()
+    graphics = (STATIC / "presentation/graphics.js").read_text()
+    project = _graphics_block(graphics, "export function myProject()", "export function assumptionsScope(m)")
+    assert "What it asks back" not in project
+    overview = _graphics_block(graphics, "export function agentOverview()", "export function agentLoop()")
+    for text in ("Tell me about the unemployment trends in 2025 and 2026", "Illustrative", "through Q2 2026",
+                 "quarterly unemployment statistics", "report passages", "State the series used", "Cite evidence for each claim"):
+        assert text in overview
+    assert "Q4 2024" not in overview
+    assert "evidenceStores" not in graphics and "Two kinds of evidence" not in main
+    assert "Multiple unemployment rates, depending on the type of population." in main
+    assert "The datasets give counts, not reasons." in main
+    assert "Where MOM commentary gives a reason, the answer attributes it to MOM." in main
+    for title in ("Scope", "Processing reports", "Three example runs"):
+        declaration = main.split(f"title: '{title}'", 1)[1].split("\n  });", 1)[0]
+        assert "caption:" not in declaration
+    loop = main.split("title: 'Agent loop'", 1)[1].split("\n  });", 1)[0]
+    assert "caption: 'The planner chooses tools or stops.'" in loop
+    ladder = main.split("title: 'Does filtering help?'", 1)[1].split("\n  });", 1)[0]
+    assert "Original test" not in ladder and "original test" not in ladder
+    assert "both sets" in ladder and "fresh questions have been reused" in ladder.lower()

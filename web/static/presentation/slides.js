@@ -7,7 +7,7 @@ import {el, fmt, finite} from '../charts.js';
 import {model, metricOf, goldOf, contextSentence} from './model.js';
 import {stat, textStat, countRunner, dataTable} from './ui.js';
 import {threeAnswers, twoSources, buildTimeline, flattening, mcpMap, retrievalStaircase, experimentStaircase, agentLoop, assignmentBrief, challengeGrid, architectureDiagram, myProject, hardParts, keywordVsMeaning, modelChoice, RESPONSIBLE_AI, HYPOTHESES, contentMetricsText, workbenchShot, conceptGrid, threatLayerTable, threatRuns, buildProcess, rowsAffordance, finalComparison, finalFacts, finalSentence, finalCostFacts, provenanceTable, secondJudgeFacts, secondJudgeNote, secondJudgeQa, secondJudgeSentence, SUPPORT_LABEL} from './graphics.js';
-import {evidenceStores, retrievalTuning, metricComparison, threatComparison, unseenRetrieval, retrievalLadder, agentOverview, fixedPipeline, assumptionsScope} from './graphics.js';
+import {retrievalTuning, metricComparison, threatComparison, unseenRetrieval, retrievalLadder, agentOverview, fixedPipeline, assumptionsScope} from './graphics.js';
 import {exampleRuns, answerChecks, evaluationDesign, threatGains, nextSteps, improvementPlan} from './graphics-flows.js';
 import {agentSummary} from './graphics.js';
 import {decisionsExperiment} from './graphics.js';
@@ -139,10 +139,9 @@ export function slideSpecs(report) {
     notes: ['This slide defines the project, its users and the questions it will or will not answer.', 'The live answer window is Q1 2020 to Q2 2026. The evaluated window was Q1 2024 to Q2 2026. Facts and quarter-to-quarter changes are supported tasks; a missing population, adjustment or year may require clarification. Unsupported causal attribution is outside scope, although attributed publisher commentary may be cited.', 'Not shown: forecasts, causal estimates, personal advice or demonstrated accuracy for the newly added 2020 to 2023 coverage. Sources: scope decision, source catalogue and system card.']
   });
   add({
-    layout: 'solo', chapter: 'Scope', title: 'Assumptions, constraints and scope', visual: assumptionsScope(m),
-    caption: 'Built within a fixed evidence boundary. These assumptions and limits remain visible in the results.',
+    layout: 'solo', chapter: 'Scope', title: 'Scope', visual: assumptionsScope(m),
     source: 'Scope and orchestration decisions; data sheet; system card; README; evaluation report',
-    notes: ['This slide separates evidence assumptions, hard constraints and delivered scope.', 'The current 142 sources comprise 36 datasets and 106 documents. They are inventory counts, not independent studies. The live window is Q1 2020 to Q2 2026; evaluated questions start in 2024. Two evidence rounds, six calls and at most three per round are budgets, not averages. The evaluated/default per-call limit is ten seconds; served report search now has 25 seconds plus one conditional timeout retry of at most 12 seconds within the run deadline.', 'Not shown: blanket permission, timeless numerical truth or re-evaluation of serving. Sources: current manifest, data sheet, system card, agent graph and D-091. A second-family AI judge is not a second human reviewer.']
+    notes: ['This slide shows five delivered scope items: the answer period, official sources, retrieval and agent tools, evaluation and workbench, and excluded tasks.', 'The current 142 sources comprise 36 datasets and 106 documents. They are inventory counts, not independent studies. The live window is Q1 2020 to Q2 2026; evaluated questions start in 2024. Public-source rights remain limited, tools are read only and bounded, and generation settings use provider defaults.', 'Not shown: blanket redistribution permission, independent human validation or production readiness. The 2020 to 2023 coverage and current serving changes have not been re-evaluated.'],
   });
   add({
     layout: 'solo', chapter: 'System', title: 'System architecture', visual: architectureDiagram(),
@@ -151,10 +150,10 @@ export function slideSpecs(report) {
   });
 
   add({
-    id: 'agent-overview', layout: 'solo', chapter: 'System', title: 'How a question is answered', visual: agentOverview(),
+    id: 'agent-overview', layout: 'solo', chapter: 'System', title: 'How the agent answers a question', visual: agentOverview(),
     caption: 'A bounded loop: plan, gather evidence, then write and check one cited answer. Later slides open each step, including the full loop.',
     source: 'Agent design and answer validation',
-    notes: ['This slide previews the five stages from a question to one checked, cited answer.', 'Question checks scope; Plan chooses typed tools; Gather evidence returns rows or passages; Write constructs claims; Check validates output. The example specifies overall, seasonally adjusted unemployment in Q4 2024, identifying a series and period rather than leaving an ambiguous unemployment question.', 'Not shown: accuracy, guaranteed success or proof that a quote supports its claim. The planner sees the question and catalogue, not report text; the answer stage sees evidence. Source: graph.py, served.py and answer validation.'],
+    notes: ['This slide illustrates five stages for a question about unemployment trends in 2025 and 2026, through the available Q2 2026 boundary.', 'The illustrated plan selects quarterly unemployment statistics and may search reports for context. It is not a saved run and presents no numerical result. Because the question names no population, the answer states which series it uses, such as overall seasonally adjusted unemployment. Each claim cites gathered evidence.', 'Code checks citations, quotes and numbers with one repair allowed. These checks do not prove semantic support or guarantee a successful answer. The planner sees the question and catalogue, not report text; the writer sees evidence.'],
   });
 
   // ---------- problem ----------
@@ -163,23 +162,17 @@ export function slideSpecs(report) {
 
   // ---------- data ----------
   add({
-    id: 'data', layout: 'solo', chapter: 'Sources', title: 'Choosing the data', visual: twoSources(m),
+    id: 'data', layout: 'solo', chapter: 'Sources', title: 'Data sources', visual: twoSources(m),
     source: 'MOM and SingStat via data.gov.sg; MOM reports and an MTI article',
-    notes: ['This slide shows why statistics and reports use different ingestion paths.', 'The current catalogue contains 36 datasets, 63 PDFs and 43 web pages. The latter two form 106 documents. Statistics are rows in Parquet, a typed columnar file format; report passages become searchable chunks. These are corpus v4 inventory counts, not evaluated v3.1 counts.', 'Not shown: reliable PDF table reconstruction or permission to publish raw reports. MOM and MTI report material stays local. Sources: report.json sources, ingestion implementation and data sheet.']
-  });
-  add({
-    layout: 'solo', chapter: 'Sources', title: 'Two kinds of evidence', visual: evidenceStores(m),
-    caption: 'Statistics stay as rows. Reports become searchable text.',
-    source: 'Committed observation store and current corpus snapshot',
-    notes: ['This slide contrasts the structured observation store with the searchable report store.', 'There are 52,020 observation rows across 36 datasets; 11,228 are inside the live 2020 to mid-2026 window. The evaluated 2024 to mid-2026 window contains 4,300 rows. Historical storage starts in 1980, but storage coverage is not answering scope. These rows are not embedded.', 'The current report store has 106 documents, 29,760 passages and 3,632 eligible chunks. A passage is an extraction unit; a chunk merges eligible neighbours. The 13,164 table_unreliable passages are retained for audit but excluded from default chunks, as are garbled passages. Source: report.json, corpus metadata and runtime chunking.',],
+    notes: ['This slide shows separate ingestion paths for structured statistics and report text.', 'Corpus v4 inventory contains 52,020 observation rows across 36 datasets, including 11,228 rows in the live Q1 2020 to Q2 2026 window. Historical storage starts in 1980 but does not widen answering scope. Statistics stay as rows, without chunking or embeddings.', 'The report store contains 106 documents, 29,760 passages and 3,632 eligible chunks. Table-like PDF passages are flagged table_unreliable and excluded from default chunks, not repaired. These are current inventory counts, not evaluated v3.1 counts. Raw MOM and MTI material and report indexes remain local; this slide does not establish reliable PDF table reconstruction or redistribution permission.']
   });
   // ---------- EDA ----------
   add({...figSlide('fig-unemployment', {title: 'Data findings'}), title: 'Data findings', id: 'eda', chapter: 'Sources', layout: 'split', human: 'MOM unemployment rates via data.gov.sg',
-    bullets: ['Each answer says which of the several official unemployment rates it uses.'], rows: rowsAffordance(m.excerpts.unemployment, 'Show the real rows'),
+    bullets: ['Multiple unemployment rates, depending on the type of population.'], rows: rowsAffordance(m.excerpts.unemployment, 'Show the real rows'),
     detail: {label: 'How to read this', content: 'Quarterly unemployment rates by population and seasonal adjustment.\nPopulation: overall, resident, citizen.\nAdjustment: seasonally adjusted and resident unadjusted.\n26 observations from Q1 2020 to Q2 2026; no confidence intervals in the published series.'},
     notes: ['This chart shows four official unemployment series whose definitions produce different values.', 'The horizontal axis covers 26 quarters from Q1 2020 to Q2 2026; the vertical axis is per cent of the relevant labour force. Solid lines distinguish resident, overall and citizen seasonally adjusted rates. The dashed resident line is unadjusted. Adjustment removes recurring seasonal patterns; it does not change who counts as resident.', 'At Q2 2026 the resident adjusted rate is 2.9%, overall 1.9%, citizen 3.0% and resident unadjusted 3.5%. Each point is a published observation, not a model estimate. The annotation marks the largest absolute adjusted-versus-unadjusted resident gap in the displayed window. Source: report.json charts and observation export.',]});
-  add({...figSlide('fig-retrenchments', {title: 'Retrenchments'}), title: 'Retrenchments rose, data gives no cause', chapter: 'Sources', layout: 'split', human: 'MOM retrenched employees via data.gov.sg',
-    bullets: ['The datasets hold counts and no cause.', 'A reason appears only in MOM commentary, and the answer labels it as theirs.'], rows: rowsAffordance(m.excerpts.retrenchments, 'Show the real rows'),
+  add({...figSlide('fig-retrenchments', {title: 'Retrenchments'}), title: 'Retrenchment counts and their causes', chapter: 'Sources', layout: 'split', human: 'MOM retrenched employees via data.gov.sg',
+    bullets: ['The datasets give counts, not reasons.', 'Where MOM commentary gives a reason, the answer attributes it to MOM.'], rows: rowsAffordance(m.excerpts.retrenchments, 'Show the real rows'),
     detail: {label: 'How to read this', content: 'Stacked quarterly counts of permanent and term-contract retrenchments, with the total compared in the source table.\nUnit: persons.\n26 quarters; no confidence intervals in the published series.'},
     notes: ['This chart shows quarterly retrenchment counts, not the reasons for retrenchment.', 'Each stacked bar is one of 26 quarters from Q1 2020 to Q2 2026. The segments count permanent and term-contract employees in persons; their sum is the total. The highlighted bar marks the largest total in the window. Totals start at 3,220, peak at 9,120 in Q3 2020 and end at 4,620. Source: report.json charts and dataset rows.', 'Not shown: causal variables, employee identities, a forecast or confidence intervals. Hovering the row affordance reveals source rows and the permanent/term-contract split, not report text.']
   });
@@ -193,7 +186,7 @@ export function slideSpecs(report) {
     notes: ['This slide maps six data difficulties to the design choices they motivated.', 'Four unemployment rates require typed population and adjustment; absent definitions trigger clarification. Counts without causes require attributed commentary or a decline. Advance/final differences require release labels, not averaging. Flattened tables require exclusion and checks. A published vacancy ratio can differ by up to 0.67 from the ratio rebuilt from counts because survey bases differ; use the published ratio. Before-2020 requests are outside live scope.', 'Not shown: six independently measured fixes, a reliable PDF table parser or a causal analysis. The scope example is schematic; the statistical popovers show actual source rows.']
   });
   add({
-    layout: 'solo', chapter: 'Processing', title: 'Processing reports', visual: flattening(m), caption: 'Two indexes search the same eligible chunks. Table-like text stays flagged, not silently repaired.',
+    layout: 'solo', chapter: 'Processing', title: 'Processing reports', visual: flattening(m),
     source: 'Current corpus metadata, parser, chunking and retrieval implementation',
     detail: {label: 'Current document build', content: 'Corpus v4, the live build, has 142 sources, including 106 documents, 29,760 extracted passages and 3,632 runtime chunks; it adds the 2020 to 2022 reports and the 2020 to 2023 annual reports to v3.1 and has not been evaluated. Corpus v3.1, the build the final evaluation ran on, has 85 sources, including 49 documents, 16,419 extracted passages and 1,847 runtime chunks. Compared with v3, v3.1 relabelled 40 MTI passages after refining the garbled-text rule; the source, passage and chunk counts stayed unchanged. These are extraction and quality-label facts, not measured retrieval gains.'},
     notes: ['This slide follows a report from local extraction to two indexes over the same eligible chunks.', 'Current corpus v4 has 142 sources, including 106 documents, 29,760 passages and 3,632 chunks. Evaluated v3.1 had 85 sources, 49 documents, 16,419 passages and 1,847 chunks. These count different units and builds. Runtime merge200 targets about 200 words with 40 words of whole-passage overlap; only quality_flag=ok enters default chunking.', 'BM25 indexes words; dense embeddings represent meaning as 3,072-number vectors. The worked eligible chunk has 216 words and nine source passages on pages 2 to 3 of the Q1 2026 final report. A table-like block on page 28 is excluded, not repaired. This is an extraction illustration, not a retrieval score. Source: runtime.py, chunk metadata and local cached vector metadata.',]
@@ -209,15 +202,15 @@ export function slideSpecs(report) {
 
   // ---------- retrieval ----------
   add({
-    id: 'retrieval', layout: 'solo', chapter: 'Retrieval', title: 'Does filtering help?', visual: retrievalLadder(), caption: 'Filter then rerank has the highest chunk hit@8 on all three sets (tied with rerank alone on fresh questions). End-to-end answer gains remain unproven.',
-    source: 'Development: corpus v3.1 re-run of 128 questions. Original test and fresh questions: frozen retrieval-only results, 3 November 2026',
-    detail: {label: 'Retrieval steps', content: 'Each group compares hybrid, filter only, rerank only, and filter plus rerank on its own questions. Development uses the same 128 questions as the previous slide, so its first bar is the same 53.9%. Test sets have their own baselines. All use corpus v3.1 and merge200.\nHybrid combines BM25 and dense rankings by reciprocal rank fusion, c=60 over the top 50 of each. BM25 uses k1=1.5, b=0.75, stop words and quarter normalisation, with no stemming. Dense uses text-embedding-3-large. The period/release filter restricts candidates to matching documents. gpt-6-luna ranks the top 30 and returns up to 10 chunks; remaining candidates retain incoming order.\nChunk hit@8 means an acceptable passage appears in one of the first eight chunks. Development, 128 questions: .539/.852/.742/.969. Original test, 18: .444/.778/.722/.889. Fresh, 34: .882/.912/.971/.971.\nStrict passage hit@8 instead counts the first eight distinct context passages. Development hybrid is .258. Original test: .167/.167/.556/.778; fresh: .500/.500/.941/.941. Filtering alone adds nothing on this stricter test-set count.\nChunk MRR@10 averages one divided by the rank of the first acceptable chunk within ten, with zero for a miss. Original/fresh hybrid scores .266/.618; both steps score .778/.887. It rewards earlier hits, not answer correctness.\nThese are literal-query retrieval diagnostics, not full answers. Development shaped the design; original evidence overlaps development; fresh questions have been reused. One reranker run does not establish sampling variation. No demonstrated end-to-end answer gain.'},
-    notes: ['This chart compares four retrieval configurations using the same chunk hit@8 measure on three question sets.', 'Within each group the order is hybrid, hybrid plus period/release filter, hybrid plus rerank, then both. Development uses 128 text questions: 53.9%, 85.2%, 74.2%, 96.9%. Original test uses 18: 44.4%, 77.8%, 72.2%, 88.9%. Fresh uses 34: 88.2%, 91.2%, 97.1%, 97.1%. All use corpus v3.1 and merge200. The first development bar matches Retrieval Strategies; test groups have their own baselines.', 'The filter restricts candidates to named periods/releases. Reranking asks gpt-6-luna to reorder the top 30 and return up to ten chunks. Chunk hit@8 asks whether any of the first eight chunks contains an acceptable passage. Counting only the first eight distinct passages is stricter: development hybrid is 25.8%; original hybrid/filter/rerank/both are 16.7/16.7/55.6/77.8%; fresh 50.0/50.0/94.1/94.1%. Under that strict count filtering alone adds nothing on the test sets.',]
+    id: 'retrieval', layout: 'solo', chapter: 'Retrieval', title: 'Does filtering help?', visual: retrievalLadder(), caption: 'Filter then rerank has the highest chunk hit@8 on both sets (tied with rerank alone on fresh questions). End-to-end answer gains remain unproven.',
+    source: 'Development: corpus v3.1 re-run of 128 questions. Fresh questions: frozen retrieval-only results, 3 November 2026',
+    detail: {label: 'Retrieval steps', content: 'Each group compares hybrid, filter only, rerank only, and filter plus rerank on its own questions. Development uses the same 128 questions as the previous slide, so its first bar is the same 53.9%. Fresh questions have their own baseline. All use corpus v3.1 and merge200.\nHybrid combines BM25 and dense rankings by reciprocal rank fusion, c=60 over the top 50 of each. BM25 uses k1=1.5, b=0.75, stop words and quarter normalisation, with no stemming. Dense uses text-embedding-3-large. The period/release filter restricts candidates to matching documents. gpt-6-luna ranks the top 30 and returns up to 10 chunks; remaining candidates retain incoming order.\nChunk hit@8 means an acceptable passage appears in one of the first eight chunks. Development chunk hit@8: .539/.852/.742/.969. Fresh: .882/.912/.971/.971. Strict passage hit@8 counts the first eight distinct passages: development hybrid .258; fresh .500/.500/.941/.941.\nChunk MRR@10 averages reciprocal rank of the first acceptable chunk within ten, with zero for a miss. Fresh hybrid scores .618 and both steps .887. It measures rank, not answer correctness.\nDevelopment shaped the design and fresh questions have been reused. One reranker run does not establish variation or end-to-end answer gains.'},
+    notes: ['This chart compares four retrieval configurations using chunk hit@8 on two question sets.', 'Within each group the order is hybrid, hybrid plus period/release filter, hybrid plus rerank, then both. Development uses 128 text questions: 53.9%, 85.2%, 74.2%, 96.9%. Fresh uses 34: 88.2%, 91.2%, 97.1%, 97.1%. All use corpus v3.1 and merge200. The first development bar matches Retrieval Strategies; fresh questions have their own baseline.', 'Development questions shaped the design and fresh questions have been reused. Chunk hit@8 asks whether any of the first eight chunks contains an acceptable passage. Distinct-passage scoring is stricter. These retrieval-only results do not establish answer improvements.'],
   });
 
   // ---------- agent ----------
   add({
-    id: 'agent', layout: 'solo', chapter: 'Agent', title: 'Agent loop', visual: agentLoop(), caption: 'The planner chooses tools or stops. On development questions: fixed pipeline .814, agent mean .897. One fixed run; no original test or fresh-question comparison.',
+    id: 'agent', layout: 'solo', chapter: 'Agent', title: 'Agent loop', visual: agentLoop(), caption: 'The planner chooses tools or stops.',
     source: 'LangGraph agent and planner/answer prompts',
     detail: {label: 'Planner and answer prompts', content: 'PLANNER\nGather evidence in round 1. Use round 2 only for a calculation or another lookup after an error or gap. Then stop gathering.\n\nANSWER\nEach claim cites supplied evidence and includes an exact quote. Quote existence is not proof of semantic support.\n\nEvaluated/default limits: 2 rounds, 6 calls total, 3 per round, 10 seconds per tool call, 1 transient retry and 1 answer repair. The unadopted report-arithmetic experiment allowed one bonus round after a bad dimension label, keeping the six-call budget.\nCurrent serving: report search has 25 seconds plus one conditional timeout retry of at most 12 seconds within the run deadline; other tools keep ten seconds. This served exception was not evaluated.'},
     // Transport choices are implementation facts; hypothetical memory costs are not measurements.
@@ -225,7 +218,6 @@ export function slideSpecs(report) {
   });
   add({
     layout: 'solo', chapter: 'Agent', title: 'Three example runs', visual: exampleRuns(),
-    caption: 'Saved development runs. Hover a row for the case file and the tool calls.',
     source: 'Saved development runs of the agent, gpt-6-luna',
     notes: ['This slide shows three selected saved runs: a numerical change, a definition and an unsupported request.', 'DEV-005 looks up resident unemployment for two quarters and calls calculate_change; the change comes from code, not model arithmetic. DEV-002 uses report search for a definition. DEV-415 seeks a count not held by the data and declines instead of substituting a broader total. Each row lists actual tool calls and the resulting response status.', 'Not shown: a success rate, a complete distribution of paths, live latency or performance of annual averaging. No publisher passage text is reproduced.']
   });
@@ -549,13 +541,12 @@ export function slideSpecs(report) {
     ['Singapore AI Agent for Workforce Policy Researchers', null, 'Start'],
     ['Assignment', null, 'Problem'],
     ['My project', null, 'Project'],
-    ['Assumptions, constraints and scope', null, 'Scope'],
+    ['Scope', null, 'Scope'],
     ['System architecture', 'all', 'System'],
-    ['How a question is answered', 'all', 'System'],
-    ['Choosing the data', 0, 'Sources'],
-    ['Two kinds of evidence', 0, 'Sources'],
+    ['How the agent answers a question', 'all', 'System'],
+    ['Data sources', 0, 'Sources'],
     ['Data findings', 0, 'Sources'],
-    ['Retrenchments rose, data gives no cause', 0, 'Sources'],
+    ['Retrenchment counts and their causes', 0, 'Sources'],
     ['Advance and final figures differ', 0, 'Sources'],
     ['Challenges with the data', 0, 'Sources'],
     ['Processing reports', 1, 'Processing'],

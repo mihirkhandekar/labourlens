@@ -115,67 +115,39 @@ export function threeAnswers(m) {
 
 /** Where the statistics and the reports are stored, as two flow rows. Hover or focus a step for the detail. */
 export function twoSources(m) {
-  const types = m.section('sources').metrics?.by_type || {};
+  const source = m.section('sources').metrics || {}, corpus = m.section('serving').corpus || {};
+  const types = source.by_type || {};
   const wrap = el('div', 'sf');
   const lane = (icon, title, count, tipText, steps) => {
     const row = el('div', 'sf-lane');
     const head = el('div', 'sf-head'); head.append(ico(icon), el('h3', '', title), el('p', 'sf-count num', count));
-    withTip(head, tipText);
+    withTip(head, tipText, 'is-down', tipText);
     row.append(head);
     steps.forEach(([stepIcon, name, detail], i) => {
       const arrow = el('span', 'sf-arrow'); arrow.append(ico('arrow-right')); row.append(arrow);
       const step = el('div', 'sf-step'); step.style.setProperty('--i', String(i));
       step.append(ico(stepIcon), el('p', 'sf-name', name));
-      row.append(withTip(step, detail));
+      row.append(withTip(step, detail, `${title === 'Reports' ? 'is-up' : 'is-down'}${i >= 2 ? ' is-source-right' : ''}`, detail));
     });
     return row;
   };
   wrap.append(
-    lane('table', 'Statistics', `${fmt.int(types.dataset_csv)} datasets`, 'Unemployment rate, vacancies per unemployed person, retrenchments, employment change by sector, and transport and storage jobs.', [
+    lane('table', 'Statistics', `${fmt.int(source.observations)} rows across ${fmt.int(types.dataset_csv)} datasets`, `History starts in ${source.period_from?.slice(0, 4)}. The answer scope is Q1 2020 to Q2 2026, with ${fmt.int(source.in_scope_observations)} observation rows in that window. Population, adjustment, units and provenance stay on each row.`, [
       ['arrow-square-out', 'Download', 'Fetched from data.gov.sg. Each file is kept exactly as fetched, with its source address, date and SHA-256 hash.'],
       ['lock', 'Snapshot', 'Immutable snapshots. A later fetch never replaces an earlier one.'],
-      ['table', 'Parquet table', 'Normalised into one long Parquet table. Every row keeps its series, unit, population, adjustment, release stage and a link back to the source cell.'],
+      ['table', 'Parquet table', 'No chunking or embeddings. Validated observations stay in a structured Parquet table, with series, unit, population, adjustment, release stage and source-cell provenance.'],
       ['wrench', 'Tool queries', 'The agent reads the table through typed read-only tools (pandas over Parquet). Changes are calculated in code.']
     ]),
-    lane('file-text', 'Reports', `${fmt.int(types.report_pdf)} PDFs and ${fmt.int(types.release_html)} web pages`, 'MOM labour market reports, MOM release pages and one MTI article on AI and employment.', [
-      ['file-text', 'PDF and web page', 'PDFs are read with PyMuPDF and web pages with BeautifulSoup. Raw MOM and MTI files stay local and are never published.'],
-      ['stack', 'Passages', 'Each passage keeps its source, page or section, and a quality flag.'],
-      ['squares-four', 'Chunks', 'Neighbouring good passages are merged into chunks of about 200 words.'],
+    lane('file-text', 'Reports', `${fmt.int(corpus.document_files)} documents`, 'MOM labour market reports, MOM release pages and one MTI article on AI and employment. Counts describe corpus v4 inventory, not evaluated v3.1.', [
+      ['file-text', 'PDF and web page', `${fmt.int(types.report_pdf)} PDFs and ${fmt.int(types.release_html)} web pages. PDFs are read with PyMuPDF and web pages with BeautifulSoup. Raw MOM and MTI files stay local.`],
+      ['stack', 'Passages', `${fmt.int(corpus.passages)} passages. Each keeps its source, page or section and quality flag. ${fmt.int(corpus.quality_flags?.all_after?.table_unreliable)} table-like PDF passages are flagged table_unreliable and excluded from default chunks, not repaired.`],
+      ['squares-four', 'Chunks', `${fmt.int(corpus.chunks)} eligible chunks. Neighbouring good passages merge into roughly 200-word chunks with 40-word overlap.`],
       ['magnifying-glass', 'BM25 and embeddings', 'A BM25 index and text-embedding-3-large vectors. Vectors are cached by content, so unchanged text is never embedded twice.']
     ])
   );
   return wrap;
 }
 
-/** Two evidence stores, with no chunking or embedding path from statistics. */
-export function evidenceStores(m) {
-  const source = m.section('sources').metrics || {}, corpus = m.section('serving').corpus || {};
-  const wrap = el('div', 'ex-stores');
-  const lane = (title, count, stages, tool, detail) => {
-    const col = el('div', 'ex-store');
-    col.append(el('h3', '', title), el('p', 'ex-store-count', count));
-    const path = el('div', 'ex-store-path');
-    stages.forEach(([head, sub, tip]) => {
-      const step = el('div', 'ex-store-step');
-      step.append(el('strong', '', head), el('span', '', sub));
-      path.append(withTip(step, tip, 'is-down'));
-    });
-    col.append(path, withTip(el('p', 'ex-store-tool', tool), detail, 'is-up'));
-    return col;
-  };
-  const history = 'The statistics store covers 1980 to Q2 2026, with Q1 2020 to Q2 2026 as the answer scope and 11,228 in-scope rows. It includes unemployment rates and counts for overall, resident and citizen populations; vacancies by industry and occupation and the vacancy-to-unemployed ratio; recruitment and resignation; retrenchment by type; employment change by sector; paid hours; re-entry at 6 and 12 months; unit labour cost; and value added per worker. Units, population, adjustment and provenance stay on each row.';
-  wrap.append(
-    lane('Statistics tables', `${fmt.int(source.by_type?.dataset_csv)} MOM tables`, [
-      ['One structured store', `${fmt.int(source.observations)} observation rows`, history],
-      ['No chunking or embeddings', 'Filter rows by series and period', 'Immutable hashed source snapshots are normalised to Parquet. The live statistics tool reads the shared validated observation store, not the report index. History outside the answer scope is not an invitation to answer out-of-scope questions.']
-    ], 'get_series → MCP → get_statistic', 'Input: source, period range and dimension. Output: validated rows with value, unit, population, adjustment and provenance. The server filters the statistics store. ' + history),
-    lane('Reports', `${fmt.int(corpus.document_files)} documents`, [
-      [`${fmt.int(corpus.passages)} passages`, 'PDF pages and web sections', `${fmt.int(corpus.quality_flags?.all_after?.table_unreliable)} table-like PDF passages are flagged table_unreliable and excluded from default chunks. They remain available for audit, not silently converted into trusted rows.`],
-      [`${fmt.int(corpus.chunks)} chunks`, 'BM25 plus embeddings', 'Eligible neighbouring passages merge into roughly 200-word chunks with 40-word overlap. BM25 and text-embedding-3-large vectors search the same chunks. Raw MOM and MTI files and report-derived indexes remain local, never published.']
-    ], 'search_reports → passages', 'Input: a question and optional result limit. Runs in the app against the passage index and stored embeddings, filters period and release, reranks, and returns labelled chunks with source passages. The planner never sees passage text; evidence goes to the answer writer.')
-  );
-  return wrap;
-}
 
 /** Equal visual weight for the three sets, not a performance comparison. */
 export function questionSets(m) {
@@ -594,14 +566,14 @@ const LOOP_TIPS = [
 /** Short, early overview of how a question is answered; the full loop and its limits come later on the Agent loop slide. */
 export function agentOverview() {
   const steps = [
-    ['1', 'Question', 'Checked first: in scope, no instructions to override the rules.'],
-    ['2', 'Plan', 'The planner picks tools from a fixed list. It sees the question and a catalogue, never report text.'],
-    ['3', 'Gather evidence', 'Search the reports, look up statistics, or calculate in code. At most 2 rounds and 6 tool calls.'],
-    ['4', 'Write', 'One answer: every claim cites a passage with a verbatim quote, or the system declines.'],
-    ['5', 'Check', 'Code confirms each quote is in its passage. One repair, then the answer is marked invalid.']
+    ['1', 'Question', 'Unemployment trends in 2025 and 2026 are in scope, through Q2 2026.'],
+    ['2', 'Plan', 'Illustrative: select quarterly unemployment statistics for 2025 and 2026, and search reports for context.'],
+    ['3', 'Gather evidence', 'Read the quarterly rows and relevant report passages. Keep population, adjustment and release labels.'],
+    ['4', 'Write', 'State the series used, such as overall seasonally adjusted unemployment. Cite evidence for each claim.'],
+    ['5', 'Check', 'Validate citations, quotes and numbers against the gathered evidence. Repair once if needed.']
   ];
   const wrap = el('div', 'agent-overview');
-  wrap.append(el('p', 'agent-overview-query', 'Example question: "What was the seasonally adjusted overall unemployment rate in Q4 2024?"'));
+  wrap.append(el('p', 'agent-overview-query', 'Illustrative question: "Tell me about the unemployment trends in 2025 and 2026"'));
   steps.forEach(([n, title, text], i) => {
     const step = el('div', 'agent-overview-step');
     step.append(el('span', 'agent-overview-n', n), el('h3', '', title), el('p', '', text));
@@ -930,41 +902,28 @@ export function myProject() {
   const wrap = el('div', 'g18 is-single');
   const task = el('div', 'g18-panel is-task');
   const tl = el('dl', 'g18-dl');
-  [['Domain', 'The Singapore labour market: official quarterly data, reports and real revisions'], ['Intended Users', 'Policy researchers and analysts'], ['What it answers', 'Facts, changes between quarters, comparisons and revisions, with a cited source'], ['What it asks back', 'Which series, when a question could mean several'], ['What it declines', 'Forecasts, causes, personal advice and anything before 2020'], ['How far', 'Q1 2020 to Q2 2026']].forEach(([k, v]) => { tl.append(el('dt', '', k), el('dd', '', v)); });
+  [['Domain', 'The Singapore labour market: official quarterly data, reports and real revisions'], ['Intended Users', 'Policy researchers and analysts'], ['What it answers', 'Facts, changes between quarters, comparisons and revisions, with a cited source'], ['What it declines', 'Forecasts, causes, personal advice and anything before 2020'], ['How far', 'Q1 2020 to Q2 2026']].forEach(([k, v]) => { tl.append(el('dt', '', k), el('dd', '', v)); });
   task.append(tl);
   wrap.append(task);
   return wrap;
 }
 
-/** Working assumptions, hard constraints and implemented scope, with limits kept visible. */
+/** Implemented scope, with details available on hover and focus. */
 export function assumptionsScope(m) {
   const count = m.section('sources').metrics?.sources;
-  const groups = [
-    ['Assumptions and constraints', [
-      ['Licences follow their recorded status', 'Not all rights have been verified.', 'The data sheet records 33 dataset licences verified, three assumed and unverified, and 45 document rights unresolved. These statuses are not blanket permission to redistribute publisher material. Source: data sheet, At a glance.'],
-      ['Public sources; report text stays local', 'No redistribution of full MOM PDFs.', 'Official public sources only. Restricted documents, passages, indexes and raw answers stay local. Public material uses links, attribution and short excerpts under the recorded rights limits. Sources: data sheet and system card.'],
-      ['Read-only, bounded research', 'Six tool calls over two rounds.', 'Default graph limits: six total tool calls across two evidence rounds, at most three calls per round, one transient tool retry and one answer repair. No arbitrary SQL, shell execution or unrestricted browsing. Sources: agent graph, orchestration decision and README.'],
-      ['Default sampling; one provider family', 'Generation settings were not tuned.', 'Generation candidates share a provider family; temperature and top_p use provider defaults and no seed. A separate second-family judge sensitivity check exists, but is not human review. Two final runs do not estimate run-to-run variance. Source: system card.']
-    ]],
-    ['Scope done', [
+  const items = [
       ['Q1 2020 to Q2 2026', 'Statistics and report text from 2020.', 'The answer window opened at Q1 2020 on 3 November 2026. Every experiment was run on the earlier Q1 2024 to Q2 2026 window, so the evaluation gold covers 2024 to 2026 and answers for 2020 to 2023 are unevaluated. Statistics cover the whole window; MOM report passages start with the 2020 quarterly reports (answers that rely on 2020 to 2022 report text are unevaluated). Actual period coverage varies by source. Requests that need a period before 2020 must abstain. Sources: scope decision and system card.'],
       [finite(count) ? `${fmt.int(count)} official sources` : 'Source count not recorded', 'Statistics and report evidence stores.', 'The current data sheet records 36 statistical datasets and 106 documents. Validated observations and source passages are stored separately, with snapshots, hashes, provenance and revision labels. Source: data sheet, corpus v4.'],
       ['Retrieval, agent and MCP', 'Built with traces and cited answers.', 'Keyword, dense and hybrid retrieval were compared; the bounded research loop uses report search, statistical lookup and deterministic calculation. Live statistical lookup uses MCP; report search and calculation stay in process. Sources: README and system card.'],
       ['Evaluation, threats and workbench', 'Measured and deployed, not production-ready.', 'Saved evaluation covers development, original test and fresh questions, with AI judges and documented human sign-off. Threat tests and a deployed workbench exist, with known failures and rights limitations. Sources: README and evaluation report.'],
       ['No forecasts or personal advice', 'No causal estimates or unrestricted browsing.', 'Unsupported causal attribution, forecasting, personal employment advice and unrestricted web research are outside scope. The system supports evidence inspection, not autonomous policy decisions. Sources: scope decision and system card.']
-    ]]
   ];
   const wrap = el('div', 'scope-contract');
-  groups.forEach(([title, items], column) => {
-    const group = el('div', 'scope-contract-group');
-    group.append(el('h3', '', title));
-    items.forEach(([heading, summary, detail], row) => {
-      const item = el('div', 'scope-contract-item');
-      item.append(el('strong', '', heading), el('p', '', summary));
-      withTip(item, detail, `${row < 2 ? 'is-down' : 'is-up'}${column === 1 ? ' is-contract-right' : ''}`);
-      group.append(item);
-    });
-    wrap.append(group);
+  items.forEach(([heading, summary, detail], row) => {
+    const item = el('div', 'scope-contract-item');
+    item.append(el('strong', '', heading), el('p', '', summary));
+    withTip(item, detail, `${row < 2 ? 'is-down' : 'is-up'}${row % 2 ? ' is-contract-right' : ''}`);
+    wrap.append(item);
   });
   return wrap;
 }
@@ -1269,18 +1228,16 @@ export function unseenRetrieval() {
   return wrap;
 }
 
-/** The four retrieval steps on one measure (chunk hit@8) and three question sets, so the first bar matches the Hybrid bar of the
- * methods slide. Values are frozen: dev-R-V31-R{0,1a,2,3} metrics (128 development questions) and
- * heldout-retrieval-20261103-paid metrics (18 original-test, 34 fresh); tests/web/test_deck.py compares them to those files. */
+/** Four retrieval configurations on chunk hit@8 for development and fresh questions.
+ * Frozen development and fresh retrieval-only metrics; tests compare literals to their saved files. */
 export function retrievalLadder() {
   const steps = ['Hybrid', 'Hybrid + filter', 'Hybrid + rerank', 'Hybrid + filter + rerank'];
   const panel = (title, values) => comparisonBars(title, steps.map((name, i) => [name, values[i], i === 3]));
   const wrap = el('div', 'exp-comparison is-ladder');
   wrap.append(el('p', 'exp-measure', 'Chunk hit@8: a relevant passage is in one of the first eight chunks (same measure as the previous slide)'),
     panel('Development · 128 questions', [.5391, .8516, .7422, .9688]),
-    panel('Original test · 18 text questions', [.444444, .777778, .722222, .888889]),
     panel('Fresh questions · 34 text questions', [.882353, .911765, .970588, .970588]),
-    el('p', 'exp-limit', 'Development questions shaped the design. Original test shares development evidence; fresh questions have been reused. Literal questions, retrieval only. Counting distinct passages is stricter and gives lower scores (hybrid on the 128: 25.8%).'));
+    el('p', 'exp-limit', 'Development questions shaped the design. Fresh questions have been reused. Literal questions, retrieval only. Counting distinct passages is stricter and gives lower scores (hybrid on the 128: 25.8%).'));
   return wrap;
 }
 

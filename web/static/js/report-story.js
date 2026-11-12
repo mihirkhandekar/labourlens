@@ -5,7 +5,7 @@
 import {fmt, finite} from '../charts.js';
 import {model, metricOf, contextSentence} from '../presentation/model.js';
 import {assignmentBrief, excerptTable, myProject, architectureDiagram, twoSources, buildTimeline, flattening, hardParts, challengeGrid, costBars, retrievalStaircase, keywordVsMeaning, agentLoop, experimentStaircase, freshQuestions, errorBars, toolFixBars, evidenceTrace, mcpMap, conceptGrid, plantedFlow, reviewStreams, measureCards, workbenchShot, cardRow, modelChoice, threatLayerTable, failureModes, HYPOTHESES, RESPONSIBLE_AI, contentMetricsText, finalComparison, finalSentence, finalCostFacts, provenanceTable, secondJudgeSentence, SUPPORT_LABEL} from '../presentation/graphics.js';
-import {evidenceStores, questionSets, threatComparison, unseenRetrieval, fixedPipeline, assumptionsScope} from '../presentation/graphics.js';
+import {questionSets, threatComparison, unseenRetrieval, fixedPipeline, assumptionsScope} from '../presentation/graphics.js';
 import {dataTable} from '../presentation/ui.js';
 import {el, band, stage, chartBox, sub, more, group, rows, statRow, table, commands, link, note} from './report-kit.js';
 import {cta} from './dom.js';
@@ -17,7 +17,7 @@ const REPO = 'https://github.com/mihirkhandekar/labourlens/blob/master/';
 
 /** The nav labels, in order. Each id is a band below. */
 export const STEPS = [
-  ['assignment', 'Assignment'], ['problem', 'My project'], ['scope-contract', 'Assumptions and constraints'], ['system', 'Agentic system'], ['data', 'Choosing the data'],
+  ['assignment', 'Assignment'], ['problem', 'My project'], ['scope-contract', 'Scope'], ['system', 'Agentic system'], ['data', 'Data sources'],
   ['eda', 'Data findings'], ['hard', 'Challenges with the data'], ['build', 'Report processing'], ['retrieval', 'Retrieval Strategies'], ['agent', 'Agent'],
   ['models', 'Models'], ['tools', 'Tools and MCP'], ['ops', 'Agent Workbench'], ['review', 'Review provenance'], ['safety', 'Safety'], ['process', 'How I built it'],
   ['limits', 'Limits'], ['run', 'Run it']
@@ -102,11 +102,11 @@ export function buildBands(report) {
   problem.node.append(more('Other domains I considered', group('', 'Recorded alternatives were housing affordability, which has confounded transaction-level data, and cost of living, which has index methods and causal complexity. They are not on the slide face.')));
   bands.problem = problem;
   const contract = band({
-    id: 'scope-contract', title: 'Assumptions, constraints and scope',
-    lede: ['Validated observations anchor calculations; reports provide context. The reference labels were drafted with AI assistance and signed off by one reviewer, not independently validated. Public-source rights, read-only tools, bounded calls and the fixed answer period constrain what the deployed prototype can do.']
+    id: 'scope-contract', title: 'Scope',
+    lede: ['The prototype answers questions from Q1 2020 to Q2 2026 using official statistics and report text. It includes retrieval, a bounded research agent, MCP statistics tools, evaluation, threat checks and a workbench. It does not provide forecasts, causal estimates or personal advice. The 2020 to 2023 coverage has not been evaluated.']
   });
-  contract.visual.append(stage(safe('Assumptions, constraints and scope', () => assumptionsScope(m))));
-  contract.node.append(note('Sources: ADR-001, ADR-002, data sheet, system card, README and evaluation report. Hover or focus each item for the recorded limitations; deployment does not establish production readiness.'));
+  contract.visual.append(stage(safe('Scope', () => assumptionsScope(m))));
+  contract.node.append(note('Hover or focus each item for scope details. Source rights and read-only tool limits still apply; deployment does not establish production readiness.'));
   bands['scope-contract'] = contract;
   const system = band({
     id: 'system', title: 'Agentic system',
@@ -120,11 +120,10 @@ export function buildBands(report) {
 
   // ---------- data ----------
   const data = band({
-    id: 'data', title: 'Choosing the data',
+    id: 'data', title: 'Data sources',
     lede: ['The structured records are quarterly statistical observations from official datasets, including unemployment, vacancies, retrenchments and employment changes. The unstructured sources are MOM labour market reports and release pages. Reports add context and definitions; dataset observations supply answerable numbers. The statistics are fetched from data.gov.sg as immutable snapshots with hashes, normalised into one Parquet table with provenance on every row, and read with pandas. The reports are extracted into passages with page and section, merged into chunks of about 200 words, and indexed with BM25 and text-embedding-3-large vectors cached by content. MOM report PDFs and raw MOM and MTI files stay on my machine because their notices restrict reproduction. Each corpus build is identified so results remain tied to the data version used.']
   });
   data.visual.append(stage(safe('Sources', () => twoSources(m))));
-  data.visual.append(sub('Two kinds of evidence', 'The statistics store is not embedded or chunked. Reports use a separate text index. Hover or focus a step for coverage, quality flags and tool access.', stage(safe('Two kinds of evidence', () => evidenceStores(m)))));
   bands.data = data;
 
   // ---------- hard parts ----------
