@@ -696,3 +696,41 @@ def test_split_rail_clips_each_scroll_area_before_sources(workbench_url, width, 
         assert not errors
         assert not external
         browser.close()
+
+
+def test_activity_lists_why_the_answer_check_failed(workbench_url):
+    playwright = pytest.importorskip("playwright.sync_api")
+    body = {"run_id": "offline-invalid", "answer": {"status": "abstained", "summary": "The run did not produce a validated answer.", "claims": [], "caveats": [],
+                                                    "reason": "The drafted answer did not pass the citation checks, so I did not show it. Try rephrasing or ask again.", "clarification_question": ""},
+            "evidence": [], "chart": {"series": []}, "usage": {}, "seconds": 0,
+            "trace": [{"node": "validate_answer", "event": "invalid", "detail": {"attempt": 1, "error_kinds": {"quote_not_found": 2, "no_citation": 1}}},
+                      {"node": "validate_answer", "event": "invalid", "detail": {"attempt": 2, "error_kinds": {"copied_wording": 1}}},
+                      {"node": "finalize", "event": "invalid", "detail": {}}]}
+    with playwright.sync_playwright() as runtime:
+        browser = runtime.chromium.launch()
+        page = browser.new_page(viewport={"width": 1440, "height": 900}, reduced_motion="reduce")
+
+        def intercept(route):
+            url = route.request.url
+            if not url.startswith(workbench_url + "/"):
+                route.abort()
+            elif "/api/" in url:
+                payload = {"enabled": True, "authenticated": True} if url.endswith("/api/status") else body if url.endswith("/api/ask") else {}
+                route.fulfill(content_type="application/json", body=json.dumps(payload))
+            else:
+                route.continue_()
+
+        page.route("**/*", intercept)
+        page.goto(workbench_url + "/workbench.html")
+        page.locator("#question-input").fill("Tell me about unemployment")
+        page.locator("#question-input").press("Enter")
+        page.locator(".wb-message-user").wait_for()
+        page.locator('[data-tab="activity"]').click()
+        steps = page.locator(".steps .step")
+        steps.first.wait_for()
+        text = page.locator(".steps").inner_text()
+        assert "one repair attempt follows" in text and "repair attempt used" in text
+        assert "A cited quote was not found in the cited passage (2)" in text and "A claim had no citation" in text
+        assert "Copied report wording instead of paraphrasing it" in text
+        page.screenshot(path="/tmp/labourlens-activity-invalid.png")
+        browser.close()

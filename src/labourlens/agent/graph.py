@@ -707,7 +707,7 @@ def build_graph(shared: Shared, tools: Tools, cfg: AgentConfig, emit=None):
             errs = rep.errors
             extra.update({"cited_ids": rep.cited_passage_ids, "ungrounded_numbers": rep.ungrounded_numbers, "source_conflicts": conflicts})
         checked_answer = extra.pop("answer", None)
-        update = {"errors": errs, "trace": _ev("validate_answer", "valid" if not errs else "invalid", attempt=s.get("attempts"), n_errors=len(errs), **extra)}
+        update = {"errors": errs, "trace": _ev("validate_answer", "valid" if not errs else "invalid", attempt=s.get("attempts"), n_errors=len(errs), error_kinds=validate.error_categories(errs), **extra)}
         if checked_answer is not None:
             update["answer"] = checked_answer
         if errs and s.get("attempts", 0) < 2:

@@ -159,6 +159,31 @@ class Report:
         return not self.errors
 
 
+# Fixed, text-free categories for showing a failed check to the user. The error strings above are written for the model's repair prompt
+# and can embed the model's own wording or report text, so only these codes (never the strings) may reach a browser.
+ERROR_CATEGORIES = (
+    ("copied_wording", re.compile(r"copies a run of report wording")),
+    ("quote_not_found", re.compile(r"quote is not verbatim in")),
+    ("quote_too_long", re.compile(r"quote from \S+ is longer than")),
+    ("no_citation", re.compile(r"^claim \d+ has no citation")),
+    ("unknown_evidence", re.compile(r"which was not in the context")),
+    ("flagged_evidence", re.compile(r"flagged as containing instructions")),
+    ("contradicts_data", re.compile(r"^abstention says no data for")),
+    ("search_failure_unsaid", re.compile(r"^report search .* does not say that report evidence could not be collected")),
+    ("incomplete_answer", re.compile(r"^status is ")),
+    ("bad_format", re.compile(r"^output is not valid JSON|^output does not match the answer schema|^empty output")),
+)
+
+
+def error_categories(errors: list[str]) -> dict[str, int]:
+    """Count validator errors by fixed category code. Anything unrecognised is counted as ``other``; no error text is kept."""
+    out: dict[str, int] = {}
+    for e in errors:
+        code = next((c for c, rx in ERROR_CATEGORIES if rx.search(str(e))), "other")
+        out[code] = out.get(code, 0) + 1
+    return out
+
+
 _WHY = re.compile(r"\b(?:why|reasons?|drivers?|caused?|causes?|explain|explanation|because|attribut\w+)\b", re.I)
 _SEARCH_FAILURE_SAID = re.compile(r"\b(?:report|reports|commentary|explanation|explanations)\b.*\b(?:search|searches|unavailable|could not|timed out|failed|not covered|not retrieved)\b"
                                   r"|\b(?:search|timed out|failed)\b.*\b(?:report|reports|commentary)\b", re.I | re.S)

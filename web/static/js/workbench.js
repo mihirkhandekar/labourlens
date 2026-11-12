@@ -36,6 +36,20 @@ const NODE_LABEL = {
   generate_answer: 'Draft answer', validate_answer: 'Validate answer', finalize: 'Finish'
 };
 const BAD = new Set(['error', 'operational_failure', 'rejected', 'output_blocked', 'invalid_arguments']);
+// Why an answer check failed: fixed categories from the server (never the validator's own messages, which can quote report text).
+const CHECK_FAILURE = {
+  copied_wording: 'Copied report wording instead of paraphrasing it',
+  quote_not_found: 'A cited quote was not found in the cited passage',
+  quote_too_long: 'A cited quote was longer than allowed',
+  no_citation: 'A claim had no citation',
+  unknown_evidence: 'A claim cited evidence that was not supplied',
+  flagged_evidence: 'A claim cited text flagged as containing instructions',
+  contradicts_data: 'The answer said data was missing that the evidence contains',
+  search_failure_unsaid: 'The answer did not say report search had failed',
+  incomplete_answer: 'A required part of the answer was missing',
+  bad_format: 'The reply was not in the required format',
+  other: 'Another check failed'
+};
 const WARN = new Set(['invalid', 'no_evidence', 'budget_exhausted']);
 
 // A shared link may carry the access code as #code=... (preferred: a fragment is never sent to the server or written to its logs) or ?code=...
@@ -516,6 +530,7 @@ export function mountWorkbench(root, {onMode} = {}) {
       note.push(event.event === 'evidence_ready' ? 'evidence ready' : human(event.event).toLowerCase());
       ['passages', 'observations', 'calculations'].forEach(k => { if (finite(detail[k])) note.push(`${detail[k]} ${k}`); });
     } else if (event.node === 'finalize') note.push(human(event.event).toLowerCase());
+    else if (event.node === 'validate_answer' && event.event === 'invalid' && Number.isInteger(detail.attempt)) note.push(detail.attempt < 2 ? 'invalid · one repair attempt follows' : 'invalid · repair attempt used');
     else note.push(human(event.event).toLowerCase());
     add(body, name, el('span', 'step-note small muted', note.join(' · ')));
     const aside = el('div', 'step-side');
@@ -525,6 +540,17 @@ export function mountWorkbench(root, {onMode} = {}) {
     }
     add(li, mark, body, aside);
     if (Array.isArray(detail.new_items) && detail.new_items.length) { const disclosure = evidenceLabelsDisclosure(detail.new_items, detail.unused_items); if (disclosure) li.append(disclosure); }
+    if (event.node === 'validate_answer' && detail.error_kinds && typeof detail.error_kinds === 'object') {
+      const kinds = Object.entries(detail.error_kinds).filter(([k, n]) => CHECK_FAILURE[k] && Number.isFinite(n) && n > 0);
+      if (kinds.length) {
+        const box = el('div', 'step-why');
+        box.append(el('p', 'small', 'Why the check failed'));
+        const list = el('ul', 'small muted');
+        kinds.forEach(([k, n]) => list.append(el('li', '', `${CHECK_FAILURE[k]}${n > 1 ? ` (${n})` : ''}`)));
+        box.append(list);
+        li.append(box);
+      }
+    }
     const args = detail.args && typeof detail.args === 'object' ? Object.entries(detail.args) : [];
     if (args.length) {
       const wrap = el('details', 'step-args'); wrap.append(el('summary', 'small', 'Arguments'));

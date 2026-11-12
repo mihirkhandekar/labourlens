@@ -254,13 +254,22 @@ def _ungrounded_numbers(raw: dict) -> list[str]:
 
 
 _TRACE_DETAIL_KEYS = {"tool", "args", "new_items", "seconds", "round", "n_calls", "observations", "passages", "calculations", "error_kind", "calls_used", "data_quality_notes"}
+_ERROR_CODES = {"copied_wording", "quote_not_found", "quote_too_long", "no_citation", "unknown_evidence", "flagged_evidence", "contradicts_data",
+                "search_failure_unsaid", "incomplete_answer", "bad_format", "other"}
 
 
 def public_trace_item(e: dict) -> dict:
     """One trace event as the browser may see it: node, event and an allow-listed subset of the detail (never passage text or model output)."""
     detail = e.get("detail", {}) if isinstance(e.get("detail"), dict) else {}
-    return {"node": e.get("node", ""), "event": e.get("event", ""),
-            "detail": {**{k: v for k, v in detail.items() if k in _TRACE_DETAIL_KEYS}, **({"transport": "mcp"} if detail.get("transport") == "mcp" else {})}}
+    out = {**{k: v for k, v in detail.items() if k in _TRACE_DETAIL_KEYS}, **({"transport": "mcp"} if detail.get("transport") == "mcp" else {})}
+    if e.get("node") == "validate_answer":
+        # Why a check failed: fixed category codes and counts only, never the validator's free-text messages (they can quote report text).
+        kinds = detail.get("error_kinds")
+        if isinstance(kinds, dict):
+            out["error_kinds"] = {k: v for k, v in kinds.items() if k in _ERROR_CODES and isinstance(v, int) and not isinstance(v, bool)}
+        if isinstance(detail.get("attempt"), int) and not isinstance(detail.get("attempt"), bool):
+            out["attempt"] = detail["attempt"]
+    return {"node": e.get("node", ""), "event": e.get("event", ""), "detail": out}
 
 
 _STAGE_TEXT = {("contextualise", "running"): "Reading the question in context.", ("contextualise", "done"): "Question read.",
