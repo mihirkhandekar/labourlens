@@ -1319,8 +1319,16 @@ Verification: `uv run pytest -q tests/retrieval/test_annual_abstention.py` passe
 - The MCP slides use one name: the agent tool `get_series` calls the server tool `get_statistic`.
 - New appendix **Q** shows four recorded MCP scenarios (valid call, invalid arguments, timeout or unavailable server, instruction in content) from `docs/mcp-demo-transcript.md`. The faults are injected on a test server; one instruction phrasing passes the client heuristics, a known limit.
 - **Summary** shows three takeaways (Evidence first; Bounded and validated execution; Evaluated with known limitations).
-- **Next steps** highlights two priorities, each with a proposed success criterion: re-evaluate the live build (at least 80% behaviour accuracy and at most 3% false answers on 100 new blind questions) and harden against misuse (no benign look-alike failures, at least 50 of 54 attacks passed on a new suite). The thresholds are proposals, not results.
+- **Next steps** highlights two priorities, each with a proposed success criterion: harden against misuse (no benign look-alike failures, at least 50 of 54 attacks passed on a new suite) and faster answers (median under 10 s on the 237 development questions, accuracy no lower than before). Re-evaluating the live build sits in the secondary row (changed 13 Nov at the owner's request; D-100 context). The thresholds are proposals, not results.
 
 **Alternatives.** Moving "How I built it" to the appendix (not done; it is a timing option). Quoting the early model counts only in notes (rejected: the trade-off was easy to miss).
 
 **Reversibility.** Deck source only. 26 main slides, 44 with references (appendix index 27, references A to Q 28 to 44).
+
+## D-100 (13 Nov 2026): remove "Does better retrieval improve answers?"
+
+**Decision (owner request).** The slide is removed from the main deck: 25 main slides, 43 with references (appendix index 26, references A to Q 27 to 43). The result stays in the "Does filtering help?" caption (end-to-end gains remain unproven), the Summary notes and the experiment notebook card "FIN / FIN2 · Development"; the report keeps the full comparison (development 82.7% to 89.7%, original test 80.6% to 83.9%, fresh 74.6% to 71.5%).
+
+**Alternatives.** Move it to the appendix (not requested). **Reversibility.** Deck source only; `git revert`.
+
+**Addendum (13 Nov 2026, owner request).** The Summary no longer shows the appendix links line or the "live build is not re-tested, labels have one reviewer" sentence on its face; the same disclosures stay in the third takeaway's hover text and the speaker notes. Next steps now lists "Make misuse harder" first and "Make answers arrive sooner" second (proposed target: median under 10 s on the 237 development questions, accuracy no lower), with "Check the live system again" in the secondary row.

@@ -1530,12 +1530,7 @@ export function agentSummary(m) {
   };
   take('Evidence first', 'Every claim cites a passage or a validated statistic. Code checks that the quote is really there.');
   take('Bounded and validated execution', 'Read-only tools, at most 2 rounds and 6 calls, typed statistics over MCP, and one repair before an answer is refused.');
-  take('Evaluated with known limitations', `Retrieval hit@8 rose from ${fmt.pct(before)} to ${fmt.pct(after)} on ${fmt.int(hitN)} development questions. The live build is not re-tested, and labels have one reviewer.`,
-    `Guarded ${THREAT_V2.guarded} of ${THREAT_V2.n} attacks passed against ${THREAT_V2.naive} without the guards (exact McNemar p = .039). The original and fresh question sets show no demonstrated answer gain.`);
-  const limits = el('p', 'as-limits');
-  const live = el('a', '', 'The live app differs from the measured build (appendix M)'); live.href = '#/served-versus-evaluated';
-  const fails = el('a', '', 'failure counts by question type (appendix P)'); fails.href = '#/where-it-fails';
-  limits.append(live, document.createTextNode('; '), fails, document.createTextNode('.'));
-  wrap.append(limits);
+  take('Evaluated with known limitations', `Retrieval hit@8 rose from ${fmt.pct(before)} to ${fmt.pct(after)} on ${fmt.int(hitN)} development questions.`,
+    `Guarded ${THREAT_V2.guarded} of ${THREAT_V2.n} passed, ${THREAT_V2.naive} without guards (p = .039). No demonstrated answer gain on original or fresh sets. Live build not re-tested; one reviewer.`);
   return wrap;
 }

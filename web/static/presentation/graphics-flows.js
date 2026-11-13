@@ -148,11 +148,11 @@ export function threatGains() {
 
 /** Six proposals, each a plain-language aim with one technical line. The first two are the priorities and carry a proposed success criterion. Nothing here is built or measured. */
 const PRIORITIES = [
-  ['Check the live system again', 'Re-evaluate the served build on the 237 development questions, then on new blind questions. Its accuracy is unmeasured today.', 'At least 80% behaviour accuracy and at most 3% false answers on 100 new blind questions, with intervals.'],
-  ['Make misuse harder', 'Protected access, rate limits, per-user budgets, an isolated MCP service, secrets management and redaction. Re-run the attack suite on new cases.', 'No benign look-alike failures (3 of 8 today) and at least 50 of 54 attacks passed on a new suite.']
+  ['Make misuse harder', 'Protected access, rate limits, per-user budgets, an isolated MCP service, secrets management and redaction. Re-run the attack suite on new cases.', 'No benign look-alike failures (3 of 8 today) and at least 50 of 54 attacks passed on a new suite.'],
+  ['Make answers arrive sooner', 'Overlap triage with the first plan. Cache embeddings and series lookups by revision and access policy. Test a smaller triage model.', 'Median answer time under 10 s on the 237 development questions (14.35 s evaluated), with behaviour accuracy no lower than before.']
 ];
 const SECONDARY = [
-  ['Make answers arrive sooner', 'Overlap triage with the first plan. Cache embeddings and series lookups by revision and access policy. Test a smaller triage model.'],
+  ['Check the live system again', 'Re-evaluate the served build on the 237 development questions, then on new blind questions. Its accuracy is unmeasured today.'],
   ['Route off-topic questions more cheaply', 'A third Decisions API attempt: a two-way scope gate, preregistered, measured on new frozen cases.'],
   ['Keep the data up to date', 'Scheduled fetches into immutable, hashed snapshots. Accept one only after schema, period and revision checks pass.'],
   ['Cover more official sources', 'More series, quarters and languages behind the same quality gates, each with its licence and snapshot recorded.']

@@ -117,9 +117,9 @@ def test_every_slide_has_a_heading_and_speaker_notes():
     assert "el('aside', 'notes')" in builder and "if (!notes.children.length) notes.append(" in builder
     main = _slides_main_section()
     specs = re.findall(r"\badd\(\{", main)
-    assert len(specs) == 26, len(specs)
+    assert len(specs) == 25, len(specs)
     total = len(re.findall(r"\badd\(\{", (STATIC / "presentation" / "slides.js").read_text()))
-    assert total == 44  # 26 main slides, appendix index, and references A to P
+    assert total == 43  # 25 main slides, appendix index, and references A to P
     assert total - len(specs) == 18
     for block in re.split(r"\badd\(\{", main)[1:]:
         assert "notes:" in block, block[:100]
@@ -152,7 +152,7 @@ def test_no_bridge_sentences_or_pills_on_faces():
 REQUIRED_TITLES = [
     "Assignment", "Project Scope", "System architecture", "How the agent answers a question", "Data sources", "Finding 1", "Finding 2", "Finding 3", "Challenges with the data",
     "Processing Unstructured Reports for RAG", "Retrieval Strategies", "Does filtering help?", "Statistics lookup through MCP", "Agent - Functional Architecture", "Three example runs", "Agent Workbench", "Checking the answer", "How I evaluated", "Choosing models",
-    "Does better retrieval improve answers?", "Attacks and defences", "How I built it", "Next steps", "Deploy in production", "Summary",
+    "Attacks and defences", "How I built it", "Next steps", "Deploy in production", "Summary",
 ]
 
 
@@ -166,7 +166,7 @@ def test_main_deck_follows_the_navigation_flow_and_has_short_plain_titles():
     main = _slides_main_section()
     defined = set(re.findall(r"\btitle: '([^']+)'", main))
     rows = _flow_rows()
-    assert len(rows) == 26
+    assert len(rows) == 25
     assert [r[0] for r in rows[1:]] == REQUIRED_TITLES
     for title, _, _ in rows:
         assert title in defined or "Singapore AI Agent" in title or title.startswith("Finding "), title
@@ -179,7 +179,7 @@ def test_main_deck_follows_the_navigation_flow_and_has_short_plain_titles():
     assert "['Sources', 'Processing', 'Retrieval', 'Agent', 'Answer', 'Checks']" in (STATIC / "presentation" / "deck.js").read_text()
     for title in [r[0] for r in rows][1:]:
         assert len(title.split()) <= 9, title
-    assert len(re.findall(r"\badd\(\{", main)) == 26
+    assert len(re.findall(r"\badd\(\{", main)) == 25
 
 
 def test_removed_slides_stay_removed_and_summary_keeps_limitations():
@@ -394,14 +394,6 @@ def test_mcp_slide_labels_the_all_tools_arm_as_tested_and_not_live():
     assert "mcpMap(m, {showMeasurements: false})" in live
 
 
-def test_ladder_hides_fresh_results_and_difference_labels_on_deck_only():
-    slides = (STATIC / "presentation" / "slides.js").read_text()
-    assert "finalComparison(m, {includeFresh: false, showDifference: false, showHistory: false})" in slides
-    graphics = (STATIC / "presentation" / "graphics.js").read_text()
-    assert "includeFresh = true, showDifference = true" in graphics
-    assert "if (showDifference)" in graphics
-
-
 def test_threat_slide_maps_layers_to_checks_without_an_on_off_leaderboard():
     graphics = (STATIC / "presentation" / "graphics.js").read_text()
     block = graphics.split("export function threatLayerTable", 1)[1].split("return wrap;", 1)[0]
@@ -487,7 +479,7 @@ def test_build_row_reads_the_final_evaluation_and_the_headline_numbers_come_from
     assert f"{r3['metrics']['behaviour_accuracy']['rate'] * 100:.1f}%" in rerun
     graphics = (STATIC / "presentation" / "graphics.js").read_text(encoding="utf-8")
     slides = (STATIC / "presentation" / "slides.js").read_text(encoding="utf-8")
-    assert "finalComparison(m, {includeFresh: false, showDifference: false, showHistory: false})" in slides and "provenanceTable(m)" in slides
+    assert "provenanceTable(m)" in slides
     for name in ("finalComparison", "finalSentence", "finalFacts", "provenanceTable"):
         assert f"export function {name}" in graphics
 
@@ -595,8 +587,7 @@ def test_metric_comparison_is_reused_and_keeps_retrieval_separate_from_answer_qu
     assert "retrievalLadder()" in retrieval and "End-to-end answer gains remain unproven" in retrieval
     final = _graphics_block(graphics, "export function finalComparison", "export function agentLoop")
     assert "if (!includeFresh && showHistory) wrap.append(metricComparison(m))" in final
-    ladder = main.split("title: 'Does better retrieval improve answers?'", 1)[1].split("\n  });", 1)[0]
-    assert "showHistory: false" in ladder and "not retrieval hit rates" in ladder
+    assert "title: 'Does better retrieval improve answers?'" not in main
     report = json.loads((STATIC / "data" / "report.json").read_text(encoding="utf-8"))
     retrieval_data = report["retrieval"]["ladder"]
     assert retrieval_data["n_cases"] == 128
@@ -683,7 +674,7 @@ def test_three_frozen_experiments_are_integrated_without_changing_slide_count():
     for helper in ("threatComparison", "unseenRetrieval", "fixedPipeline"):
         assert f"export function {helper}" in graphics
         assert helper in slides and helper in story
-    assert len(re.findall(r"\badd\(\{", slides)) == 44
+    assert len(re.findall(r"\badd\(\{", slides)) == 43
     threat = json.loads((root / "experiments/threats/threat-v2-analysis.json").read_text())
     assert (threat["guarded_majority_pass"], threat["naive_majority_pass"]) == (50, 42)
     assert (threat["guarded_only"], threat["naive_only"]) == (10, 2)
@@ -990,9 +981,10 @@ def test_next_steps_is_dom_text_without_the_removed_footer_caption():
     assert data.count("\n  ['") == 2 and data.count("Success") == 0
     side = graphics.split("const SECONDARY = [", 1)[1].split("\n];", 1)[0]
     assert side.count("\n  ['") == 4
-    for heading in ("Check the live system again", "Make misuse harder"):
+    for heading in ("Make misuse harder", "Make answers arrive sooner"):
         assert heading in data
-    for heading in ("Make answers arrive sooner", "Keep the data up to date"):
+    assert data.index("Make misuse harder") < data.index("Make answers arrive sooner")
+    for heading in ("Check the live system again", "Keep the data up to date"):
         assert heading in side
     assert "About 14 s" not in graphics and "improvementPlan" not in graphics
 
@@ -1006,8 +998,9 @@ def test_summary_describes_the_agent_its_capabilities_and_improvements():
         assert heading in block
     for read in ("m.ladder?.configs?.R0", "m.ladder?.configs?.R3", "m.ladder?.n_cases"):
         assert read in block
-    for phrase in ("appendix M", "appendix P", "live build is not re-tested", "labels have one reviewer"):
+    for phrase in ("Live build not re-tested", "one reviewer"):
         assert phrase in block
+    assert "as-limits" not in block and "appendix M" not in block and "appendix P" not in block
     assert "summaryBoard" not in graphics and "gpt-5.6-luna" not in block and "innerHTML" not in block
     for dash in ("\u2013", "\u2014"):
         assert dash not in block

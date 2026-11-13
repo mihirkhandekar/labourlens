@@ -1566,11 +1566,9 @@ ul.g24-list { list-style: none; padding-left: 0; }
 .as-take:nth-child(3) { border-top-color: var(--brass); }
 .as-big { font-size: 46px; font-weight: 600; line-height: 1.1; letter-spacing: -0.02em; }
 .as-line { font-size: 27px; color: var(--ink-2); line-height: 1.35; }
-.as-limits a { color: var(--accent); }
-.as-limits { grid-column: 1 / -1; font-size: 20px; color: var(--muted); line-height: 1.35; border-top: 1px solid var(--line-strong); padding-top: 16px; }
 @media (max-width: 900px) {
   .as { grid-template-columns: minmax(0, 1fr); row-gap: 20px; }
-  .as-big { font-size: 26px; } .as-line, .as-limits { font-size: 17px; }
+  .as-big { font-size: 26px; } .as-line { font-size: 17px; }
 }
 
 /* Follow-through: measured failures, bounded speed proposals and a production destination. */
